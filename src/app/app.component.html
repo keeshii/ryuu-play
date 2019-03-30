@@ -4,13 +4,23 @@
 </mat-toolbar>
 
 <mat-sidenav-container hasBackdrop="false">
-    <mat-sidenav #sidenav>
-        <span>
-            SideNav
-        </span>
-        
-        
-    </mat-sidenav>
+  <mat-sidenav #sidenav mode="push" class="ryuu-app-sidenav">
+    <mat-nav-list>
+      <a mat-list-item>Games</a>
+      <a mat-list-item>Deck</a>
+      <a mat-list-item>Ranking</a>
+    </mat-nav-list>
+
+    <mat-divider></mat-divider>
+    <mat-nav-list>
+      <h4>Tables</h4>
+      <a mat-list-item>
+        <span matBadge="1" matBadgeOverlap="false">Table</span>
+      </a>
+      <a mat-list-item>Table</a>
+    </mat-nav-list>
+  </mat-sidenav>
+
   <mat-sidenav-content>
     <router-outlet></router-outlet>
   </mat-sidenav-content>
