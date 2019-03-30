@@ -1,0 +1,17 @@
+@import '~@angular/material/theming';
+
+:host {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    > mat-toolbar {
+        @include mat-elevation(5);
+        flex: 0 0 auto;
+        z-index: 2;
+    }
+
+    > mat-sidenav-container {
+        flex: 1 1;
+    }
+}
