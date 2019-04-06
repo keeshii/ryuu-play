@@ -1,20 +1,22 @@
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { MaterialModule } from './shared/material.module';
+import { DeckModule } from './deck/deck.module';
+import { GamesModule } from './games/games.module';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
     AppComponent
   ],
   imports: [
-    BrowserAnimationsModule,
     BrowserModule,
     AppRoutingModule,
-    MaterialModule
+    DeckModule,
+    GamesModule,
+    SharedModule
   ],
   providers: [],
   bootstrap: [AppComponent]
