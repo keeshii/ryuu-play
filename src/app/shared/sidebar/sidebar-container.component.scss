@@ -1,0 +1,7 @@
+@import '../../../theme/variables.scss';
+
+:host {
+  display: block;
+  height: 100%;
+  margin-right: $sidebar-width;
+}

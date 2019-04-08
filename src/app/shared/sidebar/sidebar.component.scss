@@ -1,0 +1,9 @@
+@import '../../../theme/variables.scss';
+
+:host {
+  display: block;
+  height: 100%;
+  position: absolute;
+  right: 0;
+  width: $sidebar-width;
+}

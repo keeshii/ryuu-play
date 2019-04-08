@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'ryuu-games',
+  selector: 'ptcg-games',
   templateUrl: './games.component.html',
   styleUrls: ['./games.component.scss']
 })

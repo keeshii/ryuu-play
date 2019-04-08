@@ -1,4 +1,5 @@
 @import '~@angular/material/theming';
+@import '../theme/variables.scss';
 
 :host {
   display: flex;
@@ -17,7 +18,7 @@
 }
 
 .ryuu-app-sidenav {
-  min-width: 200px;
+  min-width: $nav-menu-width;
 
   h4 {
     padding: 8px 16px;
