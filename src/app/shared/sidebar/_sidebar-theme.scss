@@ -1,0 +1,19 @@
+@import '~@angular/material/theming';
+
+
+@mixin ptcg-sidebar-theme($theme) {
+  $primary: map-get($theme, primary);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  $sidebar-side-border: solid 1px mat-color($foreground, divider);
+  $sidebar-background-color: mat-color($background, dialog);
+
+  ptcg-sidebar {
+    background-color: $sidebar-background-color;
+    border-left: $sidebar-side-border;
+    color: mat-color($foreground, text);
+  }
+}
+
+@mixin ptcg-sidebar-typography($config) { }
