@@ -1,0 +1,5 @@
+@import '../app/shared/sidebar/_sidebar-theme.scss';
+
+@mixin ptcg-theme($theme) {
+  @include ptcg-sidebar-theme($ptcg-theme);
+}

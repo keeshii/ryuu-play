@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DeckModule } from './deck/deck.module';
+import { DialogModule } from './dialog/dialog.module';
 import { GamesModule } from './games/games.module';
 import { SharedModule } from './shared/shared.module';
 
@@ -15,6 +16,7 @@ import { SharedModule } from './shared/shared.module';
     BrowserModule,
     AppRoutingModule,
     DeckModule,
+    DialogModule,
     GamesModule,
     SharedModule
   ],

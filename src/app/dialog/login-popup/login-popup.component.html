@@ -1,0 +1,28 @@
+<h2 mat-dialog-title>Sign in</h2>
+
+<mat-dialog-content class="ptcg-login-popup-content">
+
+  <!-- Username -->
+  <mat-form-field>
+    <mat-label>Username</mat-label>
+    <input matInput placeholder="Username">
+  </mat-form-field>
+
+  <!-- Password -->
+  <mat-form-field>
+    <mat-label>Password</mat-label>
+    <input type="password" matInput placeholder="Password">
+  </mat-form-field>
+
+  <p>
+    <button mat-raised-button color="primary">Sign in</button>
+  </p>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <div class="mat-small">
+    <a class="ptcg-login-popup-link" routerLink="/register">Create new account</a>
+    <a class="ptcg-login-popup-link" routerLink="/recover">I forgot my password</a>
+  </div>
+</mat-dialog-actions>

@@ -1,6 +1,26 @@
-// Global styles
+@import '~@angular/material/theming';
+
+@import './_theme.scss';
 @import "variables.scss";
-
-@import "theme.scss";
-
 @import "global.scss";
+
+// NOTE: Theming is currently experimental and not yet publically released!
+
+@include mat-core();
+
+$ptcg-primary: mat-palette($mat-pink);
+$ptcg-accent:  mat-palette($mat-yellow, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$ptcg-warn:    mat-palette($mat-deep-orange);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$ptcg-theme: mat-dark-theme($ptcg-primary, $ptcg-accent, $ptcg-warn);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($ptcg-theme);
+
+
+@include ptcg-theme($ptcg-theme);

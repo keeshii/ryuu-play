@@ -2,6 +2,8 @@ import {
   MatBadgeModule,
   MatButtonModule,
   MatCheckboxModule,
+  MatDialogModule,
+  MatInputModule,
   MatListModule,
   MatSidenavModule,
   MatToolbarModule
@@ -13,6 +15,8 @@ import {NgModule} from '@angular/core';
     MatBadgeModule,
     MatButtonModule,
     MatCheckboxModule,
+    MatDialogModule,
+    MatInputModule,
     MatListModule,
     MatSidenavModule,
     MatToolbarModule
@@ -21,6 +25,8 @@ import {NgModule} from '@angular/core';
     MatBadgeModule,
     MatButtonModule,
     MatCheckboxModule,
+    MatDialogModule,
+    MatInputModule,
     MatListModule,
     MatSidenavModule,
     MatToolbarModule
