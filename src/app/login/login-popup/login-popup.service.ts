@@ -6,7 +6,7 @@ import { LoginPopupComponent } from './login-popup.component';
 @Injectable({
   providedIn: 'root'
 })
-export class LoginService {
+export class LoginPopupService {
 
   constructor(public dialog: MatDialog) {}
 

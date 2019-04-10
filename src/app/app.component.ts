@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { LoginService } from './dialog/login-popup/login.service';
+import { LoginPopupService } from './login/login-popup/login-popup.service';
 
 @Component({
   selector: 'ptcg-app',
@@ -10,7 +10,7 @@ import { LoginService } from './dialog/login-popup/login.service';
 export class AppComponent {
 
   constructor(
-    private loginService: LoginService
+    private loginService: LoginPopupService
   ) { }
 
   login() {

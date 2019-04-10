@@ -3,10 +3,12 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { DeckComponent } from './deck/deck.component';
 import { GamesComponent } from './games/games.component';
+import { RegisterComponent } from './login/register/register.component';
 
 const routes: Routes = [
     { path: 'deck', component: DeckComponent },
     { path: 'games', component: GamesComponent },
+    { path: 'register', component: RegisterComponent },
     { path: '', redirectTo: '/games', pathMatch: 'full' },
 ];
 

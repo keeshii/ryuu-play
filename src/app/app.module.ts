@@ -4,8 +4,8 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DeckModule } from './deck/deck.module';
-import { DialogModule } from './dialog/dialog.module';
 import { GamesModule } from './games/games.module';
+import { LoginModule } from './login/login.module';
 import { SharedModule } from './shared/shared.module';
 
 @NgModule({
@@ -16,8 +16,8 @@ import { SharedModule } from './shared/shared.module';
     BrowserModule,
     AppRoutingModule,
     DeckModule,
-    DialogModule,
     GamesModule,
+    LoginModule,
     SharedModule
   ],
   providers: [],

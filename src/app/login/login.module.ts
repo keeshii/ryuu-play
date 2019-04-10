@@ -1,21 +1,26 @@
 import { NgModule } from '@angular/core';
 
 import { LoginPopupComponent } from './login-popup/login-popup.component';
-import { LoginService } from './login-popup/login.service';
+import { LoginPopupService } from './login-popup/login-popup.service';
 import { SharedModule } from '../shared/shared.module';
+import { RegisterComponent } from './register/register.component';
 
 @NgModule({
   imports: [
     SharedModule
   ],
   declarations: [
-    LoginPopupComponent
+    LoginPopupComponent,
+    RegisterComponent
   ],
   entryComponents: [
     LoginPopupComponent
   ],
+  exports: [
+    RegisterComponent
+  ],
   providers: [
-    LoginService
+    LoginPopupService
   ]
 })
-export class DialogModule {}
+export class LoginModule {}
