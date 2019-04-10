@@ -15,13 +15,14 @@ export class LoginPopupComponent {
     // @Inject(MAT_DIALOG_DATA) public data: DialogData
   ) { }
 
+  resetPassword() {
+    this.dialogRef.close();
+    this.router.navigate(['/reset-password']);
+  }
+
   register() {
     this.dialogRef.close();
     this.router.navigate(['/register']);
-  }
-
-  close() {
-    this.dialogRef.close();
   }
 
 }

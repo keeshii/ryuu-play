@@ -4,6 +4,7 @@ import { LoginPopupComponent } from './login-popup/login-popup.component';
 import { LoginPopupService } from './login-popup/login-popup.service';
 import { SharedModule } from '../shared/shared.module';
 import { RegisterComponent } from './register/register.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 @NgModule({
   imports: [
@@ -11,13 +12,15 @@ import { RegisterComponent } from './register/register.component';
   ],
   declarations: [
     LoginPopupComponent,
-    RegisterComponent
+    RegisterComponent,
+    ResetPasswordComponent
   ],
   entryComponents: [
     LoginPopupComponent
   ],
   exports: [
-    RegisterComponent
+    RegisterComponent,
+    ResetPasswordComponent
   ],
   providers: [
     LoginPopupService

@@ -90,3 +90,7 @@ legend {
 textarea {
     overflow: auto;
 }
+
+p {
+  margin-bottom: map-get($padding, normal);
+}

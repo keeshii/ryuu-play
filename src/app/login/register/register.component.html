@@ -3,5 +3,60 @@
     Create a new account
   </h1>
 
-</ptcg-content>
+  <div class="ptcg-register-form">
+    <!-- Player Name -->
+    <mat-card>
 
+      <mat-card-content>
+        <mat-form-field>
+          <mat-label>Player Name</mat-label>
+          <input matInput placeholder="Player Name">
+          <mat-hint>
+            Other players will see this unique name at your games.
+            At least 3 alphanumeric characters.
+          </mat-hint>
+        </mat-form-field>
+
+        <!-- E-mail -->
+        <mat-form-field>
+          <mat-label>E-mail</mat-label>
+          <input matInput placeholder="E-mail">
+          <mat-hint>
+            You will be able to use this e-mail to notify yourself on custom events.
+            No spam, we promise.
+          </mat-hint>
+        </mat-form-field>
+
+        <!-- Password -->
+        <mat-form-field>
+          <mat-label>Password</mat-label>
+          <input type="password" matInput placeholder="Password">
+          <mat-hint>
+            Must be at least 8 characters including at least one numeric character.
+          </mat-hint>
+        </mat-form-field>
+
+        <!-- Confirm Password -->
+        <mat-form-field>
+          <mat-label>Confirm Password</mat-label>
+          <input type="password" matInput placeholder="Confirm Password">
+          <mat-hint>
+            Once again please.
+          </mat-hint>
+        </mat-form-field>
+
+      </mat-card-content>
+    </mat-card>
+
+    <p>
+      By submitting this information you acknowledge that you have read
+      and agree to be bound by the <a>Terms of Service</a>. 
+    </p>
+
+    <p>
+      <button mat-raised-button color="primary">Register</button>
+    </p>
+
+  </div>
+
+</ptcg-content>
