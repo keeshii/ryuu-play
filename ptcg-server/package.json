@@ -4,8 +4,25 @@
   "description": "Server of the ptcg game.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "tslint {src/**/*.ts,src/*.ts}",
+    "build": "npm run lint && npm run test && tsc",
+    "start": "node dist/start.js",
+    "test": "nyc -e \".ts\" -x \"src/**/*.spec.ts\" jasmine-ts \"src/**/*.spec.ts\"",
+    "coverage": "npm test && nyc report -r html"
   },
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.1",
+    "@types/jasmine": "^2.8.2",
+    "@types/node": "^8.0.53",
+    "jasmine-ts": "^0.2.1",
+    "nyc": "^11.4.1",
+    "ts-node": "^3.3.0",
+    "tslint": "^5.8.0",
+    "typescript": "^3.6.2"
+  }
 }
