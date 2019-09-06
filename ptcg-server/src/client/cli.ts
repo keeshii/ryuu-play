@@ -2,7 +2,7 @@ import * as repl from 'repl';
 import { Help } from './help';
 import { Storage } from './storage';
 
-export class Client {
+export class Cli {
 
   private welcomeMessage: string = '';
   private context: any;

@@ -1,4 +1,9 @@
-import { Client } from './client';
+import { Cli } from './client';
+import { readConfig } from './utils/config';
 
-const cli = new Client();
-cli.start();
+(async () => {
+  await readConfig();
+
+  const cli = new Cli();
+  cli.start();
+})();

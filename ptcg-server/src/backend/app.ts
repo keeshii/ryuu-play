@@ -1,4 +1,5 @@
 import * as express from 'express';
+import { config } from '../utils/config';
 
 export class App {
 
@@ -8,9 +9,11 @@ export class App {
     this.app = express();
   }
 
-  public start(): void {
-    this.app.listen(3000, () => {
-      console.log('Example app listening on port 3000!');
+  public async start(): Promise<void> {
+    const port = config.backend.port;
+
+    this.app.listen(port, () => {
+      console.log('Example app listening on port ' + port + '!');
     });
   }
 }
