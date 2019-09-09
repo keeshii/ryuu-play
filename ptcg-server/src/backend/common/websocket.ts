@@ -29,8 +29,8 @@ export class Websocket {
         const listener = this.listeners[i];
 
         socket.on(listener.message, <T>(data: T, fn: Function) => {
-          listener.handler(socket, data, (status, data) => {
-            return fn && fn({status: status, data: data});
+          listener.handler(socket, data, (message, data) => {
+            return fn && fn({message, data});
           });
         });
 

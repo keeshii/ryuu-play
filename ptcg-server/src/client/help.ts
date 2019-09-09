@@ -22,6 +22,10 @@ export class Help {
     return fn;
   }
 
+  public reset(): void {
+    this.commandList.length = 0;
+  }
+
   public getCommandList(): string {
     return this.commandList.join('\n');
   }

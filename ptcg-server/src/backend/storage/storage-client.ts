@@ -1,21 +1,18 @@
-import * as io from 'socket.io';
-import * as ioc from 'socket.io-client';
+import { WebsocketClient } from '../common/websocket-client';
 
 export class StorageClient {
 
-  private socket: any;
+  private socket: WebsocketClient = new WebsocketClient();
 
   constructor() {}
 
   public connect(address: string, port: number) {
-    this.socket = ioc.connect(`http://${address}:${port}`) as any;
+    this.socket.connect(address, port);
   }
 
-  public sendHello() {
-    const socket: io.Socket = this.socket;
-    socket.emit('hello', {data: 'data'}, function (response: any) {
-      console.log('received response: ', response);
-    });
+  public sendHello(): Promise<string> {
+    return this.socket.emit('hello', {data: 'data'})
+      .then(response => response.message);
   }
 
 }

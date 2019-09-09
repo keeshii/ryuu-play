@@ -10,11 +10,7 @@ export class StorageServer {
   private ws: Websocket = new Websocket();
 
   constructor(private address: string, private port: number) {
-
-    this.ws.addListener('hello', (socket: io.Socket, user: User, response: Response) => {
-      return response('world');
-    });
-
+    this.ws.addListener('hello', this.sendHello.bind(this));
   }
 
   public async start() {
@@ -23,6 +19,10 @@ export class StorageServer {
     });
 
     this.ws.listen(httpServer);
+  }
+
+  private sendHello(socket: io.Socket, user: User, response: Response): void {
+    response('world');
   }
 
 }

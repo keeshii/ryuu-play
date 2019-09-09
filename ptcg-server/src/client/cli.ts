@@ -1,11 +1,11 @@
 import * as repl from 'repl';
+import * as vm from 'vm';
 import { Help } from './help';
 import { Storage } from './storage';
 
 export class Cli {
 
   private welcomeMessage: string = '';
-  private context: any;
   private help: Help = new Help();
 
   constructor() {
@@ -21,15 +21,28 @@ export class Cli {
       console.log(this.welcomeMessage);
     }
 
-    let server: repl.REPLServer = repl.start('> ');
-    this.context = server.context;
-    
-    this.addGlobalProperty('help', this.help.createHelpFunction());
-    this.addGlobalProperty('storage', new Storage());    
+    let server: repl.REPLServer = repl.start({
+      prompt: '> ',
+      eval: function(cmd: string, ctx: any, fileName: string, cb: Function): any {
+        let result = vm.runInContext(cmd, ctx);
+        if (result instanceof Promise) {
+          return result.then(response => cb(null, response));
+        }
+        return cb(null, result);
+      }
+    });
+    this.initContext(server.context);
+    server.on('reset', this.initContext.bind(this));
   }
 
-  public addGlobalProperty(name: string, propertyValue: any): void {
-    Object.defineProperty(this.context, name, {
+  private initContext(context: any): void {
+    this.help.reset();
+    this.addGlobalProperty(context, 'help', this.help.createHelpFunction());
+    this.addGlobalProperty(context, 'storage', new Storage());    
+  }
+
+  public addGlobalProperty(context: any, name: string, propertyValue: any): void {
+    Object.defineProperty(context, name, {
       configurable: false,
       enumerable: true,
       value: propertyValue

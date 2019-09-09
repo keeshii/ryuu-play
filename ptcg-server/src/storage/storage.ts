@@ -1,0 +1,10 @@
+
+export class Storage {
+
+  constructor() {
+    
+  }
+  
+  
+  
+}
