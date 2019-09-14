@@ -1,11 +1,17 @@
 import { App } from './backend';
-import { readConfig } from './utils/config';
+import { config, readConfig } from './utils';
 
-(async () => {
-  console.log('Reading config file');
-  await readConfig();
+const app = new App();
 
-  console.log('Starting the backend');
-  const app = new App();
-  app.start();
-})();
+readConfig()
+  .then(() => app.connectToDatabase())
+  .then(() => app.start())
+  .then(() => {
+    const address = config.backend.address;
+    const port = config.backend.port;
+    console.log('Application started on ' + address + ':' + port + '.');
+  })
+  .catch(error => {
+    console.error(error);
+    console.log('Application not started.');
+  });

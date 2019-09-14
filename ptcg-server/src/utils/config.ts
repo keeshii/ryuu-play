@@ -11,12 +11,17 @@ export interface Config {
   };
 
   storage: {
-    adapter: 'memory'
+    type: 'mysql',
+    host: string,
+    port: number,
+    username: string,
+    password: string,
+    database: string
   };
 
 }
 
-export let config: Config;
+export let config: Config = {} as any;
 
 export async function readConfig(): Promise<Config> {
   const promise = new Promise<Config>((resolve, reject) => {
@@ -25,7 +30,7 @@ export async function readConfig(): Promise<Config> {
       if (err) {
         reject(err);
       }
-      config = JSON.parse(String(data));
+      Object.assign(config, JSON.parse(String(data)));
       resolve(config);
     });
   });

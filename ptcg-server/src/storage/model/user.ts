@@ -1,7 +1,16 @@
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-export interface User {
+@Entity()
+export class User extends BaseEntity {
 
-  nick: string;
-  password: string;
+  @PrimaryGeneratedColumn()
+  public id: number = 0;
+
+  @Column()
+  public name: string = '';
+
+  @Column()
+  public password: string = '';
+
 
 }

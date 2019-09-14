@@ -6,6 +6,11 @@
     "storagePort": 12020
   },
   "storage": {
-    "adapter": "memory"
+    "type": "mysql",
+    "host": "localhost",
+    "port": 3306,
+    "username": "root",
+    "password": "",
+    "database": "ptcg"
   }
 }

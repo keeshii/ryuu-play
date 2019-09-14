@@ -1,21 +1,47 @@
-import { StorageServer } from './storage/storage-server';
-import { config } from '../utils/config';
+import * as express from 'express';
+import { Storage } from '../storage';
+import { config } from '../utils';
 
+import {
+  Controller,
+  Login
+} from './controllers';
+
+interface ControllerClass {
+  new(path: string, app: express.Application, db: Storage): Controller;
+}
 
 export class App {
-  private storageServer: StorageServer;
+
+  private app: express.Application;
+  private storage: Storage;
 
   constructor() {
-    this.storageServer = this.createStorageService();
+    this.app = express();
+    this.storage = new Storage();
+    this.initApp();
   }
 
-  private createStorageService(): StorageServer {
-    const address = config.backend.storageAddress;
-    const port = config.backend.storagePort;
-    return new StorageServer(address, port);
+  private define(path: string, controller: ControllerClass): void {
+    let instance = new controller(path, this.app, this.storage);
+    instance.init();
   }
 
-  public async start(): Promise<void> {
-    await this.storageServer.start();
+  private initApp(): void {
+    this.define('/login', Login);
+  }
+
+  public connectToDatabase(): Promise<void> {
+    return this.storage.connect();
+  }
+
+  public start(): Promise<void> {
+    const address = config.backend.address;
+    const port = config.backend.port;
+
+    return new Promise<void>((resolve, reject) => {
+      const server = this.app.listen(port, address, resolve);
+      server.on('error', reject);
+    });
   }
 }
