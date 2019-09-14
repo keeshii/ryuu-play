@@ -2,8 +2,9 @@
   "backend": {
     "address": "0.0.0.0",
     "port": 12021,
-    "storageAddress": "127.0.0.1",
-    "storagePort": 12020
+    "serverPassword": "",
+    "registrationEnabled": true,
+    "secret": "!secret!"
   },
   "storage": {
     "type": "mysql",

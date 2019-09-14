@@ -1,4 +1,5 @@
 import * as express from 'express';
+import { json } from 'body-parser';
 import { Storage } from '../storage';
 import { config } from '../utils';
 
@@ -28,6 +29,8 @@ export class App {
   }
 
   private initApp(): void {
+    this.app.use(json());
+
     this.define('/login', Login);
   }
 
