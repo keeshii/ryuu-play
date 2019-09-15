@@ -7,6 +7,7 @@
     "lint": "tslint {src/**/*.ts,src/*.ts}",
     "build": "npm run lint && npm run test && tsc",
     "start": "node dist/start.js",
+    "start:dev": "nodemon -e ts --exec \"tsc && npm run start\"",
     "test": "nyc -e \".ts\" -x \"src/**/*.spec.ts\" jasmine-ts \"src/**/*.spec.ts\"",
     "coverage": "npm test && nyc report -r html"
   },
@@ -24,9 +25,19 @@
     "@types/jasmine": "^2.8.2",
     "@types/node": "^8.0.53",
     "jasmine-ts": "^0.2.1",
+    "nodemon": "^1.19.2",
     "nyc": "^11.4.1",
     "ts-node": "^3.3.0",
     "tslint": "^5.8.0",
     "typescript": "^3.6.2"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "coverage/*",
+      "dist/*",
+      ".nyc_output/*"
+    ],
+    "delay": "2500",
+    "watch": "src"
   }
 }
