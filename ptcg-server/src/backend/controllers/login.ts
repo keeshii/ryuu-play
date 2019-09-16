@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { AuthToken, Required } from '../services';
 import { Controller } from './controller';
 import { User } from '../../storage';
 
@@ -19,23 +20,22 @@ export class Login extends Controller {
     this.app.post(`${base}/register`, this.onRegister.bind(this));
   }
 
+  @Required('name', 'email', 'password')
   private async onRegister(req: Request, res: Response, next: NextFunction) {
     const body: RegisterRequest = req.body;
 
-    console.log(body);
+    const user = new User();
+    user.name = body.name;
+    user.email = body.email;
+    user.password = body.password;
 
-    if (!body.name || !body.email || !body.password) {
-      res.statusCode = 400;
-      return next(new Error('Invalid params'));
-    }
-
-    console.log(req.body);
     res.send({ok: true});
   }
 
+  @AuthToken()
   private async onLogin(req: Request, res: Response) {
     const count = await User.count();
-    res.send('Login: ' + count);
+    res.send('Login: ' + count + ' ' + req.body.userId);
   }
 
   private onLogout(req: Request, res: Response) {

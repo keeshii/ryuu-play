@@ -6,8 +6,10 @@ export interface Config {
   backend: {
     address: string,
     port: number,
-    storageAddress: string,
-    storagePort: number
+    serverPassword: string,
+    registrationEnabled: boolean,
+    secret: string,
+    tokenExpire: number;
   };
 
   storage: {

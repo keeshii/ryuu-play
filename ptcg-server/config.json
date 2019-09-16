@@ -4,7 +4,8 @@
     "port": 12021,
     "serverPassword": "",
     "registrationEnabled": true,
-    "secret": "!secret!"
+    "secret": "!secret!",
+    "tokenExpire": 86400
   },
   "storage": {
     "type": "mysql",
