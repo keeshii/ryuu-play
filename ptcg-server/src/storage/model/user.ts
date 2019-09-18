@@ -1,6 +1,8 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, Unique, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
+@Unique(['name'])
+@Unique(['email'])
 export class User extends BaseEntity {
 
   @PrimaryGeneratedColumn()
@@ -13,7 +15,9 @@ export class User extends BaseEntity {
   public email: string = '';
 
   @Column()
-  public password: string = '';
+  public ranking: number = 0;
 
+  @Column()
+  public password: string = '';
 
 }

@@ -26,7 +26,7 @@ export function Validate(validationMap: ValidationMap) {
           const value = req.body[param];
           if (!validationMap[param].validate(value)) {
             res.statusCode = 400;
-            res.send({error: Errors.INVALID_PARAM, param});
+            res.send({error: Errors.VALIDATION_INVALID_PARAM, param});
             return;
           }
         }

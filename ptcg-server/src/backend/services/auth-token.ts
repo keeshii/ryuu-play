@@ -42,7 +42,7 @@ export function AuthToken() {
 
       if (!userId) {
         res.statusCode = 403;
-        res.send({error: Errors.INVALID_TOKEN});
+        res.send({error: Errors.AUTH_TOKEN_INVALID});
         return;
       }
 
