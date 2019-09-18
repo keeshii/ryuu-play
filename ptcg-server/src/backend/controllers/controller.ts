@@ -9,6 +9,26 @@ export abstract class Controller {
     protected db: Storage
   ) { }
 
-  public abstract init(): void;
+  public init(): void {};
 
+}
+
+export function Get(path: string) {
+  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    const init = target.init;
+    target.init = function() {
+      init.call(this);
+      this.app.get(`${this.path}${path}`, descriptor.value.bind(this));
+    }
+  }
+}
+
+export function Post(path: string) {
+  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    const init = target.init;
+    target.init = function() {
+      init.call(this);
+      this.app.post(`${this.path}${path}`, descriptor.value.bind(this));
+    }
+  }
 }

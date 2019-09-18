@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { AuthToken, Validate, check } from '../services';
-import { Controller } from './controller';
+import { Controller, Get, Post } from './controller';
 import { User } from '../../storage';
 
 interface RegisterRequest {
@@ -12,20 +12,13 @@ interface RegisterRequest {
 
 export class Login extends Controller {
 
-  public init(): void {
-    const base = this.path;
-
-    this.app.get(base, this.onLogin.bind(this));
-    this.app.get(`${base}/logout`, this.onLogout.bind(this));
-    this.app.post(`${base}/register`, this.onRegister.bind(this));
-  }
-
+  @Post('/register')
   @Validate({
     name: check().isName(),
     email: check().isEmail(),
     password: check().minLength(3).maxLength(32)
   })
-  private async onRegister(req: Request, res: Response, next: NextFunction) {
+  public async onRegister(req: Request, res: Response, next: NextFunction) {
     const body: RegisterRequest = req.body;
 
     const user = new User();
@@ -36,13 +29,15 @@ export class Login extends Controller {
     res.send({ok: true});
   }
 
+  @Get('')
   @AuthToken()
-  private async onLogin(req: Request, res: Response) {
+  public async onLogin(req: Request, res: Response) {
     const count = await User.count();
     res.send('Login: ' + count + ' ' + req.body.userId);
   }
 
-  private onLogout(req: Request, res: Response) {
+  @Get('/logout')
+  public onLogout(req: Request, res: Response) {
     res.send('Logout');
   }
 
