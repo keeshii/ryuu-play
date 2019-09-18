@@ -1,2 +1,2 @@
 export * from './auth-token';
-export * from './required';
+export * from './validate';

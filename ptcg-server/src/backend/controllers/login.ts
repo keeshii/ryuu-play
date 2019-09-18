@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { AuthToken, Required } from '../services';
+import { AuthToken, Validate, check } from '../services';
 import { Controller } from './controller';
 import { User } from '../../storage';
 
@@ -20,7 +20,11 @@ export class Login extends Controller {
     this.app.post(`${base}/register`, this.onRegister.bind(this));
   }
 
-  @Required('name', 'email', 'password')
+  @Validate({
+    name: check().isName(),
+    email: check().isEmail(),
+    password: check().minLength(3).maxLength(32)
+  })
   private async onRegister(req: Request, res: Response, next: NextFunction) {
     const body: RegisterRequest = req.body;
 
