@@ -14,6 +14,9 @@ export function generateToken(userId: number, expire?: number) {
 
 
 export function validateToken(token: string): number {
+  if (typeof token !== 'string') {
+    return 0;
+  }
   const [userId, expire] = token.split(',').map(x => parseInt(x, 10) || 0);
   if (token !== generateToken(userId, expire)) {
     return 0;

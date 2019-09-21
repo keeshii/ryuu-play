@@ -1,5 +1,6 @@
 import { App } from './backend';
 import { config, readConfig } from './utils';
+import { exit } from 'process';
 
 const app = new App();
 
@@ -14,4 +15,5 @@ readConfig()
   .catch(error => {
     console.error(error);
     console.log('Application not started.');
+    exit(1);
   });

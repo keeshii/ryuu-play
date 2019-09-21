@@ -1,5 +1,7 @@
 import * as express from 'express';
+import { Server } from 'colyseus';
 import { json } from 'body-parser';
+import { createServer } from 'http';
 import { Storage } from '../storage';
 import { config } from '../utils';
 
@@ -8,6 +10,10 @@ import {
   Login
 } from './controllers';
 
+import {
+  PtcgTable
+} from './rooms';
+
 interface ControllerClass {
   new(path: string, app: express.Application, db: Storage): Controller;
 }
@@ -15,23 +21,37 @@ interface ControllerClass {
 export class App {
 
   private app: express.Application;
+  private gameServer: Server;
   private storage: Storage;
 
   constructor() {
-    this.app = express();
     this.storage = new Storage();
-    this.initApp();
+    this.app = this.configureExpress();
+    this.gameServer = this.configureColyseus();
   }
 
-  private define(path: string, controller: ControllerClass): void {
-    let instance = new controller(path, this.app, this.storage);
-    instance.init();
+  private configureExpress(): express.Application {
+    const storage = this.storage;
+    const app = express();
+    const define = function (path: string, controller: ControllerClass): void {
+      const instance = new controller(path, app, storage);
+      instance.init();
+    };
+
+    app.use(json());
+    define('/login', Login);
+
+    return app;
   }
 
-  private initApp(): void {
-    this.app.use(json());
+  private configureColyseus(): Server {
+    const gameServer = new Server({
+      server: createServer(this.app),
+      express: this.app
+    });
 
-    this.define('/login', Login);
+    gameServer.define('ptcgTable', PtcgTable);
+    return gameServer;
   }
 
   public connectToDatabase(): Promise<void> {
@@ -43,8 +63,8 @@ export class App {
     const port = config.backend.port;
 
     return new Promise<void>((resolve, reject) => {
-      const server = this.app.listen(port, address, resolve);
-      server.on('error', reject);
+      this.gameServer.listen(port, address, undefined, resolve);
+      this.gameServer.onShutdown(reject);
     });
   }
 }
