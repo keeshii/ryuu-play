@@ -4,6 +4,7 @@ import { json } from 'body-parser';
 import { createServer } from 'http';
 import { Storage } from '../storage';
 import { config } from '../utils';
+import { cors } from './services/cors';
 
 import {
   Controller,
@@ -39,6 +40,7 @@ export class App {
     };
 
     app.use(json());
+    app.use(cors());
     define('/login', Login);
 
     return app;

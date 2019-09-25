@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
+import { ApiModule } from './api/api.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DeckModule } from './deck/deck.module';
@@ -13,8 +14,9 @@ import { SharedModule } from './shared/shared.module';
     AppComponent
   ],
   imports: [
-    BrowserModule,
+    ApiModule,
     AppRoutingModule,
+    BrowserModule,
     DeckModule,
     GamesModule,
     LoginModule,

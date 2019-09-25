@@ -2,20 +2,36 @@
 
 <mat-dialog-content class="ptcg-login-popup-content">
 
-  <!-- Username -->
-  <mat-form-field>
-    <mat-label>Username</mat-label>
-    <input matInput placeholder="Username">
-  </mat-form-field>
+  <form #form="ngForm">
 
-  <!-- Password -->
-  <mat-form-field>
-    <mat-label>Password</mat-label>
-    <input type="password" matInput placeholder="Password">
-  </mat-form-field>
+    <!-- Username -->
+    <mat-form-field>
+      <mat-label>Username</mat-label>
+      <input matInput name="name" placeholder="Username" ptcgNameValidator
+        [(ngModel)]="name" #nameField="ngModel">
+      <mat-error *ngIf="!nameField.pristine && nameField.invalid">
+        Invalid name
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Password -->
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input type="password" matInput name="password" placeholder="Password"
+        ptcgPasswordValidator password-min-length="1"
+        [(ngModel)]="password" #passwordField="ngModel">
+      <mat-error *ngIf="!nameField.pristine && nameField.invalid">
+        Invalid password
+      </mat-error>
+    </mat-form-field>
+
+  </form>
 
   <p>
-    <button mat-raised-button color="primary">Sign in</button>
+    <button mat-raised-button color="primary" (click)="login()"
+      [disabled]="form.invalid">
+      Sign in
+    </button>
   </p>
 
 </mat-dialog-content>
