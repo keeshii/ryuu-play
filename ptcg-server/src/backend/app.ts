@@ -3,7 +3,7 @@ import { Server } from 'colyseus';
 import { json } from 'body-parser';
 import { createServer } from 'http';
 import { Storage } from '../storage';
-import { config } from '../utils';
+import { config } from '../config';
 import { cors } from './services/cors';
 
 import {

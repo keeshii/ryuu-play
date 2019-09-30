@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "tslint {src/**/*.ts,src/*.ts}",
     "build": "npm run lint && npm run test && tsc",
-    "start": "node dist/start.js",
+    "start": "node start.js",
     "start:dev": "nodemon -e ts --exec \"tsc && npm run start\"",
     "test": "nyc -e \".ts\" -x \"src/**/*.spec.ts\" jasmine-ts \"src/**/*.spec.ts\"",
     "coverage": "npm test && nyc report -r html"

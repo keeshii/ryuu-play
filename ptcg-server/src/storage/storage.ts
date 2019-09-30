@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { createConnection, EntityManager, Connection } from 'typeorm';
 import { User } from './model';
-import { config } from '../utils';
+import { config } from '../config';
 
 export class Storage {
 
@@ -10,14 +10,22 @@ export class Storage {
   constructor() { }
 
   public async connect(): Promise<void> {
+    const storageConfig: any = config.storage;
     this.connection = await createConnection({
-      ...config.storage,
+      ...storageConfig,
       entities: [
         User
       ],
       synchronize: true,
       logging: false
     });
+  }
+
+  public async disconnect(): Promise<void> {
+    if (this.connection === null) {
+      return;
+    }
+    return this.connection.close();
   }
 
   public get manager(): EntityManager {

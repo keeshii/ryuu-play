@@ -5,7 +5,7 @@ import { Errors } from '../common/errors';
 import { LoginRequest, RegisterRequest } from '../interfaces';
 import { Md5 } from '../common/md5';
 import { User } from '../../storage';
-import { config } from '../../utils';
+import { config } from '../../config';
 
 
 export class Login extends Controller {

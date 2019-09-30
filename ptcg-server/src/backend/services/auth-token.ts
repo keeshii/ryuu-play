@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { Errors } from '../common/errors';
 import { Md5 } from '../common/md5';
-import { config } from '../../utils';
+import { config } from '../../config';
 
 
 export function generateToken(userId: number, expire?: number) {
