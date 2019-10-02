@@ -1,4 +1,4 @@
-import { Bot, Game } from '../game';
+import { Bot, Game, Table } from '../game';
 import { User } from '../storage';
 
 export class SimpleBot implements Bot {
@@ -8,16 +8,16 @@ export class SimpleBot implements Bot {
     public game: Game
   ) { }
 
-  public createTable(): number {
+  public createTable(): Table {
     return this.game.createTable(this.user);
   }
 
-  public joinTable(tableId: number): void {
-    return;
+  public joinTable(table: Table): void {
+    table.join(this.user);
   }
 
-  public playTable(tableId: number, deck: string[]): void {
-    return;
+  public playTable(table: Table, deck: string[]): void {
+    table.startPlay(this.user, deck);
   }
 
 }

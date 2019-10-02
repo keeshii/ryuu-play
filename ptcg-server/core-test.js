@@ -40,10 +40,10 @@ storage.connect()
       return deck;
     }
 
-    const tableId = bot1.createTable();
-    bot2.joinTable(tableId);
+    const table = bot1.createTable();
+    bot2.joinTable(table);
 
-    bot1.playTable(tableId, createSampleDeck());
-    bot2.playTable(tableId, createSampleDeck());
+    bot1.playTable(table, createSampleDeck());
+    bot2.playTable(table, createSampleDeck());
   })
   .then(() => storage.disconnect());

@@ -15,5 +15,8 @@ export const config = {
     username: 'root',
     password: '',
     database: 'ptcg'
+  },
+  core: {
+    debug: false
   }
 };
