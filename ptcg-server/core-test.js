@@ -1,7 +1,7 @@
 require('./config');
 
 const { Storage } = require('./dist/storage');
-const { BotManager, CardManager, Game } = require('./dist/game');
+const { BotManager, CardManager, Main } = require('./dist/game');
 const { SimpleBot } = require('./dist/simple-bot/main');
 const { config } = require('./dist/config');
 const process = require('process');
@@ -22,8 +22,8 @@ storage.connect()
     process.exit(1);
   })
   .then(() => {
-    const game = new Game();
-    return botManager.initBots(game);
+    const main = new Main();
+    return botManager.initBots(main);
   })
   .then(() => {
     const bot1 = botManager.getBot('bot1');
@@ -40,10 +40,10 @@ storage.connect()
       return deck;
     }
 
-    const table = bot1.createTable();
-    bot2.joinTable(table);
+    const table = bot1.createGame();
+    bot2.joinGame(table);
 
-    bot1.playTable(table, createSampleDeck());
-    bot2.playTable(table, createSampleDeck());
+    bot1.playGame(table, createSampleDeck());
+    bot2.playGame(table, createSampleDeck());
   })
   .then(() => storage.disconnect());

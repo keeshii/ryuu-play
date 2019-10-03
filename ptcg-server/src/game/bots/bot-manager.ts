@@ -1,8 +1,8 @@
 import { Bot } from './bot';
-import { Game } from '../core/game';
+import { Main } from '../core/main';
 import { User } from '../../storage';
 
-export type BotClass = new (user: User, game: Game) => Bot;
+export type BotClass = new (user: User, game: Main) => Bot;
 
 export class BotManager {
 
@@ -23,7 +23,7 @@ export class BotManager {
     this.botsQueue.push({name, botClass});
   }
 
-  public async initBots(game: Game) {
+  public async initBots(game: Main) {
     const bots: Bot[] = [];
     for (let i = 0; i < this.botsQueue.length; i++) {
       let item = this.botsQueue[i];

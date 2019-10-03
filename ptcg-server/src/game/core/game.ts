@@ -1,47 +1,42 @@
+import { AddPlayerAction } from '../store/actions/add-player-action';
 import { User } from '../../storage';
-import { Table } from './table';
 import { logger } from '../../utils';
+import { Store } from '../store/store';
 
 export class Game {
 
-  private tables: Table[] = [];
-  private users: User[] = [];
+  public users: User[] = [];
+  public store: Store = new Store();
 
-  constructor() { }
+  constructor(public id: number, public owner: User) {
+    this.users.push(owner);
+  }
 
-  public join(user: User) {
+  join(user: User): boolean {
+    if (this.users.indexOf(user) !== -1) {
+      return false;
+    }
+
+    logger.log(`User ${user.name} joined the table ${this.id}.`);
+
     this.users.push(user);
+    return true;
   }
 
-  public createTable(user: User): Table {
-    const table = new Table(this.generateTableId(), user);
-
-    logger.log(`User ${user.name} created the table ${table.id}.`);
-
-    this.tables.push(table);
-    return table;
-  }
-
-  public getTable(tableId: number): Table | undefined {
-    return this.tables.find(table => table.id === tableId);
-  }
-
-  private generateTableId(): number {
-    if (this.tables.length === 0) {
-      return 1;
+  leave(user: User): boolean {
+    const index = this.users.indexOf(user);
+    if (index === -1) {
+      return false;
     }
+    this.users.splice(index, 1);
+    return true;
+  }
 
-    const table = this.tables[this.tables.length - 1];
-    let id = table.id + 1;
+  play(user: User, deck: string[]) {
+    logger.log(`User ${user.name} starts playing at table ${this.id}.`);
 
-    while (this.getTable(id)) {
-      if (id === Number.MAX_VALUE) {
-        id = 0;
-      }
-      id = id + 1;
-    }
-
-    return id;
+    const action = new AddPlayerAction(deck);
+    this.store.dispatch(action);
   }
 
 }
