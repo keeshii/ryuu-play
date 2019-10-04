@@ -1,7 +1,23 @@
-export interface Prompt<T> {
+export abstract class Prompt<T> {
 
-  readonly type: string;
+  readonly abstract type: string;
+  public promise: Promise<T>;
+  private resolveFn: (value: T) => any = () => {};
+  private rejectFn: (reason: string) => any = () => {};
 
-  promise: Promise<T>;
+  constructor() {
+    this.promise = new Promise<T>((resolve, reject) => {
+      this.resolveFn = resolve;
+      this.rejectFn = reject;
+    });
+  }
+
+  resolve(value: T) {
+    this.resolveFn(value);
+  }
+
+  reject(reason: string) {
+    this.rejectFn(reason);
+  }
 
 }

@@ -1,25 +1,45 @@
 import { User } from '../../storage';
 import { Game } from './game';
+import { MainEvent, MainHandler } from './events/main-events';
+import { Subscription } from './subscription';
 import { logger } from '../../utils';
+import * as events from './events/main-events';
 
 export class Main {
 
   private games: Game[] = [];
-  private users: User[] = [];
+  private subscriptions: Subscription<MainHandler>[] = [];
 
   constructor() { }
 
-  public join(user: User) {
-    this.users.push(user);
+  public join(user: User, handler: MainHandler): void {
+    this.dispatch(new events.MainJoinEvent(user));
+    this.subscriptions.push({user, handler});
+  }
+
+  public disconnect(user: User): void {
+    const index = this.subscriptions.findIndex(s => s.user === user);
+    if (index === -1) {
+      return;
+    }
+    this.subscriptions.splice(index, 1);
+    this.dispatch(new events.MainDisconnectEvent(user));
+  }
+
+  private dispatch(event: MainEvent): void {
+    for (let i = 0; i < this.subscriptions.length; i++) {
+      this.subscriptions[i].handler.handleEvent(event);
+    }
   }
 
   public createGame(user: User): Game {
-    const table = new Game(this.generateGameId(), user);
+    const game = new Game(this.generateGameId(), user);
 
-    logger.log(`User ${user.name} created the table ${table.id}.`);
+    logger.log(`User ${user.name} created the game ${game.id}.`);
 
-    this.games.push(table);
-    return table;
+    this.games.push(game);
+    this.dispatch(new events.MainCreateGameEvent(game.id));
+    return game;
   }
 
   public getGame(tableId: number): Game | undefined {
