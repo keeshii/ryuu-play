@@ -17,7 +17,7 @@ describe('Game', () => {
     user = new User();
     user.id = 1;
     user.name = 'test';
-    
+
     mainHandler = {
       onConnect: (user: User) => {},
       onDisconnect: (user: User) => {},
@@ -51,6 +51,19 @@ describe('Game', () => {
     const game2 = connection.createGame(gameHandler);
     // then
     expect(game.id).not.toEqual(game2.id);
+  });
+
+  it('Should remove game when no connections', () => {
+    // given
+    const connection = main.connect(user, mainHandler);
+    // when
+    const game = connection.createGame(gameHandler);
+    const gameRef = connection.getGame(game.id);
+    game.leave();
+    const gameRef2 = connection.getGame(game.id);
+    // then
+    expect(gameRef).toBeDefined();
+    expect(gameRef2).not.toBeDefined();
   });
 
 });

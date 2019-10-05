@@ -50,7 +50,16 @@ export class Main {
   }
 
   private createGame(user: User, handler: GameHandler): GameConnection {
-    const game = new Game(this.generateGameId());
+    const id = this.generateGameId();
+    
+    const gameCleaner = {
+      onJoin: () => {},
+      onLeave: () => this.removeEmptyGame(id),
+      onStateChange: () => {},
+      resolvePrompt: () => false
+    };
+
+    const game = new Game(this.generateGameId(), gameCleaner);
 
     logger.log(`User ${user.name} created the game ${game.id}.`);
 
@@ -65,6 +74,18 @@ export class Main {
       return undefined;
     }
     return game.createGameRef(user);
+  }
+
+  private removeEmptyGame(gameId: number) {
+    const index = this.games.findIndex(g => g.id === gameId);
+    if (index === -1) {
+      return;
+    }
+    const game = this.games[index];
+    if (game.getConnectionsCount() > 0) {
+      return;
+    }
+    this.games.splice(index, 1);
   }
 
   private generateGameId(): number {

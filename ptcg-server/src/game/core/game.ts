@@ -33,7 +33,7 @@ export class Game implements StoreHandler {
   public store: Store = new Store();
   private connections: GameConnection[] = [];
 
-  constructor(public id: number) { }
+  constructor(public id: number, private parent: GameHandler) { }
 
   public createGameRef(user: User): GameRef {
     return {
@@ -62,39 +62,47 @@ export class Game implements StoreHandler {
     };
 
     this.connections.forEach(c => c.handler.onJoin(user));
+    this.parent.onJoin(user);
     this.connections.push(connection);
     return connection;
   }
 
-  leave(user: User): boolean {
+  private leave(user: User): boolean {
     let index = this.connections.findIndex(c => c.user === user);
     if (index === -1) {
       return false;
     }
     this.connections.splice(index, 1);
     this.connections.forEach(c => c.handler.onLeave(user));
+    this.parent.onLeave(user);
     return true;
   }
 
-  play(user: User, deck: string[]) {
+  private play(user: User, deck: string[]) {
     logger.log(`User ${user.name} starts playing at table ${this.id}.`);
 
     const action = new AddPlayerAction(deck);
     this.store.dispatch(action);
   }
 
-  dispatch(user: User, action: Action) {
+  private dispatch(user: User, action: Action) {
     this.store.dispatch(action);
   }
 
-  onStateChange(state: State) {
+  public getConnectionsCount(): number {
+    return this.connections.length;
+  }
+
+  public onStateChange(state: State) {
+    this.parent.onStateChange(state);
+
     for (let i = 0; i < this.connections.length; i++) {
       // TODO: hide not public / secret data
       this.connections[i].handler.onStateChange(state);
     }
   }
 
-  resolvePrompt(prompt: Prompt<any>): boolean {
+  public resolvePrompt(prompt: Prompt<any>): boolean {
     prompt.resolve(true);
     return true;
   }
