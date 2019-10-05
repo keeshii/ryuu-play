@@ -1,49 +1,70 @@
 import { User } from '../../storage';
-import { Game } from './game';
-import { MainEvent, MainHandler } from './events/main-events';
-import { Subscription } from './subscription';
+import { Game, GameConnection, GameHandler, GameRef } from './game';
 import { logger } from '../../utils';
-import * as events from './events/main-events';
+
+export interface MainHandler {
+  onConnect(user: User): void;
+  onDisconnect(user: User): void;
+  onGameAdd(game: Game): void;
+  onGameDelete(game: Game): void;
+  onGameStatus(game: Game): void;
+}
+
+export interface MainConnection {
+  user: User;
+  handler: MainHandler;
+  createGame(handler: GameHandler): GameConnection;
+  getGame(gameId: number): GameRef | undefined;
+  disconnect(): void;
+}
 
 export class Main {
 
   private games: Game[] = [];
-  private subscriptions: Subscription<MainHandler>[] = [];
+  private connections: MainConnection[] = [];
 
   constructor() { }
 
-  public join(user: User, handler: MainHandler): void {
-    this.dispatch(new events.MainJoinEvent(user));
-    this.subscriptions.push({user, handler});
+  public connect(user: User, handler: MainHandler): MainConnection {
+
+    const connection: MainConnection = {
+      user: user,
+      handler: handler,
+      createGame: (handler: GameHandler) => this.createGame(user, handler),
+      getGame: (gameId: number) => this.getGame(user, gameId),
+      disconnect: () => this.disconnect(user)
+    };
+
+    this.connections.forEach(c => c.handler.onConnect(user));
+    this.connections.push(connection);
+    return connection;
   }
 
-  public disconnect(user: User): void {
-    const index = this.subscriptions.findIndex(s => s.user === user);
+  private disconnect(user: User): void {
+    const index = this.connections.findIndex(c => c.user === user);
     if (index === -1) {
       return;
     }
-    this.subscriptions.splice(index, 1);
-    this.dispatch(new events.MainDisconnectEvent(user));
+    this.connections.forEach(c => c.handler.onDisconnect(user));
+    this.connections.splice(index, 1);
   }
 
-  private dispatch(event: MainEvent): void {
-    for (let i = 0; i < this.subscriptions.length; i++) {
-      this.subscriptions[i].handler.handleEvent(event);
-    }
-  }
-
-  public createGame(user: User): Game {
-    const game = new Game(this.generateGameId(), user);
+  private createGame(user: User, handler: GameHandler): GameConnection {
+    const game = new Game(this.generateGameId());
 
     logger.log(`User ${user.name} created the game ${game.id}.`);
 
     this.games.push(game);
-    this.dispatch(new events.MainCreateGameEvent(game.id));
-    return game;
+    this.connections.forEach(c => c.handler.onGameAdd(game));
+    return game.createGameRef(user).join(handler);
   }
 
-  public getGame(tableId: number): Game | undefined {
-    return this.games.find(table => table.id === tableId);
+  private getGame(user: User, gameId: number): GameRef | undefined {
+    const game = this.games.find(g => g.id === gameId);
+    if (game === undefined) {
+      return undefined;
+    }
+    return game.createGameRef(user);
   }
 
   private generateGameId(): number {
@@ -54,7 +75,7 @@ export class Main {
     const table = this.games[this.games.length - 1];
     let id = table.id + 1;
 
-    while (this.getGame(id)) {
+    while (this.games.find(g => g.id === id)) {
       if (id === Number.MAX_VALUE) {
         id = 0;
       }

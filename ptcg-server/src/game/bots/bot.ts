@@ -1,11 +1,11 @@
 import { Main } from '../core/main';
-import { Game } from '../core/game';
+import { GameConnection } from '../core/game';
 import { User } from '../../storage';
 
 export interface Bot {
   user: User;
   main: Main;
-  createGame(): Game;
-  joinGame(table: Game): void;
-  playGame(table: Game, deck: string[]): void;
+  createGame(): GameConnection;
+  joinGame(gameId: number): GameConnection;
+  playGame(game: GameConnection, deck: string[]): void;
 }

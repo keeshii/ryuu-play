@@ -1,33 +1,56 @@
-import { Main } from './main';
+import { Main, MainHandler } from './main';
+import { Game, GameHandler } from './game';
+import { Prompt } from '../store/promts/prompt';
+import { State } from '../store/state/state';
 import { User } from '../../storage';
 
 describe('Game', () => {
 
-  let game: Main;
+  let main: Main;
   let user: User;
+  let mainHandler: MainHandler;
+  let gameHandler: GameHandler;
 
   beforeEach(() => {
-    game = new Main();
+    main = new Main();
 
     user = new User();
     user.id = 1;
     user.name = 'test';
+    
+    mainHandler = {
+      onConnect: (user: User) => {},
+      onDisconnect: (user: User) => {},
+      onGameAdd: (game: Game) => {},
+      onGameDelete: (game: Game) => {},
+      onGameStatus: (game: Game) => {}
+    }
+    gameHandler = {
+      onJoin: (user: User) => {},
+      onLeave: (user: User) => {},
+      onStateChange: (state: State) => {},
+      resolvePrompt: (prompt: Prompt<any>) => false
+    }
   });
 
   it('Should create table', () => {
+    // given
+    const connection = main.connect(user, mainHandler);
     // when
-    const table = game.createGame(user);
+    const game = connection.createGame(gameHandler);
     // then
-    expect(table).toBeDefined();
-    expect(table.owner).toBe(user);
+    expect(game).toBeDefined();
+    expect(game.id).toBeGreaterThan(0);
   });
 
   it('Should assign new different id to tables', () => {
+    // given
+    const connection = main.connect(user, mainHandler);
     // when
-    const table = game.createGame(user);
-    const table2 = game.createGame(user);
+    const game = connection.createGame(gameHandler);
+    const game2 = connection.createGame(gameHandler);
     // then
-    expect(table.id).not.toEqual(table2.id);
+    expect(game.id).not.toEqual(game2.id);
   });
 
 });

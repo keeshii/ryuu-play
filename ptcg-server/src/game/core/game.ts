@@ -7,35 +7,72 @@ import { StoreHandler } from '../store/store-handler';
 import { User } from '../../storage';
 import { logger } from '../../utils';
 
+
+export interface GameHandler extends StoreHandler {
+  onJoin(user: User): void;
+  onLeave(user: User): void;
+}
+
+export interface GameConnection {
+  id: number,
+  user: User;
+  handler: GameHandler;
+  leave(): void;
+  play(deck: string[]): void;
+  dispatch(acton: Action): void;
+}
+
+export interface GameRef {
+  id: number;
+  user: User;
+  join(handler: GameHandler): GameConnection;
+}
+
 export class Game implements StoreHandler {
 
-  public users: User[] = [];
   public store: Store = new Store();
-  public handlers: {[name: string]: StoreHandler} = {};
+  private connections: GameConnection[] = [];
 
-  constructor(public id: number, public owner: User) {
-    this.users.push(owner);
+  constructor(public id: number) { }
+
+  public createGameRef(user: User): GameRef {
+    return {
+      id: this.id,
+      user: user,
+      join: (handler: GameHandler) => this.join(user, handler)
+    };
   }
 
-  join(user: User, storeHandler: StoreHandler): boolean {
-    if (this.users.indexOf(user) !== -1) {
-      return false;
+  private join(user: User, handler: GameHandler): GameConnection {
+    let connection = this.connections.find(c => c.user === user);
+
+    if (connection !== undefined) {
+      return connection;
     }
 
     logger.log(`User ${user.name} joined the table ${this.id}.`);
 
-    this.users.push(user);
-    this.handlers[user.name] = storeHandler;
-    return true;
+    connection = {
+      id: this.id,
+      user: user,
+      handler: handler,
+      leave: () => this.leave(user),
+      play: (deck: string[]) => this.play(user, deck),
+      dispatch: (action: Action) => this.dispatch(user, action)
+    };
+
+    this.connections.forEach(c => c.handler.onJoin(user));
+    this.connections.push(connection);
+    return connection;
   }
 
   leave(user: User): boolean {
-    const index = this.users.indexOf(user);
+    let index = this.connections.findIndex(c => c.user === user);
     if (index === -1) {
       return false;
     }
-    this.users.splice(index, 1);
-    delete this.handlers[user.name];
+    this.connections.splice(index, 1);
+    this.connections.forEach(c => c.handler.onLeave(user));
     return true;
   }
 
@@ -46,14 +83,14 @@ export class Game implements StoreHandler {
     this.store.dispatch(action);
   }
 
-  dispatch(action: Action) {
+  dispatch(user: User, action: Action) {
     this.store.dispatch(action);
   }
 
   onStateChange(state: State) {
-    for (let i = 0; i < this.users.length; i++) {
+    for (let i = 0; i < this.connections.length; i++) {
       // TODO: hide not public / secret data
-      this.handlers[this.users[i].name].onStateChange(state);
+      this.connections[i].handler.onStateChange(state);
     }
   }
 
