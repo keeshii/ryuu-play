@@ -1,22 +1,61 @@
 import { Action } from "./actions/action";
 import { Prompt } from "./promts/prompt";
 import { State } from "./state/state";
-import {StoreHandler} from "./store-handler";
+import { StoreHandler } from "./store-handler";
+import { StoreLike } from "./store-like";
 
-export class Store {
+import { initReducer } from './reducers/init-reducer';
+
+export class Store implements StoreLike {
 
   public state: State = new State();
-  
+
   public actions: Action[] = [];
 
-  public dispatch(action: Action) { }
+  private prompt: Prompt<any> | undefined;
 
-  public resolve<T>(prompt: Prompt<T>): Promise<T> { return prompt.promise; }
+  constructor(private handler: StoreHandler) { };
 
-  public reduce(): void { }
+  public async dispatch(action: Action) {
+    this.actions.push(action);
 
-  public subscribe(handler: StoreHandler): void { }
+    if (this.prompt !== undefined) {
+      await this.prompt.promise;
+    }
 
-  public unsubscribe(handler: StoreHandler): void { }
+    while (this.actions.length > 0) {
+      this.reduce();
+
+      if (this.prompt !== undefined) {
+        await this.prompt.promise;
+      }
+    }
+  }
+
+  public resolve<T>(prompt: Prompt<T>): Promise<T> {
+    this.prompt = prompt;
+
+    prompt.promise
+      .catch(() => {})
+      .then(() => { this.prompt = undefined });
+
+    this.handler.resolvePrompt(prompt);
+
+    return prompt.promise;
+  }
+
+  public reduce(): void {
+    const action = this.actions.shift();
+    
+    if (action === undefined) {
+      return;
+    }
+
+    initReducer(this, this.state, action);
+  }
+
+  public notify(): void {
+    this.handler.onStateChange(this.state);
+  }
 
 }

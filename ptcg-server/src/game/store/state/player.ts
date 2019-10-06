@@ -2,6 +2,8 @@ import {CardList} from "./card-list";
 
 export class Player {
 
+  name: string = '';
+
   deck: CardList = new CardList();
 
   hand: CardList = new CardList();

@@ -9,6 +9,10 @@ export class Card {
 
   public superType: SuperType = SuperType.NONE;
 
-  public name: string = '';
+  public name: string;
+
+  constructor(name: string) {
+    this.name = name;
+  }
 
 }

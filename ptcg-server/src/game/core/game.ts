@@ -6,6 +6,7 @@ import { State } from '../store/state/state';
 import { StoreHandler } from '../store/store-handler';
 import { User } from '../../storage';
 import { logger } from '../../utils';
+import {ShufflePrompt} from '../store/promts/shuffle-prompt';
 
 
 export interface GameHandler extends StoreHandler {
@@ -30,7 +31,7 @@ export interface GameRef {
 
 export class Game implements StoreHandler {
 
-  public store: Store = new Store();
+  public store: Store = new Store(this);
   private connections: GameConnection[] = [];
 
   constructor(public id: number, private parent: GameHandler) { }
@@ -81,11 +82,12 @@ export class Game implements StoreHandler {
   private play(user: User, deck: string[]) {
     logger.log(`User ${user.name} starts playing at table ${this.id}.`);
 
-    const action = new AddPlayerAction(deck);
+    const action = new AddPlayerAction(user.name, deck);
     this.store.dispatch(action);
   }
 
   private dispatch(user: User, action: Action) {
+    logger.log(`User ${user.name} dispatches the action ${action.type}.`);
     this.store.dispatch(action);
   }
 
@@ -94,6 +96,8 @@ export class Game implements StoreHandler {
   }
 
   public onStateChange(state: State) {
+    logger.log('State changed: ' + JSON.stringify(state));
+
     this.parent.onStateChange(state);
 
     for (let i = 0; i < this.connections.length; i++) {
@@ -103,8 +107,14 @@ export class Game implements StoreHandler {
   }
 
   public resolvePrompt(prompt: Prompt<any>): boolean {
-    prompt.resolve(true);
-    return true;
+    
+    if (prompt instanceof ShufflePrompt) {
+      logger.log('Deck shuffled');
+      prompt.resolve(prompt.cards);
+      return true;
+    }
+
+    return false;
   }
 
 }
