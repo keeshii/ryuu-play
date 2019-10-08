@@ -1,5 +1,5 @@
 import { Action } from "./actions/action";
-import { Prompt } from "./promts/prompt";
+import { Prompt } from "./prompts/prompt";
 
 export interface StoreLike {
   notify(): void;

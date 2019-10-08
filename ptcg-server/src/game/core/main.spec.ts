@@ -1,6 +1,6 @@
 import { Main, MainHandler } from './main';
 import { Game, GameHandler } from './game';
-import { Prompt } from '../store/promts/prompt';
+import { Prompt } from '../store/prompts/prompt';
 import { State } from '../store/state/state';
 import { User } from '../../storage';
 

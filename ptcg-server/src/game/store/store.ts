@@ -1,10 +1,10 @@
 import { Action } from "./actions/action";
-import { Prompt } from "./promts/prompt";
+import { Prompt } from "./prompts/prompt";
 import { State } from "./state/state";
 import { StoreHandler } from "./store-handler";
 import { StoreLike } from "./store-like";
 
-import { initReducer } from './reducers/init-reducer';
+import { setupPhaseReducer } from './reducers/setup-reducer';
 
 export class Store implements StoreLike {
 
@@ -51,7 +51,7 @@ export class Store implements StoreLike {
       return;
     }
 
-    initReducer(this, this.state, action);
+    setupPhaseReducer(this, this.state, action);
   }
 
   public notify(): void {

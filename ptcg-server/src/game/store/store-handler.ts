@@ -1,4 +1,4 @@
-import { Prompt } from "./promts/prompt";
+import { Prompt } from "./prompts/prompt";
 import { State } from "./state/state";
 
 export interface StoreHandler {

@@ -1,12 +1,12 @@
 import { AddPlayerAction } from '../store/actions/add-player-action';
 import { Action } from '../store/actions/action';
-import { Prompt } from '../store/promts/prompt';
+import { Arbiter } from './arbiter';
+import { Prompt } from '../store/prompts/prompt';
 import { Store } from '../store/store';
 import { State } from '../store/state/state';
 import { StoreHandler } from '../store/store-handler';
 import { User } from '../../storage';
 import { logger } from '../../utils';
-import {ShufflePrompt} from '../store/promts/shuffle-prompt';
 
 
 export interface GameHandler extends StoreHandler {
@@ -33,6 +33,7 @@ export class Game implements StoreHandler {
 
   public store: Store = new Store(this);
   private connections: GameConnection[] = [];
+  private arbiter = new Arbiter();
 
   constructor(public id: number, private parent: GameHandler) { }
 
@@ -107,14 +108,10 @@ export class Game implements StoreHandler {
   }
 
   public resolvePrompt(prompt: Prompt<any>): boolean {
-    
-    if (prompt instanceof ShufflePrompt) {
-      logger.log('Deck shuffled');
-      prompt.resolve(prompt.cards);
-      return true;
-    }
 
-    return false;
+    const resolved = this.arbiter.resolvePrompt(prompt);
+
+    return resolved;
   }
 
 }

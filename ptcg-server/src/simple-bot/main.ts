@@ -1,5 +1,5 @@
-import { Bot, Main, MainConnection, MainHandler, Game, GameConnection, GameHandler } from '../game';
-import { Prompt } from '../game/store/promts/prompt';
+import { Bot, Main, MainConnection, MainHandler, Game, GameConnection,
+  GameHandler, Prompt } from '../game';
 import { State } from '../game/store/state/state';
 import { User } from '../storage';
 
