@@ -16,6 +16,8 @@ export class SimpleGameHandler implements GameHandler {
 
   public onLeave(user: User): void { }
 
+  public onStateStable(state: State): void { }
+
   public onStateChange(state: State): void {
     for (let i = 0; i < state.players.length; i++) {
       if (state.players[i].name === this.name) {

@@ -53,8 +53,9 @@ export class Main {
     const game: Game = new Game(this.generateGameId(), {
       onJoin: () => {},
       onLeave: () => this.clearEmptyGame(game),
+      onStateStable: () => {},
       onStateChange: () => {},
-      resolvePrompt: () => false
+      resolvePrompt: () => false,
     });
 
     logger.log(`User ${user.name} created the game ${game.id}.`);

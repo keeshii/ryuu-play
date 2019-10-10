@@ -10,8 +10,9 @@ export class Store implements StoreLike {
 
   public state: State = new State();
   public actions: Action[] = [];
-  private prompt: Prompt<any> | undefined;
+  private prompts: Prompt<any>[] = [];
   private serializedState: string;
+  private reduceInProgress: boolean = false;
 
   constructor(private handler: StoreHandler) {
     this.serializedState = this.serializeState(this.state);
@@ -20,41 +21,54 @@ export class Store implements StoreLike {
   public async dispatch(action: Action) {
     this.actions.push(action);
 
-    if (this.prompt !== undefined) {
-      await this.prompt.promise;
+    if (this.prompts.length > 0 || this.reduceInProgress) {
+      return; // action added to queue, will be processed later
     }
+
+    this.reduceInProgress = true;
 
     while (this.actions.length > 0) {
-      this.reduce();
+      await this.reduce();
 
-      if (this.prompt !== undefined) {
-        await this.prompt.promise;
+      if (this.prompts.length > 0) {
+        await this.waitForPrompts();
       }
     }
+
+    this.reduceInProgress = false;
+    this.notify();
   }
 
   public resolve<T>(prompt: Prompt<T>): Promise<T> {
-    this.prompt = prompt;
+    this.prompts.push(prompt);
 
     prompt.promise
       .catch(() => {})
-      .then(() => { this.prompt = undefined });
+      .then(() => { 
+        const index = this.prompts.indexOf(prompt);
+        if (index !== -1) {
+          this.prompts.splice(index, 1);
+        }
+        this.notify();
+      });
 
-    this.notify();
     this.handler.resolvePrompt(prompt);
 
     return prompt.promise;
   }
 
-  public reduce(): void {
+  public async reduce(): Promise<void> {
     const action = this.actions.shift();
     
     if (action === undefined) {
       return;
     }
 
-    setupPhaseReducer(this, this.state, action);
-    this.notify();
+    await setupPhaseReducer(this, this.state, action);
+  }
+
+  private async waitForPrompts(): Promise<any[]> {
+    return Promise.all(this.prompts.map(prompt => prompt.promise));
   }
 
   private notify(): void {
@@ -62,6 +76,9 @@ export class Store implements StoreLike {
     if (serialized !== this.serializedState) {
       this.serializedState = serialized;
       this.handler.onStateChange(this.state);
+    }
+    if (this.prompts.length === 0 && !this.reduceInProgress) {
+      this.handler.onStateStable(this.state);
     }
   }
 

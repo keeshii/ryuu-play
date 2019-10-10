@@ -28,6 +28,7 @@ describe('Game', () => {
     gameHandler = {
       onJoin: (user: User) => {},
       onLeave: (user: User) => {},
+      onStateStable: (state: State) => {},
       onStateChange: (state: State) => {},
       resolvePrompt: (prompt: Prompt<any>) => false
     }

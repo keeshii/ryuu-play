@@ -2,7 +2,9 @@ import { Action } from "../actions/action";
 import { AddPlayerAction } from "../actions/add-player-action";
 import { AlertPrompt } from "../prompts/alert-prompt";
 import { CardList } from "../state/card-list";
+import { CoinFlipPrompt } from "../prompts/coin-flip-prompt";
 import { ConfirmPrompt } from "../prompts/confirm-prompt";
+import { ChooseCardsPrompt } from "../prompts/choose-cards-prompt";
 import { Player } from "../state/player";
 import { ShuffleDeckPrompt } from "../prompts/shuffle-prompt";
 import { State, GamePhase } from "../state/state";
@@ -10,8 +12,6 @@ import { StoreError } from "../store-error";
 import { StoreLike } from "../store-like";
 import { StoreMessage } from "../store-messages";
 import { SuperType, Stage, Card } from "../state/card";
-import {ChooseCardsPrompt} from "../prompts/choose-cards-prompt";
-import {CoinFlipPrompt} from "../prompts/coin-flip-prompt";
 
 async function alertAndConfirm(store: StoreLike, confirmPlayer: Player, alertPlayer: Player): Promise<boolean> {
   const results = await Promise.all([
@@ -105,7 +105,7 @@ export async function setupPhaseReducer(store: StoreLike, state: State, action: 
 
       if (state.players.length === 2) {
         state.phase = GamePhase.SETUP;
-        setupGame(store, state);
+        await setupGame(store, state);
       }
 
     }

@@ -96,6 +96,15 @@ export class Game implements StoreHandler {
     return this.connections.length;
   }
 
+  public onStateStable(state: State) {
+    this.parent.onStateStable(state);
+
+    for (let i = 0; i < this.connections.length; i++) {
+      // TODO: hide not public / secret data
+      this.connections[i].handler.onStateStable(state);
+    }
+  }
+
   public onStateChange(state: State) {
     this.parent.onStateChange(state);
 
