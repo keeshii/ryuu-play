@@ -1,4 +1,5 @@
 import { CardList } from '../store/state/card-list';
+import { CoinFlipPrompt } from '../store/prompts/coin-flip-prompt';
 import { Prompt } from '../store/prompts/prompt';
 import { ShuffleDeckPrompt } from '../store/prompts/shuffle-prompt';
 import { logger } from '../../utils';
@@ -14,6 +15,13 @@ export class Arbiter {
       logger.log(`Arbiter shuffles deck from player ${prompt.player.name}.`);
       const order = this.shuffle(prompt.player.deck);
       prompt.resolve(order);
+      return true;
+    }
+    
+    if (prompt instanceof CoinFlipPrompt) {
+      const result = Math.round(Math.random()) === 0;
+      logger.log(`Arbiter flips coin for player ${prompt.player.name} and result is ${result ? 'HEAD' : 'TAILS'}.`);
+      prompt.resolve(result);
       return true;
     }
 

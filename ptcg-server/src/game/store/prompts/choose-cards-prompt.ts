@@ -10,18 +10,27 @@ export interface ChooseCardsOptions {
   allowCancel: boolean;
 }
 
-export class ChooseCardsPrompt extends Prompt<boolean> {
+export class ChooseCardsPrompt extends Prompt<Card[]> {
 
   readonly type: string = 'Choose cards'
+  
+  public options: ChooseCardsOptions;
 
   constructor(
     player: Player,
     public message: StoreMessage,
     public cards: CardList,
     public filter: Partial<Card>,
-    public options: ChooseCardsOptions
+    options?: Partial<ChooseCardsOptions>
   ) {
     super(player);
+
+    // Default options
+    this.options = Object.assign({}, {
+      min: 0,
+      max: cards.cards.length,
+      allowCancel: true
+    }, options);
   }
 
 }

@@ -1,4 +1,5 @@
 import { AlertPrompt, ConfirmPrompt, GameHandler, Player, Prompt, State } from '../game';
+import { ChooseCardsPrompt } from '../game/store/prompts/choose-cards-prompt';
 import { StoreMessage } from '../game/store/store-messages';
 import { User } from '../storage';
 
@@ -35,6 +36,15 @@ export class SimpleGameHandler implements GameHandler {
       } else {
         prompt.resolve(false);
       }
+      return true;
+    }
+
+    if (prompt instanceof ChooseCardsPrompt) {
+      const cards = prompt.cards.filter(prompt.filter);
+      if (cards.length > prompt.options.max) {
+        cards.length = prompt.options.max;
+      }
+      prompt.resolve(cards);
       return true;
     }
 

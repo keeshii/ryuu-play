@@ -9,8 +9,9 @@ import { State, GamePhase } from "../state/state";
 import { StoreError } from "../store-error";
 import { StoreLike } from "../store-like";
 import { StoreMessage } from "../store-messages";
-import { SuperType, Stage } from "../state/card";
+import { SuperType, Stage, Card } from "../state/card";
 import {ChooseCardsPrompt} from "../prompts/choose-cards-prompt";
+import {CoinFlipPrompt} from "../prompts/coin-flip-prompt";
 
 async function alertAndConfirm(store: StoreLike, confirmPlayer: Player, alertPlayer: Player): Promise<boolean> {
   const results = await Promise.all([
@@ -18,6 +19,16 @@ async function alertAndConfirm(store: StoreLike, confirmPlayer: Player, alertPla
     store.resolve(new AlertPrompt(alertPlayer, StoreMessage.SETUP_PLAYER_NO_BASIC))
   ]);
   return results[0];
+}
+
+function putStartingPokemons(player: Player, cards: Card[]): void {
+  if (cards.length === 0) {
+    return;
+  }
+  player.hand.moveCardTo(cards[0], player.active);
+  for (let i = 0; i < cards.length; i++) {
+    player.hand.moveCardTo(cards[i], player.bench[i - 1]);
+  }
 }
 
 async function setupGame(store: StoreLike, state: State) {
@@ -66,7 +77,14 @@ async function setupGame(store: StoreLike, state: State) {
       opponent.deck, basicPokemon, chooseCardsOptions)),
   ]);
 
-  console.log(choice);
+  putStartingPokemons(player, choice[0]);
+  putStartingPokemons(opponent, choice[1]);
+
+  const whoBegins = await store.resolve(new CoinFlipPrompt(player, StoreMessage.SETUP_WHO_BEGINS_FLIP));
+
+  state.turn = 1;
+  state.activePlayer = whoBegins ? 0 : 1;
+  state.phase = GamePhase.PLAYER_TURN;
 }
 
 

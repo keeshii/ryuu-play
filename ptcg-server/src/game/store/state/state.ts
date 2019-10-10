@@ -12,7 +12,9 @@ export class State {
   public phase: GamePhase = GamePhase.WAITING_FOR_PLAYERS;
 
   public turn = 0;
-  
+
+  public activePlayer: number = 0;
+
   public players: Player[] = [];
 
   public benchSize: number = 6;
