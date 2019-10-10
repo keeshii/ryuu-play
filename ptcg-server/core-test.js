@@ -3,12 +3,12 @@ require('./config');
 const { Storage } = require('./dist/storage');
 const { BotManager, CardManager, Main } = require('./dist/game');
 const { SimpleBot } = require('./dist/simple-bot/main');
+const { basicSet } = require('./dist/sets/basic-set/basic-set');
 const { config } = require('./dist/config');
 const process = require('process');
 
 const cardManager = CardManager.getInstance();
-cardManager.defineCard('Water Energy');
-cardManager.defineCard('Buizel GE');
+cardManager.defineSet(basicSet);
 
 const botManager = BotManager.getInstance();
 botManager.registerBot('bot1', SimpleBot);

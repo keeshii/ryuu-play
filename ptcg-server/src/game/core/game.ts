@@ -97,8 +97,6 @@ export class Game implements StoreHandler {
   }
 
   public onStateChange(state: State) {
-    logger.log('State changed: ' + JSON.stringify(state));
-
     this.parent.onStateChange(state);
 
     for (let i = 0; i < this.connections.length; i++) {
@@ -110,6 +108,15 @@ export class Game implements StoreHandler {
   public resolvePrompt(prompt: Prompt<any>): boolean {
 
     const resolved = this.arbiter.resolvePrompt(prompt);
+
+    if (resolved === false) {
+      const connection = this.connections.find(c => c.user.name === prompt.player.name);
+      if (connection === undefined) {
+        // user disconnected, opponent wins
+        return false;
+      }
+      return connection.handler.resolvePrompt(prompt);
+    }
 
     return resolved;
   }

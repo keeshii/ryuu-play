@@ -2,9 +2,9 @@ import { Player } from "../state/player";
 import { Prompt } from "./prompt";
 import { StoreMessage } from "../store-messages";
 
-export class AlertPrompt extends Prompt<void> {
+export class CoinFlipPrompt extends Prompt<boolean> {
 
-  readonly type: string = 'Alert'
+  readonly type: string = 'Coin flip'
 
   constructor(player: Player, public message: StoreMessage) {
     super(player);

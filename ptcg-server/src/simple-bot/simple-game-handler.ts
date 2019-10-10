@@ -1,13 +1,14 @@
-import { AlertPrompt, ConfirmPrompt, GameHandler, Player, Prompt, State, GamePhase } from '../game';
+import { AlertPrompt, ConfirmPrompt, GameHandler, Player, Prompt, State } from '../game';
+import { StoreMessage } from '../game/store/store-messages';
 import { User } from '../storage';
 
 export class SimpleGameHandler implements GameHandler {
 
-  private state: State;
+  // private state: State;
   private player: Player = new Player();
 
   constructor(private name: string) {
-    this.state = new State();
+    // this.state = new State();
   }
 
   public onJoin(user: User): void { }
@@ -23,14 +24,13 @@ export class SimpleGameHandler implements GameHandler {
   }
 
   public resolvePrompt(prompt: Prompt<any>): boolean {
-
     if (prompt instanceof AlertPrompt) {
       prompt.resolve(void 0);
       return true;
     }
 
     if (prompt instanceof ConfirmPrompt) {
-      if (this.state.phase === GamePhase.SETUP) {
+      if (prompt.message === StoreMessage.SETUP_OPPONENT_NO_BASIC) {
         prompt.resolve(this.player.hand.cards.length < 15);
       } else {
         prompt.resolve(false);

@@ -1,9 +1,8 @@
-import { Bot, Main, MainConnection, MainHandler, Game, GameConnection,
-  GameHandler, Prompt } from '../game';
-import { State } from '../game/store/state/state';
+import { Bot, Main, MainConnection, MainHandler, Game, GameConnection } from '../game';
 import { User } from '../storage';
+import { SimpleGameHandler } from './simple-game-handler';
 
-export class SimpleBot implements Bot, GameHandler, MainHandler {
+export class SimpleBot implements Bot, MainHandler {
 
   private connection: MainConnection;
 
@@ -15,7 +14,8 @@ export class SimpleBot implements Bot, GameHandler, MainHandler {
   }
 
   public createGame(): GameConnection {
-    return this.connection.createGame(this);
+    const gameHandler = new SimpleGameHandler(this.user.name);
+    return this.connection.createGame(gameHandler);
   }
 
   public joinGame(gameId: number): GameConnection {
@@ -23,7 +23,8 @@ export class SimpleBot implements Bot, GameHandler, MainHandler {
     if (gameRef === undefined) {
       throw new Error('Invalid game id');
     }
-    return gameRef.join(this);
+    const gameHandler = new SimpleGameHandler(this.user.name);
+    return gameRef.join(gameHandler);
   }
 
   public playGame(game: GameConnection, deck: string[]): void {
@@ -39,15 +40,5 @@ export class SimpleBot implements Bot, GameHandler, MainHandler {
   public onGameDelete(game: Game): void { }
 
   public onGameStatus(game: Game): void { }
-
-  public onJoin(user: User): void { }
-
-  public onLeave(user: User): void { }
-
-  public onStateChange(state: State): void { }
-
-  public resolvePrompt(prompt: Prompt<any>): boolean {
-    return false;
-  }
 
 }

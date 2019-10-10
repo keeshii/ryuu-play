@@ -12,15 +12,24 @@ export class Arbiter {
 
     if (prompt instanceof ShuffleDeckPrompt) {
       logger.log(`Arbiter shuffles deck from player ${prompt.player.name}.`);
-      prompt.resolve(this.shuffle(prompt.player.deck));
+      const order = this.shuffle(prompt.player.deck);
+      prompt.resolve(order);
       return true;
     }
 
     return false;
   }
 
-  private shuffle(cards: CardList): CardList {
-    return cards;
+  private shuffle(cards: CardList): number[] {
+    const len = cards.cards.length;
+    const order = [];
+
+    for (let i = 0; i < len; i++) {
+      const position = Math.min(len - 1, Math.round(Math.random() * len));
+      order.push(position);
+    }
+
+    return order;
   }
 
 

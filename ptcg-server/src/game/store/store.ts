@@ -9,12 +9,13 @@ import { setupPhaseReducer } from './reducers/setup-reducer';
 export class Store implements StoreLike {
 
   public state: State = new State();
-
   public actions: Action[] = [];
-
   private prompt: Prompt<any> | undefined;
+  private serializedState: string;
 
-  constructor(private handler: StoreHandler) { };
+  constructor(private handler: StoreHandler) {
+    this.serializedState = this.serializeState(this.state);
+  };
 
   public async dispatch(action: Action) {
     this.actions.push(action);
@@ -39,6 +40,7 @@ export class Store implements StoreLike {
       .catch(() => {})
       .then(() => { this.prompt = undefined });
 
+    this.notify();
     this.handler.resolvePrompt(prompt);
 
     return prompt.promise;
@@ -52,10 +54,20 @@ export class Store implements StoreLike {
     }
 
     setupPhaseReducer(this, this.state, action);
+    this.notify();
   }
 
-  public notify(): void {
-    this.handler.onStateChange(this.state);
+  private notify(): void {
+    const serialized = this.serializeState(this.state);
+    if (serialized !== this.serializedState) {
+      this.serializedState = serialized;
+      this.handler.onStateChange(this.state);
+    }
+  }
+
+  private serializeState(state: State): string {
+    // to be more flexible, good for now
+    return JSON.stringify(state);
   }
 
 }

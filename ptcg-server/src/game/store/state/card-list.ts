@@ -1,4 +1,6 @@
 import { Card } from "./card";
+import { CardManager } from "../../cards/card-manager";
+import { StoreError } from "../store-error";
 
 export class CardList {
 
@@ -10,8 +12,28 @@ export class CardList {
 
   public static fromList(names: string[]): CardList {
     const cardList = new CardList();
-    cardList.cards = names.map(name => new Card(name));
+    const cardManager = CardManager.getInstance();
+    cardList.cards = names.map(name => {
+      const card = cardManager.getCardByName(name);
+      if (card === undefined) {
+        throw new StoreError('Unknown card ' + name);
+      }
+      return card;
+    });
     return cardList;
+  }
+
+  public applyOrder(order: number[]) {
+    for (let i = 0; i < this.cards.length; i++) {
+      if (order.length <= i) {
+        return;
+      }
+      const position = Math.min(this.cards.length - 1, order[i]);
+      const card = this.cards[i];
+      const card2 = this.cards[position];
+      this.cards[i] = card2;
+      this.cards[position] = card;
+    }
   }
 
   public moveTo(destination: CardList, count?: number): void {
