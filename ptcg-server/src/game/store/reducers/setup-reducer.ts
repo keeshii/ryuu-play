@@ -12,6 +12,7 @@ import { StoreError } from "../store-error";
 import { StoreLike } from "../store-like";
 import { StoreMessage } from "../store-messages";
 import { SuperType, Stage, Card } from "../state/card";
+import { nextTurn } from "./player-turn-reducer";
 
 async function alertAndConfirm(store: StoreLike, confirmPlayer: Player, alertPlayer: Player): Promise<boolean> {
   const results = await Promise.all([
@@ -31,7 +32,7 @@ function putStartingPokemons(player: Player, cards: Card[]): void {
   }
 }
 
-async function setupGame(store: StoreLike, state: State) {
+async function setupGame(store: StoreLike, state: State): Promise<void> {
   const basicPokemon = {superType: SuperType.POKEMON, stage: Stage.BASIC};
   const chooseCardsOptions = { min: 1, max: 6, allowCancel: false };
   const player = state.players[0];
@@ -82,9 +83,8 @@ async function setupGame(store: StoreLike, state: State) {
 
   const whoBegins = await store.resolve(new CoinFlipPrompt(player, StoreMessage.SETUP_WHO_BEGINS_FLIP));
 
-  state.turn = 1;
   state.activePlayer = whoBegins ? 0 : 1;
-  state.phase = GamePhase.PLAYER_TURN;
+  nextTurn(store, state);
 }
 
 

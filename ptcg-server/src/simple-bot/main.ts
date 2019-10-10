@@ -15,7 +15,9 @@ export class SimpleBot implements Bot, MainHandler {
 
   public createGame(): GameConnection {
     const gameHandler = new SimpleGameHandler(this.user.name);
-    return this.connection.createGame(gameHandler);
+    const game = this.connection.createGame(gameHandler);
+    gameHandler.setGame(game);
+    return game;
   }
 
   public joinGame(gameId: number): GameConnection {
@@ -24,7 +26,9 @@ export class SimpleBot implements Bot, MainHandler {
       throw new Error('Invalid game id');
     }
     const gameHandler = new SimpleGameHandler(this.user.name);
-    return gameRef.join(gameHandler);
+    const game = gameRef.join(gameHandler);
+    gameHandler.setGame(game);
+    return game;
   }
 
   public playGame(game: GameConnection, deck: string[]): void {

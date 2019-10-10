@@ -1,5 +1,7 @@
-import { AlertPrompt, ConfirmPrompt, GameHandler, Player, Prompt, State } from '../game';
+import { Action } from '../game/store/actions/action';
+import { AlertPrompt, ConfirmPrompt, GameHandler, Player, Prompt, State, GamePhase, GameConnection } from '../game';
 import { ChooseCardsPrompt } from '../game/store/prompts/choose-cards-prompt';
+import { PassTurnAction } from '../game/store/actions/pass-turn-action';
 import { StoreMessage } from '../game/store/store-messages';
 import { User } from '../storage';
 
@@ -7,6 +9,7 @@ export class SimpleGameHandler implements GameHandler {
 
   // private state: State;
   private player: Player = new Player();
+  private game: GameConnection | undefined;
 
   constructor(private name: string) {
     // this.state = new State();
@@ -16,7 +19,18 @@ export class SimpleGameHandler implements GameHandler {
 
   public onLeave(user: User): void { }
 
-  public onStateStable(state: State): void { }
+  public onStateStable(state: State): void {
+    if (state.phase !== GamePhase.PLAYER_TURN) {
+      return;
+    }
+
+    const player = state.players[state.activePlayer];
+    if (player.name !== this.name) {
+      return;
+    }
+
+    this.dispatch(new PassTurnAction(player));
+  }
 
   public onStateChange(state: State): void {
     for (let i = 0; i < state.players.length; i++) {
@@ -51,6 +65,17 @@ export class SimpleGameHandler implements GameHandler {
     }
 
     return false;
+  }
+
+  public setGame(game: GameConnection): void {
+    this.game = game;
+  }
+
+  private dispatch(action: Action): void {
+    if (this.game === undefined) {
+      return;
+    }
+    this.game.dispatch(action);
   }
 
 }

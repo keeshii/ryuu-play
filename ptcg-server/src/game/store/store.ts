@@ -4,6 +4,7 @@ import { State } from "./state/state";
 import { StoreHandler } from "./store-handler";
 import { StoreLike } from "./store-like";
 
+import { playerTurnReducer } from "./reducers/player-turn-reducer";
 import { setupPhaseReducer } from './reducers/setup-reducer';
 
 export class Store implements StoreLike {
@@ -36,7 +37,7 @@ export class Store implements StoreLike {
     }
 
     this.reduceInProgress = false;
-    this.notify();
+    this.notifyStateStable();
   }
 
   public resolve<T>(prompt: Prompt<T>): Promise<T> {
@@ -49,7 +50,7 @@ export class Store implements StoreLike {
         if (index !== -1) {
           this.prompts.splice(index, 1);
         }
-        this.notify();
+        this.notifyStateChange();
       });
 
     this.handler.resolvePrompt(prompt);
@@ -65,18 +66,22 @@ export class Store implements StoreLike {
     }
 
     await setupPhaseReducer(this, this.state, action);
+    await playerTurnReducer(this, this.state, action);
   }
 
   private async waitForPrompts(): Promise<any[]> {
     return Promise.all(this.prompts.map(prompt => prompt.promise));
   }
 
-  private notify(): void {
+  private notifyStateChange(): void {
     const serialized = this.serializeState(this.state);
     if (serialized !== this.serializedState) {
       this.serializedState = serialized;
       this.handler.onStateChange(this.state);
     }
+  }
+
+  private notifyStateStable(): void {
     if (this.prompts.length === 0 && !this.reduceInProgress) {
       this.handler.onStateStable(this.state);
     }
