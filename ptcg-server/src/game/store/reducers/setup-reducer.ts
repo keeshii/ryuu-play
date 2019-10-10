@@ -6,6 +6,9 @@ import { ShuffleDeckPrompt } from "../prompts/shuffle-prompt";
 import { State, GamePhase } from "../state/state";
 import { StoreError } from "../store-error";
 import { StoreLike } from "../store-like";
+import {SuperType, Stage} from "../state/card";
+import {ConfirmPrompt} from "../prompts/confirm-prompt";
+import {AlertPrompt} from "../prompts/alert-prompt";
 
 /*
 The function below to be considered later.
@@ -33,14 +36,51 @@ async function setupPlayer(store: StoreLike, player: Player) {
 */
 
 async function setupGame(store: StoreLike, state: State) {
+  const basicPokemon = {superType: SuperType.POKEMON, stage: Stage.BASIC};
+  const drawMessage = 'Your opponent has not basic pokemon. Draw?';
   const player = state.players[0];
   const opponent = state.players[1];
 
-  player.deck = await store.resolve(new ShuffleDeckPrompt(player));
-  player.deck.moveTo(player.hand, 7);
+  let playerHasBasic = false;
+  let opponentHasBasic = false;
+  
+  while (!playerHasBasic || !opponentHasBasic) {
+    if (!playerHasBasic) {
+      player.hand.moveTo(player.deck);
+      store.notify();
+      player.deck = await store.resolve(new ShuffleDeckPrompt(player));
+      player.deck.moveTo(player.hand, 7);
+      playerHasBasic = player.hand.count(basicPokemon) > 0;
+      store.notify();
+    }
 
-  opponent.deck = await store.resolve(new ShuffleDeckPrompt(opponent));
-  opponent.deck.moveTo(opponent.hand, 7);
+    if (!opponentHasBasic) {
+      opponent.hand.moveTo(opponent.deck);
+      store.notify();
+      await Promise.all([
+        store.resolve(new AlertPrompt(player, 'No basic on hand')),
+        store.resolve(new ShuffleDeckPrompt(opponent)),
+      ]);
+      opponent.deck.moveTo(opponent.hand, 7);
+      opponentHasBasic = opponent.hand.count(basicPokemon) > 0;
+      store.notify();
+    }
+
+    if (playerHasBasic && !opponentHasBasic) {
+      const result = await store.resolve(new ConfirmPrompt(player, drawMessage));
+      if (result) {
+        player.deck.moveTo(player.hand, 1);
+        store.notify();
+      }
+    }
+
+    if (!playerHasBasic && opponentHasBasic) {
+      const result = await store.resolve(new ConfirmPrompt(opponent, drawMessage));
+      if (result) {
+        opponent.deck.moveTo(opponent.hand, 1);
+      }
+    }
+  }
 
   store.notify();
 }

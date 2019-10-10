@@ -25,7 +25,7 @@ export class SimpleGameHandler implements GameHandler {
   public resolvePrompt(prompt: Prompt<any>): boolean {
 
     if (prompt instanceof AlertPrompt) {
-      prompt.resolve(true);
+      prompt.resolve(void 0);
       return true;
     }
 

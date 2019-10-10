@@ -43,8 +43,23 @@ export class CardList {
     return this.cards.slice(0, count);
   }
 
-  public countCards(cardName: string) {
-    this.cards.filter(c => c.name === cardName).length;
+  public filter(query: Partial<Card>): Card[] {
+    return this.cards.filter(c => {
+      for (let key in query) {
+        if (query.hasOwnProperty(key)) {
+          const value: any = (c as any)[key];
+          const expected: any = (query as any)[key];
+          if (value !== expected) {
+            return false;
+          }
+        }
+      }
+      return true;
+    });
+  }
+
+  public count(query: Partial<Card>): number {
+    return this.filter(query).length;
   }
 
 }

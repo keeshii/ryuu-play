@@ -5,7 +5,7 @@ export class ConfirmPrompt extends Prompt<boolean> {
 
   readonly type: string = 'Confirm'
 
-  constructor(player: Player) {
+  constructor(player: Player, public message: string) {
     super(player);
   }
 

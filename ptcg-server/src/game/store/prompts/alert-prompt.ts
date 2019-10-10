@@ -5,7 +5,7 @@ export class AlertPrompt extends Prompt<void> {
 
   readonly type: string = 'Alert'
 
-  constructor(player: Player) {
+  constructor(player: Player, public message: string) {
     super(player);
   }
 
