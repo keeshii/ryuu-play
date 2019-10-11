@@ -1,8 +1,7 @@
 import * as express from 'express';
-import { Server } from 'colyseus';
 import { json } from 'body-parser';
-import { createServer } from 'http';
 import { Storage } from '../storage';
+import { Websocket } from './common/websocket';
 import { config } from '../config';
 import { cors } from './services/cors';
 
@@ -11,10 +10,6 @@ import {
   Login
 } from './controllers';
 
-import {
-  PtcgTable
-} from './rooms';
-
 interface ControllerClass {
   new(path: string, app: express.Application, db: Storage): Controller;
 }
@@ -22,13 +17,12 @@ interface ControllerClass {
 export class App {
 
   private app: express.Application;
-  private gameServer: Server;
+  private ws: Websocket = new Websocket();
   private storage: Storage;
 
   constructor() {
     this.storage = new Storage();
     this.app = this.configureExpress();
-    this.gameServer = this.configureColyseus();
   }
 
   private configureExpress(): express.Application {
@@ -46,27 +40,19 @@ export class App {
     return app;
   }
 
-  private configureColyseus(): Server {
-    const gameServer = new Server({
-      server: createServer(this.app),
-      express: this.app
-    });
-
-    gameServer.define('ptcgTable', PtcgTable);
-    return gameServer;
-  }
-
   public connectToDatabase(): Promise<void> {
     return this.storage.connect();
   }
 
-  public start(): Promise<void> {
+  public start(): void {
     const address = config.backend.address;
     const port = config.backend.port;
 
-    return new Promise<void>((resolve, reject) => {
-      this.gameServer.listen(port, address, undefined, resolve);
-      this.gameServer.onShutdown(reject);
+    const httpServer = this.app.listen(port, address, () => {
+      console.log(`Server listening on ${address}:${port}.`);
     });
+
+    this.ws.listen(httpServer);
   }
+
 }
