@@ -1,5 +1,6 @@
 import { Action } from '../game/store/actions/action';
-import { AlertPrompt, ConfirmPrompt, GameHandler, Player, Prompt, State, GamePhase, GameConnection } from '../game';
+import { AlertPrompt, ConfirmPrompt, Player, Prompt, State, GamePhase } from '../game';
+import { GameConnection, GameHandler } from '../game/core/game';
 import { ChooseCardsPrompt } from '../game/store/prompts/choose-cards-prompt';
 import { PassTurnAction } from '../game/store/actions/pass-turn-action';
 import { StoreMessage } from '../game/store/store-messages';

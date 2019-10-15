@@ -2,7 +2,7 @@
 <mat-toolbar color="primary">
   <button mat-button (click)="sidenav.toggle()">Ryuu Play</button>
   <span class="ryuu-spacer"></span>
-  <button mat-button (click)="login()">Login</button>
+  <button mat-button (click)="login()">Login {{isConnected ? 'connected' : 'disconnected' }}</button>
 </mat-toolbar>
 
 <mat-sidenav-container hasBackdrop="false">

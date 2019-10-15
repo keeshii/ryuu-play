@@ -6,6 +6,7 @@ export enum ApiErrorEnum {
   ERROR_REQUESTS_LIMIT_REACHED = 'ERROR_REQUESTS_LIMIT_REACHED',
   ERROR_UNKNOWN_REQUEST = 'ERROR_UNKNOWN_REQUEST',
   ERROR_LOGIN_INVALID = 'ERROR_LOGIN_INVALID',
+  ERROR_SOCKET = 'ERROR_SOCKET',
 }
 
 export class ApiError implements Error {
@@ -15,15 +16,28 @@ export class ApiError implements Error {
   stack: string;
   timeout: boolean;
 
-  constructor(ex: HttpErrorResponse | TimeoutError) {
-    this.name = ex.name;
-    this.message = ex.message;
-
-    if (ex instanceof HttpErrorResponse && ex.error && ex.error.error) {
-      this.code = ex.error.error;
+  public static fromError(ex: HttpErrorResponse | TimeoutError): ApiError {
+    if (ex instanceof ApiError) {
+      return ex;
     }
 
-    this.timeout = ex instanceof TimeoutError;
+    const name = ex.name;
+    const message = ex.message;
+    let code = undefined;
+
+    if (ex instanceof HttpErrorResponse && ex.error && ex.error.error) {
+      code = ex.error.error;
+    }
+
+    const apiError = new ApiError(code, message, name);
+    apiError.timeout = ex instanceof TimeoutError;
+    return apiError;
+  }
+
+  constructor(code: ApiErrorEnum, message?: string, name?: string) {
+    this.name = name || code;
+    this.message = message || code;
+    this.code = code;
   }
 
 }

@@ -1,4 +1,6 @@
-import { Bot, Main, MainConnection, MainHandler, Game, GameConnection } from '../game';
+import { Bot } from '../game/bots/bot';
+import { Game, GameConnection } from '../game/core/game';
+import { Main, MainConnection, MainHandler } from '../game/core/main';
 import { User } from '../storage';
 import { SimpleGameHandler } from './simple-game-handler';
 

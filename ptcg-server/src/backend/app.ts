@@ -10,6 +10,8 @@ import {
   Login
 } from './controllers';
 
+import { mainRefresh } from './socket/main-refresh';
+
 interface ControllerClass {
   new(path: string, app: express.Application, db: Storage): Controller;
 }
@@ -17,12 +19,13 @@ interface ControllerClass {
 export class App {
 
   private app: express.Application;
-  private ws: Websocket = new Websocket();
+  private ws: Websocket;
   private storage: Storage;
 
   constructor() {
     this.storage = new Storage();
     this.app = this.configureExpress();
+    this.ws = this.configureSocket();
   }
 
   private configureExpress(): express.Application {
@@ -38,6 +41,14 @@ export class App {
     define('/login', Login);
 
     return app;
+  }
+
+  private configureSocket(): Websocket {
+    const ws = new Websocket();
+    
+    ws.addListener('main:refresh', mainRefresh);
+    
+    return ws;
   }
 
   public connectToDatabase(): Promise<void> {

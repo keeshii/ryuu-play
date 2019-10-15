@@ -5,6 +5,8 @@
         <mat-list-item>Player 1</mat-list-item>
         <mat-list-item>Player 2</mat-list-item>
         <mat-list-item>Player 3</mat-list-item>
+
+        <mat-list-item *ngFor="let user of (users$ | async)">{{user.name}}</mat-list-item>
     </mat-list>    
   </ptcg-sidebar>
 
@@ -14,6 +16,8 @@
     <mat-card>
       Simple card
     </mat-card>
+    
+    <button mat-button (click)="createGame()">Create game</button>
   </ptcg-content>
 
 </ptcg-sidebar-container>

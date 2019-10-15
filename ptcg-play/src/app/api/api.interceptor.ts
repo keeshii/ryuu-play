@@ -35,7 +35,7 @@ export class ApiInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       timeout(environment.timeout),
       catchError(response => {
-        const apiError = new ApiError(response);
+        const apiError = ApiError.fromError(response);
 
         if (apiError.timeout) {
           this.alertService.toast('API_ERROR_TIMEOUT');
