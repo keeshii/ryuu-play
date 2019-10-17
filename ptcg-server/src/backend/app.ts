@@ -1,7 +1,7 @@
 import * as express from 'express';
 import { json } from 'body-parser';
 import { Storage } from '../storage';
-import { Websocket } from './common/websocket';
+import { MainWebsocket } from './socket/main-websocket';
 import { config } from '../config';
 import { cors } from './services/cors';
 
@@ -10,8 +10,6 @@ import {
   Login
 } from './controllers';
 
-import { mainRefresh } from './socket/main-refresh';
-
 interface ControllerClass {
   new(path: string, app: express.Application, db: Storage): Controller;
 }
@@ -19,13 +17,13 @@ interface ControllerClass {
 export class App {
 
   private app: express.Application;
-  private ws: Websocket;
+  private ws: MainWebsocket;
   private storage: Storage;
 
   constructor() {
     this.storage = new Storage();
     this.app = this.configureExpress();
-    this.ws = this.configureSocket();
+    this.ws = new MainWebsocket();
   }
 
   private configureExpress(): express.Application {
@@ -41,14 +39,6 @@ export class App {
     define('/login', Login);
 
     return app;
-  }
-
-  private configureSocket(): Websocket {
-    const ws = new Websocket();
-    
-    ws.addListener('main:refresh', mainRefresh);
-    
-    return ws;
   }
 
   public connectToDatabase(): Promise<void> {

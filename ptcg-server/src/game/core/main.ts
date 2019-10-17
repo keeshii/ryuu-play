@@ -20,7 +20,7 @@ export interface MainConnection {
 
 export class Main {
 
-  private games: Game[] = [];
+  public games: Game[] = [];
   private connections: MainConnection[] = [];
 
   constructor() { }
@@ -38,6 +38,10 @@ export class Main {
     this.connections.forEach(c => c.handler.onConnect(user));
     this.connections.push(connection);
     return connection;
+  }
+
+  public get users(): User[] {
+    return this.connections.map(connection => connection.user);
   }
 
   private disconnect(user: User): void {
