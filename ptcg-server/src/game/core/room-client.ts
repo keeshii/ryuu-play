@@ -1,8 +1,6 @@
 import { User } from "../../storage";
 
-export type RoomResponse<R> = (message: string, data: R) => void;
-
-export type RoomClientCallback<T, R> = (data: T, response?: RoomResponse<R>) => void
+export type RoomClientCallback<T, R> = (data: T) => Promise<R>
 
 export interface RoomClientListener<T, R> {
   message: string;
@@ -10,7 +8,8 @@ export interface RoomClientListener<T, R> {
 };
 
 export interface RoomEmitter {
-  emit: <T, R>(client: RoomClient, message: string, data: T, response?: RoomResponse<R>) => void;
+  emit: <T, R>(client: RoomClient, message: string, data: T) => Promise<R>;
+  notify: <T, R>(message: string, data: T) => Promise<R>;
 }
 
 export class RoomClient {
@@ -29,8 +28,8 @@ export class RoomClient {
     this.listeners.push(listener);
   }
 
-  public emit<T, R>(message: string, data: T, response?: RoomResponse<R>) {
-    this.emitter.emit(this, message, data, response);
+  public emit<T, R>(message: string, data: T): Promise<R> {
+    return this.emitter.emit(this, message, data);
   }
 
 }
