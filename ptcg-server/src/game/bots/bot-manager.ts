@@ -1,8 +1,8 @@
 import { Bot } from './bot';
-import { Main } from '../core/main';
+import { LobbyRoom } from '../core/lobby-room';
 import { User } from '../../storage';
 
-export type BotClass = new (user: User, game: Main) => Bot;
+export type BotClass = new (user: User, game: LobbyRoom) => Bot;
 
 export class BotManager {
 
@@ -23,12 +23,12 @@ export class BotManager {
     this.botsQueue.push({name, botClass});
   }
 
-  public async initBots(game: Main) {
+  public async initBots(lobbyRoom: LobbyRoom) {
     const bots: Bot[] = [];
     for (let i = 0; i < this.botsQueue.length; i++) {
       let item = this.botsQueue[i];
       let user = await this.findOrCreateUser(item.name);
-      bots.push(new item.botClass(user, game));
+      bots.push(new item.botClass(user, lobbyRoom));
     }
     this.bots = bots;
   }

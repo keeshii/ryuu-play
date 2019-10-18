@@ -1,11 +1,13 @@
-import { Main } from '../core/main';
-import { GameConnection } from '../core/game';
+import { LobbyRoom } from '../core/lobby-room';
+import { GameRoom } from '../core/game-room';
 import { User } from '../../storage';
+import { RoomClient } from '../core/room-client';
 
 export interface Bot {
   user: User;
-  main: Main;
-  createGame(): GameConnection;
-  joinGame(gameId: number): GameConnection;
-  playGame(game: GameConnection, deck: string[]): void;
+  lobbyRoom: LobbyRoom;
+
+  createGame(): RoomClient<GameRoom>;
+  joinGame(gameId: number): RoomClient<GameRoom>;
+  playGame(game: RoomClient<GameRoom>, deck: string[]): void;
 }

@@ -3,38 +3,30 @@
 import { GameRoom } from "./game-room";
 import { Room } from "./room";
 import { RoomClient } from "./room-client";
-import { User } from "../../storage";
-
-export interface CreateGameResponse {
-  gameId: number;
-  client: RoomClient;
-}
 
 export class LobbyRoom extends Room {
 
   private games: GameRoom[] = [];
 
-  constructor() {
-    super();
-    this.on('lobby:createGame', this.createGame.bind(this));
-    
-    this.addEvent('game:join', this.joinGame.bind(this));
-  }
-
   public getGame(gameId: number): GameRoom | undefined {
     return this.games.find(game => game.id === gameId);
   }
 
-  private async createGame(client: RoomClient): Promise<CreateGameResponse> {
+  public createGame(client: RoomClient<LobbyRoom>): RoomClient<GameRoom> {
     const gameRoom = new GameRoom(this, this.generateGameId());
     this.games.push(gameRoom);
     const gameClient = gameRoom.join(client.user);
     this.broadcast('lobby:createGame', gameRoom.id);
-    return {client: gameClient, gameId: gameRoom.id};
+    return gameClient;
   }
 
-  private async joinGame(game: GameRoom, user: User): Promise<void> {
-    this.broadcast('lobby:joinGame', {user, gameId: game.id});
+  public deleteGame(game: GameRoom): void {
+    const index = this.games.indexOf(game);
+    if (index === -1) {
+      return;
+    }
+    this.games.splice(index, 1);
+    this.broadcast('lobby:deleteGame', game.id);
   }
 
   private generateGameId(): number {

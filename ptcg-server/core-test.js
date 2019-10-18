@@ -1,7 +1,9 @@
 require('./config');
 
 const { Storage } = require('./dist/storage');
-const { BotManager, CardManager, Main } = require('./dist/game');
+const { BotManager } = require('./dist/game/bots/bot-manager');
+const { CardManager } = require('./dist/game/cards/card-manager');
+const { LobbyRoom } = require('./dist/game/core/lobby-room');
 const { SimpleBot } = require('./dist/simple-bot/main');
 const { basicSet } = require('./dist/sets/basic-set/basic-set');
 const { config } = require('./dist/config');
@@ -22,8 +24,8 @@ storage.connect()
     process.exit(1);
   })
   .then(() => {
-    const main = new Main();
-    return botManager.initBots(main);
+    const lobbyRoom = new LobbyRoom();
+    return botManager.initBots(lobbyRoom);
   })
   .then(() => {
     const bot1 = botManager.getBot('bot1');
@@ -41,7 +43,7 @@ storage.connect()
     }
 
     const game1 = bot1.createGame();
-    const game2 = bot2.joinGame(game1.id);
+    const game2 = bot2.joinGame(game1.room.id);
 
     bot1.playGame(game1, createSampleDeck());
     bot2.playGame(game2, createSampleDeck());

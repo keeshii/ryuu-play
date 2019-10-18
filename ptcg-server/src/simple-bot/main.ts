@@ -1,50 +1,54 @@
 import { Bot } from '../game/bots/bot';
-import { Game, GameConnection } from '../game/core/game';
-import { Main, MainConnection, MainHandler } from '../game/core/main';
-import { User } from '../storage';
+import { GameRoom } from '../game/core/game-room';
+import { LobbyRoom } from '../game/core/lobby-room';
+import { RoomClient } from '../game/core/room-client';
 import { SimpleGameHandler } from './simple-game-handler';
+import { User } from '../storage';
 
-export class SimpleBot implements Bot, MainHandler {
 
-  private connection: MainConnection;
+export class SimpleBot implements Bot {
+
+  private client: RoomClient<LobbyRoom>;
+  private gameHandlers: SimpleGameHandler[] = [];
 
   constructor(
     public user: User,
-    public main: Main
+    public lobbyRoom: LobbyRoom
   ) {
-    this.connection = main.connect(user, this);
+    this.client = this.lobbyRoom.join(user);
   }
 
-  public createGame(): GameConnection {
-    const gameHandler = new SimpleGameHandler(this.user.name);
-    const game = this.connection.createGame(gameHandler);
-    gameHandler.setGame(game);
-    return game;
+  public createGame(): RoomClient<GameRoom> {
+    const client = this.lobbyRoom.createGame(this.client);
+    return this.addGameHandler(client);
   }
 
-  public joinGame(gameId: number): GameConnection {
-    const gameRef = this.connection.getGame(gameId);
-    if (gameRef === undefined) {
-      throw new Error('Invalid game id');
+  public joinGame(gameId: number): RoomClient<GameRoom> {
+    const game = this.lobbyRoom.getGame(gameId);
+    if (game === undefined) {
+      throw new Error('ERROR_GAME_NOT_FOUND');
     }
-    const gameHandler = new SimpleGameHandler(this.user.name);
-    const game = gameRef.join(gameHandler);
-    gameHandler.setGame(game);
-    return game;
+    const client = game.join(this.user);
+    return this.addGameHandler(client);
   }
 
-  public playGame(game: GameConnection, deck: string[]): void {
-    game.play(deck);
+  private addGameHandler(client: RoomClient<GameRoom>): RoomClient<GameRoom> {
+    const gameHandler = new SimpleGameHandler(client);
+    this.gameHandlers.push(gameHandler);
+    client.on('game:destroy', () => this.deleteGameHandler(gameHandler));
+    return client;
   }
 
-  public onConnect(user: User): void { }
+  private deleteGameHandler(gameHandler: SimpleGameHandler): void {
+    const index = this.gameHandlers.indexOf(gameHandler);
+    if (index !== -1) {
+      this.gameHandlers.splice(index, 1);
+    }
+  }
 
-  public onDisconnect(user: User): void { }
-
-  public onGameAdd(game: Game): void { }
-
-  public onGameDelete(game: Game): void { }
-
-  public onGameStatus(game: Game): void { }
+  public playGame(client: RoomClient<GameRoom>, deck: string[]): void {
+    const gameRoom: GameRoom = client.room;
+    gameRoom.play(client, deck);
+  }
 
 }

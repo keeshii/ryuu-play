@@ -1,14 +1,14 @@
 import * as io from 'socket.io';
 
 import { Errors } from '../common/errors';
-import { Main, MainConnection, MainHandler } from '../../game/core/main';
-import { Game } from '../../game/core/game';
+import { LobbyRoom } from '../../game/core/lobby-room';
 import { Response, Websocket } from './websocket';
+import { RoomClient } from '../../game/core/room-client';
 import { User } from '../../storage';
 import { validateToken } from '../services/auth-token';
 
 interface AuthSocket extends io.Socket {
-  main: MainConnection;
+  lobbyClient: RoomClient<LobbyRoom>;
   user: User;
 }
 
@@ -28,14 +28,14 @@ interface MainRefreshResponse {
   users: MainUser[]
 }
 
-export class MainWebsocket extends Websocket implements MainHandler {
+export class MainWebsocket extends Websocket {
 
-  private main: Main;
+  private lobbyRoom: LobbyRoom;
   private sockets: AuthSocket[] = [];
 
   constructor() {
     super();
-    this.main = new Main();
+    this.lobbyRoom = new LobbyRoom();
 
     this.addMiddleware((socket, next) => this.authSocket(socket, next));
     this.addListener('main:refresh', this.refresh.bind(this));
@@ -60,13 +60,13 @@ export class MainWebsocket extends Websocket implements MainHandler {
 
   protected onSocketConnection(socket: AuthSocket): void {
     const user = socket.user;
-    const mainConnection = this.main.connect(user, this);
-    socket.main = mainConnection;
+    const client = this.lobbyRoom.join(user);
+    socket.lobbyClient = client;
     this.sockets.push(socket);
   }
 
   protected onSocketDisconnection(socket: AuthSocket): void {
-    socket.main.disconnect();
+    socket.lobbyClient.leave();
     const index = this.sockets.indexOf(socket);
     if (index !== -1) {
       this.sockets.splice(index, 1);
@@ -74,31 +74,6 @@ export class MainWebsocket extends Websocket implements MainHandler {
   }
 
   private refresh(socket: AuthSocket, data: void, response: Response<MainRefreshResponse>): void {
-    const users: MainUser[] = this.main.users.map(user => ({
-      name: user.name,
-      email: user.email
-    }));
-    const games = this.main.games.map(game => ({
-      id: game.id,
-      data: 'data',
-      userCount: game.getConnectionsCount()
-    }));
-    response('ok', {
-      games: games,
-      users: users
-    });
   }
-
-  public onConnect(user: User): void {
-    this.sockets.forEach(socket => socket.emit('main:connected'));
-  }
-
-  public onDisconnect(user: User): void { }
-
-  public onGameAdd(game: Game): void { }
-
-  public onGameDelete(game: Game): void { }
-
-  public onGameStatus(game: Game): void { }
 
 }

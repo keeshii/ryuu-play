@@ -1,26 +1,26 @@
 import { Action } from '../game/store/actions/action';
 import { AlertPrompt, ConfirmPrompt, Player, Prompt, State, GamePhase } from '../game';
-import { GameConnection, GameHandler } from '../game/core/game';
 import { ChooseCardsPrompt } from '../game/store/prompts/choose-cards-prompt';
 import { PassTurnAction } from '../game/store/actions/pass-turn-action';
 import { StoreMessage } from '../game/store/store-messages';
-import { User } from '../storage';
+import { GameRoom } from '../game/core/game-room';
+import { RoomClient } from '../game/core/room-client';
 
-export class SimpleGameHandler implements GameHandler {
+export class SimpleGameHandler {
 
   // private state: State;
   private player: Player = new Player();
-  private game: GameConnection | undefined;
+  private name: string;
 
-  constructor(private name: string) {
-    // this.state = new State();
+  constructor(private client: RoomClient<GameRoom>) {
+    this.name = client.user.name;
+
+    client.on('game:stateStable', (state: State) => this.onStateStable(state));
+    client.on('game:stateChange', (state: State) => this.onStateChange(state));
+    client.on('game:prompt', (prompt: Prompt<any>) => this.resolvePrompt(prompt));
   }
 
-  public onJoin(user: User): void { }
-
-  public onLeave(user: User): void { }
-
-  public onStateStable(state: State): void {
+  private onStateStable(state: State): void {
     if (state.phase !== GamePhase.PLAYER_TURN) {
       return;
     }
@@ -33,7 +33,7 @@ export class SimpleGameHandler implements GameHandler {
     this.dispatch(new PassTurnAction(player));
   }
 
-  public onStateChange(state: State): void {
+  private onStateChange(state: State): void {
     for (let i = 0; i < state.players.length; i++) {
       if (state.players[i].name === this.name) {
         this.player = state.players[i];
@@ -41,7 +41,7 @@ export class SimpleGameHandler implements GameHandler {
     }
   }
 
-  public resolvePrompt(prompt: Prompt<any>): boolean {
+  private resolvePrompt(prompt: Prompt<any>): boolean {
     if (prompt instanceof AlertPrompt) {
       prompt.resolve(void 0);
       return true;
@@ -68,15 +68,8 @@ export class SimpleGameHandler implements GameHandler {
     return false;
   }
 
-  public setGame(game: GameConnection): void {
-    this.game = game;
-  }
-
   private dispatch(action: Action): void {
-    if (this.game === undefined) {
-      return;
-    }
-    this.game.dispatch(action);
+    this.client.emit('game:action', action);
   }
 
 }

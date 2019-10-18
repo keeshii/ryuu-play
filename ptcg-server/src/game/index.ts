@@ -1,3 +1,4 @@
+export * from './cards/card-manager';
 
 export * from './store/actions/action';
 export * from './store/actions/add-player-action';
