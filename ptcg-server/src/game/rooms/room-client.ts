@@ -1,18 +1,17 @@
 import { Room } from "./room";
 import { User } from "../../storage";
 
-export type RoomClientCallback<T, R> = (data: T) => R
+export type RoomCallback<T, R> = (data: T) => R
 
-export interface RoomClientListener<T, R> {
+export interface RoomListener<T, R> {
   message: string;
-  callback: RoomClientCallback<T, R>;
+  callback: RoomCallback<T, R>;
 };
-
 
 export class RoomClient<S extends Room> {
 
   public user: User;
-  public listeners: RoomClientListener<any, any>[] = [];
+  public listeners: RoomListener<any, any>[] = [];
   public room: S;
 
   constructor(room: S, user: User) {
@@ -20,13 +19,9 @@ export class RoomClient<S extends Room> {
     this.user = user;
   }
 
-  public on<T, R>(message: string, callback: RoomClientCallback<T, R>) {
+  public on<T, R>(message: string, callback: RoomCallback<T, R>) {
     const listener = {message, callback};
     this.listeners.push(listener);
-  }
-
-  public emit<T, R>(message: string, data: T): R | undefined {
-    return this.room.emit(this, message, data);
   }
 
   public leave(): void {

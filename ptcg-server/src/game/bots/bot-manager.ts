@@ -1,5 +1,5 @@
 import { Bot } from './bot';
-import { LobbyRoom } from '../core/lobby-room';
+import { LobbyRoom } from '../rooms/lobby-room';
 import { User } from '../../storage';
 
 export type BotClass = new (user: User, game: LobbyRoom) => Bot;

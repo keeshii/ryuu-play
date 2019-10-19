@@ -1,6 +1,7 @@
 // import { RoomClient } from "./room-client";
 // import { User } from "../../storage";
 import { GameRoom } from "./game-room";
+import { GameInfo, LobbyInfo } from "./game-info.interface";
 import { Room } from "./room";
 import { RoomClient } from "./room-client";
 
@@ -12,11 +13,24 @@ export class LobbyRoom extends Room {
     return this.games.find(game => game.id === gameId);
   }
 
+  public getLobbyInfo(): LobbyInfo {
+    const users = this.clients.map(client => ({
+      userId: client.user.id,
+      name: client.user.name,
+      ranking: client.user.ranking,
+      connected: true
+    }));
+    const games = this.games.map(game => game.gameInfo);
+    return { users, games };
+  }
+
   public createGame(client: RoomClient<LobbyRoom>): RoomClient<GameRoom> {
-    const gameRoom = new GameRoom(this, this.generateGameId());
+    const gameRoom = new GameRoom(this.generateGameId());
     this.games.push(gameRoom);
     const gameClient = gameRoom.join(client.user);
     this.broadcast('lobby:createGame', gameRoom.id);
+    gameRoom.on('game:gameInfo', (gameInfo: GameInfo) => this.updateGameInfo(gameInfo));
+    gameRoom.on('game:destroy', () => this.deleteGame(gameRoom));
     return gameClient;
   }
 
@@ -27,6 +41,10 @@ export class LobbyRoom extends Room {
     }
     this.games.splice(index, 1);
     this.broadcast('lobby:deleteGame', game.id);
+  }
+
+  public updateGameInfo(gameInfo: GameInfo): void {
+    this.broadcast('lobby:gameInfo', gameInfo);
   }
 
   private generateGameId(): number {

@@ -1,12 +1,5 @@
-import { RoomClient } from "./room-client";
+import { RoomClient, RoomListener, RoomCallback } from "./room-client";
 import { User } from "../../storage";
-
-export interface RoomListener<T, R> {
-  message: string;
-  callback: RoomCallback<T, R>;
-};
-
-export type RoomCallback<T, R> = (client: RoomClient<any>, data: T) => R
 
 export class Room {
 
@@ -26,22 +19,24 @@ export class Room {
     }
   }
 
-  public emit<T, R>(client: RoomClient<any>, message: string, data: T): R | undefined {
-    let response: R | undefined;
-    for (let i = 0; i < this.listeners.length; i++) {
-      if (this.listeners[i].message === message) {
-        response = this.listeners[i].callback(client, data);
-      }
-    }
-    return response;
-  }
-
-  protected on<T, R>(message: string, callback: RoomCallback<T, R>) {
+  public on<T, R>(message: string, callback: RoomCallback<T, R>) {
     const listener = {message, callback};
     this.listeners.push(listener);
   }
 
+  public off<T, R>(message: string, callback: RoomCallback<T, R>) {
+    const index = this.listeners.findIndex(l => l.message === message && l.callback === callback);
+    if (index !== -1) {
+      this.listeners.splice(index, 1);
+    }
+  }
+
   protected broadcast<T>(message: string, data: T) {
+    for (let i = 0; i < this.listeners.length; i++) {
+      if (this.listeners[i].message === message) {
+        this.listeners[i].callback(data);
+      }
+    }
     this.clients.forEach(client => {
       for (let i = 0; i < client.listeners.length; i++) {
         if (client.listeners[i].message === message) {

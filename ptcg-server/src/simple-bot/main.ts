@@ -1,7 +1,7 @@
 import { Bot } from '../game/bots/bot';
-import { GameRoom } from '../game/core/game-room';
-import { LobbyRoom } from '../game/core/lobby-room';
-import { RoomClient } from '../game/core/room-client';
+import { GameRoom } from '../game/rooms/game-room';
+import { LobbyRoom } from '../game/rooms/lobby-room';
+import { RoomClient } from '../game/rooms/room-client';
 import { SimpleGameHandler } from './simple-game-handler';
 import { User } from '../storage';
 

@@ -7,8 +7,8 @@ import {ApiError, ApiErrorEnum} from './api.error';
 import {timeout, catchError} from 'rxjs/operators';
 
 interface SocketResponse<T> {
-  message: string,
-  data?: T
+  message: string;
+  data?: T;
 }
 
 @Injectable()
@@ -16,8 +16,8 @@ export class SocketService {
 
   public socket: SocketIOClient.Socket;
   private callbacks: {event: string, fn: any}[] = [];
-  private _enabled: boolean = false;
-  private _connection = new BehaviorSubject<boolean>(false);
+  private enabled = false;
+  private connectionSubject = new BehaviorSubject<boolean>(false);
 
   constructor() {
     this.socket = io.connect(environment.apiUrl, {
@@ -25,24 +25,24 @@ export class SocketService {
       query: {}
     });
 
-    this.socket.on('connect', () => this._connection.next(true));
-    this.socket.on('disconnect', () => this._connection.next(false));
+    this.socket.on('connect', () => this.connectionSubject.next(true));
+    this.socket.on('disconnect', () => this.connectionSubject.next(false));
   }
 
   public enable(authToken: string) {
-    if (this._enabled) {
+    if (this.enabled) {
       this.socket.disconnect();
     }
 
     (this.socket.io.opts.query as any).token = authToken;
     this.socket.connect();
-    this._enabled = true;
+    this.enabled = true;
   }
 
   public disable() {
     this.off();
     this.socket.disconnect();
-    this._enabled = false;
+    this.enabled = false;
   }
 
   public emit<T, R>(message: string, data?: T): Observable<R> {
@@ -79,14 +79,14 @@ export class SocketService {
   }
 
   get connection(): Observable<boolean> {
-    return this._connection.asObservable();
+    return this.connectionSubject.asObservable();
   }
 
-  get enabled(): boolean {
-    return this._enabled;
+  get isEnabled(): boolean {
+    return this.enabled;
   }
 
-  get connected(): boolean {
+  get isConnected(): boolean {
     return this.socket.connected;
   }
 

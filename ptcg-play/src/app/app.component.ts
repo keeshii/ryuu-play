@@ -12,8 +12,7 @@ import { takeUntilDestroyed } from './shared/operators/take-until-destroyed';
 })
 export class AppComponent implements OnInit, OnDestroy {
 
-  public isLoggedIn: boolean = false;
-  public isConnected: boolean = false;
+  public isLoggedIn = false;
 
   constructor(
     private loginService: LoginPopupService,
@@ -22,20 +21,14 @@ export class AppComponent implements OnInit, OnDestroy {
   ) { }
 
   public ngOnInit() {
-    this.socketService.connection
-      .pipe(takeUntilDestroyed(this))
-      .subscribe(connected => {
-        this.isConnected = connected;
-      });
-
     this.sessionService.get()
       .pipe(takeUntilDestroyed(this))
       .subscribe(session => {
         this.isLoggedIn = !!session.authToken;
-        if (this.isLoggedIn && !this.socketService.enabled) {
+        if (this.isLoggedIn && !this.socketService.isEnabled) {
           this.socketService.enable(session.authToken);
         }
-        if (!this.isLoggedIn && this.socketService.enabled) {
+        if (!this.isLoggedIn && this.socketService.isEnabled) {
           this.socketService.disable();
         }
       });

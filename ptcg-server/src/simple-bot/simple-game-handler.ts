@@ -3,8 +3,8 @@ import { AlertPrompt, ConfirmPrompt, Player, Prompt, State, GamePhase } from '..
 import { ChooseCardsPrompt } from '../game/store/prompts/choose-cards-prompt';
 import { PassTurnAction } from '../game/store/actions/pass-turn-action';
 import { StoreMessage } from '../game/store/store-messages';
-import { GameRoom } from '../game/core/game-room';
-import { RoomClient } from '../game/core/room-client';
+import { GameRoom } from '../game/rooms/game-room';
+import { RoomClient } from '../game/rooms/room-client';
 
 export class SimpleGameHandler {
 
@@ -69,7 +69,7 @@ export class SimpleGameHandler {
   }
 
   private dispatch(action: Action): void {
-    this.client.emit('game:action', action);
+    this.client.room.dispatch(this.client, action);
   }
 
 }

@@ -1,30 +1,30 @@
-// import { RoomClient } from "./room-client";
-// import { User } from "../../storage";
-import { Room } from "./room";
-import { RoomClient } from "./room-client";
-import { LobbyRoom } from './lobby-room';
-import { User } from "../../storage";
-import { logger } from "../../utils/logger";
 
+import { Action } from "../store/actions/action";
 import { AddPlayerAction } from "../store/actions/add-player-action";
 import { Arbiter } from "./arbiter";
+import { GameInfo, PlayerInfo } from "./game-info.interface";
 import { Prompt } from "../store/prompts/prompt";
+import { Room } from "./room";
+import { RoomClient } from "./room-client";
 import { State, GamePhase } from "../store/state/state";
 import { Store } from "../store/store";
 import { StoreHandler } from "../store/store-handler";
-import { Action } from "../store/actions/action";
+import { User } from "../../storage";
+import { logger } from "../../utils/logger";
+import { deepCompare } from "../../utils/utils";
 
 export class GameRoom extends Room implements StoreHandler {
 
   public id: number;
+  public gameInfo: GameInfo;
   private arbiter = new Arbiter();
   private store: Store;
 
-  constructor(private lobbyRoom: LobbyRoom, id: number) {
+  constructor(id: number) {
     super();
     this.id = id;
     this.store = new Store(this);
-    this.on('game:action', this.dispatch.bind(this));
+    this.gameInfo = this.buildGameInfo(this.store.state);
   }
 
   public join(user: User): RoomClient<GameRoom> {
@@ -43,7 +43,6 @@ export class GameRoom extends Room implements StoreHandler {
   private destroy() {
     this.broadcast('game:destroy', this);
     this.clients.length === 0;
-    this.lobbyRoom.deleteGame(this);
   }
 
   public play(client: RoomClient<GameRoom>, deck: string[]) {
@@ -59,6 +58,12 @@ export class GameRoom extends Room implements StoreHandler {
 
   public onStateStable(state: State) {
     this.broadcast('game:stateStable', state);
+
+    const gameInfo = this.buildGameInfo(state);
+    if (deepCompare(this.gameInfo, gameInfo)) {
+      this.gameInfo = gameInfo;
+      this.broadcast('game:gameInfo', gameInfo);
+    }
 
     if (state.phase === GamePhase.FINISHED) {
       this.destroy();
@@ -84,6 +89,26 @@ export class GameRoom extends Room implements StoreHandler {
     }
 
     return resolved;
+  }
+
+  private buildGameInfo(state: State): GameInfo {
+    const players: PlayerInfo[] = state.players.map(player => {
+      const client = this.clients.find(client => client.user.name === player.name);
+      const userId = client !== undefined ? client.user.id : 0;
+      return {
+        userId: userId,
+        name: player.name,
+        prizes: player.prizes.cards.length,
+        deck: player.deck.cards.length
+      }
+    });
+    return {
+      gameId: this.id,
+      phase: state.phase,
+      turn: state.turn,
+      activePlayer: state.activePlayer,
+      players: players
+    };
   }
 
 }

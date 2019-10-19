@@ -23,7 +23,7 @@ export class ApiError implements Error {
 
     const name = ex.name;
     const message = ex.message;
-    let code = undefined;
+    let code;
 
     if (ex instanceof HttpErrorResponse && ex.error && ex.error.error) {
       code = ex.error.error;

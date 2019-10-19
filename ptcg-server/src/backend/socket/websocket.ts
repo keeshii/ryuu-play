@@ -42,6 +42,8 @@ export abstract class Websocket {
         });
 
       }
+
+      socket.on('disconnect', () => this.onSocketDisconnection(socket));
     });
   }
 

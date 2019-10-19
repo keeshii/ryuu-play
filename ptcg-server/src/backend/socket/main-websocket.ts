@@ -1,44 +1,30 @@
 import * as io from 'socket.io';
 
 import { Errors } from '../common/errors';
-import { LobbyRoom } from '../../game/core/lobby-room';
+import { LobbyRoom } from '../../game/rooms/lobby-room';
+import { LobbyInfo, GameInfo } from '../../game/rooms/game-info.interface';
 import { Response, Websocket } from './websocket';
-import { RoomClient } from '../../game/core/room-client';
+import { RoomClient } from '../../game/rooms/room-client';
 import { User } from '../../storage';
 import { validateToken } from '../services/auth-token';
 
-interface AuthSocket extends io.Socket {
+interface MainSocket extends io.Socket {
   lobbyClient: RoomClient<LobbyRoom>;
   user: User;
-}
-
-interface MainUser {
-  name: string;
-  email: string;
-}
-
-interface MainGame {
-  id: number;
-  data: string;
-  userCount: number;
-}
-
-interface MainRefreshResponse {
-  games: MainGame[],
-  users: MainUser[]
 }
 
 export class MainWebsocket extends Websocket {
 
   private lobbyRoom: LobbyRoom;
-  private sockets: AuthSocket[] = [];
+  private sockets: MainSocket[] = [];
 
   constructor() {
     super();
     this.lobbyRoom = new LobbyRoom();
 
     this.addMiddleware((socket, next) => this.authSocket(socket, next));
-    this.addListener('main:refresh', this.refresh.bind(this));
+    this.addListener('lobby:getInfo', this.getLobbyInfo.bind(this));
+    this.addListener('lobby:createGame', this.createGame.bind(this));
   }
 
   private async authSocket(socket: io.Socket, next: (err?: any) => void): Promise<void> {
@@ -54,18 +40,18 @@ export class MainWebsocket extends Websocket {
       return next(new Error(Errors.AUTH_TOKEN_INVALID));
     }
 
-    (socket as AuthSocket).user = user;
+    (socket as MainSocket).user = user;
     next();
   }
 
-  protected onSocketConnection(socket: AuthSocket): void {
+  protected onSocketConnection(socket: MainSocket): void {
     const user = socket.user;
     const client = this.lobbyRoom.join(user);
     socket.lobbyClient = client;
     this.sockets.push(socket);
   }
 
-  protected onSocketDisconnection(socket: AuthSocket): void {
+  protected onSocketDisconnection(socket: MainSocket): void {
     socket.lobbyClient.leave();
     const index = this.sockets.indexOf(socket);
     if (index !== -1) {
@@ -73,7 +59,15 @@ export class MainWebsocket extends Websocket {
     }
   }
 
-  private refresh(socket: AuthSocket, data: void, response: Response<MainRefreshResponse>): void {
+  private getLobbyInfo(socket: MainSocket, data: void, response: Response<LobbyInfo>): void {
+    const lobbyInfo = this.lobbyRoom.getLobbyInfo();
+    response('ok', lobbyInfo);
+  }
+
+  private createGame(socket: MainSocket, data: void, response: Response<GameInfo>): void {
+    console.log('createRoom');
+    const gameRoom = this.lobbyRoom.createGame(socket.lobbyClient);
+    response('ok', gameRoom.room.gameInfo);
   }
 
 }

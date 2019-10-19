@@ -2,22 +2,23 @@
 
   <ptcg-sidebar>
     <mat-list>
-        <mat-list-item>Player 1</mat-list-item>
-        <mat-list-item>Player 2</mat-list-item>
-        <mat-list-item>Player 3</mat-list-item>
-
-        <mat-list-item *ngFor="let user of (users$ | async)">{{user.name}}</mat-list-item>
+      <mat-list-item *ngFor="let user of (users$ | async)">{{user.name}}</mat-list-item>
     </mat-list>    
   </ptcg-sidebar>
 
   <ptcg-content>
     <h1 class="mat-h1">Games</h1>
 
-    <mat-card>
-      Simple card
+    <p>Status: <span>{{isConnected ? 'connected' : 'disconnected' }}</span></p>
+
+    <p>
+      <button mat-raised-button (click)="createGame()">Create game</button>
+    </p>
+
+    <mat-card *ngFor="let game of (games$ | async)">
+      Game {{game.gameId}}
     </mat-card>
-    
-    <button mat-button (click)="createGame()">Create game</button>
+
   </ptcg-content>
 
 </ptcg-sidebar-container>

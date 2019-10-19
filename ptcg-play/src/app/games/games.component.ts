@@ -1,24 +1,40 @@
-import { Component } from '@angular/core';
-import { MainService } from '../api/services/main.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { GameInfo, UserInfo } from 'ptcg-server';
 import { Observable } from 'rxjs';
 
-import { User } from '../shared/session/user.interface';
+import { MainService } from '../api/services/main.service';
+import { SocketService } from '../api/socket.service';
+import { takeUntilDestroyed } from '../shared/operators/take-until-destroyed';
 
 @Component({
   selector: 'ptcg-games',
   templateUrl: './games.component.html',
   styleUrls: ['./games.component.scss']
 })
-export class GamesComponent {
+export class GamesComponent implements OnDestroy, OnInit {
   title = 'ptcg-play';
 
-  public users$: Observable<User[]>;
-  public games$: Observable<any>;
+  public users$: Observable<UserInfo[]>;
+  public games$: Observable<GameInfo[]>;
+  public isConnected = false;
 
-  constructor(private mainSevice: MainService) {
+  constructor(
+    private mainSevice: MainService,
+    private socketService: SocketService,
+  ) {
     this.users$ = mainSevice.users$;
     this.games$ = mainSevice.games$;
   }
+
+  ngOnInit() {
+    this.socketService.connection
+      .pipe(takeUntilDestroyed(this))
+      .subscribe(connected => {
+        this.isConnected = connected;
+      });
+  }
+
+  ngOnDestroy() { }
 
   public createGame() {
     this.mainSevice.createGame();

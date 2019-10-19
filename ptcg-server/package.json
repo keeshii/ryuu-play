@@ -2,7 +2,8 @@
   "name": "ptcg-server",
   "version": "0.0.1",
   "description": "Server of the ptcg game.",
-  "main": "dist/index.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "lint": "tslint {src/**/*.ts,src/*.ts}",
     "build": "npm run lint && npm run test && tsc",

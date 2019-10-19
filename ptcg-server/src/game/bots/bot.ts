@@ -1,7 +1,7 @@
-import { LobbyRoom } from '../core/lobby-room';
-import { GameRoom } from '../core/game-room';
+import { LobbyRoom } from '../rooms/lobby-room';
+import { GameRoom } from '../rooms/game-room';
 import { User } from '../../storage';
-import { RoomClient } from '../core/room-client';
+import { RoomClient } from '../rooms/room-client';
 
 export interface Bot {
   user: User;
