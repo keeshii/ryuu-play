@@ -3,7 +3,7 @@ require('./config');
 const { Storage } = require('./dist/storage');
 const { BotManager } = require('./dist/game/bots/bot-manager');
 const { CardManager } = require('./dist/game/cards/card-manager');
-const { LobbyRoom } = require('./dist/game/core/lobby-room');
+const { LobbyRoom } = require('./dist/game/rooms/lobby-room');
 const { SimpleBot } = require('./dist/simple-bot/main');
 const { basicSet } = require('./dist/sets/basic-set/basic-set');
 const { config } = require('./dist/config');

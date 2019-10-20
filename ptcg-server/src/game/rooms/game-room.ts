@@ -1,19 +1,23 @@
-
 import { Action } from "../store/actions/action";
 import { AddPlayerAction } from "../store/actions/add-player-action";
 import { Arbiter } from "./arbiter";
 import { GameInfo, PlayerInfo } from "./game-info.interface";
+import { LobbyClient } from "./lobby-room";
 import { Prompt } from "../store/prompts/prompt";
 import { Room } from "./room";
 import { RoomClient } from "./room-client";
 import { State, GamePhase } from "../store/state/state";
 import { Store } from "../store/store";
 import { StoreHandler } from "../store/store-handler";
-import { User } from "../../storage";
 import { logger } from "../../utils/logger";
 import { deepCompare } from "../../utils/utils";
 
-export class GameRoom extends Room implements StoreHandler {
+export interface GameClient extends RoomClient {
+  room: GameRoom;
+  lobbyClient: LobbyClient;
+}
+
+export class GameRoom extends Room<GameClient> implements StoreHandler {
 
   public id: number;
   public gameInfo: GameInfo;
@@ -27,14 +31,20 @@ export class GameRoom extends Room implements StoreHandler {
     this.gameInfo = this.buildGameInfo(this.store.state);
   }
 
-  public join(user: User): RoomClient<GameRoom> {
-    this.broadcast('game:join', user);
-    return super.join(user);
+  public join(lobbyClient: LobbyClient): GameClient {
+    let client = this.clients.find(c => c.lobbyClient === lobbyClient);
+    if (client !== undefined) {
+      return client;
+    }
+    client = this.joinRoom(lobbyClient.user);
+    client.lobbyClient = lobbyClient;
+    this.broadcast('game:join', client);
+    return client;
   }
 
-  public leave(client: RoomClient<GameRoom>) {
+  public leave(client: GameClient) {
     super.leave(client);
-    this.broadcast('game:leave', client.user);
+    this.broadcast('game:leave', client);
     if (this.clients.length === 0) {
       this.destroy();
     }
@@ -45,13 +55,13 @@ export class GameRoom extends Room implements StoreHandler {
     this.clients.length === 0;
   }
 
-  public play(client: RoomClient<GameRoom>, deck: string[]) {
+  public play(client: GameClient, deck: string[]) {
     logger.log(`User ${client.user.name} starts playing at table ${this.id}.`);
     const action = new AddPlayerAction(client.user.name, deck);
     this.store.dispatch(action);
   }
 
-  public dispatch(client: RoomClient<GameRoom>, action: Action) {
+  public dispatch(client: GameClient, action: Action) {
     logger.log(`User ${client.user.name} dispatches the action ${action.type}.`);
     this.store.dispatch(action);
   }

@@ -1,15 +1,14 @@
 import * as io from 'socket.io';
 
 import { Errors } from '../common/errors';
-import { LobbyRoom } from '../../game/rooms/lobby-room';
+import { LobbyRoom, LobbyClient } from '../../game/rooms/lobby-room';
 import { LobbyInfo, GameInfo } from '../../game/rooms/game-info.interface';
 import { Response, Websocket } from './websocket';
-import { RoomClient } from '../../game/rooms/room-client';
 import { User } from '../../storage';
 import { validateToken } from '../services/auth-token';
 
 interface MainSocket extends io.Socket {
-  lobbyClient: RoomClient<LobbyRoom>;
+  lobbyClient: LobbyClient;
   user: User;
 }
 
@@ -25,6 +24,8 @@ export class MainWebsocket extends Websocket {
     this.addMiddleware((socket, next) => this.authSocket(socket, next));
     this.addListener('lobby:getInfo', this.getLobbyInfo.bind(this));
     this.addListener('lobby:createGame', this.createGame.bind(this));
+
+    this.lobbyRoom.on('lobby:deleteGame', this.deleteGame.bind(this));
   }
 
   private async authSocket(socket: io.Socket, next: (err?: any) => void): Promise<void> {
@@ -65,9 +66,12 @@ export class MainWebsocket extends Websocket {
   }
 
   private createGame(socket: MainSocket, data: void, response: Response<GameInfo>): void {
-    console.log('createRoom');
     const gameRoom = this.lobbyRoom.createGame(socket.lobbyClient);
     response('ok', gameRoom.room.gameInfo);
+  }
+
+  private deleteGame(gameId: number): void {
+    return;
   }
 
 }

@@ -3,8 +3,7 @@ import { AlertPrompt, ConfirmPrompt, Player, Prompt, State, GamePhase } from '..
 import { ChooseCardsPrompt } from '../game/store/prompts/choose-cards-prompt';
 import { PassTurnAction } from '../game/store/actions/pass-turn-action';
 import { StoreMessage } from '../game/store/store-messages';
-import { GameRoom } from '../game/rooms/game-room';
-import { RoomClient } from '../game/rooms/room-client';
+import { GameClient } from '../game/rooms/game-room';
 
 export class SimpleGameHandler {
 
@@ -12,7 +11,7 @@ export class SimpleGameHandler {
   private player: Player = new Player();
   private name: string;
 
-  constructor(private client: RoomClient<GameRoom>) {
+  constructor(private client: GameClient) {
     this.name = client.user.name;
 
     client.on('game:stateStable', (state: State) => this.onStateStable(state));

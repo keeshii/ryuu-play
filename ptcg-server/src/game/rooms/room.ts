@@ -1,18 +1,12 @@
 import { RoomClient, RoomListener, RoomCallback } from "./room-client";
 import { User } from "../../storage";
 
-export class Room {
+export class Room<Client extends RoomClient = RoomClient> {
 
-  protected clients: RoomClient<any>[] = [];
+  protected clients: Client[] = [];
   protected listeners: RoomListener<any, any>[] = [];
 
-  public join(user: User): RoomClient<any> {
-    const client = new RoomClient(this, user);
-    this.clients.push(client);
-    return client;
-  }
-
-  public leave(client: RoomClient<any>): void {
+  public leave(client: Client): void {
     const index = this.clients.indexOf(client);
     if (index !== -1) {
       this.clients.splice(index, 1);
@@ -31,6 +25,12 @@ export class Room {
     }
   }
 
+  protected joinRoom(user: User): Client {
+    const client = new RoomClient(this, user) as Client;
+    this.clients.push(client);
+    return client;
+  }
+
   protected broadcast<T>(message: string, data: T) {
     for (let i = 0; i < this.listeners.length; i++) {
       if (this.listeners[i].message === message) {
@@ -46,7 +46,7 @@ export class Room {
     });
   }
 
-  protected emitTo<T, R>(client: RoomClient<any>, message: string, data: T): R | undefined {
+  protected emitTo<T, R>(client: Client, message: string, data: T): R | undefined {
     const index = this.clients.indexOf(client);
     let response: R | undefined;
     if (index !== -1) {

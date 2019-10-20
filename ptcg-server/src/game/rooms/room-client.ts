@@ -8,13 +8,13 @@ export interface RoomListener<T, R> {
   callback: RoomCallback<T, R>;
 };
 
-export class RoomClient<S extends Room> {
+export class RoomClient {
 
   public user: User;
   public listeners: RoomListener<any, any>[] = [];
-  public room: S;
+  public room: Room<any>;
 
-  constructor(room: S, user: User) {
+  constructor(room: Room<any>, user: User) {
     this.room = room;
     this.user = user;
   }
