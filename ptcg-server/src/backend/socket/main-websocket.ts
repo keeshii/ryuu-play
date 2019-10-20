@@ -25,7 +25,8 @@ export class MainWebsocket extends Websocket {
     this.addListener('lobby:getInfo', this.getLobbyInfo.bind(this));
     this.addListener('lobby:createGame', this.createGame.bind(this));
 
-    this.lobbyRoom.on('lobby:deleteGame', this.deleteGame.bind(this));
+    this.lobbyRoom.on('lobby:createGame', this.onCreateGame.bind(this));
+    this.lobbyRoom.on('lobby:deleteGame', this.onDeleteGame.bind(this));
   }
 
   private async authSocket(socket: io.Socket, next: (err?: any) => void): Promise<void> {
@@ -49,11 +50,13 @@ export class MainWebsocket extends Websocket {
     const user = socket.user;
     const client = this.lobbyRoom.join(user);
     socket.lobbyClient = client;
+    socket.join('lobby');
     this.sockets.push(socket);
   }
 
   protected onSocketDisconnection(socket: MainSocket): void {
     socket.lobbyClient.leave();
+    socket.leaveAll();
     const index = this.sockets.indexOf(socket);
     if (index !== -1) {
       this.sockets.splice(index, 1);
@@ -70,8 +73,15 @@ export class MainWebsocket extends Websocket {
     response('ok', gameRoom.room.gameInfo);
   }
 
-  private deleteGame(gameId: number): void {
-    return;
+  private onCreateGame(gameId: number): void {
+    const game = this.lobbyRoom.getGame(gameId);
+    if (game !== undefined) {
+      this.ws.to('lobby').emit('lobby:createGame', game.gameInfo);
+    }
+  }
+
+  private onDeleteGame(gameId: number): void {
+    this.ws.to('lobby').emit('lobby:deleteGame', gameId);
   }
 
 }

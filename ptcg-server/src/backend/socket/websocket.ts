@@ -15,6 +15,7 @@ export interface Listener<T, R, S extends io.Socket> {
 export abstract class Websocket {
   protected listeners: Listener<any, any, any>[] = [];
   protected middlewares: Middleware[] = [];
+  protected ioServer: io.Server | undefined;
 
   constructor() { }
 
@@ -45,6 +46,15 @@ export abstract class Websocket {
 
       socket.on('disconnect', () => this.onSocketDisconnection(socket));
     });
+
+    this.ioServer = ws;
+  }
+
+  protected get ws(): io.Server {
+    if (this.ioServer === undefined) {
+      throw new Error('Socket io not listening');
+    }
+    return this.ioServer;
   }
 
   protected addMiddleware(middleware: Middleware): void {

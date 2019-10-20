@@ -24,16 +24,16 @@ export class MainService {
 
   public init(): void {
     this.socketService.on('connect', () => this.refresh());
-    this.socketService.on('main:gameAdd', (game: GameInfo) => this.onGameAdd(game));
-    this.socketService.on('main:gameDelete', (gameId: number) => this.onGameDelete(gameId));
+    this.socketService.on('lobby:createGame', (game: GameInfo) => this.onCreateGame(game));
+    this.socketService.on('main:gameDelete', (gameId: number) => this.onDeleteGame(gameId));
   }
 
-  private onGameAdd(game: GameInfo): void {
+  private onCreateGame(game: GameInfo): void {
     const games = [...this.games.value, game];
     this.games.next(games);
   }
 
-  private onGameDelete(gameId: number): void {
+  private onDeleteGame(gameId: number): void {
     const games = this.games.value.filter(g => g.gameId !== gameId);
     this.games.next(games);
   }
