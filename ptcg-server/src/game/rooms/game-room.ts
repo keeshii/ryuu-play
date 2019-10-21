@@ -57,7 +57,7 @@ export class GameRoom extends Room<GameClient> implements StoreHandler {
 
   public play(client: GameClient, deck: string[]) {
     logger.log(`User ${client.user.name} starts playing at table ${this.id}.`);
-    const action = new AddPlayerAction(client.user.name, deck);
+    const action = new AddPlayerAction(client.id, client.user.name, deck);
     this.store.dispatch(action);
   }
 
@@ -102,16 +102,12 @@ export class GameRoom extends Room<GameClient> implements StoreHandler {
   }
 
   private buildGameInfo(state: State): GameInfo {
-    const players: PlayerInfo[] = state.players.map(player => {
-      const client = this.clients.find(client => client.user.name === player.name);
-      const userId = client !== undefined ? client.user.id : 0;
-      return {
-        userId: userId,
-        name: player.name,
-        prizes: player.prizes.cards.length,
-        deck: player.deck.cards.length
-      }
-    });
+    const players: PlayerInfo[] = state.players.map(player => ({
+      clientId: player.clientId,
+      name: player.name,
+      prizes: player.prizes.cards.length,
+      deck: player.deck.cards.length
+    }));
     return {
       gameId: this.id,
       phase: state.phase,

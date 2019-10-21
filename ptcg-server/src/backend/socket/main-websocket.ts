@@ -2,7 +2,7 @@ import * as io from 'socket.io';
 
 import { Errors } from '../common/errors';
 import { LobbyRoom, LobbyClient } from '../../game/rooms/lobby-room';
-import { LobbyInfo, GameInfo } from '../../game/rooms/game-info.interface';
+import { LobbyInfo, GameInfo, UserInfo } from '../../game/rooms/game-info.interface';
 import { Response, Websocket } from './websocket';
 import { User } from '../../storage';
 import { validateToken } from '../services/auth-token';
@@ -25,6 +25,8 @@ export class MainWebsocket extends Websocket {
     this.addListener('lobby:getInfo', this.getLobbyInfo.bind(this));
     this.addListener('lobby:createGame', this.createGame.bind(this));
 
+    this.lobbyRoom.on('lobby:join', this.onJoin.bind(this));
+    this.lobbyRoom.on('lobby:leave', this.onLeave.bind(this));
     this.lobbyRoom.on('lobby:createGame', this.onCreateGame.bind(this));
     this.lobbyRoom.on('lobby:deleteGame', this.onDeleteGame.bind(this));
   }
@@ -71,6 +73,14 @@ export class MainWebsocket extends Websocket {
   private createGame(socket: MainSocket, data: void, response: Response<GameInfo>): void {
     const gameRoom = this.lobbyRoom.createGame(socket.lobbyClient);
     response('ok', gameRoom.room.gameInfo);
+  }
+
+  private onJoin(userInfo: UserInfo): void {
+    this.ws.to('lobby').emit('lobby:join', userInfo);
+  }
+
+  private onLeave(userInfo: UserInfo): void {
+    this.ws.to('lobby').emit('lobby:leave', userInfo);
   }
 
   private onCreateGame(gameId: number): void {

@@ -1,5 +1,6 @@
 import { RoomClient, RoomListener, RoomCallback } from "./room-client";
 import { User } from "../../storage";
+import { generateId } from "../../utils/utils";
 
 export class Room<Client extends RoomClient = RoomClient> {
 
@@ -26,7 +27,8 @@ export class Room<Client extends RoomClient = RoomClient> {
   }
 
   protected joinRoom(user: User): Client {
-    const client = new RoomClient(this, user) as Client;
+    const id = generateId(this.clients);
+    const client = new RoomClient(this, id, user) as Client;
     this.clients.push(client);
     return client;
   }

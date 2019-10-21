@@ -2,7 +2,7 @@ import {CardList} from "./card-list";
 
 export class Player {
 
-  userId: number = 0;
+  clientId: number = 0;
 
   name: string = '';
 

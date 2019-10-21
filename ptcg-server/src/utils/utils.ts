@@ -34,3 +34,22 @@ export function deepCompare(x: any, y: any): boolean {
   }
   return true;
 }
+
+
+export function generateId<T extends {id: number}[]>(array: T): number {
+  if (array.length === 0) {
+    return 1;
+  }
+
+  const last = array[array.length - 1];
+  let id = last.id + 1;
+
+  while (array.find(g => g.id === id)) {
+    if (id === Number.MAX_VALUE) {
+      id = 0;
+    }
+    id = id + 1;
+  }
+
+  return id;
+}

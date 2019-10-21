@@ -24,8 +24,20 @@ export class MainService {
 
   public init(): void {
     this.socketService.on('connect', () => this.refresh());
+    this.socketService.on('lobby:join', (userInfo: UserInfo) => this.onJoin(userInfo));
+    this.socketService.on('lobby:leave', (userInfo: UserInfo) => this.onLeave(userInfo));
     this.socketService.on('lobby:createGame', (game: GameInfo) => this.onCreateGame(game));
-    this.socketService.on('main:gameDelete', (gameId: number) => this.onDeleteGame(gameId));
+    this.socketService.on('lobby:deleteGame', (gameId: number) => this.onDeleteGame(gameId));
+  }
+
+  private onJoin(userInfo: UserInfo): void {
+    const users = [...this.users.value, userInfo];
+    this.users.next(users);
+  }
+
+  private onLeave(userInfo: UserInfo): void {
+    const users = this.users.value.filter(user => user.clientId !== userInfo.clientId);
+    this.users.next(users);
   }
 
   private onCreateGame(game: GameInfo): void {
@@ -52,10 +64,7 @@ export class MainService {
     this.loading = true;
     this.socketService.emit('lobby:createGame')
       .pipe(finalize(() => { this.loading = false; }))
-      .subscribe((gameInfo: GameInfo) => {
-        const games = [...this.games.value, gameInfo];
-        this.games.next(games);
-      }, () => {});
+      .subscribe(() => {}, () => {});
   }
 
   public joinGame() { }
