@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { GameInfo, LobbyInfo, UserInfo } from 'ptcg-server';
-import { Game } from 'src/app/shared/session/game.interface';
 import { SocketService } from '../socket.service';
-import { User } from 'src/app/shared/session/user.interface';
 import { finalize } from 'rxjs/operators';
 
 @Injectable()
