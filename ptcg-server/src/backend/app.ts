@@ -1,6 +1,7 @@
 import * as express from 'express';
 import { json } from 'body-parser';
 
+import { GameSocketHandler } from './socket/game-socket-handler';
 import { LobbyRoom } from '../game/rooms/lobby-room';
 import { LobbySocketHandler } from './socket/lobby-socket-handler';
 import { Storage } from '../storage';
@@ -57,6 +58,7 @@ export class App {
 
     ws.use(authSocket);
     ws.addHandler(new LobbySocketHandler(ws, this.lobbyRoom));
+    ws.addHandler(new GameSocketHandler(ws, this.lobbyRoom));
 
     return ws;
   }

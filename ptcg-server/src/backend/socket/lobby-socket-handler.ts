@@ -1,5 +1,5 @@
 import { LobbyRoom } from '../../game/rooms/lobby-room';
-import { LobbyInfo, GameInfo, UserInfo } from '../../game/rooms/game-info.interface';
+import { LobbyInfo, GameInfo, UserInfo } from '../../game/rooms/rooms.interface';
 import { Socket } from './socket.interface';
 import { SocketHandler, Response } from './socket-handler';
 import { WebSocketServer } from './websocket-server';

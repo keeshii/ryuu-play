@@ -1,9 +1,10 @@
 import * as io from 'socket.io';
 
+import { Errors } from '../common/errors';
 import { Socket } from './socket.interface';
 import { WebSocketServer } from './websocket-server';
 
-export type Response<R = void> = (message: string, data?: R) => void;
+export type Response<R = void> = (message: string, data?: R | Errors) => void;
 
 export type Handler<T, R> = (socket: Socket, data: T, response: Response<R>) => void;
 
@@ -46,8 +47,8 @@ export abstract class SocketHandler {
     return this.ws.server;
   }
 
-  protected abstract onSocketConnection(socket: Socket): void;
+  protected onSocketConnection(socket: Socket): void { }
 
-  protected abstract onSocketDisconnection(socket: Socket): void;
+  protected onSocketDisconnection(socket: Socket): void { }
 
 }

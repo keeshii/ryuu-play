@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { GameInfo, LobbyInfo, UserInfo } from 'ptcg-server';
+import { GameInfo, LobbyInfo, UserInfo, GameState } from 'ptcg-server';
+import { GameService } from './game.service';
 import { SocketService } from '../socket.service';
 import { finalize } from 'rxjs/operators';
 
@@ -15,7 +16,10 @@ export class MainService {
   private games = new BehaviorSubject<GameInfo[]>([]);
   private users = new BehaviorSubject<UserInfo[]>([]);
 
-  constructor(private socketService: SocketService) {
+  constructor(
+    private gameService: GameService,
+    private socketService: SocketService
+  ) {
     this.users$ = this.users.asObservable();
     this.games$ = this.games.asObservable();
   }
@@ -62,7 +66,9 @@ export class MainService {
     this.loading = true;
     this.socketService.emit('lobby:createGame')
       .pipe(finalize(() => { this.loading = false; }))
-      .subscribe(() => {}, () => {});
+      .subscribe((gameState: GameState) => {
+        this.gameService.appendGameSate(gameState);
+      }, () => {});
   }
 
   public joinGame() { }

@@ -1,5 +1,5 @@
 import { GameRoom, GameClient } from "./game-room";
-import { GameInfo, LobbyInfo } from "./game-info.interface";
+import { GameInfo, LobbyInfo } from "./rooms.interface";
 import { Room } from "./room";
 import { RoomClient } from "./room-client";
 import { User } from "../../storage";

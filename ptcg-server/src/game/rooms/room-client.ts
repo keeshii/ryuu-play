@@ -1,6 +1,6 @@
 import { Room } from "./room";
 import { User } from "../../storage";
-import { UserInfo } from "./game-info.interface";
+import { UserInfo } from "./rooms.interface";
 
 export type RoomCallback<T, R> = (data: T) => R
 

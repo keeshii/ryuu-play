@@ -20,7 +20,9 @@
       <a mat-list-item>
         <span matBadge="1" matBadgeOverlap="false">Table</span>
       </a>
-      <a mat-list-item>Table</a>
+      <a mat-list-item *ngFor="let gameState of (gameStates$ | async)">
+        Table {{gameState.gameId}}
+      </a>
     </mat-nav-list>
   </mat-sidenav>
 

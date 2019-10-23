@@ -15,9 +15,8 @@
       <button mat-raised-button (click)="createGame()">Create game</button>
     </p>
 
-    <mat-card *ngFor="let game of (games$ | async)">
-      Game {{game.gameId}}
-    </mat-card>
+    <ptcg-game [game]="game" *ngFor="let game of (games$ | async)">
+    </ptcg-game>
 
   </ptcg-content>
 

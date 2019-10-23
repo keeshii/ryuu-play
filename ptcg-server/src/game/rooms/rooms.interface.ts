@@ -1,4 +1,4 @@
-import { GamePhase } from "../store/state/state";
+import { GamePhase, State } from "../store/state/state";
 
 export interface PlayerInfo {
   clientId: number;
@@ -25,4 +25,10 @@ export interface UserInfo {
 export interface LobbyInfo {
   users: UserInfo[],
   games: GameInfo[]
+}
+
+export interface GameState {
+  gameId: number;
+  state: State;
+  users: UserInfo[]
 }

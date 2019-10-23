@@ -1,7 +1,7 @@
 import { Action } from "../store/actions/action";
 import { AddPlayerAction } from "../store/actions/add-player-action";
 import { Arbiter } from "./arbiter";
-import { GameInfo, PlayerInfo } from "./game-info.interface";
+import { GameInfo, PlayerInfo } from "./rooms.interface";
 import { LobbyClient } from "./lobby-room";
 import { Prompt } from "../store/prompts/prompt";
 import { Room } from "./room";
@@ -32,7 +32,7 @@ export class GameRoom extends Room<GameClient> implements StoreHandler {
   }
 
   public join(lobbyClient: LobbyClient): GameClient {
-    let client = this.clients.find(c => c.lobbyClient === lobbyClient);
+    let client = this.findClient(lobbyClient);
     if (client !== undefined) {
       return client;
     }
@@ -48,6 +48,10 @@ export class GameRoom extends Room<GameClient> implements StoreHandler {
     if (this.clients.length === 0) {
       this.destroy();
     }
+  }
+
+  public findClient(lobbyClient: LobbyClient): GameClient | undefined {
+    return this.clients.find(c => c.lobbyClient === lobbyClient);
   }
 
   private destroy() {

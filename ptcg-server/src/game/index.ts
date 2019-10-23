@@ -1,6 +1,6 @@
 export * from './cards/card-manager';
 
-export * from './rooms/game-info.interface';
+export * from './rooms/rooms.interface';
 
 export * from './store/actions/action';
 export * from './store/actions/add-player-action';
