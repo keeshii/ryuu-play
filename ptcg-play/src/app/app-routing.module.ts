@@ -5,12 +5,14 @@ import { DeckComponent } from './deck/deck.component';
 import { GamesComponent } from './games/games.component';
 import { RegisterComponent } from './login/register/register.component';
 import { ResetPasswordComponent } from './login/reset-password/reset-password.component';
+import { TableComponent } from './table/table.component';
 
 const routes: Routes = [
     { path: 'deck', component: DeckComponent },
     { path: 'games', component: GamesComponent },
     { path: 'register', component: RegisterComponent },
     { path: 'reset-password', component: ResetPasswordComponent },
+    { path: 'table/:gameId', component: TableComponent },
     { path: '', redirectTo: '/games', pathMatch: 'full' },
 ];
 

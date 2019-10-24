@@ -12,16 +12,17 @@
       <a routerLink="/deck" mat-list-item>Deck</a>
       <a mat-list-item>Ranking</a>
       <a mat-list-item>Profile</a>
+      <a mat-list-item>
+        <span matBadge="1" matBadgeOverlap="false">Messages</span>
+      </a>
     </mat-nav-list>
 
     <mat-divider></mat-divider>
     <mat-nav-list>
       <h4>Tables</h4>
-      <a mat-list-item>
-        <span matBadge="1" matBadgeOverlap="false">Table</span>
-      </a>
-      <a mat-list-item *ngFor="let gameState of (gameStates$ | async)">
-        Table {{gameState.gameId}}
+      <a mat-list-item *ngFor="let table of (gameStates$ | async)"
+        [routerLink]="['/table', table.gameId]">
+        Table {{table.gameId}}
       </a>
     </mat-nav-list>
   </mat-sidenav>
