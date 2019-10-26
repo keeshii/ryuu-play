@@ -8,6 +8,7 @@ import { DeckModule } from './deck/deck.module';
 import { GamesModule } from './games/games.module';
 import { LoginModule } from './login/login.module';
 import { SharedModule } from './shared/shared.module';
+import { TableModule } from './table/table.module';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { SharedModule } from './shared/shared.module';
     DeckModule,
     GamesModule,
     LoginModule,
-    SharedModule
+    SharedModule,
+    TableModule
   ],
   providers: [],
   bootstrap: [AppComponent]
