@@ -74,8 +74,14 @@ export class SocketService {
     this.socket.on(event, callback.fn);
   }
 
-  public off(): void {
-    this.callbacks.forEach(callback => this.socket.off(callback.event, callback.fn));
+  public off(message?: string): void {
+    this.callbacks = this.callbacks.filter(callback => {
+      if (message === undefined || message === callback.event) {
+        this.socket.off(callback.event, callback.fn);
+        return false;
+      }
+      return true;
+    });
   }
 
   get connection(): Observable<boolean> {

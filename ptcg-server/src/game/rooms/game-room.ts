@@ -1,7 +1,7 @@
 import { Action } from "../store/actions/action";
 import { AddPlayerAction } from "../store/actions/add-player-action";
 import { Arbiter } from "./arbiter";
-import { GameInfo, PlayerInfo } from "./rooms.interface";
+import { GameInfo, PlayerInfo, GameState } from "./rooms.interface";
 import { LobbyClient } from "./lobby-room";
 import { Prompt } from "../store/prompts/prompt";
 import { Room } from "./room";
@@ -103,6 +103,15 @@ export class GameRoom extends Room<GameClient> implements StoreHandler {
     }
 
     return resolved;
+  }
+
+  public getGameState(gameClient: GameClient): GameState {
+    return {
+      clientId: gameClient.id,
+      gameId: this.id,
+      state: this.store.state,
+      users: this.clients.map(client => client.userInfo)
+    }
   }
 
   private buildGameInfo(state: State): GameInfo {

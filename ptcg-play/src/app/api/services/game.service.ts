@@ -38,6 +38,7 @@ export class GameService {
     const index = this.gameStates.value.findIndex(g => g.gameId === gameId);
     if (index === -1) {
       const gameStates = [...this.gameStates.value, gameState];
+      this.startListening(gameState.gameId);
       this.gameStates.next(gameStates);
     }
   }
@@ -46,6 +47,7 @@ export class GameService {
     this.socketService.emit('game:leave', gameId)
       .subscribe(() => {
         const tables = this.gameStates.value.filter(table => table.gameId !== gameId);
+        this.stopListening(gameId);
         this.gameStates.next(tables);
       });
   }
@@ -53,5 +55,25 @@ export class GameService {
   public play(deck: string[]) { }
 
   public dispatch(action: Action) { }
+
+  private startListening(id: number) {
+    console.log('startListening', id);
+    this.socketService.on(`game[${id}]:join`, (userInfo: UserInfo) => this.onJoin(id, userInfo));
+    this.socketService.on(`game[${id}]:leave`, (userInfo: UserInfo) => this.onJoin(id, userInfo));
+  }
+
+  private stopListening(id: number) {
+    console.log('stopListening', id);
+    this.socketService.off(`game[${id}]:join`);
+    this.socketService.off(`game[${id}]:leave`);
+  }
+
+  private onJoin(gameId: number, userInfo: UserInfo) {
+    console.log('gameService, onJoin', gameId, userInfo);
+  }
+
+  private onLeave(gameId: number, userInfo: UserInfo) {
+    console.log('gameService, onLeave', gameId, userInfo);
+  }
 
 }

@@ -28,6 +28,7 @@ export interface LobbyInfo {
 }
 
 export interface GameState {
+  clientId: number;
   gameId: number;
   state: State;
   users: UserInfo[]
