@@ -1,25 +1,21 @@
 import { Action } from '../game/store/actions/action';
 import { AlertPrompt, ConfirmPrompt, Player, Prompt, State, GamePhase } from '../game';
 import { ChooseCardsPrompt } from '../game/store/prompts/choose-cards-prompt';
+import { Client } from '../game/core/client';
+import { Game } from '../game/core/game';
 import { PassTurnAction } from '../game/store/actions/pass-turn-action';
 import { StoreMessage } from '../game/store/store-messages';
-import { GameClient } from '../game/rooms/game-room';
 
 export class SimpleGameHandler {
 
-  // private state: State;
   private player: Player = new Player();
   private name: string;
 
-  constructor(private client: GameClient) {
-    this.name = client.user.name;
-
-    client.on('game:stateStable', (state: State) => this.onStateStable(state));
-    client.on('game:stateChange', (state: State) => this.onStateChange(state));
-    client.on('game:prompt', (prompt: Prompt<any>) => this.resolvePrompt(prompt));
+  constructor(private client: Client, public game: Game) {
+    this.name = client.name;
   }
 
-  private onStateStable(state: State): void {
+  public onStateStable(state: State): void {
     if (state.phase !== GamePhase.PLAYER_TURN) {
       return;
     }
@@ -32,7 +28,7 @@ export class SimpleGameHandler {
     this.dispatch(new PassTurnAction(player));
   }
 
-  private onStateChange(state: State): void {
+  public onStateChange(state: State): void {
     for (let i = 0; i < state.players.length; i++) {
       if (state.players[i].name === this.name) {
         this.player = state.players[i];
@@ -40,7 +36,7 @@ export class SimpleGameHandler {
     }
   }
 
-  private resolvePrompt(prompt: Prompt<any>): boolean {
+  public resolvePrompt(prompt: Prompt<any>): boolean {
     if (prompt instanceof AlertPrompt) {
       prompt.resolve(void 0);
       return true;
@@ -63,12 +59,11 @@ export class SimpleGameHandler {
       prompt.resolve(cards);
       return true;
     }
-
     return false;
   }
 
-  private dispatch(action: Action): void {
-    this.client.room.dispatch(this.client, action);
+  public dispatch(action: Action): void {
+    this.game.dispatch(this.client, action);
   }
 
 }

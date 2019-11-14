@@ -1,15 +1,14 @@
-import { Bot } from './bot';
-import { LobbyRoom } from '../rooms/lobby-room';
+import { BotClient } from './bot-client';
+import { CoreError } from '../core/core-error';
+import { CoreMessage } from '../core/core-messages';
+import { Core } from '../core/core';
 import { User } from '../../storage';
-
-export type BotClass = new (user: User, game: LobbyRoom) => Bot;
 
 export class BotManager {
 
   private static instance: BotManager;
 
-  private botsQueue: Array<{name: string, botClass: BotClass}> = [];
-  private bots: Bot[] = [];
+  private bots: BotClient[] = [];
 
   public static getInstance(): BotManager {
     if (!BotManager.instance) {
@@ -19,27 +18,24 @@ export class BotManager {
     return BotManager.instance;
   }
 
-  public registerBot<T extends Bot>(name: string, botClass: new () => T): void {
-    this.botsQueue.push({name, botClass});
+  public registerBot(bot: BotClient): void {
+    this.bots.push(bot);
   }
 
-  public async initBots(lobbyRoom: LobbyRoom) {
-    const bots: Bot[] = [];
-    for (let i = 0; i < this.botsQueue.length; i++) {
-      let item = this.botsQueue[i];
-      let user = await this.findOrCreateUser(item.name);
-      bots.push(new item.botClass(user, lobbyRoom));
+  public async initBots(core: Core) {
+    for (let i = 0; i < this.bots.length; i++) {
+      let bot = this.bots[i];
+      let user = await this.findOrCreateUser(bot.name);
+      bot.user = user;
+      core.connect(bot);
     }
-    this.bots = bots;
   }
 
-  public getBot(botName: string): Bot {
+  public getBot(botName: string): BotClient {
     const bot = this.bots.find(bot => bot.user.name === botName);
-
     if (bot === undefined) {
-      throw new Error('Bot name `' + botName + '` not found');
+      throw new CoreError(CoreMessage.BOT_NOT_FOUND);
     }
-
     return bot;
   }
 

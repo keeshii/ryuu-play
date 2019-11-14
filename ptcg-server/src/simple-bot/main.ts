@@ -1,41 +1,71 @@
-import { Bot } from '../game/bots/bot';
-import { GameRoom, GameClient } from '../game/rooms/game-room';
-import { LobbyRoom, LobbyClient } from '../game/rooms/lobby-room';
+import { BotClient } from '../game/bots/bot-client';
+import { Client } from '../game/core/client';
+import { Game } from '../game/core/game';
+import { Prompt } from '../game/store/prompts/prompt';
 import { SimpleGameHandler } from './simple-game-handler';
-import { User } from '../storage';
+import { State } from '../game/store/state/state';
 
 
-export class SimpleBot implements Bot {
+export class SimpleBot extends BotClient {
 
-  private client: LobbyClient;
   private gameHandlers: SimpleGameHandler[] = [];
 
-  constructor(
-    public user: User,
-    public lobbyRoom: LobbyRoom
-  ) {
-    this.client = this.lobbyRoom.join(user);
-  }
+  public onConnect(client: Client): void { }
 
-  public createGame(): GameClient {
-    const client = this.lobbyRoom.createGame(this.client);
-    return this.addGameHandler(client);
-  }
+  public onDisconnect(client: Client): void { }
 
-  public joinGame(gameId: number): GameClient {
-    const game = this.lobbyRoom.getGame(gameId);
-    if (game === undefined) {
-      throw new Error('ERROR_GAME_NOT_FOUND');
+  public onGameJoin(client: Client, game: Game): void { }
+
+  public onGameLeave(client: Client, game: Game): void { }
+
+  public onGameInfo(game: Game): void { }
+
+  public onGameAdd(game: Game): void { }
+
+  public onGameDelete(game: Game): void {
+    const gameHandler = this.gameHandlers.find(handler => handler.game === game);
+    if (gameHandler !== undefined) {
+      this.deleteGameHandler(gameHandler);
     }
-    const client = game.join(this.client);
-    return this.addGameHandler(client);
   }
 
-  private addGameHandler(client: GameClient): GameClient {
-    const gameHandler = new SimpleGameHandler(client);
+  public onStateStable(game: Game, state: State): void {
+    const gameHandler = this.gameHandlers.find(handler => handler.game === game);
+    if (gameHandler !== undefined) {
+      gameHandler.onStateStable(state);
+    }
+  }
+
+  public onStateChange(game: Game, state: State): void {
+    const gameHandler = this.gameHandlers.find(handler => handler.game === game);
+    if (gameHandler !== undefined) {
+      gameHandler.onStateChange(state);
+    }
+  }
+
+  public resolvePrompt(game: Game, prompt: Prompt<any>): boolean {
+    const gameHandler = this.gameHandlers.find(handler => handler.game === game);
+    if (gameHandler !== undefined) {
+      return gameHandler.resolvePrompt(prompt);
+    }
+    return false;
+  }
+
+  public createGame(): Game {
+    const game = super.createGame();
+    this.addGameHandler(game);
+    return game;
+  }
+
+  public joinGame(game: Game): void {
+    super.joinGame(game);
+    this.addGameHandler(game);
+  }
+
+  private addGameHandler(game: Game): SimpleGameHandler {
+    const gameHandler = new SimpleGameHandler(this, game);
     this.gameHandlers.push(gameHandler);
-    client.on('game:destroy', () => this.deleteGameHandler(gameHandler));
-    return client;
+    return gameHandler;
   }
 
   private deleteGameHandler(gameHandler: SimpleGameHandler): void {
@@ -43,11 +73,6 @@ export class SimpleBot implements Bot {
     if (index !== -1) {
       this.gameHandlers.splice(index, 1);
     }
-  }
-
-  public playGame(client: GameClient, deck: string[]): void {
-    const gameRoom: GameRoom = client.room;
-    gameRoom.play(client, deck);
   }
 
 }
