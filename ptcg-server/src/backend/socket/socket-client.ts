@@ -6,6 +6,7 @@ import { CoreInfo, GameInfo, GameState } from '../../game/core/core.interface';
 import { Prompt } from '../../game/store/prompts/prompt';
 import { State } from '../../game/store/state/state';
 import { User } from '../../storage';
+import { Core } from '../../game/core/core';
 
 type Response<R = void> = (message: string, data?: R | Errors) => void;
 
@@ -20,10 +21,12 @@ export class SocketClient extends Client {
 
   public io: io.Server;
   public socket: io.Socket;
+  public core: Core;
   private listeners: Listener<any, any>[] = [];
 
-  constructor(user: User, io: io.Server, socket: io.Socket) {
+  constructor(user: User, core: Core, io: io.Server, socket: io.Socket) {
     super(user);
+    this.core = core;
     this.io = io;
     this.socket = socket;
 
@@ -81,10 +84,14 @@ export class SocketClient extends Client {
     for (let i = 0; i < this.listeners.length; i++) {
       const listener = this.listeners[i];
 
-      this.socket.on(listener.message, <T>(data: T, fn: Function) => {
-        listener.handler(data, (message, data) => {
-          return fn && fn({message, data});
-        });
+      this.socket.on(listener.message, <T, R>(data: T, fn: Function) => {
+        const response: Response<R> =
+          (message: string, data?: R | Errors) => fn && fn({message, data});
+        try {
+          listener.handler(data, response);
+        } catch(error) {
+          response('error', error);
+        }
       });
     }
   }
@@ -95,60 +102,29 @@ export class SocketClient extends Client {
   }
 
   private getCoreInfo(data: void, response: Response<CoreInfo>): void {
-    if (this.core === undefined) {
-      return response('error', Errors.CLIENT_NOT_CONNECTED);
-    }
     response('ok', this.core.coreInfo);
   }
 
   private createGame(data: void, response: Response<GameInfo>): void {
-    if (this.core === undefined) {
-      return response('error', Errors.CLIENT_NOT_CONNECTED);
-    }
-    try {
-      const game = this.core.createGame(this);
-      response('ok', game.gameInfo);
-    } catch (error) {
-      return response('error', error);
-    }
+    const game = this.core.createGame(this);
+    response('ok', game.gameInfo);
   }
 
   private joinGame(gameId: number, response: Response<GameState>): void {
-    if (this.core === undefined) {
-      return response('error', Errors.CLIENT_NOT_CONNECTED);
-    }
-    try {
-      const game = this.core.getGame(gameId);
-      this.core.joinGame(this, game);
-      response('ok', game.gameState);
-    } catch (error) {
-      return response('error', error);
-    }
+    const game = this.core.getGame(gameId);
+    this.core.joinGame(this, game);
+    response('ok', game.gameState);
   }
 
   private leaveGame(gameId: number, response: Response<void>): void {
-    if (this.core === undefined) {
-      return response('error', Errors.CLIENT_NOT_CONNECTED);
-    }
-    try {
-      const game = this.core.getGame(gameId);
-      this.core.leaveGame(this, game);
-      response('ok');
-    } catch (error) {
-      return response('error', error);
-    }
+    const game = this.core.getGame(gameId);
+    this.core.leaveGame(this, game);
+    response('ok');
   }
 
   private getGameStatus(gameId: number, response: Response<GameState>): void {
-    if (this.core === undefined) {
-      return response('error', Errors.CLIENT_NOT_CONNECTED);
-    }
-    try {
-      const game = this.core.getGame(gameId);
-      response('ok', game.gameState);
-    } catch (error) {
-      return response('error', error);
-    }
+    const game = this.core.getGame(gameId);
+    response('ok', game.gameState);
   }
 
 }

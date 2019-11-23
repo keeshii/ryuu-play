@@ -22,7 +22,7 @@ export class WebSocketServer {
     server.on('connection', (socket: io.Socket) => {
       const user: User = (socket as any).user;
 
-      const socketClient = new SocketClient(user, server, socket);
+      const socketClient = new SocketClient(user, this.core, server, socket);
       this.core.connect(socketClient);
 
       socketClient.attachListeners();
