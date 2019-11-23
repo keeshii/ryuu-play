@@ -22,13 +22,12 @@ export interface UserInfo {
   ranking: number;
 }
 
-export interface LobbyInfo {
+export interface CoreInfo {
   users: UserInfo[],
   games: GameInfo[]
 }
 
 export interface GameState {
-  clientId: number;
   gameId: number;
   state: State;
   users: UserInfo[]

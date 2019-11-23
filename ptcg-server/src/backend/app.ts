@@ -2,8 +2,6 @@ import * as express from 'express';
 import { json } from 'body-parser';
 
 import { Core } from '../game/core/core';
-import { GameSocketHandler } from './socket/game-socket-handler';
-import { LobbySocketHandler } from './socket/lobby-socket-handler';
 import { Storage } from '../storage';
 import { WebSocketServer } from './socket/websocket-server';
 import { config } from '../config';

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { GameInfo, LobbyInfo, UserInfo, GameState } from 'ptcg-server';
+import { GameInfo, CoreInfo, UserInfo, GameState } from 'ptcg-server';
 import { GameService } from './game.service';
 import { SocketService } from '../socket.service';
 import { finalize } from 'rxjs/operators';
@@ -56,7 +56,7 @@ export class MainService {
     this.loading = true;
     this.socketService.emit('lobby:getInfo')
       .pipe(finalize(() => { this.loading = false; }))
-      .subscribe((data: LobbyInfo) => {
+      .subscribe((data: CoreInfo) => {
         this.users.next(data.users);
         this.games.next(data.games);
       }, () => {});

@@ -25,6 +25,8 @@ export class WebSocketServer {
       const socketClient = new SocketClient(user, server, socket);
       this.core.connect(socketClient);
 
+      socketClient.attachListeners();
+
       socket.on('disconnect', () => {
         this.core.disconnect(socketClient);
       });

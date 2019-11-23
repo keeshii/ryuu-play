@@ -3,7 +3,7 @@ import { AddPlayerAction } from "../store/actions/add-player-action";
 import { Arbiter } from "./arbiter";
 import { Client } from "./client";
 import { Core } from "./core";
-import { GameInfo, PlayerInfo } from "./core.interface";
+import { GameInfo, PlayerInfo, GameState } from "./core.interface";
 import { Prompt } from "../store/prompts/prompt";
 import { State, GamePhase } from "../store/state/state";
 import { Store } from "../store/store";
@@ -71,6 +71,14 @@ export class Game implements StoreHandler {
     logger.log(`User ${client.user.name} starts playing at table ${this.id}.`);
     const action = new AddPlayerAction(client.id, client.user.name, deck);
     this.store.dispatch(action);
+  }
+
+  public get gameState(): GameState {
+    return {
+      gameId: this.id,
+      state: this.store.state,
+      users: this.clients.map(client => client.userInfo)
+    }
   }
 
   private buildGameInfo(state: State): GameInfo {

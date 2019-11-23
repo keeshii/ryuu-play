@@ -2,14 +2,14 @@ import { Client } from "./client";
 import { CoreError } from "./core-error";
 import { CoreMessage } from "./core-messages";
 import { Game } from "./game";
-import { LobbyInfo } from "./core.interface";
+import { CoreInfo } from "./core.interface";
 import { generateId } from "../../utils/utils";
 
 export class Core {
   private clients: Client[] = [];
   private games: Game[] = [];
 
-  public get lobbyInfo(): LobbyInfo {
+  public get coreInfo(): CoreInfo {
     return {
       users: this.clients.map(client => client.userInfo),
       games: this.games.map(game => game.gameInfo)
@@ -45,6 +45,14 @@ export class Core {
     this.emit(c => c.onGameAdd(game));
     this.joinGame(client, game);
     return game;
+  }
+
+  public getGame(gameId: number): Game {
+    const index = this.games.findIndex(game => game.id === gameId);
+    if (index === -1) {
+      throw new CoreError(CoreMessage.GAME_NOT_FOUND);
+    }
+    return this.games[index];
   }
 
   public joinGame(client: Client, game: Game): void {
