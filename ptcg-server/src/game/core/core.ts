@@ -2,17 +2,22 @@ import { Client } from "./client";
 import { CoreError } from "./core-error";
 import { CoreMessage } from "./core-messages";
 import { Game } from "./game";
+import { LobbyInfo } from "./core.interface";
 import { generateId } from "../../utils/utils";
 
 export class Core {
   private clients: Client[] = [];
   private games: Game[] = [];
 
+  public get lobbyInfo(): LobbyInfo {
+    return {
+      users: this.clients.map(client => client.userInfo),
+      games: this.games.map(game => game.gameInfo)
+    };
+  }
+
   public connect(client: Client): Client {
-    const index = this.clients.findIndex(c => c.user.id === client.user.id);
-    if (index !== -1) {
-      return this.clients[index];
-    }
+    client.id = generateId(this.clients);
     client.core = this;
     client.games = [];
     this.emit(c => c.onConnect(client));

@@ -99,6 +99,7 @@ export async function setupPhaseReducer(store: StoreLike, state: State, action: 
       }
 
       let player = new Player();
+      player.clientId = action.clientId;
       player.name = action.name;
       player.deck = CardList.fromList(action.deck);
       state.players.push(player);

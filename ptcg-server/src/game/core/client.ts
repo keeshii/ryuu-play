@@ -3,9 +3,11 @@ import { User } from "../../storage";
 import { Core } from "./core";
 import { Prompt } from "../store/prompts/prompt";
 import { State } from "../store/state/state";
+import { UserInfo } from "./core.interface";
 
 export abstract class Client {
 
+  public id: number = 0;
   public name: string;
   public user: User;
   public core: Core | undefined;
@@ -14,6 +16,15 @@ export abstract class Client {
   constructor(user: User) {
     this.name = user.name;
     this.user = user;
+  }
+
+  public get userInfo(): UserInfo {
+    return {
+      clientId: this.id,
+      userId: this.user.id,
+      name: this.user.name,
+      ranking: this.user.ranking
+    }
   }
 
   public abstract onConnect(client: Client): void;

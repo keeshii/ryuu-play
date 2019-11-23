@@ -1,6 +1,7 @@
 import { GamePhase, State } from "../store/state/state";
 
 export interface PlayerInfo {
+  clientId: number;
   name: string;
   prizes: number;
   deck: number;

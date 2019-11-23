@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { LobbyRoom } from '../../game/rooms/lobby-room';
+import { Core } from '../../game/core/core';
 import { Storage } from '../../storage';
 
 export abstract class Controller {
@@ -8,7 +8,7 @@ export abstract class Controller {
     protected path: string,
     protected app: express.Application,
     protected db: Storage,
-    protected lobbyRoom: LobbyRoom
+    protected core: Core
   ) { }
 
   public init(): void {};

@@ -2,7 +2,6 @@ import * as io from 'socket.io';
 
 import { Errors } from '../common/errors';
 import { User } from '../../storage';
-import { Socket } from './socket.interface';
 import { validateToken } from '../services/auth-token';
 
 export async function authSocket(socket: io.Socket, next: (err?: any) => void): Promise<void> {
@@ -18,6 +17,6 @@ export async function authSocket(socket: io.Socket, next: (err?: any) => void): 
     return next(new Error(Errors.AUTH_TOKEN_INVALID));
   }
 
-  (socket as Socket).user = user;
+  (socket as any).user = user;
   next();
 }

@@ -1,36 +1,34 @@
 import * as http from 'http';
 import * as io from 'socket.io';
 
-import { Socket } from './socket.interface';
-import { SocketHandler } from './socket-handler';
+import { Core } from '../../game/core/core';
+import { SocketClient } from './socket-client';
+import { User } from '../../storage';
+import { authSocket } from './auth-socket';
 
 export type Middleware = (socket: io.Socket, next: (err?: any) => void) => void;
 
 export class WebSocketServer {
-  public server: io.Server | undefined;  
-  private socketHandlers: SocketHandler[] = [];
-  private middlewares: Middleware[] = [];
+  public server: io.Server | undefined;
 
-  constructor() { }
-
-  public addHandler(handler: SocketHandler) {
-    this.socketHandlers.push(handler);
-  }
+  constructor(private core: Core) { }
 
   public async listen(httpServer: http.Server): Promise<void> {
     const server = io.listen(httpServer);
 
     this.server = server;
-    this.middlewares.forEach(middleware => server.use(middleware));
+    server.use(authSocket);
 
-    server.on('connection', (socket: Socket) => {
-      this.socketHandlers.forEach(handler => handler.attachListeners(socket));
+    server.on('connection', (socket: io.Socket) => {
+      const user: User = (socket as any).user;
+
+      const socketClient = new SocketClient(user, server, socket);
+      this.core.connect(socketClient);
+
+      socket.on('disconnect', () => {
+        this.core.disconnect(socketClient);
+      });
     });
-
-  }
-
-  public use(middleware: Middleware): void {
-    this.middlewares.push(middleware);
   }
 
 }

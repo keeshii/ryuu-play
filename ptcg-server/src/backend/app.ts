@@ -1,12 +1,11 @@
 import * as express from 'express';
 import { json } from 'body-parser';
 
+import { Core } from '../game/core/core';
 import { GameSocketHandler } from './socket/game-socket-handler';
-import { LobbyRoom } from '../game/rooms/lobby-room';
 import { LobbySocketHandler } from './socket/lobby-socket-handler';
 import { Storage } from '../storage';
 import { WebSocketServer } from './socket/websocket-server';
-import { authSocket } from './socket/auth-socket';
 import { config } from '../config';
 import { cors } from './services/cors';
 
@@ -20,7 +19,7 @@ interface ControllerClass {
     path: string,
     app: express.Application,
     db: Storage,
-    lobbyRoom: LobbyRoom
+    core: Core
   ): Controller;
 }
 
@@ -29,7 +28,7 @@ export class App {
   private app: express.Application;
   private ws: WebSocketServer;
   private storage: Storage;
-  private lobbyRoom: LobbyRoom = new LobbyRoom();
+  private core: Core = new Core();
 
   constructor() {
     this.storage = new Storage();
@@ -39,10 +38,10 @@ export class App {
 
   private configureExpress(): express.Application {
     const storage = this.storage;
-    const lobbyRoom = this.lobbyRoom;
+    const core = this.core;
     const app = express();
     const define = function (path: string, controller: ControllerClass): void {
-      const instance = new controller(path, app, storage, lobbyRoom);
+      const instance = new controller(path, app, storage, core);
       instance.init();
     };
 
@@ -54,13 +53,7 @@ export class App {
   }
 
   private configureWebSocket(): WebSocketServer {
-    const ws = new WebSocketServer();
-
-    ws.use(authSocket);
-    ws.addHandler(new LobbySocketHandler(ws, this.lobbyRoom));
-    ws.addHandler(new GameSocketHandler(ws, this.lobbyRoom));
-
-    return ws;
+    return new WebSocketServer(this.core);
   }
 
   public connectToDatabase(): Promise<void> {
