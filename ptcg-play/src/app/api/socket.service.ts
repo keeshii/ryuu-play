@@ -50,7 +50,7 @@ export class SocketService {
 
       this.socket.emit(message, data, (response: SocketResponse<R>) => {
         if (response && response.message !== 'ok') {
-          observer.error(new ApiError(ApiErrorEnum.ERROR_SOCKET, response.message));
+          observer.error(new ApiError(ApiErrorEnum.ERROR_SOCKET, String(response.data)));
           observer.complete();
           return;
         }

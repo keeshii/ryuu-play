@@ -1,12 +1,13 @@
 import * as io from 'socket.io';
+import { AddPlayerAction, Action, Prompt, PassTurnAction } from '../../game';
 import { Client } from '../../game/core/client';
 import { Errors } from '../common/errors';
 import { Game } from '../../game/core/game';
-import { CoreInfo, GameInfo, GameState } from '../../game/core/core.interface';
-import { Prompt } from '../../game/store/prompts/prompt';
 import { State } from '../../game/store/state/state';
 import { User } from '../../storage';
 import { Core } from '../../game/core/core';
+import { CoreInfo, GameInfo, PlayerInfo, UserInfo, GameState } from '../interfaces/core.interface';
+import {ResolvePromptAction} from '../../game/store/actions/resolve-prompt-action';
 
 type Response<R = void> = (message: string, data?: R | Errors) => void;
 
@@ -31,66 +32,63 @@ export class SocketClient extends Client {
     this.socket = socket;
 
     // core listeners
-    this.addListener('lobby:getInfo', this.getCoreInfo.bind(this));
-    this.addListener('lobby:createGame', this.createGame.bind(this));
+    this.addListener('core:getInfo', this.getCoreInfo.bind(this));
+    this.addListener('core:createGame', this.createGame.bind(this));
 
     // game listeners
     this.addListener('game:join', this.joinGame.bind(this));
     this.addListener('game:leave', this.leaveGame.bind(this));
     this.addListener('game:getStatus', this.getGameStatus.bind(this));
+    this.addListener('game:action:play', this.playGame.bind(this));
+    this.addListener('game:action:resolvePrompt', this.resolvePrompt.bind(this));
+    this.addListener('game:action:passTurn', this.passTurn.bind(this));
   }
 
   public onConnect(client: Client): void {
-    this.socket.emit('lobby:join', client.userInfo);
+    this.socket.emit('core:join', this.buildUserInfo(client));
   }
 
   public onDisconnect(client: Client): void {
-    this.socket.emit('lobby:leave', client.userInfo);
+    this.socket.emit('core:leave', this.buildUserInfo(client));
   }
 
   public onGameJoin(client: Client, game: Game): void {
-    this.socket.emit(`game[${game.id}]:join`, client.userInfo);    
+    this.socket.emit(`game[${game.id}]:join`, this.buildUserInfo(client));    
   }
 
   public onGameLeave(client: Client, game: Game): void {
-    this.socket.emit(`game[${game.id}]:leave`, client.userInfo);    
+    this.socket.emit(`game[${game.id}]:leave`, this.buildUserInfo(client));
   }
 
   public onGameInfo(game: Game): void {
-    this.socket.emit(`game[${game.id}]:gameInfo`, game.gameInfo);    
+    this.socket.emit(`game[${game.id}]:gameInfo`, this.buildGameInfo(game));
   }
 
   public onGameAdd(game: Game): void {
-      this.socket.emit('lobby:createGame', game.gameInfo);
+    this.socket.emit('core:createGame', this.buildGameInfo(game));
   }
 
   public onGameDelete(game: Game): void {
-    this.socket.emit('lobby:deleteGame', game.id);
-  }
-
-  public onStateStable(game: Game, state: State): void {
-    this.socket.emit(`game[${game.id}]:stateStable`, state);    
+    this.socket.emit('core:deleteGame', game.id);
   }
 
   public onStateChange(game: Game, state: State): void {
     this.socket.emit(`game[${game.id}]:stateChange`, state);        
   }
 
-  public resolvePrompt(game: Game, prompt: Prompt<any>): boolean {
-    return false;
-  }
-
   public attachListeners(): void {
     for (let i = 0; i < this.listeners.length; i++) {
       const listener = this.listeners[i];
 
-      this.socket.on(listener.message, <T, R>(data: T, fn: Function) => {
+      this.socket.on(listener.message, async <T, R>(data: T, fn: Function) => {
         const response: Response<R> =
           (message: string, data?: R | Errors) => fn && fn({message, data});
         try {
-          listener.handler(data, response);
+          console.log('aaa');
+          await listener.handler(data, response);
         } catch(error) {
-          response('error', error);
+          console.log('bbb', error.message);
+          response('error', error.message);
         }
       });
     }
@@ -101,30 +99,112 @@ export class SocketClient extends Client {
     this.listeners.push(listener);
   }
 
+  private buildUserInfo(client: Client): UserInfo {
+    return {
+      clientId: client.id,
+      userId: client.user.id,
+      name: client.user.name,
+      ranking: client.user.ranking
+    };
+  }
+
+  private buildGameInfo(game: Game): GameInfo {
+    const state = game.state;
+    const players: PlayerInfo[] = state.players.map(player => ({
+      clientId: player.id,
+      name: player.name,
+      prizes: player.prizes.cards.length,
+      deck: player.deck.cards.length
+    }));
+    return {
+      gameId: game.id,
+      phase: state.phase,
+      turn: state.turn,
+      activePlayer: state.activePlayer,
+      players: players
+    };
+  }
+
+  private buildGameState(game: Game): GameState {
+    return {
+      gameId: game.id,
+      state: game.state,
+      users: game.clients.map(client => this.buildUserInfo(client))
+    };
+  }
+
+  private buildCoreInfo(core: Core): CoreInfo {
+    return {
+      users: this.core.clients.map(client => this.buildUserInfo(client)),
+      games: this.core.games.map(game => this.buildGameInfo(game))
+    };
+  }
+
   private getCoreInfo(data: void, response: Response<CoreInfo>): void {
-    response('ok', this.core.coreInfo);
+    response('ok', this.buildCoreInfo(this.core));
   }
 
   private createGame(data: void, response: Response<GameInfo>): void {
     const game = this.core.createGame(this);
-    response('ok', game.gameInfo);
+    response('ok', this.buildGameInfo(game));
   }
 
   private joinGame(gameId: number, response: Response<GameState>): void {
-    const game = this.core.getGame(gameId);
+    const game = this.core.games.find(g => g.id === gameId);
+    if (game === undefined) {
+      response('error', Errors.GAME_INVALID_ID);
+      return;
+    }
     this.core.joinGame(this, game);
-    response('ok', game.gameState);
+    response('ok', this.buildGameState(game));
   }
 
   private leaveGame(gameId: number, response: Response<void>): void {
-    const game = this.core.getGame(gameId);
+    const game = this.core.games.find(g => g.id === gameId);
+    if (game === undefined) {
+      response('error', Errors.GAME_INVALID_ID);
+      return;
+    }
     this.core.leaveGame(this, game);
     response('ok');
   }
 
   private getGameStatus(gameId: number, response: Response<GameState>): void {
-    const game = this.core.getGame(gameId);
-    response('ok', game.gameState);
+    const game = this.core.games.find(g => g.id === gameId);
+    if (game === undefined) {
+      response('error', Errors.GAME_INVALID_ID);
+      return;
+    }
+    response('ok', this.buildGameState(game));
+  }
+
+  private dispatch(gameId: number, action: Action, response: Response<void>) {
+    const game = this.core.games.find(g => g.id === gameId);
+    if (game === undefined) {
+      response('error', Errors.GAME_INVALID_ID);
+      return;
+    }
+    try {
+      game.dispatch(this, action);
+    } catch (error) {
+      response('error', error.message);
+    }
+    response('ok');
+  }
+
+  private playGame(params: {gameId: number, deck: string[]}, response: Response<void>) {
+    const action = new AddPlayerAction(this.id, this.user.name, params.deck);
+    this.dispatch(params.gameId, action, response);
+  }
+
+  private resolvePrompt(params: {gameId: number, prompt: Prompt<any>}, response: Response<void>) {
+    const action = new ResolvePromptAction(params.prompt);
+    this.dispatch(params.gameId, action, response);
+  }
+
+  private passTurn(params: {gameId: number, prompt: Prompt<any>}, response: Response<void>) {
+    const action = new PassTurnAction(this.id);
+    this.dispatch(params.gameId, action, response);
   }
 
 }

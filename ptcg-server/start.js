@@ -1,6 +1,6 @@
 require('./config');
 
-const { App } = require('./dist/backend');
+const { App } = require('./dist/backend/app');
 const { config } = require('./dist/config');
 const process = require('process');
 

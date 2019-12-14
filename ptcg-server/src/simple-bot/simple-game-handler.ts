@@ -4,62 +4,61 @@ import { ChooseCardsPrompt } from '../game/store/prompts/choose-cards-prompt';
 import { Client } from '../game/core/client';
 import { Game } from '../game/core/game';
 import { PassTurnAction } from '../game/store/actions/pass-turn-action';
-import { StoreMessage } from '../game/store/store-messages';
+import { ResolvePromptAction } from '../game/store/actions/resolve-prompt-action';
+import { GameMessage } from '../game/game-error';
 
 export class SimpleGameHandler {
 
   private player: Player = new Player();
-  private name: string;
 
-  constructor(private client: Client, public game: Game) {
-    this.name = client.name;
-  }
-
-  public onStateStable(state: State): void {
-    if (state.phase !== GamePhase.PLAYER_TURN) {
-      return;
-    }
-
-    const player = state.players[state.activePlayer];
-    if (player.name !== this.name) {
-      return;
-    }
-
-    this.dispatch(new PassTurnAction(player));
-  }
+  constructor(private client: Client, public game: Game) { }
 
   public onStateChange(state: State): void {
     for (let i = 0; i < state.players.length; i++) {
-      if (state.players[i].name === this.name) {
+      if (state.players[i].id === this.client.id) {
         this.player = state.players[i];
       }
     }
+
+    if (state.prompts.length > 0) {
+      state.prompts
+        .filter(prompt => prompt.playerId === this.player.id)
+        .forEach(prompt => this.resolvePrompt(prompt));
+      return;
+    }
+
+    const activePlayer = state.players[state.activePlayer];
+    const isMyTurn = activePlayer.id === this.client.id;
+    if (state.phase === GamePhase.PLAYER_TURN && isMyTurn) {
+      this.dispatch(new PassTurnAction(this.client.id));
+      return;
+    }
   }
 
-  public resolvePrompt(prompt: Prompt<any>): boolean {
+  public async resolvePrompt(prompt: Prompt<any>): Promise<void> {
     if (prompt instanceof AlertPrompt) {
-      prompt.resolve(void 0);
-      return true;
+      this.dispatch(new ResolvePromptAction({ ...prompt, result: 0 }));
+      return;
     }
 
     if (prompt instanceof ConfirmPrompt) {
-      if (prompt.message === StoreMessage.SETUP_OPPONENT_NO_BASIC) {
-        prompt.resolve(this.player.hand.cards.length < 15);
+      if (prompt.message === GameMessage.SETUP_OPPONENT_NO_BASIC) {
+        const result = this.player.hand.cards.length < 15;
+        this.dispatch(new ResolvePromptAction({ ...prompt, result }));
       } else {
-        prompt.resolve(false);
+        this.dispatch(new ResolvePromptAction({ ...prompt, result: false }));
       }
-      return true;
+      return;
     }
 
     if (prompt instanceof ChooseCardsPrompt) {
-      const cards = prompt.cards.filter(prompt.filter);
-      if (cards.length > prompt.options.max) {
-        cards.length = prompt.options.max;
+      const result = prompt.cards.filter(prompt.filter);
+      if (result.length > prompt.options.max) {
+        result.length = prompt.options.max;
       }
-      prompt.resolve(cards);
-      return true;
+      this.dispatch(new ResolvePromptAction({ ...prompt, result }));
+      return;
     }
-    return false;
   }
 
   public dispatch(action: Action): void {

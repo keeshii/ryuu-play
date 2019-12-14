@@ -1,4 +1,4 @@
-import { GamePhase, State } from "../store/state/state";
+import { GamePhase, State } from '../../game';
 
 export interface PlayerInfo {
   clientId: number;

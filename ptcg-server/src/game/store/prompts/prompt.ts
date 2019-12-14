@@ -1,25 +1,11 @@
-import { Player } from "../state/player";
-
 export abstract class Prompt<T> {
 
   readonly abstract type: string;
-  public promise: Promise<T>;
-  private resolveFn: (value: T) => any = () => {};
-  private rejectFn: (reason: string) => any = () => {};
+  public id: number;
+  public result: T | undefined;
 
-  constructor(public player: Player) {
-    this.promise = new Promise<T>((resolve, reject) => {
-      this.resolveFn = resolve;
-      this.rejectFn = reject;
-    });
-  }
-
-  resolve(value: T) {
-    this.resolveFn(value);
-  }
-
-  reject(reason: string) {
-    this.rejectFn(reason);
+  constructor(public playerId: number) {
+    this.id = 0;
   }
 
 }

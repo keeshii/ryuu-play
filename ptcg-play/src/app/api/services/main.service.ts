@@ -26,10 +26,10 @@ export class MainService {
 
   public init(): void {
     this.socketService.on('connect', () => this.refresh());
-    this.socketService.on('lobby:join', (userInfo: UserInfo) => this.onJoin(userInfo));
-    this.socketService.on('lobby:leave', (userInfo: UserInfo) => this.onLeave(userInfo));
-    this.socketService.on('lobby:createGame', (game: GameInfo) => this.onCreateGame(game));
-    this.socketService.on('lobby:deleteGame', (gameId: number) => this.onDeleteGame(gameId));
+    this.socketService.on('core:join', (userInfo: UserInfo) => this.onJoin(userInfo));
+    this.socketService.on('core:leave', (userInfo: UserInfo) => this.onLeave(userInfo));
+    this.socketService.on('core:createGame', (game: GameInfo) => this.onCreateGame(game));
+    this.socketService.on('core:deleteGame', (gameId: number) => this.onDeleteGame(gameId));
   }
 
   private onJoin(userInfo: UserInfo): void {
@@ -54,7 +54,7 @@ export class MainService {
 
   public async refresh() {
     this.loading = true;
-    this.socketService.emit('lobby:getInfo')
+    this.socketService.emit('core:getInfo')
       .pipe(finalize(() => { this.loading = false; }))
       .subscribe((data: CoreInfo) => {
         this.users.next(data.users);
@@ -64,7 +64,7 @@ export class MainService {
 
   public createGame() {
     this.loading = true;
-    this.socketService.emit('lobby:createGame')
+    this.socketService.emit('core:createGame')
       .pipe(finalize(() => { this.loading = false; }))
       .subscribe((gameState: GameState) => {
         this.gameService.appendGameSate(gameState);

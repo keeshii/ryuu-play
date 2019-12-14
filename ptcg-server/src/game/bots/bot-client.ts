@@ -1,7 +1,7 @@
-import { CoreError } from '../core/core-error';
-import { CoreMessage } from '../core/core-messages';
+import { AddPlayerAction } from '../store/actions/add-player-action';
 import { Client } from '../core/client';
 import { Game } from '../core/game';
+import { GameError, GameMessage } from '../game-error';
 import { User } from '../../storage';
 
 export abstract class BotClient extends Client {
@@ -14,7 +14,7 @@ export abstract class BotClient extends Client {
 
   createGame(): Game {
     if (this.core === undefined) {
-      throw new CoreError(CoreMessage.BOT_NOT_INITIALIZED);
+      throw new GameError(GameMessage.BOT_NOT_INITIALIZED);
     }
     const game = this.core.createGame(this);
     return game;
@@ -22,13 +22,14 @@ export abstract class BotClient extends Client {
 
   joinGame(game: Game): void {
     if (this.core === undefined) {
-      throw new CoreError(CoreMessage.BOT_NOT_INITIALIZED);
+      throw new GameError(GameMessage.BOT_NOT_INITIALIZED);
     }
     this.core.joinGame(this, game);
   }
 
   playGame(game: Game, deck: string[]): void {
-    game.playGame(this, deck);
+    const action = new AddPlayerAction(this.id, this.user.name, deck);
+    game.dispatch(this, action);
   }
 
 }

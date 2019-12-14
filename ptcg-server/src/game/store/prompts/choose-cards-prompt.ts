@@ -1,8 +1,7 @@
 import { Card } from "../state/card";
 import { CardList } from "../state/card-list";
-import { Player } from "../state/player";
 import { Prompt } from "./prompt";
-import { StoreMessage } from "../store-messages";
+import { GameMessage } from "../../game-error";
 
 export interface ChooseCardsOptions {
   min: number;
@@ -17,13 +16,13 @@ export class ChooseCardsPrompt extends Prompt<Card[]> {
   public options: ChooseCardsOptions;
 
   constructor(
-    player: Player,
-    public message: StoreMessage,
+    playerId: number,
+    public message: GameMessage,
     public cards: CardList,
     public filter: Partial<Card>,
     options?: Partial<ChooseCardsOptions>
   ) {
-    super(player);
+    super(playerId);
 
     // Default options
     this.options = Object.assign({}, {

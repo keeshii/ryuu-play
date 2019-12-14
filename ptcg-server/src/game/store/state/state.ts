@@ -1,4 +1,5 @@
 import { Player } from "./player";
+import { Prompt } from "../prompts/prompt";
 
 export enum GamePhase {
   WAITING_FOR_PLAYERS,
@@ -16,6 +17,8 @@ export enum GameWinner {
 }
 
 export class State {
+
+  public prompts: Prompt<any>[] = [];
 
   public phase: GamePhase = GamePhase.WAITING_FOR_PLAYERS;
 

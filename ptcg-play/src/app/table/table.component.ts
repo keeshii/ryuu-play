@@ -40,6 +40,20 @@ export class TableComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() { }
 
-  public play() { }
+  public play() {
+    const deck: string[] = this.createSampleDeck();
+    this.gameService.play(this.gameId, deck);
+  }
+
+  private createSampleDeck(): string[] {
+    const deck: string[] = [];
+    for (let i = 0; i < 56; i++) {
+      deck.push('Water Energy');
+    }
+    for (let i = 0; i < 4; i++) {
+      deck.push('Buizel GE');
+    }
+    return deck;
+  }
 
 }

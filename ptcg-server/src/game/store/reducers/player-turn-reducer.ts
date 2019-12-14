@@ -3,6 +3,7 @@ import { PassTurnAction } from "../actions/pass-turn-action";
 import { Player } from "../state/player";
 import { State, GamePhase } from "../state/state";
 import { StoreLike } from "../store-like";
+import {GameError, GameMessage} from "../../game-error";
 
 function getActivePlayer(state: State): Player {
   return state.players[state.activePlayer];
@@ -54,7 +55,13 @@ export async function playerTurnReducer(store: StoreLike, state: State, action: 
 
   if (state.phase === GamePhase.PLAYER_TURN) {
     if (action instanceof PassTurnAction) {
-      console.log('Pass action by player ' + action.player.name);
+      const player = state.players[state.activePlayer];
+
+      if (player === undefined || player.id !== action.clientId) {
+        throw new GameError(GameMessage.NOT_YOUR_TURN);
+      }
+
+      console.log('Pass action by player ' + player.name);
       await betweenTurns(store, state);
       await nextTurn(store, state);
     }

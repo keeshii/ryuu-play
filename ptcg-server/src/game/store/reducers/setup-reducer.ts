@@ -8,16 +8,15 @@ import { ChooseCardsPrompt } from "../prompts/choose-cards-prompt";
 import { Player } from "../state/player";
 import { ShuffleDeckPrompt } from "../prompts/shuffle-prompt";
 import { State, GamePhase } from "../state/state";
-import { StoreError } from "../store-error";
+import { GameError, GameMessage } from "../../game-error";
 import { StoreLike } from "../store-like";
-import { StoreMessage } from "../store-messages";
 import { SuperType, Stage, Card } from "../state/card";
 import { nextTurn } from "./player-turn-reducer";
 
 async function alertAndConfirm(store: StoreLike, confirmPlayer: Player, alertPlayer: Player): Promise<boolean> {
   const results = await Promise.all([
-    store.resolve(new ConfirmPrompt(confirmPlayer, StoreMessage.SETUP_OPPONENT_NO_BASIC)),
-    store.resolve(new AlertPrompt(alertPlayer, StoreMessage.SETUP_PLAYER_NO_BASIC))
+    store.prompt(new ConfirmPrompt(confirmPlayer.id, GameMessage.SETUP_OPPONENT_NO_BASIC)),
+    store.prompt(new AlertPrompt(alertPlayer.id, GameMessage.SETUP_PLAYER_NO_BASIC))
   ]);
   return results[0];
 }
@@ -44,7 +43,7 @@ async function setupGame(store: StoreLike, state: State): Promise<void> {
   while (!playerHasBasic || !opponentHasBasic) {
     if (!playerHasBasic) {
       player.hand.moveTo(player.deck);
-      const order = await store.resolve(new ShuffleDeckPrompt(player));
+      const order = await store.prompt(new ShuffleDeckPrompt(player.id));
       player.deck.applyOrder(order);
       player.deck.moveTo(player.hand, 7);
       playerHasBasic = player.hand.count(basicPokemon) > 0;
@@ -52,7 +51,7 @@ async function setupGame(store: StoreLike, state: State): Promise<void> {
 
     if (!opponentHasBasic) {
       opponent.hand.moveTo(opponent.deck);
-      const order = await store.resolve(new ShuffleDeckPrompt(opponent));
+      const order = await store.prompt(new ShuffleDeckPrompt(opponent.id));
       opponent.deck.applyOrder(order);
       opponent.deck.moveTo(opponent.hand, 7);
       opponentHasBasic = opponent.hand.count(basicPokemon) > 0;
@@ -72,16 +71,16 @@ async function setupGame(store: StoreLike, state: State): Promise<void> {
   }
 
   const choice = await Promise.all([
-    store.resolve(new ChooseCardsPrompt(player, StoreMessage.CHOOSE_STARTING_POKEMONS,
+    store.prompt(new ChooseCardsPrompt(player.id, GameMessage.CHOOSE_STARTING_POKEMONS,
       player.deck, basicPokemon, chooseCardsOptions)),
-    store.resolve(new ChooseCardsPrompt(opponent, StoreMessage.CHOOSE_STARTING_POKEMONS,
+    store.prompt(new ChooseCardsPrompt(opponent.id, GameMessage.CHOOSE_STARTING_POKEMONS,
       opponent.deck, basicPokemon, chooseCardsOptions)),
   ]);
 
   putStartingPokemons(player, choice[0]);
   putStartingPokemons(opponent, choice[1]);
 
-  const whoBegins = await store.resolve(new CoinFlipPrompt(player, StoreMessage.SETUP_WHO_BEGINS_FLIP));
+  const whoBegins = await store.prompt(new CoinFlipPrompt(player.id, GameMessage.SETUP_WHO_BEGINS_FLIP));
 
   state.activePlayer = whoBegins ? 0 : 1;
   nextTurn(store, state);
@@ -95,11 +94,11 @@ export async function setupPhaseReducer(store: StoreLike, state: State, action: 
     if (action instanceof AddPlayerAction) {
 
       if (state.players.length >= 2) {
-        throw new StoreError(StoreMessage.MAX_PLAYERS_REACHED);
+        throw new GameError(GameMessage.MAX_PLAYERS_REACHED);
       }
 
       let player = new Player();
-      player.clientId = action.clientId;
+      player.id = action.clientId;
       player.name = action.name;
       player.deck = CardList.fromList(action.deck);
       state.players.push(player);

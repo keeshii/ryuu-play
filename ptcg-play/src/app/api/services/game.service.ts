@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, UserInfo, GameState } from 'ptcg-server';
+import { Action, UserInfo, GameState, State } from 'ptcg-server';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
@@ -52,20 +52,28 @@ export class GameService {
       });
   }
 
-  public play(deck: string[]) { }
+  public play(gameId: number, deck: string[]) {
+    this.socketService.emit('game:action:play', { gameId, deck })
+      .subscribe(() => {});
+  }
 
   public dispatch(action: Action) { }
 
   private startListening(id: number) {
     console.log('startListening', id);
     this.socketService.on(`game[${id}]:join`, (userInfo: UserInfo) => this.onJoin(id, userInfo));
-    this.socketService.on(`game[${id}]:leave`, (userInfo: UserInfo) => this.onJoin(id, userInfo));
+    this.socketService.on(`game[${id}]:leave`, (userInfo: UserInfo) => this.onLeave(id, userInfo));
+    this.socketService.on(`game[${id}]:stateChange`, (state: State) => this.onStateChange(id, state));
   }
 
   private stopListening(id: number) {
     console.log('stopListening', id);
     this.socketService.off(`game[${id}]:join`);
     this.socketService.off(`game[${id}]:leave`);
+  }
+
+  private onStateChange(gameId: number, state: State) {
+    console.log('gameService, onStateChange', gameId, state);
   }
 
   private onJoin(gameId: number, userInfo: UserInfo) {

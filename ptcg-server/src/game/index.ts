@@ -1,6 +1,7 @@
 export * from './cards/card-manager';
+export * from './cards/deck';
 
-export * from './core/core.interface';
+export * from './game-error';
 
 export * from './store/actions/action';
 export * from './store/actions/add-player-action';
@@ -18,8 +19,6 @@ export * from './store/state/card';
 export * from './store/state/player';
 export * from './store/state/state';
 
-export * from './store/store-error';
 export * from './store/store-handler';
 export * from './store/store-like';
-export * from './store/store-messages';
 export * from './store/store';

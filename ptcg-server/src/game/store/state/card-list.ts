@@ -1,6 +1,6 @@
 import { Card } from "./card";
 import { CardManager } from "../../cards/card-manager";
-import { StoreError } from "../store-error";
+import { GameError, GameMessage } from "../../game-error";
 
 export class CardList {
 
@@ -13,10 +13,10 @@ export class CardList {
   public static fromList(names: string[]): CardList {
     const cardList = new CardList();
     const cardManager = CardManager.getInstance();
-    cardList.cards = names.map(name => {
-      const card = cardManager.getCardByName(name);
+    cardList.cards = names.map(cardName => {
+      const card = cardManager.getCardByName(cardName);
       if (card === undefined) {
-        throw new StoreError('Unknown card ' + name);
+        throw new GameError(GameMessage.UNKNOWN_CARD, cardName);
       }
       return card;
     });

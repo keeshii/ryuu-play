@@ -1,13 +1,12 @@
-import { Player } from "../state/player";
 import { Prompt } from "./prompt";
-import { StoreMessage } from "../store-messages";
+import { GameMessage } from "../../game-error";
 
 export class AlertPrompt extends Prompt<void> {
 
   readonly type: string = 'Alert'
 
-  constructor(player: Player, public message: StoreMessage) {
-    super(player);
+  constructor(playerId: number, public message: GameMessage) {
+    super(playerId);
   }
 
 }

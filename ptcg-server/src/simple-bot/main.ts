@@ -1,7 +1,6 @@
 import { BotClient } from '../game/bots/bot-client';
 import { Client } from '../game/core/client';
 import { Game } from '../game/core/game';
-import { Prompt } from '../game/store/prompts/prompt';
 import { SimpleGameHandler } from './simple-game-handler';
 import { State } from '../game/store/state/state';
 
@@ -18,8 +17,6 @@ export class SimpleBot extends BotClient {
 
   public onGameLeave(client: Client, game: Game): void { }
 
-  public onGameInfo(game: Game): void { }
-
   public onGameAdd(game: Game): void { }
 
   public onGameDelete(game: Game): void {
@@ -29,26 +26,11 @@ export class SimpleBot extends BotClient {
     }
   }
 
-  public onStateStable(game: Game, state: State): void {
-    const gameHandler = this.gameHandlers.find(handler => handler.game === game);
-    if (gameHandler !== undefined) {
-      gameHandler.onStateStable(state);
-    }
-  }
-
   public onStateChange(game: Game, state: State): void {
     const gameHandler = this.gameHandlers.find(handler => handler.game === game);
     if (gameHandler !== undefined) {
       gameHandler.onStateChange(state);
     }
-  }
-
-  public resolvePrompt(game: Game, prompt: Prompt<any>): boolean {
-    const gameHandler = this.gameHandlers.find(handler => handler.game === game);
-    if (gameHandler !== undefined) {
-      return gameHandler.resolvePrompt(prompt);
-    }
-    return false;
   }
 
   public createGame(): Game {
