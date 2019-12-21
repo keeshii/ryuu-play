@@ -2,12 +2,11 @@ import { Action } from "../store/actions/action";
 import { Arbiter } from "./arbiter";
 import { Client } from "./client";
 import { Core } from "./core";
-import { Prompt } from "../store/prompts/prompt";
+import { ResolvePromptAction } from "../store/actions/resolve-prompt-action";
 import { State, GamePhase } from "../store/state/state";
 import { Store } from "../store/store";
 import { StoreHandler } from "../store/store-handler";
 import { logger } from "../../utils/logger";
-import {ResolvePromptAction} from "../store/actions/resolve-prompt-action";
 
 export class Game implements StoreHandler {
  
@@ -15,7 +14,6 @@ export class Game implements StoreHandler {
   public clients: Client[] = [];
   private arbiter = new Arbiter();
   private store: Store;
-  private promptsInProgress: boolean = false;
 
   constructor(private core: Core, id: number) {
     this.id = id;
@@ -30,12 +28,8 @@ export class Game implements StoreHandler {
     this.notifyStateChange(state);
   }
 
-  private async notifyStateChange(state: State): Promise<void> {
-    if (this.promptsInProgress) {
-      return;
-    }
-
-    if (await this.resolvePrompts(state)) {
+  private notifyStateChange(state: State): void {
+    if (this.handleArbiterPrompts(state)) {
       return;
     }
 
@@ -46,28 +40,26 @@ export class Game implements StoreHandler {
     }
   }
 
-  private async resolvePrompts(state: State): Promise<boolean> {
-    const resolvedPrompts: Prompt<any>[] = [];
-    for (let i = 0; i < state.prompts.length; i++) {
-      let prompt = this.arbiter.resolvePrompt(state, state.prompts[i]);
-      if (prompt !== null) {
-        resolvedPrompts.push(prompt);
+  private handleArbiterPrompts(state: State): boolean {
+    const resolved: {id: number, result: any}[] = [];
+    const unresolved = state.prompts.filter(item => item.result === undefined);
+
+    for (let i = 0; i < unresolved.length; i++) {
+      let result = this.arbiter.resolvePrompt(state, unresolved[i]);
+      if (result !== undefined) {
+        resolved.push({ id: unresolved[i].id, result });
       }
     }
 
-    if (resolvedPrompts.length === 0) {
+    if (resolved.length === 0) {
       return false;
     }
 
-    this.promptsInProgress = true;
-
-    for (let i = 0; i < resolvedPrompts.length; i++) {
-      await this.store.dispatch(new ResolvePromptAction(resolvedPrompts[i]));
+    for (let i = 0; i < resolved.length; i++) {
+      this.store.dispatch(new ResolvePromptAction(resolved[i].id, resolved[i].result));
     }
 
-    this.promptsInProgress = false;
-
-    this.notifyStateChange(this.store.state);
+    this.notifyStateChange(state);
     return true;
   }
 
@@ -75,9 +67,9 @@ export class Game implements StoreHandler {
     this.clients.forEach(fn);
   }
 
-  public dispatch(client: Client, action: Action) {
+  public dispatch(client: Client, action: Action): State {
     logger.log(`User ${client.user.name} dispatches the action ${action.type}.`);
-    this.store.dispatch(action);
+    return this.store.dispatch(action);
   }
 
 }

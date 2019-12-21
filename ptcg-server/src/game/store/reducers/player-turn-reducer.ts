@@ -9,18 +9,16 @@ function getActivePlayer(state: State): Player {
   return state.players[state.activePlayer];
 }
 
-export async function betweenTurns(store: StoreLike, state: State) {
-
+export function betweenTurns(store: StoreLike, state: State): State {
   if (state.phase === GamePhase.PLAYER_TURN) {
     state.phase = GamePhase.BETWEEN_TURNS;
-    return;
   }
-
+  return state;
 }
 
-export async function nextTurn(store: StoreLike, state: State) {
+export function nextTurn(store: StoreLike, state: State): State {
   if ([GamePhase.SETUP, GamePhase.BETWEEN_TURNS].indexOf(state.phase) === -1) {
-    return;
+    return state;
   }
 
   let player: Player = getActivePlayer(state);
@@ -45,13 +43,14 @@ export async function nextTurn(store: StoreLike, state: State) {
     state.winner = state.activePlayer ? 0 : 1;
     console.log('Winner ' + state.players[state.winner].name);
     state.phase = GamePhase.FINISHED;
-    return;
+    return state;
   }
 
   player.deck.moveTo(player.hand, 1);
+  return state;
 }
 
-export async function playerTurnReducer(store: StoreLike, state: State, action: Action) {
+export function playerTurnReducer(store: StoreLike, state: State, action: Action): State {
 
   if (state.phase === GamePhase.PLAYER_TURN) {
     if (action instanceof PassTurnAction) {
@@ -62,9 +61,10 @@ export async function playerTurnReducer(store: StoreLike, state: State, action: 
       }
 
       console.log('Pass action by player ' + player.name);
-      await betweenTurns(store, state);
-      await nextTurn(store, state);
+      state = betweenTurns(store, state);
+      state = nextTurn(store, state);
     }
   }
 
+  return state;
 }

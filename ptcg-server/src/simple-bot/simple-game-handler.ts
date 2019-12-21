@@ -21,10 +21,11 @@ export class SimpleGameHandler {
     }
 
     if (state.prompts.length > 0) {
-      state.prompts
-        .filter(prompt => prompt.playerId === this.player.id)
-        .forEach(prompt => this.resolvePrompt(prompt));
-      return;
+      const prompt = state.prompts.find(p => p.playerId === this.player.id && p.result === undefined);
+      if (prompt !== undefined) {
+        this.resolvePrompt(prompt);
+        return;
+      }
     }
 
     const activePlayer = state.players[state.activePlayer];
@@ -35,18 +36,18 @@ export class SimpleGameHandler {
     }
   }
 
-  public async resolvePrompt(prompt: Prompt<any>): Promise<void> {
+  public resolvePrompt(prompt: Prompt<any>): void {
     if (prompt instanceof AlertPrompt) {
-      this.dispatch(new ResolvePromptAction({ ...prompt, result: 0 }));
+      this.dispatch(new ResolvePromptAction(prompt.id, 0));
       return;
     }
 
     if (prompt instanceof ConfirmPrompt) {
       if (prompt.message === GameMessage.SETUP_OPPONENT_NO_BASIC) {
         const result = this.player.hand.cards.length < 15;
-        this.dispatch(new ResolvePromptAction({ ...prompt, result }));
+        this.dispatch(new ResolvePromptAction(prompt.id, result));
       } else {
-        this.dispatch(new ResolvePromptAction({ ...prompt, result: false }));
+        this.dispatch(new ResolvePromptAction(prompt.id, false));
       }
       return;
     }
@@ -56,13 +57,13 @@ export class SimpleGameHandler {
       if (result.length > prompt.options.max) {
         result.length = prompt.options.max;
       }
-      this.dispatch(new ResolvePromptAction({ ...prompt, result }));
+      this.dispatch(new ResolvePromptAction(prompt.id, result));
       return;
     }
   }
 
-  public dispatch(action: Action): void {
-    this.game.dispatch(this.client, action);
+  public dispatch(action: Action): State {
+    return this.game.dispatch(this.client, action);
   }
 
 }

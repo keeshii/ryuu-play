@@ -8,85 +8,100 @@ import { StoreLike } from "./store-like";
 
 import { playerTurnReducer } from "./reducers/player-turn-reducer";
 import { setupPhaseReducer } from './reducers/setup-reducer';
-import { generateId } from "../../utils/utils";
+import { generateId, deepClone } from "../../utils/utils";
 
-interface PromptPromise<T> {
-  resolve: (value: T) => void;
-  reject: (error: Error) => void;
-  promise: Promise<T>;
+interface PromptItem {
+  ids: number[],
+  then: (results: any) => void;
 }
 
 export class Store implements StoreLike {
 
   public state: State = new State();
-  private promptMap: {[id: number]: PromptPromise<any>} = {};
+  private promptItems: PromptItem[] = [];
 
   constructor(private handler: StoreHandler) { };
 
-  public dispatch(action: Action): void {
+  public dispatch(action: Action): State {
+    let state = this.state;
+
     if (action instanceof ResolvePromptAction) {
-      this.reducePrompt(action);
-      return;
+      state = this.reducePrompt(state, action);
+      this.handler.onStateChange(state);
+      return state;
     }
 
-    if (this.state.prompts.length > 0) {
+    if (state.prompts.some(p => p.result === undefined)) {
       throw new GameError(GameMessage.ACTION_IN_PROGRESS);
     }
 
+    state = deepClone(this.state);
+
     try {
-      this.reduce(action);
+      state = this.reduce(state, action);
     } catch (storeError) {
       // Illegal action
       throw storeError;
     }
 
-    this.handler.onStateChange(this.state);
+    this.state = state;
+    this.handler.onStateChange(state);
+    return state;
   }
 
-  public prompt<T>(prompt: Prompt<T>): Promise<T> {
-    const id = generateId(this.state.prompts);
-    prompt.id = id;
+  public prompt(state: State, prompts: Prompt<any>[] | Prompt<any>, then: (results: any) => void): State {
+    if (!(prompts instanceof Array)) {
+      prompts = [prompts];
+    }
 
-    const promptPromise: PromptPromise<T> = {} as any;
-    promptPromise.promise = new Promise<T>((resolve, reject) => {
-      promptPromise.resolve = resolve;
-      promptPromise.reject = reject;
-    });
+    for (let i = 0; i < prompts.length; i++) {
+      const id = generateId(state.prompts);
+      prompts[i].id = id;
+      state.prompts.push(prompts[i]);
+    }
 
-    promptPromise.promise.then(() => {
-      const index = this.state.prompts.indexOf(prompt);
-      this.state.prompts.splice(index, 1);
-      delete this.promptMap[id];
-    });
+    const promptItem: PromptItem = {
+      ids: prompts.map(prompt => prompt.id),
+      then: then
+    };
 
-    this.promptMap[id] = promptPromise;
-    this.state.prompts.push(prompt);
-    this.handler.onStateChange(this.state);
-    return promptPromise.promise;
+    this.promptItems.push(promptItem);
+    return state;
   }
 
-  private reducePrompt(action: ResolvePromptAction): void {
+  private reducePrompt(state: State, action: ResolvePromptAction): State {
     // Resolve prompts actions
-    const prompt = this.state.prompts.find(item => item.id === action.prompt.id);
-    const promptPromise = this.promptMap[action.prompt.id];
+    const prompt = state.prompts.find(item => item.id === action.id);
+    const promptItem = this.promptItems.find(item => item.ids.indexOf(action.id) !== -1);
 
-    if (prompt === undefined || promptPromise === undefined) {
+    if (prompt === undefined || promptItem === undefined) {
       throw new GameError(GameMessage.ILLEGAL_ACTION);
     }
 
-    promptPromise.resolve(action.prompt.result);
+    if (prompt.result !== undefined) {
+      throw new GameError(GameMessage.PROMPT_ALREADY_RESOLVED);
+    }
 
-    const index = this.state.prompts.indexOf(prompt);
-    this.state.prompts.splice(index, 1);
+    prompt.result = action.result;
+
+    const results = promptItem.ids.map(id => {
+      const p = state.prompts.find(item => item.id === id);
+      return p === undefined ? undefined : p.result;
+    });
+
+    if (results.every(result => result !== undefined)) {
+      const itemIndex = this.promptItems.indexOf(promptItem);
+      this.promptItems.splice(itemIndex, 1);
+      promptItem.then(results.length === 1 ? results[0] : results);
+    }
+
+    return state;
   }
 
-  private reduce(action: Action): void {
-    if (this.state.prompts.length > 0) {
-      throw new GameError(GameMessage.ILLEGAL_ACTION);
-    }
-
-    setupPhaseReducer(this, this.state, action);
-    playerTurnReducer(this, this.state, action);
+  private reduce(state: State, action: Action): State {
+    state = setupPhaseReducer(this, state, action);
+    state = playerTurnReducer(this, state, action);
+    return state;
   }
 
 }

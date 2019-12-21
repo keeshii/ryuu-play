@@ -197,8 +197,8 @@ export class SocketClient extends Client {
     this.dispatch(params.gameId, action, response);
   }
 
-  private resolvePrompt(params: {gameId: number, prompt: Prompt<any>}, response: Response<void>) {
-    const action = new ResolvePromptAction(params.prompt);
+  private resolvePrompt(params: {gameId: number, id: number, result: any}, response: Response<void>) {
+    const action = new ResolvePromptAction(params.id, params.result);
     this.dispatch(params.gameId, action, response);
   }
 

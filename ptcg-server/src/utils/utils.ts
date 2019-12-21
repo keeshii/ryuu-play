@@ -36,6 +36,31 @@ export function deepCompare(x: any, y: any): boolean {
 }
 
 
+export function deepClone(source: any, refMap: {s: Object, d: Object}[] = []): any {
+  if (source === null) { return null; }
+
+  if (source instanceof Array) {
+    return source.map((item: any) => deepClone(item, refMap));
+  }
+
+  if (source instanceof Object) {
+    const ref = refMap.find(item => item.s === source);
+    if (ref !== undefined) {
+      return ref.d;
+    }
+    const dest = Object.create(source);
+    refMap.push({s: source, d: dest});
+    for (let key in source) {
+      if (source.hasOwnProperty(key)) {
+        dest[key] = deepClone(source[key], refMap);
+      }
+    }
+    return dest;
+  }
+
+  return source;
+}
+
 export function generateId<T extends {id: number}[]>(array: T): number {
   if (array.length === 0) {
     return 1;

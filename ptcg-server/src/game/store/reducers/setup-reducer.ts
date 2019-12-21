@@ -13,13 +13,6 @@ import { StoreLike } from "../store-like";
 import { SuperType, Stage, Card } from "../state/card";
 import { nextTurn } from "./player-turn-reducer";
 
-async function alertAndConfirm(store: StoreLike, confirmPlayer: Player, alertPlayer: Player): Promise<boolean> {
-  const results = await Promise.all([
-    store.prompt(new ConfirmPrompt(confirmPlayer.id, GameMessage.SETUP_OPPONENT_NO_BASIC)),
-    store.prompt(new AlertPrompt(alertPlayer.id, GameMessage.SETUP_PLAYER_NO_BASIC))
-  ]);
-  return results[0];
-}
 
 function putStartingPokemons(player: Player, cards: Card[]): void {
   if (cards.length === 0) {
@@ -31,7 +24,7 @@ function putStartingPokemons(player: Player, cards: Card[]): void {
   }
 }
 
-async function setupGame(store: StoreLike, state: State): Promise<void> {
+function* setupGame(next: Function, store: StoreLike, state: State): IterableIterator<State> {
   const basicPokemon = {superType: SuperType.POKEMON, stage: Stage.BASIC};
   const chooseCardsOptions = { min: 1, max: 6, allowCancel: false };
   const player = state.players[0];
@@ -43,51 +36,70 @@ async function setupGame(store: StoreLike, state: State): Promise<void> {
   while (!playerHasBasic || !opponentHasBasic) {
     if (!playerHasBasic) {
       player.hand.moveTo(player.deck);
-      const order = await store.prompt(new ShuffleDeckPrompt(player.id));
-      player.deck.applyOrder(order);
-      player.deck.moveTo(player.hand, 7);
-      playerHasBasic = player.hand.count(basicPokemon) > 0;
+      yield store.prompt(state, new ShuffleDeckPrompt(player.id), order => {
+        player.deck.applyOrder(order);
+        player.deck.moveTo(player.hand, 7);
+        playerHasBasic = player.hand.count(basicPokemon) > 0;
+        next();
+      });
     }
 
     if (!opponentHasBasic) {
       opponent.hand.moveTo(opponent.deck);
-      const order = await store.prompt(new ShuffleDeckPrompt(opponent.id));
-      opponent.deck.applyOrder(order);
-      opponent.deck.moveTo(opponent.hand, 7);
-      opponentHasBasic = opponent.hand.count(basicPokemon) > 0;
+      yield store.prompt(state, new ShuffleDeckPrompt(opponent.id), order => {
+        opponent.deck.applyOrder(order);
+        opponent.deck.moveTo(opponent.hand, 7);
+        opponentHasBasic = opponent.hand.count(basicPokemon) > 0;
+        next();
+      });
     }
 
     if (playerHasBasic && !opponentHasBasic) {
-      if (await alertAndConfirm(store, player, opponent)) {
-        player.deck.moveTo(player.hand, 1);
-      }
+      yield store.prompt(state, [
+        new ConfirmPrompt(player.id, GameMessage.SETUP_OPPONENT_NO_BASIC),
+        new AlertPrompt(opponent.id, GameMessage.SETUP_PLAYER_NO_BASIC)
+      ], results => {
+        if (results[0]) {
+          player.deck.moveTo(player.hand, 1);
+        }
+        next();
+      });
     }
 
     if (!playerHasBasic && opponentHasBasic) {
-      if (await alertAndConfirm(store, opponent, player)) {
-        opponent.deck.moveTo(opponent.hand, 1);
-      }
+      yield store.prompt(state, [
+        new ConfirmPrompt(opponent.id, GameMessage.SETUP_OPPONENT_NO_BASIC),
+        new AlertPrompt(player.id, GameMessage.SETUP_PLAYER_NO_BASIC)
+      ], results => {
+        if (results[0]) {
+          opponent.deck.moveTo(player.hand, 1);
+        }
+        next();
+      });
     }
   }
 
-  const choice = await Promise.all([
-    store.prompt(new ChooseCardsPrompt(player.id, GameMessage.CHOOSE_STARTING_POKEMONS,
-      player.deck, basicPokemon, chooseCardsOptions)),
-    store.prompt(new ChooseCardsPrompt(opponent.id, GameMessage.CHOOSE_STARTING_POKEMONS,
-      opponent.deck, basicPokemon, chooseCardsOptions)),
-  ]);
+  yield store.prompt(state, [
+    new ChooseCardsPrompt(player.id, GameMessage.CHOOSE_STARTING_POKEMONS,
+      player.deck, basicPokemon, chooseCardsOptions),
+    new ChooseCardsPrompt(opponent.id, GameMessage.CHOOSE_STARTING_POKEMONS,
+      opponent.deck, basicPokemon, chooseCardsOptions)
+  ], choice => {
+    putStartingPokemons(player, choice[0]);
+    putStartingPokemons(opponent, choice[1]);
+    next();
+  });
 
-  putStartingPokemons(player, choice[0]);
-  putStartingPokemons(opponent, choice[1]);
+  yield store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.SETUP_WHO_BEGINS_FLIP), whoBegins => {
+    state.activePlayer = whoBegins ? 0 : 1;
+    next();
+  });
 
-  const whoBegins = await store.prompt(new CoinFlipPrompt(player.id, GameMessage.SETUP_WHO_BEGINS_FLIP));
-
-  state.activePlayer = whoBegins ? 0 : 1;
-  nextTurn(store, state);
+  return nextTurn(store, state);
 }
 
 
-export async function setupPhaseReducer(store: StoreLike, state: State, action: Action): Promise<void> {
+export function setupPhaseReducer(store: StoreLike, state: State, action: Action): State {
 
   if (state.phase === GamePhase.WAITING_FOR_PLAYERS) {
 
@@ -105,10 +117,13 @@ export async function setupPhaseReducer(store: StoreLike, state: State, action: 
 
       if (state.players.length === 2) {
         state.phase = GamePhase.SETUP;
-        await setupGame(store, state);
+        let generator: IterableIterator<State>;
+        generator = setupGame(() => generator.next(), store, state);
+        return generator.next().value;
       }
 
     }
   }
 
+  return state;
 }

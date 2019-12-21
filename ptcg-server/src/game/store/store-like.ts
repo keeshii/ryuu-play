@@ -1,7 +1,31 @@
 import { Action } from "./actions/action";
 import { Prompt } from "./prompts/prompt";
+import { State } from "./state/state";
 
 export interface StoreLike {
   dispatch(action: Action): void;
-  prompt<T>(prompt: Prompt<T>): Promise<T>;
+
+  prompt<T>(
+    state: State, prompt: Prompt<T>,
+    then: (result: T) => void): State;
+
+  prompt<T>(
+    state: State, prompt: [Prompt<T>],
+    then: (result: T) => void): State;
+
+  prompt<T, S>(
+    state: State, prompt: [Prompt<T>, Prompt<S>],
+    then: (result: [T, S]) => void): State;
+
+  prompt<T, S, R>(
+    state: State, prompt: [Prompt<T>, Prompt<S>, Prompt<R>],
+    then: (result: [T, S, R]) => void): State;
+
+  prompt<T, S, R, P>(
+    state: State, prompt: [Prompt<T>, Prompt<S>, Prompt<R>, Prompt<P>],
+    then: (result: [T, S, R, P]) => void): State;
+
+  prompt<T>(
+    state: State, prompt: Prompt<T>[],
+    then: (result: T[]) => void): State;
 }
