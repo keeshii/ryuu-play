@@ -25,7 +25,7 @@ export class LoginService {
 
   public register(name: string, password: string, email: string, code?: string) {
     return this.api.post<LoginResponse>(
-      '/login/register', { name, password, email, code });
+      '/login/register', { name, password, email, serverPassword: code });
   }
 
   public logout() {

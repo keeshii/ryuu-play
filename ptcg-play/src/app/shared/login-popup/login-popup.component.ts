@@ -31,7 +31,7 @@ export class LoginPopupComponent implements OnDestroy {
       takeUntilDestroyed(this)
     )
       .subscribe(response => {
-        console.log(response);
+        this.dialogRef.close();
       }, (error: ApiError) => {
         console.log(error);
       });

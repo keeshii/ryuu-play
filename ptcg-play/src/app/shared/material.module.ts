@@ -6,6 +6,7 @@ import {
   MatDialogModule,
   MatInputModule,
   MatListModule,
+  MatProgressBarModule,
   MatSidenavModule,
   MatToolbarModule
 } from '@angular/material';
@@ -20,6 +21,7 @@ import {NgModule} from '@angular/core';
     MatDialogModule,
     MatInputModule,
     MatListModule,
+    MatProgressBarModule,
     MatSidenavModule,
     MatToolbarModule
   ],
@@ -31,6 +33,7 @@ import {NgModule} from '@angular/core';
     MatDialogModule,
     MatInputModule,
     MatListModule,
+    MatProgressBarModule,
     MatSidenavModule,
     MatToolbarModule
   ]

@@ -1,0 +1,27 @@
+.ptcg-u-loading {
+  background-image: linear-gradient(
+    135deg, rgba(255, 255, 255, 0.15) 25%,
+    transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 75%, transparent
+  ) !important;
+  background-size: 40px 40px !important;
+  animation: ptcg-u-loading-animation 2s linear infinite !important;
+}
+
+@keyframes ptcg-u-loading-animation {
+  from {
+    background-position: 40px 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+
+
+.ptcg-u-top {
+  left: 0;
+  position: absolute !important;
+  right: 0;
+  top: 0;
+}

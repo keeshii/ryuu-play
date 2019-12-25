@@ -1,8 +1,13 @@
 require('./config');
 
 const { App } = require('./dist/backend/app');
+const { CardManager } = require('./dist/game/cards/card-manager');
+const { basicSet } = require('./dist/sets/basic-set/basic-set');
 const { config } = require('./dist/config');
 const process = require('process');
+
+const cardManager = CardManager.getInstance();
+cardManager.defineSet(basicSet);
 
 const app = new App();
 

@@ -1,4 +1,5 @@
 <ptcg-content>
+
   <h1 class="mat-h1">
     Create a new account
   </h1>
@@ -7,43 +8,72 @@
     <!-- Player Name -->
     <mat-card>
 
+      <mat-progress-bar class="ptcg-u-top" *ngIf="loading" mode="indeterminate">
+      </mat-progress-bar>
+
       <mat-card-content>
-        <mat-form-field>
-          <mat-label>Player Name</mat-label>
-          <input matInput placeholder="Player Name">
-          <mat-hint>
-            Other players will see this unique name at your games.
-            At least 3 alphanumeric characters.
-          </mat-hint>
-        </mat-form-field>
+        <form #form="ngForm">
 
-        <!-- E-mail -->
-        <mat-form-field>
-          <mat-label>E-mail</mat-label>
-          <input matInput placeholder="E-mail">
-          <mat-hint>
-            You will be able to use this e-mail to notify yourself on custom events.
-            No spam, we promise.
-          </mat-hint>
-        </mat-form-field>
+          <mat-form-field>
+            <mat-label>Player Name</mat-label>
+            <input matInput placeholder="Player Name" name="name"
+              [(ngModel)]="name" [disabled]="loading" #nameField="ngModel"
+              ptcgNameValidator [ptcgInvalidValue]="invalidName" required>
+            <mat-hint>
+              Other players will see this unique name at your games.
+              At least 3 alphanumeric characters.
+            </mat-hint>
+            <mat-error>
+              <div *ngIf="nameField.errors?.name">VALIDATION_INVALID_NAME</div>
+              <div *ngIf="nameField.errors?.invalidValue">REGISTER_NAME_TAKEN</div>
+            </mat-error>
+          </mat-form-field>
 
-        <!-- Password -->
-        <mat-form-field>
-          <mat-label>Password</mat-label>
-          <input type="password" matInput placeholder="Password">
-          <mat-hint>
-            Must be at least 8 characters including at least one numeric character.
-          </mat-hint>
-        </mat-form-field>
+          <!-- E-mail -->
+          <mat-form-field>
+            <mat-label>E-mail</mat-label>
+            <input matInput placeholder="E-mail" name="email"
+              [(ngModel)]="email" [disabled]="loading" #emailField="ngModel"
+              ptcgEmailValidator [ptcgInvalidValue]="invalidEmail" required>
+            <mat-hint>
+              You will be able to use this e-mail to notify yourself on custom events.
+              No spam, we promise.
+            </mat-hint>
+            <mat-error>
+              <div *ngIf="emailField.errors?.email">VALIDATION_INVALID_EMAIL</div>
+              <div *ngIf="emailField.errors?.invalidValue">REGISTER_EMAIL_TAKEN</div>
+            </mat-error>
+          </mat-form-field>
 
-        <!-- Confirm Password -->
-        <mat-form-field>
-          <mat-label>Confirm Password</mat-label>
-          <input type="password" matInput placeholder="Confirm Password">
-          <mat-hint>
-            Once again please.
-          </mat-hint>
-        </mat-form-field>
+          <!-- Password -->
+          <mat-form-field>
+            <mat-label>Password</mat-label>
+            <input type="password" matInput placeholder="Password" name="password"
+              [(ngModel)]="password" [disabled]="loading" #passwordField="ngModel"
+              ptcgPasswordValidator required>
+            <mat-hint>
+              Must be at least 8 characters including at least one numeric character.
+            </mat-hint>
+            <mat-error>
+              <div *ngIf="passwordField.errors?.password">VALIDATION_INVALID_PASSWORD</div>
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Confirm Password -->
+          <mat-form-field>
+            <mat-label>Confirm Password</mat-label>
+            <input type="password" matInput placeholder="Confirm Password" name="confirmPassword"
+              [(ngModel)]="confirmPassword" [disabled]="loading" #confirmPasswordField="ngModel"
+              [ptcgPasswordMatchValidator]="password" required>
+            <mat-hint>
+              Once again please.
+            </mat-hint>
+            <mat-error>
+              <div *ngIf="confirmPasswordField.errors?.passwordMatch">VALIDATION_PASSWORD_MATCH</div>
+            </mat-error>
+          </mat-form-field>
+
+        </form>
 
       </mat-card-content>
     </mat-card>
@@ -54,7 +84,12 @@
     </p>
 
     <p>
-      <button mat-raised-button color="primary">Register</button>
+      <button mat-raised-button color="primary"
+        [disabled]="loading || form.invalid"
+        [ngClass]="{'ptcg-u-loading': loading}"
+        (click)="register()">
+        Register
+      </button>
     </p>
 
   </div>
