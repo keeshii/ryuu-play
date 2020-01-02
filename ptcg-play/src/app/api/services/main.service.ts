@@ -1,31 +1,25 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-
 import { GameInfo, CoreInfo, UserInfo, GameState } from 'ptcg-server';
+import { Observable } from 'rxjs';
+
 import { GameService } from './game.service';
+import { SessionService } from 'src/app/shared/session/session.service';
 import { SocketService } from '../socket.service';
 import { finalize } from 'rxjs/operators';
 
 @Injectable()
 export class MainService {
 
-  public games$: Observable<GameInfo[]>;
-  public users$: Observable<UserInfo[]>;
   public loading = false;
-
-  private games = new BehaviorSubject<GameInfo[]>([]);
-  private users = new BehaviorSubject<UserInfo[]>([]);
 
   constructor(
     private gameService: GameService,
+    private sessionService: SessionService,
     private socketService: SocketService
-  ) {
-    this.users$ = this.users.asObservable();
-    this.games$ = this.games.asObservable();
-  }
+  ) { }
 
-  public init(): void {
-    this.socketService.on('connect', () => this.refresh());
+  public init(coreInfo: CoreInfo): void {
+    this.sessionService.set({ users: coreInfo.users, games: coreInfo.games });
     this.socketService.on('core:join', (userInfo: UserInfo) => this.onJoin(userInfo));
     this.socketService.on('core:leave', (userInfo: UserInfo) => this.onLeave(userInfo));
     this.socketService.on('core:createGame', (game: GameInfo) => this.onCreateGame(game));
@@ -33,33 +27,29 @@ export class MainService {
   }
 
   private onJoin(userInfo: UserInfo): void {
-    const users = [...this.users.value, userInfo];
-    this.users.next(users);
+    const users = [...this.sessionService.session.users, userInfo];
+    this.sessionService.set({ users });
   }
 
   private onLeave(userInfo: UserInfo): void {
-    const users = this.users.value.filter(user => user.clientId !== userInfo.clientId);
-    this.users.next(users);
+    const users = this.sessionService.session.users.filter(user => user.clientId !== userInfo.clientId);
+    this.sessionService.set({ users });
   }
 
   private onCreateGame(game: GameInfo): void {
-    const games = [...this.games.value, game];
-    this.games.next(games);
+    const games = [...this.sessionService.session.games, game];
+    this.sessionService.set({ games });
   }
 
   private onDeleteGame(gameId: number): void {
-    const games = this.games.value.filter(g => g.gameId !== gameId);
-    this.games.next(games);
+    const games = this.sessionService.session.games.filter(g => g.gameId !== gameId);
+    this.sessionService.set({ games });
   }
 
-  public async refresh() {
+  public getCoreInfo(): Observable<CoreInfo> {
     this.loading = true;
-    this.socketService.emit('core:getInfo')
-      .pipe(finalize(() => { this.loading = false; }))
-      .subscribe((data: CoreInfo) => {
-        this.users.next(data.users);
-        this.games.next(data.games);
-      }, () => {});
+    return this.socketService.emit<void, CoreInfo>('core:getInfo')
+      .pipe(finalize(() => { this.loading = false; }));
   }
 
   public createGame() {
@@ -70,9 +60,5 @@ export class MainService {
         this.gameService.appendGameSate(gameState);
       }, () => {});
   }
-
-  public joinGame() { }
-
-  public leaveGame() { }
 
 }

@@ -2,6 +2,15 @@ import * as express from 'express';
 import { Core } from '../../game/core/core';
 import { Storage } from '../../storage';
 
+export interface ControllerClass {
+  new(
+    path: string,
+    app: express.Application,
+    db: Storage,
+    core: Core
+  ): Controller;
+}
+
 export abstract class Controller {
 
   constructor(

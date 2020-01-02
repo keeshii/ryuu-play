@@ -12,7 +12,7 @@ import { SessionService } from './shared/session/session.service';
 import { SocketService } from './api/socket.service';
 
 class SessionServiceMock {
-  public get() { return EMPTY }
+  public get() { return EMPTY; }
 }
 
 describe('AppComponent', () => {

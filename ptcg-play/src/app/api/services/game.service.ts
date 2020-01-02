@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Action, UserInfo, GameState, State } from 'ptcg-server';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
 import { SocketService } from '../socket.service';
+import { SessionService } from 'src/app/shared/session/session.service';
 
 export interface GameUserInfo {
   gameId: number;
@@ -13,12 +14,10 @@ export interface GameUserInfo {
 @Injectable()
 export class GameService {
 
-  public gameStates$: Observable<GameState[]>;
-  private gameStates = new BehaviorSubject<GameState[]>([]);
-
-  constructor(private socketService: SocketService) {
-    this.gameStates$ = this.gameStates.asObservable();
-  }
+  constructor(
+    private sessionService: SessionService,
+    private socketService: SocketService
+  ) { }
 
   public join(gameId: number): Observable<GameState> {
     return new Observable<GameState>(observer => {
@@ -35,20 +34,22 @@ export class GameService {
 
   public appendGameSate(gameState: GameState) {
     const gameId = gameState.gameId;
-    const index = this.gameStates.value.findIndex(g => g.gameId === gameId);
+    const games = this.sessionService.session.gameStates;
+    const index = games.findIndex(g => g.gameId === gameId);
     if (index === -1) {
-      const gameStates = [...this.gameStates.value, gameState];
+      const gameStates = [...games, gameState];
       this.startListening(gameState.gameId);
-      this.gameStates.next(gameStates);
+      this.sessionService.set({ gameStates });
     }
   }
 
   public leave(gameId: number) {
     this.socketService.emit('game:leave', gameId)
       .subscribe(() => {
-        const tables = this.gameStates.value.filter(table => table.gameId !== gameId);
+        const games = this.sessionService.session.gameStates;
+        const gameStates = games.filter(table => table.gameId !== gameId);
         this.stopListening(gameId);
-        this.gameStates.next(tables);
+        this.sessionService.set({ gameStates });
       });
   }
 

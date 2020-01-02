@@ -3,6 +3,7 @@ import { GameInfo, UserInfo } from 'ptcg-server';
 import { Observable } from 'rxjs';
 
 import { MainService } from '../api/services/main.service';
+import { SessionService } from '../shared/session/session.service';
 import { SocketService } from '../api/socket.service';
 import { takeUntilDestroyed } from '../shared/operators/take-until-destroyed';
 
@@ -20,10 +21,11 @@ export class GamesComponent implements OnDestroy, OnInit {
 
   constructor(
     private mainSevice: MainService,
-    private socketService: SocketService,
+    private sessionService: SessionService,
+    private socketService: SocketService
   ) {
-    this.users$ = mainSevice.users$;
-    this.games$ = mainSevice.games$;
+    this.users$ = this.sessionService.get(session => session.users);
+    this.games$ = this.sessionService.get(session => session.games);
   }
 
   ngOnInit() {

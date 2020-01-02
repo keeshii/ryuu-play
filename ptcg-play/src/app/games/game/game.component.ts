@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit, Input } from '@angular/core';
 import { GameInfo, GameState } from 'ptcg-server';
 
-import { GameService } from 'src/app/api/services/game.service';
-import { takeUntilDestroyed } from 'src/app/shared/operators/take-until-destroyed';
+import { GameService } from '../../api/services/game.service';
+import { SessionService } from '../../shared/session/session.service';
+import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed';
 
 @Component({
   selector: 'ptcg-game',
@@ -26,7 +27,10 @@ export class GameComponent implements OnInit, OnDestroy {
 
   private gameValue: GameInfo;
 
-  constructor(private gameService: GameService) { }
+  constructor(
+    private gameService: GameService,
+    private sessionService: SessionService
+  ) { }
 
   public join() {
     this.gameService.join(this.game.gameId)
@@ -38,7 +42,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.gameService.gameStates$
+    this.sessionService.get(session => session.gameStates)
       .pipe(takeUntilDestroyed(this))
       .subscribe(gameStates => {
         this.isJoined = this.hasGameState(gameStates);

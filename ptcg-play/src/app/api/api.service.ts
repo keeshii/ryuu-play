@@ -21,7 +21,7 @@ export class ApiService {
   private buildHeaderOptions() {
     const token = this.sessionService.session.authToken;
     return token
-      ? { headers: { authToken: token } }
+      ? { headers: { 'Auth-Token': token } }
       : undefined;
   }
 

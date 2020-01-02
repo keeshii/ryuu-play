@@ -8,18 +8,10 @@ import { config } from '../config';
 import { cors } from './services/cors';
 
 import {
-  Controller,
-  Login
+  ControllerClass,
+  Login,
+  Profile
 } from './controllers';
-
-interface ControllerClass {
-  new(
-    path: string,
-    app: express.Application,
-    db: Storage,
-    core: Core
-  ): Controller;
-}
 
 export class App {
 
@@ -46,6 +38,7 @@ export class App {
     app.use(json());
     app.use(cors());
     define('/login', Login);
+    define('/profile', Profile);
 
     return app;
   }

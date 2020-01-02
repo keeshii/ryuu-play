@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GameState } from 'ptcg-server';
 import { Observable } from 'rxjs';
+import { skip, takeUntil } from 'rxjs/operators';
 
-import { GameService } from './api/services/game.service';
-import { LoginPopupService } from './shared/login-popup/login-popup.service';
+import { ProfileService } from './api/services/profile.service';
 import { SessionService } from './shared/session/session.service';
 import { SocketService } from './api/socket.service';
+import { User } from './shared/session/user.interface';
 import { takeUntilDestroyed } from './shared/operators/take-until-destroyed';
 
 @Component({
@@ -16,35 +17,56 @@ import { takeUntilDestroyed } from './shared/operators/take-until-destroyed';
 export class AppComponent implements OnInit, OnDestroy {
 
   public isLoggedIn = false;
+  public loggedUser: User | undefined;
   public gameStates$: Observable<GameState[]>;
+  private authToken$: Observable<string>;
 
   constructor(
-    private gameService: GameService,
-    private loginService: LoginPopupService,
+    private profileService: ProfileService,
     private sessionService: SessionService,
     private socketService: SocketService,
   ) {
-    this.gameStates$ = this.gameService.gameStates$;
+    this.authToken$ = this.sessionService.get(session => session.authToken);
+    this.gameStates$ = this.sessionService.get(session => session.gameStates);
   }
 
   public ngOnInit() {
-    this.sessionService.get()
+    // Connect to websockets after when logged in
+    this.authToken$
       .pipe(takeUntilDestroyed(this))
-      .subscribe(session => {
-        this.isLoggedIn = !!session.authToken;
+      .subscribe(authToken => {
+        this.isLoggedIn = !!authToken;
+
+        // Connect to websockets
         if (this.isLoggedIn && !this.socketService.isEnabled) {
-          this.socketService.enable(session.authToken);
+          this.socketService.enable(authToken);
         }
         if (!this.isLoggedIn && this.socketService.isEnabled) {
           this.socketService.disable();
         }
+
+        // Refresh user profile when user logs in
+        this.refreshLoggedUser(authToken);
       });
   }
 
   public ngOnDestroy() { }
 
-  login() {
-    this.loginService.openDialog();
+  private refreshLoggedUser(authToken: string) {
+    if (!authToken) {
+      this.sessionService.set({ loggedUser: undefined });
+      return;
+    }
+
+    const tokenChanged$ = this.authToken$.pipe(skip(1));
+    this.profileService.getMe()
+    .pipe(
+        takeUntilDestroyed(this),
+        takeUntil(tokenChanged$)
+      )
+      .subscribe(response => {
+        this.sessionService.set({ loggedUser: response.user });
+      });
   }
 
 }

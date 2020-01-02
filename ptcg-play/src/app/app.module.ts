@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { DeckModule } from './deck/deck.module';
 import { GamesModule } from './games/games.module';
 import { LoginModule } from './login/login.module';
+import { ProfileModule } from './profile/profile.module';
 import { SharedModule } from './shared/shared.module';
 import { TableModule } from './table/table.module';
 
@@ -21,6 +22,7 @@ import { TableModule } from './table/table.module';
     DeckModule,
     GamesModule,
     LoginModule,
+    ProfileModule,
     SharedModule,
     TableModule
   ],
