@@ -80,6 +80,10 @@ export class Core {
       game.clients.splice(clientIndex, 1);
       game.emit(c => c.onGameLeave(client, game));
     }
+    // Delete game, if there are no more clients left in the game
+    if (game.clients.length === 0) {
+      this.deleteGame(game);
+    }
   }
 
   public emit(fn: (client: Client) => void): void {

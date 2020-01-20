@@ -1,0 +1,4 @@
+<div>
+  <button mat-button *ngIf="!isJoined" (click)="join()">Join</button>
+  <button mat-button *ngIf="isJoined" (click)="leave()">Leave</button>
+</div>

@@ -6,8 +6,10 @@ import {
   MatDialogModule,
   MatInputModule,
   MatListModule,
+  MatMenuModule,
   MatProgressBarModule,
   MatSidenavModule,
+  MatTableModule,
   MatToolbarModule
 } from '@angular/material';
 import {NgModule} from '@angular/core';
@@ -21,8 +23,10 @@ import {NgModule} from '@angular/core';
     MatDialogModule,
     MatInputModule,
     MatListModule,
+    MatMenuModule,
     MatProgressBarModule,
     MatSidenavModule,
+    MatTableModule,
     MatToolbarModule
   ],
   exports: [
@@ -33,8 +37,10 @@ import {NgModule} from '@angular/core';
     MatDialogModule,
     MatInputModule,
     MatListModule,
+    MatMenuModule,
     MatProgressBarModule,
     MatSidenavModule,
+    MatTableModule,
     MatToolbarModule
   ]
 })

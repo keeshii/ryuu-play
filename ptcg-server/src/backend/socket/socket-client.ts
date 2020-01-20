@@ -84,10 +84,8 @@ export class SocketClient extends Client {
         const response: Response<R> =
           (message: string, data?: R | Errors) => fn && fn({message, data});
         try {
-          console.log('aaa');
           await listener.handler(data, response);
         } catch(error) {
-          console.log('bbb', error.message);
           response('error', error.message);
         }
       });

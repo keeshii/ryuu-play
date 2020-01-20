@@ -15,6 +15,7 @@ import { takeUntilDestroyed } from '../shared/operators/take-until-destroyed';
 export class GamesComponent implements OnDestroy, OnInit {
   title = 'ptcg-play';
 
+  displayedColumns: string[] = ['id', 'turn', 'player1', 'player2', 'actions'];
   public users$: Observable<UserInfo[]>;
   public games$: Observable<GameInfo[]>;
   public isConnected = false;
