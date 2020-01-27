@@ -22,6 +22,7 @@ export class MainService {
     this.sessionService.set({ users: coreInfo.users, games: coreInfo.games });
     this.socketService.on('core:join', (userInfo: UserInfo) => this.onJoin(userInfo));
     this.socketService.on('core:leave', (userInfo: UserInfo) => this.onLeave(userInfo));
+    this.socketService.on('core:gameInfo', (game: GameInfo) => this.onGameInfo(game));
     this.socketService.on('core:createGame', (game: GameInfo) => this.onCreateGame(game));
     this.socketService.on('core:deleteGame', (gameId: number) => this.onDeleteGame(gameId));
   }
@@ -34,6 +35,17 @@ export class MainService {
   private onLeave(userInfo: UserInfo): void {
     const users = this.sessionService.session.users.filter(user => user.clientId !== userInfo.clientId);
     this.sessionService.set({ users });
+  }
+
+  private onGameInfo(game: GameInfo): void {
+    console.log('onGameInfo', game);
+    const games = this.sessionService.session.games.slice();
+    const index = this.sessionService.session.games.findIndex(g => g.gameId === game.gameId);
+    if (index === -1) {
+      return this.onCreateGame(game);
+    }
+    games[index] = game;
+    this.sessionService.set({ games });
   }
 
   private onCreateGame(game: GameInfo): void {

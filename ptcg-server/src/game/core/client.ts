@@ -20,10 +20,6 @@ export abstract class Client {
 
   public abstract onDisconnect(client: Client): void;
   
-  public abstract onGameJoin(client: Client, game: Game): void;
-  
-  public abstract onGameLeave(client: Client, game: Game): void;
-
   public abstract onGameAdd(game: Game): void;
 
   public abstract onGameDelete(game: Game): void;

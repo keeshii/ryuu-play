@@ -46,7 +46,6 @@ export class Core {
       throw new GameError(GameMessage.GAME_NOT_FOUND);
     }
     if (client.games.indexOf(game) === -1) {
-      game.emit(c => c.onGameJoin(client, game));
       client.games.push(game);
       game.clients.push(client);
     }
@@ -78,7 +77,6 @@ export class Core {
     if (clientIndex !== -1 && gameIndex !== -1) {
       client.games.splice(gameIndex, 1);
       game.clients.splice(clientIndex, 1);
-      game.emit(c => c.onGameLeave(client, game));
     }
     // Delete game, if there are no more clients left in the game
     if (game.clients.length === 0) {

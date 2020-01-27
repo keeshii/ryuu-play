@@ -33,7 +33,7 @@ export class Game implements StoreHandler {
       return;
     }
 
-    this.clients.forEach(c => c.onStateChange(this, state));
+    this.core.emit(c => c.onStateChange(this, state));
 
     if (state.phase === GamePhase.FINISHED) {
       this.core.deleteGame(this);
@@ -41,30 +41,23 @@ export class Game implements StoreHandler {
   }
 
   private handleArbiterPrompts(state: State): boolean {
-    const resolved: {id: number, result: any}[] = [];
+    let resolved: {id: number, result: any} | undefined;
     const unresolved = state.prompts.filter(item => item.result === undefined);
 
     for (let i = 0; i < unresolved.length; i++) {
       let result = this.arbiter.resolvePrompt(state, unresolved[i]);
       if (result !== undefined) {
-        resolved.push({ id: unresolved[i].id, result });
+        resolved = { id: unresolved[i].id, result };
+        break;
       }
     }
 
-    if (resolved.length === 0) {
+    if (resolved === undefined) {
       return false;
     }
 
-    for (let i = 0; i < resolved.length; i++) {
-      this.store.dispatch(new ResolvePromptAction(resolved[i].id, resolved[i].result));
-    }
-
-    this.notifyStateChange(state);
+    this.store.dispatch(new ResolvePromptAction(resolved.id, resolved.result));
     return true;
-  }
-
-  public emit(fn: (client: Client) => void): void {
-    this.clients.forEach(fn);
   }
 
   public dispatch(client: Client, action: Action): State {

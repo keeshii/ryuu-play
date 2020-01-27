@@ -7,7 +7,8 @@ import { State } from '../../game/store/state/state';
 import { User } from '../../storage';
 import { Core } from '../../game/core/core';
 import { CoreInfo, GameInfo, PlayerInfo, UserInfo, GameState } from '../interfaces/core.interface';
-import {ResolvePromptAction} from '../../game/store/actions/resolve-prompt-action';
+import { ResolvePromptAction } from '../../game/store/actions/resolve-prompt-action';
+import { deepCompare } from '../../utils/utils';
 
 type Response<R = void> = (message: string, data?: R | Errors) => void;
 
@@ -24,6 +25,7 @@ export class SocketClient extends Client {
   public socket: io.Socket;
   public core: Core;
   private listeners: Listener<any, any>[] = [];
+  private gameInfoCache: {[id: number]: GameInfo} = {};
 
   constructor(user: User, core: Core, io: io.Server, socket: io.Socket) {
     super(user);
@@ -52,28 +54,26 @@ export class SocketClient extends Client {
     this.socket.emit('core:leave', this.buildUserInfo(client));
   }
 
-  public onGameJoin(client: Client, game: Game): void {
-    this.socket.emit(`game[${game.id}]:join`, this.buildUserInfo(client));    
-  }
-
-  public onGameLeave(client: Client, game: Game): void {
-    this.socket.emit(`game[${game.id}]:leave`, this.buildUserInfo(client));
-  }
-
-  public onGameInfo(game: Game): void {
-    this.socket.emit(`game[${game.id}]:gameInfo`, this.buildGameInfo(game));
-  }
-
   public onGameAdd(game: Game): void {
-    this.socket.emit('core:createGame', this.buildGameInfo(game));
+    this.gameInfoCache[game.id] = this.buildGameInfo(game);
+    this.socket.emit('core:createGame', this.gameInfoCache[game.id]);
   }
 
   public onGameDelete(game: Game): void {
+    delete this.gameInfoCache[game.id];
     this.socket.emit('core:deleteGame', game.id);
   }
 
   public onStateChange(game: Game, state: State): void {
-    this.socket.emit(`game[${game.id}]:stateChange`, state);        
+    const gameInfo = this.buildGameInfo(game);
+    if (!deepCompare(gameInfo, this.gameInfoCache[game.id])) {
+      this.gameInfoCache[game.id] = gameInfo;
+      this.socket.emit('core:gameInfo', gameInfo);
+    }
+
+    if (this.games.indexOf(game) !== -1) {
+      this.socket.emit(`game[${game.id}]:stateChange`, state);
+    }
   }
 
   public attachListeners(): void {
