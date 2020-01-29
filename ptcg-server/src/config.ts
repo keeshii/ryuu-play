@@ -18,5 +18,9 @@ export const config = {
   },
   core: {
     debug: false
+  },
+  sets: {
+    scansDir: '',
+    scansUrl: '/scans/{name}.jpg'
   }
 };

@@ -30,4 +30,12 @@ export class CardManager {
     return card;
   }
 
+  public isCardDefined(name: string): boolean {
+    return this.cards.find(c => c.name === name) !== undefined;
+  }
+
+  public getAllCards(): Card[] {
+    return this.cards;
+  }
+
 }

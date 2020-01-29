@@ -1,4 +1,5 @@
-import { BaseEntity, Column, Entity, Unique, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, Unique, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Deck } from './deck';
 
 @Entity()
 @Unique(['name'])
@@ -18,5 +19,8 @@ export class User extends BaseEntity {
 
   @Column()
   public password: string = '';
+
+  @OneToMany(type => Deck, deck => deck.user)
+  decks!: Deck[];
 
 }

@@ -9,6 +9,8 @@ import { cors } from './services/cors';
 
 import {
   ControllerClass,
+  Cards,
+  Decks,
   Login,
   Profile
 } from './controllers';
@@ -37,8 +39,14 @@ export class App {
 
     app.use(json());
     app.use(cors());
+    define('/cards', Cards);
+    define('/decks', Decks);
     define('/login', Login);
     define('/profile', Profile);
+
+    if (config.sets.scansDir) {
+      app.use('/scans', express.static(config.sets.scansDir));
+    }
 
     return app;
   }
