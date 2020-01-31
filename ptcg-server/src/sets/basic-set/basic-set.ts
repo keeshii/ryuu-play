@@ -1,9 +1,10 @@
-import { Card } from "../../game/store/state/card";
-import { BasicEnergy } from "./basic-energy";
+import { Card } from "../../game/store/card/card";
+import { WaterEnergy } from "./water-energy";
+import { FireEnergy } from "./fire-energy";
 import { Buizel } from "./buizel";
 
 export const basicSet: Card[] = [
-  new BasicEnergy('Water Energy'),
-  new BasicEnergy('Fire Energy'),
-  new Buizel('Buizel GE')
+  new WaterEnergy(),
+  new FireEnergy(),
+  new Buizel()
 ];

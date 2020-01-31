@@ -1,13 +1,26 @@
-import { Card, SuperType, Stage } from "../../game/store/state/card";
+import { PokemonCard } from "../../game/store/card/pokemon-card";
+import { Stage, CardType } from "../../game/store/card/card-types";
 
-export class Buizel extends Card {
+export class Buizel extends PokemonCard {
 
-  public superType: SuperType = SuperType.POKEMON;
-  
   public stage: Stage = Stage.BASIC;
 
-  constructor(name: string) {
-    super(name);
-  }
+  public hp: number = 60;
+
+  public weakness = {
+    types: [ CardType.LIGHTNING ],
+    value: 10
+  };
+
+  public retreat = [ CardType.COLORLESS ];
+
+  public attacks = [
+    { name: 'Headbutt', cost: [], damage: 10 },
+    { name: 'Surf', cost: [CardType.WATER, CardType.WATER], damage: 30 }
+  ];
+
+  public name: string = 'Buizel';
+
+  public fullName: string = 'Buizel GE';
 
 }

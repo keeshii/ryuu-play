@@ -18,4 +18,10 @@ export class Deck extends BaseEntity {
   @Column({ type: 'text' })
   public cards: string = '';
 
+  @Column()
+  public isValid: boolean = false;
+
+  @Column()
+  public cardTypes: string = '[]';
+
 }

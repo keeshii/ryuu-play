@@ -34,7 +34,7 @@ storage.connect()
     function createSampleDeck() {
       const deck = [];
       for (let i = 0; i < 56; i++) {
-        deck.push('Water Energy');
+        deck.push('Water Energy EVO');
       }
       for (let i = 0; i < 4; i++) {
         deck.push('Buizel GE');

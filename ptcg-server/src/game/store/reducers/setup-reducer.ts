@@ -1,6 +1,7 @@
 import { Action } from "../actions/action";
 import { AddPlayerAction } from "../actions/add-player-action";
 import { AlertPrompt } from "../prompts/alert-prompt";
+import { Card } from "../card/card";
 import { CardList } from "../state/card-list";
 import { CoinFlipPrompt } from "../prompts/coin-flip-prompt";
 import { ConfirmPrompt } from "../prompts/confirm-prompt";
@@ -10,7 +11,7 @@ import { ShuffleDeckPrompt } from "../prompts/shuffle-prompt";
 import { State, GamePhase } from "../state/state";
 import { GameError, GameMessage } from "../../game-error";
 import { StoreLike } from "../store-like";
-import { SuperType, Stage, Card } from "../state/card";
+import { SuperType, Stage } from "../card/card-types";
 import { nextTurn } from "./player-turn-reducer";
 
 

@@ -1,11 +1,16 @@
 export * from './cards/card-manager';
-export * from './cards/deck';
+export * from './cards/deck-analyser';
 
 export * from './game-error';
 
 export * from './store/actions/action';
 export * from './store/actions/add-player-action';
 export * from './store/actions/pass-turn-action';
+
+export * from './store/card/card-types';
+export * from './store/card/card';
+export * from './store/card/pokemon-card';
+export * from './store/card/pokemon-types';
 
 export * from './store/prompts/alert-prompt';
 export * from './store/prompts/choose-cards-prompt';
@@ -15,7 +20,6 @@ export * from './store/prompts/prompt';
 export * from './store/prompts/shuffle-prompt';
 
 export * from './store/state/card-list';
-export * from './store/state/card';
 export * from './store/state/player';
 export * from './store/state/state';
 

@@ -1,4 +1,4 @@
-import { Card } from "../state/card";
+import { Card } from "../card/card";
 import { CardList } from "../state/card-list";
 import { Prompt } from "./prompt";
 import { GameMessage } from "../../game-error";

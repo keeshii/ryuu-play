@@ -1,4 +1,4 @@
-import { Card } from "./card";
+import { Card } from "../card/card";
 import { CardManager } from "../../cards/card-manager";
 import { GameError, GameMessage } from "../../game-error";
 

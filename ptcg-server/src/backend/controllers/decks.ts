@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import { AuthToken, Validate, check } from '../services';
-import { CardManager } from '../../game';
+import { CardManager, DeckAnalyser } from '../../game';
 import { Controller, Get, Post } from './controller';
 import { DeckSaveRequest } from '../interfaces';
 import { Errors } from '../common/errors';
@@ -23,7 +23,9 @@ export class Decks extends Controller {
     const decks = user.decks.map(deck => ({
       id: deck.id,
       name: deck.name,
-      cards: JSON.parse(deck.cards)
+      cards: JSON.parse(deck.cards),
+      isValid: deck.isValid,
+      cardTypes: JSON.parse(deck.cardTypes)
     }));
 
     res.send({ok: true, decks});
@@ -71,8 +73,11 @@ export class Decks extends Controller {
       return;
     }
 
+    const deckUtils = new DeckAnalyser(body.cards);
     deck.name = body.name;
     deck.cards = JSON.stringify(body.cards);
+    deck.isValid = deckUtils.isValid();
+    deck.cardTypes = JSON.stringify(deckUtils.getDeckType());
     deck = await deck.save();
 
     res.send({ok: true, deck: {

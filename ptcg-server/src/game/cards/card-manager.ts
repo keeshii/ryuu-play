@@ -1,4 +1,4 @@
-import { Card } from "../store/state/card";
+import { Card } from "../store/card/card";
 
 export class CardManager {
 
@@ -23,7 +23,7 @@ export class CardManager {
   }
 
   public getCardByName(name: string): Card | undefined {
-    let card = this.cards.find(c => c.name === name);
+    let card = this.cards.find(c => c.fullName === name);
     if (card !== undefined) {
       card = {...card};
     }
@@ -31,7 +31,7 @@ export class CardManager {
   }
 
   public isCardDefined(name: string): boolean {
-    return this.cards.find(c => c.name === name) !== undefined;
+    return this.cards.find(c => c.fullName === name) !== undefined;
   }
 
   public getAllCards(): Card[] {
