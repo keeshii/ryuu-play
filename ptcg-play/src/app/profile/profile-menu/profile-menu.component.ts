@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
-import { LoginPopupService } from '../../shared/login-popup/login-popup.service';
+import { LoginPopupService } from '../../login/login-popup/login-popup.service';
 import { SessionService } from '../../shared/session/session.service';
 import { User } from '../../shared/session/user.interface';
 import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed';
@@ -18,6 +19,7 @@ export class ProfileMenuComponent implements OnInit, OnDestroy {
 
   constructor(
     private loginPopupService: LoginPopupService,
+    private router: Router,
     private sessionService: SessionService
   ) {
     this.loggedUser$ = this.sessionService.get(session => session.loggedUser);
@@ -37,5 +39,6 @@ export class ProfileMenuComponent implements OnInit, OnDestroy {
 
   public logout() {
     this.sessionService.clear();
+    this.router.navigate(['/login']);
   }
 }

@@ -8,16 +8,16 @@ import { LoginPopupComponent } from './login-popup.component';
 })
 export class LoginPopupService {
 
-  constructor(public dialog: MatDialog) {}
+  public redirectUrl: string;
+
+  constructor(public dialog: MatDialog) {
+    this.redirectUrl = '/games';
+  }
 
   openDialog(): void {
     const dialogRef = this.dialog.open(LoginPopupComponent, {
       maxWidth: '350px',
-      data: {}
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+      data: { redirectUrl: this.redirectUrl }
     });
   }
 

@@ -1,5 +1,5 @@
-import { Component, OnDestroy } from '@angular/core';
-import { MatDialogRef } from '@angular/material';
+import { Component, OnDestroy, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 
@@ -21,7 +21,8 @@ export class LoginPopupComponent implements OnDestroy {
   constructor(
     private loginService: LoginService,
     public dialogRef: MatDialogRef<LoginPopupComponent>,
-    private router: Router
+    private router: Router,
+    @Inject(MAT_DIALOG_DATA) private data: { redirectUrl: string },
   ) { }
 
   login() {
@@ -30,11 +31,10 @@ export class LoginPopupComponent implements OnDestroy {
       finalize(() => { this.loading = false; }),
       takeUntilDestroyed(this)
     )
-      .subscribe(response => {
+      .subscribe(() => {
         this.dialogRef.close();
-      }, (error: ApiError) => {
-        console.log(error);
-      });
+        this.router.navigate([this.data.redirectUrl]);
+      }, (error: ApiError) => { });
   }
 
   resetPassword() {
