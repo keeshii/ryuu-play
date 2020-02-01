@@ -1,4 +1,5 @@
 import { Card } from "../store/card/card";
+import { deepClone } from "../../utils/utils";
 
 export class CardManager {
 
@@ -25,7 +26,7 @@ export class CardManager {
   public getCardByName(name: string): Card | undefined {
     let card = this.cards.find(c => c.fullName === name);
     if (card !== undefined) {
-      card = {...card};
+      card = deepClone(card);
     }
     return card;
   }

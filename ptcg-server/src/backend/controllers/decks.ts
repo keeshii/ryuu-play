@@ -9,9 +9,9 @@ import { User, Deck } from '../../storage';
 
 export class Decks extends Controller {
 
-  @Get('/all')
+  @Get('/list')
   @AuthToken()
-  public async onAll(req: Request, res: Response) {
+  public async onList(req: Request, res: Response) {
     const userId: number = req.body.userId;
     const user = await User.findOne(userId, { relations: ['decks'] });
 
@@ -23,12 +23,34 @@ export class Decks extends Controller {
     const decks = user.decks.map(deck => ({
       id: deck.id,
       name: deck.name,
-      cards: JSON.parse(deck.cards),
       isValid: deck.isValid,
       cardTypes: JSON.parse(deck.cardTypes)
     }));
 
     res.send({ok: true, decks});
+  }
+
+  @Get('/get/:id')
+  @AuthToken()
+  public async onGet(req: Request, res: Response) {
+    const userId: number = req.body.userId;
+    const deckId: number = parseInt(req.params.id, 10);
+    const entity = await Deck.findOne(deckId, { relations: ['user'] });
+
+    if (entity === undefined || entity.user.id !== userId) {
+      res.send({error: Errors.DECK_INVALID});
+      return;
+    }
+
+    const deck = {
+      id: entity.id,
+      name: entity.name,
+      isValid: entity.isValid,
+      cardTypes: JSON.parse(entity.cardTypes),
+      cards: JSON.parse(entity.cards)
+    };
+
+    res.send({ok: true, deck});
   }
 
   @Post('/save')
@@ -78,7 +100,14 @@ export class Decks extends Controller {
     deck.cards = JSON.stringify(body.cards);
     deck.isValid = deckUtils.isValid();
     deck.cardTypes = JSON.stringify(deckUtils.getDeckType());
-    deck = await deck.save();
+
+    try {
+      deck = await deck.save();
+    } catch (error) {
+      res.status(400);
+      res.send({error: Errors.DECK_NAME_DUPLICATE});
+      return;
+    }
 
     res.send({ok: true, deck: {
       id: deck.id,

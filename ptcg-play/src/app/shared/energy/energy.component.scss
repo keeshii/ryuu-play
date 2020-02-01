@@ -1,0 +1,56 @@
+.ptcg-energy {
+  background-image: url("/assets/energy-types.png");
+  background-repeat: no-repeat;
+  display: inline-block;
+  height: 25px;
+  margin: 0 2px;
+  width: 25px;
+
+  &[type="grass"] {
+    background-position: -25px -50px;
+  }
+
+  &[type="fighting"] {
+    background-position: -50px -25px;
+  }
+
+  &[type="psychic"] {
+    background-position: -75px -25px;
+  }
+
+  &[type="water"] {
+    background-position: -75px -50px;
+  }
+
+  &[type="lightning"] {
+    background-position: -25px -25px;
+  }
+
+  &[type="metal"] {
+    background-position: -75px 0;
+  }
+
+  &[type="darkness"] {
+    background-position: 0 -50px;
+  }
+
+  &[type="fire"] {
+    background-position: 0 0;
+  }
+
+  &[type="dragon"] {
+    background-position: 0 -25px;
+  }
+
+  &[type="fairy"] {
+    background-position: -50px 0;
+  }
+
+  &[type="colorless"] {
+    background-position: -25px 0;
+  }
+
+  &[type="energyless"] {
+    background-position: -50px -50px;
+  }
+}

@@ -21,7 +21,7 @@ export class DeckComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.loading = true;
-    this.deckService.getAll().pipe(
+    this.deckService.getList().pipe(
       finalize(() => { this.loading = false; }),
       takeUntilDestroyed(this)
     )

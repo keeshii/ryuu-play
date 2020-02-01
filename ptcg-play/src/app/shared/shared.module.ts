@@ -5,6 +5,7 @@ import { NgModule } from '@angular/core';
 
 import { AlertService } from './alert/alert.service';
 import { ContentComponent } from './content/content.component';
+import { EnergyComponent } from './energy/energy.component';
 import { SessionService } from './session/session.service';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { SidebarContainerComponent } from './sidebar/sidebar-container.component';
@@ -19,12 +20,14 @@ import { ValidationModule } from './validation/validation.module';
   ],
   declarations: [
     ContentComponent,
+    EnergyComponent,
     SidebarComponent,
     SidebarContainerComponent
   ],
   exports: [
     BrowserAnimationsModule,
     ContentComponent,
+    EnergyComponent,
     FormsModule,
     MaterialModule,
     SidebarComponent,

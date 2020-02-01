@@ -10,8 +10,8 @@ export class DeckService {
     private api: ApiService,
   ) {}
 
-  public getAll() {
-    return this.api.get<DeckResponse>('/decks/all');
+  public getList() {
+    return this.api.get<DeckResponse>('/decks/list');
   }
 
 }
