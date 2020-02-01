@@ -5,6 +5,7 @@ import { filter, switchMap } from 'rxjs/operators';
 
 import { ApiInterceptor } from './api.interceptor';
 import { ApiService } from './api.service';
+import { DeckService } from './services/deck.service';
 import { GameService } from './services/game.service';
 import { LoginService } from './services/login.service';
 import { MainService } from './services/main.service';
@@ -21,6 +22,7 @@ import { SocketService } from './socket.service';
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: ApiInterceptor, multi: true},
     ApiService,
+    DeckService,
     GameService,
     LoginService,
     MainService,
