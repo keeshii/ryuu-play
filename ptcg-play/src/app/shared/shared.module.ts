@@ -4,6 +4,7 @@ import { MaterialModule } from './material.module';
 import { NgModule } from '@angular/core';
 
 import { AlertService } from './alert/alert.service';
+import { AppRoutingModule } from '../app-routing.module';
 import { ContentComponent } from './content/content.component';
 import { EnergyComponent } from './energy/energy.component';
 import { SessionService } from './session/session.service';
@@ -13,6 +14,7 @@ import { ValidationModule } from './validation/validation.module';
 
 @NgModule({
   imports: [
+    AppRoutingModule,
     BrowserAnimationsModule,
     FormsModule,
     MaterialModule,
@@ -25,6 +27,7 @@ import { ValidationModule } from './validation/validation.module';
     SidebarContainerComponent
   ],
   exports: [
+    AppRoutingModule,
     BrowserAnimationsModule,
     ContentComponent,
     EnergyComponent,

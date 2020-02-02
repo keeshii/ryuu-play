@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material';
 
 import { DeckNamePopupComponent } from './deck-name-popup.component';
 
@@ -10,12 +10,16 @@ export class DeckNamePopupService {
 
   constructor(public dialog: MatDialog) { }
 
-  openDialog(): void {
-    this.dialog.open(DeckNamePopupComponent, {
+  public openDialog(
+    name: string = ''
+  ): MatDialogRef<DeckNamePopupComponent, string | undefined> {
+    const dialogRef = this.dialog.open(DeckNamePopupComponent, {
       maxWidth: '100%',
       width: '350px',
-      data: { }
+      data: { name }
     });
+
+    return dialogRef;
   }
 
 }

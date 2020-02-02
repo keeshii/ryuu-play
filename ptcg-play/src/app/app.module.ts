@@ -1,4 +1,5 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
+import { MatIconRegistry } from '@angular/material';
 import { NgModule } from '@angular/core';
 
 import { ApiModule } from './api/api.module';
@@ -17,7 +18,6 @@ import { TableModule } from './table/table.module';
   ],
   imports: [
     ApiModule,
-    AppRoutingModule,
     BrowserModule,
     DeckModule,
     GamesModule,
@@ -29,4 +29,9 @@ import { TableModule } from './table/table.module';
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(matIconRegistry: MatIconRegistry, domSanitizer: DomSanitizer) {
+    // Load icons
+    matIconRegistry.addSvgIconSet(domSanitizer.bypassSecurityTrustResourceUrl('./assets/mdi.svg'));
+  }
+}

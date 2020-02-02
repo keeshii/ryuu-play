@@ -21,6 +21,7 @@
     "@angular/platform-browser": "~8.2.14",
     "@angular/platform-browser-dynamic": "~8.2.14",
     "@angular/router": "~8.2.14",
+    "@mdi/angular-material": "^4.8.95",
     "core-js": "^2.5.4",
     "ptcg-server": "file:../ptcg-server",
     "rxjs": "~6.5.3",

@@ -4,13 +4,14 @@ import {
   MatCardModule,
   MatCheckboxModule,
   MatDialogModule,
+  MatIconModule,
   MatInputModule,
   MatListModule,
   MatMenuModule,
   MatProgressBarModule,
   MatSidenavModule,
   MatTableModule,
-  MatToolbarModule
+  MatToolbarModule,
 } from '@angular/material';
 import {NgModule} from '@angular/core';
 
@@ -21,6 +22,7 @@ import {NgModule} from '@angular/core';
     MatCardModule,
     MatCheckboxModule,
     MatDialogModule,
+    MatIconModule,
     MatInputModule,
     MatListModule,
     MatMenuModule,
@@ -35,6 +37,7 @@ import {NgModule} from '@angular/core';
     MatCardModule,
     MatCheckboxModule,
     MatDialogModule,
+    MatIconModule,
     MatInputModule,
     MatListModule,
     MatMenuModule,

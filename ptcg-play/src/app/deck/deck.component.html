@@ -34,10 +34,10 @@
       <td mat-cell *matCellDef="let deck">
         <button mat-button [matMenuTriggerFor]="menu">Actions</button>
         <mat-menu #menu="matMenu">
-          <button mat-menu-item>Edit</button>
-          <button mat-menu-item>Delete</button>
-          <button mat-menu-item>Rename</button>
-          <button mat-menu-item>Duplicate</button>
+          <button mat-menu-item [routerLink]="['/deck', deck.id]">Edit</button>
+          <button mat-menu-item (click)="deleteDeck(deck.id)">Delete</button>
+          <button mat-menu-item (click)="renameDeck(deck.id)">Rename</button>
+          <button mat-menu-item (click)="duplicateDeck(deck.id)">Duplicate</button>
         </mat-menu>
       </td>
     </ng-container>
