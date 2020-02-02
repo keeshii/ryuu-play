@@ -1,0 +1,26 @@
+<h2 mat-dialog-title>Enter deck name</h2>
+
+<mat-dialog-content>
+
+  <form #form="ngForm">
+
+    <!-- Username -->
+    <mat-form-field>
+      <mat-label>Deck name</mat-label>
+      <input matInput name="name" placeholder="Enter deck name" ptcgNameValidator
+        [(ngModel)]="name" #nameField="ngModel">
+      <mat-error *ngIf="!nameField.pristine && nameField.invalid">
+        Invalid name
+      </mat-error>
+    </mat-form-field>
+
+  </form>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button (click)="cancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="confirm()" [disabled]="form.invalid">
+    Confirm
+  </button>
+</mat-dialog-actions>

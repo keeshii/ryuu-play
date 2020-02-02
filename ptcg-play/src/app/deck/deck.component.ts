@@ -3,6 +3,7 @@ import { finalize } from 'rxjs/operators';
 
 import { ApiError } from '../api/api.error';
 import { Deck } from '../api/interfaces/deck.interface';
+import { DeckNamePopupService } from './deck-name-popup/deck-name-popup.service';
 import { DeckService } from '../api/services/deck.service';
 import { takeUntilDestroyed } from '../shared/operators/take-until-destroyed';
 
@@ -17,7 +18,10 @@ export class DeckComponent implements OnInit, OnDestroy {
   public decks: Deck[] = [];
   public loading = false;
 
-  constructor(private deckService: DeckService) { }
+  constructor(
+    private deckService: DeckService,
+    private deckNamePopupService: DeckNamePopupService
+  ) { }
 
   public ngOnInit() {
     this.loading = true;
@@ -31,5 +35,9 @@ export class DeckComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() { }
+
+  public createDeck() {
+    this.deckNamePopupService.openDialog();
+  }
 
 }

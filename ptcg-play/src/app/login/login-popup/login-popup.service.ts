@@ -15,7 +15,7 @@ export class LoginPopupService {
   }
 
   openDialog(): void {
-    const dialogRef = this.dialog.open(LoginPopupComponent, {
+    this.dialog.open(LoginPopupComponent, {
       maxWidth: '350px',
       data: { redirectUrl: this.redirectUrl }
     });
