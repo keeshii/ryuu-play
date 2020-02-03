@@ -1,0 +1,20 @@
+@import '~@angular/material/theming';
+
+
+@mixin ptcg-deck-edit-theme($theme) {
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  $deck-edit-border: solid 1px mat-color($foreground, divider);
+  $deck-edit-background-color: mat-color($background, app-bar);
+
+  ptcg-deck-edit {
+    .editor-pane:last-child {
+      background-color: $deck-edit-background-color;
+      border-top: $deck-edit-border;
+      color: mat-color($foreground, text);
+    }
+  }
+}
+
+@mixin ptcg-deck-edit-typography($config) { }

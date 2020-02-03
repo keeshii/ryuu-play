@@ -1,0 +1,11 @@
+@import '../../../../theme/variables.scss';
+
+img {
+  max-width: 200px;
+  margin-bottom: map-get($padding, small);
+  margin-right: map-get($padding, small);
+}
+
+:host.thumb img {
+  max-width: 100px;
+}

@@ -3,6 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { switchMap, finalize } from 'rxjs/operators';
 
 import { AlertService } from 'src/app/shared/alert/alert.service';
+import { CardsBaseService } from 'src/app/shared/cards/cards-base.service';
 import { DeckService } from 'src/app/api/services/deck.service';
 import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed';
 
@@ -15,15 +16,19 @@ export class DeckEditComponent implements OnInit, OnDestroy {
 
   public loading = false;
   public deckName: string;
+  public cards: string[];
 
   constructor(
     private alertService: AlertService,
+    private cardsBaseService: CardsBaseService,
     private deckService: DeckService,
     private route: ActivatedRoute,
     private router: Router
   ) { }
 
   ngOnInit() {
+    this.cards = this.cardsBaseService.getCardNames();
+
     this.route.paramMap.pipe(
       switchMap(paramMap => {
         this.loading = true;

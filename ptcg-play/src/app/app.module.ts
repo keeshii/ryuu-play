@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { ApiModule } from './api/api.module';
 import { AppComponent } from './app.component';
+import { CardsBaseService } from './shared/cards/cards-base.service';
 import { DeckModule } from './deck/deck.module';
 import { GamesModule } from './games/games.module';
 import { LoginModule } from './login/login.module';
@@ -27,4 +28,8 @@ import { TableModule } from './table/table.module';
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(cardsBaseService: CardsBaseService) {
+    cardsBaseService.loadCards();
+  }
+}

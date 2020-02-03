@@ -13,3 +13,12 @@
   </button>
 
 </mat-toolbar>
+
+<div class="editor-layout">
+  <div class="editor-pane">
+    <ptcg-card *ngFor="let card of cards" [card]="card" class="thumb"></ptcg-card>
+  </div>
+  <div class="editor-pane">
+
+  </div>
+</div>
