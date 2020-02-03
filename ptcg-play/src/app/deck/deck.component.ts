@@ -42,31 +42,27 @@ export class DeckComponent implements OnInit, OnDestroy {
       }, (error: ApiError) => { });
   }
 
-  public createDeck() {
-    const dialog = this.deckNamePopupService.openDialog();
+  public async createDeck() {
+    const name = await this.getDeckName();
+    if (name === false) {
+      return;
+    }
 
-    dialog.afterClosed().pipe(
+    this.loading = true;
+    this.deckService.createDeck(name).pipe(
+      finalize(() => { this.loading = false; }),
       takeUntilDestroyed(this)
-    ).subscribe((deckName: string) => {
-
-      // User canceled the popup
-      if (deckName === undefined) {
-        return;
-      }
-
-      this.loading = true;
-      this.deckService.createDeck(deckName).pipe(
-        finalize(() => { this.loading = false; }),
-        takeUntilDestroyed(this)
-      ).subscribe(() => {
-        this.refreshList();
-      }, (error: ApiError) => {
-        this.alertService.toast('Error occured, try again.');
-      });
+    ).subscribe(() => {
+      this.refreshList();
+    }, (error: ApiError) => {
+      this.alertService.toast('Error occured, try again.');
     });
   }
 
-  public deleteDeck(deckId: number) {
+  public async deleteDeck(deckId: number) {
+    if (!await this.alertService.confirm('Delete the selected deck?')) {
+      return;
+    }
     this.loading = true;
     this.deckService.deleteDeck(deckId).pipe(
       finalize(() => { this.loading = false; }),
@@ -78,12 +74,53 @@ export class DeckComponent implements OnInit, OnDestroy {
     });
   }
 
-  public renameDeck(deckId: number) {
-    // to be implemented
+  public async renameDeck(deckId: number) {
+    const name = await this.getDeckName();
+    if (name === false) {
+      return;
+    }
+
+    this.loading = true;
+    this.deckService.rename(deckId, name).pipe(
+      finalize(() => { this.loading = false; }),
+      takeUntilDestroyed(this)
+    ).subscribe(() => {
+      this.refreshList();
+    }, (error: ApiError) => {
+      this.alertService.toast('Error occured, try again.');
+    });
   }
 
-  public duplicateDeck(deckId: number) {
-    // to be implemented
+  public async duplicateDeck(deckId: number) {
+    const name = await this.getDeckName();
+    if (name === false) {
+      return;
+    }
+
+    this.loading = true;
+    this.deckService.duplicate(deckId, name).pipe(
+      finalize(() => { this.loading = false; }),
+      takeUntilDestroyed(this)
+    ).subscribe(() => {
+      this.refreshList();
+    }, (error: ApiError) => {
+      this.alertService.toast('Error occured, try again.');
+    });
+  }
+
+  private getDeckName(): Promise<string | false> {
+    const dialog = this.deckNamePopupService.openDialog();
+    return new Promise<string | false>(resolve => {
+      dialog.afterClosed().pipe(
+        takeUntilDestroyed(this)
+      ).subscribe((deckName: string) => {
+        // User canceled the popup
+        if (deckName === undefined) {
+          resolve(false);
+        }
+        resolve(deckName);
+      }, () => resolve(false));
+    });
   }
 
 }

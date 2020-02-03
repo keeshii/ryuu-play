@@ -3,8 +3,10 @@ import { FormsModule } from '@angular/forms';
 import { MaterialModule } from './material.module';
 import { NgModule } from '@angular/core';
 
+import { AlertPopupComponent } from './alert/alert-popup/alert-popup.component';
 import { AlertService } from './alert/alert.service';
 import { AppRoutingModule } from '../app-routing.module';
+import { ConfirmPopupComponent } from './alert/confirm-popup/confirm-popup.component';
 import { ContentComponent } from './content/content.component';
 import { EnergyComponent } from './energy/energy.component';
 import { SessionService } from './session/session.service';
@@ -21,10 +23,16 @@ import { ValidationModule } from './validation/validation.module';
     ValidationModule
   ],
   declarations: [
+    AlertPopupComponent,
+    ConfirmPopupComponent,
     ContentComponent,
     EnergyComponent,
     SidebarComponent,
     SidebarContainerComponent
+  ],
+  entryComponents: [
+    AlertPopupComponent,
+    ConfirmPopupComponent
   ],
   exports: [
     AppRoutingModule,

@@ -1,8 +1,8 @@
 <mat-toolbar>
-  <h1>Editing deck: </h1>
-  
+  <h1 *ngIf="deckName">Editing deck: {{deckName}}</h1>
+
   <span class="spacer"></span>
-  
+
   <button mat-raised-button [routerLink]="['/deck']">
     <mat-icon svgIcon="arrow-left"></mat-icon>
     <span>Back</span>

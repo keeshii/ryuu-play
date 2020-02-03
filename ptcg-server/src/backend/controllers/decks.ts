@@ -146,6 +146,78 @@ export class Decks extends Controller {
     res.send({ok: true});
   }
 
+  @Post('/rename')
+  @AuthToken()
+  @Validate({
+    id: check().isNumber(),
+    name: check().minLength(3).maxLength(32),
+  })
+  public async onRename(req: Request, res: Response) {
+    const body: { id: number, name: string } = req.body;
+
+    const userId: number = req.body.userId;
+    const user = await User.findOne(userId);
+
+    if (user === undefined) {
+      res.status(400);
+      res.send({error: Errors.PROFILE_INVALID});
+      return;
+    }
+
+    let deck = await Deck.findOne(body.id, { relations: ['user'] });
+
+    if (deck === undefined || deck.user.id !== user.id) {
+      res.status(400);
+      res.send({error: Errors.DECK_INVALID});
+      return;
+    }
+
+    try {
+      deck.name = body.name;
+      deck = await deck.save();
+    } catch (error) {
+      res.status(400);
+      res.send({error: Errors.DECK_NAME_DUPLICATE});
+      return;
+    }
+
+    res.send({ok: true, deck: {
+      id: deck.id,
+      name: deck.name
+    }});
+  }
+
+  @Post('/duplicate')
+  @AuthToken()
+  @Validate({
+    id: check().isNumber(),
+    name: check().minLength(3).maxLength(32),
+  })
+  public async onDuplicate(req: Request, res: Response) {
+    const body: any = req.body;
+
+    const userId: number = req.body.userId;
+    const user = await User.findOne(userId);
+
+    if (user === undefined) {
+      res.status(400);
+      res.send({error: Errors.PROFILE_INVALID});
+      return;
+    }
+
+    let deck = await Deck.findOne(body.id, { relations: ['user'] });
+
+    if (deck === undefined || deck.user.id !== user.id) {
+      res.status(400);
+      res.send({error: Errors.DECK_INVALID});
+      return;
+    }
+
+    delete body.id;
+    body.cards = JSON.parse(deck.cards);
+    return this.onSave(req, res);
+  }
+
   private validateCards(deck: string[]) {
     if (!(deck instanceof Array)) {
       return false;

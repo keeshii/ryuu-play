@@ -5,15 +5,18 @@ import {
   MatCheckboxModule,
   MatDialogModule,
   MatIconModule,
+  MatIconRegistry,
   MatInputModule,
   MatListModule,
   MatMenuModule,
   MatProgressBarModule,
+  MatSnackBarModule,
   MatSidenavModule,
   MatTableModule,
   MatToolbarModule,
 } from '@angular/material';
 import {NgModule} from '@angular/core';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @NgModule({
   imports: [
@@ -27,6 +30,7 @@ import {NgModule} from '@angular/core';
     MatListModule,
     MatMenuModule,
     MatProgressBarModule,
+    MatSnackBarModule,
     MatSidenavModule,
     MatTableModule,
     MatToolbarModule
@@ -42,9 +46,15 @@ import {NgModule} from '@angular/core';
     MatListModule,
     MatMenuModule,
     MatProgressBarModule,
+    MatSnackBarModule,
     MatSidenavModule,
     MatTableModule,
     MatToolbarModule
   ]
 })
-export class MaterialModule {}
+export class MaterialModule {
+  constructor(matIconRegistry: MatIconRegistry, domSanitizer: DomSanitizer) {
+    // Load icons
+    matIconRegistry.addSvgIconSet(domSanitizer.bypassSecurityTrustResourceUrl('./assets/mdi.svg'));
+  }
+}

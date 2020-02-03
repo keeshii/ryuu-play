@@ -1,6 +1,9 @@
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { switchMap, finalize } from 'rxjs/operators';
 
+import { AlertService } from 'src/app/shared/alert/alert.service';
+import { DeckService } from 'src/app/api/services/deck.service';
 import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed';
 
 @Component({
@@ -10,16 +13,31 @@ import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed'
 })
 export class DeckEditComponent implements OnInit, OnDestroy {
 
+  public loading = false;
+  public deckName: string;
+
   constructor(
+    private alertService: AlertService,
+    private deckService: DeckService,
     private route: ActivatedRoute,
+    private router: Router
   ) { }
 
   ngOnInit() {
-    this.route.paramMap
-      .pipe(takeUntilDestroyed(this))
-      .subscribe(paramMap => {
+    this.route.paramMap.pipe(
+      switchMap(paramMap => {
+        this.loading = true;
         const deckId = parseInt(paramMap.get('deckId'), 10);
-        console.log(deckId);
+        return this.deckService.getDeck(deckId);
+      }),
+      finalize(() => { this.loading = false; }),
+      takeUntilDestroyed(this)
+    )
+      .subscribe(response => {
+        this.deckName = response.deck.name;
+      }, async error => {
+        await this.alertService.error('Error while loading the deck');
+        this.router.navigate(['/decks']);
       });
   }
 

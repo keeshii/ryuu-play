@@ -1,9 +1,15 @@
 .mat-toolbar {
+  > h1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   > .spacer {
     flex: 1 1 auto;
   }
 
   > button {
     margin-left: 4px;
+    min-width: 80px;
   }
 }
