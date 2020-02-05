@@ -1,0 +1,24 @@
+@import '~@angular/material/theming';
+
+
+@mixin ptcg-login-popup-theme($theme) {
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  $deck-login-popup-background-color: mat-color($background, dialog);
+
+  ptcg-login-popup {
+
+    // Disable autocomplete fill color
+    input, textarea, select {
+      &:-webkit-autofill,
+      &:-internal-autofill-selected {
+        -webkit-box-shadow: 0 0 0 50px $deck-login-popup-background-color inset;
+        -webkit-text-fill-color: mat-color($foreground, text);
+      }
+    }
+
+  }
+}
+
+@mixin ptcg-deck-edit-typography($config) { }

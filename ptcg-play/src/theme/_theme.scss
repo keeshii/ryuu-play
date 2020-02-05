@@ -1,7 +1,9 @@
 @import '../app/shared/sidebar/_sidebar-theme.scss';
+@import '../app/login/login-popup/_login-popup-theme.scss';
 @import '../app/deck/deck-edit/_deck-edit-theme.scss';
 
 @mixin ptcg-theme($theme) {
   @include ptcg-sidebar-theme($theme);
   @include ptcg-deck-edit-theme($theme);
+  @include ptcg-login-popup-theme($theme);
 }

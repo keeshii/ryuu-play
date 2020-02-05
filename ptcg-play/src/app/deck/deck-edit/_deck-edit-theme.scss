@@ -7,8 +7,15 @@
 
   $deck-edit-border: solid 1px mat-color($foreground, divider);
   $deck-edit-background-color: mat-color($background, app-bar);
+  $deck-edit-toolbar-background-color: mat-color($background, dialog);
 
   ptcg-deck-edit {
+    .secondary-toolbar {
+      background-color: $deck-edit-toolbar-background-color;
+      border-bottom: $deck-edit-border;
+      color: mat-color($foreground, text);
+    }
+
     .editor-pane:last-child {
       background-color: $deck-edit-background-color;
       border-top: $deck-edit-border;

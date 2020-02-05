@@ -9,7 +9,9 @@
 
 .mat-toolbar {
   flex: 0 0 auto;
+}
 
+.mat-toolbar-row {
   > h1 {
     overflow: hidden;
     text-overflow: ellipsis;
