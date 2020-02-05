@@ -10,6 +10,7 @@ import { CardsModule } from './cards/cards.module';
 import { ConfirmPopupComponent } from './alert/confirm-popup/confirm-popup.component';
 import { ContentComponent } from './content/content.component';
 import { EnergyComponent } from './energy/energy.component';
+import { SearchBoxComponent } from './search-box/search-box.component';
 import { SessionService } from './session/session.service';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { SidebarContainerComponent } from './sidebar/sidebar-container.component';
@@ -29,6 +30,7 @@ import { ValidationModule } from './validation/validation.module';
     ConfirmPopupComponent,
     ContentComponent,
     EnergyComponent,
+    SearchBoxComponent,
     SidebarComponent,
     SidebarContainerComponent
   ],
@@ -44,6 +46,7 @@ import { ValidationModule } from './validation/validation.module';
     EnergyComponent,
     FormsModule,
     MaterialModule,
+    SearchBoxComponent,
     SidebarComponent,
     SidebarContainerComponent,
     ValidationModule

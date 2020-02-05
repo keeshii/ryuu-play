@@ -27,6 +27,15 @@
   }
 }
 
+.mat-toolbar-row {
+  > mat-form-field, > ptcg-search-box {
+    margin-left: map-get($padding, normal);
+  }
+
+  > *:first-child {
+    margin-left: 0;
+  }
+}
 
 .editor-layout {
   display: flex;

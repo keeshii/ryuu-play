@@ -4,6 +4,7 @@
 @mixin ptcg-deck-edit-theme($theme) {
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
+  $primary: map-get($theme, primary);
 
   $deck-edit-border: solid 1px mat-color($foreground, divider);
   $deck-edit-background-color: mat-color($background, app-bar);
@@ -13,7 +14,14 @@
     .secondary-toolbar {
       background-color: $deck-edit-toolbar-background-color;
       border-bottom: $deck-edit-border;
-      color: mat-color($foreground, text);
+
+      & .mat-form-field-underline {
+        color: mat-color($primary, text);
+      }
+
+      & .mat-select {
+        color: mat-color($foreground, text);
+      }
     }
 
     .editor-pane:last-child {

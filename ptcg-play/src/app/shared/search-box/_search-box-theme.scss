@@ -1,0 +1,18 @@
+@import '~@angular/material/theming';
+
+@mixin ptcg-search-box-theme($theme) {
+  $primary: map-get($theme, primary);
+  $foreground: map-get($theme, foreground);
+
+  ptcg-search-box {
+    .mat-form-field-underline {
+      color: mat-color($primary, text);
+    }
+
+    .mat-input-element {
+      color: mat-color($foreground, text);
+    }
+  }
+}
+
+@mixin ptcg-search-box-typography($config) { }

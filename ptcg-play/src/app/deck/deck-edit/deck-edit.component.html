@@ -15,12 +15,25 @@
   </mat-toolbar-row>
 
   <mat-toolbar-row class="secondary-toolbar">
-    <form class="search-form" autocomplete="off">
-      <mat-form-field floatLabel="never" color="warn">
-        <input type="tel" matInput placeholder="Search">
-        <mat-icon matSuffix>search</mat-icon>
-      </mat-form-field>
-    </form>
+    <mat-form-field floatLabel="never" appearance="legacy">
+      <mat-select multiple placeholder="All cards">
+        <mat-option *ngFor="let superType of superTypes" [value]="superType.value">
+          {{ superType.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field floatLabel="never" appearance="legacy">
+      <mat-select multiple placeholder="All types">
+        <mat-option *ngFor="let cardType of cardTypes" [value]="cardType.value">
+          {{ cardType.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <span class="spacer"></span>
+
+    <ptcg-search-box (search)="onSearch($event)"></ptcg-search-box>
   </mat-toolbar-row>
 </mat-toolbar>
 

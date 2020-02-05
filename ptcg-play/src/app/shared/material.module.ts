@@ -10,10 +10,12 @@ import {
   MatListModule,
   MatMenuModule,
   MatProgressBarModule,
+  MatSelectModule,
   MatSnackBarModule,
   MatSidenavModule,
   MatTableModule,
   MatToolbarModule,
+  MatTooltipModule,
 } from '@angular/material';
 import {NgModule} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
@@ -30,10 +32,12 @@ import {DomSanitizer} from '@angular/platform-browser';
     MatListModule,
     MatMenuModule,
     MatProgressBarModule,
+    MatSelectModule,
     MatSnackBarModule,
     MatSidenavModule,
     MatTableModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatTooltipModule,
   ],
   exports: [
     MatBadgeModule,
@@ -46,10 +50,12 @@ import {DomSanitizer} from '@angular/platform-browser';
     MatListModule,
     MatMenuModule,
     MatProgressBarModule,
+    MatSelectModule,
     MatSnackBarModule,
     MatSidenavModule,
     MatTableModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatTooltipModule,
   ]
 })
 export class MaterialModule {
