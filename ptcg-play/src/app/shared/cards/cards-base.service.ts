@@ -10,8 +10,8 @@ import { CardsService } from '../../api/services/cards.service';
 export class CardsBaseService {
 
   public scansUrl: string;
-  private cards: CardEntry[];
-  private names: string[];
+  private cards: CardEntry[] = [];
+  private names: string[] = [];
 
   constructor(
     private cardsService: CardsService
@@ -25,6 +25,10 @@ export class CardsBaseService {
         this.names = this.cards.map(c => c.fullName);
         this.scansUrl = response.scansUrl;
       }, () => {});
+  }
+
+  public getCards(): CardEntry[] {
+    return this.cards;
   }
 
   public getCardNames(): string[] {

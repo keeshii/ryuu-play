@@ -25,3 +25,9 @@ $ptcg-theme: mat-dark-theme($ptcg-primary, $ptcg-accent, $ptcg-warn);
 
 
 @include ptcg-theme($ptcg-theme);
+
+
+// Create a config with the default typography levels.
+$config: mat-typography-config();
+
+@include ptcg-typography($config);

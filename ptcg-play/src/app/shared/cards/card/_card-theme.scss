@@ -1,0 +1,19 @@
+@import '~@angular/material/theming';
+
+@mixin ptcg-card-theme($theme) {
+  $foreground: map-get($theme, foreground);
+
+  ptcg-card {
+    .ptcg-card-label {
+      color: mat-color($foreground, text);
+    }
+  }
+}
+
+@mixin ptcg-card-typography($config) {
+  ptcg-card {
+    .ptcg-card-label {
+      @include mat-typography-level-to-styles($config, caption);
+    }
+  }
+}

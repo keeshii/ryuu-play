@@ -1,11 +1,30 @@
 @import '../../../../theme/variables.scss';
 
-img {
-  max-width: 200px;
-  margin-bottom: map-get($padding, small);
-  margin-right: map-get($padding, small);
+:host {
+  display: inline-flex;
+
+  &.thumb .ptcg-card {
+    max-width: 100px;
+  }
 }
 
-:host.thumb img {
-  max-width: 100px;
+.ptcg-card {
+  align-items: center;
+  display: inline-flex;
+  flex-direction: column;
+  margin-bottom: map-get($padding, normal);
+  margin-right: map-get($padding, normal);
+}
+
+.ptcg-card-scan {
+  max-width: 200px;
+  width: 100%;
+}
+
+.ptcg-card-label {
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  width: 100%;
+  white-space: nowrap;
 }

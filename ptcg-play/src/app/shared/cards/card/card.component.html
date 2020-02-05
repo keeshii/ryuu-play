@@ -1,3 +1,6 @@
-<span class="ptcg-card" *ngIf="data">
-  <img [src]="scanUrl">
-</span>
+<div class="ptcg-card" *ngIf="data">
+  <img class="ptcg-card-scan" [src]="scanUrl">
+  <span class="ptcg-card-label">
+    {{ data.fullName }}
+  </span>
+</div>

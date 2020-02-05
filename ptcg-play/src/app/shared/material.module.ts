@@ -5,7 +5,6 @@ import {
   MatCheckboxModule,
   MatDialogModule,
   MatIconModule,
-  MatIconRegistry,
   MatInputModule,
   MatListModule,
   MatMenuModule,
@@ -18,7 +17,6 @@ import {
   MatTooltipModule,
 } from '@angular/material';
 import {NgModule} from '@angular/core';
-import {DomSanitizer} from '@angular/platform-browser';
 
 @NgModule({
   imports: [
@@ -58,9 +56,4 @@ import {DomSanitizer} from '@angular/platform-browser';
     MatTooltipModule,
   ]
 })
-export class MaterialModule {
-  constructor(matIconRegistry: MatIconRegistry, domSanitizer: DomSanitizer) {
-    // Load icons
-    matIconRegistry.addSvgIconSet(domSanitizer.bypassSecurityTrustResourceUrl('./assets/mdi.svg'));
-  }
-}
+export class MaterialModule { }

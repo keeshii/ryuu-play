@@ -2,10 +2,16 @@
 @import '../app/login/login-popup/_login-popup-theme.scss';
 @import '../app/deck/deck-edit/_deck-edit-theme.scss';
 @import '../app/shared/search-box/_search-box-theme.scss';
+@import '../app/shared/cards/card/_card-theme.scss';
 
 @mixin ptcg-theme($theme) {
   @include ptcg-sidebar-theme($theme);
   @include ptcg-deck-edit-theme($theme);
   @include ptcg-login-popup-theme($theme);
   @include ptcg-search-box-theme($theme);
+  @include ptcg-card-theme($theme);
+}
+
+@mixin ptcg-typography($config) {
+  @include ptcg-card-typography($config);
 }

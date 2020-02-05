@@ -1,0 +1,31 @@
+@import '../../../theme/variables.scss';
+
+.ptcg-deck-edit-toolbar {
+  flex: 0 0 auto;
+}
+
+.mat-toolbar-row {
+  > h1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  > .spacer {
+    flex: 1 1 auto;
+  }
+
+  > button {
+    margin-left: 4px;
+    min-width: 80px;
+  }
+}
+
+.mat-toolbar-row {
+  > mat-form-field, > ptcg-search-box {
+    margin-left: map-get($padding, normal);
+  }
+
+  > *:first-child {
+    margin-left: 0;
+  }
+}

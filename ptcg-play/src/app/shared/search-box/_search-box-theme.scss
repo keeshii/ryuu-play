@@ -12,6 +12,10 @@
     .mat-input-element {
       color: mat-color($foreground, text);
     }
+
+    .mat-form-field-label {
+      color: mat-color($foreground, disabled) !important;
+    }
   }
 }
 
