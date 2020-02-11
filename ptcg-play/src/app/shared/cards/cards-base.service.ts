@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { take } from 'rxjs/operators';
 
-import { CardEntry } from '../../api/interfaces/cards.interface';
 import { CardsService } from '../../api/services/cards.service';
+import { Card } from 'ptcg-server';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +10,7 @@ import { CardsService } from '../../api/services/cards.service';
 export class CardsBaseService {
 
   public scansUrl: string;
-  private cards: CardEntry[] = [];
+  private cards: Card[] = [];
   private names: string[] = [];
 
   constructor(
@@ -27,7 +27,7 @@ export class CardsBaseService {
       }, () => {});
   }
 
-  public getCards(): CardEntry[] {
+  public getCards(): Card[] {
     return this.cards;
   }
 
@@ -35,7 +35,7 @@ export class CardsBaseService {
     return this.names;
   }
 
-  public getCardByName(cardName: string): CardEntry | undefined {
+  public getCardByName(cardName: string): Card | undefined {
     return this.cards.find(c => c.fullName === cardName);
   }
 

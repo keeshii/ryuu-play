@@ -1,30 +1,17 @@
-@import '../../../../theme/variables.scss';
-
-:host {
-  display: inline-flex;
-
-  &.thumb .ptcg-card {
-    max-width: 100px;
-  }
-}
 
 .ptcg-card {
-  align-items: center;
-  display: inline-flex;
-  flex-direction: column;
-  margin-bottom: map-get($padding, normal);
-  margin-right: map-get($padding, normal);
+  min-width: 100px;
+  position: relative;
+}
+
+.ptcg-card:after {
+  content: "";
+  display: block;
+  padding-bottom: 137%;
 }
 
 .ptcg-card-scan {
-  max-width: 200px;
+  height: 100%;
+  position: absolute;
   width: 100%;
-}
-
-.ptcg-card-label {
-  overflow: hidden;
-  text-align: center;
-  text-overflow: ellipsis;
-  width: 100%;
-  white-space: nowrap;
 }

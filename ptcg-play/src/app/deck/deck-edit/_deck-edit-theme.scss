@@ -33,6 +33,20 @@
       }
     }
   }
+
+  ptcg-deck-card {
+    .ptcg-deck-card-label {
+      color: mat-color($foreground, text);
+    }
+  }
 }
 
-@mixin ptcg-deck-edit-typography($config) { }
+@mixin ptcg-deck-edit-typography($config) {
+
+  ptcg-deck-card {
+    .ptcg-deck-card-label {
+      @include mat-typography-level-to-styles($config, caption);
+    }
+  }
+
+}

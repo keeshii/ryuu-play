@@ -9,8 +9,10 @@ export * from './store/actions/pass-turn-action';
 
 export * from './store/card/card-types';
 export * from './store/card/card';
+export * from './store/card/energy-card';
 export * from './store/card/pokemon-card';
 export * from './store/card/pokemon-types';
+export * from './store/card/trainer-card';
 
 export * from './store/prompts/alert-prompt';
 export * from './store/prompts/choose-cards-prompt';

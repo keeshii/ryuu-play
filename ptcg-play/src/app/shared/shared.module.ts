@@ -2,6 +2,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { MaterialModule } from './material.module';
 import { NgModule } from '@angular/core';
+import { SkyhookDndModule } from '@angular-skyhook/core';
 
 import { AlertPopupComponent } from './alert/alert-popup/alert-popup.component';
 import { AlertService } from './alert/alert.service';
@@ -23,6 +24,7 @@ import { ValidationModule } from './validation/validation.module';
     CardsModule,
     FormsModule,
     MaterialModule,
+    SkyhookDndModule,
     ValidationModule
   ],
   declarations: [
@@ -49,6 +51,7 @@ import { ValidationModule } from './validation/validation.module';
     SearchBoxComponent,
     SidebarComponent,
     SidebarContainerComponent,
+    SkyhookDndModule,
     ValidationModule
   ],
   providers: [

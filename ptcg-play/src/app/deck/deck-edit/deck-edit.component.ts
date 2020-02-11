@@ -4,10 +4,10 @@ import { switchMap } from 'rxjs/operators';
 
 import { AlertService } from 'src/app/shared/alert/alert.service';
 import { CardsBaseService } from 'src/app/shared/cards/cards-base.service';
-import { CardEntry } from 'src/app/api/interfaces/cards.interface';
 import { DeckEditToolbarFilter } from '../deck-edit-toolbar/deck-edit-toolbar-filter.interface';
 import { DeckService } from 'src/app/api/services/deck.service';
 import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed';
+import { Card } from 'ptcg-server';
 
 @Component({
   selector: 'ptcg-deck-edit',
@@ -18,7 +18,7 @@ export class DeckEditComponent implements OnInit, OnDestroy {
 
   public loading = false;
   public deckName: string;
-  public cards: CardEntry[];
+  public cards: Card[];
   public toolbarFilter: DeckEditToolbarFilter;
 
   constructor(

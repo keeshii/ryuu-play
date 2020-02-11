@@ -1,5 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { SkyhookDndModule } from '@angular-skyhook/core';
+import { default as HTML5Backend } from 'react-dnd-html5-backend';
 
 import { ApiModule } from './api/api.module';
 import { AppComponent } from './app.component';
@@ -23,6 +25,7 @@ import { TableModule } from './table/table.module';
     LoginModule,
     ProfileModule,
     SharedModule,
+    SkyhookDndModule.forRoot({ backend: HTML5Backend }),
     TableModule
   ],
   providers: [],

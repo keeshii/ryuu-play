@@ -1,0 +1,21 @@
+@import '../../../theme/variables.scss';
+
+:host {
+  display: inline-flex;
+}
+
+.ptcg-deck-card {
+  align-items: center;
+  display: inline-flex;
+  flex-direction: column;
+  margin-bottom: map-get($padding, normal);
+  margin-right: map-get($padding, normal);
+}
+
+.ptcg-deck-card-label {
+  display: block;
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

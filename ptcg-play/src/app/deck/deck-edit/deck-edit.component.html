@@ -7,9 +7,10 @@
 <div class="editor-layout">
   <div class="editor-pane">
     <!-- matBadge="16" matBadgePosition="above before" matBadgeSize="large" -->
-    <ptcg-card *ngFor="let card of cards | filterCards: toolbarFilter"
-      [card]="card.fullName" class="thumb">
-    </ptcg-card>
+    <ptcg-deck-card
+      *ngFor="let card of cards | filterCards: toolbarFilter"
+      [card]="card">
+    </ptcg-deck-card>
   </div>
   <div class="editor-pane">
 

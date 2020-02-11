@@ -1,6 +1,3 @@
-<div class="ptcg-card" *ngIf="data">
+<div class="ptcg-card" *ngIf="data" [dragSource]="cardSource">
   <img class="ptcg-card-scan" [src]="scanUrl">
-  <span class="ptcg-card-label">
-    {{ data.fullName }}
-  </span>
 </div>

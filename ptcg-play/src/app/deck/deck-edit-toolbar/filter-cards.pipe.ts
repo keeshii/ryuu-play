@@ -1,14 +1,14 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { CardEntry } from 'src/app/api/interfaces/cards.interface';
 import { DeckEditToolbarFilter } from './deck-edit-toolbar-filter.interface';
+import { Card, CardType, SuperType, PokemonCard, EnergyCard } from 'ptcg-server';
 
 @Pipe({
   name: 'filterCards'
 })
 export class FilterCardsPipe implements PipeTransform {
 
-  transform(cards: CardEntry[], filter: DeckEditToolbarFilter): any {
+  transform(cards: Card[], filter: DeckEditToolbarFilter): any {
 
     if (filter === undefined) {
       return cards;
@@ -29,12 +29,22 @@ export class FilterCardsPipe implements PipeTransform {
         return false;
       }
 
-      if (filter.cardTypes.length && !filter.cardTypes.includes(card.cardType)) {
+      if (filter.cardTypes.length && !filter.cardTypes.includes(this.getCardType(card))) {
         return false;
       }
 
       return true;
     });
+  }
+
+  private getCardType(card: Card): CardType {
+    if (card.superType === SuperType.POKEMON) {
+      return (card as PokemonCard).cardType;
+    }
+    if (card.superType === SuperType.ENERGY) {
+      return (card as EnergyCard).provides;
+    }
+    return CardType.NONE;
   }
 
 }

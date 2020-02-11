@@ -1,14 +1,7 @@
 import { Response } from './response.interface';
-import { CardType, SuperType } from 'ptcg-server';
-
-export interface CardEntry {
-  superType: SuperType;
-  cardType?: CardType;
-  fullName: string;
-  name: string;
-}
+import { Card } from 'ptcg-server';
 
 export interface CardsResponse extends Response {
-  cards: CardEntry[];
+  cards: Card[];
   scansUrl: string;
 }
