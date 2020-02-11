@@ -5,14 +5,25 @@
 ></ptcg-deck-edit-toolbar>
 
 <div class="editor-layout">
-  <div class="editor-pane">
+
+  <ptcg-deck-edit-pane [type]="DeckEditPane.LIBRARY">
     <!-- matBadge="16" matBadgePosition="above before" matBadgeSize="large" -->
     <ptcg-deck-card
       *ngFor="let card of cards | filterCards: toolbarFilter"
+      (click)="addCardToDeck(card)"
       [card]="card">
     </ptcg-deck-card>
-  </div>
-  <div class="editor-pane">
+  </ptcg-deck-edit-pane>
 
-  </div>
+  <ptcg-deck-edit-pane [type]="DeckEditPane.DECK">
+    <ptcg-deck-card
+      *ngFor="let card of deckCards"
+      (click)="removeCardFromDeck(card)"
+      [card]="card">
+    </ptcg-deck-card>
+  </ptcg-deck-edit-pane>
+
 </div>
+
+<ptcg-deck-edit-info [cards]="deckCards">
+</ptcg-deck-edit-info>

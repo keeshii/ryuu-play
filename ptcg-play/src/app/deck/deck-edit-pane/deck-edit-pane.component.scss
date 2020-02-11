@@ -1,0 +1,5 @@
+@import '../../../theme/variables.scss';
+
+:host {
+  padding: map-get($padding, normal);
+}

@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit, Input } from '@angular/core';
-import { Card } from 'ptcg-server';
+
+import { DeckCard } from './deck-card.interface';
 
 @Component({
   selector: 'ptcg-deck-card',
@@ -8,7 +9,7 @@ import { Card } from 'ptcg-server';
 })
 export class DeckCardComponent implements OnInit, OnDestroy {
 
-  @Input() card: Card;
+  @Input() card: DeckCard;
 
   constructor() {}
 

@@ -1,0 +1,7 @@
+<div class="ptcg-info-container"
+  [@state]="animationState"
+  (@state.done)="onAnimationEnd($event)">
+  <div class="ptcg-info" *ngIf="isVisible">
+    <ng-content ></ng-content>
+  </div>
+</div>

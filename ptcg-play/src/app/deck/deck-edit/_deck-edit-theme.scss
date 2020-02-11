@@ -11,7 +11,7 @@
   $deck-edit-toolbar-background-color: mat-color($background, dialog);
 
   ptcg-deck-edit {
-    .editor-pane:last-child {
+    ptcg-deck-edit-pane:last-child {
       background-color: $deck-edit-background-color;
       border-top: $deck-edit-border;
       color: mat-color($foreground, text);

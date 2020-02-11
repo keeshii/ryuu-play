@@ -1,0 +1,23 @@
+@import '~@angular/material/theming';
+
+
+@mixin ptcg-info-theme($theme) {
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  $info-background-color: mat-color($background, dialog);
+
+  .ptcg-info {
+    background-color: $info-background-color;
+    color: mat-color($foreground, text);
+  }
+
+}
+
+@mixin ptcg-info-typography($config) {
+
+  .ptcg-info {
+    @include mat-typography-level-to-styles($config, caption);
+  }
+
+}

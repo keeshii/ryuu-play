@@ -1,0 +1,13 @@
+@import '../../../theme/variables.scss';
+
+.ptcg-info-container {
+  display: flex;
+  justify-content: center;
+}
+
+.ptcg-info {
+  border-radius: 4px;
+  bottom: map-get($padding, normal);
+  padding: map-get($padding, small);
+  position: absolute;
+}
