@@ -1,0 +1,28 @@
+<h2 mat-dialog-title>{{ title }}</h2>
+
+<mat-dialog-content>
+  <p *ngIf="message">{{ message }}</p>
+
+  <form #form="ngForm" autocomplete="off">
+
+    <!-- Number -->
+    <mat-form-field>
+      <mat-label>{{placeholder}}</mat-label>
+      <input matInput type="number" name="value" placeholder="{{placeholder}}"
+        ptcgNumberValidator [ptcgNumberValidatorMin]="min" [ptcgNumberValidatorMax]="max"
+        [(ngModel)]="value" #numberField="ngModel">
+      <mat-error *ngIf="!numberField.pristine && numberField.invalid">
+        Invalid value
+      </mat-error>
+    </mat-form-field>
+
+  </form>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button (click)="cancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="confirm()" [disabled]="form.invalid">
+    OK
+  </button>
+</mat-dialog-actions>

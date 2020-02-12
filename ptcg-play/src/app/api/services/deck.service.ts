@@ -27,6 +27,14 @@ export class DeckService {
     });
   }
 
+  public saveDeck(deckId: number, name: string, cards: string[]) {
+    return this.api.post<DeckResponse>('/decks/save', {
+      id: deckId,
+      name,
+      cards
+    });
+  }
+
   public deleteDeck(deckId: number) {
     return this.api.post<Response>('/decks/delete', {
       id: deckId

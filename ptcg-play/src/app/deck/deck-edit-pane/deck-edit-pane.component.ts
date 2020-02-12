@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, NgZone } from '@angular/core';
 import { SkyhookDndService, DropTarget } from '@angular-skyhook/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -21,6 +21,7 @@ export class DeckEditPaneComponent implements OnInit, OnDestroy {
   public highlight$: Observable<boolean>;
 
   constructor(
+    private ngZone: NgZone,
     private dnd: SkyhookDndService
   ) {
     this.dropTarget = this.dnd.dropTarget(DraggableType, {
@@ -30,7 +31,7 @@ export class DeckEditPaneComponent implements OnInit, OnDestroy {
       },
       drop: monitor => {
         const card = monitor.getItem().card;
-        this.cardDrop.next(card);
+        this.ngZone.run(() => this.cardDrop.next(card));
       }
     });
 

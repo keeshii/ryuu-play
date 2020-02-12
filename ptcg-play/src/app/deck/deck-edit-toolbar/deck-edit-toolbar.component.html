@@ -1,6 +1,6 @@
 <mat-toolbar class="ptcg-deck-edit-toolbar">
   <mat-toolbar-row>
-    <h1 *ngIf="deckName">Editing deck: {{deckName}}</h1>
+    <h1 *ngIf="deck">Editing deck: {{deck.name}}</h1>
 
     <span class="spacer"></span>
 
@@ -9,7 +9,7 @@
       <span>Back</span>
     </button>
 
-    <button mat-raised-button color="primary" [disabled]="disabled">
+    <button mat-raised-button color="primary" [disabled]="disabled" (click)="onSave()">
       <span>Save</span>
     </button>
   </mat-toolbar-row>

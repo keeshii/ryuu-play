@@ -12,6 +12,7 @@ import { ConfirmPopupComponent } from './alert/confirm-popup/confirm-popup.compo
 import { ContentComponent } from './content/content.component';
 import { EnergyComponent } from './energy/energy.component';
 import { InfoComponent } from './info/info.component';
+import { InputNumberPopupComponent } from './alert/input-number-popup/input-number-popup.component';
 import { SearchBoxComponent } from './search-box/search-box.component';
 import { SessionService } from './session/session.service';
 import { SidebarComponent } from './sidebar/sidebar.component';
@@ -34,13 +35,15 @@ import { ValidationModule } from './validation/validation.module';
     ContentComponent,
     EnergyComponent,
     InfoComponent,
+    InputNumberPopupComponent,
     SearchBoxComponent,
     SidebarComponent,
     SidebarContainerComponent
   ],
   entryComponents: [
     AlertPopupComponent,
-    ConfirmPopupComponent
+    ConfirmPopupComponent,
+    InputNumberPopupComponent
   ],
   exports: [
     AppRoutingModule,

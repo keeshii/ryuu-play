@@ -1,13 +1,16 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { switchMap } from 'rxjs/operators';
+import { SuperType, EnergyCard, EnergyType } from 'ptcg-server';
+import { switchMap, finalize } from 'rxjs/operators';
 
-import { AlertService } from 'src/app/shared/alert/alert.service';
-import { CardsBaseService } from 'src/app/shared/cards/cards-base.service';
+import { ApiError } from '../../api/api.error';
+import { AlertService } from '../../shared/alert/alert.service';
+import { CardsBaseService } from '../../shared/cards/cards-base.service';
+import { Deck } from '../../api/interfaces/deck.interface';
 import { DeckCard } from '../deck-card/deck-card.interface';
 import { DeckEditPane } from '../deck-edit-pane/deck-edit-pane.interface';
 import { DeckEditToolbarFilter } from '../deck-edit-toolbar/deck-edit-toolbar-filter.interface';
-import { DeckService } from 'src/app/api/services/deck.service';
+import { DeckService } from '../../api/services/deck.service';
 import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed';
 
 @Component({
@@ -18,7 +21,7 @@ import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed'
 export class DeckEditComponent implements OnInit, OnDestroy {
 
   public loading = false;
-  public deckName: string;
+  public deck: Deck;
   public cards: DeckCard[] = [];
   public deckCards: DeckCard[] = [];
   public toolbarFilter: DeckEditToolbarFilter;
@@ -45,7 +48,7 @@ export class DeckEditComponent implements OnInit, OnDestroy {
     )
       .subscribe(response => {
         this.loading = false;
-        this.deckName = response.deck.name;
+        this.deck = response.deck;
         this.deckCards = this.loadDeckCards(response.deck.cards);
       }, async error => {
         await this.alertService.error('Error while loading the deck');
@@ -86,34 +89,89 @@ export class DeckEditComponent implements OnInit, OnDestroy {
     return deckCards;
   }
 
-  public addCardToDeck(card: DeckCard) {
-    const index = this.deckCards.findIndex(c => c.fullName === card.fullName);
-    this.deckCards = this.deckCards.slice();
+  private async askForEnergyCount(card: DeckCard, maxValue?: number): Promise<number> {
+    const DEFAULT_VALUE = 1;
 
+    if (card.superType !== SuperType.ENERGY) {
+      return DEFAULT_VALUE;
+    }
+
+    const energyCard: EnergyCard = card as any;
+    if (energyCard.energyType !== EnergyType.BASIC) {
+      return DEFAULT_VALUE;
+    }
+
+    const count = await this.alertService.inputNumber({
+      title: 'How many energy cards?',
+      value: 1,
+      minValue: 1,
+      maxValue
+    });
+    return count === undefined ? 0 : count;
+  }
+
+  public saveDeck() {
+    if (!this.deck) {
+      return;
+    }
+
+    const cards = [];
+    for (const card of this.deckCards) {
+      for (let i = 0; i < card.count; i++) {
+        cards.push(card.fullName);
+      }
+    }
+
+    this.loading = true;
+    this.deckService.saveDeck(this.deck.id, this.deck.name, cards).pipe(
+      finalize(() => { this.loading = false; }),
+      takeUntilDestroyed(this)
+    ).subscribe(() => {
+      this.alertService.toast('Deck saved.');
+    }, (error: ApiError) => {
+      this.alertService.toast('Error occured, try again.');
+    });
+  }
+
+  public async addCardToDeck(card: DeckCard) {
+    const CARDS_IN_DECK = 60;
+    const index = this.deckCards.findIndex(c => c.fullName === card.fullName);
+    const count = await this.askForEnergyCount(card, CARDS_IN_DECK);
+    if (count === 0) {
+      return;
+    }
+
+    this.deckCards = this.deckCards.slice();
     if (index === -1) {
       this.deckCards.push({
         ...card,
         pane: DeckEditPane.DECK,
-        count: 1
+        count
       });
       return;
     }
 
-    this.deckCards[index].count++;
+    this.deckCards[index].count += count;
   }
 
-  public removeCardFromDeck(card: DeckCard) {
+  public async removeCardFromDeck(card: DeckCard) {
     const index = this.deckCards.findIndex(c => c.fullName === card.fullName);
     if (index === -1) {
       return;
     }
+
+    const count = await this.askForEnergyCount(card, card.count);
+    if (count === 0) {
+      return;
+    }
+
     this.deckCards = this.deckCards.slice();
 
-    if (this.deckCards[index].count <= 1) {
+    if (this.deckCards[index].count <= count) {
       this.deckCards.splice(index, 1);
       return;
     }
-    this.deckCards[index].count--;
+    this.deckCards[index].count -= count;
   }
 
 }

@@ -1,7 +1,8 @@
 <ptcg-deck-edit-toolbar
   [disabled]="loading"
-  [deckName]="deckName"
+  [deck]="deck"
   (filterChange)="toolbarFilter = $event"
+  (save)="saveDeck()"
 ></ptcg-deck-edit-toolbar>
 
 <div class="editor-layout">
