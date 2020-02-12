@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CardComponent } from './card/card.component';
 import { SkyhookDndModule } from '@angular-skyhook/core';
+import { DropHighlightDirective } from './drop-highlight/drop-highlight.directive';
 
 
 @NgModule({
@@ -10,10 +11,12 @@ import { SkyhookDndModule } from '@angular-skyhook/core';
     SkyhookDndModule,
   ],
   declarations: [
-    CardComponent
+    CardComponent,
+    DropHighlightDirective
   ],
   exports: [
-    CardComponent
+    CardComponent,
+    DropHighlightDirective
   ]
 })
 export class CardsModule { }

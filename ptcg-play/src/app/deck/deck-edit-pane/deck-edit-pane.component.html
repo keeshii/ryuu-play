@@ -1,3 +1,5 @@
-<div class="ptcg-deck-edit-pane">
+<div class="ptcg-deck-edit-pane"
+  [dropTarget]="dropTarget"
+  ptcgDropHighlight [ptcgDropHighlightVisible]="highlight$ | async">
   <ng-content></ng-content>
 </div>

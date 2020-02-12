@@ -1,5 +1,10 @@
 @import '../../../theme/variables.scss';
 
 :host {
+  display: flex;
+}
+
+.ptcg-deck-edit-pane {
+  flex: 1 1 auto;
   padding: map-get($padding, normal);
 }

@@ -3,6 +3,7 @@
 @import '../app/deck/deck-edit/_deck-edit-theme.scss';
 @import '../app/shared/search-box/_search-box-theme.scss';
 @import '../app/shared/info/_info-theme.scss';
+@import '../app/shared/cards/drop-highlight/_drop-highlight-theme.scss';
 
 @mixin ptcg-theme($theme) {
   @include ptcg-sidebar-theme($theme);
@@ -10,6 +11,7 @@
   @include ptcg-login-popup-theme($theme);
   @include ptcg-search-box-theme($theme);
   @include ptcg-info-theme($theme);
+  @include ptcg-drop-highlight-theme($theme);
 }
 
 @mixin ptcg-typography($config) {
