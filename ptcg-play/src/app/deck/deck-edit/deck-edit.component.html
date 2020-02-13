@@ -9,22 +9,16 @@
 
   <ptcg-deck-edit-pane 
     [type]="DeckEditPane.LIBRARY"
-    (cardDrop)="removeCardFromDeck($event)">
-    <ptcg-deck-card
-      *ngFor="let card of cards | filterCards: toolbarFilter"
-      (click)="addCardToDeck(card)"
-      [card]="card">
-    </ptcg-deck-card>
+    (cardDrop)="removeCardFromDeck($event)"
+    (cardClick)="addCardToDeck($event)"
+    [cards]="cards | filterCards: toolbarFilter">
   </ptcg-deck-edit-pane>
 
   <ptcg-deck-edit-pane
     [type]="DeckEditPane.DECK"
-    (cardDrop)="addCardToDeck($event)">
-    <ptcg-deck-card
-      *ngFor="let card of deckCards"
-      (click)="removeCardFromDeck(card)"
-      [card]="card">
-    </ptcg-deck-card>
+    (cardDrop)="addCardToDeck($event)"
+    (cardClick)="removeCardFromDeck($event)"
+    [cards]="deckCards">
   </ptcg-deck-edit-pane>
 
 </div>

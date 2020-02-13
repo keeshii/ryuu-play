@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { SkyhookDndModule } from '@angular-skyhook/core';
-import { default as HTML5Backend } from 'react-dnd-html5-backend';
+import { MultiBackend, HTML5ToTouch } from '@angular-skyhook/multi-backend';
 
 import { ApiModule } from './api/api.module';
 import { AppComponent } from './app.component';
@@ -25,7 +25,7 @@ import { TableModule } from './table/table.module';
     LoginModule,
     ProfileModule,
     SharedModule,
-    SkyhookDndModule.forRoot({ backend: HTML5Backend }),
+    SkyhookDndModule.forRoot({ backend: MultiBackend, options: HTML5ToTouch }),
     TableModule
   ],
   providers: [],

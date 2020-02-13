@@ -1,3 +1,13 @@
-<div class="ptcg-card" *ngIf="data" [dragSource]="cardSource">
+<skyhook-preview [allBackends]="true">
+    <ng-template let-type let-item="item">
+        <ng-container [ngSwitch]="type">
+            <div class="ptcg-card" *ngSwitchCase="DraggableType">
+              <img class="ptcg-card-preview" [src]="item.scanUrl">
+            </div>
+        </ng-container>
+    </ng-template>
+</skyhook-preview>
+
+<div class="ptcg-card" *ngIf="data" [dragSource]="cardSource" [noHTML5Preview]="true">
   <img class="ptcg-card-scan" [src]="scanUrl">
 </div>

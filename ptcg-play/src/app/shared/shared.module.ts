@@ -3,6 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { MaterialModule } from './material.module';
 import { NgModule } from '@angular/core';
 import { SkyhookDndModule } from '@angular-skyhook/core';
+import { SkyhookMultiBackendModule } from '@angular-skyhook/multi-backend';
+import { SkyhookSortableModule } from '@angular-skyhook/sortable';
 
 import { AlertPopupComponent } from './alert/alert-popup/alert-popup.component';
 import { AlertService } from './alert/alert.service';
@@ -27,6 +29,8 @@ import { ValidationModule } from './validation/validation.module';
     FormsModule,
     MaterialModule,
     SkyhookDndModule,
+    SkyhookMultiBackendModule,
+    SkyhookSortableModule,
     ValidationModule
   ],
   declarations: [
@@ -58,6 +62,8 @@ import { ValidationModule } from './validation/validation.module';
     SidebarComponent,
     SidebarContainerComponent,
     SkyhookDndModule,
+    SkyhookMultiBackendModule,
+    SkyhookSortableModule,
     ValidationModule
   ],
   providers: [

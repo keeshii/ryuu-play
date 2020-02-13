@@ -15,7 +15,9 @@ import { DeckCard } from '../deck-card/deck-card.interface';
 export class DeckEditPaneComponent implements OnInit, OnDestroy {
 
   @Input() type: DeckEditPane;
+  @Input() cards: DeckCard[];
   @Output() cardDrop = new EventEmitter<DeckCard>();
+  @Output() cardClick = new EventEmitter<DeckCard>();
 
   public dropTarget: DropTarget<{ card: DeckCard }, any>;
   public highlight$: Observable<boolean>;
@@ -41,6 +43,10 @@ export class DeckEditPaneComponent implements OnInit, OnDestroy {
     }));
 
     this.highlight$ = dropState.pipe(map(state => state.canDrop && state.isOver));
+  }
+
+  onCardClick(card: DeckCard) {
+    this.cardClick.next(card);
   }
 
   ngOnInit() {

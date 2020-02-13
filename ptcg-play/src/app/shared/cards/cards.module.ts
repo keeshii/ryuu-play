@@ -1,14 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CardComponent } from './card/card.component';
 import { SkyhookDndModule } from '@angular-skyhook/core';
-import { DropHighlightDirective } from './drop-highlight/drop-highlight.directive';
+import { SkyhookMultiBackendModule } from '@angular-skyhook/multi-backend';
 
+import { CardComponent } from './card/card.component';
+import { DropHighlightDirective } from './drop-highlight/drop-highlight.directive';
 
 @NgModule({
   imports: [
     CommonModule,
     SkyhookDndModule,
+    SkyhookMultiBackendModule,
   ],
   declarations: [
     CardComponent,

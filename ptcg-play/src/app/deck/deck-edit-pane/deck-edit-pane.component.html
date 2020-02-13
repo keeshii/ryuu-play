@@ -1,5 +1,11 @@
 <div class="ptcg-deck-edit-pane"
   [dropTarget]="dropTarget"
   ptcgDropHighlight [ptcgDropHighlightVisible]="highlight$ | async">
-  <ng-content></ng-content>
+
+  <ptcg-deck-card
+    *ngFor="let card of cards | filterCards: toolbarFilter"
+    (click)="onCardClick(card)"
+    [card]="card">
+  </ptcg-deck-card>
+
 </div>

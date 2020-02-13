@@ -6,10 +6,11 @@
 
 .ptcg-deck-card {
   align-items: center;
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
   margin-bottom: map-get($padding, normal);
-  margin-right: map-get($padding, normal);
+  width: $card-width + map-get($padding, large);
 }
 
 .ptcg-deck-card-label {
@@ -18,4 +19,5 @@
   text-align: center;
   text-overflow: ellipsis;
   white-space: nowrap;
+  width: 100%;
 }

@@ -15,6 +15,7 @@ export const DraggableType = 'CARD';
 })
 export class CardComponent implements OnInit, OnDestroy {
 
+  public DraggableType = DraggableType;
   public cardSource: DragSource<{card: Card}, any>;
   public scanUrl: string;
   public data: Card;
@@ -32,7 +33,7 @@ export class CardComponent implements OnInit, OnDestroy {
     private dnd: SkyhookDndService
   ) {
     this.cardSource = this.dnd.dragSource(DraggableType, {
-      beginDrag: () => ({ card: this.data }),
+      beginDrag: () => ({ card: this.data, scanUrl: this.scanUrl }),
       canDrag: () => this.canDrag
     });
   }
