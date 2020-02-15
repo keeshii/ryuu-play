@@ -8,7 +8,7 @@ import { DeckEditComponent } from './deck-edit/deck-edit.component';
 import { DeckEditToolbarComponent } from './deck-edit-toolbar/deck-edit-toolbar.component';
 import { FilterCardsPipe } from './deck-edit-toolbar/filter-cards.pipe';
 import { DeckCardComponent } from './deck-card/deck-card.component';
-import { DeckEditPaneComponent } from './deck-edit-pane/deck-edit-pane.component';
+import { DeckEditPanesComponent } from './deck-edit-panes/deck-edit-panes.component';
 import { DeckEditInfoComponent } from './deck-edit-info/deck-edit-info.component';
 
 @NgModule({
@@ -22,7 +22,7 @@ import { DeckEditInfoComponent } from './deck-edit-info/deck-edit-info.component
     DeckEditComponent,
     DeckEditToolbarComponent,
     FilterCardsPipe,
-    DeckEditPaneComponent,
+    DeckEditPanesComponent,
     DeckEditInfoComponent,
   ],
   entryComponents: [

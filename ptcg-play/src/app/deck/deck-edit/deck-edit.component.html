@@ -5,23 +5,10 @@
   (save)="saveDeck()"
 ></ptcg-deck-edit-toolbar>
 
-<div class="editor-layout">
-
-  <ptcg-deck-edit-pane 
-    [type]="DeckEditPane.LIBRARY"
-    (cardDrop)="removeCardFromDeck($event)"
-    (cardClick)="addCardToDeck($event)"
-    [cards]="cards | filterCards: toolbarFilter">
-  </ptcg-deck-edit-pane>
-
-  <ptcg-deck-edit-pane
-    [type]="DeckEditPane.DECK"
-    (cardDrop)="addCardToDeck($event)"
-    (cardClick)="removeCardFromDeck($event)"
-    [cards]="deckCards">
-  </ptcg-deck-edit-pane>
-
-</div>
+<ptcg-deck-edit-panes 
+  [cards]="cards | filterCards: toolbarFilter"
+  [(deckCards)]="deckCards">
+</ptcg-deck-edit-panes>
 
 <ptcg-deck-edit-info [cards]="deckCards">
 </ptcg-deck-edit-info>

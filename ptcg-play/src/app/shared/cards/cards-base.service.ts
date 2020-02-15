@@ -3,6 +3,7 @@ import { take } from 'rxjs/operators';
 
 import { CardsService } from '../../api/services/cards.service';
 import { Card } from 'ptcg-server';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +34,10 @@ export class CardsBaseService {
 
   public getCardNames(): string[] {
     return this.names;
+  }
+
+  public getScanUrl(name: string): string {
+    return environment.apiUrl + this.scansUrl.replace('{name}', name);
   }
 
   public getCardByName(cardName: string): Card | undefined {

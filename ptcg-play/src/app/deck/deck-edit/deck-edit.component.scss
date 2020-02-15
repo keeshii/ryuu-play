@@ -4,15 +4,3 @@
   height: 100%;
   overflow: hidden;
 }
-
-.editor-layout {
-  display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
-
-  > ptcg-deck-edit-pane {
-    flex: 1 1 0;
-    max-width: 100%;
-    overflow: auto;
-  }
-}

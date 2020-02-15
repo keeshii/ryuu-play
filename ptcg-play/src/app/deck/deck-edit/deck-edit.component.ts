@@ -1,6 +1,5 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { SuperType, EnergyCard, EnergyType } from 'ptcg-server';
 import { switchMap, finalize } from 'rxjs/operators';
 
 import { ApiError } from '../../api/api.error';
@@ -8,7 +7,7 @@ import { AlertService } from '../../shared/alert/alert.service';
 import { CardsBaseService } from '../../shared/cards/cards-base.service';
 import { Deck } from '../../api/interfaces/deck.interface';
 import { DeckCard } from '../deck-card/deck-card.interface';
-import { DeckEditPane } from '../deck-edit-pane/deck-edit-pane.interface';
+import { DeckEditPane } from '../deck-edit-panes/deck-edit-pane.interface';
 import { DeckEditToolbarFilter } from '../deck-edit-toolbar/deck-edit-toolbar-filter.interface';
 import { DeckService } from '../../api/services/deck.service';
 import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed';
@@ -62,7 +61,8 @@ export class DeckEditComponent implements OnInit, OnDestroy {
     return this.cardsBaseService.getCards().map(card => ({
       ...card,
       pane: DeckEditPane.LIBRARY,
-      count: 1
+      count: 1,
+      scanUrl: this.cardsBaseService.getScanUrl(card.fullName)
     }));
   }
 
@@ -79,7 +79,8 @@ export class DeckEditComponent implements OnInit, OnDestroy {
           cardMap[name] = {
             ...card,
             pane: DeckEditPane.DECK,
-            count: 1
+            count: 1,
+            scanUrl: this.cardsBaseService.getScanUrl(name)
           };
           deckCards.push(cardMap[name]);
         }
@@ -87,27 +88,6 @@ export class DeckEditComponent implements OnInit, OnDestroy {
     }
 
     return deckCards;
-  }
-
-  private async askForEnergyCount(card: DeckCard, maxValue?: number): Promise<number> {
-    const DEFAULT_VALUE = 1;
-
-    if (card.superType !== SuperType.ENERGY) {
-      return DEFAULT_VALUE;
-    }
-
-    const energyCard: EnergyCard = card as any;
-    if (energyCard.energyType !== EnergyType.BASIC) {
-      return DEFAULT_VALUE;
-    }
-
-    const count = await this.alertService.inputNumber({
-      title: 'How many energy cards?',
-      value: 1,
-      minValue: 1,
-      maxValue
-    });
-    return count === undefined ? 0 : count;
   }
 
   public saveDeck() {
@@ -131,47 +111,6 @@ export class DeckEditComponent implements OnInit, OnDestroy {
     }, (error: ApiError) => {
       this.alertService.toast('Error occured, try again.');
     });
-  }
-
-  public async addCardToDeck(card: DeckCard) {
-    const CARDS_IN_DECK = 60;
-    const index = this.deckCards.findIndex(c => c.fullName === card.fullName);
-    const count = await this.askForEnergyCount(card, CARDS_IN_DECK);
-    if (count === 0) {
-      return;
-    }
-
-    this.deckCards = this.deckCards.slice();
-    if (index === -1) {
-      this.deckCards.push({
-        ...card,
-        pane: DeckEditPane.DECK,
-        count
-      });
-      return;
-    }
-
-    this.deckCards[index].count += count;
-  }
-
-  public async removeCardFromDeck(card: DeckCard) {
-    const index = this.deckCards.findIndex(c => c.fullName === card.fullName);
-    if (index === -1) {
-      return;
-    }
-
-    const count = await this.askForEnergyCount(card, card.count);
-    if (count === 0) {
-      return;
-    }
-
-    this.deckCards = this.deckCards.slice();
-
-    if (this.deckCards[index].count <= count) {
-      this.deckCards.splice(index, 1);
-      return;
-    }
-    this.deckCards[index].count -= count;
   }
 
 }

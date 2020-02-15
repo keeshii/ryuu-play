@@ -1,0 +1,27 @@
+@import '../../../theme/variables.scss';
+
+:host {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+}
+
+.ptcg-deck-edit-pane {
+  flex: 1 1 0;
+  max-width: 100%;
+  overflow: auto;
+}
+
+.ptcg-deck-edit-pane {
+  flex: 1 1 auto;
+  padding: map-get($padding, normal);
+}
+
+ptcg-deck-card.placeholder {
+  opacity: .5;
+}
+
+.ptcg-card-preview {
+  position: absolute;
+  width: $card-width;
+}

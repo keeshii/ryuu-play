@@ -1,6 +1,7 @@
 <div class="ptcg-deck-card">
 
   <ptcg-card [card]="card"
+    #ptcgCard="ptcgCard"
     matBadge="{{card.count}}x" [matBadgeHidden]="card.count === 1" matBadgeColor="accent">
   </ptcg-card>
   <span class="ptcg-deck-card-label">

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DeckEditPaneComponent } from './deck-edit-pane.component';
+import { DeckEditPanesComponent } from './deck-edit-panes.component';
 
 describe('DeckEditPaneComponent', () => {
-  let component: DeckEditPaneComponent;
-  let fixture: ComponentFixture<DeckEditPaneComponent>;
+  let component: DeckEditPanesComponent;
+  let fixture: ComponentFixture<DeckEditPanesComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DeckEditPaneComponent ]
+      declarations: [ DeckEditPanesComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DeckEditPaneComponent);
+    fixture = TestBed.createComponent(DeckEditPanesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
