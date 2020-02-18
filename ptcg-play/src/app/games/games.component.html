@@ -6,14 +6,20 @@
     </mat-list>    
   </ptcg-sidebar>
 
+  <mat-toolbar>
+    <mat-toolbar-row>
+      <h1>Games</h1>
+
+      <span class="ptcg-u-spacer"></span>
+
+      <button mat-raised-button color="primary" (click)="createGame()">
+        Create game
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
   <ptcg-content>
-    <h1 class="mat-h1">Games</h1>
-
     <p>Status: <span>{{isConnected ? 'connected' : 'disconnected' }}</span></p>
-
-    <p>
-      <button mat-raised-button (click)="createGame()">Create game</button>
-    </p>
 
     <table mat-table [dataSource]="games$ | async" class="mat-elevation-z8">
       <!-- Game ID Column -->

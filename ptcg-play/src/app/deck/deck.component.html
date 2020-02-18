@@ -1,11 +1,16 @@
-<ptcg-content>
-  <h1 class="mat-h1">
-    Decks
-  </h1>
+<mat-toolbar>
+  <mat-toolbar-row>
+    <h1>Decks</h1>
 
-  <p>
-    <button mat-raised-button (click)="createDeck()">Create deck</button>
-  </p>
+    <span class="ptcg-u-spacer"></span>
+
+    <button mat-raised-button color="primary" (click)="createDeck()">
+      Create deck
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<ptcg-content>
 
   <table mat-table [dataSource]="decks" class="mat-elevation-z8">
     <!-- Deck name -->

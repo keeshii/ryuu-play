@@ -2,7 +2,7 @@
   <mat-toolbar-row>
     <h1 *ngIf="deck">Editing deck: {{deck.name}}</h1>
 
-    <span class="spacer"></span>
+    <span class="ptcg-u-spacer"></span>
 
     <button mat-raised-button [routerLink]="['/deck']">
       <mat-icon>arrow_back</mat-icon>
@@ -31,7 +31,7 @@
       </mat-select>
     </mat-form-field>
 
-    <span class="spacer"></span>
+    <span class="ptcg-u-spacer"></span>
 
     <ptcg-search-box (search)="onSearch($event)"></ptcg-search-box>
   </mat-toolbar-row>
