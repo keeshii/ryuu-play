@@ -1,19 +1,10 @@
-<skyhook-preview [allBackends]="true">
-    <ng-template let-type let-item="item">
-        <ng-container [ngSwitch]="type">
-            <div class="ptcg-card" *ngSwitchCase="'DECK_CARD'">
-              <img class="ptcg-card-preview" [src]="item.data.scanUrl">
-            </div>
-        </ng-container>
-    </ng-template>
-</skyhook-preview>
-
 <div class="ptcg-deck-edit-pane"
   [dropTarget]="libraryTarget"
   ptcgDropHighlight [ptcgDropHighlightVisible]="libraryHighlight$ | async">
   <ptcg-deck-card
-    *ngFor="let card of cards"
-    (click)="addCardToDeck(card)"
+    *ngFor="let card of (cards | filterCards: toolbarFilter)"
+    [ssExternal]="card.spec" #ext="ssExternal" [source]="ext.source"
+    (click)="setCardCount(card)"
     [card]="card">
   </ptcg-deck-card>
 </div>
@@ -33,8 +24,8 @@
         [ssRender]="context"
         #render="ssRender"
         [class.placeholder]="render.isDragging$|async"
-        [dragSource]="render.source" [noHTML5Preview]="true"
-        (click)="removeCardFromDeck(render.data)"
+        [source]="render.source"
+        (click)="setCardCount(render.data)"
         [card]="render.data">
       </ptcg-deck-card>
     </ng-template>

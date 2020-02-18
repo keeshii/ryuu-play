@@ -6,7 +6,7 @@ import { ApiError } from '../../api/api.error';
 import { AlertService } from '../../shared/alert/alert.service';
 import { CardsBaseService } from '../../shared/cards/cards-base.service';
 import { Deck } from '../../api/interfaces/deck.interface';
-import { DeckCard } from '../deck-card/deck-card.interface';
+import { DeckItem } from '../deck-card/deck-card.interface';
 import { DeckEditPane } from '../deck-edit-panes/deck-edit-pane.interface';
 import { DeckEditToolbarFilter } from '../deck-edit-toolbar/deck-edit-toolbar-filter.interface';
 import { DeckService } from '../../api/services/deck.service';
@@ -21,8 +21,7 @@ export class DeckEditComponent implements OnInit, OnDestroy {
 
   public loading = false;
   public deck: Deck;
-  public cards: DeckCard[] = [];
-  public deckCards: DeckCard[] = [];
+  public deckItems: DeckItem[] = [];
   public toolbarFilter: DeckEditToolbarFilter;
   public DeckEditPane = DeckEditPane;
 
@@ -35,8 +34,6 @@ export class DeckEditComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.cards = this.loadLibraryCards();
-
     this.route.paramMap.pipe(
       switchMap(paramMap => {
         this.loading = true;
@@ -48,7 +45,7 @@ export class DeckEditComponent implements OnInit, OnDestroy {
       .subscribe(response => {
         this.loading = false;
         this.deck = response.deck;
-        this.deckCards = this.loadDeckCards(response.deck.cards);
+        this.deckItems = this.loadDeckItems(response.deck.cards);
       }, async error => {
         await this.alertService.error('Error while loading the deck');
         this.router.navigate(['/decks']);
@@ -57,37 +54,28 @@ export class DeckEditComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() { }
 
-  private loadLibraryCards(): DeckCard[] {
-    return this.cardsBaseService.getCards().map(card => ({
-      ...card,
-      pane: DeckEditPane.LIBRARY,
-      count: 1,
-      scanUrl: this.cardsBaseService.getScanUrl(card.fullName)
-    }));
-  }
-
-  private loadDeckCards(cardNames: string[]): DeckCard[] {
-    const cardMap: { [name: string]: DeckCard } = {};
-    const deckCards: DeckCard[] = [];
+  private loadDeckItems(cardNames: string[]): DeckItem[] {
+    const itemMap: { [name: string]: DeckItem } = {};
+    const deckItems: DeckItem[] = [];
 
     for (const name of cardNames) {
-      if (cardMap[name] !== undefined) {
-        cardMap[name].count++;
+      if (itemMap[name] !== undefined) {
+        itemMap[name].count++;
       } else {
         const card = this.cardsBaseService.getCardByName(name);
         if (card !== undefined) {
-          cardMap[name] = {
-            ...card,
-            pane: DeckEditPane.DECK,
+          itemMap[name] = {
+            card,
             count: 1,
+            pane: DeckEditPane.DECK,
             scanUrl: this.cardsBaseService.getScanUrl(name)
           };
-          deckCards.push(cardMap[name]);
+          deckItems.push(itemMap[name]);
         }
       }
     }
 
-    return deckCards;
+    return deckItems;
   }
 
   public saveDeck() {
@@ -95,15 +83,15 @@ export class DeckEditComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const cards = [];
-    for (const card of this.deckCards) {
-      for (let i = 0; i < card.count; i++) {
-        cards.push(card.fullName);
+    const items = [];
+    for (const item of this.deckItems) {
+      for (let i = 0; i < item.count; i++) {
+        items.push(item.card.fullName);
       }
     }
 
     this.loading = true;
-    this.deckService.saveDeck(this.deck.id, this.deck.name, cards).pipe(
+    this.deckService.saveDeck(this.deck.id, this.deck.name, items).pipe(
       finalize(() => { this.loading = false; }),
       takeUntilDestroyed(this)
     ).subscribe(() => {

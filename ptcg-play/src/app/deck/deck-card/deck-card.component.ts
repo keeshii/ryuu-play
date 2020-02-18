@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, Input, ViewChild } from '@angular/core';
+import { DragSource } from '@angular-skyhook/core';
 
-import { DeckCard } from './deck-card.interface';
-import {CardComponent} from '../../shared/cards/card/card.component';
+import { DeckItem } from './deck-card.interface';
 
 export const DeckCardType = 'DECK_CARD';
 
@@ -12,9 +12,9 @@ export const DeckCardType = 'DECK_CARD';
 })
 export class DeckCardComponent implements OnInit, OnDestroy {
 
-  @ViewChild(CardComponent, {static: true}) ptcgCard: CardComponent;
+  @Input() source: DragSource<DeckItem, any>;
 
-  @Input() card: DeckCard;
+  @Input() card: DeckItem;
 
   constructor() {}
 

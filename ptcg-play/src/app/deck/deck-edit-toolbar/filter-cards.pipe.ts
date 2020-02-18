@@ -2,25 +2,27 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 import { DeckEditToolbarFilter } from './deck-edit-toolbar-filter.interface';
 import { Card, CardType, SuperType, PokemonCard, EnergyCard } from 'ptcg-server';
+import { LibraryItem } from '../deck-card/deck-card.interface';
 
 @Pipe({
   name: 'filterCards'
 })
 export class FilterCardsPipe implements PipeTransform {
 
-  transform(cards: Card[], filter: DeckEditToolbarFilter): any {
+  transform(items: LibraryItem[], filter: DeckEditToolbarFilter): any {
 
     if (filter === undefined) {
-      return cards;
+      return items;
     }
 
     if (filter.searchValue === ''
       && filter.superTypes.length === 0
       && filter.cardTypes.length === 0) {
-      return cards;
+      return items;
     }
 
-    return cards.filter(card => {
+    return items.filter(item => {
+      const card = item.card;
       if (filter.searchValue !== '' && card.name.indexOf(filter.searchValue) === -1) {
         return false;
       }

@@ -11,7 +11,7 @@ export class NumberValidatorDirective implements Validator {
   @Input() ptcgNumberValidatorMax: number;
 
   validate(control: AbstractControl): ValidationErrors {
-    const value = String(control.value || '').trim();
+    const value = String(control.value === undefined ? '' : control.value).trim();
 
     if (!value.match(/^\d+$/)) {
       return {numberInvalid: true};

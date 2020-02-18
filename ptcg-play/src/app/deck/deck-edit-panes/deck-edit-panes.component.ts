@@ -1,13 +1,15 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, NgZone } from '@angular/core';
-import { SkyhookDndService, DropTarget } from '@angular-skyhook/core';
+import { SkyhookDndService, DropTarget, DropTargetMonitor } from '@angular-skyhook/core';
 import { DraggedItem, SortableSpec } from '@angular-skyhook/sortable';
 import { Observable } from 'rxjs';
-import { SuperType, EnergyCard, EnergyType } from 'ptcg-server';
+import { SuperType, EnergyCard, EnergyType, Card } from 'ptcg-server';
 import { map } from 'rxjs/operators';
 
 import { AlertService } from '../../shared/alert/alert.service';
+import { CardsBaseService } from 'src/app/shared/cards/cards-base.service';
 import { DeckEditPane } from './deck-edit-pane.interface';
-import { DeckCard } from '../deck-card/deck-card.interface';
+import { DeckEditToolbarFilter } from '../deck-edit-toolbar/deck-edit-toolbar-filter.interface';
+import { DeckItem, LibraryItem } from '../deck-card/deck-card.interface';
 import { DeckCardType } from '../deck-card/deck-card.component';
 
 @Component({
@@ -17,26 +19,28 @@ import { DeckCardType } from '../deck-card/deck-card.component';
 })
 export class DeckEditPanesComponent implements OnInit, OnDestroy {
 
-  @Input() cards: DeckCard[];
+  @Input() toolbarFilter: DeckEditToolbarFilter;
+  @Output() deckItemsChange = new EventEmitter<DeckItem[]>();
 
-  @Output() deckCardsChange = new EventEmitter<DeckCard[]>();
-
-  @Input() set deckCards(value: DeckCard[]) {
+  @Input() set deckItems(value: DeckItem[]) {
     this.list = value;
     this.tempList = value;
   }
 
-  public deckTarget: DropTarget<DraggedItem<DeckCard>, any>;
+  public deckTarget: DropTarget<DraggedItem<DeckItem>, any>;
   public deckHighlight$: Observable<boolean>;
-  public libraryTarget: DropTarget<DraggedItem<DeckCard>, any>;
+  public libraryTarget: DropTarget<DraggedItem<DeckItem>, any>;
   public libraryHighlight$: Observable<boolean>;
-  public deckSpec: SortableSpec<DeckCard>;
+  public deckSpec: SortableSpec<DeckItem>;
+  public cards: LibraryItem[] = [];
+  public hasDropped: boolean;
 
-  list: DeckCard[] = [];
-  tempList: DeckCard[] = [];
+  list: DeckItem[] = [];
+  tempList: DeckItem[] = [];
 
   constructor(
     private alertService: AlertService,
+    private cardsBaseService: CardsBaseService,
     private ngZone: NgZone,
     private dnd: SkyhookDndService
   ) {
@@ -45,31 +49,80 @@ export class DeckEditPanesComponent implements OnInit, OnDestroy {
 
     this.deckSpec = {
       type: DeckCardType,
-      trackBy: x => x.fullName,
+      trackBy: item => item.card.fullName + item.pane,
       hover: item => {
         this.tempList = this.moveDeckCards(item);
       },
       drop: item => {
-        // save the changes
+        this.hasDropped = true;
         this.tempList = this.list = this.moveDeckCards(item);
-        this.deckCardsChange.next(this.list);
+        if (!item.isInternal) {
+          const newItem = this.list.find(i => i.card.fullName === item.data.card.fullName);
+          newItem.count += 1;
+        }
+        this.deckItemsChange.next(this.list);
       },
       endDrag: () => {
-        // revert
+        this.hasDropped = false;
         this.tempList = this.list;
+      },
+      isDragging: (ground: DeckItem, inFlight: DraggedItem<DeckItem>) => {
+        return ground.card.fullName === inFlight.data.card.fullName;
       }
     };
   }
 
-  private moveDeckCards(item: DraggedItem<DeckCard>) {
+  private loadLibraryCards(): LibraryItem[] {
+    return this.cardsBaseService.getCards().map((card, index) => {
+      let item: LibraryItem;
+
+      const spec: SortableSpec<DeckItem, any> = {
+        ...this.deckSpec,
+        createData: () => item
+      };
+
+      item = {
+        card,
+        pane: DeckEditPane.LIBRARY,
+        count: 1,
+        scanUrl: this.cardsBaseService.getScanUrl(card.fullName),
+        spec
+      };
+      return item;
+    });
+  }
+
+  private moveDeckCards(item: DraggedItem<DeckItem>) {
     const temp = this.list.slice();
-    temp.splice(item.index, 1);
-    temp.splice(item.hover.index, 0, item.data);
+    const index = this.list.findIndex(i => i.card.fullName === item.data.card.fullName);
+    let data: DeckItem = item.data;
+
+    if (item.isInternal) {
+      temp.splice(item.index, 1);
+
+    } else {
+      data = { ...item.data, pane: DeckEditPane.DECK, count: 0 };
+      if (index !== -1) {
+        data.count = this.list[index].count;
+        temp.splice(index, 1);
+      }
+    }
+
+    // Find place to put the transit object
+    let target = item.hover.index;
+    if (target === -1) {
+      target = index;
+    }
+    if (target === -1) {
+      target = temp.length;
+    }
+
+    temp.splice(target, 0, data);
     return temp;
   }
 
-  private initDropTarget(pane: DeckEditPane): [DropTarget<DraggedItem<DeckCard>, any>, Observable<boolean>]  {
-    let dropTarget: DropTarget<DraggedItem<DeckCard>, any>;
+  private initDropTarget(pane: DeckEditPane): [DropTarget<DraggedItem<DeckItem>, any>, Observable<boolean>]  {
+    let dropTarget: DropTarget<DraggedItem<DeckItem>, any>;
     let highlight$: Observable<boolean>;
 
     dropTarget = this.dnd.dropTarget(DeckCardType, {
@@ -78,8 +131,14 @@ export class DeckEditPanesComponent implements OnInit, OnDestroy {
         return card.pane !== pane;
       },
       drop: monitor => {
+        // Card already dropped on the list
+        if (this.hasDropped) {
+          return;
+        }
         const card = monitor.getItem().data;
-        this.ngZone.run(() => this.onCardDrop(card, pane));
+        this.ngZone.run(() => pane === DeckEditPane.LIBRARY
+          ? this.removeCardFromDeck(card)
+          : this.addCardToDeck(card));
       }
     });
 
@@ -93,64 +152,29 @@ export class DeckEditPanesComponent implements OnInit, OnDestroy {
     return [ dropTarget, highlight$ ];
   }
 
-  private onCardDrop(card: DeckCard, target: DeckEditPane) {
-    return target === DeckEditPane.LIBRARY
-      ? this.removeCardFromDeck(card)
-      : this.addCardToDeck(card);
-  }
+  public async addCardToDeck(item: DeckItem) {
+    const index = this.tempList.findIndex(c => c.card.fullName === item.card.fullName);
 
-  private async askForEnergyCount(card: DeckCard, maxValue?: number): Promise<number> {
-    const DEFAULT_VALUE = 1;
-
-    if (card.superType !== SuperType.ENERGY) {
-      return DEFAULT_VALUE;
-    }
-
-    const energyCard: EnergyCard = card as any;
-    if (energyCard.energyType !== EnergyType.BASIC) {
-      return DEFAULT_VALUE;
-    }
-
-    const count = await this.alertService.inputNumber({
-      title: 'How many energy cards?',
-      value: 1,
-      minValue: 1,
-      maxValue
-    });
-    return count === undefined ? 0 : count;
-  }
-
-  public async addCardToDeck(card: DeckCard) {
-    const CARDS_IN_DECK = 60;
-    const index = this.list.findIndex(c => c.fullName === card.fullName);
-    const count = await this.askForEnergyCount(card, CARDS_IN_DECK);
-    if (count === 0) {
-      return;
-    }
-
-    const list = this.list.slice();
+    const count = 1;
+    const list = this.tempList.slice();
     if (index === -1) {
-      list.push({ ...card, pane: DeckEditPane.DECK, count });
+      list.push({ ...item, pane: DeckEditPane.DECK, count });
     } else {
       list[index].count += count;
     }
 
     this.tempList = this.list = list;
-    this.deckCardsChange.next(list);
+    this.deckItemsChange.next(list);
   }
 
-  public async removeCardFromDeck(card: DeckCard) {
-    const index = this.list.findIndex(c => c.fullName === card.fullName);
+  public async removeCardFromDeck(item: DeckItem) {
+    const index = this.tempList.findIndex(c => c.card.fullName === item.card.fullName);
     if (index === -1) {
       return;
     }
 
-    const count = await this.askForEnergyCount(card, card.count);
-    if (count === 0) {
-      return;
-    }
-
-    const list = this.list.slice();
+    const count = 1;
+    const list = this.tempList.slice();
     if (list[index].count <= count) {
       list.splice(index, 1);
     } else {
@@ -158,10 +182,46 @@ export class DeckEditPanesComponent implements OnInit, OnDestroy {
     }
 
     this.tempList = this.list = list;
-    this.deckCardsChange.next(list);
+    this.deckItemsChange.next(list);
   }
 
-  ngOnInit() {}
+  public async setCardCount(item: DeckItem) {
+    const MAX_CARD_VALUE = 99;
+    const index = this.tempList.findIndex(c => c.card.fullName === item.card.fullName);
+    if (index !== -1) {
+      item = this.tempList[index];
+    }
+
+    const count = await this.alertService.inputNumber({
+      title: 'How many cards?',
+      value: item.count,
+      minValue: 0,
+      maxValue: MAX_CARD_VALUE
+    });
+    if (count === undefined) {
+      return;
+    }
+
+    const list = this.tempList.slice();
+    if (index === -1 && count === 0) {
+      return;
+    } else if (index === -1) {
+      list.push({ ...item, pane: DeckEditPane.DECK, count });
+    } else {
+      if (count > 0) {
+        list[index].count = count;
+      } else {
+        list.splice(index, 1);
+      }
+    }
+
+    this.tempList = this.list = list;
+    this.deckItemsChange.next(list);
+  }
+
+  ngOnInit() {
+    this.cards = this.loadLibraryCards();
+  }
 
   ngOnDestroy() {
     this.deckTarget.unsubscribe();

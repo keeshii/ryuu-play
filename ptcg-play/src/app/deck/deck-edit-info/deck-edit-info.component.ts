@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { DeckCard } from '../deck-card/deck-card.interface';
+import { DeckItem } from '../deck-card/deck-card.interface';
 
 @Component({
   selector: 'ptcg-deck-edit-info',
@@ -9,11 +9,9 @@ import { DeckCard } from '../deck-card/deck-card.interface';
 export class DeckEditInfoComponent implements OnInit {
 
   public cardsCount = 0;
-  public deckCards: DeckCard[] = [];
 
-  @Input() set cards(value: DeckCard[]) {
-    this.deckCards = value;
-    this.cardsCount = this.deckCards.reduce((prev, val) => prev + val.count, 0);
+  @Input() set deckItems(value: DeckItem[]) {
+    this.cardsCount = value.reduce((prev, val) => prev + val.count, 0);
   }
 
   constructor() { }

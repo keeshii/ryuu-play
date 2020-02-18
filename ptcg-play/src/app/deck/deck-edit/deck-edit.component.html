@@ -6,9 +6,9 @@
 ></ptcg-deck-edit-toolbar>
 
 <ptcg-deck-edit-panes 
-  [cards]="cards | filterCards: toolbarFilter"
-  [(deckCards)]="deckCards">
+  [toolbarFilter]="toolbarFilter"
+  [(deckItems)]="deckItems">
 </ptcg-deck-edit-panes>
 
-<ptcg-deck-edit-info [cards]="deckCards">
+<ptcg-deck-edit-info [deckItems]="deckItems">
 </ptcg-deck-edit-info>
