@@ -1,0 +1,13 @@
+@import '../../../theme/variables.scss';
+
+.ptcg-board-card {
+  max-width: map-get($ptcg-size, card);
+  min-width: map-get($ptcg-size, board-card);
+  position: relative;
+}
+
+.ptcg-board-card:after {
+  content: "";
+  display: block;
+  padding-bottom: $card-aspect-ratio * 100%;
+}

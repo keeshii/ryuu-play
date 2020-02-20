@@ -1,0 +1,33 @@
+@import '~@angular/material/theming';
+
+
+@mixin ptcg-table-theme($theme) {
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+  $primary: map-get($theme, primary);
+
+  $table-border: solid 1px mat-color($foreground, divider);
+  $hand-background-color: mat-color($background, app-bar);
+
+  ptcg-hand {
+    background-color: $hand-background-color;
+    border-top: $table-border;
+    color: mat-color($foreground, text);
+  }
+
+  ptcg-board-card {
+    .empty {
+      border: $table-border;
+    }
+  }
+}
+
+@mixin ptcg-table-typography($config) {
+
+  ptcg-board-card {
+    .ptcg-board-card-label {
+      @include mat-typography-level-to-styles($config, caption);
+    }
+  }
+
+}

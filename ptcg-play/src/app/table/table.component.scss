@@ -1,0 +1,17 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+ptcg-sidebar-container {
+  display: flex;
+  flex-direction: column;
+}
+
+ptcg-board {
+  flex: 1 1 auto;
+}
+
+ptcg-hand {
+  flex: 0 0 auto;
+}

@@ -1,0 +1,15 @@
+@import '../../../theme/variables.scss';
+
+.ptcg-board-deck {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-around;
+  margin: 0 auto;
+  max-width: map-get($ptcg-size, card);
+  width: calc(50% - #{map-get($padding, small)});
+}
+
+ptcg-board-card {
+  width: 100%
+}

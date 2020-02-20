@@ -22,7 +22,7 @@
 }
 
 .ryuu-app-sidenav {
-  min-width: $nav-menu-width;
+  min-width: map-get($ptcg-size, nav-menu);
 
   h4 {
     padding: 8px 16px;

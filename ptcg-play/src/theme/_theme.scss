@@ -4,6 +4,7 @@
 @import '../app/shared/search-box/_search-box-theme.scss';
 @import '../app/shared/info/_info-theme.scss';
 @import '../app/shared/cards/drop-highlight/_drop-highlight-theme.scss';
+@import '../app/table/_table-theme.scss';
 
 @mixin ptcg-theme($theme) {
   @include ptcg-sidebar-theme($theme);
@@ -12,9 +13,11 @@
   @include ptcg-search-box-theme($theme);
   @include ptcg-info-theme($theme);
   @include ptcg-drop-highlight-theme($theme);
+  @include ptcg-table-theme($theme);
 }
 
 @mixin ptcg-typography($config) {
   @include ptcg-deck-edit-typography($config);
   @include ptcg-info-typography($config);
+  @include ptcg-table-typography($config);
 }

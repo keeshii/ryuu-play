@@ -4,13 +4,15 @@
   display: inline-flex;
 }
 
+$ptcg-deck-card-width: map-get($ptcg-size, card) + map-get($padding, large);
+
 .ptcg-deck-card {
   align-items: center;
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
   margin-bottom: map-get($padding, normal);
-  width: $card-width + map-get($padding, large);
+  width: $ptcg-deck-card-width;
 }
 
 .ptcg-deck-card-label {
@@ -24,5 +26,5 @@
 
 .ptcg-card-preview {
   position: absolute;
-  width: $card-width;
+  width: map-get($ptcg-size, card);
 }

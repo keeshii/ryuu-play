@@ -1,14 +1,14 @@
 @import '../../../../theme/variables.scss';
 
 .ptcg-card {
-  min-width: $card-width;
+  min-width: map-get($ptcg-size, card);
   position: relative;
 }
 
 .ptcg-card:after {
   content: "";
   display: block;
-  padding-bottom: 137%;
+  padding-bottom: $card-aspect-ratio * 100%;
 }
 
 .ptcg-card-scan {
@@ -19,5 +19,5 @@
 
 .ptcg-card-preview {
   position: absolute;
-  width: $card-width;
+  width: map-get($ptcg-size, card);
 }

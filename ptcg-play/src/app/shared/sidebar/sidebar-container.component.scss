@@ -3,5 +3,5 @@
 :host {
   display: block;
   height: 100%;
-  margin-right: $sidebar-width;
+  margin-right: map-get($ptcg-size, sidebar);
 }

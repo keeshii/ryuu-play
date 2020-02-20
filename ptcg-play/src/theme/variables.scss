@@ -1,9 +1,23 @@
-$nav-menu-width: 200px;
-$sidebar-width: 200px;
-$card-width: 100px;
+$ptcg-size: (
+  nav-menu: 200px,
+  sidebar: 200px,
+  card: 100px,
+  board-card: 50px
+);
 
 $padding: (
   small: 8px,
   normal: 16px,
   large: 32px
 );
+
+$card-aspect-ratio: 1.37;
+
+// Variables from angular material theme
+$mat-toolbar-height-desktop: 64px !default;
+$mat-toolbar-height-mobile: 56px !default;
+
+$ptcg-bench-slots: 8;
+
+$ptcg-hand-padding: map-get($padding, normal);
+$ptcg-hand-height: ceil(map-get($ptcg-size, card) * $card-aspect-ratio + 2 * $ptcg-hand-padding);

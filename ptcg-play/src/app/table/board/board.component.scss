@@ -1,0 +1,68 @@
+@import '~@angular/material/theming';
+@import '../../../theme/variables.scss';
+
+$side-width: 2 * map-get($ptcg-size, board-card) + 2 * map-get($padding, small);
+$bench-width: $ptcg-bench-slots * map-get($ptcg-size, board-card) + ($ptcg-bench-slots + 1) * map-get($padding, small);
+$board-min-width: 2 * $side-width + $bench-width;
+$board-min-height: 6 * map-get($ptcg-size, board-card) * $card-aspect-ratio + 2 * map-get($padding, large);
+
+$board-aspect-ratio: $board-min-width / $board-min-height;
+
+:host {
+  display: grid;
+  height: 100%;
+  overflow: auto;
+  width: 100%;
+}
+
+@mixin ptcg-board-size($toolbar-height) {
+  .ptcg-board-container {
+    height: 100%;
+    width: calc((100vh - #{$toolbar-height + $ptcg-hand-height}) * #{$board-aspect-ratio});
+  }
+}
+
+@include ptcg-board-size($mat-toolbar-height-desktop);
+
+@media ($mat-xsmall) {
+  @include ptcg-board-size($mat-toolbar-height-mobile);
+}
+
+.ptcg-board-container {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  margin: 0 auto;
+  min-height: $board-min-height;
+  min-width: $board-min-width;
+}
+
+.ptcg-board-player {
+  display: grid;
+
+  grid-template-columns: 2fr #{$ptcg-bench-slots}fr 2fr;
+  grid-template-rows: auto;
+
+  grid-template-areas:
+    "prizes active deck"
+    "prizes bench deck";
+    
+  &.opponent {
+    transform: rotate(180deg);
+  }
+}
+
+ptcg-board-prizes {
+  grid-area: prizes;
+}
+
+ptcg-board-deck {
+  grid-area: deck;
+}
+
+ptcg-board-active {
+  grid-area: active;
+}
+
+ptcg-board-bench {
+  grid-area: bench;
+}

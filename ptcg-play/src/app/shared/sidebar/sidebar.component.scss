@@ -5,6 +5,6 @@
   height: 100%;
   position: absolute;
   right: 0;
-  width: $sidebar-width;
+  width: map-get($ptcg-size, sidebar);
   z-index: 1;
 }
