@@ -6,15 +6,12 @@ import { SkyhookDndModule } from '@angular-skyhook/core';
 import { SkyhookMultiBackendModule } from '@angular-skyhook/multi-backend';
 import { SkyhookSortableModule } from '@angular-skyhook/sortable';
 
-import { AlertPopupComponent } from './alert/alert-popup/alert-popup.component';
-import { AlertService } from './alert/alert.service';
+import { AlertModule } from './alert/alert.module';
 import { AppRoutingModule } from '../app-routing.module';
 import { CardsModule } from './cards/cards.module';
-import { ConfirmPopupComponent } from './alert/confirm-popup/confirm-popup.component';
 import { ContentComponent } from './content/content.component';
 import { EnergyComponent } from './energy/energy.component';
 import { InfoComponent } from './info/info.component';
-import { InputNumberPopupComponent } from './alert/input-number-popup/input-number-popup.component';
 import { SearchBoxComponent } from './search-box/search-box.component';
 import { SessionService } from './session/session.service';
 import { SidebarComponent } from './sidebar/sidebar.component';
@@ -23,6 +20,7 @@ import { ValidationModule } from './validation/validation.module';
 
 @NgModule({
   imports: [
+    AlertModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     CardsModule,
@@ -34,22 +32,15 @@ import { ValidationModule } from './validation/validation.module';
     ValidationModule
   ],
   declarations: [
-    AlertPopupComponent,
-    ConfirmPopupComponent,
     ContentComponent,
     EnergyComponent,
     InfoComponent,
-    InputNumberPopupComponent,
     SearchBoxComponent,
     SidebarComponent,
     SidebarContainerComponent
   ],
-  entryComponents: [
-    AlertPopupComponent,
-    ConfirmPopupComponent,
-    InputNumberPopupComponent
-  ],
   exports: [
+    AlertModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     CardsModule,
@@ -67,7 +58,6 @@ import { ValidationModule } from './validation/validation.module';
     ValidationModule
   ],
   providers: [
-    AlertService,
     SessionService
   ]
 })

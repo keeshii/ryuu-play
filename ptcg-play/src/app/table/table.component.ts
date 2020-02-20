@@ -4,6 +4,7 @@ import { GameState } from 'ptcg-server';
 import { Observable } from 'rxjs';
 import { withLatestFrom } from 'rxjs/operators';
 
+import { AlertService } from '../shared/alert/alert.service';
 import { GameService } from '../api/services/game.service';
 import { SessionService } from '../shared/session/session.service';
 import { takeUntilDestroyed } from '../shared/operators/take-until-destroyed';
@@ -20,6 +21,7 @@ export class TableComponent implements OnInit, OnDestroy {
   private gameId: number;
 
   constructor(
+    private alertService: AlertService,
     private gameService: GameService,
     private route: ActivatedRoute,
     private sessionService: SessionService
@@ -45,9 +47,17 @@ export class TableComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() { }
 
-  public play() {
-    const deck: string[] = this.createSampleDeck();
-    this.gameService.play(this.gameId, deck);
+  public async play() {
+    const selected = await this.alertService.select({
+      title: 'Choose your deck',
+      placeholder: 'Your deck',
+      options: [{value: 'deck1', viewValue: 'Deck 1'}],
+      value: 'deck1'
+    });
+    if (selected !== undefined) {
+      const deck: string[] = this.createSampleDeck();
+      this.gameService.play(this.gameId, deck);
+    }
   }
 
   private createSampleDeck(): string[] {
