@@ -1,0 +1,19 @@
+@import '../../../theme/variables.scss';
+
+.ptcg-table-sidebar-header {
+  display: flex;
+  padding: map-get($padding, small);
+
+  & > h3 {
+    flex: 0 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  & > ptcg-badge {
+    align-self: center;
+    display: flex;
+    flex: 0 0 auto;
+  }
+}

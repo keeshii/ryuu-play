@@ -2,6 +2,7 @@ import {
   MatBadgeModule,
   MatButtonModule,
   MatCardModule,
+  MatChipsModule,
   MatCheckboxModule,
   MatDialogModule,
   MatIconModule,

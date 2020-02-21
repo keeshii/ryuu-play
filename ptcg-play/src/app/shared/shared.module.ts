@@ -8,6 +8,7 @@ import { SkyhookSortableModule } from '@angular-skyhook/sortable';
 
 import { AlertModule } from './alert/alert.module';
 import { AppRoutingModule } from '../app-routing.module';
+import { BadgeComponent } from './badge/badge.component';
 import { CardsModule } from './cards/cards.module';
 import { ContentComponent } from './content/content.component';
 import { EnergyComponent } from './energy/energy.component';
@@ -32,6 +33,7 @@ import { ValidationModule } from './validation/validation.module';
     ValidationModule
   ],
   declarations: [
+    BadgeComponent,
     ContentComponent,
     EnergyComponent,
     InfoComponent,
@@ -42,6 +44,7 @@ import { ValidationModule } from './validation/validation.module';
   exports: [
     AlertModule,
     AppRoutingModule,
+    BadgeComponent,
     BrowserAnimationsModule,
     CardsModule,
     ContentComponent,

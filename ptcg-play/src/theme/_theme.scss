@@ -3,6 +3,7 @@
 @import '../app/deck/deck-edit/_deck-edit-theme.scss';
 @import '../app/shared/search-box/_search-box-theme.scss';
 @import '../app/shared/info/_info-theme.scss';
+@import '../app/shared/badge/_badge-theme.scss';
 @import '../app/shared/cards/drop-highlight/_drop-highlight-theme.scss';
 @import '../app/table/_table-theme.scss';
 
@@ -12,6 +13,7 @@
   @include ptcg-login-popup-theme($theme);
   @include ptcg-search-box-theme($theme);
   @include ptcg-info-theme($theme);
+  @include ptcg-badge-theme($theme);
   @include ptcg-drop-highlight-theme($theme);
   @include ptcg-table-theme($theme);
 }

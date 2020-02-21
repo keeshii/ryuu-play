@@ -8,6 +8,7 @@
 
   $table-border: solid 1px mat-color($foreground, divider);
   $hand-background-color: mat-color($background, app-bar);
+  $table-sidebar-header-background-color: mat-color($background, background);
 
   ptcg-hand {
     background-color: $hand-background-color;
@@ -18,6 +19,12 @@
   ptcg-board-card {
     .empty {
       border: $table-border;
+    }
+  }
+
+  ptcg-table-sidebar {
+    .ptcg-table-sidebar-header {
+      background-color: $table-sidebar-header-background-color;
     }
   }
 }
