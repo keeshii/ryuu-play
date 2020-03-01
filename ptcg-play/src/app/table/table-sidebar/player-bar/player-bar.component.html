@@ -1,1 +1,26 @@
-<p>player-bar works!</p>
+<div class="ptcg-player-bar">
+
+  <div class="ptcg-player-avatar"></div>
+
+  <div class="ptcg-player-info">
+    <div *ngIf="!isEmpty; then playerInfo else emptyInfo"></div>
+
+    <ng-template #playerInfo>
+      <h4>{{ name }}</h4>
+      <div class="ptcg-player-rang">
+        <ptcg-badge color="primary">Ranking</ptcg-badge>
+      </div>
+    </ng-template>
+
+    <ng-template #emptyInfo>
+      <div class="ptcg-empty-info mat-caption">No player</div>
+    </ng-template>
+  </div>
+
+  <div class="ptcg-card-counts" *ngIf="!isEmpty">
+    <ptcg-badge>Deck: {{ deckCount }}</ptcg-badge>
+    <ptcg-badge>Hand: {{ handCount }}</ptcg-badge>
+    <ptcg-badge>Discard: {{ discardCount }}</ptcg-badge>
+  </div>
+
+</div>

@@ -1,0 +1,14 @@
+@import '../../../../theme/variables.scss';
+
+$avatar-size: map-get($ptcg-size, avatar);
+
+.ptcg-player-actions {
+  display: flex;
+  flex-direction: column;
+  grid-area: actions;
+  padding: 0 $ptcg-sidebar-tiny-padding;
+
+  & > * {
+    margin-top: $ptcg-sidebar-tiny-padding;
+  }
+}

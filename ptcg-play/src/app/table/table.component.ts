@@ -41,6 +41,7 @@ export class TableComponent implements OnInit, OnDestroy {
     this.gameStates$
       .pipe(takeUntilDestroyed(this))
       .subscribe(gameStates => {
+        console.log('state changed');
         this.table = gameStates.find(state => state.gameId === this.gameId);
       });
   }

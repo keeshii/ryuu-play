@@ -2,7 +2,10 @@
 
   <!-- Table sidebar -->
   <ptcg-sidebar>
-    <ptcg-table-sidebar></ptcg-table-sidebar>
+    <ptcg-table-sidebar
+      [state]="table"
+      (join)="play()"
+    ></ptcg-table-sidebar>
   </ptcg-sidebar>
 
   <!-- Table board -->

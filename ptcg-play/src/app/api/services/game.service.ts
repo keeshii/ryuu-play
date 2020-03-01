@@ -75,6 +75,12 @@ export class GameService {
 
   private onStateChange(gameId: number, state: State) {
     console.log('gameService, onStateChange', gameId, state);
+    const index = this.sessionService.session.gameStates.findIndex(g => g.gameId === gameId);
+    if (index !== -1) {
+      const gameStates = this.sessionService.session.gameStates.slice();
+      gameStates[index] = { ...gameStates[index], state };
+      this.sessionService.set({ gameStates });
+    }
   }
 
   private onJoin(gameId: number, userInfo: UserInfo) {

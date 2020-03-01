@@ -1,13 +1,17 @@
 <div class="table-sidebar">
 
   <div class="ptcg-table-sidebar-header">
-    <h3>Table 1</h3>
+    <h3>Table {{ gameId }}</h3>
     <span class="ptcg-u-spacer"></span>
-    <ptcg-badge>Turn 5</ptcg-badge>
+    <ptcg-badge>Turn {{ turn }}</ptcg-badge>
   </div>
 
-  <ptcg-player-bar></ptcg-player-bar>
+  <ptcg-player-bar [player]="player1"></ptcg-player-bar>
 
-  <ptcg-player-bar></ptcg-player-bar>
+  <ptcg-player-bar [player]="player2"></ptcg-player-bar>
+
+  <ptcg-player-actions
+    (join)="join.next()"
+  ></ptcg-player-actions>
 
 </div>

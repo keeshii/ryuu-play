@@ -8,6 +8,7 @@
 
   $table-border: solid 1px mat-color($foreground, divider);
   $hand-background-color: mat-color($background, app-bar);
+  $avatar-background-color: mat-color($background, app-bar);
   $table-sidebar-header-background-color: mat-color($background, background);
 
   ptcg-hand {
@@ -27,6 +28,13 @@
       background-color: $table-sidebar-header-background-color;
     }
   }
+  
+  ptcg-player-bar {
+    .ptcg-player-avatar {
+      background-color: $avatar-background-color;
+    }
+  }
+
 }
 
 @mixin ptcg-table-typography($config) {

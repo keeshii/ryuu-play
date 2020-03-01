@@ -142,9 +142,9 @@ export class SocketClient extends Client {
     response('ok', this.buildCoreInfo(this.core));
   }
 
-  private createGame(data: void, response: Response<GameInfo>): void {
+  private createGame(data: void, response: Response<GameState>): void {
     const game = this.core.createGame(this);
-    response('ok', this.buildGameInfo(game));
+    response('ok', this.buildGameState(game));
   }
 
   private joinGame(gameId: number, response: Response<GameState>): void {

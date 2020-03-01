@@ -1,0 +1,50 @@
+@import '../../../../theme/variables.scss';
+
+$avatar-size: map-get($ptcg-size, avatar);
+
+.ptcg-player-bar {
+  display: grid;
+  grid-template-areas:
+    "avatar name"
+    "counts counts";
+  grid-template-columns: $avatar-size 1fr;
+  grid-template-rows: $avatar-size auto;
+  padding: $ptcg-sidebar-tiny-padding;
+}
+
+.ptcg-player-avatar {
+  grid-area: avatar;
+  height: map-get($ptcg-size, avatar);
+  width: map-get($ptcg-size, avatar);
+}
+
+.ptcg-player-info {
+  display: flex;
+  flex-direction: column;
+  grid-area: name;
+  justify-content: center;
+  overflow: hidden;
+  padding: $ptcg-sidebar-tiny-padding;
+  white-space: nowrap;
+  
+  & > * {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.ptcg-empty-info {
+  padding: $ptcg-sidebar-tiny-padding;
+}
+
+.ptcg-card-counts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  grid-area: counts;
+  padding-top: $ptcg-sidebar-tiny-padding;
+
+  & > ptcg-badge:not(:last-child) {
+    margin-right: $ptcg-sidebar-tiny-padding;
+  }
+}
