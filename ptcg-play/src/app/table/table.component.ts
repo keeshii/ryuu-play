@@ -1,6 +1,6 @@
 import { ActivatedRoute } from '@angular/router';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { GameState } from 'ptcg-server';
+import { GameState, Player } from 'ptcg-server';
 import { Observable } from 'rxjs';
 import { withLatestFrom } from 'rxjs/operators';
 
@@ -16,8 +16,12 @@ import { takeUntilDestroyed } from '../shared/operators/take-until-destroyed';
 })
 export class TableComponent implements OnInit, OnDestroy {
 
-  public table: GameState;
+  public gameState: GameState;
   public gameStates$: Observable<GameState[]>;
+  public clientId$: Observable<number>;
+  public bottomPlayer: Player;
+  public topPlayer: Player;
+  public clientId: number;
   private gameId: number;
 
   constructor(
@@ -27,22 +31,29 @@ export class TableComponent implements OnInit, OnDestroy {
     private sessionService: SessionService
   ) {
     this.gameStates$ = this.sessionService.get(session => session.gameStates);
+    this.clientId$ = this.sessionService.get(session => session.clientId);
   }
 
   ngOnInit() {
     this.route.paramMap
-      .pipe(withLatestFrom(this.gameStates$))
-      .pipe(takeUntilDestroyed(this))
-      .subscribe(([paramMap, gameStates]) => {
+      .pipe(
+        withLatestFrom(this.gameStates$, this.clientId$),
+        takeUntilDestroyed(this)
+      )
+      .subscribe(([paramMap, gameStates, clientId]) => {
         this.gameId = parseInt(paramMap.get('gameId'), 10);
-        this.table = gameStates.find(state => state.gameId === this.gameId);
+        this.gameState = gameStates.find(state => state.gameId === this.gameId);
+        this.updatePlayers(this.gameState, clientId);
       });
 
     this.gameStates$
-      .pipe(takeUntilDestroyed(this))
-      .subscribe(gameStates => {
-        console.log('state changed');
-        this.table = gameStates.find(state => state.gameId === this.gameId);
+      .pipe(
+        takeUntilDestroyed(this),
+        withLatestFrom(this.clientId$)
+      )
+      .subscribe(([gameStates, clientId]) => {
+        this.gameState = gameStates.find(state => state.gameId === this.gameId);
+        this.updatePlayers(this.gameState, clientId);
       });
   }
 
@@ -58,6 +69,33 @@ export class TableComponent implements OnInit, OnDestroy {
     if (selected !== undefined) {
       const deck: string[] = this.createSampleDeck();
       this.gameService.play(this.gameId, deck);
+    }
+  }
+
+  private updatePlayers(gameState: GameState, clientId: number) {
+    this.bottomPlayer = undefined;
+    this.topPlayer = undefined;
+    this.clientId = clientId;
+
+    if (!gameState || !gameState.state) {
+      return;
+    }
+
+    const state = gameState.state;
+    if (state.players.length >= 1) {
+      if (state.players[0].id === clientId) {
+        this.bottomPlayer = state.players[0];
+      } else {
+        this.topPlayer = state.players[0];
+      }
+    }
+
+    if (state.players.length >= 2) {
+      if (this.bottomPlayer === state.players[0]) {
+        this.topPlayer = state.players[1];
+      } else {
+        this.bottomPlayer = state.players[1];
+      }
     }
   }
 

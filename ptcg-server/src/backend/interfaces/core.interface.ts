@@ -23,6 +23,7 @@ export interface UserInfo {
 }
 
 export interface CoreInfo {
+  clientId: number;
   users: UserInfo[],
   games: GameInfo[]
 }

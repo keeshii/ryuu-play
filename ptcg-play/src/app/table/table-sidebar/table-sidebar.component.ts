@@ -10,24 +10,20 @@ export class TableSidebarComponent implements OnInit {
 
   @Output() join = new EventEmitter<void>();
 
-  @Input() set state(gameState: GameState) {
-    this.gameState = gameState;
-
-    if (!gameState || !gameState.state) {
+  @Input() set gameState(value: GameState) {
+    if (!value || !value.state) {
       return;
     }
 
-    this.gameId = gameState.gameId;
-    this.turn = gameState.state.turn;
-    this.player1 = gameState.state.players[0];
-    this.player2 = gameState.state.players[1];
+    this.gameId = value.gameId;
+    this.turn = value.state.turn;
   }
 
-  private gameState: GameState;
+  @Input() topPlayer: Player;
+  @Input() bottomPlayer: Player;
+
   public turn: number;
   public gameId: number;
-  public player1: Player;
-  public player2: Player;
 
   constructor() { }
 

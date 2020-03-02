@@ -131,15 +131,16 @@ export class SocketClient extends Client {
     };
   }
 
-  private buildCoreInfo(core: Core): CoreInfo {
+  private buildCoreInfo(): CoreInfo {
     return {
+      clientId: this.id,
       users: this.core.clients.map(client => this.buildUserInfo(client)),
       games: this.core.games.map(game => this.buildGameInfo(game))
     };
   }
 
   private getCoreInfo(data: void, response: Response<CoreInfo>): void {
-    response('ok', this.buildCoreInfo(this.core));
+    response('ok', this.buildCoreInfo());
   }
 
   private createGame(data: void, response: Response<GameState>): void {

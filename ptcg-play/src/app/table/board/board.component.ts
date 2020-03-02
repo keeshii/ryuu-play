@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { GameState, Player } from 'ptcg-server';
 
 @Component({
   selector: 'ptcg-board',
@@ -6,6 +7,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./board.component.scss']
 })
 export class BoardComponent implements OnInit {
+
+  @Input() gameState: GameState;
+  @Input() topPlayer: Player;
+  @Input() bottomPlayer: Player;
 
   constructor() { }
 

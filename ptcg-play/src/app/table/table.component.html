@@ -3,15 +3,24 @@
   <!-- Table sidebar -->
   <ptcg-sidebar>
     <ptcg-table-sidebar
-      [state]="table"
+      [gameState]="gameState"
+      [topPlayer]="topPlayer"
+      [bottomPlayer]="bottomPlayer"
       (join)="play()"
     ></ptcg-table-sidebar>
   </ptcg-sidebar>
 
   <!-- Table board -->
-  <ptcg-board></ptcg-board>
+  <ptcg-board
+    [gameState]="gameState"
+    [topPlayer]="topPlayer"
+    [bottomPlayer]="bottomPlayer"
+  ></ptcg-board>
 
   <!-- Player's hand -->
-  <ptcg-hand></ptcg-hand>
+  <ptcg-hand
+    [clientId]="clientId"
+    [player]="bottomPlayer"
+  ></ptcg-hand>
 
 </ptcg-sidebar-container>

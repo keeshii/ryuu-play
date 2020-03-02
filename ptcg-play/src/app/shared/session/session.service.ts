@@ -8,6 +8,7 @@ import { User } from './user.interface';
 export class Session {
   authToken: string;
   loggedUser: User;
+  clientId: number;
   games: GameInfo[] = [];
   users: UserInfo[] = [];
   gameStates: GameState[] = [];

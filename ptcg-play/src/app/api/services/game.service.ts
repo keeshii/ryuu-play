@@ -71,6 +71,7 @@ export class GameService {
     console.log('stopListening', id);
     this.socketService.off(`game[${id}]:join`);
     this.socketService.off(`game[${id}]:leave`);
+    this.socketService.off(`game[${id}]:stateChange`);
   }
 
   private onStateChange(gameId: number, state: State) {

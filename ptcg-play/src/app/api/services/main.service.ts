@@ -19,7 +19,7 @@ export class MainService {
   ) { }
 
   public init(coreInfo: CoreInfo): void {
-    this.sessionService.set({ users: coreInfo.users, games: coreInfo.games });
+    this.sessionService.set({ users: coreInfo.users, games: coreInfo.games, clientId: coreInfo.clientId });
     this.socketService.on('core:join', (userInfo: UserInfo) => this.onJoin(userInfo));
     this.socketService.on('core:leave', (userInfo: UserInfo) => this.onLeave(userInfo));
     this.socketService.on('core:gameInfo', (game: GameInfo) => this.onGameInfo(game));
@@ -38,7 +38,6 @@ export class MainService {
   }
 
   private onGameInfo(game: GameInfo): void {
-    console.log('onGameInfo', game);
     const games = this.sessionService.session.games.slice();
     const index = this.sessionService.session.games.findIndex(g => g.gameId === game.gameId);
     if (index === -1) {

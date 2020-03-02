@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Player, Card } from 'ptcg-server';
 
 @Component({
   selector: 'ptcg-hand',
@@ -7,7 +8,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HandComponent implements OnInit {
 
-  public handItems = [1, 2, 3, 4, 5];
+  public cards: Card[] = [];
+
+  @Input() set player(value: Player) {
+    if (!value) {
+      this.cards = [];
+      return;
+    }
+    this.cards = value.hand.cards;
+  }
+
+  @Input() clientId: number;
 
   constructor() { }
 

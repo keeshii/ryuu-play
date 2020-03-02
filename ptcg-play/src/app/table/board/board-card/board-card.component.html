@@ -1,2 +1,5 @@
-<div class="ptcg-board-card empty">
+<div class="ptcg-board-card" [ngClass]="{empty: !card}">
+
+  <ptcg-card [card]="card" *ngIf="card"></ptcg-card>
+
 </div>
