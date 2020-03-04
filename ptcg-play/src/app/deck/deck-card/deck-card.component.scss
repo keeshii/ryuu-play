@@ -15,6 +15,11 @@ $ptcg-deck-card-width: map-get($ptcg-size, card) + map-get($padding, large);
   width: $ptcg-deck-card-width;
 }
 
+ptcg-card {
+  display: block;
+  width: map-get($ptcg-size, card);
+}
+
 .ptcg-deck-card-label {
   display: block;
   overflow: hidden;

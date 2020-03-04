@@ -1,9 +1,9 @@
 <div class="ptcg-board-container">
 
-  <div class="ptcg-board-player opponent">
+  <div class="ptcg-board-player upside-down">
     <ptcg-board-bench></ptcg-board-bench>
 
-    <ptcg-board-active></ptcg-board-active>
+    <ptcg-board-active [player]="topPlayer" [clientId]="clientId"></ptcg-board-active>
 
     <ptcg-board-deck></ptcg-board-deck>
 
@@ -14,7 +14,7 @@
   <div class="ptcg-board-player">
     <ptcg-board-bench></ptcg-board-bench>
 
-    <ptcg-board-active></ptcg-board-active>
+    <ptcg-board-active [player]="bottomPlayer" [clientId]="clientId"></ptcg-board-active>
 
     <ptcg-board-deck></ptcg-board-deck>
 

@@ -8,6 +8,7 @@ import { GameState, Player } from 'ptcg-server';
 })
 export class BoardComponent implements OnInit {
 
+  @Input() clientId: number;
   @Input() gameState: GameState;
   @Input() topPlayer: Player;
   @Input() bottomPlayer: Player;

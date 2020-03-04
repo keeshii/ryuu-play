@@ -1,4 +1,5 @@
-import {CardList} from "./card-list";
+import { CardList } from "./card-list";
+import { PokemonCardList } from "./pokemon-card-list";
 
 export class Player {
 
@@ -14,9 +15,9 @@ export class Player {
 
   stadium: CardList = new CardList();
 
-  active: CardList = new CardList();
+  active: PokemonCardList = new PokemonCardList();
 
-  bench: CardList[] = [];
+  bench: PokemonCardList[] = [];
 
   prizes: CardList = new CardList();
 

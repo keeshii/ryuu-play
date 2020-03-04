@@ -45,3 +45,11 @@ export enum CardType {
   DRAGON,
   FAIRY,
 }
+
+export enum SpecialCondition {
+  PARALYZED,
+  CONFUSED,
+  ASLEEP,
+  POISONED,
+  BURNED
+}

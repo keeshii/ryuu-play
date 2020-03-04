@@ -1,7 +1,7 @@
 @import '../../../../theme/variables.scss';
 
 .ptcg-card {
-  min-width: map-get($ptcg-size, card);
+  width: 100%;
   position: relative;
 }
 

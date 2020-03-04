@@ -23,6 +23,7 @@ export * from './store/prompts/shuffle-prompt';
 
 export * from './store/state/card-list';
 export * from './store/state/player';
+export * from './store/state/pokemon-card-list';
 export * from './store/state/state';
 
 export * from './store/store-handler';

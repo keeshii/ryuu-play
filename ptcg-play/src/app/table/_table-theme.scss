@@ -17,9 +17,10 @@
     color: mat-color($foreground, text);
   }
 
-  ptcg-board-card {
+  ptcg-board-card,
+  ptcg-board-card-list {
     .empty {
-      border: $table-border;
+      outline: $table-border;
     }
   }
 
@@ -45,4 +46,9 @@
     }
   }
 
+  ptcg-board-card-list {
+    .ptcg-card-damage {
+      @include mat-typography-level-to-styles($config, headline);
+    }
+  }
 }

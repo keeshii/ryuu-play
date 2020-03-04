@@ -45,8 +45,8 @@ $board-aspect-ratio: $board-min-width / $board-min-height;
   grid-template-areas:
     "prizes active deck"
     "prizes bench deck";
-    
-  &.opponent {
+
+  &.upside-down {
     transform: rotate(180deg);
   }
 }
