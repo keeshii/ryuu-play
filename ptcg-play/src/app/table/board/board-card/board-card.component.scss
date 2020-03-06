@@ -1,5 +1,8 @@
 @import '../../../../theme/variables.scss';
 
+$ptcg-max-energy-cards: 4;
+$ptcg-energy-card-offset: 15%;
+
 .ptcg-board-card {
   max-width: map-get($ptcg-size, card);
   min-width: map-get($ptcg-size, board-card);
@@ -9,5 +12,88 @@
     content: "";
     display: block;
     padding-bottom: $card-aspect-ratio * 100%;
+  }
+
+  &.face-down > div:not(.ptcg-card-counts),
+  &.face-down > ptcg-card {
+    display: none;
+  }
+
+  &.face-down:after {
+    background-image: url("/assets/cardback.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    content: "";
+    display: block;
+    padding-bottom: $card-aspect-ratio * 100%;
+  }
+}
+
+.ptcg-energy-cards {
+  ptcg-card {
+    position: absolute;
+    width: 100%;
+  }
+
+  @for $i from 1 through $ptcg-max-energy-cards {
+    ptcg-card:nth-last-child(#{$i}) {
+      top: #{-$ptcg-energy-card-offset * $i};
+    }
+  }
+}
+
+.ptcg-energy-more {
+  padding: $ptcg-board-tiny-padding 0;
+  position: absolute;
+  top: #{-$ptcg-energy-card-offset * $ptcg-max-energy-cards};
+  transform: translateY(-100%);
+
+  :host-context(.ptcg-board-player.upside-down) & {
+    transform: translateY(-100%) rotate(180deg);
+  }
+}
+
+.ptcg-trainer-card {
+  left: 50%;
+  position: absolute;
+  transform: rotate(90deg);
+  width: 100%;
+}
+
+.ptcg-card-counts {
+  bottom: 0;
+  padding: $ptcg-board-tiny-padding 0;
+  position: absolute;
+  right: 0;
+  transform: translateY(100%);
+
+  :host-context(.ptcg-board-player.upside-down) & {
+    transform: translateY(100%) rotate(180deg);
+  }
+}
+
+.ptcg-card-damage {
+  position: absolute;
+  top: 15%;
+  left: 10%;
+
+  :host-context(.ptcg-board-player.upside-down) & {
+    transform: rotate(180deg);
+  }
+}
+
+.ptcg-special-conditions {
+  left: 0;
+  padding: map-get($padding, small);
+  position: absolute;
+  top: 0;
+  transform: translateX(-100%);
+
+  & > div {
+    padding-bottom: $ptcg-board-tiny-padding;
+  }
+
+  :host-context(.ptcg-board-player.upside-down) & {
+    transform: translateX(-100%) rotate(180deg);
   }
 }

@@ -7,7 +7,6 @@ import { BoardActiveComponent } from './board-active/board-active.component';
 import { BoardDeckComponent } from './board-deck/board-deck.component';
 import { BoardCardComponent } from './board-card/board-card.component';
 import { SharedModule } from '../../shared/shared.module';
-import { BoardCardListComponent } from './board-card-list/board-card-list.component';
 
 @NgModule({
   imports: [
@@ -20,7 +19,6 @@ import { BoardCardListComponent } from './board-card-list/board-card-list.compon
     BoardActiveComponent,
     BoardDeckComponent,
     BoardCardComponent,
-    BoardCardListComponent
   ],
   exports: [
     BoardComponent,

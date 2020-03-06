@@ -3,7 +3,7 @@
   <div class="ptcg-hand-container">
 
     <div class="ptcg-hand-card" *ngFor="let card of cards">
-      <ptcg-board-card [card]="card"></ptcg-board-card>
+      <ptcg-board-card [card]="card" [isFaceDown]="isFaceDown"></ptcg-board-card>
     </div>
 
   </div>

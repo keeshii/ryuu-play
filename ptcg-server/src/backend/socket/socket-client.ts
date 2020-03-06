@@ -111,7 +111,7 @@ export class SocketClient extends Client {
     const players: PlayerInfo[] = state.players.map(player => ({
       clientId: player.id,
       name: player.name,
-      prizes: player.prizes.cards.length,
+      prizes: player.prizes.reduce((sum, cardList) => sum + cardList.cards.length, 0),
       deck: player.deck.cards.length
     }));
     return {

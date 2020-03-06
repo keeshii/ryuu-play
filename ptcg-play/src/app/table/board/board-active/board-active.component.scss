@@ -8,7 +8,7 @@
   justify-content: space-evenly;
 }
 
-ptcg-board-card-list {
+ptcg-board-card {
   max-width: map-get($ptcg-size, card);
   width: calc(#{100 / $ptcg-bench-slots}% - #{map-get($padding, small)});
 }

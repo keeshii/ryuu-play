@@ -19,7 +19,7 @@ export class Player {
 
   bench: PokemonCardList[] = [];
 
-  prizes: CardList = new CardList();
+  prizes: CardList[] = [];
 
   energyPlayedTurn: number = 0;
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { Player, Card } from 'ptcg-server';
 
 @Component({
@@ -6,23 +6,27 @@ import { Player, Card } from 'ptcg-server';
   templateUrl: './hand.component.html',
   styleUrls: ['./hand.component.scss']
 })
-export class HandComponent implements OnInit {
+export class HandComponent implements OnInit, OnChanges {
+
+  @Input() player: Player;
+  @Input() clientId: number;
 
   public cards: Card[] = [];
-
-  @Input() set player(value: Player) {
-    if (!value) {
-      this.cards = [];
-      return;
-    }
-    this.cards = value.hand.cards;
-  }
-
-  @Input() clientId: number;
+  public isFaceDown: boolean;
 
   constructor() { }
 
-  ngOnInit() {
+  ngOnInit() { }
+
+  ngOnChanges() {
+    if (this.player) {
+      const hand = this.player.hand;
+      const isOwner = this.player.id === this.clientId;
+      this.cards = hand.cards;
+      this.isFaceDown = hand.isSecret || (!hand.isPublic && !isOwner);
+    } else {
+      this.cards = [];
+    }
   }
 
 }

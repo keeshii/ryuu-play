@@ -1,5 +1,35 @@
-<div class="ptcg-board-card" [ngClass]="{empty: !card}">
+<div class="ptcg-board-card" [ngClass]="{empty: isEmpty, 'face-down': isFaceDown}">
 
-  <ptcg-card [card]="card" *ngIf="card"></ptcg-card>
+  <div class="ptcg-energy-cards">
+    <ptcg-card [card]="energyCard" *ngFor="let energyCard of energyCards"></ptcg-card>
+  </div>
+
+  <div class="ptcg-energy-more" *ngIf="moreEnergies > 0">
+    <ptcg-badge color="primary">{{ moreEnergies }} more energy</ptcg-badge>
+  </div>
+
+  <div class="ptcg-trainer-card" *ngIf="trainerCard">
+    <ptcg-card [card]="trainerCard"></ptcg-card>
+  </div>
+
+  <ptcg-card [card]="mainCard" *ngIf="mainCard"></ptcg-card>
+
+  <div class="ptcg-card-damage" *ngIf="damage > 0">
+    <ptcg-badge color="warn">{{ damage }}</ptcg-badge>
+  </div>
+
+  <div class="ptcg-special-conditions" *ngIf="specialConditions.length > 0">
+    <div *ngFor="let condition of specialConditions" [ngSwitch]="condition">
+      <ptcg-badge color="accent" *ngSwitchCase="SpecialCondition.PARALYZED">Paralyzed</ptcg-badge>
+      <ptcg-badge color="accent" *ngSwitchCase="SpecialCondition.CONFUSED">Confused</ptcg-badge>
+      <ptcg-badge color="accent" *ngSwitchCase="SpecialCondition.ASLEEP">Asleep</ptcg-badge>
+      <ptcg-badge color="accent" *ngSwitchCase="SpecialCondition.POISONED">Poisoned</ptcg-badge>
+      <ptcg-badge color="accent" *ngSwitchCase="SpecialCondition.BURNED">Burned</ptcg-badge>
+    </div>
+  </div>
+
+  <div class="ptcg-card-counts" *ngIf="showCardCount && cardCount > 0">
+    <ptcg-badge>{{ cardCount }} cards</ptcg-badge>
+  </div>
 
 </div>

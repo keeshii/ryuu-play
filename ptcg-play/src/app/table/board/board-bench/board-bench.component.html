@@ -1,6 +1,6 @@
 <div class="ptcg-board-bench">
 
-  <ptcg-board-card *ngFor="let item of benchItems">
+  <ptcg-board-card [cardList]="cardList" [owner]="isOwner" *ngFor="let cardList of bench">
   </ptcg-board-card>
 
 </div>
