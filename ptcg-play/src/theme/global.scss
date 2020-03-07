@@ -102,3 +102,15 @@ table {
 [hidden] {
   display: none !important;
 }
+
+
+/* Some material overrides, and fixes */
+mat-dialog-actions {
+  justify-content: flex-end;
+}
+
+mat-dialog-content {
+  > form mat-form-field {
+    width: 100%;
+  }
+}

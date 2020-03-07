@@ -58,6 +58,11 @@ export class GameService {
       .subscribe(() => {});
   }
 
+  public resolvePrompt(gameId: number, promptId: number, result: any) {
+    this.socketService.emit('game:action:resolvePrompt', {gameId, id: promptId, result})
+      .subscribe(() => {});
+  }
+
   public dispatch(action: Action) { }
 
   private startListening(id: number) {
