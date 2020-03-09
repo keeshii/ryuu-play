@@ -1,0 +1,24 @@
+<h2 class="mat-dialog-title">Choose cards</h2>
+
+<mat-dialog-content>
+  <p>{{ message }}</p>
+</mat-dialog-content>
+
+<ptcg-cards-container>
+  <ptcg-card
+    *ngFor="let card of cards.cards"
+    [ngClass]="{unavailable: !filterMap[card.fullName]}"
+    [card]="card">
+  </ptcg-card>
+</ptcg-cards-container>
+
+<ptcg-cards-container>
+  
+</ptcg-cards-container>
+
+<mat-dialog-actions>
+  <button mat-raised-button *ngIf="allowedCancel" (click)="cancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="confirm()">
+    OK
+  </button>
+</mat-dialog-actions>

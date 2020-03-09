@@ -1,0 +1,15 @@
+@import '../../../../theme/variables.scss';
+
+ptcg-cards-container + ptcg-cards-container {
+  margin-top: map-get($padding, normal);
+}
+
+ptcg-card {
+  margin: map-get($padding, small);
+  width: map-get($ptcg-size, card);
+
+  &.unavailable {
+    opacity: $ptcg-disabled-opacity;
+  }
+
+}

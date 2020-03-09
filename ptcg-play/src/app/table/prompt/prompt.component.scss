@@ -33,6 +33,7 @@ $ptcg-prompt-border-radius: 4px !default;
 
 .ptcg-prompt-content {
   display: block;
+  margin: map-get($padding, normal);
   padding: $ptcg-prompt-padding;
   border-radius: $ptcg-prompt-border-radius;
   box-sizing: border-box;

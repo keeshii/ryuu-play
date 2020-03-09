@@ -4,6 +4,8 @@
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
 
+  $ptcg-cards-container-background: mat-color($background, app-bar);
+
   ptcg-prompt {
     .ptcg-prompt-overlay {
       background: $cdk-overlay-dark-backdrop-background;
@@ -12,8 +14,14 @@
 
     .ptcg-prompt-content {
       @include _mat-theme-elevation(24, $theme);
-      background: mat-color($background, dialog);
+      background-color: mat-color($background, dialog);
       color: mat-color($foreground, text);
+    }
+  }
+
+  ptcg-cards-container {
+    .ptcg-cards-container {
+      background-color: $ptcg-cards-container-background;
     }
   }
 

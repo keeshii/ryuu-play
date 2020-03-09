@@ -19,6 +19,7 @@ $mat-toolbar-height-desktop: 64px !default;
 $mat-toolbar-height-mobile: 56px !default;
 
 $ptcg-bench-slots: 8;
+$ptcg-disabled-opacity: .5;
 
 $ptcg-hand-padding: map-get($padding, normal);
 $ptcg-hand-height: ceil(map-get($ptcg-size, card) * $card-aspect-ratio + 2 * $ptcg-hand-padding);

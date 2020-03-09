@@ -82,9 +82,9 @@ function* setupGame(next: Function, store: StoreLike, state: State): IterableIte
 
   yield store.prompt(state, [
     new ChooseCardsPrompt(player.id, GameMessage.CHOOSE_STARTING_POKEMONS,
-      player.deck, basicPokemon, chooseCardsOptions),
+      player.hand, basicPokemon, chooseCardsOptions),
     new ChooseCardsPrompt(opponent.id, GameMessage.CHOOSE_STARTING_POKEMONS,
-      opponent.deck, basicPokemon, chooseCardsOptions)
+      opponent.hand, basicPokemon, chooseCardsOptions)
   ], choice => {
     putStartingPokemons(player, choice[0]);
     putStartingPokemons(opponent, choice[1]);
