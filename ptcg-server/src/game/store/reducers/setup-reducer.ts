@@ -13,15 +13,19 @@ import { GameError, GameMessage } from "../../game-error";
 import { StoreLike } from "../store-like";
 import { SuperType, Stage } from "../card/card-types";
 import { nextTurn } from "./player-turn-reducer";
+import {PokemonCardList} from "../state/pokemon-card-list";
 
 
-function putStartingPokemons(player: Player, cards: Card[]): void {
+function putStartingPokemonsAndPrizes(player: Player, cards: Card[]): void {
   if (cards.length === 0) {
     return;
   }
   player.hand.moveCardTo(cards[0], player.active);
-  for (let i = 0; i < cards.length; i++) {
+  for (let i = 1; i < cards.length; i++) {
     player.hand.moveCardTo(cards[i], player.bench[i - 1]);
+  }
+  for (let i = 0; i < 6; i++) {
+    player.deck.moveTo(player.prizes[i], 1);
   }
 }
 
@@ -86,8 +90,8 @@ function* setupGame(next: Function, store: StoreLike, state: State): IterableIte
     new ChooseCardsPrompt(opponent.id, GameMessage.CHOOSE_STARTING_POKEMONS,
       opponent.hand, basicPokemon, chooseCardsOptions)
   ], choice => {
-    putStartingPokemons(player, choice[0]);
-    putStartingPokemons(opponent, choice[1]);
+    putStartingPokemonsAndPrizes(player, choice[0]);
+    putStartingPokemonsAndPrizes(opponent, choice[1]);
     next();
   });
 
@@ -110,10 +114,32 @@ export function setupPhaseReducer(store: StoreLike, state: State, action: Action
         throw new GameError(GameMessage.MAX_PLAYERS_REACHED);
       }
 
+      if (state.players.length == 1 && state.players[0].id === action.clientId) {
+        throw new GameError(GameMessage.ALREADY_PLAYING);
+      }
+
       let player = new Player();
       player.id = action.clientId;
       player.name = action.name;
       player.deck = CardList.fromList(action.deck);
+      player.deck.isSecret = true;
+
+      // Empty prizes, places for 6 cards
+      for (let i = 0; i < 6; i++) {
+        const prize = new CardList();
+        prize.isSecret = true;
+        player.prizes.push(prize);
+      }
+
+      // Empty bench, places for 5 pokemons
+      for (let i = 0; i < 5; i++) {
+        const bench = new PokemonCardList();
+        bench.isPublic = true;
+        player.bench.push(bench);
+      }
+
+      player.active.isPublic = true;
+
       state.players.push(player);
 
       if (state.players.length === 2) {

@@ -41,8 +41,10 @@ export class PromptComponent implements OnInit, OnChanges {
       return p.playerId === this.clientId && p.result === undefined;
     });
 
-    this.prompt = prompt;
-    return this.toggle(prompt !== undefined);
+    if (!this.prompt || !prompt || this.prompt.id !== prompt.id) {
+      this.prompt = prompt;
+      return this.toggle(prompt !== undefined);
+    }
   }
 
   /** Callback, invoked whenever an animation on the host completes. */

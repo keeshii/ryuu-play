@@ -38,7 +38,7 @@ export class CardList {
 
   public moveTo(destination: CardList, count?: number): void {
     if (count === undefined) {
-      count = destination.cards.length;
+      count = this.cards.length;
     }
 
     count = Math.min(count, this.cards.length);

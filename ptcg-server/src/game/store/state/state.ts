@@ -30,6 +30,4 @@ export class State {
 
   public players: Player[] = [];
 
-  public benchSize: number = 6;
-
 }

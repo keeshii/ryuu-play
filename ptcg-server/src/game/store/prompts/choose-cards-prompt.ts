@@ -3,6 +3,8 @@ import { CardList } from "../state/card-list";
 import { Prompt } from "./prompt";
 import { GameMessage } from "../../game-error";
 
+export const ChooseCardsPromptType = 'Choose cards';
+
 export interface ChooseCardsOptions {
   min: number;
   max: number;
@@ -11,7 +13,7 @@ export interface ChooseCardsOptions {
 
 export class ChooseCardsPrompt extends Prompt<Card[]> {
 
-  readonly type: string = 'Choose cards'
+  readonly type: string = ChooseCardsPromptType;
   
   public options: ChooseCardsOptions;
 

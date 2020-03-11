@@ -1,5 +1,5 @@
 import * as io from 'socket.io';
-import { AddPlayerAction, Action, Prompt, PassTurnAction } from '../../game';
+import { AddPlayerAction, Action, Prompt, PassTurnAction, ChooseCardsPromptType, CardList } from '../../game';
 import { Client } from '../../game/core/client';
 import { Errors } from '../common/errors';
 import { Game } from '../../game/core/game';
@@ -197,6 +197,24 @@ export class SocketClient extends Client {
   }
 
   private resolvePrompt(params: {gameId: number, id: number, result: any}, response: Response<void>) {
+    const game = this.core.games.find(g => g.id === params.gameId);
+    if (game === undefined) {
+      response('error', Errors.GAME_INVALID_ID);
+      return;
+    }
+    const prompt = game.state.prompts.find(p => p.id === params.id);
+    if (prompt === undefined) {
+      response('error', Errors.PROMPT_INVALID_ID);
+      return;
+    }
+
+    // If 'Choose card prompt', we have to decode indexes to card instances
+    if (prompt.type === ChooseCardsPromptType) {
+      const cards: CardList = (prompt as any).cards;
+      const result: number[] = params.result;
+      params.result = result.map(index => cards.cards[index]);
+    }
+
     const action = new ResolvePromptAction(params.id, params.result);
     this.dispatch(params.gameId, action, response);
   }
