@@ -1,0 +1,24 @@
+@import '~@angular/material/theming';
+@import '../../../theme/variables.scss';
+
+@mixin ptcg-cards-theme($theme) {
+  $primary: map-get($theme, primary);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  $ptcg-card-placeholder-background: mat-color($background, dialog);
+  $ptcg-card-placeholder-border-color: mat-color($foreground, divider);
+  $cards-drop-highlight-shadow: inset 0 0 map-get($padding, normal) mat-color($primary, text);
+
+  .ptcg-drop-highlight-visible {
+    box-shadow: $cards-drop-highlight-shadow;
+  }
+
+  ptcg-card {
+    &.placeholder .ptcg-card:after {
+      background-color: $ptcg-card-placeholder-background;
+      box-shadow: inset 0 0 0 1px $ptcg-card-placeholder-border-color;
+    }
+  }
+
+}

@@ -2,23 +2,52 @@
 
 <mat-dialog-content>
   <p>{{ message }}</p>
+
+  <ptcg-cards-container [keepInitialSize]="true">
+    <skyhook-sortable-list
+      [ssSortableSpec]="topSortable.spec"
+      ssSortableTrigger="fixed"
+      [ssSortableChildren]="topSortable.tempList"
+      [ssSortableListId]="topListId">
+
+      <ng-template ssTemplate let-context>
+        <ptcg-card
+          [ngClass]="{unavailable: !filterMap[context.data.card.fullName]}"
+          [ssRender]="context"
+          #render="ssRender"
+          [dragSource]="render.source" [noHTML5Preview]="true"
+          [class.placeholder]="render.isDragging$ | async"
+          [card]="context.data.card">
+        </ptcg-card>
+      </ng-template>
+
+    </skyhook-sortable-list>
+  </ptcg-cards-container>
+
+  <ptcg-cards-container [keepInitialSize]="true">
+    <skyhook-sortable-list
+      [ssSortableSpec]="bottomSortable.spec"
+      ssSortableTrigger="fixed"
+      [ssSortableChildren]="bottomSortable.tempList"
+      [ssSortableListId]="bottomListId">
+
+      <ng-template ssTemplate let-context>
+        <ptcg-card
+          [ssRender]="context"
+          #render="ssRender"
+          [dragSource]="render.source" [noHTML5Preview]="true"
+          [class.placeholder]="render.isDragging$ | async"
+          [card]="context.data.card">
+        </ptcg-card>
+      </ng-template>
+
+    </skyhook-sortable-list>
+  </ptcg-cards-container>
 </mat-dialog-content>
-
-<ptcg-cards-container>
-  <ptcg-card
-    *ngFor="let card of cards.cards"
-    [ngClass]="{unavailable: !filterMap[card.fullName]}"
-    [card]="card">
-  </ptcg-card>
-</ptcg-cards-container>
-
-<ptcg-cards-container>
-  
-</ptcg-cards-container>
 
 <mat-dialog-actions>
   <button mat-raised-button *ngIf="allowedCancel" (click)="cancel()">Cancel</button>
-  <button mat-raised-button color="primary" (click)="confirm()">
+  <button mat-raised-button [disabled]="isInvalid" color="primary" (click)="confirm()">
     OK
   </button>
 </mat-dialog-actions>

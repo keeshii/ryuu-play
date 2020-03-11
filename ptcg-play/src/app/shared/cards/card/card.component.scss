@@ -1,5 +1,25 @@
 @import '../../../../theme/variables.scss';
 
+:host.placeholder {
+  img {
+    display: none;
+  }
+  .ptcg-card:after {
+    opacity: $ptcg-disabled-opacity;
+  }
+}
+
+:host.cardback {
+  img {
+    display: none;
+  }
+  .ptcg-card:after {
+    background-image: url("/assets/cardback.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+  }
+}
+
 .ptcg-card {
   width: 100%;
   position: relative;

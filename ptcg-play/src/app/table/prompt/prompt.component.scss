@@ -40,3 +40,8 @@ $ptcg-prompt-border-radius: 4px !default;
   overflow: hidden;
   outline: 0;
 }
+
+.ptcg-card-preview {
+  position: absolute;
+  width: map-get($ptcg-size, card);
+}

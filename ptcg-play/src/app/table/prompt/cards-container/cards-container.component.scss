@@ -4,10 +4,14 @@ $ptcg-cards-container-padding: map-get($padding, small);
 $ptcg-cards-container-border-radius: map-get($padding, small);
 
 $ptcg-cards-container-min-height: map-get($ptcg-size, card) * $card-aspect-ratio + 2 * map-get($padding, normal);
-$ptcg-cards-container-max-height: 3 * map-get($ptcg-size, card) * $card-aspect-ratio + 4 * map-get($padding, normal);
+$ptcg-cards-container-max-height: 2 * map-get($ptcg-size, card) * $card-aspect-ratio + 3 * map-get($padding, normal);
 
 :host {
   display: block;
+
+  &:not(:last-child) {
+    margin-bottom: map-get($padding, normal);
+  }
 }
 
 .ptcg-cards-container {
@@ -15,6 +19,7 @@ $ptcg-cards-container-max-height: 3 * map-get($ptcg-size, card) * $card-aspect-r
   display: flex;
   flex-wrap: wrap;
   max-height: $ptcg-cards-container-max-height;
+  max-width: 100%;
   min-height: $ptcg-cards-container-min-height;
   overflow: auto;
   padding: $ptcg-cards-container-padding;

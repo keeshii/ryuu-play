@@ -14,7 +14,9 @@ export class CardComponent implements OnInit {
   public scanUrl: string;
   public data: Card;
 
-  @Input() canDrag = true;
+  @Input() cardback = false;
+
+  @Input() placeholder = false;
 
   @Input() set card(value: Card) {
     this.data = value;

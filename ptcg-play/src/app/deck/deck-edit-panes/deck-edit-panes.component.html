@@ -23,7 +23,7 @@
       <ptcg-deck-card
         [ssRender]="context"
         #render="ssRender"
-        [class.placeholder]="render.isDragging$|async"
+        [class.placeholder]="render.isDragging$ | async"
         [source]="render.source"
         (click)="setCardCount(render.data)"
         [card]="render.data">
