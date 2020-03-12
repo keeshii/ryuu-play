@@ -1,6 +1,7 @@
 @import '../../../../theme/variables.scss';
 
 $avatar-size: map-get($ptcg-size, avatar);
+$ptcg-player-bar-active-divider-size: 2px;
 
 .ptcg-player-bar {
   display: grid;
@@ -10,6 +11,17 @@ $avatar-size: map-get($ptcg-size, avatar);
   grid-template-columns: $avatar-size 1fr;
   grid-template-rows: $avatar-size auto;
   padding: $ptcg-sidebar-tiny-padding;
+  position: relative;
+
+  &.active:before {
+    bottom: 0;
+    content: "";
+    display: block;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: $ptcg-player-bar-active-divider-size;
+  }
 }
 
 .ptcg-player-avatar {

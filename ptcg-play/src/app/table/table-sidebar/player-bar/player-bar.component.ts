@@ -20,6 +20,8 @@ export class PlayerBarComponent implements OnInit {
     this.name = player.name;
   }
 
+  @Input() active: boolean;
+
   public isEmpty = true;
   public deckCount: number;
   public handCount: number;

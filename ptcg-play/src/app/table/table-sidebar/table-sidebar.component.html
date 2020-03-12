@@ -6,9 +6,9 @@
     <ptcg-badge>Turn {{ turn }}</ptcg-badge>
   </div>
 
-  <ptcg-player-bar [player]="topPlayer"></ptcg-player-bar>
+  <ptcg-player-bar [player]="topPlayer" [active]="isTopPlayerActive"></ptcg-player-bar>
 
-  <ptcg-player-bar [player]="bottomPlayer"></ptcg-player-bar>
+  <ptcg-player-bar [player]="bottomPlayer" [active]="isBottomPlayerActive"></ptcg-player-bar>
 
   <ptcg-player-actions
     (join)="join.next()"

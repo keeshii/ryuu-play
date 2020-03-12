@@ -7,6 +7,7 @@
   $primary: map-get($theme, primary);
 
   $table-border: solid 1px mat-color($foreground, divider);
+  $active-player-background-color: mat-color($background, focused-button);
   $hand-background-color: mat-color($background, app-bar);
   $avatar-background-color: mat-color($background, app-bar);
   $table-sidebar-header-background-color: mat-color($background, background);
@@ -29,8 +30,14 @@
       background-color: $table-sidebar-header-background-color;
     }
   }
-  
+
   ptcg-player-bar {
+    .ptcg-player-bar.active {
+      background-color: $active-player-background-color;
+      &:before {
+        background-color: mat-color($primary);
+      }
+    }
     .ptcg-player-avatar {
       background-color: $avatar-background-color;
     }

@@ -1,10 +1,12 @@
 import { ActivatedRoute } from '@angular/router';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GameState, Player } from 'ptcg-server';
-import { Observable } from 'rxjs';
-import { withLatestFrom } from 'rxjs/operators';
+import { Observable, from, EMPTY } from 'rxjs';
+import { withLatestFrom, switchMap, finalize } from 'rxjs/operators';
 
+import { ApiError } from '../api/api.error';
 import { AlertService } from '../shared/alert/alert.service';
+import { DeckService } from '../api/services/deck.service';
 import { GameService } from '../api/services/game.service';
 import { SessionService } from '../shared/session/session.service';
 import { takeUntilDestroyed } from '../shared/operators/take-until-destroyed';
@@ -22,11 +24,13 @@ export class TableComponent implements OnInit, OnDestroy {
   public bottomPlayer: Player;
   public topPlayer: Player;
   public clientId: number;
+  public loading: boolean;
   private gameId: number;
 
   constructor(
     private alertService: AlertService,
     private gameService: GameService,
+    private deckService: DeckService,
     private route: ActivatedRoute,
     private sessionService: SessionService
   ) {
@@ -59,17 +63,45 @@ export class TableComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() { }
 
-  public async play() {
-    const selected = await this.alertService.select({
-      title: 'Choose your deck',
-      placeholder: 'Your deck',
-      options: [{value: 'deck1', viewValue: 'Deck 1'}],
-      value: 'deck1'
-    });
-    if (selected !== undefined) {
-      const deck: string[] = this.createSampleDeck();
-      this.gameService.play(this.gameId, deck);
-    }
+  public play() {
+    this.loading = true;
+    this.deckService.getList()
+      .pipe(
+        finalize(() => { this.loading = false; }),
+        takeUntilDestroyed(this),
+        switchMap(decks => {
+          const options = decks.decks
+            .filter(deckEntry => deckEntry.isValid)
+            .map(deckEntry => ({value: deckEntry.id, viewValue: deckEntry.name}));
+
+          if (options.length === 0) {
+            this.alertService.alert(
+              'You must prepare a valid deck before joining the game',
+              'No valid decks'
+            );
+            return EMPTY;
+          }
+
+          return from(this.alertService.select({
+            title: 'Choose your deck',
+            placeholder: 'Your deck',
+            options,
+            value: options[0].value
+          }));
+        }),
+        switchMap(deckId => {
+          return deckId !== undefined
+            ? this.deckService.getDeck(deckId)
+            : EMPTY;
+        })
+      )
+      .subscribe({
+        next: deckResponse => {
+          const deck = deckResponse.deck.cards;
+          this.gameService.play(this.gameId, deck);
+        },
+        error: (error: ApiError) => {}
+      });
   }
 
   private updatePlayers(gameState: GameState, clientId: number) {
