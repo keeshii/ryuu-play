@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { CardType, SuperType } from 'ptcg-server';
-import { MatSelectChange } from '@angular/material';
+import { MatSelectChange } from '@angular/material/select';
 
 import { Deck } from '../../api/interfaces/deck.interface';
 import { DeckEditToolbarFilter } from './deck-edit-toolbar-filter.interface';

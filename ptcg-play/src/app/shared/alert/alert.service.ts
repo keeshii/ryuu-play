@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { MatDialog, MatSnackBar } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { AlertPopupComponent } from './alert-popup/alert-popup.component';
 import { ConfirmPopupComponent } from './confirm-popup/confirm-popup.component';
