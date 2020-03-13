@@ -16,21 +16,26 @@
   margin: 0 auto;
 }
 
-.ptcg-hand-card {
+skyhook-sortable-list {
+  display: flex;
+}
+
+ptcg-card {
   flex: 0 0 auto;
   width: map-get($ptcg-size, card);
 }
 
-.ptcg-hand-card:first-child {
+ptcg-card:first-child {
   padding-left: $ptcg-hand-padding;
   width: map-get($ptcg-size, card) + $ptcg-hand-padding;
 }
 
-.ptcg-hand-card:last-child {
+ptcg-card:last-child {
   padding-right: $ptcg-hand-padding;
   width: map-get($ptcg-size, card) + $ptcg-hand-padding;
 }
 
-ptcg-board-card {
+.ptcg-card-preview {
+  position: absolute;
   width: map-get($ptcg-size, card);
 }

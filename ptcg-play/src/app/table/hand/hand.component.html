@@ -1,10 +1,33 @@
+<skyhook-preview [allBackends]="true">
+    <ng-template let-type let-item="item">
+        <ng-container [ngSwitch]="type">
+            <div class="ptcg-card" *ngSwitchCase="'HAND_CARD'">
+              <img class="ptcg-card-preview" [src]="item.data.scanUrl">
+            </div>
+        </ng-container>
+    </ng-template>
+</skyhook-preview>
+
 <div class="ptcg-hand">
 
   <div class="ptcg-hand-container">
 
-    <div class="ptcg-hand-card" *ngFor="let card of cards">
-      <ptcg-board-card [card]="card" [isFaceDown]="isFaceDown"></ptcg-board-card>
-    </div>
+    <skyhook-sortable-list
+      [ssSortableSpec]="handSpec"
+      ssSortableTrigger="fixed"
+      [ssSortableChildren]="tempList"
+      [ssSortableListId]="handListId">
+      <ng-template ssTemplate let-context>
+        <ptcg-card
+          [ssRender]="context"
+          #render="ssRender"
+          [dragSource]="render.source" [noHTML5Preview]="true"
+          [card]="context.data.card"
+          [class.placeholder]="render.isDragging$ | async"
+          [class.cardback]="isFaceDown">
+        </ptcg-card>
+      </ng-template>
+    </skyhook-sortable-list>
 
   </div>
 

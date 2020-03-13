@@ -63,6 +63,11 @@ export class GameService {
       .subscribe(() => {});
   }
 
+  public reorderHandAction(gameId: number, order: number[]) {
+    this.socketService.emit('game:action:reorderHand', {gameId, order})
+      .subscribe(() => {});
+  }
+
   public dispatch(action: Action) { }
 
   private startListening(id: number) {

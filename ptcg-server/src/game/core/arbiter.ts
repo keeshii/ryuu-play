@@ -32,11 +32,17 @@ export class Arbiter {
 
   private shuffle(cards: CardList): number[] {
     const len = cards.cards.length;
-    const order = [];
+    const order: number[] = [];
+
+    for (let i = 0; i < len; i++) {
+      order.push(i);
+    }
 
     for (let i = 0; i < len; i++) {
       const position = Math.min(len - 1, Math.round(Math.random() * len));
-      order.push(position);
+      let tmp = order[i];
+      order[i] = order[position];
+      order[position] = tmp;
     }
 
     return order;

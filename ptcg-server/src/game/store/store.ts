@@ -1,5 +1,6 @@
 import { Action } from "./actions/action";
 import { Prompt } from "./prompts/prompt";
+import { ReorderHandAction } from "./actions/reorder-hand-action";
 import { ResolvePromptAction } from "./actions/resolve-prompt-action";
 import { State } from "./state/state";
 import { GameError, GameMessage } from "../game-error";
@@ -7,8 +8,9 @@ import { StoreHandler } from "./store-handler";
 import { StoreLike } from "./store-like";
 
 import { playerTurnReducer } from "./reducers/player-turn-reducer";
+import { reorderReducer} from "./reducers/reorder-reducer";
 import { setupPhaseReducer } from './reducers/setup-reducer';
-import { generateId, deepClone } from "../../utils/utils";
+import { generateId } from "../../utils/utils";
 
 interface PromptItem {
   ids: number[],
@@ -25,6 +27,10 @@ export class Store implements StoreLike {
   public dispatch(action: Action): State {
     let state = this.state;
 
+    if (action instanceof ReorderHandAction) {
+      state = reorderReducer(this, state, action);
+    }
+
     if (action instanceof ResolvePromptAction) {
       state = this.reducePrompt(state, action);
       this.handler.onStateChange(state);
@@ -34,8 +40,6 @@ export class Store implements StoreLike {
     if (state.prompts.some(p => p.result === undefined)) {
       throw new GameError(GameMessage.ACTION_IN_PROGRESS);
     }
-
-    state = deepClone(this.state);
 
     try {
       state = this.reduce(state, action);
