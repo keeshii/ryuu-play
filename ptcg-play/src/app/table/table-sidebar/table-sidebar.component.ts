@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, OnChanges } from '@angular/core';
 import { GameState, Player, State } from 'ptcg-server';
 
 @Component({
@@ -6,23 +6,14 @@ import { GameState, Player, State } from 'ptcg-server';
   templateUrl: './table-sidebar.component.html',
   styleUrls: ['./table-sidebar.component.scss']
 })
-export class TableSidebarComponent implements OnInit {
+export class TableSidebarComponent implements OnInit, OnChanges {
 
   @Output() join = new EventEmitter<void>();
 
-  @Input() set gameState(value: GameState) {
-    if (!value || !value.state) {
-      return;
-    }
-
-    this.gameId = value.gameId;
-    this.turn = value.state.turn;
-    this.isTopPlayerActive = this.isPlayerActive(value.state, this.topPlayer);
-    this.isBottomPlayerActive = this.isPlayerActive(value.state, this.bottomPlayer);
-  }
-
+  @Input() clientId: number;
   @Input() topPlayer: Player;
   @Input() bottomPlayer: Player;
+  @Input() gameState: GameState;
 
   public turn: number;
   public gameId: number;
@@ -39,6 +30,22 @@ export class TableSidebarComponent implements OnInit {
       return false;
     }
     return player.id === state.players[state.activePlayer].id;
+  }
+
+  ngOnChanges() {
+    if (!this.gameState || !this.gameState) {
+      this.turn = 0;
+      this.gameId = undefined;
+      this.isTopPlayerActive = false;
+      this.isBottomPlayerActive = false;
+      return;
+    }
+
+    const state = this.gameState.state;
+    this.gameId = this.gameState.gameId;
+    this.turn = state.turn;
+    this.isTopPlayerActive = this.isPlayerActive(state, this.topPlayer);
+    this.isBottomPlayerActive = this.isPlayerActive(state, this.bottomPlayer);
   }
 
 }

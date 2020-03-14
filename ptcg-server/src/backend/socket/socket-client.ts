@@ -1,5 +1,5 @@
 import * as io from 'socket.io';
-import { AddPlayerAction, Action, Prompt, PassTurnAction, ChooseCardsPromptType,
+import { AddPlayerAction, Action, PassTurnAction, ChooseCardsPromptType,
   CardList, ReorderHandAction } from '../../game';
 import { Client } from '../../game/core/client';
 import { Errors } from '../common/errors';
@@ -226,7 +226,7 @@ export class SocketClient extends Client {
     this.dispatch(params.gameId, action, response);
   }
 
-  private passTurn(params: {gameId: number, prompt: Prompt<any>}, response: Response<void>) {
+  private passTurn(params: {gameId: number}, response: Response<void>) {
     const action = new PassTurnAction(this.id);
     this.dispatch(params.gameId, action, response);
   }

@@ -68,6 +68,11 @@ export class GameService {
       .subscribe(() => {});
   }
 
+  public passTurnAction(gameId: number) {
+    this.socketService.emit('game:action:passTurn', {gameId})
+      .subscribe(() => {});
+  }
+
   public dispatch(action: Action) { }
 
   private startListening(id: number) {
