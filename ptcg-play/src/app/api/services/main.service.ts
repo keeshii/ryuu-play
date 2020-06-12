@@ -48,6 +48,10 @@ export class MainService {
   }
 
   private onCreateGame(game: GameInfo): void {
+    const index = this.sessionService.session.games.findIndex(g => g.gameId === game.gameId);
+    if (index !== -1) {
+      return;
+    }
     const games = [...this.sessionService.session.games, game];
     this.sessionService.set({ games });
   }

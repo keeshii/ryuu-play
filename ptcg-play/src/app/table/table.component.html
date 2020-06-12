@@ -13,10 +13,12 @@
 
   <!-- Table board -->
   <ptcg-board
+    (highlighted)="isBoardHighlighted = $event"
     [clientId]="clientId"
     [gameState]="gameState"
     [topPlayer]="topPlayer"
     [bottomPlayer]="bottomPlayer"
+    ptcgDropHighlight [ptcgDropHighlightVisible]="isBoardHighlighted"
   ></ptcg-board>
 
   <!-- Player's hand -->

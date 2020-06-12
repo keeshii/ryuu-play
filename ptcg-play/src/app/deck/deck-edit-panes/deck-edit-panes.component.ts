@@ -1,8 +1,7 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, NgZone } from '@angular/core';
-import { SkyhookDndService, DropTarget, DropTargetMonitor } from '@angular-skyhook/core';
+import { SkyhookDndService, DropTarget } from '@angular-skyhook/core';
 import { DraggedItem, SortableSpec } from '@angular-skyhook/sortable';
 import { Observable } from 'rxjs';
-import { SuperType, EnergyCard, EnergyType, Card } from 'ptcg-server';
 import { map } from 'rxjs/operators';
 
 import { AlertService } from '../../shared/alert/alert.service';

@@ -2,6 +2,7 @@ import * as express from 'express';
 import { json } from 'body-parser';
 
 import { Core } from '../game/core/core';
+import { BotManager } from '../game/bots/bot-manager';
 import { Storage } from '../storage';
 import { WebSocketServer } from './socket/websocket-server';
 import { config } from '../config';
@@ -57,6 +58,10 @@ export class App {
 
   public connectToDatabase(): Promise<void> {
     return this.storage.connect();
+  }
+
+  public configureBotManager(botManager: BotManager) {
+    botManager.initBots(this.core);
   }
 
   public start(): void {
