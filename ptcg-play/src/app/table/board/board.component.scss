@@ -51,6 +51,25 @@ $board-aspect-ratio: $board-min-width / $board-min-height;
   }
 }
 
+.ptcg-board-row {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  justify-content: space-evenly;
+
+  > ptcg-board-card,
+  > .ptcg-board-drop-target {
+    max-width: map-get($ptcg-size, card);
+    width: calc(#{100 / $ptcg-bench-slots}% - #{map-get($padding, small)});
+  }
+}
+
+.ptcg-board-drop-target > ptcg-board-card {
+  display: block;
+  width: 100%;
+}
+
 ptcg-board-prizes {
   grid-area: prizes;
 }
@@ -59,10 +78,15 @@ ptcg-board-deck {
   grid-area: deck;
 }
 
-ptcg-board-active {
+.ptcg-board-active {
   grid-area: active;
 }
 
-ptcg-board-bench {
+.ptcg-board-bench {
   grid-area: bench;
+}
+
+.ptcg-card-preview {
+  position: absolute;
+  width: map-get($ptcg-size, card);
 }

@@ -8,9 +8,13 @@
 
   $ptcg-card-placeholder-background: mat-color($background, dialog);
   $ptcg-card-placeholder-border-color: mat-color($foreground, divider);
-  $cards-drop-highlight-shadow: inset 0 0 map-get($padding, normal) mat-color($primary, text);
+  $cards-drop-highlight-shadow: 0 0 map-get($padding, normal) mat-color($primary, text);
 
   .ptcg-drop-highlight-visible {
+    box-shadow: inset $cards-drop-highlight-shadow;
+  }
+
+  .ptcg-drop-highlight-visible.ptcg-drop-highlight-outside {
     box-shadow: $cards-drop-highlight-shadow;
   }
 
