@@ -6,7 +6,6 @@ import { map } from 'rxjs/operators';
 
 import { GameState, Player, SuperType } from 'ptcg-server';
 import { HandItem, HandCardType } from '../hand/hand-item.interface';
-import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed';
 import { BoardCardItem, BoardCardType, SlotType, PlayerType } from './board-item.interface';
 import { CardsBaseService } from '../../shared/cards/cards-base.service';
 
@@ -21,7 +20,6 @@ type DropTargetType = DropTarget<DraggedItem<HandItem> | BoardCardItem, any>;
 })
 export class BoardComponent implements OnInit, OnDestroy, OnChanges {
 
-  @Output() highlighted = new EventEmitter<boolean>();
   @Input() clientId: number;
   @Input() gameState: GameState;
   @Input() topPlayer: Player;
@@ -111,13 +109,7 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
     return [ dropTarget, highlight$ ];
   }
 
-  ngOnInit() {
-    this.boardHighlight$
-      .pipe(takeUntilDestroyed(this))
-      .subscribe({
-      next: isHighlighted => this.highlighted.emit(isHighlighted)
-    });
-  }
+  ngOnInit() { }
 
   ngOnDestroy() {
     this.bottomActive.source.unsubscribe();

@@ -1,0 +1,46 @@
+@import '../../../../theme/variables.scss';
+
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
+.ptcg-game-logs-header {
+  align-items: center;
+  display: flex;
+  flex: 0 0 auto;
+  padding: map-get($padding, small);
+
+  & mat-icon {
+    cursor: pointer;
+    height: 1em;
+    overflow: hidden;
+    width: 1em;
+  }
+}
+
+.ptcg-game-logs-content {
+  flex: 1 1 auto;
+  overflow: auto;
+
+  ul {
+    height: 0;
+    list-style-type: none;
+  }
+  li {
+    padding: $ptcg-sidebar-tiny-padding;
+  }
+}
+
+.ptcg-game-logs-footer {
+  flex: 0 0 auto;
+  padding: 0 $ptcg-sidebar-tiny-padding;
+
+  & form {
+    display: flex;
+  }
+
+  & mat-form-field {
+    width: 100%;
+  }
+}

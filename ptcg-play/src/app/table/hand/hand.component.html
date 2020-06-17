@@ -1,13 +1,3 @@
-<skyhook-preview [allBackends]="true">
-    <ng-template let-type let-item="item">
-        <ng-container [ngSwitch]="type">
-            <div class="ptcg-card" *ngSwitchCase="'HAND_CARD'">
-              <img class="ptcg-card-preview" [src]="item.data.scanUrl">
-            </div>
-        </ng-container>
-    </ng-template>
-</skyhook-preview>
-
 <div class="ptcg-hand">
 
   <div class="ptcg-hand-container">

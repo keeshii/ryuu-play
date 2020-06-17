@@ -1,0 +1,66 @@
+<div class="ptcg-game-logs-header">
+  <h4 class="ptcg-game-logs-header-text">Messages</h4>
+  <span class="ptcg-u-spacer"></span>
+  <mat-icon matTooltip="Clear logs" matTooltipShowDelay="1000">delete_outline</mat-icon>
+</div>
+
+<div class="ptcg-game-logs-content">
+  <ul>
+    <li>
+      <span class="ptcg-system">System</span> Game log 1.
+    </li>
+    <li>
+      <span class="ptcg-player1">Player 1</span> Game log 2.
+    </li>
+    <li>
+      <span class="ptcg-player2">Player 2</span> Game log 3.
+    </li>
+    <li>
+      <span class="ptcg-system">System</span> Game log 1.
+    </li>
+    <li>
+      <span class="ptcg-player1">Player 1</span> Game log 2.
+    </li>
+    <li>
+      <span class="ptcg-player2">Player 2</span> Game log 3.
+    </li>
+    <li>
+      <span class="ptcg-system">System</span> Game log 1.
+    </li>
+    <li>
+      <span class="ptcg-player1">Player 1</span> Game log 2.
+    </li>
+    <li>
+      <span class="ptcg-player2">Player 2</span> Game log 3.
+    </li>
+    <li>
+      <span class="ptcg-system">System</span> Game log 1.
+    </li>
+    <li>
+      <span class="ptcg-player1">Player 1</span> Game log 2.
+    </li>
+    <li>
+      <span class="ptcg-player2">Player 2</span> Game log 3.
+    </li>
+  </ul>
+</div>
+
+<div class="ptcg-game-logs-footer">
+  <form class="game-logs-form" autocomplete="off">
+    <mat-form-field floatLabel="never" appearance="legacy">
+      <input
+        #searchInput="matInput"
+        name="message"
+        (blur)="onBlur()"
+        (input)="onChange()"
+        [(ngModel)]="messageValue"
+        type="text" matInput placeholder="Enter message">
+      <button mat-button matSuffix mat-icon-button
+          matTooltip="Send message"
+          matTooltipShowDelay="1000"
+         (click)="value=''">
+        <mat-icon>play_arrow</mat-icon>
+      </button>
+    </mat-form-field>
+  </form>
+</div>

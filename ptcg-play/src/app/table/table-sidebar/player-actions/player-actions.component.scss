@@ -11,4 +11,8 @@ $avatar-size: map-get($ptcg-size, avatar);
   & > * {
     margin-top: $ptcg-sidebar-tiny-padding;
   }
+
+  & > *:last-child {
+    margin-bottom: $ptcg-sidebar-tiny-padding;
+  }
 }

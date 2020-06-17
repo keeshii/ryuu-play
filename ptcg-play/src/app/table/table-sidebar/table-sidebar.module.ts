@@ -5,6 +5,7 @@ import { PlayerBarComponent } from './player-bar/player-bar.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { TableSidebarComponent } from './table-sidebar.component';
 import { PlayerActionsComponent } from './player-actions/player-actions.component';
+import { GameLogsComponent } from './game-logs/game-logs.component';
 
 @NgModule({
   imports: [
@@ -14,7 +15,8 @@ import { PlayerActionsComponent } from './player-actions/player-actions.componen
   declarations: [
     TableSidebarComponent,
     PlayerBarComponent,
-    PlayerActionsComponent
+    PlayerActionsComponent,
+    GameLogsComponent
   ],
   exports: [
     TableSidebarComponent

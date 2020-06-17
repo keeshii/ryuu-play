@@ -25,7 +25,6 @@ export class TableComponent implements OnInit, OnDestroy {
   public topPlayer: Player;
   public clientId: number;
   public loading: boolean;
-  public isBoardHighlighted: boolean;
   private gameId: number;
 
   constructor(

@@ -1,5 +1,11 @@
 @import '../../../theme/variables.scss';
 
+.table-sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .ptcg-table-sidebar-header {
   display: flex;
   padding: map-get($padding, small);
@@ -16,4 +22,14 @@
     display: flex;
     flex: 0 0 auto;
   }
+}
+
+.ptcg-table-sidebar-header,
+ptcg-player-bar,
+ptcg-player-actions {
+  flex: 0 0 auto;
+}
+
+ptcg-game-logs {
+  flex: 1 1 auto;
 }
