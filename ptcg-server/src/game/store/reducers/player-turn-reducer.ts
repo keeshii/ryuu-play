@@ -34,14 +34,14 @@ export function nextTurn(store: StoreLike, state: State): State {
   }
 
   state.turn++;
-  console.log('Next turn ' + state.turn);
+  store.log(state, `Next turn ${state.turn}.`);
 
   // Draw card at the beginning
-  console.log('Draw card, cards left ' + player.deck.cards.length);
+  store.log(state, `${player.name} draws card, cards left ${player.deck.cards.length}.`);
   if (player.deck.cards.length === 0) {
-    console.log('Game finished, no more cards in deck');
+    store.log(state, `${player.name} has no more cards in the deck. Game finished.`);
     state.winner = state.activePlayer ? 0 : 1;
-    console.log('Winner ' + state.players[state.winner].name);
+    store.log(state, `Winner ${state.players[state.winner].name}.`);
     state.phase = GamePhase.FINISHED;
     return state;
   }
@@ -60,7 +60,7 @@ export function playerTurnReducer(store: StoreLike, state: State, action: Action
         throw new GameError(GameMessage.NOT_YOUR_TURN);
       }
 
-      console.log('Pass action by player ' + player.name);
+      store.log(state, `${player.name} ended the turn.`);
       state = betweenTurns(store, state);
       state = nextTurn(store, state);
     }

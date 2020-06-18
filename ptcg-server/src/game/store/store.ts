@@ -11,6 +11,7 @@ import { playerTurnReducer } from "./reducers/player-turn-reducer";
 import { reorderReducer} from "./reducers/reorder-reducer";
 import { setupPhaseReducer } from './reducers/setup-reducer';
 import { generateId } from "../../utils/utils";
+import { StateLogLevel, StateLog } from "./state/state-log";
 
 interface PromptItem {
   ids: number[],
@@ -21,6 +22,7 @@ export class Store implements StoreLike {
 
   public state: State = new State();
   private promptItems: PromptItem[] = [];
+  private logId: number = 0;
 
   constructor(private handler: StoreHandler) { };
 
@@ -73,6 +75,12 @@ export class Store implements StoreLike {
     return state;
   }
 
+  public log(state: State, message: string, client?: number, level?: StateLogLevel): void {
+    const log = new StateLog(message, client, level);
+    log.id = ++this.logId;
+    state.logs.push(log);
+  }
+
   private reducePrompt(state: State, action: ResolvePromptAction): State {
     // Resolve prompts actions
     const prompt = state.prompts.find(item => item.id === action.id);
@@ -97,6 +105,10 @@ export class Store implements StoreLike {
       const itemIndex = this.promptItems.indexOf(promptItem);
       this.promptItems.splice(itemIndex, 1);
       promptItem.then(results.length === 1 ? results[0] : results);
+    }
+
+    if (action.log !== undefined) {
+      this.log(state, action.log.message, action.log.client, action.log.level);
     }
 
     return state;

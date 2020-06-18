@@ -1,9 +1,12 @@
 import { Action } from "./actions/action";
 import { Prompt } from "./prompts/prompt";
 import { State } from "./state/state";
+import { StateLogLevel } from "./state/state-log";
 
 export interface StoreLike {
   dispatch(action: Action): void;
+
+  log(state: State, message: string, client?: number, level?: StateLogLevel): void;
 
   prompt<T>(
     state: State, prompt: Prompt<T>,

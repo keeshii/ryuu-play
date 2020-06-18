@@ -60,7 +60,7 @@ export class App {
     return this.storage.connect();
   }
 
-  public configureBotManager(botManager: BotManager) {
+  public configureBotManager(botManager: BotManager): void {
     botManager.initBots(this.core);
   }
 

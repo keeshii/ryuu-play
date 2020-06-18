@@ -27,6 +27,7 @@ export class SocketClient extends Client {
   public core: Core;
   private listeners: Listener<any, any>[] = [];
   private gameInfoCache: {[id: number]: GameInfo} = {};
+  private lastLogIdCache: {[id: number]: number} = {};
 
   constructor(user: User, core: Core, io: io.Server, socket: io.Socket) {
     super(user);
@@ -58,11 +59,13 @@ export class SocketClient extends Client {
 
   public onGameAdd(game: Game): void {
     this.gameInfoCache[game.id] = this.buildGameInfo(game);
+    this.lastLogIdCache[game.id] = 0;
     this.socket.emit('core:createGame', this.gameInfoCache[game.id]);
   }
 
   public onGameDelete(game: Game): void {
     delete this.gameInfoCache[game.id];
+    delete this.lastLogIdCache[game.id];
     this.socket.emit('core:deleteGame', game.id);
   }
 
@@ -74,6 +77,7 @@ export class SocketClient extends Client {
     }
 
     if (this.games.indexOf(game) !== -1) {
+      state = this.filterState(game.id, state);
       this.socket.emit(`game[${game.id}]:stateChange`, state);
     }
   }
@@ -92,6 +96,20 @@ export class SocketClient extends Client {
         }
       });
     }
+  }
+
+  /**
+   * Clear sensitive data, resolved prompts and old logs.
+   */
+  private filterState(gameId: number, state: State): State {
+    state = { ...state };
+    const lastLogId = this.lastLogIdCache[gameId];
+    state.prompts = state.prompts.filter(prompt => prompt.result === undefined);
+    state.logs = state.logs.filter(log => log.id > lastLogId);
+    if (state.logs.length > 0) {
+      this.lastLogIdCache[gameId] = state.logs[state.logs.length - 1].id;
+    }
+    return state;
   }
 
   private addListener<T, R>(message: string, handler: Handler<T, R>) {

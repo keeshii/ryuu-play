@@ -6,7 +6,6 @@ import { ResolvePromptAction } from "../store/actions/resolve-prompt-action";
 import { State, GamePhase } from "../store/state/state";
 import { Store } from "../store/store";
 import { StoreHandler } from "../store/store-handler";
-import { logger } from "../../utils/logger";
 
 export class Game implements StoreHandler {
  
@@ -41,13 +40,13 @@ export class Game implements StoreHandler {
   }
 
   private handleArbiterPrompts(state: State): boolean {
-    let resolved: {id: number, result: any} | undefined;
+    let resolved: {id: number, action: ResolvePromptAction} | undefined;
     const unresolved = state.prompts.filter(item => item.result === undefined);
 
     for (let i = 0; i < unresolved.length; i++) {
-      let result = this.arbiter.resolvePrompt(state, unresolved[i]);
-      if (result !== undefined) {
-        resolved = { id: unresolved[i].id, result };
+      let action = this.arbiter.resolvePrompt(state, unresolved[i]);
+      if (action !== undefined) {
+        resolved = { id: unresolved[i].id, action };
         break;
       }
     }
@@ -56,12 +55,11 @@ export class Game implements StoreHandler {
       return false;
     }
 
-    this.store.dispatch(new ResolvePromptAction(resolved.id, resolved.result));
+    this.store.dispatch(resolved.action);
     return true;
   }
 
   public dispatch(client: Client, action: Action): State {
-    logger.log(`User ${client.user.name} dispatches the action ${action.type}.`);
     return this.store.dispatch(action);
   }
 
