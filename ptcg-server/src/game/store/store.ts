@@ -1,4 +1,5 @@
 import { Action } from "./actions/action";
+import { AppendLogAction } from "./actions/append-log-action";
 import { Prompt } from "./prompts/prompt";
 import { ReorderHandAction } from "./actions/reorder-hand-action";
 import { ResolvePromptAction } from "./actions/resolve-prompt-action";
@@ -11,7 +12,7 @@ import { playerTurnReducer } from "./reducers/player-turn-reducer";
 import { reorderReducer} from "./reducers/reorder-reducer";
 import { setupPhaseReducer } from './reducers/setup-reducer';
 import { generateId } from "../../utils/utils";
-import { StateLogLevel, StateLog } from "./state/state-log";
+import { StateLog } from "./state/state-log";
 
 interface PromptItem {
   ids: number[],
@@ -35,6 +36,12 @@ export class Store implements StoreLike {
 
     if (action instanceof ResolvePromptAction) {
       state = this.reducePrompt(state, action);
+      this.handler.onStateChange(state);
+      return state;
+    }
+
+    if (action instanceof AppendLogAction) {
+      this.log(state, action.message, action.id);
       this.handler.onStateChange(state);
       return state;
     }
@@ -75,8 +82,8 @@ export class Store implements StoreLike {
     return state;
   }
 
-  public log(state: State, message: string, client?: number, level?: StateLogLevel): void {
-    const log = new StateLog(message, client, level);
+  public log(state: State, message: string, client?: number): void {
+    const log = new StateLog(message, client);
     log.id = ++this.logId;
     state.logs.push(log);
   }
@@ -101,14 +108,14 @@ export class Store implements StoreLike {
       return p === undefined ? undefined : p.result;
     });
 
+    if (action.log !== undefined) {
+      this.log(state, action.log.message, action.log.client);
+    }
+
     if (results.every(result => result !== undefined)) {
       const itemIndex = this.promptItems.indexOf(promptItem);
       this.promptItems.splice(itemIndex, 1);
       promptItem.then(results.length === 1 ? results[0] : results);
-    }
-
-    if (action.log !== undefined) {
-      this.log(state, action.log.message, action.log.client, action.log.level);
     }
 
     return state;

@@ -20,14 +20,13 @@ export class Arbiter {
 
     if (prompt instanceof ShuffleDeckPrompt) {
       const result = this.shuffle(player.deck);
-      const log = new StateLog(`shuffles deck from player ${player.name}.`, player.id);
-      return new ResolvePromptAction(prompt.id, result, log);
+      return new ResolvePromptAction(prompt.id, result);
     }
 
     if (prompt instanceof CoinFlipPrompt) {
       const result = Math.round(Math.random()) === 0;
-      const message = `flips coin for player ${player.name} and result is ${result ? 'HEAD' : 'TAILS'}.`;
-      const log = new StateLog(message, player.id);
+      const message = `${player.name} flips a coin. It's ${result ? 'HEAD' : 'TAILS'}.`;
+      const log = new StateLog(message);
       return new ResolvePromptAction(prompt.id, result, log);
     }
   }

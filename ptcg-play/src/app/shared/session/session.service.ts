@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { GameInfo, GameState, UserInfo } from 'ptcg-server';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { map, filter, distinctUntilChanged } from 'rxjs/operators';
+import { map, distinctUntilChanged } from 'rxjs/operators';
 
 import { User } from './user.interface';
 

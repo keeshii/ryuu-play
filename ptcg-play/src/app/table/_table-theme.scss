@@ -56,6 +56,9 @@
     .ptcg-player2 {
       color: mat-color($warn);
     }
+    .ptcg-spectator {
+      color: mat-color($foreground, hint-text);
+    }
     .ptcg-game-logs-header {
       background-color: $table-sidebar-header-background-color;
     }

@@ -60,6 +60,7 @@ function* setupGame(next: Function, store: StoreLike, state: State): IterableIte
     }
 
     if (playerHasBasic && !opponentHasBasic) {
+      store.log(state, `${opponent.name} has no basic Pokemon on the hand.`);
       yield store.prompt(state, [
         new ConfirmPrompt(player.id, GameMessage.SETUP_OPPONENT_NO_BASIC),
         new AlertPrompt(opponent.id, GameMessage.SETUP_PLAYER_NO_BASIC)
@@ -72,6 +73,7 @@ function* setupGame(next: Function, store: StoreLike, state: State): IterableIte
     }
 
     if (!playerHasBasic && opponentHasBasic) {
+      store.log(state, `${player.name} has no basic Pokemon on the hand.`);
       yield store.prompt(state, [
         new ConfirmPrompt(opponent.id, GameMessage.SETUP_OPPONENT_NO_BASIC),
         new AlertPrompt(player.id, GameMessage.SETUP_PLAYER_NO_BASIC)

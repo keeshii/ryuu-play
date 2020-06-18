@@ -12,6 +12,7 @@ import {
   ControllerClass,
   Cards,
   Decks,
+  Game,
   Login,
   Profile
 } from './controllers';
@@ -42,6 +43,7 @@ export class App {
     app.use(cors());
     define('/cards', Cards);
     define('/decks', Decks);
+    define('/game', Game);
     define('/login', Login);
     define('/profile', Profile);
 

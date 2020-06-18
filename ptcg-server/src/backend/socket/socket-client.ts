@@ -1,5 +1,5 @@
 import * as io from 'socket.io';
-import { AddPlayerAction, Action, PassTurnAction, ChooseCardsPromptType,
+import { AddPlayerAction, AppendLogAction, Action, PassTurnAction, ChooseCardsPromptType,
   CardList, ReorderHandAction } from '../../game';
 import { Client } from '../../game/core/client';
 import { Errors } from '../common/errors';
@@ -47,6 +47,7 @@ export class SocketClient extends Client {
     this.addListener('game:action:resolvePrompt', this.resolvePrompt.bind(this));
     this.addListener('game:action:reorderHand', this.reorderHand.bind(this));
     this.addListener('game:action:passTurn', this.passTurn.bind(this));
+    this.addListener('game:action:appendLog', this.appendLog.bind(this));
   }
 
   public onConnect(client: Client): void {
@@ -58,8 +59,8 @@ export class SocketClient extends Client {
   }
 
   public onGameAdd(game: Game): void {
-    this.gameInfoCache[game.id] = this.buildGameInfo(game);
     this.lastLogIdCache[game.id] = 0;
+    this.gameInfoCache[game.id] = this.buildGameInfo(game);
     this.socket.emit('core:createGame', this.gameInfoCache[game.id]);
   }
 
@@ -80,6 +81,14 @@ export class SocketClient extends Client {
       state = this.filterState(game.id, state);
       this.socket.emit(`game[${game.id}]:stateChange`, state);
     }
+  }
+
+  public onGameJoin(game: Game, client: Client): void {
+    this.socket.emit(`game[${game.id}]:join`, this.buildUserInfo(client));
+  }
+
+  public onGameLeave(game: Game, client: Client): void {
+    this.socket.emit(`game[${game.id}]:leave`, this.buildUserInfo(client));
   }
 
   public attachListeners(): void {
@@ -174,6 +183,7 @@ export class SocketClient extends Client {
       response('error', Errors.GAME_INVALID_ID);
       return;
     }
+    this.lastLogIdCache[game.id] = 0;
     this.core.joinGame(this, game);
     response('ok', this.buildGameState(game));
   }
@@ -184,6 +194,7 @@ export class SocketClient extends Client {
       response('error', Errors.GAME_INVALID_ID);
       return;
     }
+    delete this.lastLogIdCache[game.id];
     this.core.leaveGame(this, game);
     response('ok');
   }
@@ -246,6 +257,11 @@ export class SocketClient extends Client {
 
   private passTurn(params: {gameId: number}, response: Response<void>) {
     const action = new PassTurnAction(this.id);
+    this.dispatch(params.gameId, action, response);
+  }
+
+  private appendLog(params: {gameId: number, message: string}, response: Response<void>) {
+    const action = new AppendLogAction(this.id, params.message);
     this.dispatch(params.gameId, action, response);
   }
 

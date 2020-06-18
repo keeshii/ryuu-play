@@ -34,10 +34,10 @@ export function nextTurn(store: StoreLike, state: State): State {
   }
 
   state.turn++;
-  store.log(state, `Next turn ${state.turn}.`);
+  store.log(state, `Turn ${state.turn}.`);
 
   // Draw card at the beginning
-  store.log(state, `${player.name} draws card, cards left ${player.deck.cards.length}.`);
+  store.log(state, `${player.name} draws a card.`);
   if (player.deck.cards.length === 0) {
     store.log(state, `${player.name} has no more cards in the deck. Game finished.`);
     state.winner = state.activePlayer ? 0 : 1;

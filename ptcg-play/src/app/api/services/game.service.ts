@@ -73,17 +73,20 @@ export class GameService {
       .subscribe(() => {});
   }
 
+  public appendLogAction(gameId: number, message: string) {
+    this.socketService.emit('game:action:appendLog', {gameId, message})
+      .subscribe(() => {});
+  }
+
   public dispatch(action: Action) { }
 
   private startListening(id: number) {
-    console.log('startListening', id);
     this.socketService.on(`game[${id}]:join`, (userInfo: UserInfo) => this.onJoin(id, userInfo));
     this.socketService.on(`game[${id}]:leave`, (userInfo: UserInfo) => this.onLeave(id, userInfo));
     this.socketService.on(`game[${id}]:stateChange`, (state: State) => this.onStateChange(id, state));
   }
 
   private stopListening(id: number) {
-    console.log('stopListening', id);
     this.socketService.off(`game[${id}]:join`);
     this.socketService.off(`game[${id}]:leave`);
     this.socketService.off(`game[${id}]:stateChange`);
@@ -100,11 +103,33 @@ export class GameService {
   }
 
   private onJoin(gameId: number, userInfo: UserInfo) {
-    console.log('gameService, onJoin', gameId, userInfo);
+    const index = this.sessionService.session.gameStates.findIndex(g => g.gameId === gameId);
+    if (index === -1) {
+      return;
+    }
+    const game = this.sessionService.session.gameStates[index];
+    const userIndex = game.users.findIndex(u => u.clientId === userInfo.clientId);
+    if (userIndex === -1) {
+      const users = [ ...game.users, userInfo ];
+      const gameStates = this.sessionService.session.gameStates.slice();
+      gameStates[index] = { ...gameStates[index], users };
+      this.sessionService.set({ gameStates });
+    }
   }
 
   private onLeave(gameId: number, userInfo: UserInfo) {
-    console.log('gameService, onLeave', gameId, userInfo);
+    const index = this.sessionService.session.gameStates.findIndex(g => g.gameId === gameId);
+    if (index === -1) {
+      return;
+    }
+    const game = this.sessionService.session.gameStates[index];
+    const userIndex = game.users.findIndex(u => u.clientId === userInfo.clientId);
+    if (userIndex !== -1) {
+      const users = game.users.filter(u => u.clientId !== userInfo.clientId);
+      const gameStates = this.sessionService.session.gameStates.slice();
+      gameStates[index] = { ...gameStates[index], users };
+      this.sessionService.set({ gameStates });
+    }
   }
 
 }

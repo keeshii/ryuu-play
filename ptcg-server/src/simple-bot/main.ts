@@ -13,6 +13,10 @@ export class SimpleBot extends BotClient {
 
   public onDisconnect(client: Client): void { }
 
+  public onGameJoin(game: Game, client: Client): void { }
+
+  public onGameLeave(game: Game, client: Client): void { }
+
   public onGameAdd(game: Game): void { }
 
   public onGameDelete(game: Game): void {

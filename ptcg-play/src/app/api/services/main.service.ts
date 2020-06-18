@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { GameInfo, CoreInfo, UserInfo, GameState } from 'ptcg-server';
 import { Observable } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 
 import { GameService } from './game.service';
-import { SessionService } from 'src/app/shared/session/session.service';
+import { SessionService } from '../../shared/session/session.service';
 import { SocketService } from '../socket.service';
-import { finalize } from 'rxjs/operators';
 
 @Injectable()
 export class MainService {
