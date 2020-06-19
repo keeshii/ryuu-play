@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, UserInfo, GameState, State } from 'ptcg-server';
+import { Action, UserInfo, GameState, State, CardTarget } from 'ptcg-server';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
@@ -60,6 +60,11 @@ export class GameService {
 
   public resolvePrompt(gameId: number, promptId: number, result: any) {
     this.socketService.emit('game:action:resolvePrompt', {gameId, id: promptId, result})
+      .subscribe(() => {});
+  }
+
+  public playCardAction(gameId: number, handIndex: number, target: CardTarget) {
+    this.socketService.emit('game:action:playCard', {gameId, handIndex, target})
       .subscribe(() => {});
   }
 

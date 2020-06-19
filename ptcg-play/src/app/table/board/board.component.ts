@@ -1,12 +1,12 @@
-import { Component, OnInit, OnChanges, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnChanges, Input, OnDestroy } from '@angular/core';
 import { DraggedItem } from '@angular-skyhook/sortable';
 import { DropTarget, SkyhookDndService } from '@angular-skyhook/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { GameState, Player, SuperType } from 'ptcg-server';
+import { GameState, Player, SuperType, SlotType, PlayerType, CardTarget } from 'ptcg-server';
 import { HandItem, HandCardType } from '../hand/hand-item.interface';
-import { BoardCardItem, BoardCardType, SlotType, PlayerType, Target } from './board-item.interface';
+import { BoardCardItem, BoardCardType } from './board-item.interface';
 import { CardsBaseService } from '../../shared/cards/cards-base.service';
 import { GameService } from '../../api/services/game.service';
 
@@ -121,11 +121,11 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
     return [ dropTarget, highlight$ ];
   }
 
-  private handlePlayFromHand(item: HandItem, target: Target): void {
-    return;
+  private handlePlayFromHand(item: HandItem, target: CardTarget): void {
+    this.gameService.playCardAction(this.gameState.gameId, item.index, target);
   }
 
-  private handleMoveBoardCard(item: BoardCardItem, target: Target): void {
+  private handleMoveBoardCard(item: BoardCardItem, target: CardTarget): void {
     const gameId = this.gameState.gameId;
 
     // ReorderBenchAction

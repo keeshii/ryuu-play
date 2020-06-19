@@ -3,7 +3,7 @@ import { PassTurnAction } from "../actions/pass-turn-action";
 import { Player } from "../state/player";
 import { State, GamePhase } from "../state/state";
 import { StoreLike } from "../store-like";
-import {GameError, GameMessage} from "../../game-error";
+import { GameError, GameMessage } from "../../game-error";
 
 function getActivePlayer(state: State): Player {
   return state.players[state.activePlayer];
@@ -53,6 +53,7 @@ export function nextTurn(store: StoreLike, state: State): State {
 export function playerTurnReducer(store: StoreLike, state: State, action: Action): State {
 
   if (state.phase === GamePhase.PLAYER_TURN) {
+
     if (action instanceof PassTurnAction) {
       const player = state.players[state.activePlayer];
 
@@ -63,7 +64,9 @@ export function playerTurnReducer(store: StoreLike, state: State, action: Action
       store.log(state, `${player.name} ended the turn.`);
       state = betweenTurns(store, state);
       state = nextTurn(store, state);
+      return state;
     }
+
   }
 
   return state;

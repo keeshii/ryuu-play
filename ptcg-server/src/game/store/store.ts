@@ -1,13 +1,14 @@
 import { Action } from "./actions/action";
 import { AppendLogAction } from "./actions/append-log-action";
 import { Prompt } from "./prompts/prompt";
-import { ReorderBenchAction, ReorderHandAction } from "./actions/reorder-actions";
+import { ReorderHandAction, ReorderBenchAction } from "./actions/reorder-actions";
 import { ResolvePromptAction } from "./actions/resolve-prompt-action";
 import { State } from "./state/state";
 import { GameError, GameMessage } from "../game-error";
 import { StoreHandler } from "./store-handler";
 import { StoreLike } from "./store-like";
 
+import { playCardReducer } from "./reducers/play-card-reducer";
 import { playerTurnReducer } from "./reducers/player-turn-reducer";
 import { reorderReducer} from "./reducers/reorder-reducer";
 import { setupPhaseReducer } from './reducers/setup-reducer';
@@ -124,6 +125,7 @@ export class Store implements StoreLike {
 
   private reduce(state: State, action: Action): State {
     state = setupPhaseReducer(this, state, action);
+    state = playCardReducer(this, state, action);
     state = playerTurnReducer(this, state, action);
     return state;
   }

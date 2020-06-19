@@ -1,6 +1,6 @@
 import * as io from 'socket.io';
 import { AddPlayerAction, AppendLogAction, Action, PassTurnAction, ChooseCardsPromptType,
-  CardList, ReorderHandAction, ReorderBenchAction } from '../../game';
+  CardList, ReorderHandAction, ReorderBenchAction, PlayCardAction, CardTarget } from '../../game';
 import { Client } from '../../game/core/client';
 import { Errors } from '../common/errors';
 import { Game } from '../../game/core/game';
@@ -44,6 +44,7 @@ export class SocketClient extends Client {
     this.addListener('game:leave', this.leaveGame.bind(this));
     this.addListener('game:getStatus', this.getGameStatus.bind(this));
     this.addListener('game:action:play', this.playGame.bind(this));
+    this.addListener('game:action:playCard', this.playCard.bind(this));
     this.addListener('game:action:resolvePrompt', this.resolvePrompt.bind(this));
     this.addListener('game:action:reorderBench', this.reorderBench.bind(this));
     this.addListener('game:action:reorderHand', this.reorderHand.bind(this));
@@ -225,6 +226,11 @@ export class SocketClient extends Client {
 
   private playGame(params: {gameId: number, deck: string[]}, response: Response<void>) {
     const action = new AddPlayerAction(this.id, this.user.name, params.deck);
+    this.dispatch(params.gameId, action, response);
+  }
+
+  private playCard(params: {gameId: number, handIndex: number, target: CardTarget}, response: Response<void>) {
+    const action = new PlayCardAction(this.id, params.handIndex, params.target);
     this.dispatch(params.gameId, action, response);
   }
 

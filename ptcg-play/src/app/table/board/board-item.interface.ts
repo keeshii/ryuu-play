@@ -1,29 +1,11 @@
 import { DragSource } from '@angular-skyhook/core';
-import { Player } from 'ptcg-server';
+import { CardTarget, PlayerType, SlotType } from 'ptcg-server';
 
 import { HandItem } from '../hand/hand-item.interface';
 
 export const BoardCardType = 'BOARD_SLOT';
 
-export enum PlayerType {
-  ANY,
-  TOP_PLAYER,
-  BOTTOM_PLAYER
-}
-
-export enum SlotType {
-  BOARD,
-  ACTIVE,
-  BENCH
-}
-
-export interface Target {
-  player: PlayerType;
-  slot: SlotType;
-  index: number;
-}
-
-export interface BoardCardItem extends Target {
+export interface BoardCardItem extends CardTarget {
   player: PlayerType;
   slot: SlotType;
   index: number;
