@@ -17,7 +17,13 @@ export enum SlotType {
   BENCH
 }
 
-export interface BoardCardItem {
+export interface Target {
+  player: PlayerType;
+  slot: SlotType;
+  index: number;
+}
+
+export interface BoardCardItem extends Target {
   player: PlayerType;
   slot: SlotType;
   index: number;

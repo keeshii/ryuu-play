@@ -1,7 +1,7 @@
 import { Action } from "./actions/action";
 import { AppendLogAction } from "./actions/append-log-action";
 import { Prompt } from "./prompts/prompt";
-import { ReorderHandAction } from "./actions/reorder-hand-action";
+import { ReorderBenchAction, ReorderHandAction } from "./actions/reorder-actions";
 import { ResolvePromptAction } from "./actions/resolve-prompt-action";
 import { State } from "./state/state";
 import { GameError, GameMessage } from "../game-error";
@@ -30,7 +30,8 @@ export class Store implements StoreLike {
   public dispatch(action: Action): State {
     let state = this.state;
 
-    if (action instanceof ReorderHandAction) {
+    if (action instanceof ReorderHandAction
+      || action instanceof ReorderBenchAction) {
       state = reorderReducer(this, state, action);
     }
 

@@ -63,6 +63,11 @@ export class GameService {
       .subscribe(() => {});
   }
 
+  public reorderBenchAction(gameId: number, from: number, to: number) {
+    this.socketService.emit('game:action:reorderBench', {gameId, from, to})
+      .subscribe(() => {});
+  }
+
   public reorderHandAction(gameId: number, order: number[]) {
     this.socketService.emit('game:action:reorderHand', {gameId, order})
       .subscribe(() => {});

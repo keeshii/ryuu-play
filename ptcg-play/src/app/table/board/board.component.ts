@@ -6,8 +6,9 @@ import { map } from 'rxjs/operators';
 
 import { GameState, Player, SuperType } from 'ptcg-server';
 import { HandItem, HandCardType } from '../hand/hand-item.interface';
-import { BoardCardItem, BoardCardType, SlotType, PlayerType } from './board-item.interface';
+import { BoardCardItem, BoardCardType, SlotType, PlayerType, Target } from './board-item.interface';
 import { CardsBaseService } from '../../shared/cards/cards-base.service';
+import { GameService } from '../../api/services/game.service';
 
 const BENCH_SIZE = 5;
 
@@ -41,7 +42,8 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
 
   constructor(
     private cardsBaseService: CardsBaseService,
-    private dnd: SkyhookDndService
+    private dnd: SkyhookDndService,
+    private gameService: GameService
   ) {
     // Bottom Player
     this.bottomActive = this.createBoardCardItem(PlayerType.BOTTOM_PLAYER, SlotType.ACTIVE);
@@ -70,12 +72,16 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
     index: number = 0
   ): [DropTargetType, Observable<boolean>]  {
 
+    const target = { player, slot, index };
     let dropTarget: DropTargetType;
     let highlight$: Observable<boolean>;
 
     dropTarget = this.dnd.dropTarget([HandCardType, BoardCardType], {
       canDrop: monitor => {
         const item = monitor.getItem();
+        if (!this.gameState) {
+          return false;
+        }
         const isFromHand = (item as DraggedItem<HandItem>).type === HandCardType;
         if (slot === SlotType.BOARD) {
           return isFromHand;
@@ -95,7 +101,13 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
         if (hasDroppedOnChild) {
           return;
         }
-        // console.log('DROP EVENT', monitor.getItem(), slot, index);
+        const item = monitor.getItem();
+        if ((item as DraggedItem<HandItem>).type === HandCardType) {
+          const handItem = (item as DraggedItem<HandItem>).data;
+          this.handlePlayFromHand(handItem, target);
+          return;
+        }
+        this.handleMoveBoardCard(item as BoardCardItem, target);
       }
     });
 
@@ -107,6 +119,24 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
     highlight$ = dropState.pipe(map(state => state.canDrop && state.isOver));
 
     return [ dropTarget, highlight$ ];
+  }
+
+  private handlePlayFromHand(item: HandItem, target: Target): void {
+    return;
+  }
+
+  private handleMoveBoardCard(item: BoardCardItem, target: Target): void {
+    const gameId = this.gameState.gameId;
+
+    // ReorderBenchAction
+    if (item.player === PlayerType.BOTTOM_PLAYER
+      && item.slot === SlotType.BENCH
+      && target.player === PlayerType.BOTTOM_PLAYER
+      && target.slot === SlotType.BENCH
+      && target.index !== item.index) {
+      this.gameService.reorderBenchAction(gameId, item.index, target.index);
+      return;
+    }
   }
 
   ngOnInit() { }

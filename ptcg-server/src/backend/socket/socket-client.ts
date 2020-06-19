@@ -1,6 +1,6 @@
 import * as io from 'socket.io';
 import { AddPlayerAction, AppendLogAction, Action, PassTurnAction, ChooseCardsPromptType,
-  CardList, ReorderHandAction } from '../../game';
+  CardList, ReorderHandAction, ReorderBenchAction } from '../../game';
 import { Client } from '../../game/core/client';
 import { Errors } from '../common/errors';
 import { Game } from '../../game/core/game';
@@ -45,6 +45,7 @@ export class SocketClient extends Client {
     this.addListener('game:getStatus', this.getGameStatus.bind(this));
     this.addListener('game:action:play', this.playGame.bind(this));
     this.addListener('game:action:resolvePrompt', this.resolvePrompt.bind(this));
+    this.addListener('game:action:reorderBench', this.reorderBench.bind(this));
     this.addListener('game:action:reorderHand', this.reorderHand.bind(this));
     this.addListener('game:action:passTurn', this.passTurn.bind(this));
     this.addListener('game:action:appendLog', this.appendLog.bind(this));
@@ -247,6 +248,11 @@ export class SocketClient extends Client {
     }
 
     const action = new ResolvePromptAction(params.id, params.result);
+    this.dispatch(params.gameId, action, response);
+  }
+
+  private reorderBench(params: {gameId: number, from: number, to: number}, response: Response<void>) {
+    const action = new ReorderBenchAction(this.id, params.from, params.to);
     this.dispatch(params.gameId, action, response);
   }
 

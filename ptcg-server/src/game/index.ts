@@ -7,7 +7,7 @@ export * from './store/actions/action';
 export * from './store/actions/add-player-action';
 export * from './store/actions/append-log-action';
 export * from './store/actions/pass-turn-action';
-export * from './store/actions/reorder-hand-action';
+export * from './store/actions/reorder-actions';
 export * from './store/actions/resolve-prompt-action';
 
 export * from './store/card/card-types';
