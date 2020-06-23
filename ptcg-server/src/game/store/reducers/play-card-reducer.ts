@@ -1,11 +1,13 @@
 import { Action } from "../actions/action";
-import { AttachEnergyEffect } from "../effects/play-card-effects";
+import { AttachEnergyEffect, PlayPokemonEffect } from "../effects/play-card-effects";
 import { CardList } from "../state/card-list";
+import { EnergyCard } from "../card/energy-card";
 import { GameError, GameMessage } from "../../game-error";
 import { PlayCardAction, PlayerType, SlotType, CardTarget } from "../actions/play-card-action";
+import { PokemonCard } from "../card/pokemon-card";
+import { PokemonCardList } from "../state/pokemon-card-list";
 import { State, GamePhase } from "../state/state";
 import { StoreLike } from "../store-like";
-import { SuperType } from "../card/card-types";
 import { effectsReducer } from "./effects-reducer";
 
 function findCardList(state: State, target: CardTarget): CardList | undefined {
@@ -34,13 +36,23 @@ export function playCardReducer(store: StoreLike, state: State, action: Action):
         throw new GameError(GameMessage.UNKNOWN_CARD);
       }
 
-      if (handCard.superType === SuperType.ENERGY) {
+      if (handCard instanceof EnergyCard) {
         const target = findCardList(state, action.target);
-        if (target === undefined || target.cards.length === 0) {
+        if (!(target instanceof PokemonCardList) || target.cards.length === 0) {
           throw new GameError(GameMessage.INVALID_TARGET);
         }
 
-        const effect = new AttachEnergyEffect(player, player.hand, handCard, target);
+        const effect = new AttachEnergyEffect(player, handCard, target);
+        return effectsReducer(store, state, effect);
+      }
+
+      if (handCard instanceof PokemonCard) {
+        const target = findCardList(state, action.target);
+        if (!(target instanceof PokemonCardList)) {
+          throw new GameError(GameMessage.INVALID_TARGET);
+        }
+
+        const effect = new PlayPokemonEffect(player, handCard, target);
         return effectsReducer(store, state, effect);
       }
     }

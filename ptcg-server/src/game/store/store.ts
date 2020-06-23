@@ -12,7 +12,7 @@ import { playCardReducer } from "./reducers/play-card-reducer";
 import { playerTurnReducer } from "./reducers/player-turn-reducer";
 import { reorderReducer} from "./reducers/reorder-reducer";
 import { setupPhaseReducer } from './reducers/setup-reducer';
-import { generateId } from "../../utils/utils";
+import { generateId, deepClone } from "../../utils/utils";
 import { StateLog } from "./state/state-log";
 
 interface PromptItem {
@@ -34,6 +34,8 @@ export class Store implements StoreLike {
     if (action instanceof ReorderHandAction
       || action instanceof ReorderBenchAction) {
       state = reorderReducer(this, state, action);
+      this.handler.onStateChange(state);
+      return state;
     }
 
     if (action instanceof ResolvePromptAction) {
@@ -52,15 +54,8 @@ export class Store implements StoreLike {
       throw new GameError(GameMessage.ACTION_IN_PROGRESS);
     }
 
-    try {
-      state = this.reduce(state, action);
-    } catch (storeError) {
-      // Illegal action
-      throw storeError;
-    }
+    state = this.reduce(state, action);
 
-    this.state = state;
-    this.handler.onStateChange(state);
     return state;
   }
 
@@ -124,9 +119,21 @@ export class Store implements StoreLike {
   }
 
   private reduce(state: State, action: Action): State {
-    state = setupPhaseReducer(this, state, action);
-    state = playCardReducer(this, state, action);
-    state = playerTurnReducer(this, state, action);
+    let stateBackup = deepClone(state);
+    this.promptItems.length = 0;
+
+    try {
+      state = setupPhaseReducer(this, state, action);
+      state = playCardReducer(this, state, action);
+      state = playerTurnReducer(this, state, action);
+    } catch (storeError) {
+      // Illegal action
+      this.state = stateBackup;
+      this.promptItems.length = 0;
+      throw storeError;
+    }
+
+    this.handler.onStateChange(state);
     return state;
   }
 

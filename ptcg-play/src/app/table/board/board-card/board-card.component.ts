@@ -34,8 +34,8 @@ export class BoardCardComponent implements OnInit {
     this.isFaceDown = value.isSecret || (!value.isPublic && !this.isOwner);
 
     // Pokemon slot, init energies, tool, special conditions, etc.
-    if (value instanceof PokemonCardList) {
-      this.initPokemonCardList(value);
+    if (this.isPokemonCardList(value)) {
+      this.initPokemonCardList(value as PokemonCardList);
       return;
     }
 
@@ -77,6 +77,10 @@ export class BoardCardComponent implements OnInit {
   private isOwner = false;
 
   constructor() { }
+
+  private isPokemonCardList(cardList: CardList) {
+    return (cardList as PokemonCardList).specialConditions !== undefined;
+  }
 
   private initPokemonCardList(cardList: PokemonCardList) {
     this.damage = cardList.damage;

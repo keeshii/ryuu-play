@@ -3,7 +3,7 @@ import { AlertPrompt, ConfirmPrompt, Player, Prompt, State, GamePhase } from '..
 import { ChooseCardsPrompt } from '../game/store/prompts/choose-cards-prompt';
 import { Client } from '../game/core/client';
 import { Game } from '../game/core/game';
-import { PassTurnAction } from '../game/store/actions/pass-turn-action';
+import { PassTurnAction } from '../game/store/actions/game-actions';
 import { ResolvePromptAction } from '../game/store/actions/resolve-prompt-action';
 import { GameMessage } from '../game/game-error';
 

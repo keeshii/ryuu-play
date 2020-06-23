@@ -1,7 +1,8 @@
-import { Card } from "../card/card";
-import { CardList } from "../state/card-list";
-import { Effect, EffectTarget } from "./effect";
+import { Effect } from "./effect";
+import { EnergyCard } from "../card/energy-card";
 import { Player } from "../state/player";
+import { PokemonCard } from "../card/pokemon-card";
+import { PokemonCardList } from "../state/pokemon-card-list";
 
 export enum PlayCardEffects {
   ATTACH_ENERGY_EFFECT = 'ATTACH_ENERGY_EFFECT',
@@ -10,22 +11,28 @@ export enum PlayCardEffects {
 
 export class AttachEnergyEffect implements Effect {
   readonly type: string = PlayCardEffects.ATTACH_ENERGY_EFFECT;
-  public source: EffectTarget;
-  public target: EffectTarget;
+  public preventDefault = false;
+  public player: Player;
+  public energyCard: EnergyCard;
+  public target: PokemonCardList;
 
-  constructor(player: Player, fromCardList: CardList, energyCard: Card, target: CardList) {
-    this.source = { player, cardList: fromCardList, card: energyCard };
-    this.target = { player, cardList: target};
+  constructor(player: Player, energyCard: EnergyCard, target: PokemonCardList) {
+    this.player = player;
+    this.energyCard = energyCard;
+    this.target = target;
   }
 }
 
-export class PlayBasicPokemon implements Effect {
+export class PlayPokemonEffect implements Effect {
   readonly type: string = PlayCardEffects.PLAY_BASIC_POKEMON_EFFECT;
-  public source: EffectTarget;
-  public target: EffectTarget;
+  public preventDefault = false;
+  public player: Player;
+  public pokemonCard: PokemonCard;
+  public target: PokemonCardList;
 
-  constructor(player: Player, fromCardList: CardList, pokemonCard: Card, benchIndex: number) {
-    this.source = { player, cardList: fromCardList, card: pokemonCard };
-    this.target = { player, cardList: player.bench[benchIndex] };
+  constructor(player: Player, pokemonCard: PokemonCard, target: PokemonCardList) {
+    this.player = player;
+    this.pokemonCard = pokemonCard;
+    this.target = target;
   }
 }

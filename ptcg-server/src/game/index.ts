@@ -6,7 +6,7 @@ export * from './game-error';
 export * from './store/actions/action';
 export * from './store/actions/add-player-action';
 export * from './store/actions/append-log-action';
-export * from './store/actions/pass-turn-action';
+export * from './store/actions/game-actions';
 export * from './store/actions/play-card-action';
 export * from './store/actions/reorder-actions';
 export * from './store/actions/resolve-prompt-action';

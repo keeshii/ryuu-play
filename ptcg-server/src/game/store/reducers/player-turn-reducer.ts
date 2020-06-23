@@ -1,5 +1,5 @@
 import { Action } from "../actions/action";
-import { PassTurnAction } from "../actions/pass-turn-action";
+import { PassTurnAction } from "../actions/game-actions";
 import { Player } from "../state/player";
 import { State, GamePhase } from "../state/state";
 import { StoreLike } from "../store-like";
