@@ -4,6 +4,7 @@ import { Effect } from "../effects/effect";
 import { Stage } from "../card/card-types";
 import { State } from "../state/state";
 import { StoreLike } from "../store-like";
+import { UseAttackEffect, CheckAttackCostEffect, CheckEnoughEnergyEffect, DealDamageEffect } from "../effects/game-effects";
 
 function reduceCardEffects(store: StoreLike, state: State, effect: Effect): State {
   for (let player of state.players) {
@@ -58,6 +59,49 @@ export function effectsReducer(store: StoreLike, state: State, effect: Effect): 
     }
 
     throw new GameError(GameMessage.INVALID_TARGET);
+  }
+
+  if (effect instanceof CheckEnoughEnergyEffect) {
+    // const player = effect.player;
+    // const source = effect.source;
+    effect.enoughEnergy = true;
+    return state;
+  }
+
+  if (effect instanceof DealDamageEffect) {
+    const target = effect.target;
+    const pokemonCard = target.getPokemonCard();
+    if (pokemonCard === undefined) {
+      throw new GameError(GameMessage.ILLEGAL_ACTION);
+    }
+    target.damage += effect.damage;
+    return state;
+  }
+
+  if (effect instanceof UseAttackEffect) {
+    const player = effect.player;
+    if (state.players.length !== 2 || !state.players.includes(player)) {
+      throw new GameError(GameMessage.ILLEGAL_ACTION);
+    }
+
+    const opponent = state.players[0] === player ? state.players[1] : state.players[0];
+    const attack = effect.attack;
+    const checkAttackCost = new CheckAttackCostEffect(player, attack);
+    state = effectsReducer(store, state, checkAttackCost);
+
+    const checkEnoughEnergy = new CheckEnoughEnergyEffect(player, checkAttackCost.cost);
+    state = effectsReducer(store, state, checkEnoughEnergy);
+
+    if (checkEnoughEnergy.enoughEnergy === false) {
+      throw new GameError(GameMessage.NOT_ENOUGH_ENERGY);
+    }
+
+    if (attack.damage > 0) {
+      const dealDamage = new DealDamageEffect(player, attack.damage, opponent.active, player.active);
+      state = effectsReducer(store, state, dealDamage);
+    }
+
+    return state;
   }
 
   return state;
