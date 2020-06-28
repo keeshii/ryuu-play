@@ -1,9 +1,11 @@
 import { Action } from "../actions/action";
-import { PassTurnAction } from "../actions/game-actions";
+import { PassTurnAction, RetreatAction } from "../actions/game-actions";
 import { Player } from "../state/player";
 import { State, GamePhase } from "../state/state";
 import { StoreLike } from "../store-like";
 import { GameError, GameMessage } from "../../game-error";
+import { RetreatEffect } from "../effects/game-effects";
+import { effectsReducer } from "./effects-reducer";
 
 function getActivePlayer(state: State): Player {
   return state.players[state.activePlayer];
@@ -64,6 +66,18 @@ export function playerTurnReducer(store: StoreLike, state: State, action: Action
       store.log(state, `${player.name} ended the turn.`);
       state = betweenTurns(store, state);
       state = nextTurn(store, state);
+      return state;
+    }
+
+    if (action instanceof RetreatAction) {
+      const player = state.players[state.activePlayer];
+
+      if (player === undefined || player.id !== action.clientId) {
+        throw new GameError(GameMessage.NOT_YOUR_TURN);
+      }
+
+      const retreatEffect = new RetreatEffect(player, action.benchIndex);
+      state = effectsReducer(store, state, retreatEffect);
       return state;
     }
 

@@ -3,7 +3,7 @@ import { EnergyCard } from "../../game/store/card/energy-card";
 
 export class FireEnergy extends EnergyCard {
 
-  public provides: CardType = CardType.FIRE;
+  public provides: CardType[] = [ CardType.FIRE ];
 
   public name = 'Fire Energy';
 

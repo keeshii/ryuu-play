@@ -1,10 +1,20 @@
 import { AttachEnergyEffect, PlayPokemonEffect } from "../effects/play-card-effects";
 import { GameError, GameMessage } from "../../game-error";
 import { Effect } from "../effects/effect";
-import { Stage } from "../card/card-types";
+import { Stage, CardType } from "../card/card-types";
 import { State } from "../state/state";
 import { StoreLike } from "../store-like";
-import { UseAttackEffect, CheckAttackCostEffect, CheckEnoughEnergyEffect, DealDamageEffect } from "../effects/game-effects";
+import {
+  CheckAttackCostEffect,
+  CheckEnoughEnergyEffect,
+  CheckRetreatCostEffect,
+  DealDamageEffect,
+  RetreatEffect,
+  UseAttackEffect
+} from "../effects/game-effects";
+import {ChooseEnergyPrompt} from "../prompts/choose-energy-prompt";
+import {EnergyCard} from "../card/energy-card";
+import {Card} from "../card/card";
 
 function reduceCardEffects(store: StoreLike, state: State, effect: Effect): State {
   for (let player of state.players) {
@@ -27,6 +37,7 @@ export function effectsReducer(store: StoreLike, state: State, effect: Effect): 
     return state;
   }
 
+  /* Play energy card */
   if (effect instanceof AttachEnergyEffect) {
     if (effect.player.energyPlayedTurn === state.turn) {
       throw new GameError(GameMessage.ENERGY_ALREADY_ATTACHED);
@@ -37,6 +48,7 @@ export function effectsReducer(store: StoreLike, state: State, effect: Effect): 
     return state;
   }
 
+  /* Play pokemon card */
   if (effect instanceof PlayPokemonEffect) {
     const stage = effect.pokemonCard.stage;
     const isBasic = stage === Stage.BASIC;
@@ -61,10 +73,48 @@ export function effectsReducer(store: StoreLike, state: State, effect: Effect): 
     throw new GameError(GameMessage.INVALID_TARGET);
   }
 
+  /* Retreat pokemon */
+  if (effect instanceof RetreatEffect) {
+    const player = effect.player;
+
+    if (player.bench[effect.benchIndex].cards.length === 0) {
+      throw new GameError(GameMessage.INVALID_TARGET);
+    }
+
+    const checkRetreatCost = new CheckRetreatCostEffect(effect.player);
+    state = effectsReducer(store, state, checkRetreatCost);
+
+    if (checkRetreatCost.cost.length === 0) {
+      return state;
+    }
+
+    const enoughEnergies = checkEnoughEnergy(player.active.cards, checkRetreatCost.cost);
+    if (enoughEnergies === false) {
+      throw new GameError(GameMessage.NOT_ENOUGH_ENERGY);
+    }
+
+    const prompt = new ChooseEnergyPrompt(
+      player.id,
+      GameMessage.RETREAT_MESSAGE,
+      player.active,
+      checkRetreatCost.cost
+    );
+
+    return store.prompt(state, prompt, cards => {
+      const isEnough = checkEnoughEnergy(player.active.cards, checkRetreatCost.cost);
+      if (!isEnough) {
+        return; // operation cancelled, not enough energies
+      }
+      player.active.moveCardsTo(cards, player.discard);
+      const temp = player.active;
+      player.active = player.bench[effect.benchIndex];
+      player.bench[effect.benchIndex] = temp;
+    });
+  }
+
+  /* Attack effects */
   if (effect instanceof CheckEnoughEnergyEffect) {
-    // const player = effect.player;
-    // const source = effect.source;
-    effect.enoughEnergy = true;
+    effect.enoughEnergy = checkEnoughEnergy(effect.source.cards, effect.cost);
     return state;
   }
 
@@ -80,7 +130,7 @@ export function effectsReducer(store: StoreLike, state: State, effect: Effect): 
 
   if (effect instanceof UseAttackEffect) {
     const player = effect.player;
-    if (state.players.length !== 2 || !state.players.includes(player)) {
+    if (state.players.length !== 2 || state.players.indexOf(player) === -1) {
       throw new GameError(GameMessage.ILLEGAL_ACTION);
     }
 
@@ -105,4 +155,52 @@ export function effectsReducer(store: StoreLike, state: State, effect: Effect): 
   }
 
   return state;
+}
+
+function checkEnoughEnergy(cards: Card[], cost: CardType[]): boolean {
+  if (cost.length === 0) {
+    return true;
+  }
+
+  const provided: CardType[] = [];
+  cards.forEach(card => {
+    if (card instanceof EnergyCard) {
+      card.provides.forEach(energy => provided.push(energy));
+    }
+  });
+
+  let colorless = 0;
+  let rainbow = 0;
+
+  // First remove from array cards with specific energy types
+  cost.forEach(costType => {
+    switch (costType) {
+      case CardType.ANY:
+      case CardType.NONE:
+        break;
+      case CardType.COLORLESS:
+        colorless += 1;
+        break;
+      default:
+        const index = provided.findIndex(energy => energy === costType);
+        if (index !== -1) {
+          provided.splice(index, 1);
+        } else {
+          rainbow += 1;
+        }
+    }
+  });
+
+  // Check if we have enough rainbow energies
+  for (let i = 0; i < rainbow; i++) {
+    const index = provided.findIndex(energy => energy === CardType.ANY);
+    if (index !== -1) {
+      provided.splice(index, 1);
+    } else {
+      return false;
+    }
+  }
+
+  // Rest cards can be used to pay for colorless energies
+  return provided.length >= colorless;
 }

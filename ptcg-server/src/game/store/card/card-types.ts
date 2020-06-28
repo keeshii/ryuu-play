@@ -32,6 +32,7 @@ export enum Stage {
 }
 
 export enum CardType {
+  ANY,
   NONE,
   COLORLESS,
   GRASS,

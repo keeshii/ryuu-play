@@ -3,7 +3,7 @@ import { EnergyCard } from "../../game/store/card/energy-card";
 
 export class WaterEnergy extends EnergyCard {
 
-  public provides: CardType = CardType.WATER;
+  public provides: CardType[] = [ CardType.WATER ];
 
   public name = 'Water Energy';
 

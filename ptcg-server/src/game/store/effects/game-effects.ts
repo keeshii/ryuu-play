@@ -5,11 +5,24 @@ import { Player } from "../state/player";
 import { PokemonCardList } from "../state/pokemon-card-list";
 
 export enum GameEffects {
+  RETREAT_EFFECT = 'RETREAT_EFFECT',
   USE_ATTACK_EFFECT = 'USE_ATTACK_EFFECT',
   DEAL_DAMAGE_EFFECT = 'DEAL_DAMAGE_EFFECT',
   CHECK_ENOUGH_ENERGY_EFFECT = 'CHECK_ENOUGH_ENERGY_EFFECT',
   CHECK_ATTACK_COST_EFFECT = 'CHECK_ATTACK_COST_EFFECT',
   CHECK_RETREAT_COST_EFFECT = 'CHECK_RETREAT_COST_EFFECT'
+}
+
+export class RetreatEffect implements Effect {
+  readonly type: string = GameEffects.RETREAT_EFFECT;
+  public preventDefault = false;
+  public player: Player;
+  public benchIndex: number;
+
+  constructor(player: Player, benchIndex: number) {
+    this.player = player;
+    this.benchIndex = benchIndex;
+  }
 }
 
 export class UseAttackEffect implements Effect {
@@ -73,7 +86,6 @@ export class CheckEnoughEnergyEffect implements Effect {
   public player: Player;
   public source: PokemonCardList;
   public cost: CardType[];
-  public provided: CardType[] = [];
   public enoughEnergy = false;
 
   constructor(player: Player, cost: CardType[], source?: PokemonCardList) {
