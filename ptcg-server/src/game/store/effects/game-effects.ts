@@ -10,7 +10,8 @@ export enum GameEffects {
   DEAL_DAMAGE_EFFECT = 'DEAL_DAMAGE_EFFECT',
   CHECK_ENOUGH_ENERGY_EFFECT = 'CHECK_ENOUGH_ENERGY_EFFECT',
   CHECK_ATTACK_COST_EFFECT = 'CHECK_ATTACK_COST_EFFECT',
-  CHECK_RETREAT_COST_EFFECT = 'CHECK_RETREAT_COST_EFFECT'
+  CHECK_RETREAT_COST_EFFECT = 'CHECK_RETREAT_COST_EFFECT',
+  ATTACK_EFFECT = 'ATTACK_EFFECT'
 }
 
 export class RetreatEffect implements Effect {
@@ -92,5 +93,17 @@ export class CheckEnoughEnergyEffect implements Effect {
     this.player = player;
     this.source = source === undefined ? player.active : source;
     this.cost = cost;
+  }
+}
+
+export class AttackEffect implements Effect {
+  readonly type: string = GameEffects.ATTACK_EFFECT;
+  public preventDefault = false;
+  public player: Player;
+  public attack: Attack;
+
+  constructor(player: Player, attack: Attack) {
+    this.player = player;
+    this.attack = attack;
   }
 }

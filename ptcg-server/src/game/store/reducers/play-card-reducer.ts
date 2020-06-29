@@ -8,7 +8,6 @@ import { PokemonCard } from "../card/pokemon-card";
 import { PokemonCardList } from "../state/pokemon-card-list";
 import { State, GamePhase } from "../state/state";
 import { StoreLike } from "../store-like";
-import { effectsReducer } from "./effects-reducer";
 
 function findCardList(state: State, target: CardTarget): CardList | undefined {
   const player = target.player === PlayerType.BOTTOM_PLAYER
@@ -43,7 +42,7 @@ export function playCardReducer(store: StoreLike, state: State, action: Action):
         }
 
         const effect = new AttachEnergyEffect(player, handCard, target);
-        return effectsReducer(store, state, effect);
+        return store.reduceEffect(state, effect);
       }
 
       if (handCard instanceof PokemonCard) {
@@ -53,7 +52,7 @@ export function playCardReducer(store: StoreLike, state: State, action: Action):
         }
 
         const effect = new PlayPokemonEffect(player, handCard, target);
-        return effectsReducer(store, state, effect);
+        return store.reduceEffect(state, effect);
       }
     }
 

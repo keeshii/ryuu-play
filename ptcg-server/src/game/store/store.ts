@@ -1,19 +1,23 @@
 import { Action } from "./actions/action";
 import { AppendLogAction } from "./actions/append-log-action";
+import { Effect } from "./effects/effect";
+import { GameError, GameMessage } from "../game-error";
 import { Prompt } from "./prompts/prompt";
 import { ReorderHandAction, ReorderBenchAction } from "./actions/reorder-actions";
 import { ResolvePromptAction } from "./actions/resolve-prompt-action";
 import { State } from "./state/state";
-import { GameError, GameMessage } from "../game-error";
+import { StateLog } from "./state/state-log";
 import { StoreHandler } from "./store-handler";
 import { StoreLike } from "./store-like";
-
+import { generateId, deepClone } from "../../utils/utils";
+import { attackReducer } from "./effect-reducers/attack-effect";
 import { playCardReducer } from "./reducers/play-card-reducer";
+import { playEnergyReducer } from "./effect-reducers/play-energy-effect";
+import { playPokemonReducer } from "./effect-reducers/play-pokemon-effect";
 import { playerTurnReducer } from "./reducers/player-turn-reducer";
+import { retreatReducer } from "./effect-reducers/retreat-effect";
 import { reorderReducer} from "./reducers/reorder-reducer";
 import { setupPhaseReducer } from './reducers/setup-reducer';
-import { generateId, deepClone } from "../../utils/utils";
-import { StateLog } from "./state/state-log";
 
 interface PromptItem {
   ids: number[],
@@ -55,6 +59,21 @@ export class Store implements StoreLike {
     }
 
     state = this.reduce(state, action);
+
+    return state;
+  }
+
+  public reduceEffect(state: State, effect: Effect): State {
+    state = this.propagateEffect(state, effect);
+
+    if (effect.preventDefault === true) {
+      return state;
+    }
+
+    state = playEnergyReducer(this, state, effect);
+    state = playPokemonReducer(this, state, effect);
+    state = retreatReducer(this, state, effect);
+    state = attackReducer(this, state, effect);
 
     return state;
   }
@@ -137,4 +156,15 @@ export class Store implements StoreLike {
     return state;
   }
 
+  private propagateEffect(state: State, effect: Effect): State {
+    for (let player of state.players) {
+      player.stadium.cards.forEach(c => { state = c.reduceEffect(this, state, effect); });
+      player.active.cards.forEach(c => { state = c.reduceEffect(this, state, effect); });
+      for (let bench of player.bench) {
+        bench.cards.forEach(c => { state = c.reduceEffect(this, state, effect); });
+      }
+      player.hand.cards.forEach(c => { state = c.reduceEffect(this, state, effect); });
+    }
+    return state;
+  }
 }

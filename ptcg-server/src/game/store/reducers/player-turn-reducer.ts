@@ -5,7 +5,6 @@ import { State, GamePhase } from "../state/state";
 import { StoreLike } from "../store-like";
 import { GameError, GameMessage } from "../../game-error";
 import { RetreatEffect } from "../effects/game-effects";
-import { effectsReducer } from "./effects-reducer";
 
 function getActivePlayer(state: State): Player {
   return state.players[state.activePlayer];
@@ -77,7 +76,7 @@ export function playerTurnReducer(store: StoreLike, state: State, action: Action
       }
 
       const retreatEffect = new RetreatEffect(player, action.benchIndex);
-      state = effectsReducer(store, state, retreatEffect);
+      state = store.reduceEffect(state, retreatEffect);
       return state;
     }
 

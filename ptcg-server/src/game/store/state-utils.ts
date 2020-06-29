@@ -51,4 +51,20 @@ export class StateUtils {
     return provided.length >= colorless;
   }
 
+  public static checkExactEnergy(cards: Card[], cost: CardType[]): boolean {
+    let enough = StateUtils.checkEnoughEnergy(cards, cost);
+    if (!enough) {
+      return false;
+    }
+    for (let i = 0; i < cards.length; i++) {
+      const tempCards = cards.slice();
+      tempCards.splice(i, 1);
+      enough = StateUtils.checkEnoughEnergy(tempCards, cost);
+      if (enough) {
+        return false;
+      }
+    }
+    return true;
+  }
+
 }

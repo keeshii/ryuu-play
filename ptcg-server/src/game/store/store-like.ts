@@ -1,9 +1,12 @@
 import { Action } from "./actions/action";
+import { Effect } from "./effects/effect";
 import { Prompt } from "./prompts/prompt";
 import { State } from "./state/state";
 
 export interface StoreLike {
   dispatch(action: Action): void;
+
+  reduceEffect(state: State, effect: Effect): State;
 
   log(state: State, message: string, client?: number): void;
 

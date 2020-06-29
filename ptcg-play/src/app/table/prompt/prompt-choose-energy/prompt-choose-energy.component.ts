@@ -52,7 +52,7 @@ export class PromptChooseEnergyComponent implements OnInit {
       cards.push(this.cards.cards[index]);
     }
 
-    const enough = StateUtils.checkEnoughEnergy(cards, this.cost);
+    const enough = StateUtils.checkExactEnergy(cards, this.cost);
     this.result = result;
     this.isInvalid = !enough;
   }
