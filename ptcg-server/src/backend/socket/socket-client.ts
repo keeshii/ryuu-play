@@ -1,6 +1,6 @@
 import * as io from 'socket.io';
 import { AddPlayerAction, AppendLogAction, Action, PassTurnAction, ChooseCardsPromptType,
-  CardList, ReorderHandAction, ReorderBenchAction, PlayCardAction, CardTarget } from '../../game';
+  CardList, ReorderHandAction, ReorderBenchAction, PlayCardAction, CardTarget, RetreatAction, ChooseEnergyPromptType } from '../../game';
 import { Client } from '../../game/core/client';
 import { Errors } from '../common/errors';
 import { Game } from '../../game/core/game';
@@ -46,6 +46,7 @@ export class SocketClient extends Client {
     this.addListener('game:action:play', this.playGame.bind(this));
     this.addListener('game:action:playCard', this.playCard.bind(this));
     this.addListener('game:action:resolvePrompt', this.resolvePrompt.bind(this));
+    this.addListener('game:action:retreat', this.retreat.bind(this));
     this.addListener('game:action:reorderBench', this.reorderBench.bind(this));
     this.addListener('game:action:reorderHand', this.reorderHand.bind(this));
     this.addListener('game:action:passTurn', this.passTurn.bind(this));
@@ -247,10 +248,12 @@ export class SocketClient extends Client {
     }
 
     // If 'Choose card prompt', we have to decode indexes to card instances
-    if (prompt.type === ChooseCardsPromptType) {
+    if (prompt.type === ChooseCardsPromptType || prompt.type === ChooseEnergyPromptType) {
       const cards: CardList = (prompt as any).cards;
-      const result: number[] = params.result;
-      params.result = result.map(index => cards.cards[index]);
+      if (params.result !== null) {
+        const result: number[] = params.result;
+        params.result = result.map(index => cards.cards[index]);
+      }
     }
 
     const action = new ResolvePromptAction(params.id, params.result);
@@ -264,6 +267,11 @@ export class SocketClient extends Client {
 
   private reorderHand(params: {gameId: number, order: number[]}, response: Response<void>) {
     const action = new ReorderHandAction(this.id, params.order);
+    this.dispatch(params.gameId, action, response);
+  }
+
+  private retreat(params: {gameId: number, to: number}, response: Response<void>) {
+    const action = new RetreatAction(this.id, params.to);
     this.dispatch(params.gameId, action, response);
   }
 

@@ -137,6 +137,24 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
       this.gameService.reorderBenchAction(gameId, item.index, target.index);
       return;
     }
+
+    // RetreatAction (Active -> Bench)
+    if (item.player === PlayerType.BOTTOM_PLAYER
+      && item.slot === SlotType.ACTIVE
+      && target.player === PlayerType.BOTTOM_PLAYER
+      && target.slot === SlotType.BENCH) {
+      this.gameService.retreatAction(gameId, target.index);
+      return;
+    }
+
+    // RetreatAction (Bench -> Active)
+    if (item.player === PlayerType.BOTTOM_PLAYER
+      && item.slot === SlotType.BENCH
+      && target.player === PlayerType.BOTTOM_PLAYER
+      && target.slot === SlotType.ACTIVE) {
+      this.gameService.retreatAction(gameId, item.index);
+      return;
+    }
   }
 
   ngOnInit() { }

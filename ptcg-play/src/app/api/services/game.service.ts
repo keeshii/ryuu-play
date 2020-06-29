@@ -78,6 +78,11 @@ export class GameService {
       .subscribe(() => {});
   }
 
+  public retreatAction(gameId: number, to: number) {
+    this.socketService.emit('game:action:retreat', {gameId, to})
+      .subscribe(() => {});
+  }
+
   public passTurnAction(gameId: number) {
     this.socketService.emit('game:action:passTurn', {gameId})
       .subscribe(() => {});

@@ -1,23 +1,22 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ChooseCardsPrompt, GameState, CardList, Card } from 'ptcg-server';
+import { ChooseEnergyPrompt, GameState, CardList, Card, SuperType, CardType, StateUtils } from 'ptcg-server';
 
 import { GameService } from '../../../api/services/game.service';
 
 @Component({
-  selector: 'ptcg-prompt-choose-cards',
-  templateUrl: './prompt-choose-cards.component.html',
-  styleUrls: ['./prompt-choose-cards.component.scss']
+  selector: 'ptcg-prompt-choose-energy',
+  templateUrl: './prompt-choose-energy.component.html',
+  styleUrls: ['./prompt-choose-energy.component.scss']
 })
-export class PromptChooseCardsComponent implements OnInit {
+export class PromptChooseEnergyComponent implements OnInit {
 
-  @Input() set prompt(prompt: ChooseCardsPrompt) {
+  @Input() set prompt(prompt: ChooseEnergyPrompt) {
     this.cards = prompt.cards;
-    this.filter = prompt.filter;
+    this.filter = { superType: SuperType.ENERGY };
     this.allowedCancel = prompt.options.allowCancel;
     this.message = prompt.message;
     this.promptId = prompt.id;
-    this.min = prompt.options.min;
-    this.max = prompt.options.max;
+    this.cost = prompt.cost;
   }
 
   @Input() gameState: GameState;
@@ -28,8 +27,7 @@ export class PromptChooseCardsComponent implements OnInit {
   public message: string;
   public filter: Partial<Card>;
   public isInvalid = false;
-  private min: number;
-  private max: number;
+  private cost: CardType[];
   private result: number[] = [];
 
   constructor(
@@ -49,15 +47,14 @@ export class PromptChooseCardsComponent implements OnInit {
   }
 
   protected onChange(result: number[]) {
-    let isInvalid = false;
-    if (this.min !== undefined && this.min > result.length) {
-      isInvalid = true;
+    const cards: Card[] = [];
+    for (const index of result) {
+      cards.push(this.cards.cards[index]);
     }
-    if (this.max !== undefined && this.max < result.length) {
-      isInvalid = true;
-    }
+
+    const enough = StateUtils.checkEnoughEnergy(cards, this.cost);
     this.result = result;
-    this.isInvalid = isInvalid;
+    this.isInvalid = !enough;
   }
 
   ngOnInit() {

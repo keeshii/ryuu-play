@@ -20,6 +20,7 @@ export * from './store/card/trainer-card';
 
 export * from './store/prompts/alert-prompt';
 export * from './store/prompts/choose-cards-prompt';
+export * from './store/prompts/choose-energy-prompt';
 export * from './store/prompts/coin-flip-prompt';
 export * from './store/prompts/confirm-prompt';
 export * from './store/prompts/prompt';
@@ -31,6 +32,7 @@ export * from './store/state/pokemon-card-list';
 export * from './store/state/state-log';
 export * from './store/state/state';
 
+export * from './store/state-utils';
 export * from './store/store-handler';
 export * from './store/store-like';
 export * from './store/store';

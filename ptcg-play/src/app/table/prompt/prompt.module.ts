@@ -7,6 +7,8 @@ import { PromptAlertComponent } from './prompt-alert/prompt-alert.component';
 import { SharedModule } from '../../shared/shared.module';
 import { PromptChooseCardsComponent } from './prompt-choose-cards/prompt-choose-cards.component';
 import { CardsContainerComponent } from './cards-container/cards-container.component';
+import { ChooseCardsPanesComponent } from './choose-cards-panes/choose-cards-panes.component';
+import { PromptChooseEnergyComponent } from './prompt-choose-energy/prompt-choose-energy.component';
 
 
 @NgModule({
@@ -15,7 +17,9 @@ import { CardsContainerComponent } from './cards-container/cards-container.compo
     PromptConfirmComponent,
     PromptAlertComponent,
     PromptChooseCardsComponent,
-    CardsContainerComponent
+    CardsContainerComponent,
+    ChooseCardsPanesComponent,
+    PromptChooseEnergyComponent
   ],
   imports: [
     CommonModule,
