@@ -1,0 +1,98 @@
+<h2 mat-dialog-title>{{ card.fullName }}</h2>
+
+<mat-dialog-content>
+  <div class="ptcg-card-info-layout">
+    <div class="ptcg-card-info-image">
+      <ptcg-card [card]="card"></ptcg-card>
+    </div>
+    <div class="ptcg-card-info-text">
+      <div class="title">
+        {{card.name}}
+      </div>
+      <div class="subtitle">
+        <div class="subtitle-stage">
+          Basic
+        </div>
+        <div class="ptcg-u-spacer"></div>
+        <div class="subtitle-hp">
+          <span class="subtitle-hp-unit">HP</span>
+          <span class="subtitle-hp-value">{{card.hp}}</span>
+        </div>
+        <div class="subtitle-card-type">
+          <ptcg-energy [type]="6"></ptcg-energy>
+        </div>
+      </div>
+
+      <div class="ability">
+        <div class="ability-header">
+          <div class="ability-type">Ability</div>
+          <div class="ability-name">
+            Ability name
+          </div>
+        </div>
+        <p>Ability text</p>
+      </div>
+
+      <div class="attack">
+        <div class="attack-header">
+          <div class="attack-cost">
+            <ptcg-energy type="6"></ptcg-energy>
+          </div>
+          <div class="attack-name">
+            Attack name
+          </div>
+          <div class="attack-damage">
+            10
+          </div>
+        </div>
+        <p>Attack text</p>
+      </div>
+
+      <div class="stats">
+        <div class="stats-item">
+          <div class="stats-item-header">Weakness</div>
+          <div class="stats-item-value">
+            <div class="stats-item-value-type">
+              <ptcg-energy type="6"></ptcg-energy>
+            </div>
+            <div class="stats-item-value-modifier">
+              x2
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-item">
+          <div class="stats-item-header">Resistance</div>
+          <div class="stats-item-value">
+            <div class="stats-item-value-type">
+              <ptcg-energy type="6"></ptcg-energy>
+            </div>
+            <div class="stats-item-value-modifier">
+              x2
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-item">
+          <div class="stats-item-header">Retreat Cost</div>
+          <div class="stats-item-value">
+            <div class="stats-item-value-type">
+              <ptcg-energy type="6"></ptcg-energy>
+            </div>
+            <div class="stats-item-value-modifier">
+              x2
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button (click)="cancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="confirm()">
+    OK
+  </button>
+</mat-dialog-actions>

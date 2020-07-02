@@ -10,6 +10,9 @@
   $ptcg-card-placeholder-border-color: mat-color($foreground, divider);
   $cards-drop-highlight-shadow: 0 0 map-get($padding, normal) mat-color($primary, text);
 
+  $ptcg-card-info-title-background: mat-color($background, app-bar);
+  $ptcg-card-info-subtitle-background: mat-color($background, focused-button);
+
   .ptcg-drop-highlight-visible {
     box-shadow: inset $cards-drop-highlight-shadow;
   }
@@ -25,4 +28,57 @@
     }
   }
 
+  ptcg-card-info-popup {
+    .title {
+      background-color: $ptcg-card-info-title-background;
+    }
+    .subtitle, .stats {
+      background-color: $ptcg-card-info-subtitle-background;
+    }
+  }
+
+}
+
+@mixin ptcg-cards-typography($config) {
+  ptcg-card-info-popup {
+    .title {
+      @include mat-typography-level-to-styles($config, title);
+    }
+
+    .subtitle-stage, .stats-item-header {
+      @include mat-typography-level-to-styles($config, body-2);
+      font-weight: 700;
+    }
+
+    .subtitle-hp-unit, .stats-item-value-modifier {
+      @include mat-typography-level-to-styles($config, caption);
+    }
+
+    .subtitle-hp-value {
+      @include mat-typography-level-to-styles($config, title);
+    }
+
+  }
+
+/*
+  ptcg-board-card {
+    .ptcg-board-card-label {
+      @include mat-typography-level-to-styles($config, caption);
+    }
+  }
+
+  ptcg-board-card-list {
+    .ptcg-card-damage {
+      @include mat-typography-level-to-styles($config, headline);
+    }
+  }
+
+  ptcg-game-logs {
+    .ptcg-game-logs-header mat-icon {
+      font-size: mat-font-size($config, input);
+    }
+    .ptcg-game-logs-content {
+      @include mat-typography-level-to-styles($config, caption);
+    }
+  }*/
 }

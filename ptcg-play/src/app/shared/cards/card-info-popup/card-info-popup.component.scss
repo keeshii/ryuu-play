@@ -1,0 +1,68 @@
+@import '../../../../theme/variables.scss';
+
+$window-min-size: 650px;
+
+.ptcg-card-info-layout {
+  display: flex;
+}
+
+.ptcg-card-info-image {
+  flex: 33 33 auto;
+  min-width: map-get($ptcg-size, card);
+  padding-right: map-get($padding, normal);
+}
+
+.ptcg-card-info-text {
+  flex: 67 67 auto;
+}
+
+.title {
+  border-top-left-radius: map-get($padding, small);
+  border-top-right-radius: map-get($padding, small);
+  padding: map-get($padding, small);
+}
+
+.subtitle {
+  display: flex;
+  align-items: center;
+  padding: map-get($padding, small);
+}
+
+.subtitle-hp {
+  margin: 0 map-get($padding, small) / 2;
+}
+
+.subtitle-hp-unit {
+  margin-right: map-get($padding, small) / 2;
+}
+
+.subtitle-card-type ptcg-energy {
+  display: flex;
+}
+
+
+
+.stats {
+  border-radius: map-get($padding, small);
+  display: flex;
+  padding: map-get($padding, small);
+}
+
+.stats-item {
+  flex: 1 1 auto;
+  text-align: center;
+}
+
+.stats-item-header {
+  padding-bottom: map-get($padding, small) / 2;
+}
+
+.stats-item-value {
+  align-items: flex-end;
+  display: flex;
+  justify-content: center;
+}
+
+.stats-item-value-type ptcg-energy {
+  display: flex;
+}
