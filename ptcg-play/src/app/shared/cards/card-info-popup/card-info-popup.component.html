@@ -5,7 +5,7 @@
     <div class="ptcg-card-info-image">
       <ptcg-card [card]="card"></ptcg-card>
     </div>
-    <div class="ptcg-card-info-text">
+    <div class="ptcg-card-info-text" *ngIf="card.superType === SuperType.POKEMON">
       <div class="title">
         {{card.name}}
       </div>
@@ -30,7 +30,7 @@
             Ability name
           </div>
         </div>
-        <p>Ability text</p>
+        <div class="card-text">Ability text</div>
       </div>
 
       <div class="attack">
@@ -41,11 +41,12 @@
           <div class="attack-name">
             Attack name
           </div>
+          <div class="ptcg-u-spacer"></div>
           <div class="attack-damage">
             10
           </div>
         </div>
-        <p>Attack text</p>
+        <div class="card-text">Attack text</div>
       </div>
 
       <div class="stats">

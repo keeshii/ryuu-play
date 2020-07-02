@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { Card } from 'ptcg-server';
+import { Card, SuperType } from 'ptcg-server';
 
 export interface CardInfoPopupData {
   card: Card;
@@ -18,6 +18,7 @@ export interface CardInfoPopupData {
 export class CardInfoPopupComponent implements OnInit {
 
   public card: Card;
+  public SuperType = SuperType;
 
   constructor(
     private dialogRef: MatDialogRef<CardInfoPopupComponent>,

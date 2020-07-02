@@ -28,6 +28,8 @@ $ptcg-theme: mat-dark-theme($ptcg-primary, $ptcg-accent, $ptcg-warn);
 
 
 // Create a config with the default typography levels.
-$config: mat-typography-config();
+$config: mat-typography-config(
+  $body-2:        mat-typography-level(14px, 24px, 700)
+);
 
 @include ptcg-typography($config);

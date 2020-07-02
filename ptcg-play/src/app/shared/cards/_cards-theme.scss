@@ -35,27 +35,25 @@
     .subtitle, .stats {
       background-color: $ptcg-card-info-subtitle-background;
     }
+    .ability-type {
+      color: mat-color($primary);
+    }
   }
 
 }
 
 @mixin ptcg-cards-typography($config) {
   ptcg-card-info-popup {
-    .title {
+    .title, .subtitle-hp-value {
       @include mat-typography-level-to-styles($config, title);
     }
 
-    .subtitle-stage, .stats-item-header {
+    .subtitle-stage, .stats-item-header, .attack-name, .ability-name {
       @include mat-typography-level-to-styles($config, body-2);
-      font-weight: 700;
     }
 
     .subtitle-hp-unit, .stats-item-value-modifier {
       @include mat-typography-level-to-styles($config, caption);
-    }
-
-    .subtitle-hp-value {
-      @include mat-typography-level-to-styles($config, title);
     }
 
   }

@@ -36,11 +36,23 @@ $window-min-size: 650px;
   margin-right: map-get($padding, small) / 2;
 }
 
-.subtitle-card-type ptcg-energy {
+.attack, .ability {
+  margin: map-get($padding, small) 0;
+  padding: map-get($padding, small);
+}
+
+.attack-name {
+  padding: 0 map-get($padding, small);
+}
+
+.attack-header {
+  align-items: center;
   display: flex;
 }
 
-
+.attack-header + .card-text {
+  padding-top: map-get($padding, small);
+}
 
 .stats {
   border-radius: map-get($padding, small);
@@ -63,6 +75,6 @@ $window-min-size: 650px;
   justify-content: center;
 }
 
-.stats-item-value-type ptcg-energy {
+ptcg-energy {
   display: flex;
 }
