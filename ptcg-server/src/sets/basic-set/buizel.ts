@@ -9,16 +9,16 @@ export class Buizel extends PokemonCard {
 
   public hp: number = 60;
 
-  public weakness = {
-    types: [ CardType.LIGHTNING ],
+  public weakness = [{
+    type: CardType.LIGHTNING,
     value: 10
-  };
+  }];
 
   public retreat = [ CardType.COLORLESS ];
 
   public attacks = [
-    { name: 'Headbutt', cost: [], damage: 10 },
-    { name: 'Surf', cost: [CardType.WATER, CardType.WATER], damage: 30 }
+    { name: 'Headbutt', cost: [], damage: 10, text: '' },
+    { name: 'Surf', cost: [CardType.WATER, CardType.WATER], damage: 30, text: '' }
   ];
 
   public name: string = 'Buizel';

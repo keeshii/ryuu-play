@@ -7,11 +7,17 @@
     </div>
     <div class="ptcg-card-info-text" *ngIf="card.superType === SuperType.POKEMON">
       <div class="title">
-        {{card.name}}
+        <span>{{card.name}}</span>
+        <div class="ptcg-u-spacer"></div>
+        <div class="subtitle-evolves-from" *ngIf="card.evolvesFrom">
+          (evolves from {{card.evolvesFrom}})
+        </div>
       </div>
       <div class="subtitle">
-        <div class="subtitle-stage">
-          Basic
+        <div class="subtitle-stage" [ngSwitch]="card.stage">
+          <span *ngSwitchCase="Stage.BASIC">Basic</span>
+          <span *ngSwitchCase="Stage.STAGE_1">Stage 1</span>
+          <span *ngSwitchCase="Stage.STAGE_2">Stage 2</span>
         </div>
         <div class="ptcg-u-spacer"></div>
         <div class="subtitle-hp">
@@ -19,7 +25,7 @@
           <span class="subtitle-hp-value">{{card.hp}}</span>
         </div>
         <div class="subtitle-card-type">
-          <ptcg-energy [type]="6"></ptcg-energy>
+          <ptcg-energy [type]="card.cardType"></ptcg-energy>
         </div>
       </div>
 
@@ -33,43 +39,46 @@
         <div class="card-text">Ability text</div>
       </div>
 
-      <div class="attack">
+      <div class="attack" *ngFor="let attack of card.attacks">
         <div class="attack-header">
           <div class="attack-cost">
-            <ptcg-energy type="6"></ptcg-energy>
+            <ptcg-energy *ngIf="attack.cost.length === 0"></ptcg-energy>
+            <ptcg-energy *ngFor="let cost of attack.cost" [type]="cost"></ptcg-energy>
           </div>
           <div class="attack-name">
-            Attack name
+            {{ attack.name }}
           </div>
           <div class="ptcg-u-spacer"></div>
           <div class="attack-damage">
-            10
+            {{ attack.damage }}
           </div>
         </div>
-        <div class="card-text">Attack text</div>
+        <div class="card-text" *ngIf="attack.text">
+          {{ attack.text }}
+        </div>
       </div>
 
       <div class="stats">
         <div class="stats-item">
           <div class="stats-item-header">Weakness</div>
-          <div class="stats-item-value">
+          <div class="stats-item-value" *ngFor="let weakness of card.weakness">
             <div class="stats-item-value-type">
-              <ptcg-energy type="6"></ptcg-energy>
+              <ptcg-energy [type]="weakness.type"></ptcg-energy>
             </div>
             <div class="stats-item-value-modifier">
-              x2
+              {{ weakness.value ? '+' + weakness.value : 'x2' }}
             </div>
           </div>
         </div>
 
         <div class="stats-item">
           <div class="stats-item-header">Resistance</div>
-          <div class="stats-item-value">
+          <div class="stats-item-value" *ngFor="let resistance of card.resistance">
             <div class="stats-item-value-type">
-              <ptcg-energy type="6"></ptcg-energy>
+              <ptcg-energy [type]="resistance.type"></ptcg-energy>
             </div>
             <div class="stats-item-value-modifier">
-              x2
+              {{ resistance.value }}
             </div>
           </div>
         </div>
@@ -78,10 +87,7 @@
           <div class="stats-item-header">Retreat Cost</div>
           <div class="stats-item-value">
             <div class="stats-item-value-type">
-              <ptcg-energy type="6"></ptcg-energy>
-            </div>
-            <div class="stats-item-value-modifier">
-              x2
+              <ptcg-energy *ngFor="let cost of card.retreat" [type]="cost"></ptcg-energy>
             </div>
           </div>
         </div>

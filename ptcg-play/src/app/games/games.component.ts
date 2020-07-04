@@ -46,7 +46,7 @@ export class GamesComponent implements OnDestroy, OnInit {
   }
 
   public showCardInfo() {
-    const card = this.cardsBaseService.getCardByName('Buizel GE');
+    const card = this.cardsBaseService.getCardByName('Sableye SF');
     this.cardsBaseService.showCardInfo({ card });
   }
 

@@ -17,8 +17,10 @@ $window-min-size: 650px;
 }
 
 .title {
+  align-items: baseline;
   border-top-left-radius: map-get($padding, small);
   border-top-right-radius: map-get($padding, small);
+  display: flex;
   padding: map-get($padding, small);
 }
 
@@ -32,6 +34,10 @@ $window-min-size: 650px;
   margin: 0 map-get($padding, small) / 2;
 }
 
+.subtitle-hp-value {
+  line-height: map-get($ptcg-size, energy-size);
+}
+
 .subtitle-hp-unit {
   margin-right: map-get($padding, small) / 2;
 }
@@ -39,6 +45,10 @@ $window-min-size: 650px;
 .attack, .ability {
   margin: map-get($padding, small) 0;
   padding: map-get($padding, small);
+}
+
+.attack-cost {
+  display: flex;
 }
 
 .attack-name {

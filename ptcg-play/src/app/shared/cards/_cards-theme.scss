@@ -52,7 +52,7 @@
       @include mat-typography-level-to-styles($config, body-2);
     }
 
-    .subtitle-hp-unit, .stats-item-value-modifier {
+    .subtitle-hp-unit, .stats-item-value-modifier, .subtitle-evolves-from {
       @include mat-typography-level-to-styles($config, caption);
     }
 

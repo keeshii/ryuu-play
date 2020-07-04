@@ -34,7 +34,7 @@ export class EnergyComponent implements OnInit {
         this.typeClass = 'metal';
         break;
       case CardType.DARK:
-        this.typeClass = 'dark';
+        this.typeClass = 'darkness';
         break;
       case CardType.FIRE:
         this.typeClass = 'fire';
