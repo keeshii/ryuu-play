@@ -47,11 +47,12 @@ export class CardsBaseService {
     return this.cards.find(c => c.fullName === cardName);
   }
 
-  public showCardInfo(options: CardInfoPopupData): Promise<void> {
+  public showCardInfo(card: Card, options: CardInfoPopupData = {}): Promise<void> {
+
     const dialog = this.dialog.open(CardInfoPopupComponent, {
       maxWidth: '100%',
       width: '650px',
-      data: options
+      data: {...options, card }
     });
 
     return dialog.afterClosed().toPromise()

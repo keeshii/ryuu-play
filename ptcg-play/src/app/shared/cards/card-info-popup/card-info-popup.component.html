@@ -29,14 +29,18 @@
         </div>
       </div>
 
-      <div class="ability">
-        <div class="ability-header">
-          <div class="ability-type">Ability</div>
-          <div class="ability-name">
-            Ability name
+      <div class="power" *ngFor="let power of card.powers">
+        <div class="power-header">
+          <div class="power-type" [ngSwitch]="power.powerType">
+            <div class="ability" *ngSwitchCase="PowerType.ABILITY">Ability</div>
+            <div class="ability" *ngSwitchCase="PowerType.POKEPOWER">Poke-Power</div>
+            <div class="poke-body" *ngSwitchCase="PowerType.POKEBODY">Poke-Body</div>
+          </div>
+          <div class="power-name">
+            {{ power.name }}
           </div>
         </div>
-        <div class="card-text">Ability text</div>
+        <div class="card-text">{{ power.text }}</div>
       </div>
 
       <div class="attack" *ngFor="let attack of card.attacks">
@@ -94,12 +98,71 @@
       </div>
 
     </div>
+
+    <div class="ptcg-card-info-text" *ngIf="card.superType === SuperType.ENERGY">
+      <div class="title">
+        {{card.name}}
+      </div>
+      <div class="subtitle">
+        <div class="subtitle-stage" [ngSwitch]="card.energyType">
+          <span *ngSwitchCase="EnergyType.BASIC">Basic Energy</span>
+          <span *ngSwitchCase="EnergyType.SPECIAL">Special Energy</span>
+        </div>
+        <div class="ptcg-u-spacer"></div>
+        <div class="subtitle-card-type">
+          <ptcg-trainer-type></ptcg-trainer-type>
+        </div>
+      </div>
+
+      <div class="power" *ngIf="card.text">
+        <div class="power-header">
+          <div class="power-name">
+            Text on card
+          </div>
+        </div>
+        <div class="card-text">{{ card.text }}</div>
+      </div>
+
+    </div>
+
+    <div class="ptcg-card-info-text" *ngIf="card.superType === SuperType.TRAINER">
+      <div class="title">
+        {{card.name}}
+      </div>
+      <div class="subtitle">
+        <div class="subtitle-stage" [ngSwitch]="card.trainerType">
+          <span *ngSwitchDefaultCase>Item</span>
+          <span *ngSwitchCase="TrainerType.SUPPORTER">Supporter</span>
+          <span *ngSwitchCase="TrainerType.STADIUM">Stadium</span>
+          <span *ngSwitchCase="TrainerType.TM">Pokemon Tool</span>
+        </div>
+        <div class="ptcg-u-spacer"></div>
+        <div class="subtitle-card-type">
+          <ptcg-trainer-type [type]="card.trainerType"></ptcg-trainer-type>
+        </div>
+      </div>
+
+      <div class="power" *ngIf="card.text">
+        <div class="power-header">
+          <div class="power-name">
+            Text on card
+          </div>
+        </div>
+        <div class="card-text">{{ card.text }}</div>
+      </div>
+
+    </div>
+
+    <div class="ptcg-card-info-text" *ngIf="card.superType === SuperType.NONE">
+      <div class="title">
+        {{card.name}}
+      </div>
+    </div>
   </div>
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-raised-button (click)="cancel()">Cancel</button>
-  <button mat-raised-button color="primary" (click)="confirm()">
-    OK
+  <button mat-raised-button color="primary" (click)="close()">
+    Close
   </button>
 </mat-dialog-actions>

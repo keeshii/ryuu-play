@@ -3,6 +3,7 @@
 
 @mixin ptcg-cards-theme($theme) {
   $primary: map-get($theme, primary);
+  $ptcg: map-get($theme, ptcg);
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
 
@@ -35,8 +36,11 @@
     .subtitle, .stats {
       background-color: $ptcg-card-info-subtitle-background;
     }
-    .ability-type {
-      color: mat-color($primary);
+    .power-type .ability {
+      color: mat-color($ptcg, ability);
+    }
+    .power-type .poke-body {
+      color: mat-color($ptcg, poke-body);
     }
   }
 
@@ -48,7 +52,7 @@
       @include mat-typography-level-to-styles($config, title);
     }
 
-    .subtitle-stage, .stats-item-header, .attack-name, .ability-name {
+    .subtitle-stage, .stats-item-header, .attack-name, .power-name {
       @include mat-typography-level-to-styles($config, body-2);
     }
 

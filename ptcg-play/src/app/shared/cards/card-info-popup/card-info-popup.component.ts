@@ -1,9 +1,8 @@
-import { Component, Inject, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { Card, SuperType, PokemonCard, TrainerCard, EnergyCard, Stage } from 'ptcg-server';
+import { Card, SuperType, Stage, PowerType, EnergyType, TrainerType } from 'ptcg-server';
 
 export interface CardInfoPopupData {
-  card: Card;
   enableAbility?: boolean;
   enableAttack?: boolean;
   enableRetreat?: boolean;
@@ -20,42 +19,23 @@ export class CardInfoPopupComponent implements OnInit {
   public card: Card;
   public SuperType = SuperType;
   public Stage = Stage;
-
-  public subtitle: string;
+  public PowerType = PowerType;
+  public EnergyType = EnergyType;
+  public TrainerType = TrainerType;
+  public textOnCard: string;
 
   constructor(
     private dialogRef: MatDialogRef<CardInfoPopupComponent>,
-    @Inject(MAT_DIALOG_DATA) data: CardInfoPopupData,
+    @Inject(MAT_DIALOG_DATA) data: (CardInfoPopupData & {card: Card}),
   ) {
-    const card = {
-      ...data.card, stage: Stage.STAGE_1, evolvesFrom: 'Buizel' } as any;
-    this.card = card;
-    switch (card.superType) {
-      case SuperType.POKEMON:
-        this.loadPokemonCard(card as PokemonCard);
-        break;
-      case SuperType.TRAINER:
-        this.loadTrainerCard(card as TrainerCard);
-        break;
-      case SuperType.ENERGY:
-        this.loadEnergyCard(card as EnergyCard);
-        break;
-    }
-  }
-
-  loadPokemonCard(card: PokemonCard): void {
-    return;
-  }
-
-  loadTrainerCard(card: TrainerCard): void {
-    return;
-  }
-
-  loadEnergyCard(card: EnergyCard): void {
-    return;
+    this.card = data.card;
   }
 
   ngOnInit() {
+  }
+
+  close() {
+    this.dialogRef.close();
   }
 
 }

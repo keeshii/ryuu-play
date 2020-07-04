@@ -1,0 +1,27 @@
+.ptcg-trainer-type {
+  background-image: url("/assets/trainer-types.png");
+  background-repeat: no-repeat;
+  display: flex;
+  height: 15px;
+  margin: 0 2px;
+
+  &[type="item"] {
+    background-position: 0 0;
+    width: 43px;
+  }
+
+  &[type="supporter"] {
+    background-position: 0 -15px;
+    width: 94px;
+  }
+
+  &[type="stadium"] {
+    background-position: 0 -30px;
+    width: 71px;
+  }
+
+  &[type="energy"] {
+    background-position: 0 -45px;
+    width: 93px;
+  }
+}

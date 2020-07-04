@@ -8,6 +8,7 @@ import { CardInfoPopupComponent } from './card-info-popup/card-info-popup.compon
 import { DropHighlightDirective } from './drop-highlight/drop-highlight.directive';
 import { EnergyComponent } from './energy/energy.component';
 import { MaterialModule } from '../material.module';
+import { TrainerTypeComponent } from './trainer-type/trainer-type.component';
 
 @NgModule({
   imports: [
@@ -21,6 +22,7 @@ import { MaterialModule } from '../material.module';
     CardInfoPopupComponent,
     EnergyComponent,
     DropHighlightDirective,
+    TrainerTypeComponent,
   ],
   entryComponents: [
     CardInfoPopupComponent

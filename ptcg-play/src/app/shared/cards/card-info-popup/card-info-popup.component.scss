@@ -7,13 +7,13 @@ $window-min-size: 650px;
 }
 
 .ptcg-card-info-image {
-  flex: 33 33 auto;
+  flex: 1 1 33%;
   min-width: map-get($ptcg-size, card);
   padding-right: map-get($padding, normal);
 }
 
 .ptcg-card-info-text {
-  flex: 67 67 auto;
+  flex: 1 1 67%;
 }
 
 .title {
@@ -42,7 +42,7 @@ $window-min-size: 650px;
   margin-right: map-get($padding, small) / 2;
 }
 
-.attack, .ability {
+.attack, .power {
   margin: map-get($padding, small) 0;
   padding: map-get($padding, small);
 }

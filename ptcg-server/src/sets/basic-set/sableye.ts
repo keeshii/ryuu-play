@@ -20,7 +20,7 @@ export class Sableye extends PokemonCard {
 
   public retreat = [ CardType.COLORLESS ];
 
-  public power = [{
+  public powers = [{
     name: 'Overeager',
     powerType: PowerType.POKEBODY,
     text: 'If Sableye is your Active Pokemon at the beginning of the game, ' +
