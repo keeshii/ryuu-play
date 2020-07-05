@@ -9,6 +9,7 @@ import { DropHighlightDirective } from './drop-highlight/drop-highlight.directiv
 import { EnergyComponent } from './energy/energy.component';
 import { MaterialModule } from '../material.module';
 import { TrainerTypeComponent } from './trainer-type/trainer-type.component';
+import { HoverHighlightComponent } from './hover-highlight/hover-highlight.component';
 
 @NgModule({
   imports: [
@@ -23,6 +24,7 @@ import { TrainerTypeComponent } from './trainer-type/trainer-type.component';
     EnergyComponent,
     DropHighlightDirective,
     TrainerTypeComponent,
+    HoverHighlightComponent,
   ],
   entryComponents: [
     CardInfoPopupComponent

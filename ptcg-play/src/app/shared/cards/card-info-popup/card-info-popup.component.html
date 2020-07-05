@@ -29,38 +29,46 @@
         </div>
       </div>
 
-      <div class="power" *ngFor="let power of card.powers">
-        <div class="power-header">
-          <div class="power-type" [ngSwitch]="power.powerType">
-            <div class="ability" *ngSwitchCase="PowerType.ABILITY">Ability</div>
-            <div class="ability" *ngSwitchCase="PowerType.POKEPOWER">Poke-Power</div>
-            <div class="poke-body" *ngSwitchCase="PowerType.POKEBODY">Poke-Body</div>
+      <ptcg-hover-highlight *ngFor="let power of card.powers"
+        (click)="close(power)"
+        [enabled]="options.enableAbility">
+        <div class="power">
+          <div class="power-header">
+            <div class="power-type" [ngSwitch]="power.powerType">
+              <div class="ability" *ngSwitchCase="PowerType.ABILITY">Ability</div>
+              <div class="ability" *ngSwitchCase="PowerType.POKEPOWER">Poke-Power</div>
+              <div class="poke-body" *ngSwitchCase="PowerType.POKEBODY">Poke-Body</div>
+            </div>
+            <div class="power-name">
+              {{ power.name }}
+            </div>
           </div>
-          <div class="power-name">
-            {{ power.name }}
-          </div>
+          <div class="card-text">{{ power.text }}</div>
         </div>
-        <div class="card-text">{{ power.text }}</div>
-      </div>
+      </ptcg-hover-highlight>
 
-      <div class="attack" *ngFor="let attack of card.attacks">
-        <div class="attack-header">
-          <div class="attack-cost">
-            <ptcg-energy *ngIf="attack.cost.length === 0"></ptcg-energy>
-            <ptcg-energy *ngFor="let cost of attack.cost" [type]="cost"></ptcg-energy>
+      <ptcg-hover-highlight *ngFor="let attack of card.attacks"
+        (click)="close(attack)"
+        [enabled]="options.enableAttack">
+        <div class="attack">
+          <div class="attack-header">
+            <div class="attack-cost">
+              <ptcg-energy *ngIf="attack.cost.length === 0"></ptcg-energy>
+              <ptcg-energy *ngFor="let cost of attack.cost" [type]="cost"></ptcg-energy>
+            </div>
+            <div class="attack-name">
+              {{ attack.name }}
+            </div>
+            <div class="ptcg-u-spacer"></div>
+            <div class="attack-damage">
+              {{ attack.damage }}
+            </div>
           </div>
-          <div class="attack-name">
-            {{ attack.name }}
-          </div>
-          <div class="ptcg-u-spacer"></div>
-          <div class="attack-damage">
-            {{ attack.damage }}
+          <div class="card-text" *ngIf="attack.text">
+            {{ attack.text }}
           </div>
         </div>
-        <div class="card-text" *ngIf="attack.text">
-          {{ attack.text }}
-        </div>
-      </div>
+      </ptcg-hover-highlight>
 
       <div class="stats">
         <div class="stats-item">

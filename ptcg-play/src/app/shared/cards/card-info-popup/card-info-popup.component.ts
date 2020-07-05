@@ -5,8 +5,6 @@ import { Card, SuperType, Stage, PowerType, EnergyType, TrainerType } from 'ptcg
 export interface CardInfoPopupData {
   enableAbility?: boolean;
   enableAttack?: boolean;
-  enableRetreat?: boolean;
-  hideImage?: boolean;
 }
 
 @Component({
@@ -17,6 +15,7 @@ export interface CardInfoPopupData {
 export class CardInfoPopupComponent implements OnInit {
 
   public card: Card;
+  public options: CardInfoPopupData;
   public SuperType = SuperType;
   public Stage = Stage;
   public PowerType = PowerType;
@@ -29,12 +28,13 @@ export class CardInfoPopupComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) data: (CardInfoPopupData & {card: Card}),
   ) {
     this.card = data.card;
+    this.options = data;
   }
 
   ngOnInit() {
   }
 
-  close() {
+  public close(result?: any) {
     this.dialogRef.close();
   }
 
