@@ -1,7 +1,8 @@
 <div class="ptcg-board-card" [ngClass]="{empty: isEmpty, 'face-down': isFaceDown}">
 
   <div class="ptcg-energy-cards">
-    <ptcg-card [card]="energyCard" *ngFor="let energyCard of energyCards"></ptcg-card>
+    <ptcg-card [card]="energyCard" *ngFor="let energyCard of energyCards"
+    (click)="onCardClick(energyCard)"></ptcg-card>
   </div>
 
   <div class="ptcg-energy-more" *ngIf="moreEnergies > 0">
@@ -9,10 +10,12 @@
   </div>
 
   <div class="ptcg-trainer-card" *ngIf="trainerCard">
-    <ptcg-card [card]="trainerCard"></ptcg-card>
+    <ptcg-card [card]="trainerCard"
+    (click)="onCardClick(trainerCard)"></ptcg-card>
   </div>
 
-  <ptcg-card [card]="mainCard" *ngIf="mainCard"></ptcg-card>
+  <ptcg-card [card]="mainCard" *ngIf="mainCard"
+  (click)="onCardClick(mainCard)"></ptcg-card>
 
   <div class="ptcg-card-damage" *ngIf="damage > 0">
     <ptcg-badge color="warn">{{ damage }}</ptcg-badge>

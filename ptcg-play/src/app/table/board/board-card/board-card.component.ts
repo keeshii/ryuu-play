@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { PokemonCardList, Card, CardList, SuperType, SpecialCondition } from 'ptcg-server';
 
 const MAX_ENERGY_CARDS = 4;
@@ -11,6 +11,7 @@ const MAX_ENERGY_CARDS = 4;
 export class BoardCardComponent implements OnInit {
 
   @Input() showCardCount = false;
+  @Output() cardClick = new EventEmitter<Card>();
 
   @Input() set cardList(value: CardList | PokemonCardList) {
     this.mainCard = undefined;
@@ -106,5 +107,9 @@ export class BoardCardComponent implements OnInit {
   }
 
   ngOnInit() { }
+
+  public onCardClick(card: Card) {
+    this.cardClick.next(card);
+  }
 
 }

@@ -4,7 +4,7 @@ import { DropTarget, SkyhookDndService } from '@angular-skyhook/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { GameState, Player, SuperType, SlotType, PlayerType, CardTarget } from 'ptcg-server';
+import { GameState, Player, SuperType, SlotType, PlayerType, CardTarget, Card } from 'ptcg-server';
 import { HandItem, HandCardType } from '../hand/hand-item.interface';
 import { BoardCardItem, BoardCardType } from './board-item.interface';
 import { CardsBaseService } from '../../shared/cards/cards-base.service';
@@ -205,6 +205,10 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
     boardCardItem.source = source;
 
     return boardCardItem;
+  }
+
+  public onCardClick(card: Card) {
+    this.cardsBaseService.showCardInfo(card);
   }
 
   ngOnChanges() { }
