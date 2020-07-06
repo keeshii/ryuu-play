@@ -30,7 +30,7 @@
       </div>
 
       <ptcg-hover-highlight *ngFor="let power of card.powers"
-        (click)="options.enableAbility && close(power)"
+        (click)="options.enableAbility && close({ability: power.name})"
         [enabled]="options.enableAbility">
         <div class="power">
           <div class="power-header">
@@ -48,7 +48,7 @@
       </ptcg-hover-highlight>
 
       <ptcg-hover-highlight *ngFor="let attack of card.attacks"
-        (click)="options.enableAttack && close(attack)"
+        (click)="options.enableAttack && close({attack: attack.name})"
         [enabled]="options.enableAttack">
         <div class="attack">
           <div class="attack-header">

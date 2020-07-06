@@ -24,8 +24,7 @@ export class GamesComponent implements OnDestroy, OnInit {
   constructor(
     private mainSevice: MainService,
     private sessionService: SessionService,
-    private socketService: SocketService,
-    private cardsBaseService: CardsBaseService
+    private socketService: SocketService
   ) {
     this.users$ = this.sessionService.get(session => session.users);
     this.games$ = this.sessionService.get(session => session.games);
@@ -43,11 +42,6 @@ export class GamesComponent implements OnDestroy, OnInit {
 
   public createGame() {
     this.mainSevice.createGame();
-  }
-
-  public showCardInfo() {
-    const card = this.cardsBaseService.getCardByName('Sableye SF');
-    this.cardsBaseService.showCardInfo(card, { enableAttack: true });
   }
 
 }

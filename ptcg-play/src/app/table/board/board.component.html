@@ -19,7 +19,7 @@
     <!-- Top Active -->
     <div class="ptcg-board-row ptcg-board-active">
       <ptcg-board-card
-        [cardList]="topPlayer?.active" [owner]="isTopOwner"
+        [cardList]="topPlayer?.active" [owner]="topPlayer?.id === clientId"
         (cardClick)="onCardClick($event)">
       </ptcg-board-card>
     </div>
@@ -27,7 +27,7 @@
     <!-- Top Bench -->
     <div class="ptcg-board-row ptcg-board-bench">
       <ptcg-board-card *ngFor="let slot of topBench"
-        [cardList]="topPlayer?.bench[index]" [owner]="isTopOwner"
+        [cardList]="topPlayer?.bench[index]" [owner]="topPlayer?.id === clientId"
         (cardClick)="onCardClick($event)">
       </ptcg-board-card>
     </div>
@@ -48,8 +48,8 @@
         ptcgDropHighlight="outside" [ptcgDropHighlightVisible]="bottomActiveHighlight$ | async">
         <ptcg-board-card
           [dragSource]="bottomActive.source" [noHTML5Preview]="true"
-          [cardList]="bottomPlayer?.active" [owner]="isBottomOwner"
-          (cardClick)="onCardClick($event)">
+          [cardList]="bottomPlayer?.active" [owner]="bottomPlayer?.id === clientId"
+          (cardClick)="onActiveClick($event)">
         </ptcg-board-card>
       </div>
     </div>
@@ -61,8 +61,8 @@
         ptcgDropHighlight="outside" [ptcgDropHighlightVisible]="bottomBenchHighlight$[slot.index] | async">
         <ptcg-board-card
           [dragSource]="slot.source"
-          [cardList]="bottomPlayer?.bench[slot.index]" [owner]="isBottomOwner"
-          (cardClick)="onCardClick($event)">
+          [cardList]="bottomPlayer?.bench[slot.index]" [owner]="bottomPlayer?.id === clientId"
+          (cardClick)="onBenchClick($event, slot.index)">
         </ptcg-board-card>
       </div>
     </div>

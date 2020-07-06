@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Card } from 'ptcg-server';
 import { take } from 'rxjs/operators';
 
-import { CardInfoPopupData, CardInfoPopupComponent } from './card-info-popup/card-info-popup.component';
+import { CardInfoPopupData, CardInfoPopupComponent, CardInfoPopupResponse } from './card-info-popup/card-info-popup.component';
 import { CardsService } from '../../api/services/cards.service';
 import { MatDialog } from '@angular/material';
 import { environment } from '../../../environments/environment';
@@ -47,7 +47,7 @@ export class CardsBaseService {
     return this.cards.find(c => c.fullName === cardName);
   }
 
-  public showCardInfo(card: Card, options: CardInfoPopupData = {}): Promise<void> {
+  public showCardInfo(card: Card, options: CardInfoPopupData = {}): Promise<CardInfoPopupResponse> {
 
     const dialog = this.dialog.open(CardInfoPopupComponent, {
       maxWidth: '100%',

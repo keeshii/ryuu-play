@@ -7,6 +7,11 @@ export interface CardInfoPopupData {
   enableAttack?: boolean;
 }
 
+export interface CardInfoPopupResponse {
+  attack?: string;
+  ability?: string;
+}
+
 @Component({
   selector: 'ptcg-card-info-popup',
   templateUrl: './card-info-popup.component.html',
@@ -34,8 +39,8 @@ export class CardInfoPopupComponent implements OnInit {
   ngOnInit() {
   }
 
-  public close(result?: any) {
-    this.dialogRef.close();
+  public close(result: CardInfoPopupResponse = {}) {
+    this.dialogRef.close(result);
   }
 
 }

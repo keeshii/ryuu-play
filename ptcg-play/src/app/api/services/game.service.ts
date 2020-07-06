@@ -53,6 +53,16 @@ export class GameService {
       });
   }
 
+  public ability(gameId: number, ability: string, target: CardTarget) {
+    this.socketService.emit('game:action:ability', { gameId, ability, target })
+      .subscribe(() => {});
+  }
+
+  public attack(gameId: number, attack: string) {
+    this.socketService.emit('game:action:attack', { gameId, attack })
+      .subscribe(() => {});
+  }
+
   public play(gameId: number, deck: string[]) {
     this.socketService.emit('game:action:play', { gameId, deck })
       .subscribe(() => {});

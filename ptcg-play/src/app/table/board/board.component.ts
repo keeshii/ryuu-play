@@ -26,9 +26,6 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
   @Input() topPlayer: Player;
   @Input() bottomPlayer: Player;
 
-  public isTopOwner = false;
-  public isBottomOwner = false;
-
   public topBench = new Array(BENCH_SIZE);
   public bottomActive: BoardCardItem;
   public bottomBench: BoardCardItem[];
@@ -195,7 +192,10 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
 
     const source = this.dnd.dragSource<BoardCardItem>(BoardCardType, {
       canDrag: () => {
-        return this.getScanUrl(boardCardItem) !== undefined;
+        const isBottomOwner = this.bottomPlayer && this.bottomPlayer.id === this.clientId;
+        const isTopOwner = this.topPlayer && this.topPlayer.id === this.clientId;
+        const isOwner = isBottomOwner || isTopOwner;
+        return isOwner && this.getScanUrl(boardCardItem) !== undefined;
       },
       beginDrag: () => {
         return { ...boardCardItem, scanUrl: this.getScanUrl(boardCardItem) };
@@ -209,6 +209,61 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
 
   public onCardClick(card: Card) {
     this.cardsBaseService.showCardInfo(card);
+  }
+
+  public onActiveClick(card: Card) {
+    const isBottomOwner = this.bottomPlayer && this.bottomPlayer.id === this.clientId;
+
+    if (!isBottomOwner) {
+      return this.onCardClick(card);
+    }
+
+    const player = PlayerType.BOTTOM_PLAYER;
+    const slot = SlotType.ACTIVE;
+    const target: CardTarget = { player, slot, index: 0 };
+
+    const options = { enableAbility: true, enableAttack: true };
+    this.cardsBaseService.showCardInfo(card, options)
+      .then(result => {
+        if (!result) {
+          return;
+        }
+        const gameId = this.gameState.gameId;
+
+        // Use ability from the card
+        if (result.ability) {
+          this.gameService.ability(gameId, result.ability, target);
+
+        // Use attack from the card
+        } else if (result.attack) {
+          this.gameService.attack(gameId, result.attack);
+        }
+      });
+  }
+
+  public onBenchClick(card: Card, index: number) {
+    const isBottomOwner = this.bottomPlayer && this.bottomPlayer.id === this.clientId;
+
+    if (!isBottomOwner) {
+      return this.onCardClick(card);
+    }
+
+    const player = PlayerType.BOTTOM_PLAYER;
+    const slot = SlotType.BENCH;
+    const target: CardTarget = { player, slot, index };
+
+    const options = { enableAbility: true, enableAttack: false };
+    this.cardsBaseService.showCardInfo(card, options)
+      .then(result => {
+        if (!result) {
+          return;
+        }
+
+        // Use ability from the card
+        if (result.ability) {
+          this.gameService.ability(this.gameState.gameId, result.ability, target);
+        }
+      });
   }
 
   ngOnChanges() { }
