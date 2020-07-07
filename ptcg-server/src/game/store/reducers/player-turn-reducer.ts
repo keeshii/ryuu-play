@@ -1,10 +1,11 @@
 import { Action } from "../actions/action";
-import { PassTurnAction, RetreatAction } from "../actions/game-actions";
+import { PassTurnAction, RetreatAction, AttackAction } from "../actions/game-actions";
 import { Player } from "../state/player";
 import { State, GamePhase } from "../state/state";
 import { StoreLike } from "../store-like";
 import { GameError, GameMessage } from "../../game-error";
-import { RetreatEffect } from "../effects/game-effects";
+import { RetreatEffect, UseAttackEffect } from "../effects/game-effects";
+import {EndTurnEffect} from "../effects/game-phase-effects";
 
 function getActivePlayer(state: State): Player {
   return state.players[state.activePlayer];
@@ -62,9 +63,9 @@ export function playerTurnReducer(store: StoreLike, state: State, action: Action
         throw new GameError(GameMessage.NOT_YOUR_TURN);
       }
 
-      store.log(state, `${player.name} ended the turn.`);
-      state = betweenTurns(store, state);
-      state = nextTurn(store, state);
+      const endTurnEffect = new EndTurnEffect(player);
+
+      state = store.reduceEffect(state, endTurnEffect);
       return state;
     }
 
@@ -77,6 +78,28 @@ export function playerTurnReducer(store: StoreLike, state: State, action: Action
 
       const retreatEffect = new RetreatEffect(player, action.benchIndex);
       state = store.reduceEffect(state, retreatEffect);
+      return state;
+    }
+
+    if (action instanceof AttackAction) {
+      const player = state.players[state.activePlayer];
+
+      if (player === undefined || player.id !== action.clientId) {
+        throw new GameError(GameMessage.NOT_YOUR_TURN);
+      }
+
+      const pokemonCard = player.active.getPokemonCard();
+      if (pokemonCard === undefined) {
+        throw new GameError(GameMessage.UNKNOWN_ATTACK);
+      }
+
+      const attack = pokemonCard.attacks.find(a => a.name === action.name);
+      if (attack === undefined) {
+        throw new GameError(GameMessage.UNKNOWN_ATTACK);
+      }
+
+      const useAttackEffect = new UseAttackEffect(player, attack);
+      state = store.reduceEffect(state, useAttackEffect);
       return state;
     }
 

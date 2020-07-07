@@ -28,7 +28,6 @@ export function playCardReducer(store: StoreLike, state: State, action: Action):
   if (state.phase === GamePhase.PLAYER_TURN) {
 
     if (action instanceof PlayCardAction) {
-      store.log(state, 'PlayCardAction ' + JSON.stringify(action));
       const handCard = player.hand.cards[action.handIndex];
 
       if (handCard === undefined) {

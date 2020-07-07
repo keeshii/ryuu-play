@@ -14,6 +14,7 @@ export function playPokemonReducer(store: StoreLike, state: State, effect: Effec
     const isBasic = stage === Stage.BASIC;
 
     if (isBasic && effect.target.cards.length === 0) {
+      store.log(state, `${effect.player.name} puts ${effect.pokemonCard.name} on the Bench.`);
       effect.player.hand.moveCardTo(effect.pokemonCard, effect.target);
       return state;
     }
@@ -26,6 +27,7 @@ export function playPokemonReducer(store: StoreLike, state: State, effect: Effec
     }
 
     if (isEvolved && pokemonCard.stage < stage && pokemonCard.name === evolvesFrom) {
+      store.log(state, `${effect.player.name} evolves ${pokemonCard.name} into ${effect.pokemonCard.name}.`);
       effect.player.hand.moveCardTo(effect.pokemonCard, effect.target);
       return state;
     }

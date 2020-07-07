@@ -1,4 +1,5 @@
 import { Action } from "./action";
+import { CardTarget } from "./play-card-action";
 
 export class AttackAction implements Action {
 
@@ -17,7 +18,8 @@ export class UseAbilityAction implements Action {
 
   constructor(
     public clientId: number,
-    public name: string
+    public name: string,
+    public target: CardTarget
   ) {}
 
 }

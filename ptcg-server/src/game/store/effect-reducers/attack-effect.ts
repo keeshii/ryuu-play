@@ -1,4 +1,5 @@
 import { GameError, GameMessage } from "../../game-error";
+import { EndTurnEffect } from "../effects/game-phase-effects";
 import { Effect } from "../effects/effect";
 import { State } from "../state/state";
 import { StoreLike } from "../store-like";
@@ -9,7 +10,7 @@ import {
   DealDamageEffect,
   UseAttackEffect,
 } from "../effects/game-effects";
-import {StateUtils} from "../state-utils";
+import { StateUtils } from "../state-utils";
 
 export function attackReducer(store: StoreLike, state: State, effect: Effect): State {
 
@@ -47,6 +48,7 @@ export function attackReducer(store: StoreLike, state: State, effect: Effect): S
       throw new GameError(GameMessage.NOT_ENOUGH_ENERGY);
     }
 
+    store.log(state, `${player.name} attacks with ${attack.name}.`);
     state = store.reduceEffect(state, new AttackEffect(player, attack));
 
     if (attack.damage > 0) {
@@ -54,6 +56,7 @@ export function attackReducer(store: StoreLike, state: State, effect: Effect): S
       state = store.reduceEffect(state, dealDamage);
     }
 
+    state = store.reduceEffect(state, new EndTurnEffect(player));
     return state;
   }
 
