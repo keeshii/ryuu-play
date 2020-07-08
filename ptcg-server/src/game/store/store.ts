@@ -16,9 +16,11 @@ import { playEnergyReducer } from "./effect-reducers/play-energy-effect";
 import { playPokemonReducer } from "./effect-reducers/play-pokemon-effect";
 import { playerTurnReducer } from "./reducers/player-turn-reducer";
 import { gamePhaseReducer } from "./effect-reducers/game-phase-effect";
+import { checkStateReducer } from "./effect-reducers/check-state-effect";
 import { retreatReducer } from "./effect-reducers/retreat-effect";
 import { reorderReducer} from "./reducers/reorder-reducer";
 import { setupPhaseReducer } from './reducers/setup-reducer';
+import { CheckStateEffect } from "./effects/check-effects";
 
 interface PromptItem {
   ids: number[],
@@ -45,6 +47,9 @@ export class Store implements StoreLike {
 
     if (action instanceof ResolvePromptAction) {
       state = this.reducePrompt(state, action);
+      if (this.promptItems.length === 0) {
+        state = this.reduceEffect(state, new CheckStateEffect());
+      }
       this.handler.onStateChange(state);
       return state;
     }
@@ -76,6 +81,7 @@ export class Store implements StoreLike {
     state = playPokemonReducer(this, state, effect);
     state = retreatReducer(this, state, effect);
     state = attackReducer(this, state, effect);
+    state = checkStateReducer(this, state, effect);
 
     return state;
   }
@@ -119,21 +125,27 @@ export class Store implements StoreLike {
       throw new GameError(GameMessage.PROMPT_ALREADY_RESOLVED);
     }
 
-    prompt.result = action.result;
+    try {
+      prompt.result = action.result;
 
-    const results = promptItem.ids.map(id => {
-      const p = state.prompts.find(item => item.id === id);
-      return p === undefined ? undefined : p.result;
-    });
+      const results = promptItem.ids.map(id => {
+        const p = state.prompts.find(item => item.id === id);
+        return p === undefined ? undefined : p.result;
+      });
 
-    if (action.log !== undefined) {
-      this.log(state, action.log.message, action.log.client);
-    }
+      if (action.log !== undefined) {
+        this.log(state, action.log.message, action.log.client);
+      }
 
-    if (results.every(result => result !== undefined)) {
-      const itemIndex = this.promptItems.indexOf(promptItem);
-      this.promptItems.splice(itemIndex, 1);
-      promptItem.then(results.length === 1 ? results[0] : results);
+      if (results.every(result => result !== undefined)) {
+        const itemIndex = this.promptItems.indexOf(promptItem);
+        promptItem.then(results.length === 1 ? results[0] : results);
+        this.promptItems.splice(itemIndex, 1);
+      }
+    } catch (storeError) {
+      // Illegal action
+      prompt.result = undefined;
+      throw storeError;
     }
 
     return state;
@@ -147,6 +159,10 @@ export class Store implements StoreLike {
       state = setupPhaseReducer(this, state, action);
       state = playCardReducer(this, state, action);
       state = playerTurnReducer(this, state, action);
+
+      if (this.promptItems.length === 0) {
+        state = this.reduceEffect(state, new CheckStateEffect());
+      }
     } catch (storeError) {
       // Illegal action
       this.state = stateBackup;

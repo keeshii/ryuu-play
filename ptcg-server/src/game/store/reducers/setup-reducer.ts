@@ -141,6 +141,7 @@ export function setupPhaseReducer(store: StoreLike, state: State, action: Action
       }
 
       player.active.isPublic = true;
+      player.discard.isPublic = true;
 
       state.players.push(player);
 

@@ -41,11 +41,11 @@ export function retreatReducer(store: StoreLike, state: State, effect: Effect): 
 
     return store.prompt(state, prompt, cards => {
       if (cards === null) {
-        return; // operation cancelled, not enough energies
+        return; // operation cancelled
       }
       const isEnough = StateUtils.checkExactEnergy(player.active.cards, checkRetreatCost.cost);
       if (!isEnough) {
-        return; // invalid energies selected
+        throw new GameError(GameMessage.ILLEGAL_ACTION);
       }
       const activePokemon = player.active.getPokemonCard();
       const benchedPokemon = player.bench[effect.benchIndex].getPokemonCard();
