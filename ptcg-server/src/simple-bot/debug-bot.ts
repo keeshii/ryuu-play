@@ -11,16 +11,16 @@ export class DebugBot extends SimpleBot {
     this.playGame(game, deck);
   }
 
-  public onDisconnect(client: Client): void {
+  public onGameLeave(game: Game, client: Client): void {
     if (!this.core) {
       return;
     }
-    for (let i = 0; i < this.gameHandlers.length; i++) {
-      const gameHandler = this.gameHandlers[i];
-      const game = gameHandler.game;
-      if (game.clients.length === 1 && game.clients[0].id === this.id) {
-        this.core.leaveGame(this, game);
-      }
+    const gameHandler = this.gameHandlers.find(gh => gh.game === game);
+    if (gameHandler === undefined) {
+      return;
+    }
+    if (game.clients.length === 1 && game.clients[0].id === this.id) {
+      this.core.leaveGame(this, game);
     }
   }
 

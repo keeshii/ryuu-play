@@ -56,6 +56,8 @@ export class StateUtils {
     if (!enough) {
       return false;
     }
+    cards = cards.filter(c => c.superType === SuperType.ENERGY);
+
     for (let i = 0; i < cards.length; i++) {
       const tempCards = cards.slice();
       tempCards.splice(i, 1);

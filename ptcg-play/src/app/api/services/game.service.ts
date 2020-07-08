@@ -3,8 +3,10 @@ import { Action, UserInfo, GameState, State, CardTarget } from 'ptcg-server';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
+import { AlertService } from '../../shared/alert/alert.service';
+import { ApiError } from '../api.error';
 import { SocketService } from '../socket.service';
-import { SessionService } from 'src/app/shared/session/session.service';
+import { SessionService } from '../../shared/session/session.service';
 
 export interface GameUserInfo {
   gameId: number;
@@ -15,6 +17,7 @@ export interface GameUserInfo {
 export class GameService {
 
   constructor(
+    private alertService: AlertService,
     private sessionService: SessionService,
     private socketService: SocketService
   ) { }
@@ -50,57 +53,57 @@ export class GameService {
         const gameStates = games.filter(table => table.gameId !== gameId);
         this.stopListening(gameId);
         this.sessionService.set({ gameStates });
-      });
+      }, (error: ApiError) => this.alertService.toast(error.message));
   }
 
   public ability(gameId: number, ability: string, target: CardTarget) {
     this.socketService.emit('game:action:ability', { gameId, ability, target })
-      .subscribe(() => {});
+      .subscribe(() => {}, (error: ApiError) => this.alertService.toast(error.message));
   }
 
   public attack(gameId: number, attack: string) {
     this.socketService.emit('game:action:attack', { gameId, attack })
-      .subscribe(() => {});
+      .subscribe(() => {}, (error: ApiError) => this.alertService.toast(error.message));
   }
 
   public play(gameId: number, deck: string[]) {
     this.socketService.emit('game:action:play', { gameId, deck })
-      .subscribe(() => {});
+      .subscribe(() => {}, (error: ApiError) => this.alertService.toast(error.message));
   }
 
   public resolvePrompt(gameId: number, promptId: number, result: any) {
     this.socketService.emit('game:action:resolvePrompt', {gameId, id: promptId, result})
-      .subscribe(() => {});
+      .subscribe(() => {}, (error: ApiError) => this.alertService.toast(error.message));
   }
 
   public playCardAction(gameId: number, handIndex: number, target: CardTarget) {
     this.socketService.emit('game:action:playCard', {gameId, handIndex, target})
-      .subscribe(() => {});
+      .subscribe(() => {}, (error: ApiError) => this.alertService.toast(error.message));
   }
 
   public reorderBenchAction(gameId: number, from: number, to: number) {
     this.socketService.emit('game:action:reorderBench', {gameId, from, to})
-      .subscribe(() => {});
+      .subscribe(() => {}, (error: ApiError) => this.alertService.toast(error.message));
   }
 
   public reorderHandAction(gameId: number, order: number[]) {
     this.socketService.emit('game:action:reorderHand', {gameId, order})
-      .subscribe(() => {});
+      .subscribe(() => {}, (error: ApiError) => this.alertService.toast(error.message));
   }
 
   public retreatAction(gameId: number, to: number) {
     this.socketService.emit('game:action:retreat', {gameId, to})
-      .subscribe(() => {});
+      .subscribe(() => {}, (error: ApiError) => this.alertService.toast(error.message));
   }
 
   public passTurnAction(gameId: number) {
     this.socketService.emit('game:action:passTurn', {gameId})
-      .subscribe(() => {});
+      .subscribe(() => {}, (error: ApiError) => this.alertService.toast(error.message));
   }
 
   public appendLogAction(gameId: number, message: string) {
     this.socketService.emit('game:action:appendLog', {gameId, message})
-      .subscribe(() => {});
+      .subscribe(() => {}, (error: ApiError) => this.alertService.toast(error.message));
   }
 
   public dispatch(action: Action) { }

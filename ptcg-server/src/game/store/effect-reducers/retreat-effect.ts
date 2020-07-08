@@ -47,6 +47,13 @@ export function retreatReducer(store: StoreLike, state: State, effect: Effect): 
       if (!isEnough) {
         return; // invalid energies selected
       }
+      const activePokemon = player.active.getPokemonCard();
+      const benchedPokemon = player.bench[effect.benchIndex].getPokemonCard();
+      if (activePokemon === undefined || benchedPokemon === undefined) {
+        return;
+      }
+
+      store.log(state, `${player.name} retreats ${activePokemon.name} to ${benchedPokemon.name}.`);
       player.active.moveCardsTo(cards, player.discard);
       const temp = player.active;
       player.active = player.bench[effect.benchIndex];
