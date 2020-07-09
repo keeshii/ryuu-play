@@ -7,6 +7,7 @@ export interface PromptItem {
   card: Card;
   index: number;
   isAvailable: boolean;
+  isSecret: boolean;
   scanUrl: string;
   spec?: SortableSpec<PromptItem, any>;
 }

@@ -9,6 +9,7 @@ import { PromptChooseCardsComponent } from './prompt-choose-cards/prompt-choose-
 import { CardsContainerComponent } from './cards-container/cards-container.component';
 import { ChooseCardsPanesComponent } from './choose-cards-panes/choose-cards-panes.component';
 import { PromptChooseEnergyComponent } from './prompt-choose-energy/prompt-choose-energy.component';
+import { PromptChoosePrizeComponent } from './prompt-choose-prize/prompt-choose-prize.component';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { PromptChooseEnergyComponent } from './prompt-choose-energy/prompt-choos
     PromptChooseCardsComponent,
     CardsContainerComponent,
     ChooseCardsPanesComponent,
-    PromptChooseEnergyComponent
+    PromptChooseEnergyComponent,
+    PromptChoosePrizeComponent
   ],
   imports: [
     CommonModule,

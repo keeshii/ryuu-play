@@ -22,6 +22,7 @@
         <ptcg-prompt-alert *ngSwitchCase="'Alert'" [gameState]="gameState" [prompt]="prompt"></ptcg-prompt-alert>
         <ptcg-prompt-choose-cards *ngSwitchCase="'Choose cards'" [gameState]="gameState" [prompt]="prompt"></ptcg-prompt-choose-cards>
         <ptcg-prompt-choose-energy *ngSwitchCase="'Choose energy'" [gameState]="gameState" [prompt]="prompt"></ptcg-prompt-choose-energy>
+        <ptcg-prompt-choose-prize *ngSwitchCase="'Choose prize'" [gameState]="gameState" [prompt]="prompt"></ptcg-prompt-choose-prize>
         <div *ngSwitchDefault>
           Unknown prompt type: '{{prompt?.type}}'.
         </div>

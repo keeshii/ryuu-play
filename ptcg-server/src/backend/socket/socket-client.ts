@@ -1,6 +1,8 @@
 import * as io from 'socket.io';
 import { AddPlayerAction, AppendLogAction, Action, PassTurnAction, ChooseCardsPromptType,
-  CardList, ReorderHandAction, ReorderBenchAction, PlayCardAction, CardTarget, RetreatAction, ChooseEnergyPromptType, AttackAction, UseAbilityAction } from '../../game';
+  CardList, ReorderHandAction, ReorderBenchAction, PlayCardAction, CardTarget,
+  RetreatAction, ChooseEnergyPromptType, AttackAction, UseAbilityAction, Prompt,
+  ChoosePrizePromptType } from '../../game';
 import { Client } from '../../game/core/client';
 import { Errors } from '../common/errors';
 import { Game } from '../../game/core/game';
@@ -247,6 +249,28 @@ export class SocketClient extends Client {
     this.dispatch(params.gameId, action, response);
   }
 
+  private decodePromptResults(game: Game, prompt: Prompt<any>, result: any): any {
+
+    // If 'Choose card prompt', we have to decode indexes to card instances
+    if (prompt.type === ChooseCardsPromptType || prompt.type === ChooseEnergyPromptType) {
+      const cards: CardList = (prompt as any).cards;
+      if (result !== null) {
+        result = (result as number[]).map(index => cards.cards[index]);
+      }
+    }
+
+    if (prompt.type === ChoosePrizePromptType) {
+      const player = game.state.players.find(p => p.id === prompt.playerId);
+      if (player === undefined) {
+        throw Errors.PROMPT_INVALID_ID;
+      }
+      const prizes = player.prizes.filter(p => p.cards.length > 0);
+      result = (result as number[]).map(index => prizes[index]);
+    }
+
+    return result;
+  }
+
   private resolvePrompt(params: {gameId: number, id: number, result: any}, response: Response<void>) {
     const game = this.core.games.find(g => g.id === params.gameId);
     if (game === undefined) {
@@ -259,13 +283,11 @@ export class SocketClient extends Client {
       return;
     }
 
-    // If 'Choose card prompt', we have to decode indexes to card instances
-    if (prompt.type === ChooseCardsPromptType || prompt.type === ChooseEnergyPromptType) {
-      const cards: CardList = (prompt as any).cards;
-      if (params.result !== null) {
-        const result: number[] = params.result;
-        params.result = result.map(index => cards.cards[index]);
-      }
+    try {
+      params.result = this.decodePromptResults(game, prompt, params.result);
+    } catch (error) {
+      response('error', error);
+      return;
     }
 
     const action = new ResolvePromptAction(params.id, params.result);

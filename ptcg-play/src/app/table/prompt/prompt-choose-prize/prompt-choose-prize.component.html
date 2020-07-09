@@ -1,11 +1,11 @@
-<h2 class="mat-dialog-title">Choose energy</h2>
+<h2 class="mat-dialog-title">Choose prize</h2>
 
 <mat-dialog-content>
   <p>{{ message }}</p>
 
   <ptcg-choose-cards-panes
-    [cards]="cards.cards"
-    [filter]="filter"
+    [cards]="cards"
+    [cardbackMap]="cardbackMap"
     (change)="onChange($event)">
   </ptcg-choose-cards-panes>
 </mat-dialog-content>

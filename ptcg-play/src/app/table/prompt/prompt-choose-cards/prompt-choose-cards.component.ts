@@ -48,7 +48,7 @@ export class PromptChooseCardsComponent implements OnInit {
     this.gameService.resolvePrompt(gameId, id, this.result);
   }
 
-  protected onChange(result: number[]) {
+  public onChange(result: number[]) {
     let isInvalid = false;
     if (this.min !== undefined && this.min > result.length) {
       isInvalid = true;

@@ -7,7 +7,8 @@
 
     <ng-template ssTemplate let-context>
       <ptcg-card
-        [ngClass]="{unavailable: !filterMap[context.data.card.fullName]}"
+        [ngClass]="{unavailable: !filterMap[context.data.card.fullName],
+          cardback: cardbackMap[context.data.index]}"
         [ssRender]="context"
         #render="ssRender"
         [dragSource]="render.source" [noHTML5Preview]="true"
@@ -28,6 +29,7 @@
 
     <ng-template ssTemplate let-context>
       <ptcg-card
+        [ngClass]="{cardback: cardbackMap[context.data.index]}"
         [ssRender]="context"
         #render="ssRender"
         [dragSource]="render.source" [noHTML5Preview]="true"

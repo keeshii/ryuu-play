@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { CardList, Card } from 'ptcg-server';
+import { Card } from 'ptcg-server';
 import { DraggedItem } from '@angular-skyhook/sortable';
 
 import { CardsBaseService } from '../../../shared/cards/cards-base.service';
@@ -17,21 +17,23 @@ export class ChooseCardsPanesComponent implements OnInit {
   public readonly topListId = 'CHOOSE_CARDS_TOP_LIST';
   public readonly bottomListId = 'CHOOSE_CARDS_BOTTOM_LIST';
 
-  @Input() set cards(cardList: CardList) {
-    this.cardList = cardList;
-    this.filterMap = this.buildFilterMap(cardList, this.filterValue);
-    this.topSortable.tempList = this.buildCardList(cardList);
+  @Input() set cards(value: Card[]) {
+    this.cardArray = value;
+    this.filterMap = this.buildFilterMap(value, this.filterValue);
+    this.topSortable.tempList = this.buildCardList(value);
     this.bottomSortable.tempList = [];
     this.commitTempLists();
   }
 
   @Input() set filter(filter: Partial<Card>) {
     this.filterValue = filter || {};
-    this.filterMap = this.buildFilterMap(this.cardList, filter);
-    this.topSortable.tempList = this.buildCardList(this.cardList);
+    this.filterMap = this.buildFilterMap(this.cardArray, filter);
+    this.topSortable.tempList = this.buildCardList(this.cardArray);
     this.bottomSortable.tempList = [];
     this.commitTempLists();
   }
+
+  @Input() cardbackMap: {[index: number]: boolean} = {};
 
   @Output() change = new EventEmitter<number[]>();
 
@@ -42,7 +44,7 @@ export class ChooseCardsPanesComponent implements OnInit {
   public topSortable: ChooseCardsSortable;
   public bottomSortable: ChooseCardsSortable;
 
-  private cardList: CardList = new CardList();
+  private cardArray: Card[] = [];
   private filterValue: Partial<Card> = {};
 
   constructor(
@@ -78,9 +80,9 @@ export class ChooseCardsPanesComponent implements OnInit {
     return sortable;
   }
 
-  private buildFilterMap(cards: CardList, filter: Partial<Card>) {
+  private buildFilterMap(cards: Card[], filter: Partial<Card>) {
     const filterMap: {[fullName: string]: boolean} = {};
-    for (const card of cards.cards) {
+    for (const card of cards) {
       let result = false;
       for (const key in filter) {
         if (filter.hasOwnProperty(key)) {
@@ -92,12 +94,13 @@ export class ChooseCardsPanesComponent implements OnInit {
     return filterMap;
   }
 
-  private buildCardList(cards: CardList): PromptItem[] {
-    return cards.cards.map((card, index) => {
+  private buildCardList(cards: Card[]): PromptItem[] {
+    return cards.map((card, index) => {
       const item: PromptItem = {
         card,
         index,
         isAvailable: this.filterMap[card.fullName],
+        isSecret: !!this.cardbackMap[index],
         scanUrl: this.cardsBaseService.getScanUrl(card.fullName)
       };
       return item;

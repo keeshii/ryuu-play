@@ -4,6 +4,7 @@ import { State, GamePhase } from "../state/state";
 import { StoreLike } from "../store-like";
 import { Player } from "../state/player";
 import { EndTurnEffect } from "../effects/game-phase-effects";
+import { checkState } from "./check-state-effect";
 
 function getActivePlayer(state: State): Player {
   return state.players[state.activePlayer];
@@ -60,9 +61,12 @@ export function gamePhaseReducer(store: StoreLike, state: State, effect: Effect)
       throw new GameError(GameMessage.NOT_YOUR_TURN);
     }
 
-    store.log(state, `${player.name} ends the turn.`);
-    state = betweenTurns(store, state);
-    state = nextTurn(store, state);
+    state = checkState(store, state, () => {
+      store.log(state, `${player.name} ends the turn.`);
+      state = betweenTurns(store, state);
+      state = nextTurn(store, state);
+    });
+
     return state;
   }
 

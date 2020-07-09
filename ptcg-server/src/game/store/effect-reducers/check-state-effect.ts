@@ -27,7 +27,7 @@ function discardKoPokemons(store: StoreLike, state: State): [number, number] {
 
           const checkPrizesCount = new CheckPrizesCountEffect(player, target);
           state = store.reduceEffect(state, checkPrizesCount);
-          prizesToTake[i] += checkPrizesCount.count;
+          prizesToTake[i === 0 ? 1 : 0] += checkPrizesCount.count;
 
           store.log(state, `${pokemonCard.name} is KO.`);
           target.moveCardsTo(target.cards, player.discard);
@@ -76,9 +76,14 @@ function choosePrizeCards(state: State, prizesToTake: [number, number]): ChooseP
   return prompts;
 }
 
-function handlePrompts(store: StoreLike, state: State, prompts: (ChoosePrizePrompt | ChoosePokemonPrompt)[]): State {
+function handlePrompts(
+  store: StoreLike, state: State,
+  prompts: (ChoosePrizePrompt | ChoosePokemonPrompt)[],
+  onComplete: () => void
+): State {
   const prompt = prompts.shift();
   if (prompt === undefined) {
+    onComplete();
     return state;
   }
 
@@ -91,7 +96,7 @@ function handlePrompts(store: StoreLike, state: State, prompts: (ChoosePrizeProm
     if (prompt instanceof ChoosePrizePrompt) {
       const prizes: CardList[] = result;
       prizes.forEach(prize => prize.moveTo(player.hand));
-      handlePrompts(store, state, prompts);
+      handlePrompts(store, state, prompts, onComplete);
     } else if (prompt instanceof ChoosePokemonPrompt) {
       const selectedPokemon = result as PokemonCardList[];
       if (selectedPokemon.length !== 1) {
@@ -105,21 +110,28 @@ function handlePrompts(store: StoreLike, state: State, prompts: (ChoosePrizeProm
       const temp = player.active;
       player.active = player.bench[benchIndex];
       player.bench[benchIndex] = temp;
-      handlePrompts(store, state, prompts);
+      handlePrompts(store, state, prompts, onComplete);
     }
   });
 }
 
-function checkState(store: StoreLike, state: State): State {
+export function checkState(store: StoreLike, state: State, onComplete?: () => void): State {
   const prizesToTake: [number, number] = discardKoPokemons(store, state);
   const prompts: (ChoosePrizePrompt | ChoosePokemonPrompt)[] = [
     ...choosePrizeCards(state, prizesToTake),
     ...chooseActivePokemons(state)
   ];
 
-  for (const player of state.players) {
+  const completed: [boolean, boolean] = [false, false];
+  for (let i = 0; i < state.players.length; i++) {
+    const player = state.players[i];
     const playerPrompts = prompts.filter(p => p.playerId === player.id);
-    state = handlePrompts(store, state, playerPrompts);
+    state = handlePrompts(store, state, playerPrompts, () => {
+      completed[i] = true;
+      if (completed.every(c => c) && onComplete) {
+        onComplete();
+      }
+    });
   }
 
   return state;
