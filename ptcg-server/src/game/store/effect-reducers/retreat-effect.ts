@@ -43,7 +43,7 @@ export function retreatReducer(store: StoreLike, state: State, effect: Effect): 
       if (cards === null) {
         return; // operation cancelled
       }
-      const isEnough = StateUtils.checkExactEnergy(player.active.cards, checkRetreatCost.cost);
+      const isEnough = StateUtils.checkExactEnergy(cards, checkRetreatCost.cost);
       if (!isEnough) {
         throw new GameError(GameMessage.ILLEGAL_ACTION);
       }

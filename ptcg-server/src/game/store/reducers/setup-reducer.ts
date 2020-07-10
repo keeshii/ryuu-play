@@ -12,8 +12,8 @@ import { State, GamePhase } from "../state/state";
 import { GameError, GameMessage } from "../../game-error";
 import { StoreLike } from "../store-like";
 import { SuperType, Stage } from "../card/card-types";
-import { nextTurn } from "./player-turn-reducer";
-import {PokemonCardList} from "../state/pokemon-card-list";
+import { nextTurn } from "../effect-reducers/game-phase-effect";
+import { PokemonCardList } from "../state/pokemon-card-list";
 
 
 function putStartingPokemonsAndPrizes(player: Player, cards: Card[]): void {
@@ -79,7 +79,7 @@ function* setupGame(next: Function, store: StoreLike, state: State): IterableIte
         new AlertPrompt(player.id, GameMessage.SETUP_PLAYER_NO_BASIC)
       ], results => {
         if (results[0]) {
-          opponent.deck.moveTo(player.hand, 1);
+          opponent.deck.moveTo(opponent.hand, 1);
         }
         next();
       });

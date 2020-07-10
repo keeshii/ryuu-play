@@ -1,0 +1,16 @@
+<h2 class="mat-dialog-title">Game over</h2>
+
+<mat-dialog-content>
+  <div [ngSwitch]="prompt.winner">
+    <p *ngSwitchCase="GameWinner.DRAW">It's draw.</p>
+    <p *ngSwitchCase="GameWinner.PLAYER_1">Winner {{ gameState.state.players[0].name }}.</p>
+    <p *ngSwitchCase="GameWinner.PLAYER_2">Winner {{ gameState.state.players[1].name }}.</p>
+    <p *ngSwitchDefault>Game is finished.</p>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button color="primary" (click)="confirm()">
+    OK
+  </button>
+</mat-dialog-actions>

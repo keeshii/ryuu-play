@@ -12,6 +12,7 @@ import { ChooseCardsPanesComponent } from './choose-cards-panes/choose-cards-pan
 import { PromptChooseEnergyComponent } from './prompt-choose-energy/prompt-choose-energy.component';
 import { PromptChoosePrizeComponent } from './prompt-choose-prize/prompt-choose-prize.component';
 import { PromptChoosePokemonComponent } from './prompt-choose-pokemon/prompt-choose-pokemon.component';
+import { PromptGameOverComponent } from './prompt-game-over/prompt-game-over.component';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { PromptChoosePokemonComponent } from './prompt-choose-pokemon/prompt-cho
     ChooseCardsPanesComponent,
     PromptChooseEnergyComponent,
     PromptChoosePrizeComponent,
-    PromptChoosePokemonComponent
+    PromptChoosePokemonComponent,
+    PromptGameOverComponent
   ],
   imports: [
     BoardModule,
