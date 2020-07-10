@@ -1,0 +1,23 @@
+<h2 class="mat-dialog-title">Choose pokemon</h2>
+
+<mat-dialog-content>
+  <p>{{ message }}</p>
+
+  <div class="ptcg-selection-container">
+    <div class="ptcg-pokemon-row" *ngFor="let row of rows"
+      [ngClass]="{'upside-down': row.target.player === PlayerType.TOP_PLAYER}">
+      <ptcg-board-card *ngFor="let item of row.items"
+        ptcgDropHighlight="outside" [ptcgDropHighlightVisible]="item.selected"
+        [cardList]="item.cardList"
+        (cardClick)="onCardClick(item)">
+      </ptcg-board-card>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button *ngIf="allowedCancel" (click)="cancel()">Cancel</button>
+  <button mat-raised-button [disabled]="isInvalid" color="primary" (click)="confirm()">
+    OK
+  </button>
+</mat-dialog-actions>

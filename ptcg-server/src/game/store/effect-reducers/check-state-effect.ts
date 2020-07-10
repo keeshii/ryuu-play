@@ -6,7 +6,8 @@ import { PokemonCardList } from "../state/pokemon-card-list";
 import { ChoosePokemonPrompt } from "../prompts/choose-pokemon-prompt";
 import { GameMessage, GameError } from "../../game-error";
 import { ChoosePrizePrompt } from "../prompts/choose-prize-prompt";
-import {CardList} from "../state/card-list";
+import { CardList } from "../state/card-list";
+import { PlayerType, SlotType } from "../actions/play-card-action";
 
 function discardKoPokemons(store: StoreLike, state: State): [number, number] {
   const prizesToTake: [number, number] = [0, 0];
@@ -48,7 +49,13 @@ function chooseActivePokemons(state: State): ChoosePokemonPrompt[] {
     const hasActive = player.active.cards.length > 0;
     const hasBenched = player.bench.some(bench => bench.cards.length > 0);
     if (!hasActive && hasBenched) {
-      const choose = new ChoosePokemonPrompt(player.id, GameMessage.CHOOSE_NEW_ACTIVE_POKEMON);
+      const choose = new ChoosePokemonPrompt(
+        player.id,
+        GameMessage.CHOOSE_NEW_ACTIVE_POKEMON,
+        PlayerType.BOTTOM_PLAYER,
+        [ SlotType.BENCH ],
+        { count: 1, allowCancel: false }
+      );
       prompts.push(choose);
     }
   }

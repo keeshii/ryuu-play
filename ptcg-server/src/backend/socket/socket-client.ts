@@ -2,7 +2,7 @@ import * as io from 'socket.io';
 import { AddPlayerAction, AppendLogAction, Action, PassTurnAction, ChooseCardsPromptType,
   CardList, ReorderHandAction, ReorderBenchAction, PlayCardAction, CardTarget,
   RetreatAction, ChooseEnergyPromptType, AttackAction, UseAbilityAction, Prompt,
-  ChoosePrizePromptType } from '../../game';
+  ChoosePrizePromptType, ChoosePokemonPromptType, PlayerType, SlotType, PokemonCardList} from '../../game';
 import { Client } from '../../game/core/client';
 import { Errors } from '../common/errors';
 import { Game } from '../../game/core/game';
@@ -266,6 +266,23 @@ export class SocketClient extends Client {
       }
       const prizes = player.prizes.filter(p => p.cards.length > 0);
       result = (result as number[]).map(index => prizes[index]);
+    }
+
+    if (prompt.type === ChoosePokemonPromptType) {
+      const player = game.state.players.find(p => p.id === prompt.playerId);
+      const opponent = game.state.players.find(p => p.id !== prompt.playerId);
+      if (player === undefined || opponent === undefined) {
+        throw Errors.PROMPT_INVALID_ID;
+      }
+      let cardLists: PokemonCardList[] = [];
+      (result as CardTarget[]).forEach(target => {
+        let p = target.player === PlayerType.BOTTOM_PLAYER ? player : opponent;
+        cardLists.push(target.slot === SlotType.ACTIVE ? p.active : p.bench[target.index]);
+      });
+      if (cardLists.some(cardList => cardList.cards.length === 0)) {
+        throw Errors.PROMPT_INVALID_ID;
+      }
+      result = cardLists;
     }
 
     return result;

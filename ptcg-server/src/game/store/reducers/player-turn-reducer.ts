@@ -5,7 +5,7 @@ import { State, GamePhase } from "../state/state";
 import { StoreLike } from "../store-like";
 import { GameError, GameMessage } from "../../game-error";
 import { RetreatEffect, UseAttackEffect } from "../effects/game-effects";
-import {EndTurnEffect} from "../effects/game-phase-effects";
+import { EndTurnEffect } from "../effects/game-phase-effects";
 
 function getActivePlayer(state: State): Player {
   return state.players[state.activePlayer];

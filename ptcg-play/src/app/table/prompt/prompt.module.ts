@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+import { BoardModule } from '../board/board.module';
 import { PromptComponent } from './prompt.component';
 import { PromptConfirmComponent } from './prompt-confirm/prompt-confirm.component';
 import { PromptAlertComponent } from './prompt-alert/prompt-alert.component';
@@ -10,6 +11,7 @@ import { CardsContainerComponent } from './cards-container/cards-container.compo
 import { ChooseCardsPanesComponent } from './choose-cards-panes/choose-cards-panes.component';
 import { PromptChooseEnergyComponent } from './prompt-choose-energy/prompt-choose-energy.component';
 import { PromptChoosePrizeComponent } from './prompt-choose-prize/prompt-choose-prize.component';
+import { PromptChoosePokemonComponent } from './prompt-choose-pokemon/prompt-choose-pokemon.component';
 
 
 @NgModule({
@@ -21,9 +23,11 @@ import { PromptChoosePrizeComponent } from './prompt-choose-prize/prompt-choose-
     CardsContainerComponent,
     ChooseCardsPanesComponent,
     PromptChooseEnergyComponent,
-    PromptChoosePrizeComponent
+    PromptChoosePrizeComponent,
+    PromptChoosePokemonComponent
   ],
   imports: [
+    BoardModule,
     CommonModule,
     SharedModule,
   ],

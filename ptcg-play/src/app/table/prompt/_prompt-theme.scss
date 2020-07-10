@@ -25,4 +25,10 @@
     }
   }
 
+  ptcg-prompt-choose-pokemon {
+    .ptcg-selection-container {
+      background-color: $ptcg-cards-container-background;
+    }
+  }
+
 }

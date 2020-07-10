@@ -1,14 +1,11 @@
 import { Prompt } from "./prompt";
 import { GameMessage } from "../../game-error";
+import { PlayerType, SlotType } from "../actions/play-card-action";
 import { PokemonCardList } from "../state/pokemon-card-list";
 
 export const ChoosePokemonPromptType = 'Choose pokemon';
 
 export interface ChoosePokemonOptions {
-  allowPlayerActive: boolean;
-  allowPlayerBench: boolean;
-  allowOpponentActive: boolean;
-  allowOpponentBench: boolean;
   count: number;
   allowCancel: boolean;
 }
@@ -22,18 +19,16 @@ export class ChoosePokemonPrompt extends Prompt<PokemonCardList[]> {
   constructor(
     playerId: number,
     public message: GameMessage,
+    public playerType: PlayerType,
+    public slots: SlotType[],
     options?: Partial<ChoosePokemonOptions>
   ) {
     super(playerId);
 
     // Default options
     this.options = Object.assign({}, {
-      allowPlayerActive: false,
-      allowPlayerBench: true,
-      allowOpponentActive: false,
-      allowOpponentBench: false,
       count: 1,
-      allowCancel: false
+      allowCancel: true
     }, options);
   }
 

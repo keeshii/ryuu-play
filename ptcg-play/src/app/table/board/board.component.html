@@ -26,8 +26,8 @@
 
     <!-- Top Bench -->
     <div class="ptcg-board-row ptcg-board-bench">
-      <ptcg-board-card *ngFor="let slot of topBench"
-        [cardList]="topPlayer?.bench[index]" [owner]="topPlayer?.id === clientId"
+      <ptcg-board-card *ngFor="let slot of topBench; index as i"
+        [cardList]="topPlayer?.bench[i]" [owner]="topPlayer?.id === clientId"
         (cardClick)="onCardClick($event)">
       </ptcg-board-card>
     </div>

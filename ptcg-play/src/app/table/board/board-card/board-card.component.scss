@@ -48,7 +48,7 @@ $ptcg-energy-card-offset: 15%;
   top: #{-$ptcg-energy-card-offset * $ptcg-max-energy-cards};
   transform: translateY(-100%);
 
-  :host-context(.ptcg-board-player.upside-down) & {
+  :host-context(.upside-down) & {
     transform: translateY(-100%) rotate(180deg);
   }
 }

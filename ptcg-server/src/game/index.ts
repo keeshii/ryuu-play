@@ -21,6 +21,7 @@ export * from './store/card/trainer-card';
 export * from './store/prompts/alert-prompt';
 export * from './store/prompts/choose-cards-prompt';
 export * from './store/prompts/choose-energy-prompt';
+export * from './store/prompts/choose-pokemon-prompt';
 export * from './store/prompts/choose-prize-prompt';
 export * from './store/prompts/coin-flip-prompt';
 export * from './store/prompts/confirm-prompt';
