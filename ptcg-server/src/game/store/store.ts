@@ -16,7 +16,7 @@ import { playEnergyReducer } from "./effect-reducers/play-energy-effect";
 import { playPokemonReducer } from "./effect-reducers/play-pokemon-effect";
 import { playerTurnReducer } from "./reducers/player-turn-reducer";
 import { gamePhaseReducer } from "./effect-reducers/game-phase-effect";
-import { checkStateReducer } from "./effect-reducers/check-state-effect";
+import { checkStateReducer, checkState } from "./effect-reducers/check-state-effect";
 import { retreatReducer } from "./effect-reducers/retreat-effect";
 import { reorderReducer} from "./reducers/reorder-reducer";
 import { setupPhaseReducer } from './reducers/setup-reducer';
@@ -48,7 +48,7 @@ export class Store implements StoreLike {
     if (action instanceof ResolvePromptAction) {
       state = this.reducePrompt(state, action);
       if (this.promptItems.length === 0) {
-        state = this.reduceEffect(state, new CheckStateEffect());
+        state = checkState(this, state);
       }
       this.handler.onStateChange(state);
       return state;
@@ -161,7 +161,7 @@ export class Store implements StoreLike {
       state = playerTurnReducer(this, state, action);
 
       if (this.promptItems.length === 0) {
-        state = this.reduceEffect(state, new CheckStateEffect());
+        state = checkState(this, state);
       }
     } catch (storeError) {
       // Illegal action

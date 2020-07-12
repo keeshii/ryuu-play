@@ -3,13 +3,8 @@ import { Player } from "../state/player";
 import { PokemonCardList } from "../state/pokemon-card-list";
 
 export enum CheckEffects {
-  CHECK_STATE = 'CHECK_STATE',
   CHECK_HP_EFFECT = 'CHECK_HP_EFFECT',
-}
-
-export class CheckStateEffect implements Effect {
-  readonly type: string = CheckEffects.CHECK_STATE;
-  public preventDefault = false;
+  CHECK_PRIZES_COUNT_EFFECT = 'CHECK_PRIZE_COUNT_EFFECT',
 }
 
 export class CheckHpEffect implements Effect {
@@ -28,7 +23,7 @@ export class CheckHpEffect implements Effect {
 }
 
 export class CheckPrizesCountEffect implements Effect {
-  readonly type: string = CheckEffects.CHECK_HP_EFFECT;
+  readonly type: string = CheckEffects.CHECK_PRIZES_COUNT_EFFECT;
   public preventDefault = false;
   public player: Player;
   public target: PokemonCardList;

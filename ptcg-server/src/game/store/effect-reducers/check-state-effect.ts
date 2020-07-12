@@ -1,13 +1,14 @@
 import { Effect } from "../effects/effect";
-import { State, GamePhase } from "../state/state";
+import { State, GamePhase, GameWinner } from "../state/state";
 import { StoreLike } from "../store-like";
-import { CheckStateEffect, CheckHpEffect, CheckPrizesCountEffect } from "../effects/check-effects";
+import { CheckHpEffect, CheckPrizesCountEffect } from "../effects/check-effects";
 import { PokemonCardList } from "../state/pokemon-card-list";
 import { ChoosePokemonPrompt } from "../prompts/choose-pokemon-prompt";
 import { GameMessage, GameError } from "../../game-error";
 import { ChoosePrizePrompt } from "../prompts/choose-prize-prompt";
 import { CardList } from "../state/card-list";
 import { PlayerType, SlotType } from "../actions/play-card-action";
+import { GameOverPrompt } from "../prompts/game-over-prompt";
 
 function discardKoPokemons(store: StoreLike, state: State): [number, number] {
   const prizesToTake: [number, number] = [0, 0];
@@ -83,8 +84,87 @@ function choosePrizeCards(state: State, prizesToTake: [number, number]): ChooseP
   return prompts;
 }
 
+export function endGame(store: StoreLike, state: State, winner: GameWinner, onComplete?: () => void): State {
+
+  if (state.players.length !== 2) {
+    throw new GameError(GameMessage.ILLEGAL_ACTION);
+  }
+
+  if (state.phase !== GamePhase.PLAYER_TURN && state.phase !== GamePhase.BETWEEN_TURNS) {
+    throw new GameError(GameMessage.ILLEGAL_ACTION);    
+  }
+
+  switch (winner) {
+    case GameWinner.NONE:
+      store.log(state, 'Game finished.');
+      break;
+    case GameWinner.DRAW:
+      store.log(state, 'Game finished. It\'s a draw.');
+      break;
+    case GameWinner.PLAYER_1:
+    case GameWinner.PLAYER_2:
+      const winnerName = winner === GameWinner.PLAYER_1
+        ? state.players[0].name
+        : state.players[1].name;
+      store.log(state, `Game finished. Winner ${winnerName}.`);
+      break;
+  }
+
+  state = store.prompt(state, [
+    new GameOverPrompt(state.players[0].id, winner),
+    new GameOverPrompt(state.players[1].id, winner),
+  ], () => {
+    state.winner = winner;
+    state.phase = GamePhase.FINISHED;
+    if (onComplete !== undefined) {
+      onComplete();
+    }
+  });
+
+  return state;
+}
+
+function checkWinner(
+  store: StoreLike,
+  state: State,
+  onComplete?: () => void
+): State {
+  const points: [number, number] = [0, 0];
+  for (let i = 0; i < state.players.length; i++) {
+    const player = state.players[i];
+    // Player has no active Pokemon, opponent wins.
+    if (player.active.cards.length === 0) {
+      store.log(state, `${player.name} has no active Pokemon.`);
+      points[i === 0 ? 1 : 0]++;
+    }
+    // Player has no Prize cards left, player wins.
+    if (player.prizes.every(p => p.cards.length === 0)) {
+      store.log(state, `${player.name} has no more Prize cards left.`);
+      points[i]++;
+    }
+  }
+
+  if (points[0] + points[1] === 0) {
+    if (onComplete) {
+      onComplete();
+    }
+    return state;
+  }
+
+  let winner = GameWinner.DRAW;
+  if (points[0] > points[1]) {
+    winner = GameWinner.PLAYER_1;
+  } else if (points[1] > points[0]) {
+    winner = GameWinner.PLAYER_2;
+  }
+
+  state = endGame(store, state, winner, onComplete);
+  return state;
+}
+
 function handlePrompts(
-  store: StoreLike, state: State,
+  store: StoreLike,
+  state: State,
   prompts: (ChoosePrizePrompt | ChoosePokemonPrompt)[],
   onComplete: () => void
 ): State {
@@ -135,8 +215,8 @@ export function checkState(store: StoreLike, state: State, onComplete?: () => vo
     const playerPrompts = prompts.filter(p => p.playerId === player.id);
     state = handlePrompts(store, state, playerPrompts, () => {
       completed[i] = true;
-      if (completed.every(c => c) && onComplete) {
-        onComplete();
+      if (completed.every(c => c)) {
+        checkWinner(store, state, onComplete);
       }
     });
   }
@@ -145,18 +225,5 @@ export function checkState(store: StoreLike, state: State, onComplete?: () => vo
 }
 
 export function checkStateReducer(store: StoreLike, state: State, effect: Effect): State {
-
-  /* Perform complete state check (KO, no active, etc) */
-  if (effect instanceof CheckStateEffect) {
-    if (state.phase !== GamePhase.PLAYER_TURN && state.phase !== GamePhase.BETWEEN_TURNS) {
-      return state;
-    }
-    if (state.players.length !== 2) {
-      return state;
-    }
-
-    return checkState(store, state);
-  }
-
   return state;
 }

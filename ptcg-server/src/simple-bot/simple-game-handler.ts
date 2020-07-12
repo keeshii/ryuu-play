@@ -1,5 +1,7 @@
 import { Action } from '../game/store/actions/action';
-import { AlertPrompt, ConfirmPrompt, Player, Prompt, State, GamePhase } from '../game';
+import { AlertPrompt, ConfirmPrompt, Player, Prompt, State, GamePhase,
+  GameOverPrompt, ChooseEnergyPrompt, StateUtils, Card, EnergyCard,
+  ChoosePokemonPrompt, PokemonCardList, PlayerType, SlotType } from '../game';
 import { ChooseCardsPrompt } from '../game/store/prompts/choose-cards-prompt';
 import { Client } from '../game/core/client';
 import { Game } from '../game/core/game';
@@ -28,6 +30,11 @@ export class SimpleGameHandler {
       }
     }
 
+    // Wait for other players to resolve the prompts.
+    if (state.prompts.filter(p => p.result === undefined).length > 0) {
+      return;
+    }
+
     const activePlayer = state.players[state.activePlayer];
     const isMyTurn = activePlayer.id === this.client.id;
     if (state.phase === GamePhase.PLAYER_TURN && isMyTurn) {
@@ -37,7 +44,7 @@ export class SimpleGameHandler {
   }
 
   public resolvePrompt(prompt: Prompt<any>): void {
-    if (prompt instanceof AlertPrompt) {
+    if (prompt instanceof AlertPrompt || prompt instanceof GameOverPrompt) {
       this.dispatch(new ResolvePromptAction(prompt.id, 0));
       return;
     }
@@ -60,6 +67,50 @@ export class SimpleGameHandler {
       this.dispatch(new ResolvePromptAction(prompt.id, result));
       return;
     }
+
+    if (prompt instanceof ChooseEnergyPrompt) {
+      const result: Card[] = prompt.cards.cards.filter(c => c instanceof EnergyCard);
+      while (result.length > 0 && !StateUtils.checkExactEnergy(result, prompt.cost)) {
+        result.splice(result.length - 1, 1);
+      }
+      this.dispatch(new ResolvePromptAction(prompt.id, result));
+      return;
+    }
+
+    if (prompt instanceof ChoosePokemonPrompt) {
+      const result: PokemonCardList[] = this.buildPokemonToChoose(prompt)
+        .slice(0, prompt.options.count);
+      this.dispatch(new ResolvePromptAction(prompt.id, result));
+      return;
+    }
+  }
+
+  private buildPokemonToChoose(prompt: ChoosePokemonPrompt): PokemonCardList[] {
+    const state = this.game.state;
+    const player = state.players.find(p => p.id === prompt.playerId);
+    const opponent = state.players.find(p => p.id !== prompt.playerId);
+    if (player === undefined || opponent === undefined) {
+      return [];
+    }
+    const hasOpponent = [PlayerType.TOP_PLAYER, PlayerType.ANY].includes(prompt.playerType);
+    const hasPlayer = [PlayerType.BOTTOM_PLAYER, PlayerType.ANY].includes(prompt.playerType);
+    const hasBench = prompt.slots.includes(SlotType.BENCH);
+    const hasActive = prompt.slots.includes(SlotType.ACTIVE);
+
+    let result: PokemonCardList[] = [];
+    if (hasOpponent && hasBench) {
+      opponent.bench.filter(b => b.cards.length).forEach(b => result.push(b));
+    }
+    if (hasOpponent && hasActive) {
+      result.push(opponent.active);
+    }
+    if (hasPlayer && hasActive) {
+      result.push(player.active);
+    }
+    if (hasPlayer && hasBench) {
+      player.bench.filter(b => b.cards.length).forEach(b => result.push(b));
+    }
+    return result;
   }
 
   public dispatch(action: Action): State {

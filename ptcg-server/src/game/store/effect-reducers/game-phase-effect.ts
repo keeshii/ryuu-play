@@ -3,9 +3,8 @@ import { Effect } from "../effects/effect";
 import { State, GamePhase, GameWinner } from "../state/state";
 import { StoreLike } from "../store-like";
 import { Player } from "../state/player";
-import { EndTurnEffect, EndGameEffect } from "../effects/game-phase-effects";
-import { checkState } from "./check-state-effect";
-import {GameOverPrompt} from "../prompts/game-over-prompt";
+import { EndTurnEffect } from "../effects/game-phase-effects";
+import { checkState, endGame } from "./check-state-effect";
 
 function getActivePlayer(state: State): Player {
   return state.players[state.activePlayer];
@@ -44,13 +43,15 @@ export function nextTurn(store: StoreLike, state: State): State {
 
     store.log(state, `${player.name} has no more cards in the deck.`);
     const winner = state.activePlayer ? GameWinner.PLAYER_1 : GameWinner.PLAYER_2;
-    state = store.reduceEffect(state, new EndGameEffect(winner));
+    state = endGame(store, state, winner);
     return state;
   }
 
   player.deck.moveTo(player.hand, 1);
   return state;
 }
+
+
 
 export function gamePhaseReducer(store: StoreLike, state: State, effect: Effect): State {
 
@@ -62,43 +63,13 @@ export function gamePhaseReducer(store: StoreLike, state: State, effect: Effect)
     }
 
     state = checkState(store, state, () => {
+      if (state.phase === GamePhase.FINISHED) {
+        return;
+      }
+
       store.log(state, `${player.name} ends the turn.`);
       state = betweenTurns(store, state);
       state = nextTurn(store, state);
-    });
-
-    return state;
-  }
-
-  if (effect instanceof EndGameEffect) {
-    const winner = effect.winner;
-
-    if (state.players.length !== 2) {
-      throw new GameError(GameMessage.ILLEGAL_ACTION);
-    }
-
-    switch (winner) {
-      case GameWinner.NONE:
-        store.log(state, 'Game finished.');
-        break;
-      case GameWinner.DRAW:
-        store.log(state, 'Game finished. It\'s a draw.');
-        break;
-      case GameWinner.PLAYER_1:
-      case GameWinner.PLAYER_2:
-        const winnerName = winner === GameWinner.PLAYER_1
-          ? state.players[0].name
-          : state.players[1].name;
-        store.log(state, `Game finished. Winner ${winnerName}.`);
-        break;
-    }
-
-    state = store.prompt(state, [
-      new GameOverPrompt(state.players[0].id, winner),
-      new GameOverPrompt(state.players[1].id, winner),
-    ], () => {
-      state.winner = winner;
-      state.phase = GamePhase.FINISHED;
     });
 
     return state;
