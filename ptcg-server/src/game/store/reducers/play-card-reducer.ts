@@ -1,5 +1,6 @@
 import { Action } from "../actions/action";
-import { AttachEnergyEffect, PlayPokemonEffect } from "../effects/play-card-effects";
+import { AttachEnergyEffect, PlayPokemonEffect, PlayTrainerEffect,
+  PlayStadiumEffect, PlaySupporterEffect, AttachPokemonToolEffect } from "../effects/play-card-effects";
 import { CardList } from "../state/card-list";
 import { EnergyCard } from "../card/energy-card";
 import { GameError, GameMessage } from "../../game-error";
@@ -8,6 +9,9 @@ import { PokemonCard } from "../card/pokemon-card";
 import { PokemonCardList } from "../state/pokemon-card-list";
 import { State, GamePhase } from "../state/state";
 import { StoreLike } from "../store-like";
+import { TrainerCard } from "../card/trainer-card";
+import { TrainerType } from "../card/card-types";
+import { Effect } from "../effects/effect";
 
 function findCardList(state: State, target: CardTarget): CardList | undefined {
   const player = target.player === PlayerType.BOTTOM_PLAYER
@@ -51,6 +55,29 @@ export function playCardReducer(store: StoreLike, state: State, action: Action):
         }
 
         const effect = new PlayPokemonEffect(player, handCard, target);
+        return store.reduceEffect(state, effect);
+      }
+
+      if (handCard instanceof TrainerCard) {
+        const target = findCardList(state, action.target);
+        let effect: Effect;
+        switch (handCard.trainerType) {
+          case TrainerType.SUPPORTER:
+            effect = new PlaySupporterEffect(player, handCard, target);
+            break;
+          case TrainerType.STADIUM:
+            effect = new PlayStadiumEffect(player, handCard);
+            break;
+          case TrainerType.TOOL:
+            if (!(target instanceof PokemonCardList)) {
+              throw new GameError(GameMessage.INVALID_TARGET);
+            }
+            effect = new AttachPokemonToolEffect(player, handCard, target);
+            break;
+          default:
+            effect = new PlayTrainerEffect(player, handCard, target);
+            break;
+        }
         return store.reduceEffect(state, effect);
       }
     }

@@ -1,8 +1,11 @@
+import { Effect } from "../../game/store/effects/effect";
+import { PlayTrainerEffect } from "../../game/store/effects/play-card-effects";
+import { ShuffleDeckPrompt } from "../../game/store/prompts/shuffle-prompt";
+import { State } from "../../game/store/state/state";
+import { StateUtils } from "../../game/store/state-utils";
+import { StoreLike } from "../../game/store/store-like";
 import { TrainerCard } from "../../game/store/card/trainer-card";
 import { TrainerType } from "../../game/store/card/card-types";
-import { StoreLike } from "../../game/store/store-like";
-import { State } from "../../game/store/state/state";
-import { Effect } from "../../game/store/effects/effect";
 
 export class N extends TrainerCard {
 
@@ -19,6 +22,23 @@ export class N extends TrainerCard {
     'Then, each player draws a card for each of his or her remaining Prize cards.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    if (effect instanceof PlayTrainerEffect && effect.trainerCard === this) {
+
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      player.hand.moveTo(player.deck);
+      opponent.hand.moveTo(opponent.hand);
+
+      store.prompt(state, [
+        new ShuffleDeckPrompt(player.id),
+        new ShuffleDeckPrompt(opponent.id)
+      ], () => {
+        player.deck.moveTo(player.hand, player.getPrizeLeft());
+        opponent.deck.moveTo(opponent.hand, opponent.getPrizeLeft());
+      });
+    }
+
     return state;
   }
 

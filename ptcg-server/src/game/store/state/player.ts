@@ -29,4 +29,8 @@ export class Player {
 
   stadiumUsedTurn: number = 0;
 
+  getPrizeLeft(): number {
+    return this.prizes.reduce((left, p) => left + p.cards.length, 0);
+  }
+
 }

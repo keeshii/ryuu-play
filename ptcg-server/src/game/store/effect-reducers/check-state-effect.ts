@@ -69,7 +69,7 @@ function choosePrizeCards(state: State, prizesToTake: [number, number]): ChooseP
 
   for (let i = 0; i < state.players.length; i++) {
     const player = state.players[i];
-    const prizeLeft = player.prizes.reduce((left, p) => left + p.cards.length, 0);
+    const prizeLeft = player.getPrizeLeft();
 
     if (prizesToTake[i] > prizeLeft) {
       prizesToTake[i] = prizeLeft;

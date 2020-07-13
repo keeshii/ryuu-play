@@ -1,6 +1,9 @@
 import { Card } from "./card/card";
 import { CardType, SuperType } from "./card/card-types";
 import { EnergyCard } from "./card/energy-card";
+import {State} from "./state/state";
+import {Player} from "./state/player";
+import {GameError, GameMessage} from "../game-error";
 
 export class StateUtils {
   public static checkEnoughEnergy(cards: Card[], cost: CardType[]): boolean {
@@ -67,6 +70,14 @@ export class StateUtils {
       }
     }
     return true;
+  }
+
+  public static getOpponent(state: State, player: Player): Player {
+    const opponent = state.players.find(p => p.id !== player.id);
+    if (opponent === undefined) {
+      throw new GameError(GameMessage.INVALID_GAME_STATE);
+    }
+    return opponent;
   }
 
 }

@@ -14,6 +14,7 @@ import { attackReducer } from "./effect-reducers/attack-effect";
 import { playCardReducer } from "./reducers/play-card-reducer";
 import { playEnergyReducer } from "./effect-reducers/play-energy-effect";
 import { playPokemonReducer } from "./effect-reducers/play-pokemon-effect";
+import { playTrainerReducer } from "./effect-reducers/play-trainer-effect";
 import { playerTurnReducer } from "./reducers/player-turn-reducer";
 import { gamePhaseReducer } from "./effect-reducers/game-phase-effect";
 import { checkStateReducer, checkState } from "./effect-reducers/check-state-effect";
@@ -60,7 +61,6 @@ export class Store implements StoreLike {
     }
 
     if (state.prompts.some(p => p.result === undefined)) {
-      console.log(state.prompts.filter(p => p.result === undefined), action);
       throw new GameError(GameMessage.ACTION_IN_PROGRESS);
     }
 
@@ -79,6 +79,7 @@ export class Store implements StoreLike {
     state = gamePhaseReducer(this, state, effect);
     state = playEnergyReducer(this, state, effect);
     state = playPokemonReducer(this, state, effect);
+    state = playTrainerReducer(this, state, effect);
     state = retreatReducer(this, state, effect);
     state = attackReducer(this, state, effect);
     state = checkStateReducer(this, state, effect);
