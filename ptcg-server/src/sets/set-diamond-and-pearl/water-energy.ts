@@ -5,6 +5,8 @@ export class WaterEnergy extends EnergyCard {
 
   public provides: CardType[] = [ CardType.WATER ];
 
+  public set: string = 'DP';
+
   public name = 'Water Energy';
 
   public fullName = 'Water Energy EVO';

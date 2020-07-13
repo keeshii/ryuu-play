@@ -15,7 +15,7 @@ export enum TrainerType {
   ITEM,
   SUPPORTER,
   STADIUM,
-  TM,
+  TOOL,
 }
 
 export enum PokemonType {

@@ -68,7 +68,7 @@ export class DeckEditComponent implements OnInit, OnDestroy {
             card,
             count: 1,
             pane: DeckEditPane.DECK,
-            scanUrl: this.cardsBaseService.getScanUrl(name)
+            scanUrl: this.cardsBaseService.getScanUrl(card)
           };
           deckItems.push(itemMap[name]);
         }

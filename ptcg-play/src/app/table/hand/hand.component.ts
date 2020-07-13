@@ -84,7 +84,7 @@ export class HandComponent implements OnInit, OnChanges {
       const item: HandItem = {
         card,
         index,
-        scanUrl: this.cardsBaseService.getScanUrl(card.fullName)
+        scanUrl: this.cardsBaseService.getScanUrl(card)
       };
       return item;
     });

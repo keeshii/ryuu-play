@@ -1,1 +1,2 @@
-export * from './basic-set/basic-set';
+export * from './set-diamond-and-pearl';
+export * from './set-hgss';

@@ -21,6 +21,6 @@ export const config = {
   },
   sets: {
     scansDir: '',
-    scansUrl: '/scans/{name}.jpg'
+    scansUrl: '/scans/{set}/{name}.jpg'
   }
 };

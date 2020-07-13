@@ -39,8 +39,10 @@ export class CardsBaseService {
     return this.names;
   }
 
-  public getScanUrl(name: string): string {
-    return environment.apiUrl + this.scansUrl.replace('{name}', name);
+  public getScanUrl(card: Card): string {
+    return environment.apiUrl + this.scansUrl
+      .replace('{set}', card.set)
+      .replace('{name}', card.fullName);
   }
 
   public getCardByName(cardName: string): Card | undefined {

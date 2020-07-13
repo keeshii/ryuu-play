@@ -181,7 +181,7 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
     let scanUrl;
     for (const card of cardList.cards) {
       if (card.superType === SuperType.POKEMON) {
-        scanUrl = this.cardsBaseService.getScanUrl(card.fullName);
+        scanUrl = this.cardsBaseService.getScanUrl(card);
       }
     }
     return scanUrl;

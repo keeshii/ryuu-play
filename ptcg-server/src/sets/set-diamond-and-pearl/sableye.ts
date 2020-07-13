@@ -46,6 +46,8 @@ export class Sableye extends PokemonCard {
     }
   ];
 
+  public set: string = 'DP';
+
   public name: string = 'Sableye';
 
   public fullName: string = 'Sableye SF';

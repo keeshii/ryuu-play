@@ -5,6 +5,8 @@ import { StoreLike } from "../store-like";
 
 export abstract class Card {
 
+  public abstract set: string;
+
   public abstract superType: SuperType;
 
   public abstract fullName: string;

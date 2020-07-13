@@ -101,7 +101,7 @@ export class ChooseCardsPanesComponent implements OnInit {
         index,
         isAvailable: this.filterMap[card.fullName],
         isSecret: !!this.cardbackMap[index],
-        scanUrl: this.cardsBaseService.getScanUrl(card.fullName)
+        scanUrl: this.cardsBaseService.getScanUrl(card)
       };
       return item;
     });

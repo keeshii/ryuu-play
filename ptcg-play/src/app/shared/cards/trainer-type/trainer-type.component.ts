@@ -13,7 +13,7 @@ export class TrainerTypeComponent implements OnInit {
   @Input() set type(trainerType: TrainerType) {
     switch (trainerType) {
       case TrainerType.ITEM:
-      case TrainerType.TM:
+      case TrainerType.TOOL:
         this.typeClass = 'item';
         break;
       case TrainerType.SUPPORTER:

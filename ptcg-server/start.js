@@ -4,12 +4,13 @@ const { App } = require('./dist/backend/app');
 const { BotManager } = require('./dist/game/bots/bot-manager');
 const { DebugBot } = require('./dist/simple-bot/debug-bot');
 const { CardManager } = require('./dist/game/cards/card-manager');
-const { basicSet } = require('./dist/sets/basic-set/basic-set');
+const { setDiamondAndPearl, setHgss } = require('./dist/sets');
 const { config } = require('./dist/config');
 const process = require('process');
 
 const cardManager = CardManager.getInstance();
-cardManager.defineSet(basicSet);
+cardManager.defineSet(setDiamondAndPearl);
+cardManager.defineSet(setHgss);
 
 const botManager = BotManager.getInstance();
 botManager.registerBot(new DebugBot('computer'));
