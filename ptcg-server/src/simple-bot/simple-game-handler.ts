@@ -1,7 +1,8 @@
 import { Action } from '../game/store/actions/action';
 import { AlertPrompt, ConfirmPrompt, Player, Prompt, State, GamePhase,
   GameOverPrompt, ChooseEnergyPrompt, StateUtils, Card, EnergyCard,
-  ChoosePokemonPrompt, PokemonCardList, PlayerType, SlotType } from '../game';
+  ChoosePokemonPrompt, PokemonCardList, PlayerType, SlotType,
+  ChoosePrizePrompt } from '../game';
 import { ChooseCardsPrompt } from '../game/store/prompts/choose-cards-prompt';
 import { Client } from '../game/core/client';
 import { Game } from '../game/core/game';
@@ -83,6 +84,13 @@ export class SimpleGameHandler {
 
     if (prompt instanceof ChoosePokemonPrompt) {
       const result: PokemonCardList[] = this.buildPokemonToChoose(prompt)
+        .slice(0, prompt.options.count);
+      this.dispatch(new ResolvePromptAction(prompt.id, result));
+      return;
+    }
+
+    if (prompt instanceof ChoosePrizePrompt) {
+      const result = this.player.prizes.filter(p => p.cards.length > 0)
         .slice(0, prompt.options.count);
       this.dispatch(new ResolvePromptAction(prompt.id, result));
       return;

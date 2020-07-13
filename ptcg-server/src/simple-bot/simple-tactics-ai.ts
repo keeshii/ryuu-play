@@ -1,6 +1,6 @@
 import { Player, State, PassTurnAction, Action, PokemonCard, Stage,
   PokemonCardList, PlayCardAction, CardTarget, PlayerType, SlotType, EnergyCard,
-  CardType } from '../game';
+  CardType, StateUtils, AttackAction} from '../game';
 import { Client } from '../game/core/client';
 
 export enum SimpleTactics {
@@ -38,6 +38,7 @@ export class SimpleTacticsAi {
     const action
       = this.playBasicPokemon(player, state)
       || this.attachEnergyCard(player, state)
+      || this.useBestAttack(player, state)
       || new PassTurnAction(this.client.id);
 
     return action;
@@ -59,10 +60,28 @@ export class SimpleTacticsAi {
         return new PlayCardAction(
           this.client.id,
           player.hand.cards.indexOf(basicPokemon),
-          this.getCardTarget(player, state, emptyBenchSlot);
-        )
+          this.getCardTarget(player, state, emptyBenchSlot)
+        );
       }
     } catch (error) { }
+  }
+
+  private useBestAttack(player: Player, state: State): Action | undefined {
+    if (!this.tactics.includes(SimpleTactics.USE_BEST_ATTACK)) {
+      return undefined;
+    }
+
+    const active = player.active.getPokemonCard();
+    if (!active) {
+      return undefined;
+    }
+
+    for (let i = active.attacks.length - 1; i >= 0; i--) {
+      const attack = active.attacks[i];
+      if (StateUtils.checkEnoughEnergy(player.active.cards, attack.cost)) {
+        return new AttackAction(this.client.id, attack.name);
+      }
+    }
   }
 
   private attachEnergyCard(player: Player, state: State): Action | undefined {
