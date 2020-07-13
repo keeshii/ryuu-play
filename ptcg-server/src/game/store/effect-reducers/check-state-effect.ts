@@ -32,7 +32,7 @@ function discardKoPokemons(store: StoreLike, state: State): [number, number] {
           prizesToTake[i === 0 ? 1 : 0] += checkPrizesCount.count;
 
           store.log(state, `${pokemonCard.name} is KO.`);
-          target.moveCardsTo(target.cards, player.discard);
+          target.moveTo(player.discard);
           target.damage = 0;
           target.specialConditions = [];
         }
@@ -91,7 +91,7 @@ export function endGame(store: StoreLike, state: State, winner: GameWinner, onCo
   }
 
   if (state.phase !== GamePhase.PLAYER_TURN && state.phase !== GamePhase.BETWEEN_TURNS) {
-    throw new GameError(GameMessage.ILLEGAL_ACTION);    
+    throw new GameError(GameMessage.ILLEGAL_ACTION);
   }
 
   switch (winner) {
@@ -193,7 +193,6 @@ function handlePrompts(
       if (benchIndex === -1 || player.active.cards.length > 0) {
         throw new GameError(GameMessage.ILLEGAL_ACTION);
       }
-      selectedPokemon[0].moveTo(player.active);
       const temp = player.active;
       player.active = player.bench[benchIndex];
       player.bench[benchIndex] = temp;
@@ -203,6 +202,10 @@ function handlePrompts(
 }
 
 export function checkState(store: StoreLike, state: State, onComplete?: () => void): State {
+  if (state.phase !== GamePhase.PLAYER_TURN && state.phase !== GamePhase.BETWEEN_TURNS) {
+    return state;
+  }
+
   const prizesToTake: [number, number] = discardKoPokemons(store, state);
   const prompts: (ChoosePrizePrompt | ChoosePokemonPrompt)[] = [
     ...choosePrizeCards(state, prizesToTake),

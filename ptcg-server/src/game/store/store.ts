@@ -20,7 +20,6 @@ import { checkStateReducer, checkState } from "./effect-reducers/check-state-eff
 import { retreatReducer } from "./effect-reducers/retreat-effect";
 import { reorderReducer} from "./reducers/reorder-reducer";
 import { setupPhaseReducer } from './reducers/setup-reducer';
-import { CheckStateEffect } from "./effects/check-effects";
 
 interface PromptItem {
   ids: number[],

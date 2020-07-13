@@ -5,15 +5,18 @@ import { AlertPrompt, ConfirmPrompt, Player, Prompt, State, GamePhase,
 import { ChooseCardsPrompt } from '../game/store/prompts/choose-cards-prompt';
 import { Client } from '../game/core/client';
 import { Game } from '../game/core/game';
-import { PassTurnAction } from '../game/store/actions/game-actions';
 import { ResolvePromptAction } from '../game/store/actions/resolve-prompt-action';
 import { GameMessage } from '../game/game-error';
+import { SimpleTacticsAi } from './simple-tactics-ai';
 
 export class SimpleGameHandler {
 
   private player: Player = new Player();
+  private ai: SimpleTacticsAi;
 
-  constructor(private client: Client, public game: Game) { }
+  constructor(private client: Client, public game: Game) {
+    this.ai = new SimpleTacticsAi(this.client);
+  }
 
   public onStateChange(state: State): void {
     for (let i = 0; i < state.players.length; i++) {
@@ -38,7 +41,8 @@ export class SimpleGameHandler {
     const activePlayer = state.players[state.activePlayer];
     const isMyTurn = activePlayer.id === this.client.id;
     if (state.phase === GamePhase.PLAYER_TURN && isMyTurn) {
-      this.dispatch(new PassTurnAction(this.client.id));
+      const action = this.ai.decodeNextAction(state);
+      this.dispatch(action);
       return;
     }
   }
