@@ -4,6 +4,7 @@ import { EnergyCard } from "./card/energy-card";
 import {State} from "./state/state";
 import {Player} from "./state/player";
 import {GameError, GameMessage} from "../game-error";
+import {CardList} from "./state/card-list";
 
 export class StateUtils {
   public static checkEnoughEnergy(cards: Card[], cost: CardType[]): boolean {
@@ -78,6 +79,36 @@ export class StateUtils {
       throw new GameError(GameMessage.INVALID_GAME_STATE);
     }
     return opponent;
+  }
+
+  public static findCardList(state: State, card: Card): CardList | undefined {
+    const cardLists: CardList[] = [];
+    for (const player of state.players) {
+      cardLists.push(player.active);
+      cardLists.push(player.deck);
+      cardLists.push(player.discard);
+      cardLists.push(player.hand);
+      cardLists.push(player.stadium);
+      player.bench.forEach(item => cardLists.push(item));
+      player.prizes.forEach(item => cardLists.push(item));
+    }
+    return cardLists.find(c => c.cards.includes(card));
+  }
+
+  public static findOwner(state: State, cardList: CardList): Player | undefined {
+    for (const player of state.players) {
+      const cardLists: CardList[] = [];
+      cardLists.push(player.active);
+      cardLists.push(player.deck);
+      cardLists.push(player.discard);
+      cardLists.push(player.hand);
+      cardLists.push(player.stadium);
+      player.bench.forEach(item => cardLists.push(item));
+      player.prizes.forEach(item => cardLists.push(item));
+      if (cardLists.includes(cardList)) {
+        return player;
+      }
+    }
   }
 
 }

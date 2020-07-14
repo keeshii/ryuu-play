@@ -3,14 +3,42 @@ import { EndTurnEffect } from "../effects/game-phase-effects";
 import { Effect } from "../effects/effect";
 import { State } from "../state/state";
 import { StoreLike } from "../store-like";
+import { StateUtils } from "../state-utils";
+import { CheckPokemonTypeEffect, CheckPokemonStatsEffect } from "../effects/check-effects";
+import { Weakness, Resistance } from "../card/pokemon-types";
+import { CardType } from "../card/card-types";
 import {
   AttackEffect,
   CheckAttackCostEffect,
   CheckEnoughEnergyEffect,
   DealDamageEffect,
   UseAttackEffect,
+  DealDamageAfterWeaknessEffect,
 } from "../effects/game-effects";
-import { StateUtils } from "../state-utils";
+
+function applyWeaknessAndResistance(damage: number, cardType: CardType, weakness: Weakness[], resistance: Resistance[]): number {
+  let multiply = 1;
+  let modifier = 0;
+
+  for (const item of weakness) {
+    if (item.type === cardType) {
+      if (item.value === undefined) {
+        multiply *= 2;
+      } else {
+        modifier += item.value;
+      }
+    }
+  }
+
+  for (const item of resistance) {
+    if (item.type === cardType) {
+      modifier += item.value;
+    }
+  }
+
+  return (damage * multiply) + modifier;
+}
+
 
 export function attackReducer(store: StoreLike, state: State, effect: Effect): State {
 
@@ -20,13 +48,31 @@ export function attackReducer(store: StoreLike, state: State, effect: Effect): S
     return state;
   }
 
-  if (effect instanceof DealDamageEffect) {
+  if (effect instanceof DealDamageAfterWeaknessEffect) {
     const target = effect.target;
     const pokemonCard = target.getPokemonCard();
     if (pokemonCard === undefined) {
       throw new GameError(GameMessage.ILLEGAL_ACTION);
     }
+
     target.damage += effect.damage;
+  }
+
+  if (effect instanceof DealDamageEffect) {
+    const checkPokemonType = new CheckPokemonTypeEffect(effect.source);
+    state = store.reduceEffect(state, checkPokemonType);
+    const checkPokemonStats = new CheckPokemonStatsEffect(effect.target);
+    state = store.reduceEffect(state, checkPokemonStats);
+
+    const cardType = checkPokemonType.cardType;
+    const weakness = checkPokemonStats.weakness;
+    const resistance = checkPokemonStats.resistance;
+    const damage = applyWeaknessAndResistance(effect.damage, cardType, weakness, resistance);
+
+    const dealDamage = new DealDamageAfterWeaknessEffect(
+      effect.player, damage, effect.target, effect.source);
+    state = store.reduceEffect(state, dealDamage);
+
     return state;
   }
 

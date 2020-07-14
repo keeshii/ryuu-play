@@ -28,7 +28,7 @@ export class N extends TrainerCard {
       const opponent = StateUtils.getOpponent(state, player);
 
       player.hand.moveTo(player.deck);
-      opponent.hand.moveTo(opponent.hand);
+      opponent.hand.moveTo(opponent.deck);
 
       store.prompt(state, [
         new ShuffleDeckPrompt(player.id),

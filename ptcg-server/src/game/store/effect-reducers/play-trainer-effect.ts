@@ -1,8 +1,10 @@
-import { PlayTrainerEffect, PlaySupporterEffect } from "../effects/play-card-effects";
+import { AttachPokemonToolEffect, PlayTrainerEffect, PlaySupporterEffect } from "../effects/play-card-effects";
 import { GameError, GameMessage } from "../../game-error";
 import { Effect } from "../effects/effect";
 import { State } from "../state/state";
 import { StoreLike } from "../store-like";
+import { TrainerCard } from "../card/trainer-card";
+import { TrainerType } from "../card/card-types";
 
 
 export function playTrainerReducer(store: StoreLike, state: State, effect: Effect): State {
@@ -17,6 +19,27 @@ export function playTrainerReducer(store: StoreLike, state: State, effect: Effec
 
     effect.player.hand.moveCardTo(effect.trainerCard, effect.player.discard);
     effect.player.supporterPlayedTurn = state.turn;
+
+    const playTrainer = new PlayTrainerEffect(effect.player, effect.trainerCard, effect.target);
+    state = store.reduceEffect(state, playTrainer);
+
+    return state;
+  }
+
+  if (effect instanceof AttachPokemonToolEffect) {
+    const pokemonCard = effect.target.getPokemonCard();
+    if (pokemonCard === undefined) {
+      throw new GameError(GameMessage.INVALID_TARGET);
+    }
+    const hasPokemonTool = effect.target.cards.some(c => {
+      return c instanceof TrainerCard && c.trainerType === TrainerType.TOOL;
+    })
+    if (hasPokemonTool) {
+      throw new GameError(GameMessage.POKEMON_TOOL_ALREADY_ATTACHED);
+    }
+
+    store.log(state, `${effect.player.name} attaches ${effect.trainerCard.name}. to ${pokemonCard.name}`);
+    effect.player.hand.moveCardTo(effect.trainerCard, effect.target);
 
     const playTrainer = new PlayTrainerEffect(effect.player, effect.trainerCard, effect.target);
     state = store.reduceEffect(state, playTrainer);

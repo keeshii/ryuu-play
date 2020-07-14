@@ -1,7 +1,7 @@
 import { Effect } from "../effects/effect";
 import { State, GamePhase, GameWinner } from "../state/state";
 import { StoreLike } from "../store-like";
-import { CheckHpEffect, CheckPrizesCountEffect } from "../effects/check-effects";
+import { CheckHpEffect, CheckPokemonPrizesEffect } from "../effects/check-effects";
 import { PokemonCardList } from "../state/pokemon-card-list";
 import { ChoosePokemonPrompt } from "../prompts/choose-pokemon-prompt";
 import { GameMessage, GameError } from "../../game-error";
@@ -27,7 +27,7 @@ function discardKoPokemons(store: StoreLike, state: State): [number, number] {
 
         if (target.damage >= checkHpEffect.hp) {
 
-          const checkPrizesCount = new CheckPrizesCountEffect(player, target);
+          const checkPrizesCount = new CheckPokemonPrizesEffect(player, target);
           state = store.reduceEffect(state, checkPrizesCount);
           prizesToTake[i === 0 ? 1 : 0] += checkPrizesCount.count;
 

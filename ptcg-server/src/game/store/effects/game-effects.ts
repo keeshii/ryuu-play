@@ -44,9 +44,25 @@ export class DealDamageEffect implements Effect {
   public player: Player;
   public damage: number;
   public target: PokemonCardList;
-  public source: PokemonCardList | undefined;
+  public source: PokemonCardList;
 
-  constructor(player: Player, damage: number, target: PokemonCardList, source?: PokemonCardList) {
+  constructor(player: Player, damage: number, target: PokemonCardList, source: PokemonCardList) {
+    this.player = player;
+    this.damage = damage;
+    this.target = target;
+    this.source = source;
+  }
+}
+
+export class DealDamageAfterWeaknessEffect implements Effect {
+  readonly type: string = GameEffects.DEAL_DAMAGE_EFFECT;
+  public preventDefault = false;
+  public player: Player;
+  public damage: number;
+  public target: PokemonCardList;
+  public source: PokemonCardList;
+
+  constructor(player: Player, damage: number, target: PokemonCardList, source: PokemonCardList) {
     this.player = player;
     this.damage = damage;
     this.target = target;
