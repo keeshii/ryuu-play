@@ -275,6 +275,9 @@ export class SocketClient extends Client {
         throw Errors.PROMPT_INVALID_ID;
       }
       let cardLists: PokemonCardList[] = [];
+      if (result === null) {
+        return result;  // operation cancelled
+      }
       (result as CardTarget[]).forEach(target => {
         let p = target.player === PlayerType.BOTTOM_PLAYER ? player : opponent;
         cardLists.push(target.slot === SlotType.ACTIVE ? p.active : p.bench[target.index]);

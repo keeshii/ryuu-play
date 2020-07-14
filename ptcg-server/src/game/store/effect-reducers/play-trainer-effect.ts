@@ -9,15 +9,13 @@ import { TrainerType } from "../card/card-types";
 
 export function playTrainerReducer(store: StoreLike, state: State, effect: Effect): State {
 
-  /* Play trainer card */
+  /* Play supporter card */
   if (effect instanceof PlaySupporterEffect) {
     if (effect.player.supporterPlayedTurn === state.turn) {
       throw new GameError(GameMessage.SUPPORTER_ALREADY_PLAYED);
     }
 
     store.log(state, `${effect.player.name} plays ${effect.trainerCard.name}.`);
-
-    effect.player.hand.moveCardTo(effect.trainerCard, effect.player.discard);
     effect.player.supporterPlayedTurn = state.turn;
 
     const playTrainer = new PlayTrainerEffect(effect.player, effect.trainerCard, effect.target);
@@ -26,6 +24,7 @@ export function playTrainerReducer(store: StoreLike, state: State, effect: Effec
     return state;
   }
 
+  // Play Pokemon Tool card
   if (effect instanceof AttachPokemonToolEffect) {
     const pokemonCard = effect.target.getPokemonCard();
     if (pokemonCard === undefined) {
@@ -44,6 +43,15 @@ export function playTrainerReducer(store: StoreLike, state: State, effect: Effec
     const playTrainer = new PlayTrainerEffect(effect.player, effect.trainerCard, effect.target);
     state = store.reduceEffect(state, playTrainer);
 
+    return state;
+  }
+
+  // Play item card
+  if (effect instanceof PlayTrainerEffect) {
+    if (effect.player.hand.cards.includes(effect.trainerCard)) {
+      effect.player.hand.moveCardTo(effect.trainerCard, effect.player.discard);
+    }
+    store.log(state, `${effect.player.name} plays ${effect.trainerCard.name}.`);
     return state;
   }
 

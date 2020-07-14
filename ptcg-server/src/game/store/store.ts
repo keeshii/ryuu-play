@@ -21,6 +21,7 @@ import { checkStateReducer, checkState } from "./effect-reducers/check-state-eff
 import { retreatReducer } from "./effect-reducers/retreat-effect";
 import { reorderReducer} from "./reducers/reorder-reducer";
 import { setupPhaseReducer } from './reducers/setup-reducer';
+import {Card} from "./card/card";
 
 interface PromptItem {
   ids: number[],
@@ -177,13 +178,15 @@ export class Store implements StoreLike {
 
   private propagateEffect(state: State, effect: Effect): State {
     for (let player of state.players) {
-      player.stadium.cards.forEach(c => { state = c.reduceEffect(this, state, effect); });
-      player.active.cards.forEach(c => { state = c.reduceEffect(this, state, effect); });
+      const cards: Card[] = [];
+      player.stadium.cards.forEach(c => cards.push(c));
+      player.active.cards.forEach(c => cards.push(c));
       for (let bench of player.bench) {
-        bench.cards.forEach(c => { state = c.reduceEffect(this, state, effect); });
+        bench.cards.forEach(c => cards.push(c));
       }
       player.hand.cards.forEach(c => { state = c.reduceEffect(this, state, effect); });
-      player.discard.cards.forEach(c => { state = c.reduceEffect(this, state, effect); });
+      cards.sort(c => c.superType);
+      cards.forEach(c => { state = c.reduceEffect(this, state, effect); });
     }
     return state;
   }

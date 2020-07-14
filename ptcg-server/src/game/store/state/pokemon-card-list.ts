@@ -20,4 +20,9 @@ export class PokemonCardList extends CardList {
     return result;
   }
 
+  clearEffects(): void {
+    this.damage = 0;
+    this.specialConditions = [];
+  }
+
 }
