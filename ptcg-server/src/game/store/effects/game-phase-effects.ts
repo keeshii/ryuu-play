@@ -2,7 +2,8 @@ import { Effect } from "./effect";
 import { Player } from "../state/player";
 
 export enum GamePhaseEffects {
-  END_TURN_EFFECT = 'END_TURN_EFFECT'
+  END_TURN_EFFECT = 'END_TURN_EFFECT',
+  WHO_BEGINS_EFFECT = 'WHO_BEGINS_EFFECT'
 }
 
 export class EndTurnEffect implements Effect {
@@ -13,4 +14,12 @@ export class EndTurnEffect implements Effect {
   constructor(player: Player) {
     this.player = player;
   }
+}
+
+export class WhoBeginsEffect implements Effect {
+  readonly type: string = GamePhaseEffects.END_TURN_EFFECT;
+  public preventDefault = false;
+  public player: Player | undefined;
+
+  constructor() { }
 }

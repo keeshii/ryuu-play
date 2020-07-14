@@ -43,12 +43,14 @@ export class DealDamageEffect implements Effect {
   public preventDefault = false;
   public player: Player;
   public damage: number;
+  public attack: Attack;
   public target: PokemonCardList;
   public source: PokemonCardList;
 
-  constructor(player: Player, damage: number, target: PokemonCardList, source: PokemonCardList) {
+  constructor(player: Player, damage: number, attack: Attack, target: PokemonCardList, source: PokemonCardList) {
     this.player = player;
     this.damage = damage;
+    this.attack = attack;
     this.target = target;
     this.source = source;
   }
@@ -59,12 +61,14 @@ export class DealDamageAfterWeaknessEffect implements Effect {
   public preventDefault = false;
   public player: Player;
   public damage: number;
+  public attack: Attack;
   public target: PokemonCardList;
   public source: PokemonCardList;
 
-  constructor(player: Player, damage: number, target: PokemonCardList, source: PokemonCardList) {
+  constructor(player: Player, damage: number, attack: Attack, target: PokemonCardList, source: PokemonCardList) {
     this.player = player;
     this.damage = damage;
+    this.attack = attack;
     this.target = target;
     this.source = source;
   }

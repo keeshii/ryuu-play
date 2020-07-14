@@ -1,9 +1,15 @@
 import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType } from "../../game/store/card/card-types";
+import { Stage, CardType, SuperType, TrainerType } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { PowerType } from "../../game/store/card/pokemon-types";
+import {AttackEffect, DealDamageEffect} from "../../game/store/effects/game-effects";
+import {ChooseCardsPrompt, TrainerCard, StateUtils} from "../../game";
+import {CardMessage} from "../card-message";
+import {PlayTrainerEffect} from "../../game/store/effects/play-card-effects";
+import {CheckHpEffect} from "../../game/store/effects/check-effects";
+import {WhoBeginsEffect} from "../../game/store/effects/game-phase-effects";
 
 export class Sableye extends PokemonCard {
 
@@ -53,6 +59,60 @@ export class Sableye extends PokemonCard {
   public fullName: string = 'Sableye SF';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    // Overeager
+    if (effect instanceof WhoBeginsEffect) {
+      const cardList = StateUtils.findCardList(state, this);
+      const player = StateUtils.findOwner(state, cardList);
+      const opponent = StateUtils.getOpponent(state, player);
+      const opponentCard = opponent.active.getPokemonCard();
+      if (opponentCard && opponentCard.powers.some(p => p.name === 'Overeager')) {
+        return state;
+      }
+      if (cardList === player.active) {
+        store.log(state, CardMessage.LOG_STARTS_BECAUSE_OVEREAGER, [player.name]);
+        effect.player = player;
+      }
+      return state;
+    }
+
+    // Impersonate
+    if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
+      const player = effect.player;
+
+      store.prompt(state, new ChooseCardsPrompt(
+        player.id,
+        CardMessage.CHOOSE_SUPPORTER_CARD,
+        player.deck,
+        { superType: SuperType.TRAINER, trainerType: TrainerType.SUPPORTER } as any,
+        { min: 1, max: 1, allowCancel: true }
+      ), (cards) => {
+        if (!cards || cards.length === 0) {
+          return;
+        }
+        const trainerCard = cards[0] as TrainerCard;
+        player.deck.moveCardTo(trainerCard, player.hand);
+        const playTrainer = new PlayTrainerEffect(player, trainerCard);
+        store.reduceEffect(state, playTrainer);
+      });
+
+      return state;
+    }
+
+    // Overconfident
+    if (effect instanceof DealDamageEffect && effect.attack === this.attacks[1]) {
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      const sourceHp = new CheckHpEffect(player, effect.source);
+      store.reduceEffect(state, sourceHp);
+      const targetHp = new CheckHpEffect(opponent, effect.target);
+      store.reduceEffect(state, targetHp);
+
+      if (sourceHp.hp > targetHp.hp) {
+        effect.damage = 40;
+      }
+    }
+
     return state;
   }
 

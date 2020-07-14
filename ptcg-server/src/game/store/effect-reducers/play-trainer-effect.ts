@@ -15,7 +15,6 @@ export function playTrainerReducer(store: StoreLike, state: State, effect: Effec
       throw new GameError(GameMessage.SUPPORTER_ALREADY_PLAYED);
     }
 
-    store.log(state, `${effect.player.name} plays ${effect.trainerCard.name}.`);
     effect.player.supporterPlayedTurn = state.turn;
 
     const playTrainer = new PlayTrainerEffect(effect.player, effect.trainerCard, effect.target);

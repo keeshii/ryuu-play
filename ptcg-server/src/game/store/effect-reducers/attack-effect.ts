@@ -70,7 +70,7 @@ export function attackReducer(store: StoreLike, state: State, effect: Effect): S
     const damage = applyWeaknessAndResistance(effect.damage, cardType, weakness, resistance);
 
     const dealDamage = new DealDamageAfterWeaknessEffect(
-      effect.player, damage, effect.target, effect.source);
+      effect.player, damage, effect.attack, effect.target, effect.source);
     state = store.reduceEffect(state, dealDamage);
 
     return state;
@@ -98,7 +98,8 @@ export function attackReducer(store: StoreLike, state: State, effect: Effect): S
     state = store.reduceEffect(state, new AttackEffect(player, attack));
 
     if (attack.damage > 0) {
-      const dealDamage = new DealDamageEffect(player, attack.damage, opponent.active, player.active);
+      const dealDamage = new DealDamageEffect(
+        player, attack.damage, attack, opponent.active, player.active);
       state = store.reduceEffect(state, dealDamage);
     }
 

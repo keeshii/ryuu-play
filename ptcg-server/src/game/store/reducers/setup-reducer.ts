@@ -14,6 +14,7 @@ import { StoreLike } from "../store-like";
 import { SuperType, Stage } from "../card/card-types";
 import { nextTurn } from "../effect-reducers/game-phase-effect";
 import { PokemonCardList } from "../state/pokemon-card-list";
+import {WhoBeginsEffect} from "../effects/game-phase-effects";
 
 
 function putStartingPokemonsAndPrizes(player: Player, cards: Card[]): void {
@@ -97,10 +98,18 @@ function* setupGame(next: Function, store: StoreLike, state: State): IterableIte
     next();
   });
 
-  yield store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.SETUP_WHO_BEGINS_FLIP), whoBegins => {
-    state.activePlayer = whoBegins ? 0 : 1;
-    next();
-  });
+  const whoBeginsEffect = new WhoBeginsEffect();
+  store.reduceEffect(state, whoBeginsEffect);
+
+  if (whoBeginsEffect.player) {
+    state.activePlayer = state.players.indexOf(whoBeginsEffect.player);
+  } else {
+    const coinFlipPrompt = new CoinFlipPrompt(player.id, GameMessage.SETUP_WHO_BEGINS_FLIP);
+    yield store.prompt(state, coinFlipPrompt, whoBegins => {
+      state.activePlayer = whoBegins ? 0 : 1;
+      next();
+    });
+  }
 
   return nextTurn(store, state);
 }

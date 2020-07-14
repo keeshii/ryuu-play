@@ -81,7 +81,7 @@ export class StateUtils {
     return opponent;
   }
 
-  public static findCardList(state: State, card: Card): CardList | undefined {
+  public static findCardList(state: State, card: Card): CardList {
     const cardLists: CardList[] = [];
     for (const player of state.players) {
       cardLists.push(player.active);
@@ -92,10 +92,14 @@ export class StateUtils {
       player.bench.forEach(item => cardLists.push(item));
       player.prizes.forEach(item => cardLists.push(item));
     }
-    return cardLists.find(c => c.cards.includes(card));
+    const cardList = cardLists.find(c => c.cards.includes(card));
+    if (cardList === undefined) {
+      throw new GameError(GameMessage.INVALID_GAME_STATE);
+    }
+    return cardList;
   }
 
-  public static findOwner(state: State, cardList: CardList): Player | undefined {
+  public static findOwner(state: State, cardList: CardList): Player {
     for (const player of state.players) {
       const cardLists: CardList[] = [];
       cardLists.push(player.active);
@@ -109,6 +113,7 @@ export class StateUtils {
         return player;
       }
     }
+    throw new GameError(GameMessage.INVALID_GAME_STATE);
   }
 
 }

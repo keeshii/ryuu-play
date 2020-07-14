@@ -1,4 +1,4 @@
-export type StateLogParam = {[key: string]: string | number};
+export type StateLogParam = (string | number)[];
 
 export class StateLog {
   public id: number = 0;
@@ -8,7 +8,7 @@ export class StateLog {
 
   constructor(
     message: string,
-    params: {[key: string]: string | number} = {},
+    params: StateLogParam = [],
     client: number = 0,
   ) {
     this.message = message;
