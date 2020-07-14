@@ -29,11 +29,13 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: PlayT
 
   player.deck.moveCardsTo(cards, player.hand);
 
-  yield store.prompt(state, new ShowCardsPrompt(
-    opponent.id,
-    CardMessage.CARDS_SHOWED_BY_THE_OPPONENT,
-    cards
-  ), () => next());
+  if (cards.length > 0) {
+    yield store.prompt(state, new ShowCardsPrompt(
+      opponent.id,
+      CardMessage.CARDS_SHOWED_BY_THE_OPPONENT,
+      cards
+    ), () => next());
+  }
 
   return store.prompt(state, new ShuffleDeckPrompt(player.id), order => {
     player.deck.applyOrder(order);

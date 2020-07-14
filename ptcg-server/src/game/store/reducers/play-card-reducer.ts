@@ -32,6 +32,10 @@ export function playCardReducer(store: StoreLike, state: State, action: Action):
   if (state.phase === GamePhase.PLAYER_TURN) {
 
     if (action instanceof PlayCardAction) {
+      if (player === undefined || player.id !== action.id) {
+        throw new GameError(GameMessage.NOT_YOUR_TURN);
+      }
+
       const handCard = player.hand.cards[action.handIndex];
 
       if (handCard === undefined) {
