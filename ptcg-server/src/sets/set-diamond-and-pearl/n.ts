@@ -33,7 +33,10 @@ export class N extends TrainerCard {
       store.prompt(state, [
         new ShuffleDeckPrompt(player.id),
         new ShuffleDeckPrompt(opponent.id)
-      ], () => {
+      ], deckOrder => {
+        player.deck.applyOrder(deckOrder[0]);
+        opponent.deck.applyOrder(deckOrder[1]);
+
         player.deck.moveTo(player.hand, player.getPrizeLeft());
         opponent.deck.moveTo(opponent.hand, opponent.getPrizeLeft());
       });

@@ -14,9 +14,13 @@ export function playTrainerReducer(store: StoreLike, state: State, effect: Effec
     }
 
     store.log(state, `${effect.player.name} plays ${effect.trainerCard.name}.`);
+
+    effect.player.hand.moveCardTo(effect.trainerCard, effect.player.discard);
     effect.player.supporterPlayedTurn = state.turn;
+
     const playTrainer = new PlayTrainerEffect(effect.player, effect.trainerCard, effect.target);
     state = store.reduceEffect(state, playTrainer);
+
     return state;
   }
 

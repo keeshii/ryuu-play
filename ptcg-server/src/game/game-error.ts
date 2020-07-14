@@ -24,7 +24,10 @@ export enum GameMessage {
   RETREAT_MESSAGE = 'RETREAT_MESSAGE',
   CHOOSE_NEW_ACTIVE_POKEMON = 'CHOOSE_NEW_ACTIVE_POKEMON',
   CHOOSE_PRIZE_CARD = 'CHOOSE_PRIZE_CARD',
-  INVALID_GAME_STATE = 'INVALID_GAME_STATE'
+  INVALID_GAME_STATE = 'INVALID_GAME_STATE',
+
+  LOG_SHUFFLE_DECK = '{1} shuffles the deck.',
+  LOG_DRAW_CARDS = '{1} draws {2} cards.'
 }
 
 export class GameError extends Error {

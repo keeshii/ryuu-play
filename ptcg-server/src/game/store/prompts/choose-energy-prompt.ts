@@ -2,7 +2,6 @@ import { Card } from "../card/card";
 import { CardList } from "../state/card-list";
 import { CardType } from "../card/card-types";
 import { Prompt } from "./prompt";
-import { GameMessage } from "../../game-error";
 
 export const ChooseEnergyPromptType = 'Choose energy';
 
@@ -18,7 +17,7 @@ export class ChooseEnergyPrompt extends Prompt<Card[]> {
 
   constructor(
     playerId: number,
-    public message: GameMessage,
+    public message: string,
     public cards: CardList,
     public cost: CardType[],
     options?: Partial<ChooseEnergyOptions>

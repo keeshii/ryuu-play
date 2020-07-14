@@ -1,5 +1,4 @@
 import { Prompt } from "./prompt";
-import { GameMessage } from "../../game-error";
 import { PlayerType, SlotType } from "../actions/play-card-action";
 import { PokemonCardList } from "../state/pokemon-card-list";
 
@@ -18,7 +17,7 @@ export class ChoosePokemonPrompt extends Prompt<PokemonCardList[]> {
 
   constructor(
     playerId: number,
-    public message: GameMessage,
+    public message: string,
     public playerType: PlayerType,
     public slots: SlotType[],
     options?: Partial<ChoosePokemonOptions>

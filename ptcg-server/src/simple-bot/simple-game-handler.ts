@@ -2,7 +2,7 @@ import { Action } from '../game/store/actions/action';
 import { AlertPrompt, ConfirmPrompt, Player, Prompt, State, GamePhase,
   GameOverPrompt, ChooseEnergyPrompt, StateUtils, Card, EnergyCard,
   ChoosePokemonPrompt, PokemonCardList, PlayerType, SlotType,
-  ChoosePrizePrompt } from '../game';
+  ChoosePrizePrompt, ShowCardsPrompt} from '../game';
 import { ChooseCardsPrompt } from '../game/store/prompts/choose-cards-prompt';
 import { Client } from '../game/core/client';
 import { Game } from '../game/core/game';
@@ -49,7 +49,7 @@ export class SimpleGameHandler {
   }
 
   public resolvePrompt(prompt: Prompt<any>): void {
-    if (prompt instanceof AlertPrompt || prompt instanceof GameOverPrompt) {
+    if (prompt instanceof AlertPrompt || prompt instanceof ShowCardsPrompt || prompt instanceof GameOverPrompt) {
       this.dispatch(new ResolvePromptAction(prompt.id, 0));
       return;
     }

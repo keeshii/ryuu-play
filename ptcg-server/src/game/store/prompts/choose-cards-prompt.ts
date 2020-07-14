@@ -1,7 +1,6 @@
 import { Card } from "../card/card";
 import { CardList } from "../state/card-list";
 import { Prompt } from "./prompt";
-import { GameMessage } from "../../game-error";
 
 export const ChooseCardsPromptType = 'Choose cards';
 
@@ -19,7 +18,7 @@ export class ChooseCardsPrompt extends Prompt<Card[]> {
 
   constructor(
     playerId: number,
-    public message: GameMessage,
+    public message: string,
     public cards: CardList,
     public filter: Partial<Card>,
     options?: Partial<ChooseCardsOptions>

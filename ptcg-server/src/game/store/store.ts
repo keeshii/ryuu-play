@@ -6,7 +6,7 @@ import { Prompt } from "./prompts/prompt";
 import { ReorderHandAction, ReorderBenchAction } from "./actions/reorder-actions";
 import { ResolvePromptAction } from "./actions/resolve-prompt-action";
 import { State } from "./state/state";
-import { StateLog } from "./state/state-log";
+import { StateLog, StateLogParam } from "./state/state-log";
 import { StoreHandler } from "./store-handler";
 import { StoreLike } from "./store-like";
 import { generateId, deepClone } from "../../utils/utils";
@@ -55,7 +55,7 @@ export class Store implements StoreLike {
     }
 
     if (action instanceof AppendLogAction) {
-      this.log(state, action.message, action.id);
+      this.log(state, action.message, undefined, action.id);
       this.handler.onStateChange(state);
       return state;
     }
@@ -107,8 +107,8 @@ export class Store implements StoreLike {
     return state;
   }
 
-  public log(state: State, message: string, client?: number): void {
-    const log = new StateLog(message, client);
+  public log(state: State, message: string, params?: StateLogParam, client?: number): void {
+    const log = new StateLog(message, params, client);
     log.id = ++this.logId;
     state.logs.push(log);
   }
@@ -135,7 +135,7 @@ export class Store implements StoreLike {
       });
 
       if (action.log !== undefined) {
-        this.log(state, action.log.message, action.log.client);
+        this.log(state, action.log.message, undefined, action.log.client);
       }
 
       if (results.every(result => result !== undefined)) {
@@ -183,6 +183,7 @@ export class Store implements StoreLike {
         bench.cards.forEach(c => { state = c.reduceEffect(this, state, effect); });
       }
       player.hand.cards.forEach(c => { state = c.reduceEffect(this, state, effect); });
+      player.discard.cards.forEach(c => { state = c.reduceEffect(this, state, effect); });
     }
     return state;
   }

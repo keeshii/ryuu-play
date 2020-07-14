@@ -27,6 +27,7 @@ export * from './store/prompts/coin-flip-prompt';
 export * from './store/prompts/confirm-prompt';
 export * from './store/prompts/game-over-prompt';
 export * from './store/prompts/prompt';
+export * from './store/prompts/show-cards-prompt';
 export * from './store/prompts/shuffle-prompt';
 
 export * from './store/state/card-list';
