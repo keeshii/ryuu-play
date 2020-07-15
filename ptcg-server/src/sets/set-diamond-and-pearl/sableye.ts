@@ -108,7 +108,10 @@ export class Sableye extends PokemonCard {
       const targetHp = new CheckHpEffect(opponent, effect.target);
       store.reduceEffect(state, targetHp);
 
-      if (sourceHp.hp > targetHp.hp) {
+      const sourceHpLeft = sourceHp.hp - effect.source.damage;
+      const targetHpLeft = targetHp.hp - effect.target.damage;
+
+      if (sourceHpLeft > targetHpLeft) {
         effect.damage = 40;
       }
     }

@@ -1,4 +1,10 @@
 
+export enum CardTag {
+  POKEMON_SP = 'SP',
+  POKEMON_EX = 'EX',
+  POKEMON_GX = 'GX'
+}
+
 export enum SuperType {
   NONE,
   POKEMON,
