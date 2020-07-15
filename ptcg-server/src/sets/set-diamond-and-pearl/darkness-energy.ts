@@ -3,7 +3,7 @@ import { EnergyCard } from "../../game/store/card/energy-card";
 
 export class DarknessEnergy extends EnergyCard {
 
-  public provides: CardType[] = [CardType.DARK ];
+  public provides: CardType[] = [ CardType.DARK ];
 
   public set: string = 'DP';
 
