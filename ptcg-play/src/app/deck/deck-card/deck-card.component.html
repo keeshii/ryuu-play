@@ -1,13 +1,3 @@
-<skyhook-preview [allBackends]="true">
-    <ng-template let-type let-item="item">
-        <ng-container [ngSwitch]="type">
-            <div class="ptcg-card" *ngSwitchCase="'DECK_CARD'">
-              <img class="ptcg-card-preview" [src]="item.data.scanUrl">
-            </div>
-        </ng-container>
-    </ng-template>
-</skyhook-preview>
-
 <div class="ptcg-deck-card">
   <ptcg-card [card]="card.card" [dragSource]="source" [noHTML5Preview]="true"
     matBadge="{{card.count}}x" [matBadgeHidden]="card.count <= 1" matBadgeColor="accent">

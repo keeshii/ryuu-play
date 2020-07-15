@@ -85,6 +85,11 @@ $window-min-size: 650px;
   justify-content: center;
 }
 
+.stats-item-value-type {
+  display: flex;
+  flex-direction: row;
+}
+
 ptcg-energy {
   display: flex;
 }

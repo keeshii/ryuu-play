@@ -218,6 +218,10 @@ export class DeckEditPanesComponent implements OnInit, OnDestroy {
     this.deckItemsChange.next(list);
   }
 
+  public showCardInfo(item: LibraryItem) {
+    this.cardsBaseService.showCardInfo(item.card);
+  }
+
   ngOnInit() {
     this.cards = this.loadLibraryCards();
   }

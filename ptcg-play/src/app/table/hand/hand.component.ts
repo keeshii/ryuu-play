@@ -64,6 +64,10 @@ export class HandComponent implements OnInit, OnChanges {
     }
   }
 
+  public showCardInfo(card: Card) {
+    this.cardsBaseService.showCardInfo(card);
+  }
+
   private dispatchAction(list: HandItem[]) {
     if (!this.gameState) {
       return;

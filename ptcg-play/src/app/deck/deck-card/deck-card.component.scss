@@ -28,8 +28,3 @@ ptcg-card {
   white-space: nowrap;
   width: 100%;
 }
-
-.ptcg-card-preview {
-  position: absolute;
-  width: map-get($ptcg-size, card);
-}
