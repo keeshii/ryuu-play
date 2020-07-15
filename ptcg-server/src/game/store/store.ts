@@ -17,11 +17,11 @@ import { playPokemonReducer } from "./effect-reducers/play-pokemon-effect";
 import { playTrainerReducer } from "./effect-reducers/play-trainer-effect";
 import { playerTurnReducer } from "./reducers/player-turn-reducer";
 import { gamePhaseReducer } from "./effect-reducers/game-phase-effect";
-import { checkStateReducer, checkState } from "./effect-reducers/check-state-effect";
+import { checkState } from "./effect-reducers/check-state-effect";
 import { retreatReducer } from "./effect-reducers/retreat-effect";
 import { reorderReducer} from "./reducers/reorder-reducer";
 import { setupPhaseReducer } from './reducers/setup-reducer';
-import {Card} from "./card/card";
+import { Card } from "./card/card";
 
 interface PromptItem {
   ids: number[],
@@ -32,6 +32,7 @@ export class Store implements StoreLike {
 
   public state: State = new State();
   private promptItems: PromptItem[] = [];
+  private waitItems: (() => void)[] = [];
   private logId: number = 0;
 
   constructor(private handler: StoreHandler) { };
@@ -83,7 +84,6 @@ export class Store implements StoreLike {
     state = playTrainerReducer(this, state, effect);
     state = retreatReducer(this, state, effect);
     state = attackReducer(this, state, effect);
-    state = checkStateReducer(this, state, effect);
 
     return state;
   }
@@ -106,6 +106,10 @@ export class Store implements StoreLike {
 
     this.promptItems.push(promptItem);
     return state;
+  }
+
+  public waitPrompt(callback: () => void): void {
+    this.waitItems.push(callback);
   }
 
   public log(state: State, message: string, params?: StateLogParam, client?: number): void {
@@ -144,6 +148,8 @@ export class Store implements StoreLike {
         promptItem.then(results.length === 1 ? results[0] : results);
         this.promptItems.splice(itemIndex, 1);
       }
+
+      this.resolveWaitItems();
     } catch (storeError) {
       // Illegal action
       prompt.result = undefined;
@@ -151,6 +157,15 @@ export class Store implements StoreLike {
     }
 
     return state;
+  }
+
+  private resolveWaitItems(): void {
+    while (this.promptItems.length === 0 && this.waitItems.length > 0) {
+      const waitItem = this.waitItems.pop();
+      if (waitItem !== undefined) {
+        waitItem();
+      }
+    }
   }
 
   private reduce(state: State, action: Action): State {
@@ -162,6 +177,7 @@ export class Store implements StoreLike {
       state = playCardReducer(this, state, action);
       state = playerTurnReducer(this, state, action);
 
+      this.resolveWaitItems();
       if (this.promptItems.length === 0) {
         state = checkState(this, state);
       }

@@ -1,4 +1,3 @@
-import { Effect } from "../effects/effect";
 import { State, GamePhase, GameWinner } from "../state/state";
 import { StoreLike } from "../store-like";
 import { CheckHpEffect, CheckPokemonPrizesEffect } from "../effects/check-effects";
@@ -224,9 +223,5 @@ export function checkState(store: StoreLike, state: State, onComplete?: () => vo
     });
   }
 
-  return state;
-}
-
-export function checkStateReducer(store: StoreLike, state: State, effect: Effect): State {
   return state;
 }

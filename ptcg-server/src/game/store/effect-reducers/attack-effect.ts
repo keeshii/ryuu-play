@@ -97,13 +97,18 @@ export function attackReducer(store: StoreLike, state: State, effect: Effect): S
     store.log(state, `${player.name} attacks with ${attack.name}.`);
     state = store.reduceEffect(state, new AttackEffect(player, attack));
 
-    if (attack.damage > 0) {
-      const dealDamage = new DealDamageEffect(
-        player, attack.damage, attack, opponent.active, player.active);
-      state = store.reduceEffect(state, dealDamage);
-    }
+    store.waitPrompt(() => {
+      if (attack.damage > 0) {
+        const dealDamage = new DealDamageEffect(
+          player, attack.damage, attack, opponent.active, player.active);
+        state = store.reduceEffect(state, dealDamage);
+      }
 
-    state = store.reduceEffect(state, new EndTurnEffect(player));
+      store.waitPrompt(() => {
+        state = store.reduceEffect(state, new EndTurnEffect(player));
+      });
+    });
+
     return state;
   }
 
