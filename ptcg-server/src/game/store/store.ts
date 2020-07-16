@@ -203,9 +203,9 @@ export class Store implements StoreLike {
       for (let prize of player.prizes) {
         prize.cards.forEach(c => cards.push(c));
       }
-      player.hand.cards.forEach(c => { state = c.reduceEffect(this, state, effect); });
-      player.deck.cards.forEach(c => { state = c.reduceEffect(this, state, effect); });
-      player.discard.cards.forEach(c => { state = c.reduceEffect(this, state, effect); });
+      player.hand.cards.forEach(c => cards.push(c));
+      player.deck.cards.forEach(c => cards.push(c));
+      player.discard.cards.forEach(c => cards.push(c));
     }
     cards.sort(c => c.superType);
     cards.forEach(c => { state = c.reduceEffect(this, state, effect); });
