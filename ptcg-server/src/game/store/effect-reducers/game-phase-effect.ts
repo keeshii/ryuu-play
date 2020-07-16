@@ -1,23 +1,33 @@
-import { GameError, GameMessage } from "../../game-error";
 import { Effect } from "../effects/effect";
+import { EndTurnEffect, BetweenTurnsEffect } from "../effects/game-phase-effects";
+import { GameError, GameMessage } from "../../game-error";
+import { Player } from "../state/player";
+import { SpecialCondition } from "../card/card-types";
 import { State, GamePhase, GameWinner } from "../state/state";
 import { StoreLike } from "../store-like";
-import { Player } from "../state/player";
-import { EndTurnEffect } from "../effects/game-phase-effects";
 import { checkState, endGame } from "./check-state-effect";
+import {CoinFlipPrompt} from "../prompts/coin-flip-prompt";
 
 function getActivePlayer(state: State): Player {
   return state.players[state.activePlayer];
 }
 
-export function betweenTurns(store: StoreLike, state: State): State {
+export function betweenTurns(store: StoreLike, state: State, onComplete: () => void): State {
   if (state.phase === GamePhase.PLAYER_TURN) {
     state.phase = GamePhase.BETWEEN_TURNS;
   }
+
+  for (const player of state.players) {
+    store.reduceEffect(state, new BetweenTurnsEffect(player));
+  }
+
+  store.waitPrompt(() => {
+    checkState(store, state, () => onComplete());
+  });
   return state;
 }
 
-export function nextTurn(store: StoreLike, state: State): State {
+export function initNextTurn(store: StoreLike, state: State): State {
   if ([GamePhase.SETUP, GamePhase.BETWEEN_TURNS].indexOf(state.phase) === -1) {
     return state;
   }
@@ -51,7 +61,74 @@ export function nextTurn(store: StoreLike, state: State): State {
   return state;
 }
 
+function* startNextTurn(next: Function, store: StoreLike, state: State): IterableIterator<State> {
+  const player = state.players[state.activePlayer];
+  store.log(state, `${player.name} ends the turn.`);
 
+  yield betweenTurns(store, state, () => {
+    next();
+  });
+
+  if (state.phase !== GamePhase.FINISHED) {
+    return initNextTurn(store, state);;
+  }
+
+  return state;
+}
+
+function handleSpecialConditions(store: StoreLike, state: State, effect: BetweenTurnsEffect) {
+  const player = effect.player;
+  for (const sp of player.active.specialConditions) {
+    switch (sp) {
+      case SpecialCondition.POISONED:
+        player.active.damage += effect.poisonDamage;
+        break;
+      case SpecialCondition.BURNED:
+        if (effect.burnFlipResult === true) {
+          break;
+        }
+        if (effect.burnFlipResult === false) {
+          player.active.damage += effect.burnDamage;
+          break;
+        }
+        store.prompt(state, new CoinFlipPrompt(
+          player.id,
+          GameMessage.BURNED_DAMAGE_FLIP
+        ), result => {
+          if (result === false) {
+            player.active.damage += effect.burnDamage;
+          }
+        })
+        break;
+      case SpecialCondition.ASLEEP:
+        if (effect.asleepFlipResult === true) {
+          const index = player.active.specialConditions.indexOf(sp);
+          player.active.specialConditions.splice(index, 1);
+          break;
+        }
+        if (effect.asleepFlipResult === false) {
+          break;
+        }
+        store.prompt(state, new CoinFlipPrompt(
+          player.id,
+          GameMessage.ASLEEP_FLIP
+        ), result => {
+          if (result === true) {
+            const index = player.active.specialConditions.indexOf(sp);
+            player.active.specialConditions.splice(index, 1);
+          }
+        })
+        break;
+      case SpecialCondition.PARALYZED:
+        if (effect.keepParalyzed) {
+          break;
+        }
+        const index = player.active.specialConditions.indexOf(sp);
+        player.active.specialConditions.splice(index, 1);
+        break;
+    }
+  }
+}
 
 export function gamePhaseReducer(store: StoreLike, state: State, effect: Effect): State {
 
@@ -67,12 +144,16 @@ export function gamePhaseReducer(store: StoreLike, state: State, effect: Effect)
         return;
       }
 
-      store.log(state, `${player.name} ends the turn.`);
-      state = betweenTurns(store, state);
-      state = nextTurn(store, state);
+      let generator: IterableIterator<State>;
+      generator = startNextTurn(() => generator.next(), store, state);
+      return generator.next().value;
     });
 
     return state;
+  }
+
+  if (effect instanceof BetweenTurnsEffect) {
+    handleSpecialConditions(store, state, effect);
   }
 
   return state;

@@ -3,12 +3,25 @@ import { GameError, GameMessage } from "../../game-error";
 import { Effect } from "../effects/effect";
 import { State } from "../state/state";
 import { StoreLike } from "../store-like";
-import {
-  CheckRetreatCostEffect,
-  RetreatEffect,
-} from "../effects/game-effects";
+import { RetreatEffect } from "../effects/game-effects";
 import { StateUtils } from "../state-utils";
+import { CheckRetreatCostEffect } from "../effects/check-effects";
 
+
+function retreatPokemon(store: StoreLike, state: State, effect: RetreatEffect) {
+  const player = effect.player;
+  const activePokemon = player.active.getPokemonCard();
+  const benchedPokemon = player.bench[effect.benchIndex].getPokemonCard();
+  if (activePokemon === undefined || benchedPokemon === undefined) {
+    return;
+  }
+
+  store.log(state, `${player.name} retreats ${activePokemon.name} to ${benchedPokemon.name}.`);
+  player.active.clearEffects();
+  const temp = player.active;
+  player.active = player.bench[effect.benchIndex];
+  player.bench[effect.benchIndex] = temp;
+}
 
 export function retreatReducer(store: StoreLike, state: State, effect: Effect): State {
 
@@ -20,10 +33,16 @@ export function retreatReducer(store: StoreLike, state: State, effect: Effect): 
       throw new GameError(GameMessage.INVALID_TARGET);
     }
 
+    if (player.retreatedTurn === state.turn) {
+      throw new GameError(GameMessage.RETREAT_ALREADY_USED);
+    }
+    player.retreatedTurn = state.turn;
+
     const checkRetreatCost = new CheckRetreatCostEffect(effect.player);
     state = store.reduceEffect(state, checkRetreatCost);
 
     if (checkRetreatCost.cost.length === 0) {
+      retreatPokemon(store, state, effect);
       return state;
     }
 
@@ -53,11 +72,8 @@ export function retreatReducer(store: StoreLike, state: State, effect: Effect): 
         return;
       }
 
-      store.log(state, `${player.name} retreats ${activePokemon.name} to ${benchedPokemon.name}.`);
       player.active.moveCardsTo(cards, player.discard);
-      const temp = player.active;
-      player.active = player.bench[effect.benchIndex];
-      player.bench[effect.benchIndex] = temp;
+      retreatPokemon(store, state, effect);
     });
   }
 

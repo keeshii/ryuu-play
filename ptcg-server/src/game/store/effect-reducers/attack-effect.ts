@@ -4,17 +4,12 @@ import { Effect } from "../effects/effect";
 import { State } from "../state/state";
 import { StoreLike } from "../store-like";
 import { StateUtils } from "../state-utils";
-import { CheckPokemonTypeEffect, CheckPokemonStatsEffect } from "../effects/check-effects";
+import { CheckPokemonTypeEffect, CheckPokemonStatsEffect,
+  CheckEnoughEnergyEffect, CheckAttackCostEffect } from "../effects/check-effects";
 import { Weakness, Resistance } from "../card/pokemon-types";
 import { CardType } from "../card/card-types";
-import {
-  AttackEffect,
-  CheckAttackCostEffect,
-  CheckEnoughEnergyEffect,
-  DealDamageEffect,
-  UseAttackEffect,
-  DealDamageAfterWeaknessEffect,
-} from "../effects/game-effects";
+import { AttackEffect, DealDamageEffect, UseAttackEffect,
+  DealDamageAfterWeaknessEffect } from "../effects/game-effects";
 
 function applyWeaknessAndResistance(damage: number, cardType: CardType, weakness: Weakness[], resistance: Resistance[]): number {
   let multiply = 1;

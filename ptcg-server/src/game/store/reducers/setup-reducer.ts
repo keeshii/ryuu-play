@@ -12,7 +12,7 @@ import { State, GamePhase } from "../state/state";
 import { GameError, GameMessage } from "../../game-error";
 import { StoreLike } from "../store-like";
 import { SuperType, Stage } from "../card/card-types";
-import { nextTurn } from "../effect-reducers/game-phase-effect";
+import { initNextTurn } from "../effect-reducers/game-phase-effect";
 import { PokemonCardList } from "../state/pokemon-card-list";
 import {WhoBeginsEffect} from "../effects/game-phase-effects";
 
@@ -111,7 +111,7 @@ function* setupGame(next: Function, store: StoreLike, state: State): IterableIte
     });
   }
 
-  return nextTurn(store, state);
+  return initNextTurn(store, state);
 }
 
 

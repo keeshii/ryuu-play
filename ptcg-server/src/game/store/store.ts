@@ -193,17 +193,22 @@ export class Store implements StoreLike {
   }
 
   private propagateEffect(state: State, effect: Effect): State {
+    const cards: Card[] = [];
     for (let player of state.players) {
-      const cards: Card[] = [];
       player.stadium.cards.forEach(c => cards.push(c));
       player.active.cards.forEach(c => cards.push(c));
       for (let bench of player.bench) {
         bench.cards.forEach(c => cards.push(c));
       }
+      for (let prize of player.prizes) {
+        prize.cards.forEach(c => cards.push(c));
+      }
       player.hand.cards.forEach(c => { state = c.reduceEffect(this, state, effect); });
-      cards.sort(c => c.superType);
-      cards.forEach(c => { state = c.reduceEffect(this, state, effect); });
+      player.deck.cards.forEach(c => { state = c.reduceEffect(this, state, effect); });
+      player.discard.cards.forEach(c => { state = c.reduceEffect(this, state, effect); });
     }
+    cards.sort(c => c.superType);
+    cards.forEach(c => { state = c.reduceEffect(this, state, effect); });
     return state;
   }
 }

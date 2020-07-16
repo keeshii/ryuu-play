@@ -2,13 +2,16 @@ import { CardType } from "../card/card-types";
 import { Effect } from "./effect";
 import { Player } from "../state/player";
 import { PokemonCardList } from "../state/pokemon-card-list";
-import { Resistance, Weakness } from "../card/pokemon-types";
+import { Resistance, Weakness, Attack } from "../card/pokemon-types";
 
 export enum CheckEffects {
   CHECK_HP_EFFECT = 'CHECK_HP_EFFECT',
   CHECK_PRIZES_COUNT_EFFECT = 'CHECK_PRIZE_COUNT_EFFECT',
   CHECK_POKEMON_STATS_EFFECT = 'CHECK_POKEMON_STATS_EFFECT',
-  CHECK_POKEMON_TYPE_EFFECT = 'CHECK_POKEMON_TYPE_EFFECT'
+  CHECK_POKEMON_TYPE_EFFECT = 'CHECK_POKEMON_TYPE_EFFECT',
+  CHECK_RETREAT_COST_EFFECT = 'CHECK_RETREAT_COST_EFFECT',
+  CHECK_ATTACK_COST_EFFECT = 'CHECK_ATTACK_COST_EFFECT',
+  CHECK_ENOUGH_ENERGY_EFFECT = 'CHECK_ENOUGH_ENERGY_EFFECT'
 }
 
 export class CheckHpEffect implements Effect {
@@ -68,5 +71,47 @@ export class CheckPokemonTypeEffect implements Effect {
     this.target = target;
     const pokemonCard = target.getPokemonCard();
     this.cardType = pokemonCard ? pokemonCard.cardType : CardType.NONE;
+  }
+}
+
+export class CheckRetreatCostEffect implements Effect {
+  readonly type: string = CheckEffects.CHECK_RETREAT_COST_EFFECT;
+  public preventDefault = false;
+  public player: Player;
+  public cost: CardType[];
+
+  constructor(player: Player) {
+    this.player = player;
+    const pokemonCard = player.active.getPokemonCard();
+    this.cost = pokemonCard !== undefined ? pokemonCard.retreat : [];
+  }
+}
+
+export class CheckAttackCostEffect implements Effect {
+  readonly type: string = CheckEffects.CHECK_ATTACK_COST_EFFECT;
+  public preventDefault = false;
+  public player: Player;
+  public attack: Attack;
+  public cost: CardType[];
+
+  constructor(player: Player, attack: Attack) {
+    this.player = player;
+    this.attack = attack;
+    this.cost = attack.cost;
+  }
+}
+
+export class CheckEnoughEnergyEffect implements Effect {
+  readonly type: string = CheckEffects.CHECK_ENOUGH_ENERGY_EFFECT;
+  public preventDefault = false;
+  public player: Player;
+  public source: PokemonCardList;
+  public cost: CardType[];
+  public enoughEnergy = false;
+
+  constructor(player: Player, cost: CardType[], source?: PokemonCardList) {
+    this.player = player;
+    this.source = source === undefined ? player.active : source;
+    this.cost = cost;
   }
 }

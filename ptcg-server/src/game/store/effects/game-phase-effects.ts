@@ -3,7 +3,8 @@ import { Player } from "../state/player";
 
 export enum GamePhaseEffects {
   END_TURN_EFFECT = 'END_TURN_EFFECT',
-  WHO_BEGINS_EFFECT = 'WHO_BEGINS_EFFECT'
+  WHO_BEGINS_EFFECT = 'WHO_BEGINS_EFFECT',
+  BETWEEN_TURNS_EFFECT = 'BETWEEN_TURNS_EFFECT'
 }
 
 export class EndTurnEffect implements Effect {
@@ -22,4 +23,24 @@ export class WhoBeginsEffect implements Effect {
   public player: Player | undefined;
 
   constructor() { }
+}
+
+export class BetweenTurnsEffect implements Effect {
+  readonly type: string = GamePhaseEffects.BETWEEN_TURNS_EFFECT;
+  public preventDefault = false;
+  public player: Player;
+  public poisonDamage: number;
+  public burnDamage: number;
+  public burnFlipResult: boolean | undefined;
+  public asleepFlipResult: boolean | undefined;
+  public keepParalyzed: boolean;
+
+  constructor(player: Player) {
+    this.player = player;
+    this.poisonDamage = 10;
+    this.burnDamage = 20;
+    this.burnFlipResult = undefined;
+    this.asleepFlipResult = undefined;
+    this.keepParalyzed = false;
+  }
 }

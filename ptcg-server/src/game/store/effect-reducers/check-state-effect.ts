@@ -33,7 +33,7 @@ function discardKoPokemons(store: StoreLike, state: State): [number, number] {
           store.log(state, `${pokemonCard.name} is KO.`);
           target.moveTo(player.discard);
           target.damage = 0;
-          target.specialConditions = [];
+          target.clearEffects();
         }
       }
     }
