@@ -1,5 +1,5 @@
 import { Prompt } from "./prompt";
-import { PlayerType, SlotType } from "../actions/play-card-action";
+import { PlayerType, SlotType, CardTarget } from "../actions/play-card-action";
 import { PokemonCardList } from "../state/pokemon-card-list";
 
 export const ChoosePokemonPromptType = 'Choose pokemon';
@@ -7,6 +7,7 @@ export const ChoosePokemonPromptType = 'Choose pokemon';
 export interface ChoosePokemonOptions {
   count: number;
   allowCancel: boolean;
+  blocked: CardTarget[];
 }
 
 export class ChoosePokemonPrompt extends Prompt<PokemonCardList[]> {
@@ -27,7 +28,8 @@ export class ChoosePokemonPrompt extends Prompt<PokemonCardList[]> {
     // Default options
     this.options = Object.assign({}, {
       count: 1,
-      allowCancel: true
+      allowCancel: true,
+      blocked: []
     }, options);
   }
 

@@ -1,8 +1,42 @@
+import { CardMessage } from "../card-message";
+import { GameError, GameMessage } from "../../game/game-error";
 import { TrainerCard } from "../../game/store/card/trainer-card";
-import { TrainerType } from "../../game/store/card/card-types";
+import { TrainerType, SuperType } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
+import { PlayTrainerEffect } from "../../game/store/effects/play-card-effects";
+import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
+
+function* playCard(next: Function, store: StoreLike, state: State, effect: PlayTrainerEffect): IterableIterator<State> {
+  const player = effect.player;
+
+  // Player has no Pokemons in the discard pile
+  if (!player.discard.cards.some(c => c.superType === SuperType.POKEMON)) {
+    throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
+  }
+
+  // We will discard this card after prompt confirmation
+  effect.preventDefault = true;
+
+  yield store.prompt(state, new ChooseCardsPrompt(
+    player.id,
+    CardMessage.CHOOSE_ONE_POKEMON,
+    player.discard,
+    { superType: SuperType.POKEMON },
+    { min: 1, max: 1, allowCancel: true }
+  ), selected => {
+    if (selected && selected.length > 0) {
+      // Discard trainer only when user selected a Pokemon
+      player.hand.moveCardTo(effect.trainerCard, player.discard);
+      // Recover discarded Pokemon
+      player.discard.moveCardsTo(selected, player.hand);
+    }
+    next();
+  });
+
+  return state;
+}
 
 export class PokemonRescue extends TrainerCard {
 
@@ -19,6 +53,12 @@ export class PokemonRescue extends TrainerCard {
     'and put it into your hand.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    if (effect instanceof PlayTrainerEffect && effect.trainerCard === this) {
+      let generator: IterableIterator<State>;
+      generator = playCard(() => generator.next(), store, state, effect);
+      return generator.next().value;
+    }
+
     return state;
   }
 
