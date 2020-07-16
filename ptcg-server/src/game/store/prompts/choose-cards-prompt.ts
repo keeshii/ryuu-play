@@ -8,6 +8,7 @@ export interface ChooseCardsOptions {
   min: number;
   max: number;
   allowCancel: boolean;
+  blocked: number[]
 }
 
 export class ChooseCardsPrompt extends Prompt<Card[]> {
@@ -29,7 +30,8 @@ export class ChooseCardsPrompt extends Prompt<Card[]> {
     this.options = Object.assign({}, {
       min: 0,
       max: cards.cards.length,
-      allowCancel: true
+      allowCancel: true,
+      blocked: []
     }, options);
   }
 
