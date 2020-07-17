@@ -60,7 +60,7 @@
         [dropTarget]="bottomBenchTarget[slot.index]"
         ptcgDropHighlight="outside" [ptcgDropHighlightVisible]="bottomBenchHighlight$[slot.index] | async">
         <ptcg-board-card
-          [dragSource]="slot.source"
+          [dragSource]="slot.source" [noHTML5Preview]="true"
           [cardList]="bottomPlayer?.bench[slot.index]" [owner]="bottomPlayer?.id === clientId"
           (cardClick)="onBenchClick($event, slot.index)">
         </ptcg-board-card>

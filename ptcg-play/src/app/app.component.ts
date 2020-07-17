@@ -61,9 +61,8 @@ export class AppComponent implements OnInit, OnDestroy {
     const contentHeight = element.offsetHeight - toolbarHeight;
     const cardAspectRatio = 1.37;
     const padding = 16;
-    const scrollSize = 10;
-    const cardHeight = (contentHeight - (padding * 5) - (scrollSize * 2)) / 7;
-    let cardSize = Math.round(cardHeight / cardAspectRatio);
+    const cardHeight = (contentHeight - (padding * 5)) / 7;
+    let cardSize = Math.floor(cardHeight / cardAspectRatio);
     cardSize = Math.min(Math.max(cardSize, 50), 100);
     element.style.setProperty('--card-size', cardSize + 'px');
   }

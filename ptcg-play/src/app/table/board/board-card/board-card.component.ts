@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { PokemonCardList, Card, CardList, SuperType, SpecialCondition } from 'ptcg-server';
+import { PokemonCardList, Card, CardList, SuperType, SpecialCondition, PokemonCard } from 'ptcg-server';
 
 const MAX_ENERGY_CARDS = 4;
 
@@ -86,6 +86,12 @@ export class BoardCardComponent implements OnInit {
   private initPokemonCardList(cardList: PokemonCardList) {
     this.damage = cardList.damage;
     this.specialConditions = cardList.specialConditions;
+    this.trainerCard = undefined;
+
+    if (cardList.tool !== undefined) {
+      this.trainerCard = cardList.cards
+        .find(c => c.fullName === cardList.tool.fullName);
+    }
 
     for (const card of cardList.cards) {
       switch (card.superType) {
@@ -96,11 +102,14 @@ export class BoardCardComponent implements OnInit {
           this.moreEnergies++;
         }
         break;
-      case SuperType.TRAINER:
-        this.trainerCard = card;
-        break;
       case SuperType.POKEMON:
-        this.mainCard = card;
+        const pokemonCard = card as PokemonCard;
+        const mainCard = this.mainCard as PokemonCard;
+        if (pokemonCard !== this.trainerCard) {
+          if (!mainCard || mainCard.stage < pokemonCard.stage) {
+            this.mainCard = pokemonCard;
+          }
+        }
         break;
       }
     }

@@ -2,9 +2,10 @@ import { Component, OnInit, OnChanges, Input, OnDestroy } from '@angular/core';
 import { DraggedItem } from '@angular-skyhook/sortable';
 import { DropTarget, SkyhookDndService } from '@angular-skyhook/core';
 import { Observable } from 'rxjs';
+import { GameState, Player, SuperType, SlotType, PlayerType, CardTarget, Card,
+  PokemonCard, Stage } from 'ptcg-server';
 import { map } from 'rxjs/operators';
 
-import { GameState, Player, SuperType, SlotType, PlayerType, CardTarget, Card } from 'ptcg-server';
 import { HandItem, HandCardType } from '../hand/hand-item.interface';
 import { BoardCardItem, BoardCardType } from './board-item.interface';
 import { CardsBaseService } from '../../shared/cards/cards-base.service';
@@ -178,13 +179,19 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
       ? player.active
       : player.bench[item.index];
 
-    let scanUrl;
-    for (const card of cardList.cards) {
-      if (card.superType === SuperType.POKEMON) {
-        scanUrl = this.cardsBaseService.getScanUrl(card);
-      }
+    let tool: Card | undefined;
+    if (cardList.tool) {
+      tool = cardList.cards.find(c => cardList.tool.fullName === c.fullName);
     }
-    return scanUrl;
+
+    const cards = cardList.cards
+      .filter(c => c.superType === SuperType.POKEMON)
+      .filter(c => c !== tool) as PokemonCard[];
+
+    cards.sort((c1, c2) => c2.stage - c1.stage);
+
+    const pokemonCard = cards.pop();
+    return pokemonCard ? this.cardsBaseService.getScanUrl(pokemonCard) : '';
   }
 
   private createBoardCardItem(player: PlayerType, slot: SlotType, index: number = 0): BoardCardItem {
