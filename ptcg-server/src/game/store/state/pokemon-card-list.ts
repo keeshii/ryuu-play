@@ -31,6 +31,9 @@ export class PokemonCardList extends CardList {
   clearEffects(): void {
     this.markers = [];
     this.specialConditions = [];
+    if (this.cards.length === 0) {
+      this.damage = 0;
+    }
     if (this.tool && !this.cards.includes(this.tool)) {
       this.tool = undefined;
     }

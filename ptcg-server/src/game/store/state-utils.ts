@@ -1,10 +1,12 @@
 import { Card } from "./card/card";
 import { CardList } from "./state/card-list";
+import { CardTarget, PlayerType, SlotType } from "./actions/play-card-action";
 import { CardType, SuperType } from "./card/card-types";
 import { GameError, GameMessage } from "../game-error";
 import { EnergyCard } from "./card/energy-card";
 import { State } from "./state/state";
 import { Player } from "./state/player";
+import { PokemonCardList } from "./state/pokemon-card-list";
 
 export class StateUtils {
   public static checkEnoughEnergy(cards: Card[], cost: CardType[]): boolean {
@@ -79,6 +81,19 @@ export class StateUtils {
       throw new GameError(GameMessage.INVALID_GAME_STATE);
     }
     return opponent;
+  }
+
+  public static getTarget(state: State, player: Player, target: CardTarget): PokemonCardList {
+    if (target.player === PlayerType.TOP_PLAYER) {
+      player = StateUtils.getOpponent(state, player);
+    }
+    if (target.slot === SlotType.ACTIVE) {
+      return player.active;
+    }
+    if (player.bench[target.index] === undefined) {
+      throw new GameError(GameMessage.INVALID_TARGET);
+    }
+    return player.bench[target.index];
   }
 
   public static findCardList(state: State, card: Card): CardList {

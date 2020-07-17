@@ -5,6 +5,7 @@ import { StoreLike } from "../store-like";
 import { GameError, GameMessage } from "../../game-error";
 import { RetreatEffect, UseAttackEffect, UsePowerEffect } from "../effects/game-effects";
 import { EndTurnEffect } from "../effects/game-phase-effects";
+import {StateUtils} from "../state-utils";
 
 export function playerTurnReducer(store: StoreLike, state: State, action: Action): State {
 
@@ -64,9 +65,10 @@ export function playerTurnReducer(store: StoreLike, state: State, action: Action
         throw new GameError(GameMessage.NOT_YOUR_TURN);
       }
 
-      const pokemonCard = player.active.getPokemonCard();
+      const target = StateUtils.getTarget(state, player, action.target);
+      const pokemonCard = target.getPokemonCard();
       if (pokemonCard === undefined) {
-        throw new GameError(GameMessage.UNKNOWN_POWER);
+        throw new GameError(GameMessage.INVALID_TARGET);
       }
 
       const power = pokemonCard.powers.find(a => a.name === action.name);
