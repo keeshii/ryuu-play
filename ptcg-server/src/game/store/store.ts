@@ -1,5 +1,6 @@
 import { Action } from "./actions/action";
 import { AppendLogAction } from "./actions/append-log-action";
+import { Card } from "./card/card";
 import { Effect } from "./effects/effect";
 import { GameError, GameMessage } from "../game-error";
 import { Prompt } from "./prompts/prompt";
@@ -18,10 +19,10 @@ import { playTrainerReducer } from "./effect-reducers/play-trainer-effect";
 import { playerTurnReducer } from "./reducers/player-turn-reducer";
 import { gamePhaseReducer } from "./effect-reducers/game-phase-effect";
 import { checkState } from "./effect-reducers/check-state-effect";
+import { powerReducer } from "./effect-reducers/power-effect";
 import { retreatReducer } from "./effect-reducers/retreat-effect";
 import { reorderReducer} from "./reducers/reorder-reducer";
 import { setupPhaseReducer } from './reducers/setup-reducer';
-import { Card } from "./card/card";
 
 interface PromptItem {
   ids: number[],
@@ -84,6 +85,7 @@ export class Store implements StoreLike {
     state = playTrainerReducer(this, state, effect);
     state = retreatReducer(this, state, effect);
     state = attackReducer(this, state, effect);
+    state = powerReducer(this, state, effect);
 
     return state;
   }

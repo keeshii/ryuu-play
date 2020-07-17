@@ -1,4 +1,4 @@
-import { Attack } from "../card/pokemon-types";
+import { Attack, Power } from "../card/pokemon-types";
 import { Effect } from "./effect";
 import { Player } from "../state/player";
 import { PokemonCardList } from "../state/pokemon-card-list";
@@ -6,8 +6,10 @@ import { PokemonCardList } from "../state/pokemon-card-list";
 export enum GameEffects {
   RETREAT_EFFECT = 'RETREAT_EFFECT',
   USE_ATTACK_EFFECT = 'USE_ATTACK_EFFECT',
+  USE_POWER_EFFECT = 'USE_POWER_EFFECT',
+  POWER_EFFECT = 'POWER_EFFECT',
   DEAL_DAMAGE_EFFECT = 'DEAL_DAMAGE_EFFECT',
-  ATTACK_EFFECT = 'ATTACK_EFFECT'
+  ATTACK_EFFECT = 'ATTACK_EFFECT',
 }
 
 export class RetreatEffect implements Effect {
@@ -19,6 +21,30 @@ export class RetreatEffect implements Effect {
   constructor(player: Player, benchIndex: number) {
     this.player = player;
     this.benchIndex = benchIndex;
+  }
+}
+
+export class UsePowerEffect implements Effect {
+  readonly type: string = GameEffects.USE_POWER_EFFECT;
+  public preventDefault = false;
+  public player: Player;
+  public power: Power;
+
+  constructor(player: Player, power: Power) {
+    this.player = player;
+    this.power = power;
+  }
+}
+
+export class PowerEffect implements Effect {
+  readonly type: string = GameEffects.POWER_EFFECT;
+  public preventDefault = false;
+  public player: Player;
+  public power: Power;
+
+  constructor(player: Player, power: Power) {
+    this.player = player;
+    this.power = power;
   }
 }
 

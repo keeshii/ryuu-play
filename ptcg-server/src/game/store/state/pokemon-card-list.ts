@@ -12,10 +12,14 @@ export class PokemonCardList extends CardList {
 
   public markers: CardMarker[] = [];
 
+  // Some pokemon cards can be attached as a tool,
+  // we must remember, which card acts as a pokemon tool.
+  public tool: Card | undefined;
+
   public getPokemonCard(): PokemonCard | undefined {
     let result: PokemonCard | undefined;
     for (let card of this.cards) {
-      if (card instanceof PokemonCard) {
+      if (card instanceof PokemonCard && card !== this.tool) {
         if (result === undefined || result.stage < card.stage) {
           result = card;
         }
@@ -27,6 +31,9 @@ export class PokemonCardList extends CardList {
   clearEffects(): void {
     this.markers = [];
     this.specialConditions = [];
+    if (this.tool && !this.cards.includes(this.tool)) {
+      this.tool = undefined;
+    }
   }
 
   removeSpecialCondition(sp: SpecialCondition): void {

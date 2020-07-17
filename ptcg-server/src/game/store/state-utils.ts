@@ -1,10 +1,10 @@
 import { Card } from "./card/card";
+import { CardList } from "./state/card-list";
 import { CardType, SuperType } from "./card/card-types";
+import { GameError, GameMessage } from "../game-error";
 import { EnergyCard } from "./card/energy-card";
-import {State} from "./state/state";
-import {Player} from "./state/player";
-import {GameError, GameMessage} from "../game-error";
-import {CardList} from "./state/card-list";
+import { State } from "./state/state";
+import { Player } from "./state/player";
 
 export class StateUtils {
   public static checkEnoughEnergy(cards: Card[], cost: CardType[]): boolean {

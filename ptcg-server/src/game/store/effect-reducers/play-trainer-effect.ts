@@ -3,8 +3,6 @@ import { GameError, GameMessage } from "../../game-error";
 import { Effect } from "../effects/effect";
 import { State } from "../state/state";
 import { StoreLike } from "../store-like";
-import { TrainerCard } from "../card/trainer-card";
-import { TrainerType } from "../card/card-types";
 
 
 export function playTrainerReducer(store: StoreLike, state: State, effect: Effect): State {
@@ -29,15 +27,13 @@ export function playTrainerReducer(store: StoreLike, state: State, effect: Effec
     if (pokemonCard === undefined) {
       throw new GameError(GameMessage.INVALID_TARGET);
     }
-    const hasPokemonTool = effect.target.cards.some(c => {
-      return c instanceof TrainerCard && c.trainerType === TrainerType.TOOL;
-    })
-    if (hasPokemonTool) {
+    if (effect.target.tool !== undefined) {
       throw new GameError(GameMessage.POKEMON_TOOL_ALREADY_ATTACHED);
     }
 
     store.log(state, `${effect.player.name} attaches ${effect.trainerCard.name}. to ${pokemonCard.name}`);
     effect.player.hand.moveCardTo(effect.trainerCard, effect.target);
+    effect.target.tool = effect.trainerCard;
 
     const playTrainer = new PlayTrainerEffect(effect.player, effect.trainerCard, effect.target);
     state = store.reduceEffect(state, playTrainer);

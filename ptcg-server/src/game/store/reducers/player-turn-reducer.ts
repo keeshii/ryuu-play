@@ -1,9 +1,9 @@
 import { Action } from "../actions/action";
-import { PassTurnAction, RetreatAction, AttackAction } from "../actions/game-actions";
+import { PassTurnAction, RetreatAction, AttackAction, UseAbilityAction } from "../actions/game-actions";
 import { State, GamePhase } from "../state/state";
 import { StoreLike } from "../store-like";
 import { GameError, GameMessage } from "../../game-error";
-import { RetreatEffect, UseAttackEffect } from "../effects/game-effects";
+import { RetreatEffect, UseAttackEffect, UsePowerEffect } from "../effects/game-effects";
 import { EndTurnEffect } from "../effects/game-phase-effects";
 
 export function playerTurnReducer(store: StoreLike, state: State, action: Action): State {
@@ -54,6 +54,27 @@ export function playerTurnReducer(store: StoreLike, state: State, action: Action
 
       const useAttackEffect = new UseAttackEffect(player, attack);
       state = store.reduceEffect(state, useAttackEffect);
+      return state;
+    }
+
+    if (action instanceof UseAbilityAction) {
+      const player = state.players[state.activePlayer];
+
+      if (player === undefined || player.id !== action.clientId) {
+        throw new GameError(GameMessage.NOT_YOUR_TURN);
+      }
+
+      const pokemonCard = player.active.getPokemonCard();
+      if (pokemonCard === undefined) {
+        throw new GameError(GameMessage.UNKNOWN_POWER);
+      }
+
+      const power = pokemonCard.powers.find(a => a.name === action.name);
+      if (power === undefined) {
+        throw new GameError(GameMessage.UNKNOWN_POWER);
+      }
+
+      state = store.reduceEffect(state, new UsePowerEffect(player, power));
       return state;
     }
 
