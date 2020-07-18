@@ -1,0 +1,23 @@
+<h2 class="mat-dialog-title">Move energy</h2>
+
+<mat-dialog-content>
+  <p>{{ message }}</p>
+
+  <ptcg-choose-pokemons-pane
+    [rows]="rows"
+    (cardClick)="onCardClick($event)">
+  </ptcg-choose-pokemons-pane>
+
+  <ptcg-choose-cards-panes
+    [cards]="cards.cards"
+    [filter]="filter"
+    (change)="onChange($event)">
+  </ptcg-choose-cards-panes>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button *ngIf="allowedCancel" (click)="cancel()">Cancel</button>
+  <button mat-raised-button [disabled]="isInvalid" color="primary" (click)="confirm()">
+    OK
+  </button>
+</mat-dialog-actions>

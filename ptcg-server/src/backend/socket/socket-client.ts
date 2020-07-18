@@ -2,7 +2,8 @@ import * as io from 'socket.io';
 import { AddPlayerAction, AppendLogAction, Action, PassTurnAction, ChooseCardsPromptType,
   CardList, ReorderHandAction, ReorderBenchAction, PlayCardAction, CardTarget,
   RetreatAction, ChooseEnergyPromptType, AttackAction, UseAbilityAction, Prompt,
-  ChoosePrizePromptType, ChoosePokemonPromptType, PlayerType, SlotType, PokemonCardList} from '../../game';
+  ChoosePrizePromptType, ChoosePokemonPromptType, PlayerType, SlotType, PokemonCardList,
+  MoveEnergyPromptType, StateUtils, CardTransfer } from '../../game';
 import { Client } from '../../game/core/client';
 import { Errors } from '../common/errors';
 import { Game } from '../../game/core/game';
@@ -286,6 +287,23 @@ export class SocketClient extends Client {
         throw Errors.PROMPT_INVALID_ID;
       }
       result = cardLists;
+    }
+
+    if (prompt.type === MoveEnergyPromptType) {
+      const player = game.state.players.find(p => p.id === prompt.playerId);
+      if (player === undefined) {
+        throw Errors.PROMPT_INVALID_ID;
+      }
+      if (result === null) {
+        return result;  // operation cancelled
+      }
+      const transfers: CardTransfer[] = [];
+      (result as {from: CardTarget, to: CardTarget, index: number}[]).forEach(t => {
+        const cardList = StateUtils.getTarget(game.state, player, t.from);
+        const card = cardList.cards[t.index];
+        transfers.push({ from: t.from, to: t.to, card });
+      });
+      result = transfers;
     }
 
     return result;
