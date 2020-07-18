@@ -1,0 +1,10 @@
+<div class="ptcg-choose-pokemons-pane">
+  <div class="ptcg-pokemon-row" *ngFor="let row of rows"
+    [ngClass]="{'upside-down': row.target.player === PlayerType.TOP_PLAYER}">
+    <ptcg-board-card *ngFor="let item of row.items"
+      ptcgDropHighlight="outside" [ptcgDropHighlightVisible]="item.selected"
+      [cardList]="item.cardList"
+      (cardClick)="onCardClick(item)">
+    </ptcg-board-card>
+  </div>
+</div>

@@ -67,7 +67,7 @@ $ptcg-energy-card-offset: 15%;
   right: 0;
   transform: translateY(100%);
 
-  :host-context(.ptcg-board-player.upside-down) & {
+  :host-context(.upside-down) & {
     transform: translateY(100%) rotate(180deg);
   }
 }
@@ -77,7 +77,7 @@ $ptcg-energy-card-offset: 15%;
   top: 15%;
   left: 10%;
 
-  :host-context(.ptcg-board-player.upside-down) & {
+  :host-context(.upside-down) & {
     transform: rotate(180deg);
   }
 }
@@ -93,7 +93,7 @@ $ptcg-energy-card-offset: 15%;
     padding-bottom: $ptcg-board-tiny-padding;
   }
 
-  :host-context(.ptcg-board-player.upside-down) & {
+  :host-context(.upside-down) & {
     transform: translateX(-100%) rotate(180deg);
   }
 }

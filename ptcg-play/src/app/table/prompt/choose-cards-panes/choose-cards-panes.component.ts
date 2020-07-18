@@ -34,7 +34,7 @@ export class ChooseCardsPanesComponent implements OnInit {
   }
 
   @Input() cardbackMap: {[index: number]: boolean} = {};
-
+  @Input() singlePaneMode = false;
   @Output() change = new EventEmitter<number[]>();
 
   public allowedCancel: boolean;
@@ -86,7 +86,7 @@ export class ChooseCardsPanesComponent implements OnInit {
       let result = false;
       for (const key in filter) {
         if (filter.hasOwnProperty(key)) {
-          result = result || filter[key] !== card[key];
+          result = result || (filter as any)[key] !== (card as any)[key];
         }
       }
       filterMap[card.fullName] = !result;
@@ -147,7 +147,10 @@ export class ChooseCardsPanesComponent implements OnInit {
     this.topSortable.list = this.topSortable.tempList.slice();
     this.bottomSortable.list = this.bottomSortable.tempList.slice();
 
-    const result = this.bottomSortable.list.map(i => i.index);
+    const result = this.singlePaneMode
+      ? this.topSortable.list.map(i => i.index)
+      : this.bottomSortable.list.map(i => i.index);
+
     this.change.next(result);
   }
 

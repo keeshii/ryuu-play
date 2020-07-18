@@ -20,7 +20,7 @@
   </skyhook-sortable-list>
 </ptcg-cards-container>
 
-<ptcg-cards-container [keepInitialSize]="true">
+<ptcg-cards-container [keepInitialSize]="true" *ngIf="singlePaneMode === false">
   <skyhook-sortable-list
     [ssSortableSpec]="bottomSortable.spec"
     ssSortableTrigger="fixed"

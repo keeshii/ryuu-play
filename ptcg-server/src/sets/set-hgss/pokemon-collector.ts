@@ -18,7 +18,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: PlayT
 
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    CardMessage.CHOOSE_UP_TO_BASIC_POKEMON,
+    CardMessage.CHOOSE_UP_TO_3_BASIC_POKEMON,
     player.deck,
     { superType: SuperType.POKEMON, stage: Stage.BASIC } as any,
     { min: 0, max: 3, allowCancel: false }

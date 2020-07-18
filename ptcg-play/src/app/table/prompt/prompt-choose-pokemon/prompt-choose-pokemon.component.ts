@@ -1,18 +1,8 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
-import { GameState, ChoosePokemonPrompt, PokemonCardList, PlayerType, SlotType,
-  CardTarget, State } from 'ptcg-server';
+import { GameState, ChoosePokemonPrompt } from 'ptcg-server';
 
 import { GameService } from 'src/app/api/services/game.service';
-
-interface SelectionItem {
-  cardList: PokemonCardList;
-  selected: boolean;
-}
-
-interface SelectionRow {
-  items: SelectionItem[];
-  target: CardTarget;
-}
+import { ChoosePokemonsPaneComponent, SelectionRow, SelectionItem } from '../choose-pokemons-pane/choose-pokemons-pane.component';
 
 @Component({
   selector: 'ptcg-prompt-choose-pokemon',
@@ -24,7 +14,6 @@ export class PromptChoosePokemonComponent implements OnInit, OnChanges {
   @Input() prompt: ChoosePokemonPrompt;
   @Input() gameState: GameState;
 
-  public PlayerType = PlayerType;
   public rows: SelectionRow[] = [];
   public allowedCancel: boolean;
   public promptId: number;
@@ -49,14 +38,7 @@ export class PromptChoosePokemonComponent implements OnInit, OnChanges {
   public confirm() {
     const gameId = this.gameState.gameId;
     const id = this.promptId;
-
-    const result: CardTarget[] = [];
-    this.rows.forEach(row => row.items.forEach((item, index) => {
-      if (item.selected) {
-        result.push({...row.target, index });
-      }
-    }));
-
+    const result = ChoosePokemonsPaneComponent.buildTargets(this.rows);
     this.gameService.resolvePrompt(gameId, id, result);
   }
 
@@ -76,47 +58,14 @@ export class PromptChoosePokemonComponent implements OnInit, OnChanges {
     this.isInvalid = selected !== this.count;
   }
 
-  private buildRow(cardLists: PokemonCardList[], player: PlayerType, slot: SlotType) {
-    const target = { player, slot, index: 0 };
-    const items = cardLists.map(cardList => ({cardList, selected: false}));
-    return { target, items };
-  }
-
-  private buildSelectionRows(state: State, prompt: ChoosePokemonPrompt) {
-    const player = state.players.find(p => p.id === this.prompt.playerId);
-    const opponent = state.players.find(p => p.id !== this.prompt.playerId);
-    if (player === undefined || opponent === undefined) {
-      return;
-    }
-
-    const hasOpponent = [PlayerType.TOP_PLAYER, PlayerType.ANY].includes(prompt.playerType);
-    const hasPlayer = [PlayerType.BOTTOM_PLAYER, PlayerType.ANY].includes(prompt.playerType);
-    const hasBench = prompt.slots.includes(SlotType.BENCH);
-    const hasActive = prompt.slots.includes(SlotType.ACTIVE);
-
-    const rows: SelectionRow[] = [];
-    if (hasOpponent && hasBench) {
-      rows.push(this.buildRow(opponent.bench, PlayerType.TOP_PLAYER, SlotType.BENCH));
-    }
-    if (hasOpponent && hasActive) {
-      rows.push(this.buildRow([opponent.active], PlayerType.TOP_PLAYER, SlotType.ACTIVE));
-    }
-    if (hasPlayer && hasActive) {
-      rows.push(this.buildRow([player.active], PlayerType.BOTTOM_PLAYER, SlotType.ACTIVE));
-    }
-    if (hasPlayer && hasBench) {
-      rows.push(this.buildRow(player.bench, PlayerType.BOTTOM_PLAYER, SlotType.BENCH));
-    }
-
-    return rows;
-  }
-
   ngOnChanges() {
     if (this.prompt && this.gameState) {
       const state = this.gameState.state;
       const prompt = this.prompt;
 
-      this.rows = this.buildSelectionRows(state, prompt);
+      this.rows = ChoosePokemonsPaneComponent.buildSelectionRows(
+        state, prompt.playerId, prompt.playerType, prompt.slots);
+
       this.allowedCancel = prompt.options.allowCancel;
       this.count = prompt.options.count;
       this.message = prompt.message;

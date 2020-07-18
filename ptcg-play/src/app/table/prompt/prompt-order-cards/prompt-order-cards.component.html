@@ -1,13 +1,13 @@
-<h2 class="mat-dialog-title">Choose pokemon</h2>
+<h2 class="mat-dialog-title">Order cards</h2>
 
 <mat-dialog-content>
   <p>{{ message }}</p>
 
-  <ptcg-choose-pokemons-pane
-    [rows]="rows"
-    (cardClick)="onCardClick($event)">
-  </ptcg-choose-pokemons-pane>
-
+  <ptcg-choose-cards-panes
+    [singlePaneMode]="true"
+    [cards]="cards.cards"
+    (change)="onChange($event)">
+  </ptcg-choose-cards-panes>
 </mat-dialog-content>
 
 <mat-dialog-actions>

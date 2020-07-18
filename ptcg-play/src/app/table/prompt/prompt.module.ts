@@ -14,6 +14,8 @@ import { PromptChoosePrizeComponent } from './prompt-choose-prize/prompt-choose-
 import { PromptChoosePokemonComponent } from './prompt-choose-pokemon/prompt-choose-pokemon.component';
 import { PromptGameOverComponent } from './prompt-game-over/prompt-game-over.component';
 import { PromptShowCardsComponent } from './prompt-show-cards/prompt-show-cards.component';
+import { ChoosePokemonsPaneComponent } from './choose-pokemons-pane/choose-pokemons-pane.component';
+import { PromptOrderCardsComponent } from './prompt-order-cards/prompt-order-cards.component';
 
 
 @NgModule({
@@ -28,7 +30,9 @@ import { PromptShowCardsComponent } from './prompt-show-cards/prompt-show-cards.
     PromptChoosePrizeComponent,
     PromptChoosePokemonComponent,
     PromptGameOverComponent,
-    PromptShowCardsComponent
+    PromptShowCardsComponent,
+    ChoosePokemonsPaneComponent,
+    PromptOrderCardsComponent
   ],
   imports: [
     BoardModule,
