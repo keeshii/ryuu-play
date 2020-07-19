@@ -1,18 +1,25 @@
-import { State, PlayerType, SlotType, PokemonCardList, CardTarget } from 'ptcg-server';
+import { State, PlayerType, SlotType, PokemonCardList, CardTarget, Card } from 'ptcg-server';
 
 export interface PokemonItem {
   cardList: PokemonCardList;
   selected: boolean;
+  target: CardTarget;
 }
 
 export interface PokemonRow {
   items: PokemonItem[];
-  target: CardTarget;
+  playerType: PlayerType;
+}
+
+interface CardIndex {
+  card: Card;
+  index: number;
 }
 
 export class PokemonData {
 
   private rows: PokemonRow[];
+  private cardIndexes: CardIndex[] = [];
 
   constructor(
     state: State,
@@ -25,8 +32,13 @@ export class PokemonData {
 
   private buildRow(cardLists: PokemonCardList[], player: PlayerType, slot: SlotType): PokemonRow {
     const target = { player, slot, index: 0 };
-    const items = cardLists.map(cardList => ({cardList, selected: false}));
-    return { target, items };
+    const items = cardLists.map((cardList, index) => (
+      {cardList, selected: false, target: {...target, index}}
+    ));
+    items.forEach(item => item.cardList.cards.forEach((card, index) => {
+      this.cardIndexes.push({card, index});
+    }));
+    return { items, playerType: player };
   }
 
   private buildPokemonRows(state: State, playerId: number, playerType: PlayerType, slots: SlotType[]): PokemonRow[] {
@@ -66,7 +78,7 @@ export class PokemonData {
     const result: CardTarget[] = [];
     this.rows.forEach(row => row.items.forEach((item, index) => {
       if (item.selected) {
-        result.push({...row.target, index });
+        result.push(item.target);
       }
     }));
     return result;
@@ -83,13 +95,19 @@ export class PokemonData {
   }
 
   public matchesTarget(item: PokemonItem, targets: CardTarget[]): boolean {
-    for (const target of targets) {
-      const row = this.rows.find(r => r.target.player === target.player && r.target.slot === target.slot);
-      if (row !== undefined && row.items.length > target.index && row.items[target.index] === item) {
-        return true;
-      }
+    return targets.some(t => {
+      return t.player === item.target.player
+        && t.slot === item.target.slot
+        && t.index === item.target.index;
+    });
+  }
+
+  public getCardIndex(card: Card): number {
+    const cardIndex = this.cardIndexes.find(c => c.card === card);
+    if (cardIndex === undefined) {
+      return -1;
     }
-    return false;
+    return cardIndex.index;
   }
 
 }

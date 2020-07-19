@@ -1,13 +1,13 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { GameState, Card, MoveEnergyPrompt, SuperType, EnergyCard,
-  EnergyType, PokemonCardList} from 'ptcg-server';
+  EnergyType, CardTarget } from 'ptcg-server';
 
 import { GameService } from '../../../api/services/game.service';
 import { PokemonData, PokemonItem } from '../choose-pokemons-pane/pokemon-data';
 
 interface MoveEnergyResult {
-  from: PokemonCardList;
-  to: PokemonCardList;
+  from: PokemonItem;
+  to: PokemonItem;
   card: Card;
 }
 
@@ -22,13 +22,16 @@ export class PromptMoveEnergyComponent implements OnInit, OnChanges {
   @Input() gameState: GameState;
 
   public pokemonData: PokemonData;
-  public cardList: PokemonCardList | undefined;
+  public selectedItem: PokemonItem | undefined;
   public allowedCancel: boolean;
   public promptId: number;
   public message: string;
   public filter: Partial<EnergyCard>;
   public isInvalid = false;
-  private result: MoveEnergyResult[] = [];
+
+  private blockedFrom: CardTarget[];
+  private blockedTo: CardTarget[];
+  private results: MoveEnergyResult[] = [];
 
   constructor(
     private gameService: GameService
@@ -43,37 +46,70 @@ export class PromptMoveEnergyComponent implements OnInit, OnChanges {
   public confirm() {
     const gameId = this.gameState.gameId;
     const id = this.promptId;
-    this.gameService.resolvePrompt(gameId, id, null);
-    // this.gameService.resolvePrompt(gameId, id, this.result);
+    const results = this.results.map(r => ({
+      from: r.from.target,
+      to: r.to.target,
+      index: this.pokemonData.getCardIndex(r.card)
+    }));
+    this.gameService.resolvePrompt(gameId, id, results);
   }
 
   ngOnInit() {
   }
 
   public onCardClick(item: PokemonItem) {
+    if (this.pokemonData.matchesTarget(item, this.blockedFrom)) {
+      return;
+    }
     this.pokemonData.unselectAll();
     item.selected = true;
-    this.cardList = item.cardList;
+    this.selectedItem = item;
   }
 
   public onCardDrop([item, card]: [PokemonItem, Card]) {
-    if (item.cardList === this.cardList) {
+    if (item === this.selectedItem) {
       return;
     }
-
-    const result: MoveEnergyResult = {
-      from: this.cardList,
-      to: item.cardList,
-      card
-    };
-
-    const index = result.from.cards.indexOf(card);
+    if (this.pokemonData.matchesTarget(item, this.blockedTo)) {
+      return;
+    }
+    const index = this.selectedItem.cardList.cards.indexOf(card);
     if (index === -1) {
       return;
     }
-    result.from.cards.splice(index, 1);
-    result.to.cards.push(card);
-    this.result.push(result);
+    const result: MoveEnergyResult = {
+      from: this.selectedItem,
+      to: item,
+      card
+    };
+    this.moveCard(result.from, result.to, card);
+    this.appendMoveResult(result);
+  }
+
+  private moveCard(from: PokemonItem, to: PokemonItem, card: Card) {
+    from.cardList = { ...from.cardList } as any;
+    from.cardList.cards = [...from.cardList.cards];
+
+    to.cardList = { ...to.cardList } as any;
+    to.cardList.cards = [...to.cardList.cards];
+
+    const index = from.cardList.cards.indexOf(card);
+    from.cardList.cards.splice(index, 1);
+    to.cardList.cards.push(card);
+  }
+
+  private appendMoveResult(result: MoveEnergyResult) {
+    const index = this.results.findIndex(r => r.card === result.card);
+    if (index === -1) {
+      this.results.push(result);
+      return;
+    }
+    const prevResult = this.results[index];
+    if (prevResult.from === result.to) {
+      this.results.splice(index, 1);
+      return;
+    }
+    prevResult.to = result.to;
   }
 
   private buildFilter(prompt: MoveEnergyPrompt): Partial<Card> {
@@ -103,12 +139,14 @@ export class PromptMoveEnergyComponent implements OnInit, OnChanges {
       const slots = prompt.slots;
 
       this.pokemonData = new PokemonData(state, playerId, playerType, slots);
+      this.blockedFrom = prompt.options.blockedFrom;
+      this.blockedTo = prompt.options.blockedTo;
       this.allowedCancel = prompt.options.allowCancel;
       this.filter = this.buildFilter(prompt);
       this.message = prompt.message;
       this.promptId = prompt.id;
-      this.cardList = undefined;
-      this.result = [];
+      this.selectedItem = undefined;
+      this.results = [];
       this.updateIsInvalid();
     }
   }

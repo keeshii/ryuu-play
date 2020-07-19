@@ -5,13 +5,14 @@
 
   <ptcg-choose-pokemons-pane
     [pokemonData]="pokemonData"
-    (cardClick)="onCardClick($event)">
+    (cardClick)="onCardClick($event)"
+    (cardDrop)="onCardDrop($event)">
   </ptcg-choose-pokemons-pane>
 
   <ptcg-choose-cards-panes
-    [cards]="cardList ? cardList.cards : []"
+    [cards]="selectedItem ? selectedItem.cardList.cards : []"
     [filter]="filter"
-    (change)="onChange($event)">
+    [singlePaneMode]="true">
   </ptcg-choose-cards-panes>
 </mat-dialog-content>
 

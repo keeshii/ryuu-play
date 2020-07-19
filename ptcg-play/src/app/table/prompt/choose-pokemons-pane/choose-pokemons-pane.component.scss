@@ -3,6 +3,14 @@
 $ptcg-selection-container-padding: map-get($padding, small);
 $ptcg-selection-container-border-radius: map-get($padding, small);
 
+:host {
+  display: block;
+
+  &:not(:last-child) {
+    margin-bottom: map-get($padding, normal);
+  }
+}
+
 ptcg-board-card {
   margin: 0 map-get($padding, small);
   width: map-get($ptcg-size, card);
@@ -13,6 +21,7 @@ ptcg-board-card {
   display: flex;
   flex-direction: column;
   max-width: 100%;
+  overflow: hidden;
   padding: $ptcg-selection-container-padding;
 }
 
