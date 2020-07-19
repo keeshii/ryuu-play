@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { GameState, ChoosePokemonPrompt, CardTarget } from 'ptcg-server';
 
 import { GameService } from 'src/app/api/services/game.service';
-import { ChoosePokemonsPaneComponent, SelectionRow, SelectionItem } from '../choose-pokemons-pane/choose-pokemons-pane.component';
+import { PokemonData, PokemonItem } from '../choose-pokemons-pane/pokemon-data';
 
 @Component({
   selector: 'ptcg-prompt-choose-pokemon',
@@ -14,7 +14,7 @@ export class PromptChoosePokemonComponent implements OnInit, OnChanges {
   @Input() prompt: ChoosePokemonPrompt;
   @Input() gameState: GameState;
 
-  public rows: SelectionRow[] = [];
+  public pokemonData: PokemonData;
   public allowedCancel: boolean;
   public promptId: number;
   public message: string;
@@ -39,18 +39,18 @@ export class PromptChoosePokemonComponent implements OnInit, OnChanges {
   public confirm() {
     const gameId = this.gameState.gameId;
     const id = this.promptId;
-    const result = ChoosePokemonsPaneComponent.buildTargets(this.rows);
+    const result = this.pokemonData.getSelectedTargets();
     this.gameService.resolvePrompt(gameId, id, result);
   }
 
-  public onCardClick(item: SelectionItem) {
-    if (ChoosePokemonsPaneComponent.isBlocked(this.rows, item, this.blocked)) {
+  public onCardClick(item: PokemonItem) {
+    if (this.pokemonData.matchesTarget(item, this.blocked)) {
       return;
     }
 
     // If we are selecting only one card, unselect all first
     if (this.count === 1) {
-      this.rows.forEach(row => row.items.forEach(i => i.selected = false));
+      this.pokemonData.unselectAll();
     }
 
     item.selected = !item.selected;
@@ -58,8 +58,7 @@ export class PromptChoosePokemonComponent implements OnInit, OnChanges {
   }
 
   private updateIsInvalid() {
-    let selected = 0;
-    this.rows.forEach(r => r.items.forEach(i => selected += i.selected ? 1 : 0));
+    const selected = this.pokemonData.countSelected();
     this.isInvalid = selected !== this.count;
   }
 
@@ -67,10 +66,11 @@ export class PromptChoosePokemonComponent implements OnInit, OnChanges {
     if (this.prompt && this.gameState) {
       const state = this.gameState.state;
       const prompt = this.prompt;
+      const playerId = prompt.playerId;
+      const playerType = prompt.playerType;
+      const slots = prompt.slots;
 
-      this.rows = ChoosePokemonsPaneComponent.buildSelectionRows(
-        state, prompt.playerId, prompt.playerType, prompt.slots);
-
+      this.pokemonData = new PokemonData(state, playerId, playerType, slots);
       this.allowedCancel = prompt.options.allowCancel;
       this.blocked = prompt.options.blocked;
       this.count = prompt.options.count;

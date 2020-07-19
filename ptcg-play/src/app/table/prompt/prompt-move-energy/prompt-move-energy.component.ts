@@ -3,11 +3,7 @@ import { GameState, Card, MoveEnergyPrompt, SuperType, EnergyCard,
   EnergyType, PokemonCardList} from 'ptcg-server';
 
 import { GameService } from '../../../api/services/game.service';
-import {
-  ChoosePokemonsPaneComponent,
-  SelectionRow,
-  SelectionItem
-} from '../choose-pokemons-pane/choose-pokemons-pane.component';
+import { PokemonData, PokemonItem } from '../choose-pokemons-pane/pokemon-data';
 
 interface MoveEnergyResult {
   from: PokemonCardList;
@@ -25,7 +21,7 @@ export class PromptMoveEnergyComponent implements OnInit, OnChanges {
   @Input() prompt: MoveEnergyPrompt;
   @Input() gameState: GameState;
 
-  public rows: SelectionRow[] = [];
+  public pokemonData: PokemonData;
   public cardList: PokemonCardList | undefined;
   public allowedCancel: boolean;
   public promptId: number;
@@ -54,13 +50,13 @@ export class PromptMoveEnergyComponent implements OnInit, OnChanges {
   ngOnInit() {
   }
 
-  public onCardClick(item: SelectionItem) {
-    this.rows.forEach(row => row.items.forEach(i => i.selected = false));
+  public onCardClick(item: PokemonItem) {
+    this.pokemonData.unselectAll();
     item.selected = true;
     this.cardList = item.cardList;
   }
 
-  public onCardDrop([item, card]: [SelectionItem, Card]) {
+  public onCardDrop([item, card]: [PokemonItem, Card]) {
     if (item.cardList === this.cardList) {
       return;
     }
@@ -102,10 +98,11 @@ export class PromptMoveEnergyComponent implements OnInit, OnChanges {
     if (this.prompt && this.gameState) {
       const state = this.gameState.state;
       const prompt = this.prompt;
+      const playerId = prompt.playerId;
+      const playerType = prompt.playerType;
+      const slots = prompt.slots;
 
-      this.rows = ChoosePokemonsPaneComponent.buildSelectionRows(
-        state, prompt.playerId, prompt.playerType, prompt.slots);
-
+      this.pokemonData = new PokemonData(state, playerId, playerType, slots);
       this.allowedCancel = prompt.options.allowCancel;
       this.filter = this.buildFilter(prompt);
       this.message = prompt.message;
