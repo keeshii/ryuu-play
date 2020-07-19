@@ -6,10 +6,6 @@ $ptcg-selection-container-border-radius: map-get($padding, small);
 ptcg-board-card {
   margin: 0 map-get($padding, small);
   width: map-get($ptcg-size, card);
-
-  &.unavailable {
-    opacity: $ptcg-disabled-opacity;
-  }
 }
 
 .ptcg-choose-pokemons-pane {

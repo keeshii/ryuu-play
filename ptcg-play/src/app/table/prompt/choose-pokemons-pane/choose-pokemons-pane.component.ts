@@ -21,7 +21,6 @@ export class ChoosePokemonsPaneComponent implements OnInit {
   public PlayerType = PlayerType;
 
   @Input() rows: SelectionRow[] = [];
-  @Input() blocked: CardTarget[] = [];
   @Output() cardClick = new EventEmitter<SelectionItem>();
   @Output() cardDrop = new EventEmitter<[SelectionItem, Card]>();
 
@@ -75,6 +74,27 @@ export class ChoosePokemonsPaneComponent implements OnInit {
       }
     }));
     return result;
+  }
+
+  public static  findTarget(rows: SelectionRow[], target: CardTarget): SelectionItem | undefined {
+    const row = rows.find(r => r.target.player === target.player && r.target.slot === target.slot);
+    if (row === undefined) {
+      return undefined;
+    }
+    if (row.items.length <= target.index) {
+      return undefined;
+    }
+    return row.items[target.index];
+  }
+
+  public static isBlocked(rows: SelectionRow[], item: SelectionItem, blocked: CardTarget[]) {
+    for (const b of blocked) {
+      const blockedItem = ChoosePokemonsPaneComponent.findTarget(rows, b);
+      if (blockedItem === item) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public onCardClick(item: SelectionItem) {

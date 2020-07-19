@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 import { Card } from 'ptcg-server';
 import { DraggedItem } from '@angular-skyhook/sortable';
 
@@ -12,27 +12,14 @@ import { ChooseCardsSortable } from './choose-cards-panes.interface';
   templateUrl: './choose-cards-panes.component.html',
   styleUrls: ['./choose-cards-panes.component.scss']
 })
-export class ChooseCardsPanesComponent implements OnInit {
+export class ChooseCardsPanesComponent implements OnInit, OnChanges {
 
   public readonly topListId = 'CHOOSE_CARDS_TOP_LIST';
   public readonly bottomListId = 'CHOOSE_CARDS_BOTTOM_LIST';
 
-  @Input() set cards(value: Card[]) {
-    this.cardArray = value;
-    this.filterMap = this.buildFilterMap(value, this.filterValue);
-    this.topSortable.tempList = this.buildCardList(value);
-    this.bottomSortable.tempList = [];
-    this.commitTempLists();
-  }
-
-  @Input() set filter(filter: Partial<Card>) {
-    this.filterValue = filter || {};
-    this.filterMap = this.buildFilterMap(this.cardArray, filter);
-    this.topSortable.tempList = this.buildCardList(this.cardArray);
-    this.bottomSortable.tempList = [];
-    this.commitTempLists();
-  }
-
+  @Input() cards: Card[];
+  @Input() filter: Partial<Card> = {};
+  @Input() blocked: number[] = [];
   @Input() cardbackMap: {[index: number]: boolean} = {};
   @Input() singlePaneMode = false;
   @Output() change = new EventEmitter<number[]>();
@@ -43,9 +30,6 @@ export class ChooseCardsPanesComponent implements OnInit {
   public filterMap: {[fullName: string]: boolean} = {};
   public topSortable: ChooseCardsSortable;
   public bottomSortable: ChooseCardsSortable;
-
-  private cardArray: Card[] = [];
-  private filterValue: Partial<Card> = {};
 
   constructor(
     private cardsBaseService: CardsBaseService
@@ -80,16 +64,19 @@ export class ChooseCardsPanesComponent implements OnInit {
     return sortable;
   }
 
-  private buildFilterMap(cards: Card[], filter: Partial<Card>) {
+  private buildFilterMap(cards: Card[], filter: Partial<Card>, blocked: number[]) {
     const filterMap: {[fullName: string]: boolean} = {};
-    for (const card of cards) {
-      let result = false;
-      for (const key in filter) {
-        if (filter.hasOwnProperty(key)) {
-          result = result || (filter as any)[key] !== (card as any)[key];
+    for (let i = 0; i < cards.length; i++) {
+      const card = cards[i];
+      let isBlocked = blocked.includes(i);
+      if (isBlocked === false) {
+        for (const key in filter) {
+          if (filter.hasOwnProperty(key)) {
+            isBlocked = isBlocked || (filter as any)[key] !== (card as any)[key];
+          }
         }
       }
-      filterMap[card.fullName] = !result;
+      filterMap[card.fullName] = !isBlocked;
     }
     return filterMap;
   }
@@ -160,6 +147,15 @@ export class ChooseCardsPanesComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  ngOnChanges() {
+    if (this.cards && this.filter && this.blocked) {
+      this.filterMap = this.buildFilterMap(this.cards, this.filter, this.blocked);
+      this.topSortable.tempList = this.buildCardList(this.cards);
+      this.bottomSortable.tempList = [];
+      this.commitTempLists();
+    }
   }
 
 }

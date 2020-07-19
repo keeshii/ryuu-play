@@ -11,7 +11,7 @@ import { CardMessage } from "../card-message";
 function* playCard(next: Function, store: StoreLike, state: State, effect: PlayTrainerEffect): IterableIterator<State> {
   const player = effect.player;
   const opponent = StateUtils.getOpponent(state, player);
-  let cards: Card[] = [];
+  let cards: Card[] | null = [];
 
   const blocked = player.deck.cards
     .filter(c => c instanceof PokemonCard && c.tags.includes(CardTag.POKEMON_LV_X))
@@ -27,6 +27,10 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: PlayT
     cards = selected;
     next();
   });
+
+  if (cards === null) {
+    return state;
+  }
 
   player.deck.moveCardsTo(cards, player.hand);
 

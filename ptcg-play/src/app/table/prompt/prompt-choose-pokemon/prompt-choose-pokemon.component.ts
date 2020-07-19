@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
-import { GameState, ChoosePokemonPrompt } from 'ptcg-server';
+import { GameState, ChoosePokemonPrompt, CardTarget } from 'ptcg-server';
 
 import { GameService } from 'src/app/api/services/game.service';
 import { ChoosePokemonsPaneComponent, SelectionRow, SelectionItem } from '../choose-pokemons-pane/choose-pokemons-pane.component';
@@ -18,6 +18,7 @@ export class PromptChoosePokemonComponent implements OnInit, OnChanges {
   public allowedCancel: boolean;
   public promptId: number;
   public message: string;
+  public blocked: CardTarget[];
   public isInvalid = false;
 
   private count = 0;
@@ -43,6 +44,10 @@ export class PromptChoosePokemonComponent implements OnInit, OnChanges {
   }
 
   public onCardClick(item: SelectionItem) {
+    if (ChoosePokemonsPaneComponent.isBlocked(this.rows, item, this.blocked)) {
+      return;
+    }
+
     // If we are selecting only one card, unselect all first
     if (this.count === 1) {
       this.rows.forEach(row => row.items.forEach(i => i.selected = false));
@@ -67,6 +72,7 @@ export class PromptChoosePokemonComponent implements OnInit, OnChanges {
         state, prompt.playerId, prompt.playerType, prompt.slots);
 
       this.allowedCancel = prompt.options.allowCancel;
+      this.blocked = prompt.options.blocked;
       this.count = prompt.options.count;
       this.message = prompt.message;
       this.promptId = prompt.id;

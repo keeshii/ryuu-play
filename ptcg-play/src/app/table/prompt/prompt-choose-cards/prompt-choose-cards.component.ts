@@ -14,6 +14,7 @@ export class PromptChooseCardsComponent implements OnInit {
     this.cards = prompt.cards;
     this.filter = prompt.filter;
     this.allowedCancel = prompt.options.allowCancel;
+    this.blocked = prompt.options.blocked;
     this.message = prompt.message;
     this.promptId = prompt.id;
     this.min = prompt.options.min;
@@ -27,6 +28,7 @@ export class PromptChooseCardsComponent implements OnInit {
   public promptId: number;
   public message: string;
   public filter: Partial<Card>;
+  public blocked: number[];
   public isInvalid = false;
   private min: number;
   private max: number;

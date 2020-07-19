@@ -2,7 +2,10 @@
     <ng-template let-type let-item="item">
         <ng-container [ngSwitch]="type">
             <div class="ptcg-card" *ngSwitchCase="'PROMPT_CARD'">
-              <img class="ptcg-card-preview" [src]="item.data.scanUrl">
+              <ptcg-card class="ptcg-card-preview"
+                [class.cardback]="item.data.isSecret"
+                [card]="item.data.card">
+              </ptcg-card>
             </div>
         </ng-container>
     </ng-template>

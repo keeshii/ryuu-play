@@ -9,7 +9,7 @@
   </ptcg-choose-pokemons-pane>
 
   <ptcg-choose-cards-panes
-    [cards]="cards.cards"
+    [cards]="cardList ? cardList.cards : []"
     [filter]="filter"
     (change)="onChange($event)">
   </ptcg-choose-cards-panes>
