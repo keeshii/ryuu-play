@@ -58,6 +58,7 @@ export class MainService {
 
   private onDeleteGame(gameId: number): void {
     const games = this.sessionService.session.games.filter(g => g.gameId !== gameId);
+    this.gameService.removeGameState(gameId);
     this.sessionService.set({ games });
   }
 
@@ -72,7 +73,7 @@ export class MainService {
     this.socketService.emit('core:createGame')
       .pipe(finalize(() => { this.loading = false; }))
       .subscribe((gameState: GameState) => {
-        this.gameService.appendGameSate(gameState);
+        this.gameService.appendGameState(gameState);
       }, () => {});
   }
 

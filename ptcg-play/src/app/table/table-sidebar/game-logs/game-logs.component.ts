@@ -25,6 +25,7 @@ export class GameLogsComponent implements OnInit {
 
   @Input() set gameState(gameState: GameState) {
     if (!gameState || !gameState.state) {
+      this.logs = [];
       return;
     }
     this.state = gameState;

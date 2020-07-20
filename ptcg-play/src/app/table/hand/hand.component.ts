@@ -61,6 +61,8 @@ export class HandComponent implements OnInit, OnChanges {
       this.isFaceDown = hand.isSecret || (!hand.isPublic && !this.isOwner);
     } else {
       this.cards = [];
+      this.list = [];
+      this.tempList = [];
     }
   }
 

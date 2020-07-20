@@ -27,7 +27,7 @@ export class GameService {
       this.socketService.emit('game:join', gameId)
         .pipe(finalize(() => observer.complete()))
         .subscribe((gameState: GameState) => {
-          this.appendGameSate(gameState);
+          this.appendGameState(gameState);
           observer.next(gameState);
         }, (error: any) => {
           observer.error(error);
@@ -35,7 +35,7 @@ export class GameService {
     });
   }
 
-  public appendGameSate(gameState: GameState) {
+  public appendGameState(gameState: GameState) {
     const gameId = gameState.gameId;
     const games = this.sessionService.session.gameStates;
     const index = games.findIndex(g => g.gameId === gameId);
@@ -46,13 +46,20 @@ export class GameService {
     }
   }
 
+  public removeGameState(gameId: number) {
+    const games = this.sessionService.session.gameStates;
+    const index = games.findIndex(g => g.gameId === gameId);
+    if (index !== -1) {
+      const gameStates = games.filter(table => table.gameId !== gameId);
+      this.stopListening(gameId);
+      this.sessionService.set({ gameStates });
+    }
+  }
+
   public leave(gameId: number) {
     this.socketService.emit('game:leave', gameId)
       .subscribe(() => {
-        const games = this.sessionService.session.gameStates;
-        const gameStates = games.filter(table => table.gameId !== gameId);
-        this.stopListening(gameId);
-        this.sessionService.set({ gameStates });
+        this.removeGameState(gameId);
       }, (error: ApiError) => this.alertService.toast(error.message));
   }
 

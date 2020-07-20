@@ -1,4 +1,4 @@
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GameState, Player } from 'ptcg-server';
 import { Observable, from, EMPTY } from 'rxjs';
@@ -32,6 +32,7 @@ export class TableComponent implements OnInit, OnDestroy {
     private gameService: GameService,
     private deckService: DeckService,
     private route: ActivatedRoute,
+    private router: Router,
     private sessionService: SessionService
   ) {
     this.gameStates$ = this.sessionService.get(session => session.gameStates);
@@ -110,6 +111,7 @@ export class TableComponent implements OnInit, OnDestroy {
     this.clientId = clientId;
 
     if (!gameState || !gameState.state) {
+      this.router.navigate(['/games']);
       return;
     }
 

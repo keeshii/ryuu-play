@@ -33,7 +33,7 @@ export class TableSidebarComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-    if (!this.gameState || !this.gameState) {
+    if (!this.gameState) {
       this.turn = 0;
       this.gameId = undefined;
       this.isTopPlayerActive = false;
