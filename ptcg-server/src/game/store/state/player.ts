@@ -2,6 +2,7 @@ import { CardList } from "./card-list";
 import { CardTarget, PlayerType, SlotType } from "../actions/play-card-action";
 import { PokemonCard } from "../card/pokemon-card";
 import { PokemonCardList } from "./pokemon-card-list";
+import { Marker } from "./card-marker";
 
 export class Player {
 
@@ -32,6 +33,8 @@ export class Player {
   stadiumPlayedTurn: number = 0;
 
   stadiumUsedTurn: number = 0;
+
+  marker = new Marker();
 
   getPrizeLeft(): number {
     return this.prizes.reduce((left, p) => left + p.cards.length, 0);

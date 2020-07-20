@@ -24,6 +24,7 @@ import { SuperScoopUp } from "./super-scoop-up";
 import { UnownQ } from "./unown-q";
 import { UnownR } from "./unown-r";
 import { Uxie } from "./uxie";
+import { VictoryMedal } from "./victory-medal";
 import { WaterEnergy } from "./water-energy";
 
 export const setDiamondAndPearl: Card[] = [
@@ -52,5 +53,6 @@ export const setDiamondAndPearl: Card[] = [
   new UnownQ(),
   new UnownR(),
   new Uxie(),
+  new VictoryMedal(),
   new WaterEnergy()
 ];

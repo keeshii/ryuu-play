@@ -50,7 +50,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: PlayT
     { },
     { min: 0, max: 2, allowCancel: true }
   ), selected => {
-    cards = selected;
+    cards = selected || [];
     next();
   });
 

@@ -96,11 +96,11 @@ export class CrobatG extends PokemonCard {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const defending = StateUtils.getOpponent(state, effect.player).active;
       defending.addSpecialCondition(SpecialCondition.POISONED);
-      defending.addMarker(this.TOXIC_MARKER, this);
+      defending.marker.addMarker(this.TOXIC_MARKER, this);
     }
 
     if (effect instanceof BetweenTurnsEffect) {
-      if (effect.player.active.hasMarker(this.TOXIC_MARKER)) {
+      if (effect.player.active.marker.hasMarker(this.TOXIC_MARKER)) {
         effect.poisonDamage = 20;
       }
     }

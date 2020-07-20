@@ -43,11 +43,10 @@ export class ChooseEnergyPrompt extends Prompt<Card[]> {
     if (result === null) {
       return this.options.allowCancel;
     }
-    const cards: Card[] = this.cards.cards;
-    if (!cards.every(c => c.superType === SuperType.ENERGY)) {
+    if (!result.every(c => c.superType === SuperType.ENERGY)) {
       return false;
     }
-    if (!StateUtils.checkExactEnergy(cards, this.cost)) {
+    if (!StateUtils.checkExactEnergy(result, this.cost)) {
       return false;
     }
     return true;
