@@ -1,7 +1,7 @@
 import { PokemonCard } from "../../game/store/card/pokemon-card";
 import { Stage, CardType, SpecialCondition } from "../../game/store/card/card-types";
 import { PowerType, StoreLike, State, ShuffleDeckPrompt } from "../../game";
-import { AttackEffect, DealDamageAfterWeaknessEffect } from "../../game/store/effects/game-effects";
+import { AttackEffect, DealDamageEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
 
 export class Cleffa extends PokemonCard {
@@ -52,12 +52,12 @@ export class Cleffa extends PokemonCard {
       });
     }
 
-    if (effect instanceof DealDamageAfterWeaknessEffect) {
+    if (effect instanceof DealDamageEffect) {
       if (effect.target.cards.includes(this)) {
         const pokemonCard = effect.target.getPokemonCard();
         const isAsleep = effect.target.specialConditions.includes(SpecialCondition.ASLEEP);
         if (pokemonCard === this && isAsleep) {
-          effect.damage = 0;
+          effect.preventDefault = true;
         }
       }
     }

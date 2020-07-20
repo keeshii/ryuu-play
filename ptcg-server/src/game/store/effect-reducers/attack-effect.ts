@@ -11,12 +11,12 @@ import { CardType } from "../card/card-types";
 import { AttackEffect, DealDamageEffect, UseAttackEffect,
   DealDamageAfterWeaknessEffect } from "../effects/game-effects";
 
-function applyWeaknessAndResistance(damage: number, cardType: CardType, weakness: Weakness[], resistance: Resistance[]): number {
+function applyWeaknessAndResistance(damage: number, cardTypes: CardType[], weakness: Weakness[], resistance: Resistance[]): number {
   let multiply = 1;
   let modifier = 0;
 
   for (const item of weakness) {
-    if (item.type === cardType) {
+    if (cardTypes.includes(item.type)) {
       if (item.value === undefined) {
         multiply *= 2;
       } else {
@@ -26,7 +26,7 @@ function applyWeaknessAndResistance(damage: number, cardType: CardType, weakness
   }
 
   for (const item of resistance) {
-    if (item.type === cardType) {
+    if (cardTypes.includes(item.type)) {
       modifier += item.value;
     }
   }
@@ -50,7 +50,7 @@ export function attackReducer(store: StoreLike, state: State, effect: Effect): S
       throw new GameError(GameMessage.ILLEGAL_ACTION);
     }
 
-    target.damage += effect.damage;
+    target.damage += Math.max(0, effect.damage);
   }
 
   if (effect instanceof DealDamageEffect) {
@@ -59,7 +59,7 @@ export function attackReducer(store: StoreLike, state: State, effect: Effect): S
     const checkPokemonStats = new CheckPokemonStatsEffect(effect.target);
     state = store.reduceEffect(state, checkPokemonStats);
 
-    const cardType = checkPokemonType.cardType;
+    const cardType = checkPokemonType.cardTypes;
     const weakness = checkPokemonStats.weakness;
     const resistance = checkPokemonStats.resistance;
     const damage = applyWeaknessAndResistance(effect.damage, cardType, weakness, resistance);

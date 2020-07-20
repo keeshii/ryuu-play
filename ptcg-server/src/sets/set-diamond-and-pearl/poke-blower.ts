@@ -83,15 +83,10 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: PlayT
     [ SlotType.BENCH ],
     { count: 1, allowCancel: false }
   ), targets => {
-    if (targets && targets.length > 0) {
-      const benchIndex = opponent.bench.indexOf(targets[0]);
-      if (benchIndex !== -1) {
-        opponent.active.clearEffects();
-        const temp = opponent.active;
-        opponent.active = opponent.bench[benchIndex];
-        opponent.bench[benchIndex] = temp;
-      }
+    if (!targets || targets.length === 0) {
+      return;
     }
+    opponent.switchPokemon(targets[0]);
     next();
   });
 

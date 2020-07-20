@@ -22,7 +22,7 @@ export class Eviolite extends TrainerCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof DealDamageAfterWeaknessEffect) {
-      if (effect.target.cards.includes(this)) {
+      if (effect.target.tool === this) {
         const pokemonCard = effect.target.getPokemonCard();
         if (pokemonCard && pokemonCard.stage === Stage.BASIC) {
           effect.damage -= 20;

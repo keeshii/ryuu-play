@@ -65,12 +65,12 @@ export class CheckPokemonTypeEffect implements Effect {
   readonly type: string = CheckEffects.CHECK_POKEMON_TYPE_EFFECT;
   public preventDefault = false;
   public target: PokemonCardList;
-  public cardType: CardType;
+  public cardTypes: CardType[];
 
   constructor(target: PokemonCardList) {
     this.target = target;
     const pokemonCard = target.getPokemonCard();
-    this.cardType = pokemonCard ? pokemonCard.cardType : CardType.NONE;
+    this.cardTypes = pokemonCard ? [ pokemonCard.cardType ] : [];
   }
 }
 
