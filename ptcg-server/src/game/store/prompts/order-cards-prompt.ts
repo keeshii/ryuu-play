@@ -27,4 +27,21 @@ export class OrderCardsPrompt extends Prompt<number[]> {
     }, options);
   }
 
+  public validate(result: number[] | null): boolean {
+    if (result === null) {
+      return this.options.allowCancel;
+    }
+    if (result.length !== this.cards.cards.length) {
+      return false;
+    }
+    const s = result.slice();
+    s.sort();
+    for (let i = 0; i < s.length; i++) {
+      if (s[i] !== i) {
+        return false;
+      }
+    }
+    return true;
+  }
+
 }

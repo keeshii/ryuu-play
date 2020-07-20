@@ -1,9 +1,7 @@
 import * as io from 'socket.io';
-import { AddPlayerAction, AppendLogAction, Action, PassTurnAction, ChooseCardsPromptType,
-  CardList, ReorderHandAction, ReorderBenchAction, PlayCardAction, CardTarget,
-  RetreatAction, ChooseEnergyPromptType, AttackAction, UseAbilityAction, Prompt,
-  ChoosePrizePromptType, ChoosePokemonPromptType, PlayerType, SlotType, PokemonCardList,
-  MoveEnergyPromptType, StateUtils, CardTransfer } from '../../game';
+import { AddPlayerAction, AppendLogAction, Action, PassTurnAction,
+  ReorderHandAction, ReorderBenchAction, PlayCardAction, CardTarget,
+  RetreatAction, AttackAction, UseAbilityAction } from '../../game';
 import { Client } from '../../game/core/client';
 import { Errors } from '../common/errors';
 import { Game } from '../../game/core/game';
@@ -250,65 +248,6 @@ export class SocketClient extends Client {
     this.dispatch(params.gameId, action, response);
   }
 
-  private decodePromptResults(game: Game, prompt: Prompt<any>, result: any): any {
-
-    // If 'Choose card prompt', we have to decode indexes to card instances
-    if (prompt.type === ChooseCardsPromptType || prompt.type === ChooseEnergyPromptType) {
-      const cards: CardList = (prompt as any).cards;
-      if (result !== null) {
-        result = (result as number[]).map(index => cards.cards[index]);
-      }
-    }
-
-    if (prompt.type === ChoosePrizePromptType) {
-      const player = game.state.players.find(p => p.id === prompt.playerId);
-      if (player === undefined) {
-        throw Errors.PROMPT_INVALID_ID;
-      }
-      const prizes = player.prizes.filter(p => p.cards.length > 0);
-      result = (result as number[]).map(index => prizes[index]);
-    }
-
-    if (prompt.type === ChoosePokemonPromptType) {
-      const player = game.state.players.find(p => p.id === prompt.playerId);
-      const opponent = game.state.players.find(p => p.id !== prompt.playerId);
-      if (player === undefined || opponent === undefined) {
-        throw Errors.PROMPT_INVALID_ID;
-      }
-      let cardLists: PokemonCardList[] = [];
-      if (result === null) {
-        return result;  // operation cancelled
-      }
-      (result as CardTarget[]).forEach(target => {
-        let p = target.player === PlayerType.BOTTOM_PLAYER ? player : opponent;
-        cardLists.push(target.slot === SlotType.ACTIVE ? p.active : p.bench[target.index]);
-      });
-      if (cardLists.some(cardList => cardList.cards.length === 0)) {
-        throw Errors.PROMPT_INVALID_ID;
-      }
-      result = cardLists;
-    }
-
-    if (prompt.type === MoveEnergyPromptType) {
-      const player = game.state.players.find(p => p.id === prompt.playerId);
-      if (player === undefined) {
-        throw Errors.PROMPT_INVALID_ID;
-      }
-      if (result === null) {
-        return result;  // operation cancelled
-      }
-      const transfers: CardTransfer[] = [];
-      (result as {from: CardTarget, to: CardTarget, index: number}[]).forEach(t => {
-        const cardList = StateUtils.getTarget(game.state, player, t.from);
-        const card = cardList.cards[t.index];
-        transfers.push({ from: t.from, to: t.to, card });
-      });
-      result = transfers;
-    }
-
-    return result;
-  }
-
   private resolvePrompt(params: {gameId: number, id: number, result: any}, response: Response<void>) {
     const game = this.core.games.find(g => g.id === params.gameId);
     if (game === undefined) {
@@ -322,7 +261,11 @@ export class SocketClient extends Client {
     }
 
     try {
-      params.result = this.decodePromptResults(game, prompt, params.result);
+      params.result = prompt.decode(params.result, game.state);
+      if (prompt.validate(params.result, game.state) === false) {
+        response('error', Errors.PROMPT_INVALID_RESULT);
+        return;
+      }
     } catch (error) {
       response('error', error);
       return;

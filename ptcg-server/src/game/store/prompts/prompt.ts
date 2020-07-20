@@ -1,3 +1,5 @@
+import { State } from "../state/state";
+
 export abstract class Prompt<T> {
 
   readonly abstract type: string;
@@ -6,6 +8,14 @@ export abstract class Prompt<T> {
 
   constructor(public playerId: number) {
     this.id = 0;
+  }
+
+  public decode(result: any, state: State): T | null {
+    return result;
+  }
+
+  public validate(result: T | null, state: State): boolean {
+    return true;
   }
 
 }

@@ -1,7 +1,8 @@
 import { Card } from "../card/card";
 import { CardList } from "../state/card-list";
-import { CardType } from "../card/card-types";
+import { CardType, SuperType } from "../card/card-types";
 import { Prompt } from "./prompt";
+import {StateUtils} from "../state-utils";
 
 export const ChooseEnergyPromptType = 'Choose energy';
 
@@ -28,6 +29,28 @@ export class ChooseEnergyPrompt extends Prompt<Card[]> {
     this.options = Object.assign({}, {
       allowCancel: true
     }, options);
+  }
+
+  public decode(result: number[] | null): Card[] | null {
+    if (result === null) {
+      return null;
+    }
+    const cards: Card[] = this.cards.cards;
+    return result.map(index => cards[index]);
+  }
+
+  public validate(result: Card[] | null): boolean {
+    if (result === null) {
+      return this.options.allowCancel;
+    }
+    const cards: Card[] = this.cards.cards;
+    if (!cards.every(c => c.superType === SuperType.ENERGY)) {
+      return false;
+    }
+    if (!StateUtils.checkExactEnergy(cards, this.cost)) {
+      return false;
+    }
+    return true;
   }
 
 }

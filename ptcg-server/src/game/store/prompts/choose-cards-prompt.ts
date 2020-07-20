@@ -1,6 +1,9 @@
 import { Card } from "../card/card";
 import { CardList } from "../state/card-list";
+import { EnergyCard } from "../card/energy-card";
 import { Prompt } from "./prompt";
+import { PokemonCard } from "../card/pokemon-card";
+import { TrainerCard } from "../card/trainer-card";
 
 export const ChooseCardsPromptType = 'Choose cards';
 
@@ -10,6 +13,8 @@ export interface ChooseCardsOptions {
   allowCancel: boolean;
   blocked: number[]
 }
+
+export type FilterType = Partial<PokemonCard | TrainerCard | EnergyCard>;
 
 export class ChooseCardsPrompt extends Prompt<Card[]> {
 
@@ -21,7 +26,7 @@ export class ChooseCardsPrompt extends Prompt<Card[]> {
     playerId: number,
     public message: string,
     public cards: CardList,
-    public filter: Partial<Card>,
+    public filter: FilterType,
     options?: Partial<ChooseCardsOptions>
   ) {
     super(playerId);
@@ -33,6 +38,38 @@ export class ChooseCardsPrompt extends Prompt<Card[]> {
       allowCancel: true,
       blocked: []
     }, options);
+  }
+
+  public decode(result: number[] | null): Card[] | null {
+    if (result === null) {
+      return null;
+    }
+    const cards: Card[] = this.cards.cards;
+    return result.map(index => cards[index]);
+  }
+
+  public validate(result: Card[] | null): boolean {
+    if (result === null) {
+      return this.options.allowCancel;
+    }
+    if (result.length < this.options.min || result.length > this.options.max) {
+      return false;
+    }
+    const blocked = this.options.blocked;
+    return result.every((r, index) => {
+      return !blocked.includes(index) && this.matchFilter(r);
+    });
+  }
+
+  private matchFilter(card: Card): boolean {
+    for (const key in this.filter) {
+      if (this.filter.hasOwnProperty(key)) {
+        if ((this.filter as any)[key] !== (card as any)[key]) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
 }
