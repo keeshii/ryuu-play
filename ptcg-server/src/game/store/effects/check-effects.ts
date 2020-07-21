@@ -11,7 +11,8 @@ export enum CheckEffects {
   CHECK_POKEMON_TYPE_EFFECT = 'CHECK_POKEMON_TYPE_EFFECT',
   CHECK_RETREAT_COST_EFFECT = 'CHECK_RETREAT_COST_EFFECT',
   CHECK_ATTACK_COST_EFFECT = 'CHECK_ATTACK_COST_EFFECT',
-  CHECK_ENOUGH_ENERGY_EFFECT = 'CHECK_ENOUGH_ENERGY_EFFECT'
+  CHECK_ENOUGH_ENERGY_EFFECT = 'CHECK_ENOUGH_ENERGY_EFFECT',
+  CHECK_POKEMON_PLAYED_TURN_EFFECT = 'CHECK_POKEMON_PLAYED_TURN_EFFECT'
 }
 
 export class CheckHpEffect implements Effect {
@@ -41,6 +42,20 @@ export class CheckPokemonPrizesEffect implements Effect {
     this.player = player;
     this.target = target;
     this.count = 1;
+  }
+}
+
+export class CheckPokemonPlayedTurnEffect implements Effect {
+  readonly type: string = CheckEffects.CHECK_POKEMON_PLAYED_TURN_EFFECT;
+  public preventDefault = false;
+  public player: Player;
+  public target: PokemonCardList;
+  public pokemonPlayedTurn: number;
+
+  constructor(player: Player, target: PokemonCardList) {
+    this.player = player;
+    this.target = target;
+    this.pokemonPlayedTurn = target.pokemonPlayedTurn;
   }
 }
 

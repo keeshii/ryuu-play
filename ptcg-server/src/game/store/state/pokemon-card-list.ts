@@ -12,6 +12,8 @@ export class PokemonCardList extends CardList {
 
   public marker = new Marker();
 
+  public pokemonPlayedTurn: number = 0;
+
   // Some pokemon cards can be attached as a tool,
   // we must remember, which card acts as a pokemon tool.
   public tool: Card | undefined;
