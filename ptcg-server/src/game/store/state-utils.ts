@@ -1,24 +1,22 @@
 import { Card } from "./card/card";
 import { CardList } from "./state/card-list";
 import { CardTarget, PlayerType, SlotType } from "./actions/play-card-action";
-import { CardType, SuperType } from "./card/card-types";
+import { CardType } from "./card/card-types";
 import { GameError, GameMessage } from "../game-error";
-import { EnergyCard } from "./card/energy-card";
 import { State } from "./state/state";
 import { Player } from "./state/player";
 import { PokemonCardList } from "./state/pokemon-card-list";
+import { EnergyMap } from "./prompts/choose-energy-prompt";
 
 export class StateUtils {
-  public static checkEnoughEnergy(cards: Card[], cost: CardType[]): boolean {
+  public static checkEnoughEnergy(energy: EnergyMap[], cost: CardType[]): boolean {
     if (cost.length === 0) {
       return true;
     }
 
-    const provided: CardType[] = [];
-    cards.forEach(card => {
-      if (card.superType === SuperType.ENERGY) {
-        (card as EnergyCard).provides.forEach(energy => provided.push(energy));
-      }
+    const provides: CardType[] = [];
+    energy.forEach(e => {
+      e.provides.forEach(cardType => provides.push(cardType));
     });
 
     let colorless = 0;
@@ -34,9 +32,9 @@ export class StateUtils {
           colorless += 1;
           break;
         default:
-          const index = provided.findIndex(energy => energy === costType);
+          const index = provides.findIndex(energy => energy === costType);
           if (index !== -1) {
-            provided.splice(index, 1);
+            provides.splice(index, 1);
           } else {
             rainbow += 1;
           }
@@ -45,27 +43,26 @@ export class StateUtils {
 
     // Check if we have enough rainbow energies
     for (let i = 0; i < rainbow; i++) {
-      const index = provided.findIndex(energy => energy === CardType.ANY);
+      const index = provides.findIndex(energy => energy === CardType.ANY);
       if (index !== -1) {
-        provided.splice(index, 1);
+        provides.splice(index, 1);
       } else {
         return false;
       }
     }
 
     // Rest cards can be used to pay for colorless energies
-    return provided.length >= colorless;
+    return provides.length >= colorless;
   }
 
-  public static checkExactEnergy(cards: Card[], cost: CardType[]): boolean {
-    let enough = StateUtils.checkEnoughEnergy(cards, cost);
+  public static checkExactEnergy(energy: EnergyMap[], cost: CardType[]): boolean {
+    let enough = StateUtils.checkEnoughEnergy(energy, cost);
     if (!enough) {
       return false;
     }
-    cards = cards.filter(c => c.superType === SuperType.ENERGY);
 
-    for (let i = 0; i < cards.length; i++) {
-      const tempCards = cards.slice();
+    for (let i = 0; i < energy.length; i++) {
+      const tempCards = energy.slice();
       tempCards.splice(i, 1);
       enough = StateUtils.checkEnoughEnergy(tempCards, cost);
       if (enough) {

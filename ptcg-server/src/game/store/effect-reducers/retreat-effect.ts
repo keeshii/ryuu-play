@@ -5,8 +5,8 @@ import { State } from "../state/state";
 import { StoreLike } from "../store-like";
 import { RetreatEffect } from "../effects/game-effects";
 import { StateUtils } from "../state-utils";
-import { CheckRetreatCostEffect } from "../effects/check-effects";
-import {SpecialCondition} from "../card/card-types";
+import { CheckRetreatCostEffect, CheckProvidedEnergyEffect } from "../effects/check-effects";
+import { SpecialCondition } from "../card/card-types";
 
 
 function retreatPokemon(store: StoreLike, state: State, effect: RetreatEffect) {
@@ -18,10 +18,8 @@ function retreatPokemon(store: StoreLike, state: State, effect: RetreatEffect) {
   }
 
   store.log(state, `${player.name} retreats ${activePokemon.name} to ${benchedPokemon.name}.`);
-  player.active.clearEffects();
-  const temp = player.active;
-  player.active = player.bench[effect.benchIndex];
-  player.bench[effect.benchIndex] = temp;
+  player.retreatedTurn = state.turn;
+  player.switchPokemon(player.bench[effect.benchIndex]);
 }
 
 export function retreatReducer(store: StoreLike, state: State, effect: Effect): State {
@@ -42,7 +40,6 @@ export function retreatReducer(store: StoreLike, state: State, effect: Effect): 
     if (player.retreatedTurn === state.turn) {
       throw new GameError(GameMessage.RETREAT_ALREADY_USED);
     }
-    player.retreatedTurn = state.turn;
 
     const checkRetreatCost = new CheckRetreatCostEffect(effect.player);
     state = store.reduceEffect(state, checkRetreatCost);
@@ -52,25 +49,22 @@ export function retreatReducer(store: StoreLike, state: State, effect: Effect): 
       return state;
     }
 
-    const enoughEnergies = StateUtils.checkEnoughEnergy(player.active.cards, checkRetreatCost.cost);
+    const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);
+    state = store.reduceEffect(state, checkProvidedEnergy);
+
+    const enoughEnergies = StateUtils.checkEnoughEnergy(checkProvidedEnergy.energyMap, checkRetreatCost.cost);
     if (enoughEnergies === false) {
       throw new GameError(GameMessage.NOT_ENOUGH_ENERGY);
     }
 
-    const prompt = new ChooseEnergyPrompt(
+    return store.prompt(state, new ChooseEnergyPrompt(
       player.id,
       GameMessage.RETREAT_MESSAGE,
-      player.active,
+      checkProvidedEnergy.energyMap,
       checkRetreatCost.cost
-    );
-
-    return store.prompt(state, prompt, cards => {
-      if (cards === null) {
+    ), energy => {
+      if (energy === null) {
         return; // operation cancelled
-      }
-      const isEnough = StateUtils.checkExactEnergy(cards, checkRetreatCost.cost);
-      if (!isEnough) {
-        throw new GameError(GameMessage.ILLEGAL_ACTION);
       }
       const activePokemon = player.active.getPokemonCard();
       const benchedPokemon = player.bench[effect.benchIndex].getPokemonCard();
@@ -78,6 +72,7 @@ export function retreatReducer(store: StoreLike, state: State, effect: Effect): 
         return;
       }
 
+      const cards = energy.map(e => e.card);
       player.active.moveCardsTo(cards, player.discard);
       retreatPokemon(store, state, effect);
     });

@@ -5,12 +5,13 @@ import { State } from "../state/state";
 import { StoreLike } from "../store-like";
 import { StateUtils } from "../state-utils";
 import { CheckPokemonTypeEffect, CheckPokemonStatsEffect,
-  CheckEnoughEnergyEffect, CheckAttackCostEffect } from "../effects/check-effects";
+  CheckProvidedEnergyEffect, CheckAttackCostEffect } from "../effects/check-effects";
 import { Weakness, Resistance } from "../card/pokemon-types";
 import { CardType, SpecialCondition } from "../card/card-types";
 import { AttackEffect, DealDamageEffect, UseAttackEffect,
   DealDamageAfterWeaknessEffect } from "../effects/game-effects";
 import { CoinFlipPrompt } from "../prompts/coin-flip-prompt";
+import {EnergyCard} from "../card/energy-card";
 
 function applyWeaknessAndResistance(damage: number, cardTypes: CardType[], weakness: Weakness[], resistance: Resistance[]): number {
   let multiply = 1;
@@ -67,10 +68,10 @@ function* useAttack(next: Function, store: StoreLike, state: State, effect: UseA
   const checkAttackCost = new CheckAttackCostEffect(player, attack);
   state = store.reduceEffect(state, checkAttackCost);
 
-  const checkEnoughEnergy = new CheckEnoughEnergyEffect(player, checkAttackCost.cost);
-  state = store.reduceEffect(state, checkEnoughEnergy);
+  const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);
+  state = store.reduceEffect(state, checkProvidedEnergy);
 
-  if (checkEnoughEnergy.enoughEnergy === false) {
+  if (StateUtils.checkEnoughEnergy(checkProvidedEnergy.energyMap, checkAttackCost.cost) === false) {
     throw new GameError(GameMessage.NOT_ENOUGH_ENERGY);
   }
 
@@ -96,8 +97,12 @@ function* useAttack(next: Function, store: StoreLike, state: State, effect: UseA
 export function attackReducer(store: StoreLike, state: State, effect: Effect): State {
 
   /* Attack effects */
-  if (effect instanceof CheckEnoughEnergyEffect) {
-    effect.enoughEnergy = StateUtils.checkEnoughEnergy(effect.source.cards, effect.cost);
+  if (effect instanceof CheckProvidedEnergyEffect) {
+    effect.source.cards.forEach(c => {
+      if (c instanceof EnergyCard && !effect.energyMap.some(e => e.card === c)) {
+        effect.energyMap.push({ card: c, provides: c.provides });
+      }
+    });
     return state;
   }
 

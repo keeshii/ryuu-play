@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ChooseEnergyPrompt, GameState, CardList, Card, SuperType, CardType, StateUtils } from 'ptcg-server';
+import { ChooseEnergyPrompt, GameState, CardList, Card, SuperType, CardType,
+  StateUtils, EnergyMap } from 'ptcg-server';
 
 import { GameService } from '../../../api/services/game.service';
 
@@ -11,7 +12,10 @@ import { GameService } from '../../../api/services/game.service';
 export class PromptChooseEnergyComponent implements OnInit {
 
   @Input() set prompt(prompt: ChooseEnergyPrompt) {
-    this.cards = prompt.cards;
+    const cardList = new CardList();
+    cardList.cards = prompt.energy.map(map => map.card);
+    this.cards = cardList;
+    this.energy = prompt.energy;
     this.filter = { superType: SuperType.ENERGY };
     this.allowedCancel = prompt.options.allowCancel;
     this.message = prompt.message;
@@ -27,6 +31,7 @@ export class PromptChooseEnergyComponent implements OnInit {
   public message: string;
   public filter: Partial<Card>;
   public isInvalid = false;
+  private energy: EnergyMap[] = [];
   private cost: CardType[];
   private result: number[] = [];
 
@@ -47,12 +52,12 @@ export class PromptChooseEnergyComponent implements OnInit {
   }
 
   protected onChange(result: number[]) {
-    const cards: Card[] = [];
+    const energy: EnergyMap[] = [];
     for (const index of result) {
-      cards.push(this.cards.cards[index]);
+      energy.push(this.energy[index]);
     }
 
-    const enough = StateUtils.checkExactEnergy(cards, this.cost);
+    const enough = StateUtils.checkExactEnergy(energy, this.cost);
     this.result = result;
     this.isInvalid = !enough;
   }

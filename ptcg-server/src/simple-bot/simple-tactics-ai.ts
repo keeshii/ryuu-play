@@ -1,6 +1,6 @@
-import { Player, State, PassTurnAction, Action, PokemonCard, Stage,
+import { Player, State, PassTurnAction, Action, PokemonCard, Stage, EnergyMap,
   PokemonCardList, PlayCardAction, CardTarget, PlayerType, SlotType, EnergyCard,
-  CardType, StateUtils, AttackAction, SpecialCondition} from '../game';
+  CardType, StateUtils, AttackAction, SpecialCondition } from '../game';
 import { Client } from '../game/core/client';
 
 export enum SimpleTactics {
@@ -83,7 +83,15 @@ export class SimpleTacticsAi {
 
     for (let i = active.attacks.length - 1; i >= 0; i--) {
       const attack = active.attacks[i];
-      if (StateUtils.checkEnoughEnergy(player.active.cards, attack.cost)) {
+
+      const energy: EnergyMap[] = [];
+      player.active.cards.forEach(card => {
+        if (card instanceof EnergyCard) {
+          energy.push({ card, provides: card.provides });
+        }
+      });
+
+      if (StateUtils.checkEnoughEnergy(energy, attack.cost)) {
         return new AttackAction(this.client.id, attack.name);
       }
     }

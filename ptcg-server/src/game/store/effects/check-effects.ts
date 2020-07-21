@@ -3,6 +3,7 @@ import { Effect } from "./effect";
 import { Player } from "../state/player";
 import { PokemonCardList } from "../state/pokemon-card-list";
 import { Resistance, Weakness, Attack } from "../card/pokemon-types";
+import { EnergyMap } from "../prompts/choose-energy-prompt";
 
 export enum CheckEffects {
   CHECK_HP_EFFECT = 'CHECK_HP_EFFECT',
@@ -116,17 +117,15 @@ export class CheckAttackCostEffect implements Effect {
   }
 }
 
-export class CheckEnoughEnergyEffect implements Effect {
+export class CheckProvidedEnergyEffect implements Effect {
   readonly type: string = CheckEffects.CHECK_ENOUGH_ENERGY_EFFECT;
   public preventDefault = false;
   public player: Player;
   public source: PokemonCardList;
-  public cost: CardType[];
-  public enoughEnergy = false;
+  public energyMap: EnergyMap[] = [];
 
-  constructor(player: Player, cost: CardType[], source?: PokemonCardList) {
+  constructor(player: Player, source?: PokemonCardList) {
     this.player = player;
     this.source = source === undefined ? player.active : source;
-    this.cost = cost;
   }
 }

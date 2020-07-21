@@ -1,8 +1,7 @@
 import { Card } from "../card/card";
-import { CardList } from "../state/card-list";
-import { CardType, SuperType } from "../card/card-types";
+import { CardType } from "../card/card-types";
 import { Prompt } from "./prompt";
-import {StateUtils} from "../state-utils";
+import { StateUtils } from "../state-utils";
 
 export const ChooseEnergyPromptType = 'Choose energy';
 
@@ -10,7 +9,9 @@ export interface ChooseEnergyOptions {
   allowCancel: boolean;
 }
 
-export class ChooseEnergyPrompt extends Prompt<Card[]> {
+export type EnergyMap = { card: Card, provides: CardType[] }
+
+export class ChooseEnergyPrompt extends Prompt<EnergyMap[]> {
 
   readonly type: string = ChooseEnergyPromptType;
 
@@ -19,7 +20,7 @@ export class ChooseEnergyPrompt extends Prompt<Card[]> {
   constructor(
     playerId: number,
     public message: string,
-    public cards: CardList,
+    public energy: EnergyMap[],
     public cost: CardType[],
     options?: Partial<ChooseEnergyOptions>
   ) {
@@ -31,20 +32,17 @@ export class ChooseEnergyPrompt extends Prompt<Card[]> {
     }, options);
   }
 
-  public decode(result: number[] | null): Card[] | null {
+  public decode(result: number[] | null): EnergyMap[] | null {
     if (result === null) {
       return null;
     }
-    const cards: Card[] = this.cards.cards;
-    return result.map(index => cards[index]);
+    const energy: EnergyMap[] = this.energy;
+    return result.map(index => energy[index]);
   }
 
-  public validate(result: Card[] | null): boolean {
+  public validate(result: EnergyMap[] | null): boolean {
     if (result === null) {
       return this.options.allowCancel;
-    }
-    if (!result.every(c => c.superType === SuperType.ENERGY)) {
-      return false;
     }
     if (!StateUtils.checkExactEnergy(result, this.cost)) {
       return false;

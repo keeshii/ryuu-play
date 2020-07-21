@@ -1,8 +1,8 @@
 import { Action } from '../game/store/actions/action';
 import { AlertPrompt, ConfirmPrompt, Player, Prompt, State, GamePhase,
-  GameOverPrompt, ChooseEnergyPrompt, StateUtils, Card, EnergyCard,
+  GameOverPrompt, ChooseEnergyPrompt, StateUtils,
   ChoosePokemonPrompt, PokemonCardList, PlayerType, SlotType,
-  ChoosePrizePrompt, ShowCardsPrompt} from '../game';
+  ChoosePrizePrompt, ShowCardsPrompt, EnergyMap } from '../game';
 import { ChooseCardsPrompt } from '../game/store/prompts/choose-cards-prompt';
 import { Client } from '../game/core/client';
 import { Game } from '../game/core/game';
@@ -74,7 +74,7 @@ export class SimpleGameHandler {
     }
 
     if (prompt instanceof ChooseEnergyPrompt) {
-      const result: Card[] = prompt.cards.cards.filter(c => c instanceof EnergyCard);
+      const result: EnergyMap[] = prompt.energy.slice();
       while (result.length > 0 && !StateUtils.checkExactEnergy(result, prompt.cost)) {
         result.splice(result.length - 1, 1);
       }
