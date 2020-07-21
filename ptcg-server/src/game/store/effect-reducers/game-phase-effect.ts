@@ -21,7 +21,7 @@ export function betweenTurns(store: StoreLike, state: State, onComplete: () => v
     store.reduceEffect(state, new BetweenTurnsEffect(player));
   }
 
-  store.waitPrompt(() => {
+  state = store.waitPrompt(state, () => {
     checkState(store, state, () => onComplete());
   });
   return state;

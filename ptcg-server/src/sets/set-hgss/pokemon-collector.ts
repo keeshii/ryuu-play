@@ -21,9 +21,9 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: PlayT
     CardMessage.CHOOSE_UP_TO_3_BASIC_POKEMON,
     player.deck,
     { superType: SuperType.POKEMON, stage: Stage.BASIC } as any,
-    { min: 0, max: 3, allowCancel: false }
+    { min: 0, max: 3, allowCancel: true }
   ), selected => {
-    cards = selected;
+    cards = selected || [];
     next();
   });
 

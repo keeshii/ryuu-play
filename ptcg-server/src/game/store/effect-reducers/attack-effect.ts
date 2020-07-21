@@ -7,9 +7,10 @@ import { StateUtils } from "../state-utils";
 import { CheckPokemonTypeEffect, CheckPokemonStatsEffect,
   CheckEnoughEnergyEffect, CheckAttackCostEffect } from "../effects/check-effects";
 import { Weakness, Resistance } from "../card/pokemon-types";
-import { CardType } from "../card/card-types";
+import { CardType, SpecialCondition } from "../card/card-types";
 import { AttackEffect, DealDamageEffect, UseAttackEffect,
   DealDamageAfterWeaknessEffect } from "../effects/game-effects";
+import { CoinFlipPrompt } from "../prompts/coin-flip-prompt";
 
 function applyWeaknessAndResistance(damage: number, cardTypes: CardType[], weakness: Weakness[], resistance: Resistance[]): number {
   let multiply = 1;
@@ -34,6 +35,63 @@ function applyWeaknessAndResistance(damage: number, cardTypes: CardType[], weakn
   return (damage * multiply) + modifier;
 }
 
+function* useAttack(next: Function, store: StoreLike, state: State, effect: UseAttackEffect): IterableIterator<State> {
+  const player = effect.player;
+  const opponent = StateUtils.getOpponent(state, player);
+
+  const sp = player.active.specialConditions;
+  if (sp.includes(SpecialCondition.PARALYZED) || sp.includes(SpecialCondition.ASLEEP)) {
+    throw new GameError(GameMessage.BLOCKED_BY_SPECIAL_CONDITION);
+  }
+
+  if (sp.includes(SpecialCondition.CONFUSED)) {
+    let flip = false;
+
+    store.log(state, `${player.name} flips a coin for the confusion.`);
+    yield store.prompt(state, new CoinFlipPrompt(
+      player.id,
+      GameMessage.CONFUSION_FLIP),
+      result => {
+        flip = result;
+      });
+
+    if (flip === false) {
+      store.log(state, `Attacking Pokemon hurts itself.`);
+      player.active.damage += 30;
+      state = store.reduceEffect(state, new EndTurnEffect(player));
+      return state;
+    }
+  }
+
+  const attack = effect.attack;
+  const checkAttackCost = new CheckAttackCostEffect(player, attack);
+  state = store.reduceEffect(state, checkAttackCost);
+
+  const checkEnoughEnergy = new CheckEnoughEnergyEffect(player, checkAttackCost.cost);
+  state = store.reduceEffect(state, checkEnoughEnergy);
+
+  if (checkEnoughEnergy.enoughEnergy === false) {
+    throw new GameError(GameMessage.NOT_ENOUGH_ENERGY);
+  }
+
+  store.log(state, `${player.name} attacks with ${attack.name}.`);
+  state = store.reduceEffect(state, new AttackEffect(player, attack));
+
+  yield store.waitPrompt(state, () => {
+    if (attack.damage > 0) {
+      const dealDamage = new DealDamageEffect(
+        player, attack.damage, attack, opponent.active, player.active);
+      state = store.reduceEffect(state, dealDamage);
+    }
+    next();
+  });
+
+  yield store.waitPrompt(state, () => {
+    state = store.reduceEffect(state, new EndTurnEffect(player));
+  });
+
+  return state;
+}
 
 export function attackReducer(store: StoreLike, state: State, effect: Effect): State {
 
@@ -72,39 +130,9 @@ export function attackReducer(store: StoreLike, state: State, effect: Effect): S
   }
 
   if (effect instanceof UseAttackEffect) {
-    const player = effect.player;
-    if (state.players.length !== 2 || state.players.indexOf(player) === -1) {
-      throw new GameError(GameMessage.ILLEGAL_ACTION);
-    }
-
-    const opponent = state.players[0] === player ? state.players[1] : state.players[0];
-    const attack = effect.attack;
-    const checkAttackCost = new CheckAttackCostEffect(player, attack);
-    state = store.reduceEffect(state, checkAttackCost);
-
-    const checkEnoughEnergy = new CheckEnoughEnergyEffect(player, checkAttackCost.cost);
-    state = store.reduceEffect(state, checkEnoughEnergy);
-
-    if (checkEnoughEnergy.enoughEnergy === false) {
-      throw new GameError(GameMessage.NOT_ENOUGH_ENERGY);
-    }
-
-    store.log(state, `${player.name} attacks with ${attack.name}.`);
-    state = store.reduceEffect(state, new AttackEffect(player, attack));
-
-    store.waitPrompt(() => {
-      if (attack.damage > 0) {
-        const dealDamage = new DealDamageEffect(
-          player, attack.damage, attack, opponent.active, player.active);
-        state = store.reduceEffect(state, dealDamage);
-      }
-
-      store.waitPrompt(() => {
-        state = store.reduceEffect(state, new EndTurnEffect(player));
-      });
-    });
-
-    return state;
+    let generator: IterableIterator<State>;
+    generator = useAttack(() => generator.next(), store, state, effect);
+    return generator.next().value;
   }
 
   return state;

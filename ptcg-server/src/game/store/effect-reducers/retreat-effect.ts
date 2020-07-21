@@ -6,6 +6,7 @@ import { StoreLike } from "../store-like";
 import { RetreatEffect } from "../effects/game-effects";
 import { StateUtils } from "../state-utils";
 import { CheckRetreatCostEffect } from "../effects/check-effects";
+import {SpecialCondition} from "../card/card-types";
 
 
 function retreatPokemon(store: StoreLike, state: State, effect: RetreatEffect) {
@@ -31,6 +32,11 @@ export function retreatReducer(store: StoreLike, state: State, effect: Effect): 
 
     if (player.bench[effect.benchIndex].cards.length === 0) {
       throw new GameError(GameMessage.INVALID_TARGET);
+    }
+
+    const sp = player.active.specialConditions;
+    if (sp.includes(SpecialCondition.PARALYZED) || sp.includes(SpecialCondition.ASLEEP)) {
+      throw new GameError(GameMessage.BLOCKED_BY_SPECIAL_CONDITION);
     }
 
     if (player.retreatedTurn === state.turn) {

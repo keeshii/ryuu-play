@@ -110,8 +110,9 @@ export class Store implements StoreLike {
     return state;
   }
 
-  public waitPrompt(callback: () => void): void {
+  public waitPrompt(state: State, callback: () => void): State {
     this.waitItems.push(callback);
+    return state;
   }
 
   public log(state: State, message: string, params?: StateLogParam, client?: number): void {

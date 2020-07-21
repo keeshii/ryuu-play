@@ -11,7 +11,7 @@ export interface StoreLike {
 
   log(state: State, message: string, params?: StateLogParam, client?: number): void;
 
-  waitPrompt(callback: () => void): void;
+  waitPrompt(state: State, callback: () => void): State;
 
   prompt<T>(
     state: State, prompt: Prompt<T>,

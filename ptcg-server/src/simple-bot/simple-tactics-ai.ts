@@ -1,6 +1,6 @@
 import { Player, State, PassTurnAction, Action, PokemonCard, Stage,
   PokemonCardList, PlayCardAction, CardTarget, PlayerType, SlotType, EnergyCard,
-  CardType, StateUtils, AttackAction} from '../game';
+  CardType, StateUtils, AttackAction, SpecialCondition} from '../game';
 import { Client } from '../game/core/client';
 
 export enum SimpleTactics {
@@ -68,6 +68,11 @@ export class SimpleTacticsAi {
 
   private useBestAttack(player: Player, state: State): Action | undefined {
     if (!this.tactics.includes(SimpleTactics.USE_BEST_ATTACK)) {
+      return undefined;
+    }
+
+    const sp = player.active.specialConditions;
+    if (sp.includes(SpecialCondition.PARALYZED) || sp.includes(SpecialCondition.ASLEEP)) {
       return undefined;
     }
 
