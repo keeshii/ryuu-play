@@ -90,10 +90,16 @@ export class Sableye extends PokemonCard {
           return;
         }
         const trainerCard = cards[0] as TrainerCard;
-        const playTrainer = new PlayTrainerEffect(player, trainerCard);
-        playTrainer.preventDefault = true;
-        store.reduceEffect(state, playTrainer);
+        const deckIndex = player.deck.cards.indexOf(trainerCard);
         player.deck.moveCardTo(trainerCard, player.discard);
+        try {
+          const playTrainer = new PlayTrainerEffect(player, trainerCard);
+          store.reduceEffect(state, playTrainer);
+        } catch (error) {
+          player.discard.cards.pop();
+          player.deck.cards.splice(deckIndex, 0, trainerCard);
+          throw error;
+        }
       });
 
       return state;

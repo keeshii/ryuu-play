@@ -64,6 +64,9 @@ export class Smeargle extends PokemonCard {
       if (cardList.specialConditions.length > 0) {
         throw new GameError(GameMessage.CANNOT_USE_POWER);
       }
+      if (cardList !== player.active) {
+        throw new GameError(GameMessage.CANNOT_USE_POWER);
+      }
       if (player.marker.hasMarker(this.PORTRAIT_MARKER, this)) {
         throw new GameError(GameMessage.POWER_ALREADY_USED);
       }
@@ -81,7 +84,6 @@ export class Smeargle extends PokemonCard {
         }
         const trainerCard = cards[0] as TrainerCard;
         const playTrainerEffect = new PlayTrainerEffect(player, trainerCard);
-        playTrainerEffect.preventDefault = true;
         store.reduceEffect(state, playTrainerEffect);
       });
     }
