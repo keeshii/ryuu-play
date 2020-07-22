@@ -1,5 +1,5 @@
 import { TrainerCard } from "../../game/store/card/trainer-card";
-import { TrainerType } from "../../game/store/card/card-types";
+import { TrainerType, CardTag } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
@@ -8,9 +8,11 @@ import { GameError, GameMessage } from "../../game/game-error";
 import { Card} from "../../game/store/card/card";
 import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
 import { CardMessage } from "../card-message";
-import {CardList} from "../../game/store/state/card-list";
+import { CardList } from "../../game/store/state/card-list";
 
-function* playCard(next: Function, store: StoreLike, state: State, self: JunkArm, effect: PlayTrainerEffect): IterableIterator<State> {
+
+function* playCard(next: Function, store: StoreLike, state: State,
+  self: DowsingMachine, effect: PlayTrainerEffect): IterableIterator<State> {
   const player = effect.player;
   const itemTypes = [TrainerType.ITEM, TrainerType.TOOL];
   let cards: Card[] = [];
@@ -22,7 +24,7 @@ function* playCard(next: Function, store: StoreLike, state: State, self: JunkArm
 
   let trainersInDiscard = 0;
   player.discard.cards.forEach(c => {
-    if (c instanceof TrainerCard && itemTypes.includes(c.trainerType) && c.name !== self.name) {
+    if (c instanceof TrainerCard && itemTypes.includes(c.trainerType)) {
       trainersInDiscard += 1;
     }
   });
@@ -83,20 +85,22 @@ function* playCard(next: Function, store: StoreLike, state: State, self: JunkArm
   return state;
 }
 
-export class JunkArm extends TrainerCard {
+export class DowsingMachine extends TrainerCard {
 
   public trainerType: TrainerType = TrainerType.ITEM;
 
-  public set: string = 'HGSS';
+  public tags = [ CardTag.ACE_SPEC ];
 
-  public name: string = 'Junk Arm';
+  public set: string = 'BW';
 
-  public fullName: string = 'Junk Arm TRM';
+  public name: string = 'Dowsing Machine';
+
+  public fullName: string = 'Dowsing Machine PLS';
 
   public text: string =
-    'Discard 2 cards from your hand. Search your discard pile for a Trainer ' +
-    'card, show it to your opponent, and put it into your hand. You can\'t ' +
-    'choose Junk Arm with the effect of this card.';
+    'Discard 2 cards from your hand. (If you can\'t discard 2 cards, ' +
+    'you can\'t play this card.) Put a Trainer card from your discard ' +
+    'pile into your hand.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof PlayTrainerEffect && effect.trainerCard === this) {
