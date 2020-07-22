@@ -1,39 +1,38 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
-import { GameState, Card, MoveEnergyPrompt, CardTarget, FilterType } from 'ptcg-server';
+import { GameState, Card, AttachEnergyPrompt, CardTarget, FilterType, CardList } from 'ptcg-server';
 
 import { GameService } from '../../../api/services/game.service';
 import { PokemonData, PokemonItem } from '../choose-pokemons-pane/pokemon-data';
 
-interface MoveEnergyResult {
-  from: PokemonItem;
+interface AttachEnergyResult {
   to: PokemonItem;
   card: Card;
 }
 
 @Component({
-  selector: 'ptcg-prompt-move-energy',
-  templateUrl: './prompt-move-energy.component.html',
-  styleUrls: ['./prompt-move-energy.component.scss']
+  selector: 'ptcg-prompt-attach-energy',
+  templateUrl: './prompt-attach-energy.component.html',
+  styleUrls: ['./prompt-attach-energy.component.scss']
 })
-export class PromptMoveEnergyComponent implements OnInit, OnChanges {
+export class PromptAttachEnergyComponent implements OnInit, OnChanges {
 
-  @Input() prompt: MoveEnergyPrompt;
+  @Input() prompt: AttachEnergyPrompt;
   @Input() gameState: GameState;
 
   public pokemonData: PokemonData;
-  public selectedItem: PokemonItem | undefined;
   public allowedCancel: boolean;
   public promptId: number;
   public message: string;
+  public cardList: CardList;
   public filter: FilterType;
   public isInvalid = false;
 
   private min: number;
-  private max: number | undefined;
+  private max: number;
 
-  private blockedFrom: CardTarget[];
   private blockedTo: CardTarget[];
-  private results: MoveEnergyResult[] = [];
+  private initialCards: Card[];
+  public results: AttachEnergyResult[] = [];
 
   constructor(
     private gameService: GameService
@@ -49,9 +48,8 @@ export class PromptMoveEnergyComponent implements OnInit, OnChanges {
     const gameId = this.gameState.gameId;
     const id = this.promptId;
     const results = this.results.map(r => ({
-      from: r.from.target,
       to: r.to.target,
-      index: this.pokemonData.getCardIndex(r.card)
+      index: this.initialCards.indexOf(r.card)
     }));
     this.gameService.resolvePrompt(gameId, id, results);
   }
@@ -59,68 +57,48 @@ export class PromptMoveEnergyComponent implements OnInit, OnChanges {
   ngOnInit() {
   }
 
-  public onCardClick(item: PokemonItem) {
-    if (this.pokemonData.matchesTarget(item, this.blockedFrom)) {
-      return;
-    }
-    this.pokemonData.unselectAll();
-    item.selected = true;
-    this.selectedItem = item;
-  }
-
   public onCardDrop([item, card]: [PokemonItem, Card]) {
-    if (item === this.selectedItem) {
-      return;
-    }
     if (this.pokemonData.matchesTarget(item, this.blockedTo)) {
       return;
     }
-    const index = this.selectedItem.cardList.cards.indexOf(card);
+    const index = this.cardList.cards.indexOf(card);
     if (index === -1) {
       return;
     }
-    const result: MoveEnergyResult = {
-      from: this.selectedItem,
+    const result: AttachEnergyResult = {
       to: item,
       card
     };
-    this.moveCard(result.from, result.to, card);
-    this.appendMoveResult(result);
+    this.moveCard(result.to, card);
+    this.results.push(result);
     this.updateIsInvalid(this.results);
   }
 
-  private moveCard(from: PokemonItem, to: PokemonItem, card: Card) {
-    from.cardList = { ...from.cardList } as any;
-    from.cardList.cards = [...from.cardList.cards];
+  public reset() {
+    this.results.forEach(r => {
+      const item = r.to;
+      item.cardList = { ...item.cardList } as any;
+      item.cardList.cards = item.cardList.cards.filter(c => c !== r.card);
+    });
+    this.cardList.cards = [ ...this.initialCards ];
+    this.results = [];
+    this.updateIsInvalid(this.results);
+  }
+
+  private moveCard(to: PokemonItem, card: Card) {
+    this.cardList.cards = [...this.cardList.cards];
 
     to.cardList = { ...to.cardList } as any;
     to.cardList.cards = [...to.cardList.cards];
 
-    const index = from.cardList.cards.indexOf(card);
-    from.cardList.cards.splice(index, 1);
+    const index = this.cardList.cards.indexOf(card);
+    this.cardList.cards.splice(index, 1);
     to.cardList.cards.push(card);
   }
 
-  private appendMoveResult(result: MoveEnergyResult) {
-    const index = this.results.findIndex(r => r.card === result.card);
-    if (index === -1) {
-      this.results.push(result);
-      return;
-    }
-    const prevResult = this.results[index];
-    if (prevResult.from === result.to) {
-      this.results.splice(index, 1);
-      return;
-    }
-    prevResult.to = result.to;
-  }
-
-  private updateIsInvalid(results: MoveEnergyResult[]) {
+  private updateIsInvalid(results: AttachEnergyResult[]) {
     let isInvalid = false;
-    if (this.min > results.length) {
-      isInvalid = true;
-    }
-    if (this.max !== undefined && this.max < results.length) {
+    if (this.min > results.length || this.max < results.length) {
       isInvalid = true;
     }
     this.isInvalid = isInvalid;
@@ -135,13 +113,13 @@ export class PromptMoveEnergyComponent implements OnInit, OnChanges {
       const slots = prompt.slots;
 
       this.pokemonData = new PokemonData(state, playerId, playerType, slots);
-      this.blockedFrom = prompt.options.blockedFrom;
       this.blockedTo = prompt.options.blockedTo;
       this.allowedCancel = prompt.options.allowCancel;
+      this.cardList = prompt.cardList;
+      this.initialCards = prompt.cardList.cards;
       this.filter = prompt.filter;
       this.message = prompt.message;
       this.promptId = prompt.id;
-      this.selectedItem = undefined;
       this.results = [];
       this.min = prompt.options.min;
       this.max = prompt.options.max;

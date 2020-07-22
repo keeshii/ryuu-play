@@ -1,5 +1,5 @@
 import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType } from "../../game/store/card/card-types";
+import { Stage, CardType, SuperType, EnergyType } from "../../game/store/card/card-types";
 import { PowerType, StoreLike, State, StateUtils, GameError, GameMessage,
   PokemonCardList, MoveEnergyPrompt, PlayerType, SlotType} from "../../game";
 import {Effect} from "../../game/store/effects/effect";
@@ -14,7 +14,8 @@ function* useHiddenPower(next: Function, store: StoreLike, state: State, effect:
     CardMessage.MOVE_BASIC_ENERGY,
     PlayerType.BOTTOM_PLAYER,
     [ SlotType.ACTIVE, SlotType.BENCH ],
-    { allowCancel: true, moveSpecialEnergy: false }
+    { superType: SuperType.ENERGY, energyType: EnergyType.BASIC },
+    { allowCancel: true }
   ), transfers => {
     if (transfers === null) {
       return;

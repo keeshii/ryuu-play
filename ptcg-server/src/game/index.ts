@@ -19,6 +19,7 @@ export * from './store/card/pokemon-types';
 export * from './store/card/trainer-card';
 
 export * from './store/prompts/alert-prompt';
+export * from './store/prompts/attach-energy-prompt';
 export * from './store/prompts/choose-cards-prompt';
 export * from './store/prompts/choose-energy-prompt';
 export * from './store/prompts/choose-pokemon-prompt';

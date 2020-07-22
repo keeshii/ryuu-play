@@ -5,6 +5,9 @@ import { Colress } from "./colress";
 import { ComputerSearch } from "./computer-search";
 import { CrushingHammer } from "./crushing-hammer";
 import { DowsingMachine } from "./dowsing-machine";
+import { Durant } from "./durant";
+import { Eelektrik } from "./eelektrik";
+import { Tynamo } from "./tynamo";
 
 export const setBlackAndWhite: Card[] = [
   new Bianca(),
@@ -12,5 +15,8 @@ export const setBlackAndWhite: Card[] = [
   new Colress(),
   new ComputerSearch(),
   new CrushingHammer(),
-  new DowsingMachine()
+  new DowsingMachine(),
+  new Durant(),
+  new Eelektrik(),
+  new Tynamo()
 ];

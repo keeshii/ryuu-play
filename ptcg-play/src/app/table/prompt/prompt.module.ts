@@ -9,6 +9,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { PromptChooseCardsComponent } from './prompt-choose-cards/prompt-choose-cards.component';
 import { CardsContainerComponent } from './cards-container/cards-container.component';
 import { ChooseCardsPanesComponent } from './choose-cards-panes/choose-cards-panes.component';
+import { PromptAttachEnergyComponent } from './prompt-attach-energy/prompt-attach-energy.component';
 import { PromptChooseEnergyComponent } from './prompt-choose-energy/prompt-choose-energy.component';
 import { PromptChoosePrizeComponent } from './prompt-choose-prize/prompt-choose-prize.component';
 import { PromptChoosePokemonComponent } from './prompt-choose-pokemon/prompt-choose-pokemon.component';
@@ -24,6 +25,7 @@ import { PromptMoveEnergyComponent } from './prompt-move-energy/prompt-move-ener
     PromptComponent,
     PromptConfirmComponent,
     PromptAlertComponent,
+    PromptAttachEnergyComponent,
     PromptChooseCardsComponent,
     CardsContainerComponent,
     ChooseCardsPanesComponent,

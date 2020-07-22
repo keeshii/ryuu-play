@@ -3,40 +3,40 @@ import { GameError, GameMessage } from "../../game-error";
 import { Prompt } from "./prompt";
 import { PlayerType, SlotType, CardTarget } from "../actions/play-card-action";
 import { State } from "../state/state";
-import { StateUtils } from "../state-utils";
+import { CardList } from "../state/card-list";
 import { FilterType } from "./choose-cards-prompt";
 
-export const MoveEnergyPromptType = 'Move energy';
+export const AttachEnergyPromptType = 'Attach energy';
 
-export type MoveEnergyResultType = {from: CardTarget, to: CardTarget, index: number}[];
+export interface AttachEnergyOptions {
+  allowCancel: boolean;
+  min: number;
+  max: number;
+  blocked: number[];
+  blockedTo: CardTarget[];
+}
 
-export interface CardTransfer {
-  from: CardTarget;
+export type AttachEnergyResultType = {to: CardTarget, index: number}[];
+
+export interface CardAssign {
   to: CardTarget;
   card: Card;
 }
 
-export interface MoveEnergyOptions {
-  allowCancel: boolean;
-  min: number;
-  max: number | undefined;
-  blockedFrom: CardTarget[];
-  blockedTo: CardTarget[];
-}
+export class AttachEnergyPrompt extends Prompt<CardAssign[]> {
 
-export class MoveEnergyPrompt extends Prompt<CardTransfer[]> {
+  readonly type: string = AttachEnergyPromptType;
 
-  readonly type: string = MoveEnergyPromptType;
-
-  public options: MoveEnergyOptions;
+  public options: AttachEnergyOptions;
 
   constructor(
     playerId: number,
     public message: string,
+    public cardList: CardList,
     public playerType: PlayerType,
     public slots: SlotType[],
     public filter: FilterType,
-    options?: Partial<MoveEnergyOptions>
+    options?: Partial<AttachEnergyOptions>
   ) {
     super(playerId);
 
@@ -44,13 +44,13 @@ export class MoveEnergyPrompt extends Prompt<CardTransfer[]> {
     this.options = Object.assign({}, {
       allowCancel: true,
       min: 0,
-      max: undefined,
-      blockedFrom: [],
+      max: cardList.cards.length,
+      blocked: [],
       blockedTo: []
     }, options);
   }
 
-  public decode(result: MoveEnergyResultType | null, state: State): CardTransfer[] | null {
+  public decode(result: AttachEnergyResultType | null, state: State): CardAssign[] | null {
     if (result === null) {
       return result;  // operation cancelled
     }
@@ -58,18 +58,21 @@ export class MoveEnergyPrompt extends Prompt<CardTransfer[]> {
     if (player === undefined) {
       throw new GameError(GameMessage.INVALID_PROMPT_RESULT);
     }
-    const transfers: CardTransfer[] = [];
+    const transfers: CardAssign[] = [];
     result.forEach(t => {
-      const cardList = StateUtils.getTarget(state, player, t.from);
+      const cardList = this.cardList;
       const card = cardList.cards[t.index];
-      transfers.push({ from: t.from, to: t.to, card });
+      transfers.push({ to: t.to, card });
     });
     return transfers;
   }
 
-  public validate(result: CardTransfer[] | null): boolean {
+  public validate(result: CardAssign[] | null): boolean {
     if (result === null) {
       return this.options.allowCancel;  // operation cancelled
+    }
+    if (result.length < this.options.min || result.length > this.options.max) {
+      return false;
     }
     return result.every(r => r.card !== undefined);
   }

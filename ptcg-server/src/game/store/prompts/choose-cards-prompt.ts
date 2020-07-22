@@ -57,11 +57,11 @@ export class ChooseCardsPrompt extends Prompt<Card[]> {
     }
     const blocked = this.options.blocked;
     return result.every((r, index) => {
-      return !blocked.includes(index) && this.matchFilter(r);
+      return !blocked.includes(index) && this.matchesFilter(r);
     });
   }
 
-  private matchFilter(card: Card): boolean {
+  private matchesFilter(card: Card): boolean {
     for (const key in this.filter) {
       if (this.filter.hasOwnProperty(key)) {
         if ((this.filter as any)[key] !== (card as any)[key]) {
