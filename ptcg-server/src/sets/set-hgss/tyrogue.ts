@@ -1,6 +1,8 @@
 import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType } from "../../game/store/card/card-types";
-import { PowerType } from "../../game";
+import { Stage, CardType, SpecialCondition } from "../../game/store/card/card-types";
+import { PowerType, StoreLike, State, StateUtils } from "../../game";
+import { AttackEffect, DealDamageAfterWeaknessEffect } from "../../game/store/effects/game-effects";
+import { Effect } from "../../game/store/effects/effect";
 
 export class Tyrogue extends PokemonCard {
 
@@ -34,5 +36,32 @@ export class Tyrogue extends PokemonCard {
   public name: string = 'Tyrogue';
 
   public fullName: string = 'Tyrogue HGSS';
+
+  public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      effect.damage = 0;
+
+      store.reduceEffect(state, new DealDamageAfterWeaknessEffect(
+        player, 30, effect.attack, opponent.active, player.active));
+
+      player.active.addSpecialCondition(SpecialCondition.ASLEEP);
+      return state;
+    }
+
+    if (effect instanceof DealDamageAfterWeaknessEffect) {
+      if (effect.target.cards.includes(this)) {
+        const pokemonCard = effect.target.getPokemonCard();
+        const isAsleep = effect.target.specialConditions.includes(SpecialCondition.ASLEEP);
+        if (pokemonCard === this && isAsleep) {
+          effect.preventDefault = true;
+        }
+      }
+    }
+
+    return state;
+  }
 
 }
