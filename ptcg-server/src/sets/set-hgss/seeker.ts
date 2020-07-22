@@ -9,6 +9,43 @@ import { ChoosePokemonPrompt } from "../../game/store/prompts/choose-pokemon-pro
 import { PlayerType, SlotType } from "../../game/store/actions/play-card-action";
 import { GameError, GameMessage } from "../../game/game-error";
 import { Player } from "../../game/store/state/player";
+import { StateUtils } from "../../game/store/state-utils";
+
+function pickUpBenchedPokemon(next: Function, store: StoreLike, state: State, player: Player): State {
+  return store.prompt(state, new ChoosePokemonPrompt(
+    player.id,
+    CardMessage.CHOOSE_ONE_POKEMON,
+    PlayerType.BOTTOM_PLAYER,
+    [ SlotType.BENCH ],
+    { allowCancel: false, count: 1 }
+  ), selection => {
+    const cardList = selection[0];
+    cardList.moveTo(player.hand);
+    cardList.clearEffects();
+    next();
+  });
+}
+
+function* playCard(next: Function, store: StoreLike, state: State, effect: PlayTrainerEffect): IterableIterator<State> {
+  const player = effect.player;
+  const opponent = StateUtils.getOpponent(state, player);
+  const playerHasBench = player.bench.some(b => b.cards.length > 0);
+  const opponentHasBench = opponent.bench.some(b => b.cards.length > 0);
+
+  if (!playerHasBench && !opponentHasBench) {
+    throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
+  }
+
+  if (playerHasBench) {
+    yield pickUpBenchedPokemon(next, store, state, player);
+  }
+
+  if (opponentHasBench) {
+    yield pickUpBenchedPokemon(next, store, state, opponent);
+  }
+
+  return state;
+}
 
 export class Seeker extends TrainerCard {
 
@@ -26,33 +63,9 @@ export class Seeker extends TrainerCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof PlayTrainerEffect && effect.trainerCard === this) {
-
-      const players: Player[] = [];
-      state.players.forEach(player => {
-        if (player.bench.some(b => b.cards.length > 0)) {
-          players.push(player);
-        }
-      });
-
-      if (players.length === 0) {
-        throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
-      }
-
-      players.forEach(player => {
-        state = store.prompt(state, new ChoosePokemonPrompt(
-          player.id,
-          CardMessage.CHOOSE_ONE_POKEMON,
-          PlayerType.BOTTOM_PLAYER,
-          [ SlotType.BENCH ],
-          { allowCancel: false, count: 1 }
-        ), selection => {
-          const cardList = selection[0];
-          cardList.moveTo(player.hand);
-          cardList.clearEffects();
-        });
-      });
-
-      return state;
+      let generator: IterableIterator<State>;
+      generator = playCard(() => generator.next(), store, state, effect);
+      return generator.next().value;
     }
     return state;
   }

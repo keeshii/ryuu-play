@@ -83,16 +83,17 @@ export class Sableye extends PokemonCard {
         player.id,
         CardMessage.CHOOSE_SUPPORTER_CARD,
         player.deck,
-        { superType: SuperType.TRAINER, trainerType: TrainerType.SUPPORTER } as any,
+        { superType: SuperType.TRAINER, trainerType: TrainerType.SUPPORTER },
         { min: 1, max: 1, allowCancel: true }
       ), (cards) => {
         if (!cards || cards.length === 0) {
           return;
         }
         const trainerCard = cards[0] as TrainerCard;
-        player.deck.moveCardTo(trainerCard, player.hand);
         const playTrainer = new PlayTrainerEffect(player, trainerCard);
+        playTrainer.preventDefault = true;
         store.reduceEffect(state, playTrainer);
+        player.deck.moveCardTo(trainerCard, player.discard);
       });
 
       return state;

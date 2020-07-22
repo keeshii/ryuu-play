@@ -76,12 +76,13 @@ function* useAttack(next: Function, store: StoreLike, state: State, effect: UseA
   }
 
   store.log(state, `${player.name} attacks with ${attack.name}.`);
-  state = store.reduceEffect(state, new AttackEffect(player, attack));
+  const attackEffect = new AttackEffect(player, attack);
+  state = store.reduceEffect(state, attackEffect);
 
   yield store.waitPrompt(state, () => {
     if (attack.damage > 0) {
       const dealDamage = new DealDamageEffect(
-        player, attack.damage, attack, opponent.active, player.active);
+        player, attackEffect.damage, attack, opponent.active, player.active);
       state = store.reduceEffect(state, dealDamage);
     }
     next();

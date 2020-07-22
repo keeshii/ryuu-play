@@ -101,9 +101,11 @@ export class AttackEffect implements Effect {
   public preventDefault = false;
   public player: Player;
   public attack: Attack;
+  public damage: number;
 
   constructor(player: Player, attack: Attack) {
     this.player = player;
     this.attack = attack;
+    this.damage = attack.damage;
   }
 }
