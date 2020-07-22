@@ -1,7 +1,7 @@
 import { Card } from "../store/card/card";
 import { CardManager } from "./card-manager";
 import { EnergyCard } from "../store/card/energy-card";
-import { EnergyType, Stage, CardType } from "../store/card/card-types";
+import { EnergyType, Stage, CardType, CardTag } from "../store/card/card-types";
 import { PokemonCard } from "../store/card/pokemon-card";
 
 export class DeckAnalyser {
@@ -23,6 +23,7 @@ export class DeckAnalyser {
   public isValid(): boolean {
     const countMap: { [name: string]: number } = { };
     let hasBasicPokemon: boolean = false;
+    let hasAceSpec: boolean = false;
 
     if (this.cards.length !== 60) {
       return false;
@@ -42,6 +43,13 @@ export class DeckAnalyser {
         if (countMap[card.name] > 4) {
           return false;
         }
+      }
+
+      if (card.tags.includes(CardTag.ACE_SPEC)) {
+        if (hasAceSpec) {
+          return false;
+        }
+        hasAceSpec = true;
       }
     }
 

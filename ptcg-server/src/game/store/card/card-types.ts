@@ -3,7 +3,8 @@ export enum CardTag {
   POKEMON_SP = 'SP',
   POKEMON_EX = 'EX',
   POKEMON_GX = 'GX',
-  POKEMON_LV_X = 'LV_X'
+  POKEMON_LV_X = 'LV_X',
+  ACE_SPEC = 'ACE_SPEC'
 }
 
 export enum SuperType {

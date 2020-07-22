@@ -22,7 +22,8 @@ export class Bianca extends TrainerCard {
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof PlayTrainerEffect && effect.trainerCard === this) {
       const player = effect.player;
-      const cardsToDraw = Math.max(0, 7 - player.hand.cards.length);
+      const cards = player.hand.cards.filter(c => c !== this);
+      const cardsToDraw = Math.max(0, 6 - cards.length);
 
       if (cardsToDraw === 0 || player.deck.cards.length === 0) {
         throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
