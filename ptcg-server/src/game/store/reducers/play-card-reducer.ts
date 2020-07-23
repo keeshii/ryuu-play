@@ -47,6 +47,10 @@ export function playCardReducer(store: StoreLike, state: State, action: Action):
         if (!(target instanceof PokemonCardList) || target.cards.length === 0) {
           throw new GameError(GameMessage.INVALID_TARGET);
         }
+        if (player.energyPlayedTurn === state.turn) {
+          throw new GameError(GameMessage.ENERGY_ALREADY_ATTACHED);
+        }
+        player.energyPlayedTurn = state.turn;
 
         const effect = new AttachEnergyEffect(player, handCard, target);
         return store.reduceEffect(state, effect);

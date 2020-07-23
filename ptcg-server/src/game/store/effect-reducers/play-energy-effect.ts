@@ -10,17 +10,12 @@ export function playEnergyReducer(store: StoreLike, state: State, effect: Effect
 
   /* Play energy card */
   if (effect instanceof AttachEnergyEffect) {
-    if (effect.player.energyPlayedTurn === state.turn) {
-      throw new GameError(GameMessage.ENERGY_ALREADY_ATTACHED);
-    }
-
     const pokemonCard = effect.target.getPokemonCard();
     if (pokemonCard === undefined) {
       throw new GameError(GameMessage.INVALID_TARGET);
     }
 
     store.log(state, `${effect.player.name} attaches a ${effect.energyCard.name} to the ${pokemonCard.name}.`);
-    effect.player.energyPlayedTurn = state.turn;
     effect.player.hand.moveCardTo(effect.energyCard, effect.target);
     return state;
   }

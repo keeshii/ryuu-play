@@ -7,6 +7,9 @@ import { CrushingHammer } from "./crushing-hammer";
 import { DowsingMachine } from "./dowsing-machine";
 import { Durant } from "./durant";
 import { Eelektrik } from "./eelektrik";
+import { Emboar } from "./emboar";
+import { Emolga } from "./emolga";
+import { Empoleon } from "./empoleon";
 import { Tynamo } from "./tynamo";
 
 export const setBlackAndWhite: Card[] = [
@@ -18,5 +21,8 @@ export const setBlackAndWhite: Card[] = [
   new DowsingMachine(),
   new Durant(),
   new Eelektrik(),
+  new Emboar(),
+  new Emolga(),
+  new Empoleon(),
   new Tynamo()
 ];
