@@ -3,8 +3,8 @@ import { TrainerType } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
-import { CheckHpEffect, CheckPokemonPrizesEffect } from "../../game/store/effects/check-effects";
-import { DealDamageEffect } from "../../game/store/effects/game-effects";
+import { CheckHpEffect } from "../../game/store/effects/check-effects";
+import { DealDamageEffect, KnockOutEffect } from "../../game/store/effects/game-effects";
 import { StateUtils } from "../../game/store/state-utils";
 
 export class ExpertBelt extends TrainerCard {
@@ -35,8 +35,8 @@ export class ExpertBelt extends TrainerCard {
       }
     }
 
-    if (effect instanceof CheckPokemonPrizesEffect && effect.target.cards.includes(this)) {
-      effect.count += 1;
+    if (effect instanceof KnockOutEffect && effect.target.cards.includes(this)) {
+      effect.prizeCount += 1;
     }
 
     return state;

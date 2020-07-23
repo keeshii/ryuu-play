@@ -1,6 +1,6 @@
 import { State, GamePhase, GameWinner } from "../state/state";
 import { StoreLike } from "../store-like";
-import { CheckHpEffect, CheckPokemonPrizesEffect } from "../effects/check-effects";
+import { CheckHpEffect } from "../effects/check-effects";
 import { PokemonCardList } from "../state/pokemon-card-list";
 import { ChoosePokemonPrompt } from "../prompts/choose-pokemon-prompt";
 import { GameMessage, GameError } from "../../game-error";
@@ -8,37 +8,30 @@ import { ChoosePrizePrompt } from "../prompts/choose-prize-prompt";
 import { CardList } from "../state/card-list";
 import { PlayerType, SlotType } from "../actions/play-card-action";
 import { GameOverPrompt } from "../prompts/game-over-prompt";
+import { KnockOutEffect } from "../effects/game-effects";
+import { Effect } from "../effects/effect";
 
-function discardKoPokemons(store: StoreLike, state: State): [number, number] {
-  const prizesToTake: [number, number] = [0, 0];
+interface PokemonItem {
+  playerNum: number;
+  cardList: PokemonCardList;
+}
+
+function findKoPokemons(store: StoreLike, state: State): PokemonItem[] {
+  const pokemons: PokemonItem[] = [];
 
   for (let i = 0; i < state.players.length; i++) {
     const player = state.players[i];
-    const targets: PokemonCardList[] = player.bench.slice();
-    targets.push(player.active);
+    player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card, target) => {
+      const checkHpEffect = new CheckHpEffect(player, cardList);
+      store.reduceEffect(state, checkHpEffect);
 
-    for (const target of targets) {
-      const pokemonCard = target.getPokemonCard();
-      if (pokemonCard !== undefined) {
-
-        const checkHpEffect = new CheckHpEffect(player, target);
-        store.reduceEffect(state, checkHpEffect);
-
-        if (target.damage >= checkHpEffect.hp) {
-
-          const checkPrizesCount = new CheckPokemonPrizesEffect(player, target);
-          state = store.reduceEffect(state, checkPrizesCount);
-          prizesToTake[i === 0 ? 1 : 0] += checkPrizesCount.count;
-
-          store.log(state, `${pokemonCard.name} is KO.`);
-          target.moveTo(player.discard);
-          target.clearEffects();
-        }
+      if (cardList.damage >= checkHpEffect.hp) {
+        pokemons.push({ playerNum: i, cardList });
       }
-    }
+    });
   }
 
-  return prizesToTake;
+  return pokemons;
 }
 
 function chooseActivePokemons(state: State): ChoosePokemonPrompt[] {
@@ -199,12 +192,27 @@ function handlePrompts(
   });
 }
 
-export function checkState(store: StoreLike, state: State, onComplete?: () => void): State {
-  if (state.phase !== GamePhase.PLAYER_TURN && state.phase !== GamePhase.BETWEEN_TURNS) {
-    return state;
+function* executeCheckState(next: Function, store: StoreLike, state: State,
+  onComplete?: () => void): IterableIterator<State> {
+
+  const prizesToTake: [number, number] = [0, 0];
+
+  const pokemonsToDiscard = findKoPokemons(store, state);
+  for (const item of pokemonsToDiscard) {
+    const player = state.players[item.playerNum];
+    const knockOutEffect = new KnockOutEffect(player, item.cardList);
+    state = store.reduceEffect(state, knockOutEffect);
+
+    yield store.waitPrompt(state, () => {
+      next();
+    })
+
+    if (knockOutEffect.preventDefault === false) {
+      const opponentNum = item.playerNum === 0 ? 1 : 0
+      prizesToTake[opponentNum] += knockOutEffect.prizeCount;
+    }
   }
 
-  const prizesToTake: [number, number] = discardKoPokemons(store, state);
   const prompts: (ChoosePrizePrompt | ChoosePokemonPrompt)[] = [
     ...choosePrizeCards(state, prizesToTake),
     ...chooseActivePokemons(state)
@@ -220,6 +228,33 @@ export function checkState(store: StoreLike, state: State, onComplete?: () => vo
         checkWinner(store, state, onComplete);
       }
     });
+  }
+
+  return state;
+}
+
+export function checkState(store: StoreLike, state: State, onComplete?: () => void): State {
+  if (state.phase !== GamePhase.PLAYER_TURN && state.phase !== GamePhase.BETWEEN_TURNS) {
+    if (onComplete !== undefined) {
+      onComplete();
+    }
+    return state;
+  }
+
+  let generator: IterableIterator<State>;
+  generator = executeCheckState(() => generator.next(), store, state, onComplete);
+  return generator.next().value;
+}
+
+
+export function checkStateReducer(store: StoreLike, state: State, effect: Effect): State {
+  if (effect instanceof KnockOutEffect) {
+    const card = effect.target.getPokemonCard();
+    if (card !== undefined) {
+      store.log(state, `${card.name} is KO.`);
+      effect.target.moveTo(effect.player.discard);
+      effect.target.clearEffects();
+    }
   }
 
   return state;

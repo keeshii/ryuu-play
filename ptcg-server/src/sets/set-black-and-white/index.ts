@@ -12,6 +12,7 @@ import { Emolga } from "./emolga";
 import { Empoleon } from "./empoleon";
 import { EnergyRetrieval } from "./energy-retrieval";
 import { EnhancedHammer } from "./enhanced-hammer";
+import { ExpShare } from "./exp-share";
 import { Tynamo } from "./tynamo";
 
 export const setBlackAndWhite: Card[] = [
@@ -28,5 +29,6 @@ export const setBlackAndWhite: Card[] = [
   new Empoleon(),
   new EnergyRetrieval(),
   new EnhancedHammer(),
+  new ExpShare(),
   new Tynamo()
 ];

@@ -31,21 +31,6 @@ export class CheckHpEffect implements Effect {
   }
 }
 
-// how many prizes when target Pokemon is KO
-export class CheckPokemonPrizesEffect implements Effect {
-  readonly type: string = CheckEffects.CHECK_PRIZES_COUNT_EFFECT;
-  public preventDefault = false;
-  public player: Player;
-  public target: PokemonCardList;
-  public count: number;
-
-  constructor(player: Player, target: PokemonCardList) {
-    this.player = player;
-    this.target = target;
-    this.count = 1;
-  }
-}
-
 export class CheckPokemonPlayedTurnEffect implements Effect {
   readonly type: string = CheckEffects.CHECK_POKEMON_PLAYED_TURN_EFFECT;
   public preventDefault = false;

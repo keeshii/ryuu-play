@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
-import { GameState, Card, AttachEnergyPrompt, CardTarget, FilterType, CardList } from 'ptcg-server';
+import { GameState, Card, AttachEnergyPrompt, CardTarget, FilterType, CardList, AttachEnergyOptions } from 'ptcg-server';
 
 import { GameService } from '../../../api/services/game.service';
 import { PokemonData, PokemonItem } from '../choose-pokemons-pane/pokemon-data';
@@ -26,13 +26,9 @@ export class PromptAttachEnergyComponent implements OnInit, OnChanges {
   public cardList: CardList;
   public filter: FilterType;
   public isInvalid = false;
-
-  private min: number;
-  private max: number;
-
-  private blockedTo: CardTarget[];
-  private initialCards: Card[];
   public results: AttachEnergyResult[] = [];
+  private options: Partial<AttachEnergyOptions> = {};
+  private initialCards: Card[];
 
   constructor(
     private gameService: GameService
@@ -58,7 +54,13 @@ export class PromptAttachEnergyComponent implements OnInit, OnChanges {
   }
 
   public onCardDrop([item, card]: [PokemonItem, Card]) {
-    if (this.pokemonData.matchesTarget(item, this.blockedTo)) {
+    if (this.pokemonData.matchesTarget(item, this.options.blockedTo)) {
+      return;
+    }
+    if (this.options.sameTarget && !this.results.every(r => r.to === item)) {
+      return;
+    }
+    if (this.options.differentTargets && this.results.some(r => r.to === item)) {
       return;
     }
     const index = this.cardList.cards.indexOf(card);
@@ -98,7 +100,7 @@ export class PromptAttachEnergyComponent implements OnInit, OnChanges {
 
   private updateIsInvalid(results: AttachEnergyResult[]) {
     let isInvalid = false;
-    if (this.min > results.length || this.max < results.length) {
+    if (this.options.min > results.length || this.options.max < results.length) {
       isInvalid = true;
     }
     this.isInvalid = isInvalid;
@@ -113,7 +115,6 @@ export class PromptAttachEnergyComponent implements OnInit, OnChanges {
       const slots = prompt.slots;
 
       this.pokemonData = new PokemonData(state, playerId, playerType, slots);
-      this.blockedTo = prompt.options.blockedTo;
       this.allowedCancel = prompt.options.allowCancel;
       this.cardList = prompt.cardList;
       this.initialCards = prompt.cardList.cards;
@@ -121,8 +122,7 @@ export class PromptAttachEnergyComponent implements OnInit, OnChanges {
       this.message = prompt.message;
       this.promptId = prompt.id;
       this.results = [];
-      this.min = prompt.options.min;
-      this.max = prompt.options.max;
+      this.options = prompt.options;
       this.updateIsInvalid(this.results);
     }
   }

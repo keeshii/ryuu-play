@@ -10,6 +10,7 @@ export enum GameEffects {
   POWER_EFFECT = 'POWER_EFFECT',
   DEAL_DAMAGE_EFFECT = 'DEAL_DAMAGE_EFFECT',
   ATTACK_EFFECT = 'ATTACK_EFFECT',
+  KNOCK_OUT_EFFECT = 'KNOCK_OUT_EFFECT'
 }
 
 export class RetreatEffect implements Effect {
@@ -107,5 +108,20 @@ export class AttackEffect implements Effect {
     this.player = player;
     this.attack = attack;
     this.damage = attack.damage;
+  }
+}
+
+// how many prizes when target Pokemon is KO
+export class KnockOutEffect implements Effect {
+  readonly type: string = GameEffects.KNOCK_OUT_EFFECT;
+  public preventDefault = false;
+  public player: Player;
+  public target: PokemonCardList;
+  public prizeCount: number;
+
+  constructor(player: Player, target: PokemonCardList) {
+    this.player = player;
+    this.target = target;
+    this.prizeCount = 1;
   }
 }
