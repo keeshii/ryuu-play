@@ -10,7 +10,8 @@ export enum GameEffects {
   POWER_EFFECT = 'POWER_EFFECT',
   DEAL_DAMAGE_EFFECT = 'DEAL_DAMAGE_EFFECT',
   ATTACK_EFFECT = 'ATTACK_EFFECT',
-  KNOCK_OUT_EFFECT = 'KNOCK_OUT_EFFECT'
+  KNOCK_OUT_EFFECT = 'KNOCK_OUT_EFFECT',
+  HEAL_EFFECT = 'HEAL_EFFECT'
 }
 
 export class RetreatEffect implements Effect {
@@ -123,5 +124,19 @@ export class KnockOutEffect implements Effect {
     this.player = player;
     this.target = target;
     this.prizeCount = 1;
+  }
+}
+
+export class HealEffect implements Effect {
+  readonly type: string = GameEffects.HEAL_EFFECT;
+  public preventDefault = false;
+  public player: Player;
+  public target: PokemonCardList;
+  public damage: number;
+
+  constructor(player: Player, target: PokemonCardList, damage: number) {
+    this.player = player;
+    this.target = target;
+    this.damage = damage;
   }
 }

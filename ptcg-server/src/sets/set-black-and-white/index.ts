@@ -13,6 +13,12 @@ import { Empoleon } from "./empoleon";
 import { EnergyRetrieval } from "./energy-retrieval";
 import { EnhancedHammer } from "./enhanced-hammer";
 import { ExpShare } from "./exp-share";
+import { LevelBall } from "./level-ball";
+import { MaxPotion } from "./max-potion";
+import { Pignite } from "./pignite";
+import { Piplup } from "./piplup";
+import { PlusPower } from "./plus-power";
+import { Pokegear30 } from "./pokegear-30";
 import { Tynamo } from "./tynamo";
 
 export const setBlackAndWhite: Card[] = [
@@ -30,5 +36,11 @@ export const setBlackAndWhite: Card[] = [
   new EnergyRetrieval(),
   new EnhancedHammer(),
   new ExpShare(),
+  new LevelBall(),
+  new MaxPotion(),
+  new Pignite(),
+  new Piplup(),
+  new PlusPower(),
+  new Pokegear30(),
   new Tynamo()
 ];

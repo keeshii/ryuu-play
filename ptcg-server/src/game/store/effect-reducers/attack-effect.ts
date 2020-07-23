@@ -9,7 +9,8 @@ import { CheckPokemonTypeEffect, CheckPokemonStatsEffect,
 import { Weakness, Resistance } from "../card/pokemon-types";
 import { CardType, SpecialCondition } from "../card/card-types";
 import { AttackEffect, DealDamageEffect, UseAttackEffect,
-  DealDamageAfterWeaknessEffect } from "../effects/game-effects";
+  DealDamageAfterWeaknessEffect, 
+  HealEffect} from "../effects/game-effects";
 import { CoinFlipPrompt } from "../prompts/coin-flip-prompt";
 import {EnergyCard} from "../card/energy-card";
 
@@ -139,6 +140,11 @@ export function attackReducer(store: StoreLike, state: State, effect: Effect): S
     let generator: IterableIterator<State>;
     generator = useAttack(() => generator.next(), store, state, effect);
     return generator.next().value;
+  }
+
+  if (effect instanceof HealEffect) {
+    effect.target.damage = Math.max(0, effect.target.damage - effect.damage);
+    return state;
   }
 
   return state;
