@@ -1,4 +1,4 @@
-import { AttachPokemonToolEffect, PlayTrainerEffect, PlaySupporterEffect } from "../effects/play-card-effects";
+import { AttachPokemonToolEffect, TrainerEffect, PlaySupporterEffect, PlayItemEffect } from "../effects/play-card-effects";
 import { GameError, GameMessage } from "../../game-error";
 import { Effect } from "../effects/effect";
 import { State } from "../state/state";
@@ -15,7 +15,7 @@ export function playTrainerReducer(store: StoreLike, state: State, effect: Effec
 
     effect.player.supporterPlayedTurn = state.turn;
 
-    const playTrainer = new PlayTrainerEffect(effect.player, effect.trainerCard, effect.target);
+    const playTrainer = new TrainerEffect(effect.player, effect.trainerCard, effect.target);
     state = store.reduceEffect(state, playTrainer);
 
     return state;
@@ -35,18 +35,25 @@ export function playTrainerReducer(store: StoreLike, state: State, effect: Effec
     effect.player.hand.moveCardTo(effect.trainerCard, effect.target);
     effect.target.tool = effect.trainerCard;
 
-    const playTrainer = new PlayTrainerEffect(effect.player, effect.trainerCard, effect.target);
+    const playTrainer = new TrainerEffect(effect.player, effect.trainerCard, effect.target);
     state = store.reduceEffect(state, playTrainer);
 
     return state;
   }
 
   // Play item card
-  if (effect instanceof PlayTrainerEffect) {
+  if (effect instanceof PlayItemEffect) {
+    const playTrainer = new TrainerEffect(effect.player, effect.trainerCard, effect.target);
+    state = store.reduceEffect(state, playTrainer);
+    store.log(state, `${effect.player.name} plays ${effect.trainerCard.name}.`);
+    return state;
+  }
+
+  // Process trainer effect
+  if (effect instanceof TrainerEffect) {
     if (effect.player.hand.cards.includes(effect.trainerCard)) {
       effect.player.hand.moveCardTo(effect.trainerCard, effect.player.discard);
     }
-    store.log(state, `${effect.player.name} plays ${effect.trainerCard.name}.`);
     return state;
   }
 

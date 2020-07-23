@@ -3,7 +3,7 @@ import { Stage, CardType, SuperType, TrainerType } from "../../game/store/card/c
 import { PowerType, StoreLike, State, StateUtils, PokemonCardList, GameError,
   GameMessage, CoinFlipPrompt, ChooseCardsPrompt, TrainerCard} from "../../game";
 import { Effect } from "../../game/store/effects/effect";
-import { PlayPokemonEffect, PlayTrainerEffect } from "../../game/store/effects/play-card-effects";
+import { PlayPokemonEffect, TrainerEffect } from "../../game/store/effects/play-card-effects";
 import { PowerEffect, AttackEffect } from "../../game/store/effects/game-effects";
 import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
 import { CardMessage } from "../card-message";
@@ -83,7 +83,7 @@ export class Smeargle extends PokemonCard {
           return;
         }
         const trainerCard = cards[0] as TrainerCard;
-        const playTrainerEffect = new PlayTrainerEffect(player, trainerCard);
+        const playTrainerEffect = new TrainerEffect(player, trainerCard);
         store.reduceEffect(state, playTrainerEffect);
       });
     }

@@ -1,5 +1,5 @@
 import { Effect } from "../../game/store/effects/effect";
-import { PlayTrainerEffect } from "../../game/store/effects/play-card-effects";
+import { TrainerEffect } from "../../game/store/effects/play-card-effects";
 import { ShuffleDeckPrompt } from "../../game/store/prompts/shuffle-prompt";
 import { State } from "../../game/store/state/state";
 import { StateUtils } from "../../game/store/state-utils";
@@ -22,7 +22,7 @@ export class N extends TrainerCard {
     'Then, each player draws a card for each of his or her remaining Prize cards.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof PlayTrainerEffect && effect.trainerCard === this) {
+    if (effect instanceof TrainerEffect && effect.trainerCard === this) {
 
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);

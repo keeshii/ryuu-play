@@ -1,6 +1,6 @@
 import { Effect } from "../../game/store/effects/effect";
 import { GameError, GameMessage } from "../../game/game-error";
-import { PlayTrainerEffect } from "../../game/store/effects/play-card-effects";
+import { TrainerEffect } from "../../game/store/effects/play-card-effects";
 import { State } from "../../game/store/state/state";
 import { StoreLike } from "../../game/store/store-like";
 import { TrainerCard } from "../../game/store/card/trainer-card";
@@ -20,7 +20,7 @@ export class Cheren extends TrainerCard {
     'Draw 3 cards.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof PlayTrainerEffect && effect.trainerCard === this) {
+    if (effect instanceof TrainerEffect && effect.trainerCard === this) {
       const player = effect.player;
 
       if (player.deck.cards.length === 0) {

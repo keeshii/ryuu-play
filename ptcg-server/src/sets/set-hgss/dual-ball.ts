@@ -6,9 +6,9 @@ import { Effect } from "../../game/store/effects/effect";
 import { CoinFlipPrompt, ChooseCardsPrompt, Card, StateUtils, ShowCardsPrompt,
   ShuffleDeckPrompt } from "../../game";
 import { CardMessage } from "../card-message";
-import { PlayTrainerEffect } from "../../game/store/effects/play-card-effects";
+import { TrainerEffect } from "../../game/store/effects/play-card-effects";
 
-function* playCard(next: Function, store: StoreLike, state: State, effect: PlayTrainerEffect): IterableIterator<State> {
+function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
   const opponent = StateUtils.getOpponent(state, player);
 
@@ -71,7 +71,7 @@ export class DualBall extends TrainerCard {
     'deck afterward.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof PlayTrainerEffect && effect.trainerCard === this) {
+    if (effect instanceof TrainerEffect && effect.trainerCard === this) {
       let generator: IterableIterator<State>;
       generator = playCard(() => generator.next(), store, state, effect);
       return generator.next().value;

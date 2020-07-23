@@ -1,6 +1,6 @@
 import { Action } from "../actions/action";
-import { AttachEnergyEffect, PlayPokemonEffect, PlayTrainerEffect,
-  PlayStadiumEffect, PlaySupporterEffect, AttachPokemonToolEffect } from "../effects/play-card-effects";
+import { AttachEnergyEffect, PlayPokemonEffect, PlayStadiumEffect,
+  PlaySupporterEffect, AttachPokemonToolEffect, PlayItemEffect } from "../effects/play-card-effects";
 import { CardList } from "../state/card-list";
 import { EnergyCard } from "../card/energy-card";
 import { GameError, GameMessage } from "../../game-error";
@@ -83,7 +83,7 @@ export function playCardReducer(store: StoreLike, state: State, action: Action):
             effect = new AttachPokemonToolEffect(player, handCard, target);
             break;
           default:
-            effect = new PlayTrainerEffect(player, handCard, target);
+            effect = new PlayItemEffect(player, handCard, target);
             break;
         }
         return store.reduceEffect(state, effect);

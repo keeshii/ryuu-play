@@ -3,7 +3,7 @@ import { TrainerCard } from "../../game/store/card/trainer-card";
 import { TrainerType } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
-import { PlayTrainerEffect } from "../../game/store/effects/play-card-effects";
+import { TrainerEffect } from "../../game/store/effects/play-card-effects";
 import { StateUtils } from "../../game/store/state-utils";
 import { GameError, GameMessage } from "../../game/game-error";
 import { DealDamageEffect } from "../../game/store/effects/game-effects";
@@ -28,7 +28,7 @@ export class BlackBelt extends TrainerCard {
   private readonly BLACK_BELT_MARKER = 'BLACK_BELT_MARKER';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof PlayTrainerEffect && effect.trainerCard === this) {
+    if (effect instanceof TrainerEffect && effect.trainerCard === this) {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
 

@@ -3,7 +3,7 @@ import { TrainerType } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
-import { PlayTrainerEffect } from "../../game/store/effects/play-card-effects";
+import { TrainerEffect } from "../../game/store/effects/play-card-effects";
 import { ConfirmPrompt } from "../../game/store/prompts/confirm-prompt";
 import { CardMessage } from "../card-message";
 import { CoinFlipPrompt } from "../../game/store/prompts/coin-flip-prompt";
@@ -11,7 +11,7 @@ import { ChoosePokemonPrompt } from "../../game/store/prompts/choose-pokemon-pro
 import { PlayerType, SlotType } from "../../game/store/actions/play-card-action";
 import { StateUtils } from "../../game/store/state-utils";
 
-function* playCard(next: Function, store: StoreLike, state: State, effect: PlayTrainerEffect): IterableIterator<State> {
+function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
   const opponent = StateUtils.getOpponent(state, player);
   const name = effect.trainerCard.name;
@@ -111,7 +111,7 @@ export class PokeBlower extends TrainerCard {
     'Active Pokemon.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof PlayTrainerEffect && effect.trainerCard === this) {
+    if (effect instanceof TrainerEffect && effect.trainerCard === this) {
       let generator: IterableIterator<State>;
       generator = playCard(() => generator.next(), store, state, effect);
       return generator.next().value;

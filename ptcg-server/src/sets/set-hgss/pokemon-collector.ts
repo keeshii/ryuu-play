@@ -6,12 +6,12 @@ import { TrainerType, SuperType, Stage } from "../../game/store/card/card-types"
 import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { StateUtils } from "../../game/store/state-utils";
-import { PlayTrainerEffect } from "../../game/store/effects/play-card-effects";
+import { TrainerEffect } from "../../game/store/effects/play-card-effects";
 import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
 import { ShowCardsPrompt } from "../../game/store/prompts/show-cards-prompt";
 import { ShuffleDeckPrompt } from "../../game/store/prompts/shuffle-prompt";
 
-function* playCard(next: Function, store: StoreLike, state: State, effect: PlayTrainerEffect): IterableIterator<State> {
+function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
   const opponent = StateUtils.getOpponent(state, player);
   let cards: Card[] = [];
@@ -60,7 +60,7 @@ export class PokemonCollector extends TrainerCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
 
-    if (effect instanceof PlayTrainerEffect && effect.trainerCard === this) {
+    if (effect instanceof TrainerEffect && effect.trainerCard === this) {
       let generator: IterableIterator<State>;
       generator = playCard(() => generator.next(), store, state, effect);
       return generator.next().value;

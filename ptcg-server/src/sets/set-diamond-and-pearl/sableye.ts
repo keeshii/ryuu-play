@@ -7,7 +7,7 @@ import { PowerType } from "../../game/store/card/pokemon-types";
 import {AttackEffect, DealDamageEffect} from "../../game/store/effects/game-effects";
 import {ChooseCardsPrompt, TrainerCard, StateUtils} from "../../game";
 import {CardMessage} from "../card-message";
-import {PlayTrainerEffect} from "../../game/store/effects/play-card-effects";
+import {TrainerEffect} from "../../game/store/effects/play-card-effects";
 import {CheckHpEffect} from "../../game/store/effects/check-effects";
 import {WhoBeginsEffect} from "../../game/store/effects/game-phase-effects";
 
@@ -93,7 +93,7 @@ export class Sableye extends PokemonCard {
         const deckIndex = player.deck.cards.indexOf(trainerCard);
         player.deck.moveCardTo(trainerCard, player.hand);
         try {
-          const playTrainer = new PlayTrainerEffect(player, trainerCard);
+          const playTrainer = new TrainerEffect(player, trainerCard);
           store.reduceEffect(state, playTrainer);
         } catch (error) {
           player.hand.cards.pop();

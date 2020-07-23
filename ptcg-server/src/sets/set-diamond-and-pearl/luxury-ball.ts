@@ -3,12 +3,12 @@ import { TrainerType, SuperType, CardTag } from "../../game/store/card/card-type
 import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
-import { PlayTrainerEffect } from "../../game/store/effects/play-card-effects";
+import { TrainerEffect } from "../../game/store/effects/play-card-effects";
 import { ChooseCardsPrompt, Card, StateUtils, ShowCardsPrompt, ShuffleDeckPrompt,
   PokemonCard, GameError, GameMessage } from "../../game";
 import { CardMessage } from "../card-message";
 
-function* playCard(next: Function, store: StoreLike, state: State, effect: PlayTrainerEffect): IterableIterator<State> {
+function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
   const opponent = StateUtils.getOpponent(state, player);
   let cards: Card[] | null = [];
@@ -64,7 +64,7 @@ export class LuxuryBall extends TrainerCard {
     'If any Luxury Ball is in your discard pile, you can\'t play this card.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof PlayTrainerEffect && effect.trainerCard === this) {
+    if (effect instanceof TrainerEffect && effect.trainerCard === this) {
       const player = effect.player;
       if (player.discard.cards.some(c => c.name === this.name)) {
         throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);

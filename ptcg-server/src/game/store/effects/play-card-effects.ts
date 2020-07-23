@@ -79,7 +79,21 @@ export class AttachPokemonToolEffect implements Effect {
   }
 }
 
-export class PlayTrainerEffect implements Effect {
+export class PlayItemEffect implements Effect {
+  readonly type: string = PlayCardEffects.PLAY_BASIC_POKEMON_EFFECT;
+  public preventDefault = false;
+  public player: Player;
+  public trainerCard: TrainerCard;
+  public target: CardList | undefined;
+
+  constructor(player: Player, trainerCard: TrainerCard, target?: CardList) {
+    this.player = player;
+    this.trainerCard = trainerCard;
+    this.target = target;
+  }
+}
+
+export class TrainerEffect implements Effect {
   readonly type: string = PlayCardEffects.PLAY_BASIC_POKEMON_EFFECT;
   public preventDefault = false;
   public player: Player;
