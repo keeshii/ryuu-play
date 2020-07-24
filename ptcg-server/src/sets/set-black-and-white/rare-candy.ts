@@ -1,8 +1,9 @@
+import { Card } from "../../game/store/card/card";
 import { CardTarget, PlayerType, SlotType } from "../../game/store/actions/play-card-action";
 import { CardMessage } from "../card-message";
 import { GameError, GameMessage } from "../../game/game-error";
 import { TrainerCard } from "../../game/store/card/trainer-card";
-import { TrainerType, Stage } from "../../game/store/card/card-types";
+import { TrainerType, Stage, SuperType } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
@@ -12,6 +13,7 @@ import { PokemonCard } from "../../game/store/card/pokemon-card";
 import { CardManager } from "../../game/cards/card-manager";
 import { PokemonCardList} from "../../game/store/state/pokemon-card-list";
 import { CheckPokemonPlayedTurnEffect } from "../../game/store/effects/check-effects";
+import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
 
 function isMatchingStage2(stage1: PokemonCard[], basic: PokemonCard, stage2: PokemonCard): boolean {
   for (const card of stage1) {
@@ -82,17 +84,35 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     return state; // invalid target?
   }
 
-  const matchingStage2 = stage2.find(s => isMatchingStage2(stage1, pokemonCard, s));
-  if (matchingStage2 === undefined) {
-    return state; // stage 2 disappeard from player's hand?
+  const blocked2: number[] = [];
+  player.hand.cards.forEach((c, index) => {
+    if (c instanceof PokemonCard && c.stage === Stage.STAGE_2) {
+      if (!isMatchingStage2(stage1, pokemonCard, c)) {
+        blocked2.push(index);
+      }
+    }
+  });
+
+  let cards: Card[] = [];
+  yield store.prompt(state, new ChooseCardsPrompt(
+    player.id,
+    CardMessage.CHOOSE_MATCHING_STAGE_2,
+    player.hand,
+    { superType: SuperType.POKEMON, stage: Stage.STAGE_2 },
+    { min: 1, max: 1, allowCancel: true, blocked: blocked2 }
+  ), selected => {
+    cards = selected || [];
+    next();
+  });
+
+  if (cards.length > 0) {
+    // Discard trainer only when user selected a Pokemon
+    player.hand.moveCardTo(effect.trainerCard, player.discard);
+
+    // Evolve Pokemon directly to Stage 2
+    player.hand.moveCardsTo(cards, targets[0]);
+    targets[0].pokemonPlayedTurn = state.turn;
   }
-
-  // Discard trainer only when user selected a Pokemon
-  player.hand.moveCardTo(effect.trainerCard, player.discard);
-
-  // Evolve Pokemon directly to Stage 2
-  player.hand.moveCardTo(matchingStage2, targets[0]);
-  targets[0].pokemonPlayedTurn = state.turn;
 
   return state;
 }
