@@ -19,6 +19,14 @@ import { Pignite } from "./pignite";
 import { Piplup } from "./piplup";
 import { PlusPower } from "./plus-power";
 import { Pokegear30 } from "./pokegear-30";
+import { PokemonCatcher } from "./pokemon-catcher";
+import { PokemonCommunication } from "./pokemon-communication";
+import { Prinplup } from "./prinplup";
+import { PrismEnergy } from "./prism-energy";
+import { ProfessorJuniper } from "./professor-juniper";
+import { ProfessorOaksNewTheory } from "./professor-oaks-new-theory";
+import { QuickBall } from "./quick-ball";
+import { RainbowEnergy } from "./rainbow-energy";
 import { Tynamo } from "./tynamo";
 
 export const setBlackAndWhite: Card[] = [
@@ -42,5 +50,13 @@ export const setBlackAndWhite: Card[] = [
   new Piplup(),
   new PlusPower(),
   new Pokegear30(),
+  new PokemonCatcher(),
+  new PokemonCommunication(),
+  new Prinplup(),
+  new PrismEnergy(),
+  new ProfessorJuniper(),
+  new ProfessorOaksNewTheory(),
+  new QuickBall(),
+  new RainbowEnergy(),
   new Tynamo()
 ];

@@ -10,26 +10,53 @@ import { TrainerEffect } from "../../game/store/effects/play-card-effects";
 import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
 import { ShowCardsPrompt } from "../../game/store/prompts/show-cards-prompt";
 import { ShuffleDeckPrompt } from "../../game/store/prompts/shuffle-prompt";
-import {PokemonCard} from "../../game/store/card/pokemon-card";
+import { GameError, GameMessage } from "../../game/game-error";
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
   const opponent = StateUtils.getOpponent(state, player);
-  let cards: Card[] = [];
+  const hasPokemon = player.hand.cards.some(c => c.superType === SuperType.POKEMON);
 
-  const blocked: number[] = [];
-  player.deck.cards.forEach((card, index) => {
-    if (card instanceof PokemonCard && card.hp > 90) {
-      blocked.push(index);
-    }
+  if (!hasPokemon) {
+    throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
+  }
+
+  // Do not discard the card yet
+  effect.preventDefault = true;
+
+  let cards: Card[] = [];
+  yield store.prompt(state, new ChooseCardsPrompt(
+    player.id,
+    CardMessage.CHOOSE_ONE_POKEMON,
+    player.hand,
+    { superType: SuperType.POKEMON },
+    { min: 1, max: 1, allowCancel: true }
+  ), selected => {
+    cards = selected || [];
+    next();
   });
+
+  if (cards.length === 0) {
+    return;
+  }
+
+  // Discard trainer only when user selected a Pokemon
+  player.hand.moveCardTo(effect.trainerCard, player.discard);
+  // Put Pokemon from hand into the deck
+  player.hand.moveCardsTo(cards, player.deck);
+
+  yield store.prompt(state, new ShowCardsPrompt(
+    opponent.id,
+    CardMessage.CARDS_SHOWED_BY_THE_OPPONENT,
+    cards
+  ), () => next());
 
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
     CardMessage.CHOOSE_ONE_POKEMON,
     player.deck,
     { superType: SuperType.POKEMON },
-    { min: 1, max: 1, allowCancel: true, blocked }
+    { min: 1, max: 1, allowCancel: true }
   ), selected => {
     cards = selected || [];
     next();
@@ -47,23 +74,24 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 
   return store.prompt(state, new ShuffleDeckPrompt(player.id), order => {
     player.deck.applyOrder(order);
-    next();
+    next()
   });
 }
 
-export class LevelBall extends TrainerCard {
+export class PokemonCommunication extends TrainerCard {
 
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'BW';
 
-  public name: string = 'Level Ball';
+  public name: string = 'Pokemon Communication';
 
-  public fullName: string = 'Level Ball NXD';
+  public fullName: string = 'Pokemon Communication TEU';
 
   public text: string =
-    'Search your deck for a Pokemon with 90 HP or less, reveal it, ' +
-    'and put it into your hand. Shuffle your deck afterward.';
+    'Reveal a Pokemon from your hand and put it into your deck. If you do, ' +
+    'search your deck for a Pokemon, reveal it, and put it into your hand. ' +
+    'Then, shuffle your deck.';
 
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
