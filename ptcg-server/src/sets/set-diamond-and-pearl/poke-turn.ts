@@ -58,7 +58,7 @@ export class PokeTurn extends TrainerCard {
 
   public set: string = 'DP';
 
-  public name: string = 'Poke Turn Up';
+  public name: string = 'Poke Turn';
 
   public fullName: string = 'Poke Turn PL';
 

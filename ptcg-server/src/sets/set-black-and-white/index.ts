@@ -27,6 +27,7 @@ import { ProfessorJuniper } from "./professor-juniper";
 import { ProfessorOaksNewTheory } from "./professor-oaks-new-theory";
 import { QuickBall } from "./quick-ball";
 import { RainbowEnergy } from "./rainbow-energy";
+import { RareCandy } from "./rare-candy";
 import { Tynamo } from "./tynamo";
 
 export const setBlackAndWhite: Card[] = [
@@ -58,5 +59,6 @@ export const setBlackAndWhite: Card[] = [
   new ProfessorOaksNewTheory(),
   new QuickBall(),
   new RainbowEnergy(),
+  new RareCandy(),
   new Tynamo()
 ];
