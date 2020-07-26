@@ -10,7 +10,8 @@ import { Weakness, Resistance } from "../card/pokemon-types";
 import { CardType, SpecialCondition } from "../card/card-types";
 import { AttackEffect, DealDamageEffect, UseAttackEffect,
   DealDamageAfterWeaknessEffect, 
-  HealEffect} from "../effects/game-effects";
+  HealEffect,
+  ApplyWeaknessEffect} from "../effects/game-effects";
 import { CoinFlipPrompt } from "../prompts/coin-flip-prompt";
 import {EnergyCard} from "../card/energy-card";
 
@@ -98,6 +99,19 @@ function* useAttack(next: Function, store: StoreLike, state: State, effect: UseA
 
 export function attackReducer(store: StoreLike, state: State, effect: Effect): State {
 
+  if (effect instanceof ApplyWeaknessEffect) {
+    const checkPokemonType = new CheckPokemonTypeEffect(effect.source);
+    state = store.reduceEffect(state, checkPokemonType);
+    const checkPokemonStats = new CheckPokemonStatsEffect(effect.target);
+    state = store.reduceEffect(state, checkPokemonStats);
+
+    const cardType = checkPokemonType.cardTypes;
+    const weakness = checkPokemonStats.weakness;
+    const resistance = checkPokemonStats.resistance;
+    effect.damage = applyWeaknessAndResistance(effect.damage, cardType, weakness, resistance);
+    return state;
+  }
+
   /* Attack effects */
   if (effect instanceof CheckProvidedEnergyEffect) {
     effect.source.cards.forEach(c => {
@@ -119,18 +133,12 @@ export function attackReducer(store: StoreLike, state: State, effect: Effect): S
   }
 
   if (effect instanceof DealDamageEffect) {
-    const checkPokemonType = new CheckPokemonTypeEffect(effect.source);
-    state = store.reduceEffect(state, checkPokemonType);
-    const checkPokemonStats = new CheckPokemonStatsEffect(effect.target);
-    state = store.reduceEffect(state, checkPokemonStats);
-
-    const cardType = checkPokemonType.cardTypes;
-    const weakness = checkPokemonStats.weakness;
-    const resistance = checkPokemonStats.resistance;
-    const damage = applyWeaknessAndResistance(effect.damage, cardType, weakness, resistance);
+    const applyWeakness = new ApplyWeaknessEffect(
+      effect.player, effect.damage, effect.target, effect.source);
+    state = store.reduceEffect(state, applyWeakness);
 
     const dealDamage = new DealDamageAfterWeaknessEffect(
-      effect.player, damage, effect.attack, effect.target, effect.source);
+      effect.player, applyWeakness.damage, effect.attack, effect.target, effect.source);
     state = store.reduceEffect(state, dealDamage);
 
     return state;
