@@ -18,6 +18,7 @@ import { PromptShowCardsComponent } from './prompt-show-cards/prompt-show-cards.
 import { ChoosePokemonsPaneComponent } from './choose-pokemons-pane/choose-pokemons-pane.component';
 import { PromptOrderCardsComponent } from './prompt-order-cards/prompt-order-cards.component';
 import { PromptMoveEnergyComponent } from './prompt-move-energy/prompt-move-energy.component';
+import { PromptSelectComponent } from './prompt-select/prompt-select.component';
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import { PromptMoveEnergyComponent } from './prompt-move-energy/prompt-move-ener
     PromptShowCardsComponent,
     ChoosePokemonsPaneComponent,
     PromptOrderCardsComponent,
-    PromptMoveEnergyComponent
+    PromptMoveEnergyComponent,
+    PromptSelectComponent
   ],
   imports: [
     BoardModule,

@@ -30,6 +30,7 @@ export * from './store/prompts/game-over-prompt';
 export * from './store/prompts/move-energy-prompt';
 export * from './store/prompts/order-cards-prompt';
 export * from './store/prompts/prompt';
+export * from './store/prompts/select-prompt';
 export * from './store/prompts/show-cards-prompt';
 export * from './store/prompts/shuffle-prompt';
 
