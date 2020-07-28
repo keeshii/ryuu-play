@@ -50,7 +50,7 @@ export class RayquazaEx extends PokemonCard {
       const temp = new CardList();
       player.deck.moveTo(temp, 3);
       const energyCards = temp.cards.filter(c => c instanceof EnergyCard);
-      temp.moveCardsTo(energyCards, player.active);
+      temp.moveCardsTo(energyCards, effect.source);
       temp.moveTo(player.discard);
       return state;
     }
@@ -63,31 +63,28 @@ export class RayquazaEx extends PokemonCard {
       const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);
       state = store.reduceEffect(state, checkProvidedEnergy);
 
-      const lightningCards: Card[] = [];
-      const fireCards: Card[] = [];
-      checkProvidedEnergy.energyMap.forEach(energy => {
-        if (energy.provides.includes(CardType.ANY)) {
-          lightningCards.push(energy.card);
-          fireCards.push(energy.card);
-        } else if (energy.provides.includes(CardType.LIGHTNING)) {
-          lightningCards.push(energy.card);
-        } else if (energy.provides.includes(CardType.FIRE)) {
-          fireCards.push(energy.card);
-        }
-      });
-
       return store.prompt(state, new SelectPrompt(
         player.id,
         CardMessage.CHOOSE_ENERGIES_TO_DISCARD,
         [ CardMessage.ALL_FIRE_ENERGIES, CardMessage.ALL_LIGHTNING_ENERGIES ],
         { allowCancel: false }
       ), choice => {
-        const cards = choice === 0 ? fireCards : lightningCards;
+        const cardType = choice === 0 ? CardType.FIRE : CardType.LIGHTNING;
+        let damage = 0;
+
+        const cards: Card[] = [];
+        for (const energyMap of checkProvidedEnergy.energyMap) {
+          const energy = energyMap.provides.filter(t => t === cardType || t === CardType.ANY);
+          if (energy.length > 0) {
+            cards.push(energyMap.card);
+            damage += 60 * energy.length;
+          }
+        }
+
         player.active.moveCardsTo(cards, player.discard);
-        const damage = cards.length * 60;
 
         const dealDamage = new DealDamageEffect(player, damage, this.attacks[1],
-          opponent.active, player.active);
+          opponent.active, effect.source);
         store.reduceEffect(state, dealDamage);
       });
     }

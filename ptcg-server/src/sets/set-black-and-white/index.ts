@@ -30,6 +30,8 @@ import { RainbowEnergy } from "./rainbow-energy";
 import { RareCandy } from "./rare-candy";
 import { Rayquaza } from "./rayquaza";
 import { RayquazaEx } from "./rayquaza-ex";
+import { RescueEnergy } from "./rescue-energy";
+import { Reshiram } from "./reshiram";
 import { Tynamo } from "./tynamo";
 
 export const setBlackAndWhite: Card[] = [
@@ -64,5 +66,7 @@ export const setBlackAndWhite: Card[] = [
   new RareCandy(),
   new Rayquaza(),
   new RayquazaEx(),
+  new RescueEnergy(),
+  new Reshiram(),
   new Tynamo()
 ];
