@@ -51,7 +51,7 @@ export class PromptChooseEnergyComponent implements OnInit {
     this.gameService.resolvePrompt(gameId, id, this.result);
   }
 
-  protected onChange(result: number[]) {
+  public onChange(result: number[]) {
     const energy: EnergyMap[] = [];
     for (const index of result) {
       energy.push(this.energy[index]);

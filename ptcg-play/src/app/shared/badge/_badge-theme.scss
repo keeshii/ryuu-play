@@ -6,8 +6,8 @@
   color: $foreground;
 }
 
-@mixin mat-badge-theme-color($palette) {
-  @include mat-badge-color(mat-color($palette, default-contrast), mat-color($palette));
+@mixin ptcg-badge-theme-color($palette) {
+  @include ptcg-badge-color(mat-color($palette, default-contrast), mat-color($palette));
 }
 
 @mixin ptcg-badge-theme($theme) {
@@ -25,15 +25,15 @@
     @include ptcg-badge-color($unselected-foreground, $unselected-background);
 
     &.mat-primary {
-      @include mat-chips-theme-color($primary);
+      @include ptcg-badge-theme-color($primary);
     }
 
     &.mat-warn {
-      @include mat-chips-theme-color($warn);
+      @include ptcg-badge-theme-color($warn);
     }
 
     &.mat-accent {
-      @include mat-chips-theme-color($accent);
+      @include ptcg-badge-theme-color($accent);
     }
   }
 
