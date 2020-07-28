@@ -1,7 +1,7 @@
 import { Card } from "../store/card/card";
 import { CardManager } from "./card-manager";
 import { EnergyCard } from "../store/card/energy-card";
-import { EnergyType, Stage, CardType } from "../store/card/card-types";
+import { EnergyType, Stage, CardType, CardTag } from "../store/card/card-types";
 import { PokemonCard } from "../store/card/pokemon-card";
 
 export class DeckAnalyser {
@@ -23,6 +23,7 @@ export class DeckAnalyser {
   public isValid(): boolean {
     const countMap: { [name: string]: number } = { };
     let hasBasicPokemon: boolean = false;
+    let hasAceSpec: boolean = false;
 
     if (this.cards.length !== 60) {
       return false;
@@ -43,6 +44,13 @@ export class DeckAnalyser {
           return false;
         }
       }
+
+      if (card.tags.includes(CardTag.ACE_SPEC)) {
+        if (hasAceSpec) {
+          return false;
+        }
+        hasAceSpec = true;
+      }
     }
 
     return hasBasicPokemon;
@@ -57,12 +65,16 @@ export class DeckAnalyser {
 
       if (card instanceof PokemonCard) {
         cardType = card.cardType;
+        if (cardType !== CardType.NONE && cardTypes.indexOf(cardType) === -1) {
+          cardTypes.push(cardType);
+        }
       } else if (card instanceof EnergyCard) {
-        cardType = card.provides;
-      }
-
-      if (cardType !== CardType.NONE && cardTypes.indexOf(cardType) === -1) {
-        cardTypes.push(cardType);
+        for (let j = 0; j < card.provides.length; j++) {
+          cardType = card.provides[j];
+          if (cardType !== CardType.NONE && cardTypes.indexOf(cardType) === -1) {
+            cardTypes.push(cardType);
+          }
+        }
       }
     }
 

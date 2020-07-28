@@ -24,15 +24,22 @@ export class CardList {
   }
 
   public applyOrder(order: number[]) {
-    for (let i = 0; i < this.cards.length; i++) {
-      if (order.length <= i) {
+    // Check if order is valid, same length
+    if (this.cards.length !== order.length) {
+      return;
+    }
+    // Contains all elements exacly one time
+    const orderCopy = order.slice();
+    orderCopy.sort((a, b) => a - b);
+    for (let i = 0; i < orderCopy.length; i++) {
+      if (i !== orderCopy[i]) {
         return;
       }
-      const position = Math.min(this.cards.length - 1, order[i]);
-      const card = this.cards[i];
-      const card2 = this.cards[position];
-      this.cards[i] = card2;
-      this.cards[position] = card;
+    }
+    // Apply order
+    const copy = this.cards.slice();
+    for (let i = 0; i < order.length; i++) {
+      this.cards[i] = copy[order[i]];
     }
   }
 

@@ -11,7 +11,11 @@
   <ptcg-player-bar [player]="bottomPlayer" [active]="isBottomPlayerActive"></ptcg-player-bar>
 
   <ptcg-player-actions
+    [gameState]="gameState"
+    [clientId]="clientId"
     (join)="join.next()"
   ></ptcg-player-actions>
+
+  <ptcg-game-logs [gameState]="gameState"></ptcg-game-logs>
 
 </div>

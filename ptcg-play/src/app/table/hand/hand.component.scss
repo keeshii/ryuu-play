@@ -1,36 +1,39 @@
 @import '../../../theme/variables.scss';
 
-:host {
-  overflow: auto;
-}
+$ptcg-hand-padding: map-get($padding, normal);
+$ptcg-hand-height: calc(var(--card-size) * #{$card-aspect-ratio} + #{2 * $ptcg-hand-padding});
 
 .ptcg-hand {
   display: flex;
   height: $ptcg-hand-height;
-  padding: $ptcg-hand-padding 0;
+  overflow: auto;
 }
 
 .ptcg-hand-container {
+  align-items: center;
   display: flex;
   flex: 0 0 auto;
   margin: 0 auto;
 }
 
-.ptcg-hand-card {
+skyhook-sortable-list {
+  display: flex;
+}
+
+ptcg-card {
   flex: 0 0 auto;
-  width: map-get($ptcg-size, card);
+  width: var(--card-size);
 }
 
-.ptcg-hand-card:first-child {
-  padding-left: $ptcg-hand-padding;
-  width: map-get($ptcg-size, card) + $ptcg-hand-padding;
+ptcg-card:first-child {
+  margin-left: $ptcg-hand-padding;
 }
 
-.ptcg-hand-card:last-child {
-  padding-right: $ptcg-hand-padding;
-  width: map-get($ptcg-size, card) + $ptcg-hand-padding;
+ptcg-card:last-child {
+  margin-right: $ptcg-hand-padding;
 }
 
-ptcg-board-card {
-  width: map-get($ptcg-size, card);
+.ptcg-card-preview {
+  position: absolute;
+  width: var(--card-size);
 }

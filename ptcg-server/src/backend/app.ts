@@ -2,6 +2,7 @@ import * as express from 'express';
 import { json } from 'body-parser';
 
 import { Core } from '../game/core/core';
+import { BotManager } from '../game/bots/bot-manager';
 import { Storage } from '../storage';
 import { WebSocketServer } from './socket/websocket-server';
 import { config } from '../config';
@@ -11,6 +12,7 @@ import {
   ControllerClass,
   Cards,
   Decks,
+  Game,
   Login,
   Profile
 } from './controllers';
@@ -41,6 +43,7 @@ export class App {
     app.use(cors());
     define('/cards', Cards);
     define('/decks', Decks);
+    define('/game', Game);
     define('/login', Login);
     define('/profile', Profile);
 
@@ -57,6 +60,10 @@ export class App {
 
   public connectToDatabase(): Promise<void> {
     return this.storage.connect();
+  }
+
+  public configureBotManager(botManager: BotManager): void {
+    botManager.initBots(this.core);
   }
 
   public start(): void {

@@ -1,13 +1,20 @@
 require('./config');
 
 const { App } = require('./dist/backend/app');
+const { BotManager } = require('./dist/game/bots/bot-manager');
+const { DebugBot } = require('./dist/simple-bot/debug-bot');
 const { CardManager } = require('./dist/game/cards/card-manager');
-const { basicSet } = require('./dist/sets/basic-set/basic-set');
+const { setBlackAndWhite, setDiamondAndPearl, setHgss } = require('./dist/sets');
 const { config } = require('./dist/config');
 const process = require('process');
 
 const cardManager = CardManager.getInstance();
-cardManager.defineSet(basicSet);
+cardManager.defineSet(setDiamondAndPearl);
+cardManager.defineSet(setHgss);
+cardManager.defineSet(setBlackAndWhite);
+
+const botManager = BotManager.getInstance();
+botManager.registerBot(new DebugBot('computer'));
 
 const app = new App();
 
@@ -17,6 +24,7 @@ app.connectToDatabase()
     console.error(error.message);
     process.exit(1);
   })
+  .then(() => app.configureBotManager(botManager))
   .then(() => app.start())
   .then(() => {
     const address = config.backend.address;

@@ -19,3 +19,8 @@
 ptcg-deck-card.placeholder {
   opacity: $ptcg-disabled-opacity;
 }
+
+.ptcg-card-preview {
+  position: absolute;
+  width: map-get($ptcg-size, card);
+}

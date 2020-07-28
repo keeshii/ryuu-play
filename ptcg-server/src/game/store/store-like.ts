@@ -1,9 +1,17 @@
 import { Action } from "./actions/action";
+import { Effect } from "./effects/effect";
 import { Prompt } from "./prompts/prompt";
 import { State } from "./state/state";
+import { StateLogParam } from "./state/state-log";
 
 export interface StoreLike {
   dispatch(action: Action): void;
+
+  reduceEffect(state: State, effect: Effect): State;
+
+  log(state: State, message: string, params?: StateLogParam, client?: number): void;
+
+  waitPrompt(state: State, callback: () => void): State;
 
   prompt<T>(
     state: State, prompt: Prompt<T>,

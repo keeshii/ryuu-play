@@ -20,7 +20,7 @@ export class CardComponent implements OnInit {
 
   @Input() set card(value: Card) {
     this.data = value;
-    this.scanUrl = this.cardsBaseService.getScanUrl(this.data.fullName);
+    this.scanUrl = this.cardsBaseService.getScanUrl(this.data);
   }
 
   constructor(

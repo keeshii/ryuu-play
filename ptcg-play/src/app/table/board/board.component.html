@@ -1,22 +1,76 @@
-<div class="ptcg-board-container">
+<skyhook-preview [allBackends]="true">
+    <ng-template let-type let-item="item">
+        <ng-container [ngSwitch]="type">
+            <div class="ptcg-card" *ngSwitchCase="'BOARD_SLOT'">
+              <img class="ptcg-card-preview" [src]="item.scanUrl"
+                ptcgDropHighlight="outside" [ptcgDropHighlightVisible]="boardHighlight$ | async">
+            </div>
+            <div class="ptcg-card" *ngSwitchCase="'HAND_CARD'">
+              <img class="ptcg-card-preview" [src]="item.data.scanUrl"
+                ptcgDropHighlight="outside" [ptcgDropHighlightVisible]="boardHighlight$ | async">
+            </div>
+        </ng-container>
+    </ng-template>
+</skyhook-preview>
+
+<div class="ptcg-board-container" [dropTarget]="boardTarget">
 
   <div class="ptcg-board-player upside-down">
-    <ptcg-board-bench [player]="topPlayer" [clientId]="clientId"></ptcg-board-bench>
+    <!-- Top Active -->
+    <div class="ptcg-board-row ptcg-board-active">
+      <ptcg-board-card
+        [cardList]="topPlayer?.active" [owner]="topPlayer?.id === clientId"
+        (cardClick)="onCardClick($event)">
+      </ptcg-board-card>
+    </div>
 
-    <ptcg-board-active [player]="topPlayer" [clientId]="clientId"></ptcg-board-active>
+    <!-- Top Bench -->
+    <div class="ptcg-board-row ptcg-board-bench">
+      <ptcg-board-card *ngFor="let slot of topBench; index as i"
+        [cardList]="topPlayer?.bench[i]" [owner]="topPlayer?.id === clientId"
+        (cardClick)="onCardClick($event)">
+      </ptcg-board-card>
+    </div>
 
+    <!-- Top Deck -->
     <ptcg-board-deck [player]="topPlayer" [clientId]="clientId"></ptcg-board-deck>
 
+    <!-- Top Prizes -->
     <ptcg-board-prizes [player]="topPlayer" [clientId]="clientId"></ptcg-board-prizes>
   </div>
 
   <div class="ptcg-board-player">
-    <ptcg-board-bench [player]="bottomPlayer" [clientId]="clientId"></ptcg-board-bench>
 
-    <ptcg-board-active [player]="bottomPlayer" [clientId]="clientId"></ptcg-board-active>
+    <!-- Bottom Active -->
+    <div class="ptcg-board-row ptcg-board-active">
+      <div class="ptcg-board-drop-target"
+        [dropTarget]="bottomActiveTarget"
+        ptcgDropHighlight="outside" [ptcgDropHighlightVisible]="bottomActiveHighlight$ | async">
+        <ptcg-board-card
+          [dragSource]="bottomActive.source" [noHTML5Preview]="true"
+          [cardList]="bottomPlayer?.active" [owner]="bottomPlayer?.id === clientId"
+          (cardClick)="onActiveClick($event)">
+        </ptcg-board-card>
+      </div>
+    </div>
 
+    <!-- Bottom Bench -->
+    <div class="ptcg-board-row ptcg-board-bench">
+      <div class="ptcg-board-drop-target" *ngFor="let slot of bottomBench"
+        [dropTarget]="bottomBenchTarget[slot.index]"
+        ptcgDropHighlight="outside" [ptcgDropHighlightVisible]="bottomBenchHighlight$[slot.index] | async">
+        <ptcg-board-card
+          [dragSource]="slot.source" [noHTML5Preview]="true"
+          [cardList]="bottomPlayer?.bench[slot.index]" [owner]="bottomPlayer?.id === clientId"
+          (cardClick)="onBenchClick($event, slot.index)">
+        </ptcg-board-card>
+      </div>
+    </div>
+
+    <!-- Deck -->
     <ptcg-board-deck [player]="bottomPlayer" [clientId]="clientId"></ptcg-board-deck>
 
+    <!-- Prizes -->
     <ptcg-board-prizes [player]="bottomPlayer" [clientId]="clientId"></ptcg-board-prizes>
   </div>
 

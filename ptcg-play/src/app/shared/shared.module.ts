@@ -11,7 +11,7 @@ import { AppRoutingModule } from '../app-routing.module';
 import { BadgeComponent } from './badge/badge.component';
 import { CardsModule } from './cards/cards.module';
 import { ContentComponent } from './content/content.component';
-import { EnergyComponent } from './energy/energy.component';
+import { EnergyComponent } from './cards/energy/energy.component';
 import { InfoComponent } from './info/info.component';
 import { SearchBoxComponent } from './search-box/search-box.component';
 import { SessionService } from './session/session.service';
@@ -35,7 +35,6 @@ import { ValidationModule } from './validation/validation.module';
   declarations: [
     BadgeComponent,
     ContentComponent,
-    EnergyComponent,
     InfoComponent,
     SearchBoxComponent,
     SidebarComponent,

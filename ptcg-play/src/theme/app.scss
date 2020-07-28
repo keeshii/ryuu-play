@@ -18,6 +18,13 @@ $ptcg-warn:    mat-palette($mat-deep-orange);
 // Create the theme object (a Sass map containing all of the palettes).
 $ptcg-theme: mat-dark-theme($ptcg-primary, $ptcg-accent, $ptcg-warn);
 
+$ptcg-colors: (
+  ability: #e3350d,
+  poke-body: #4dad5b
+);
+
+$ptcg-theme: map-merge($ptcg-theme, (ptcg: $ptcg-colors));
+
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
@@ -28,6 +35,8 @@ $ptcg-theme: mat-dark-theme($ptcg-primary, $ptcg-accent, $ptcg-warn);
 
 
 // Create a config with the default typography levels.
-$config: mat-typography-config();
+$config: mat-typography-config(
+  $body-2:        mat-typography-level(14px, 24px, 700)
+);
 
 @include ptcg-typography($config);

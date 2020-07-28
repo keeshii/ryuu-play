@@ -1,0 +1,36 @@
+<div class="ptcg-game-logs-header">
+  <h4 class="ptcg-game-logs-header-text">Messages</h4>
+  <span class="ptcg-u-spacer"></span>
+  <mat-icon (click)="clearLogs()"
+    matTooltip="Clear logs"
+    matTooltipShowDelay="1000">
+    delete_outline
+  </mat-icon>
+</div>
+
+<div class="ptcg-game-logs-content">
+  <ul>
+    <li *ngFor="let log of logs">
+      <span [class]="log.className">{{log.name}}</span>
+      {{log.message}}
+    </li>
+  </ul>
+</div>
+
+<div class="ptcg-game-logs-footer">
+  <form class="game-logs-form" autocomplete="off">
+    <mat-form-field floatLabel="never" appearance="legacy">
+      <input
+        #searchInput="matInput"
+        name="message"
+        [(ngModel)]="message"
+        type="text" matInput placeholder="Enter message">
+      <button mat-button matSuffix mat-icon-button
+        matTooltip="Send message"
+        matTooltipShowDelay="1000"
+        (click)="sendMessage()">
+        <mat-icon>play_arrow</mat-icon>
+      </button>
+    </mat-form-field>
+  </form>
+</div>

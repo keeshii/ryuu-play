@@ -6,6 +6,7 @@ import { MainService } from '../api/services/main.service';
 import { SessionService } from '../shared/session/session.service';
 import { SocketService } from '../api/socket.service';
 import { takeUntilDestroyed } from '../shared/operators/take-until-destroyed';
+import { CardsBaseService } from '../shared/cards/cards-base.service';
 
 @Component({
   selector: 'ptcg-games',

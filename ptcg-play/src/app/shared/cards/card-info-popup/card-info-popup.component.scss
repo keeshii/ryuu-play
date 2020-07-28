@@ -1,0 +1,95 @@
+@import '../../../../theme/variables.scss';
+
+$window-min-size: 650px;
+
+.ptcg-card-info-layout {
+  display: flex;
+}
+
+.ptcg-card-info-image {
+  flex: 1 1 33%;
+  min-width: map-get($ptcg-size, card);
+  padding-right: map-get($padding, normal);
+}
+
+.ptcg-card-info-text {
+  flex: 1 1 67%;
+}
+
+.title {
+  align-items: baseline;
+  border-top-left-radius: map-get($padding, small);
+  border-top-right-radius: map-get($padding, small);
+  display: flex;
+  padding: map-get($padding, small);
+}
+
+.subtitle {
+  display: flex;
+  align-items: center;
+  padding: map-get($padding, small);
+}
+
+.subtitle-hp {
+  margin: 0 map-get($padding, small) / 2;
+}
+
+.subtitle-hp-value {
+  line-height: map-get($ptcg-size, energy-size);
+}
+
+.subtitle-hp-unit {
+  margin-right: map-get($padding, small) / 2;
+}
+
+.attack, .power {
+  margin: map-get($padding, small) 0;
+  padding: map-get($padding, small);
+}
+
+.attack-cost {
+  display: flex;
+}
+
+.attack-name {
+  padding: 0 map-get($padding, small);
+}
+
+.attack-header {
+  align-items: center;
+  display: flex;
+}
+
+.attack-header + .card-text {
+  padding-top: map-get($padding, small);
+}
+
+.stats {
+  border-radius: map-get($padding, small);
+  display: flex;
+  padding: map-get($padding, small);
+}
+
+.stats-item {
+  flex: 1 1 auto;
+  text-align: center;
+}
+
+.stats-item-header {
+  padding-bottom: map-get($padding, small) / 2;
+}
+
+.stats-item-value {
+  align-items: flex-end;
+  display: flex;
+  justify-content: center;
+}
+
+.stats-item-value-type {
+  display: flex;
+  flex-direction: row;
+}
+
+ptcg-energy {
+  display: flex;
+}

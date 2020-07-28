@@ -8,5 +8,7 @@ export abstract class EnergyCard extends Card {
   
   public energyType: EnergyType = EnergyType.BASIC;
 
-  public provides: CardType = CardType.NONE;
+  public provides: CardType[] = [];
+
+  public text: string = '';
 }

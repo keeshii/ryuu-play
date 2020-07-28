@@ -1,0 +1,16 @@
+<h2 class="mat-dialog-title">Show cards</h2>
+
+<mat-dialog-content>
+  <p>{{ prompt.message }}</p>
+
+  <ptcg-cards-container [keepInitialSize]="true">
+    <ptcg-card *ngFor="let card of prompt.cards" [card]="card">
+    </ptcg-card>
+  </ptcg-cards-container>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button color="primary" (click)="confirm()">
+    OK
+  </button>
+</mat-dialog-actions>

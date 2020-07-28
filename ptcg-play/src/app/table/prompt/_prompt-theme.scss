@@ -19,10 +19,9 @@
     }
   }
 
-  ptcg-cards-container {
-    .ptcg-cards-container {
-      background-color: $ptcg-cards-container-background;
-    }
+  ptcg-cards-container .ptcg-cards-container,
+  ptcg-choose-pokemons-pane .ptcg-choose-pokemons-pane {
+    background-color: $ptcg-cards-container-background;
   }
 
 }

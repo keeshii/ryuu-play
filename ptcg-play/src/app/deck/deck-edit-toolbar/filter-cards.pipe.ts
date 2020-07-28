@@ -44,7 +44,10 @@ export class FilterCardsPipe implements PipeTransform {
       return (card as PokemonCard).cardType;
     }
     if (card.superType === SuperType.ENERGY) {
-      return (card as EnergyCard).provides;
+      const energyCard = card as EnergyCard;
+      if (energyCard.provides.length > 0) {
+        return energyCard.provides[0];
+      }
     }
     return CardType.NONE;
   }

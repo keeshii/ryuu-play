@@ -1,5 +1,7 @@
 import * as io from 'socket.io';
-import { AddPlayerAction, Action, Prompt, PassTurnAction, ChooseCardsPromptType, CardList } from '../../game';
+import { AddPlayerAction, AppendLogAction, Action, PassTurnAction,
+  ReorderHandAction, ReorderBenchAction, PlayCardAction, CardTarget,
+  RetreatAction, AttackAction, UseAbilityAction } from '../../game';
 import { Client } from '../../game/core/client';
 import { Errors } from '../common/errors';
 import { Game } from '../../game/core/game';
@@ -26,6 +28,7 @@ export class SocketClient extends Client {
   public core: Core;
   private listeners: Listener<any, any>[] = [];
   private gameInfoCache: {[id: number]: GameInfo} = {};
+  private lastLogIdCache: {[id: number]: number} = {};
 
   constructor(user: User, core: Core, io: io.Server, socket: io.Socket) {
     super(user);
@@ -41,9 +44,16 @@ export class SocketClient extends Client {
     this.addListener('game:join', this.joinGame.bind(this));
     this.addListener('game:leave', this.leaveGame.bind(this));
     this.addListener('game:getStatus', this.getGameStatus.bind(this));
+    this.addListener('game:action:ability', this.ability.bind(this));
+    this.addListener('game:action:attack', this.attack.bind(this));
     this.addListener('game:action:play', this.playGame.bind(this));
+    this.addListener('game:action:playCard', this.playCard.bind(this));
     this.addListener('game:action:resolvePrompt', this.resolvePrompt.bind(this));
+    this.addListener('game:action:retreat', this.retreat.bind(this));
+    this.addListener('game:action:reorderBench', this.reorderBench.bind(this));
+    this.addListener('game:action:reorderHand', this.reorderHand.bind(this));
     this.addListener('game:action:passTurn', this.passTurn.bind(this));
+    this.addListener('game:action:appendLog', this.appendLog.bind(this));
   }
 
   public onConnect(client: Client): void {
@@ -55,12 +65,14 @@ export class SocketClient extends Client {
   }
 
   public onGameAdd(game: Game): void {
+    this.lastLogIdCache[game.id] = 0;
     this.gameInfoCache[game.id] = this.buildGameInfo(game);
     this.socket.emit('core:createGame', this.gameInfoCache[game.id]);
   }
 
   public onGameDelete(game: Game): void {
     delete this.gameInfoCache[game.id];
+    delete this.lastLogIdCache[game.id];
     this.socket.emit('core:deleteGame', game.id);
   }
 
@@ -72,8 +84,17 @@ export class SocketClient extends Client {
     }
 
     if (this.games.indexOf(game) !== -1) {
+      state = this.filterState(game.id, state);
       this.socket.emit(`game[${game.id}]:stateChange`, state);
     }
+  }
+
+  public onGameJoin(game: Game, client: Client): void {
+    this.socket.emit(`game[${game.id}]:join`, this.buildUserInfo(client));
+  }
+
+  public onGameLeave(game: Game, client: Client): void {
+    this.socket.emit(`game[${game.id}]:leave`, this.buildUserInfo(client));
   }
 
   public attachListeners(): void {
@@ -90,6 +111,20 @@ export class SocketClient extends Client {
         }
       });
     }
+  }
+
+  /**
+   * Clear sensitive data, resolved prompts and old logs.
+   */
+  private filterState(gameId: number, state: State): State {
+    state = { ...state };
+    const lastLogId = this.lastLogIdCache[gameId];
+    state.prompts = state.prompts.filter(prompt => prompt.result === undefined);
+    state.logs = state.logs.filter(log => log.id > lastLogId);
+    if (state.logs.length > 0) {
+      this.lastLogIdCache[gameId] = state.logs[state.logs.length - 1].id;
+    }
+    return state;
   }
 
   private addListener<T, R>(message: string, handler: Handler<T, R>) {
@@ -154,6 +189,7 @@ export class SocketClient extends Client {
       response('error', Errors.GAME_INVALID_ID);
       return;
     }
+    this.lastLogIdCache[game.id] = 0;
     this.core.joinGame(this, game);
     response('ok', this.buildGameState(game));
   }
@@ -164,6 +200,7 @@ export class SocketClient extends Client {
       response('error', Errors.GAME_INVALID_ID);
       return;
     }
+    delete this.lastLogIdCache[game.id];
     this.core.leaveGame(this, game);
     response('ok');
   }
@@ -191,8 +228,23 @@ export class SocketClient extends Client {
     response('ok');
   }
 
+  private ability(params: {gameId: number, ability: string, target: CardTarget}, response: Response<void>) {
+    const action = new UseAbilityAction(this.id, params.ability, params.target);
+    this.dispatch(params.gameId, action, response);
+  }
+
+  private attack(params: {gameId: number, attack: string}, response: Response<void>) {
+    const action = new AttackAction(this.id, params.attack);
+    this.dispatch(params.gameId, action, response);
+  }
+
   private playGame(params: {gameId: number, deck: string[]}, response: Response<void>) {
     const action = new AddPlayerAction(this.id, this.user.name, params.deck);
+    this.dispatch(params.gameId, action, response);
+  }
+
+  private playCard(params: {gameId: number, handIndex: number, target: CardTarget}, response: Response<void>) {
+    const action = new PlayCardAction(this.id, params.handIndex, params.target);
     this.dispatch(params.gameId, action, response);
   }
 
@@ -208,19 +260,43 @@ export class SocketClient extends Client {
       return;
     }
 
-    // If 'Choose card prompt', we have to decode indexes to card instances
-    if (prompt.type === ChooseCardsPromptType) {
-      const cards: CardList = (prompt as any).cards;
-      const result: number[] = params.result;
-      params.result = result.map(index => cards.cards[index]);
+    try {
+      params.result = prompt.decode(params.result, game.state);
+      if (prompt.validate(params.result, game.state) === false) {
+        response('error', Errors.PROMPT_INVALID_RESULT);
+        return;
+      }
+    } catch (error) {
+      response('error', error);
+      return;
     }
 
     const action = new ResolvePromptAction(params.id, params.result);
     this.dispatch(params.gameId, action, response);
   }
 
-  private passTurn(params: {gameId: number, prompt: Prompt<any>}, response: Response<void>) {
+  private reorderBench(params: {gameId: number, from: number, to: number}, response: Response<void>) {
+    const action = new ReorderBenchAction(this.id, params.from, params.to);
+    this.dispatch(params.gameId, action, response);
+  }
+
+  private reorderHand(params: {gameId: number, order: number[]}, response: Response<void>) {
+    const action = new ReorderHandAction(this.id, params.order);
+    this.dispatch(params.gameId, action, response);
+  }
+
+  private retreat(params: {gameId: number, to: number}, response: Response<void>) {
+    const action = new RetreatAction(this.id, params.to);
+    this.dispatch(params.gameId, action, response);
+  }
+
+  private passTurn(params: {gameId: number}, response: Response<void>) {
     const action = new PassTurnAction(this.id);
+    this.dispatch(params.gameId, action, response);
+  }
+
+  private appendLog(params: {gameId: number, message: string}, response: Response<void>) {
+    const action = new AppendLogAction(this.id, params.message);
     this.dispatch(params.gameId, action, response);
   }
 

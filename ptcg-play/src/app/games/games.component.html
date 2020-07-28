@@ -21,7 +21,7 @@
   <ptcg-content>
     <p>Status: <span>{{isConnected ? 'connected' : 'disconnected' }}</span></p>
 
-    <table mat-table [dataSource]="games$ | async" class="mat-elevation-z8">
+    <table mat-table [dataSource]="games$ | async" class="mat-elevation-z2">
       <!-- Game ID Column -->
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef>No.</th>

@@ -12,8 +12,9 @@ import { State, GamePhase } from "../state/state";
 import { GameError, GameMessage } from "../../game-error";
 import { StoreLike } from "../store-like";
 import { SuperType, Stage } from "../card/card-types";
-import { nextTurn } from "./player-turn-reducer";
-import {PokemonCardList} from "../state/pokemon-card-list";
+import { initNextTurn } from "../effect-reducers/game-phase-effect";
+import { PokemonCardList } from "../state/pokemon-card-list";
+import {WhoBeginsEffect} from "../effects/game-phase-effects";
 
 
 function putStartingPokemonsAndPrizes(player: Player, cards: Card[]): void {
@@ -60,6 +61,7 @@ function* setupGame(next: Function, store: StoreLike, state: State): IterableIte
     }
 
     if (playerHasBasic && !opponentHasBasic) {
+      store.log(state, `${opponent.name} has no basic Pokemon on the hand.`);
       yield store.prompt(state, [
         new ConfirmPrompt(player.id, GameMessage.SETUP_OPPONENT_NO_BASIC),
         new AlertPrompt(opponent.id, GameMessage.SETUP_PLAYER_NO_BASIC)
@@ -72,12 +74,13 @@ function* setupGame(next: Function, store: StoreLike, state: State): IterableIte
     }
 
     if (!playerHasBasic && opponentHasBasic) {
+      store.log(state, `${player.name} has no basic Pokemon on the hand.`);
       yield store.prompt(state, [
         new ConfirmPrompt(opponent.id, GameMessage.SETUP_OPPONENT_NO_BASIC),
         new AlertPrompt(player.id, GameMessage.SETUP_PLAYER_NO_BASIC)
       ], results => {
         if (results[0]) {
-          opponent.deck.moveTo(player.hand, 1);
+          opponent.deck.moveTo(opponent.hand, 1);
         }
         next();
       });
@@ -95,12 +98,20 @@ function* setupGame(next: Function, store: StoreLike, state: State): IterableIte
     next();
   });
 
-  yield store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.SETUP_WHO_BEGINS_FLIP), whoBegins => {
-    state.activePlayer = whoBegins ? 0 : 1;
-    next();
-  });
+  const whoBeginsEffect = new WhoBeginsEffect();
+  store.reduceEffect(state, whoBeginsEffect);
 
-  return nextTurn(store, state);
+  if (whoBeginsEffect.player) {
+    state.activePlayer = state.players.indexOf(whoBeginsEffect.player);
+  } else {
+    const coinFlipPrompt = new CoinFlipPrompt(player.id, GameMessage.SETUP_WHO_BEGINS_FLIP);
+    yield store.prompt(state, coinFlipPrompt, whoBegins => {
+      state.activePlayer = whoBegins ? 0 : 1;
+      next();
+    });
+  }
+
+  return initNextTurn(store, state);
 }
 
 
@@ -139,6 +150,7 @@ export function setupPhaseReducer(store: StoreLike, state: State, action: Action
       }
 
       player.active.isPublic = true;
+      player.discard.isPublic = true;
 
       state.players.push(player);
 

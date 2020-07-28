@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
+import { Card } from 'ptcg-server';
 import { take } from 'rxjs/operators';
 
+import { CardInfoPopupData, CardInfoPopupComponent, CardInfoPopupResponse } from './card-info-popup/card-info-popup.component';
 import { CardsService } from '../../api/services/cards.service';
-import { Card } from 'ptcg-server';
+import { MatDialog } from '@angular/material';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -15,7 +17,8 @@ export class CardsBaseService {
   private names: string[] = [];
 
   constructor(
-    private cardsService: CardsService
+    private cardsService: CardsService,
+    private dialog: MatDialog
   ) { }
 
   public loadCards() {
@@ -36,12 +39,26 @@ export class CardsBaseService {
     return this.names;
   }
 
-  public getScanUrl(name: string): string {
-    return environment.apiUrl + this.scansUrl.replace('{name}', name);
+  public getScanUrl(card: Card): string {
+    return environment.apiUrl + this.scansUrl
+      .replace('{set}', card.set)
+      .replace('{name}', card.fullName);
   }
 
   public getCardByName(cardName: string): Card | undefined {
     return this.cards.find(c => c.fullName === cardName);
+  }
+
+  public showCardInfo(card: Card, options: CardInfoPopupData = {}): Promise<CardInfoPopupResponse> {
+
+    const dialog = this.dialog.open(CardInfoPopupComponent, {
+      maxWidth: '100%',
+      width: '650px',
+      data: {...options, card }
+    });
+
+    return dialog.afterClosed().toPromise()
+      .catch(() => undefined);
   }
 
 }

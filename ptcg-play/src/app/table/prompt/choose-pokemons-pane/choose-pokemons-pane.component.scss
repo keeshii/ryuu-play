@@ -1,0 +1,36 @@
+@import '../../../../theme/variables.scss';
+
+$ptcg-selection-container-padding: map-get($padding, small);
+$ptcg-selection-container-border-radius: map-get($padding, small);
+
+:host {
+  display: block;
+
+  &:not(:last-child) {
+    margin-bottom: map-get($padding, normal);
+  }
+}
+
+ptcg-board-card {
+  margin: 0 map-get($padding, small);
+  width: map-get($ptcg-size, card);
+}
+
+.ptcg-choose-pokemons-pane {
+  border-radius: $ptcg-selection-container-border-radius;
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  overflow: hidden;
+  padding: $ptcg-selection-container-padding;
+}
+
+.ptcg-pokemon-row {
+  display: flex;
+  justify-content: center;
+  margin: map-get($padding, normal) 0;
+
+  &.upside-down {
+    transform: rotate(180deg);
+  }
+}

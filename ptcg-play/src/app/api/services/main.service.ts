@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { GameInfo, CoreInfo, UserInfo, GameState } from 'ptcg-server';
 import { Observable } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 
 import { GameService } from './game.service';
-import { SessionService } from 'src/app/shared/session/session.service';
+import { SessionService } from '../../shared/session/session.service';
 import { SocketService } from '../socket.service';
-import { finalize } from 'rxjs/operators';
 
 @Injectable()
 export class MainService {
@@ -48,12 +48,17 @@ export class MainService {
   }
 
   private onCreateGame(game: GameInfo): void {
+    const index = this.sessionService.session.games.findIndex(g => g.gameId === game.gameId);
+    if (index !== -1) {
+      return;
+    }
     const games = [...this.sessionService.session.games, game];
     this.sessionService.set({ games });
   }
 
   private onDeleteGame(gameId: number): void {
     const games = this.sessionService.session.games.filter(g => g.gameId !== gameId);
+    this.gameService.removeGameState(gameId);
     this.sessionService.set({ games });
   }
 
@@ -68,7 +73,7 @@ export class MainService {
     this.socketService.emit('core:createGame')
       .pipe(finalize(() => { this.loading = false; }))
       .subscribe((gameState: GameState) => {
-        this.gameService.appendGameSate(gameState);
+        this.gameService.appendGameState(gameState);
       }, () => {});
   }
 

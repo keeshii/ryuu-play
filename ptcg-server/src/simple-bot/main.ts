@@ -7,11 +7,15 @@ import { State } from '../game/store/state/state';
 
 export class SimpleBot extends BotClient {
 
-  private gameHandlers: SimpleGameHandler[] = [];
+  protected gameHandlers: SimpleGameHandler[] = [];
 
   public onConnect(client: Client): void { }
 
   public onDisconnect(client: Client): void { }
+
+  public onGameJoin(game: Game, client: Client): void { }
+
+  public onGameLeave(game: Game, client: Client): void { }
 
   public onGameAdd(game: Game): void { }
 
@@ -40,13 +44,13 @@ export class SimpleBot extends BotClient {
     this.addGameHandler(game);
   }
 
-  private addGameHandler(game: Game): SimpleGameHandler {
+  protected addGameHandler(game: Game): SimpleGameHandler {
     const gameHandler = new SimpleGameHandler(this, game);
     this.gameHandlers.push(gameHandler);
     return gameHandler;
   }
 
-  private deleteGameHandler(gameHandler: SimpleGameHandler): void {
+  protected deleteGameHandler(gameHandler: SimpleGameHandler): void {
     const index = this.gameHandlers.indexOf(gameHandler);
     if (index !== -1) {
       this.gameHandlers.splice(index, 1);

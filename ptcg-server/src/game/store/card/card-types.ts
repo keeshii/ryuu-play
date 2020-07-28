@@ -1,4 +1,12 @@
 
+export enum CardTag {
+  POKEMON_SP = 'SP',
+  POKEMON_EX = 'EX',
+  POKEMON_GX = 'GX',
+  POKEMON_LV_X = 'LV_X',
+  ACE_SPEC = 'ACE_SPEC'
+}
+
 export enum SuperType {
   NONE,
   POKEMON,
@@ -15,7 +23,7 @@ export enum TrainerType {
   ITEM,
   SUPPORTER,
   STADIUM,
-  TM,
+  TOOL,
 }
 
 export enum PokemonType {
@@ -32,6 +40,7 @@ export enum Stage {
 }
 
 export enum CardType {
+  ANY,
   NONE,
   COLORLESS,
   GRASS,

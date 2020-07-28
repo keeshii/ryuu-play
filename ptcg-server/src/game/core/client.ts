@@ -23,7 +23,11 @@ export abstract class Client {
   public abstract onGameAdd(game: Game): void;
 
   public abstract onGameDelete(game: Game): void;
-  
+
+  public abstract onGameJoin(game: Game, client: Client): void;
+
+  public abstract onGameLeave(game: Game, client: Client): void;
+
   public abstract onStateChange(game: Game, state: State): void;
 
 }

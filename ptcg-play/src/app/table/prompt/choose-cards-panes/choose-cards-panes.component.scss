@@ -1,0 +1,16 @@
+@import '../../../../theme/variables.scss';
+
+ptcg-card {
+  margin: map-get($padding, small);
+  width: map-get($ptcg-size, card);
+
+  &.unavailable {
+    opacity: $ptcg-disabled-opacity;
+  }
+}
+
+skyhook-sortable-list {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+}

@@ -1,0 +1,18 @@
+<h2 class="mat-dialog-title">Order cards</h2>
+
+<mat-dialog-content>
+  <p>{{ message }}</p>
+
+  <ptcg-choose-cards-panes
+    [singlePaneMode]="true"
+    [cards]="cards.cards"
+    (change)="onChange($event)">
+  </ptcg-choose-cards-panes>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button *ngIf="allowedCancel" (click)="cancel()">Cancel</button>
+  <button mat-raised-button [disabled]="isInvalid" color="primary" (click)="confirm()">
+    OK
+  </button>
+</mat-dialog-actions>

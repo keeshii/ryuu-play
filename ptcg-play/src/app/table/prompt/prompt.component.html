@@ -2,7 +2,10 @@
     <ng-template let-type let-item="item">
         <ng-container [ngSwitch]="type">
             <div class="ptcg-card" *ngSwitchCase="'PROMPT_CARD'">
-              <img class="ptcg-card-preview" [src]="item.data.scanUrl">
+              <ptcg-card class="ptcg-card-preview"
+                [class.cardback]="item.data.isSecret"
+                [card]="item.data.card">
+              </ptcg-card>
             </div>
         </ng-container>
     </ng-template>
@@ -20,7 +23,16 @@
       <div [ngSwitch]="prompt.type" *ngIf="prompt">
         <ptcg-prompt-confirm *ngSwitchCase="'Confirm'" [gameState]="gameState" [prompt]="prompt"></ptcg-prompt-confirm>
         <ptcg-prompt-alert *ngSwitchCase="'Alert'" [gameState]="gameState" [prompt]="prompt"></ptcg-prompt-alert>
+        <ptcg-prompt-attach-energy *ngSwitchCase="'Attach energy'" [gameState]="gameState" [prompt]="prompt"></ptcg-prompt-attach-energy>
         <ptcg-prompt-choose-cards *ngSwitchCase="'Choose cards'" [gameState]="gameState" [prompt]="prompt"></ptcg-prompt-choose-cards>
+        <ptcg-prompt-choose-energy *ngSwitchCase="'Choose energy'" [gameState]="gameState" [prompt]="prompt"></ptcg-prompt-choose-energy>
+        <ptcg-prompt-choose-prize *ngSwitchCase="'Choose prize'" [gameState]="gameState" [prompt]="prompt"></ptcg-prompt-choose-prize>
+        <ptcg-prompt-choose-pokemon *ngSwitchCase="'Choose pokemon'" [gameState]="gameState" [prompt]="prompt"></ptcg-prompt-choose-pokemon>
+        <ptcg-prompt-game-over *ngSwitchCase="'Game over'" [gameState]="gameState" [prompt]="prompt"></ptcg-prompt-game-over>
+        <ptcg-prompt-move-energy *ngSwitchCase="'Move energy'" [gameState]="gameState" [prompt]="prompt"></ptcg-prompt-move-energy>
+        <ptcg-prompt-order-cards *ngSwitchCase="'Order cards'" [gameState]="gameState" [prompt]="prompt"></ptcg-prompt-order-cards>
+        <ptcg-prompt-show-cards *ngSwitchCase="'Show cards'" [gameState]="gameState" [prompt]="prompt"></ptcg-prompt-show-cards>
+        <ptcg-prompt-select *ngSwitchCase="'Select'" [gameState]="gameState" [prompt]="prompt"></ptcg-prompt-select>
         <div *ngSwitchDefault>
           Unknown prompt type: '{{prompt?.type}}'.
         </div>

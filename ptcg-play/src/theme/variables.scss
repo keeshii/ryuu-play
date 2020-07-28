@@ -3,7 +3,8 @@ $ptcg-size: (
   sidebar: 200px,
   card: 100px,
   avatar: 50px,
-  board-card: 50px
+  board-card: 50px,
+  energy-size: 25px
 );
 
 $padding: (
@@ -20,9 +21,6 @@ $mat-toolbar-height-mobile: 56px !default;
 
 $ptcg-bench-slots: 8;
 $ptcg-disabled-opacity: .5;
-
-$ptcg-hand-padding: map-get($padding, normal);
-$ptcg-hand-height: ceil(map-get($ptcg-size, card) * $card-aspect-ratio + 2 * $ptcg-hand-padding);
 
 $ptcg-sidebar-tiny-padding: map-get($padding, small) / 2;
 $ptcg-board-tiny-padding: map-get($padding, small) / 4;

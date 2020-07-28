@@ -5,12 +5,15 @@
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
   $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
 
   $table-border: solid 1px mat-color($foreground, divider);
   $active-player-background-color: mat-color($background, focused-button);
   $hand-background-color: mat-color($background, app-bar);
   $avatar-background-color: mat-color($background, app-bar);
   $table-sidebar-header-background-color: mat-color($background, background);
+  $table-sidebar-logs-background-color: mat-color($background, focused-button);
 
   ptcg-hand {
     background-color: $hand-background-color;
@@ -43,6 +46,29 @@
     }
   }
 
+  ptcg-game-logs {
+    .ptcg-system {
+      color: mat-color($accent);
+    }
+    .ptcg-player1 {
+      color: mat-color($primary);
+    }
+    .ptcg-player2 {
+      color: mat-color($warn);
+    }
+    .ptcg-spectator {
+      color: mat-color($foreground, hint-text);
+    }
+    .ptcg-game-logs-header {
+      background-color: $table-sidebar-header-background-color;
+    }
+    .ptcg-game-logs-content {
+      background-color: $table-sidebar-logs-background-color;
+    }
+    .ptcg-game-logs-content li {
+      border-bottom: $table-border;
+    }
+  }
 }
 
 @mixin ptcg-table-typography($config) {
@@ -56,6 +82,15 @@
   ptcg-board-card-list {
     .ptcg-card-damage {
       @include mat-typography-level-to-styles($config, headline);
+    }
+  }
+
+  ptcg-game-logs {
+    .ptcg-game-logs-header mat-icon {
+      font-size: mat-font-size($config, input);
+    }
+    .ptcg-game-logs-content {
+      @include mat-typography-level-to-styles($config, caption);
     }
   }
 }

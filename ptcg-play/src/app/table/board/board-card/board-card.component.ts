@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { PokemonCardList, Card, CardList, SuperType, SpecialCondition } from 'ptcg-server';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { PokemonCardList, Card, CardList, SuperType, SpecialCondition, PokemonCard } from 'ptcg-server';
 
 const MAX_ENERGY_CARDS = 4;
 
@@ -11,6 +11,7 @@ const MAX_ENERGY_CARDS = 4;
 export class BoardCardComponent implements OnInit {
 
   @Input() showCardCount = false;
+  @Output() cardClick = new EventEmitter<Card>();
 
   @Input() set cardList(value: CardList | PokemonCardList) {
     this.mainCard = undefined;
@@ -34,8 +35,8 @@ export class BoardCardComponent implements OnInit {
     this.isFaceDown = value.isSecret || (!value.isPublic && !this.isOwner);
 
     // Pokemon slot, init energies, tool, special conditions, etc.
-    if (value instanceof PokemonCardList) {
-      this.initPokemonCardList(value);
+    if (this.isPokemonCardList(value)) {
+      this.initPokemonCardList(value as PokemonCardList);
       return;
     }
 
@@ -78,9 +79,19 @@ export class BoardCardComponent implements OnInit {
 
   constructor() { }
 
+  private isPokemonCardList(cardList: CardList) {
+    return (cardList as PokemonCardList).specialConditions !== undefined;
+  }
+
   private initPokemonCardList(cardList: PokemonCardList) {
     this.damage = cardList.damage;
     this.specialConditions = cardList.specialConditions;
+    this.trainerCard = undefined;
+
+    if (cardList.tool !== undefined) {
+      this.trainerCard = cardList.cards
+        .find(c => c.fullName === cardList.tool.fullName);
+    }
 
     for (const card of cardList.cards) {
       switch (card.superType) {
@@ -91,16 +102,23 @@ export class BoardCardComponent implements OnInit {
           this.moreEnergies++;
         }
         break;
-      case SuperType.TRAINER:
-        this.trainerCard = card;
-        break;
       case SuperType.POKEMON:
-        this.mainCard = card;
+        const pokemonCard = card as PokemonCard;
+        const mainCard = this.mainCard as PokemonCard;
+        if (pokemonCard !== this.trainerCard) {
+          if (!mainCard || mainCard.stage < pokemonCard.stage) {
+            this.mainCard = pokemonCard;
+          }
+        }
         break;
       }
     }
   }
 
   ngOnInit() { }
+
+  public onCardClick(card: Card) {
+    this.cardClick.next(card);
+  }
 
 }

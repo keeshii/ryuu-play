@@ -1,12 +1,12 @@
 import {CardType} from "./card-types";
 
 export interface Weakness {
-  types: CardType[];
+  type: CardType;
   value?: number; // when undefined, then it's x2
 }
 
 export interface Resistance {
-  types: CardType[];
+  type: CardType;
   value: number;
 }
 
@@ -14,6 +14,7 @@ export interface Attack {
   cost: CardType[];
   damage: number;
   name: string;
+  text: string;
 }
 
 export enum PowerType {
@@ -23,6 +24,7 @@ export enum PowerType {
 }
 
 export interface Power {
-  name: string,
-  powerType: PowerType
+  name: string;
+  powerType: PowerType;
+  text: string;
 }

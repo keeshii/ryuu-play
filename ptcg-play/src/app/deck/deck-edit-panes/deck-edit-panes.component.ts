@@ -1,8 +1,7 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, NgZone } from '@angular/core';
-import { SkyhookDndService, DropTarget, DropTargetMonitor } from '@angular-skyhook/core';
+import { SkyhookDndService, DropTarget } from '@angular-skyhook/core';
 import { DraggedItem, SortableSpec } from '@angular-skyhook/sortable';
 import { Observable } from 'rxjs';
-import { SuperType, EnergyCard, EnergyType, Card } from 'ptcg-server';
 import { map } from 'rxjs/operators';
 
 import { AlertService } from '../../shared/alert/alert.service';
@@ -85,7 +84,7 @@ export class DeckEditPanesComponent implements OnInit, OnDestroy {
         card,
         pane: DeckEditPane.LIBRARY,
         count: 1,
-        scanUrl: this.cardsBaseService.getScanUrl(card.fullName),
+        scanUrl: this.cardsBaseService.getScanUrl(card),
         spec
       };
       return item;
@@ -217,6 +216,10 @@ export class DeckEditPanesComponent implements OnInit, OnDestroy {
 
     this.tempList = this.list = list;
     this.deckItemsChange.next(list);
+  }
+
+  public showCardInfo(item: LibraryItem) {
+    this.cardsBaseService.showCardInfo(item.card);
   }
 
   ngOnInit() {

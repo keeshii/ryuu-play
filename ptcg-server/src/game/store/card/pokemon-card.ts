@@ -19,9 +19,9 @@ export abstract class PokemonCard extends Card {
 
   public hp: number = 0;
 
-  public weakness: Weakness = { types: [] };
+  public weakness: Weakness[] = [];
   
-  public resistance: Resistance = { types: [], value: 0 };
+  public resistance: Resistance[] = [];
 
   public powers: Power[] = [];
 

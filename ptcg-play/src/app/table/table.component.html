@@ -3,6 +3,7 @@
   <!-- Table sidebar -->
   <ptcg-sidebar>
     <ptcg-table-sidebar
+      [clientId]="clientId"
       [gameState]="gameState"
       [topPlayer]="topPlayer"
       [bottomPlayer]="bottomPlayer"
@@ -21,6 +22,7 @@
   <!-- Player's hand -->
   <ptcg-hand
     [clientId]="clientId"
+    [gameState]="gameState"
     [player]="bottomPlayer"
   ></ptcg-hand>
 

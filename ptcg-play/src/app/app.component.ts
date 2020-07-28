@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, HostListener, HostBinding, ElementRef } from '@angular/core';
 import { GameState } from 'ptcg-server';
 import { Observable } from 'rxjs';
 import { skip, takeUntil } from 'rxjs/operators';
@@ -22,12 +22,14 @@ export class AppComponent implements OnInit, OnDestroy {
   private authToken$: Observable<string>;
 
   constructor(
+    private elementRef: ElementRef<HTMLElement>,
     private profileService: ProfileService,
     private sessionService: SessionService,
     private socketService: SocketService,
   ) {
     this.authToken$ = this.sessionService.get(session => session.authToken);
     this.gameStates$ = this.sessionService.get(session => session.gameStates);
+    setTimeout(() => this.onResize());
   }
 
   public ngOnInit() {
@@ -51,6 +53,19 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() { }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event?: Event) {
+    const element = this.elementRef.nativeElement;
+    const toolbarHeight = 64;
+    const contentHeight = element.offsetHeight - toolbarHeight;
+    const cardAspectRatio = 1.37;
+    const padding = 16;
+    const cardHeight = (contentHeight - (padding * 5)) / 7;
+    let cardSize = Math.floor(cardHeight / cardAspectRatio);
+    cardSize = Math.min(Math.max(cardSize, 50), 100);
+    element.style.setProperty('--card-size', cardSize + 'px');
+  }
 
   private refreshLoggedUser(authToken: string) {
     if (!authToken) {

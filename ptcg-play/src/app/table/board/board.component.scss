@@ -1,24 +1,18 @@
 @import '~@angular/material/theming';
 @import '../../../theme/variables.scss';
 
-$side-width: 2 * map-get($ptcg-size, board-card) + 2 * map-get($padding, small);
-$bench-width: $ptcg-bench-slots * map-get($ptcg-size, board-card) + ($ptcg-bench-slots + 1) * map-get($padding, small);
-$board-min-width: 2 * $side-width + $bench-width;
-$board-min-height: 6 * map-get($ptcg-size, board-card) * $card-aspect-ratio + 2 * map-get($padding, large);
-
-$board-aspect-ratio: $board-min-width / $board-min-height;
+$board-min-width: calc((4 + #{$ptcg-bench-slots}) * (var(--card-size) + #{map-get($padding, small)}));
+$board-min-height: calc(6 * var(--card-size) * #{$card-aspect-ratio} + 2 * #{map-get($padding, normal)});
 
 :host {
-  display: grid;
-  height: 100%;
+  display: block;
   overflow: auto;
-  width: 100%;
 }
 
 @mixin ptcg-board-size($toolbar-height) {
   .ptcg-board-container {
     height: 100%;
-    width: calc((100vh - #{$toolbar-height + $ptcg-hand-height}) * #{$board-aspect-ratio});
+    width: calc(var(--card-size) * #{$ptcg-bench-slots} + #{($ptcg-bench-slots + 1) * map-get($padding, small)});
   }
 }
 
@@ -51,6 +45,25 @@ $board-aspect-ratio: $board-min-width / $board-min-height;
   }
 }
 
+.ptcg-board-row {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  justify-content: space-evenly;
+
+  > ptcg-board-card,
+  > .ptcg-board-drop-target {
+    max-width: var(--card-size);
+    width: calc(#{100 / $ptcg-bench-slots}% - #{map-get($padding, small)});
+  }
+}
+
+.ptcg-board-drop-target > ptcg-board-card {
+  display: block;
+  width: 100%;
+}
+
 ptcg-board-prizes {
   grid-area: prizes;
 }
@@ -59,10 +72,15 @@ ptcg-board-deck {
   grid-area: deck;
 }
 
-ptcg-board-active {
+.ptcg-board-active {
   grid-area: active;
 }
 
-ptcg-board-bench {
+.ptcg-board-bench {
   grid-area: bench;
+}
+
+.ptcg-card-preview {
+  position: absolute;
+  width: var(--card-size);
 }
