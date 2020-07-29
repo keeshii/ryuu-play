@@ -50,7 +50,7 @@ export class Rayquaza extends PokemonCard {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
 
-      const applyWeakness = new ApplyWeaknessEffect(player, 90, opponent.active, effect.source);
+      const applyWeakness = new ApplyWeaknessEffect(player, 90, opponent.active, player.active);
       store.reduceEffect(state, applyWeakness);
 
       effect.damage = 0;

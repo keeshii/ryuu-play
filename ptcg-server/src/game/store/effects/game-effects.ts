@@ -103,13 +103,11 @@ export class AttackEffect implements Effect {
   readonly type: string = GameEffects.ATTACK_EFFECT;
   public preventDefault = false;
   public player: Player;
-  public source: PokemonCardList;
   public attack: Attack;
   public damage: number;
 
-  constructor(player: Player, attack: Attack, source?: PokemonCardList) {
+  constructor(player: Player, attack: Attack) {
     this.player = player;
-    this.source = source || player.active;
     this.attack = attack;
     this.damage = attack.damage;
   }

@@ -42,7 +42,7 @@ export class Reshiram extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      effect.damage += effect.source.damage;
+      effect.damage += effect.player.active.damage;
       return state;
     }
 
@@ -60,7 +60,7 @@ export class Reshiram extends PokemonCard {
         { allowCancel: false }
       ), energy => {
         const cards: Card[] = (energy || []).map(e => e.card);
-        effect.source.moveCardsTo(cards, player.discard);
+        effect.player.active.moveCardsTo(cards, player.discard);
       });
     }
 

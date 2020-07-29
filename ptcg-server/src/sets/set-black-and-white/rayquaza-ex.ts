@@ -50,7 +50,7 @@ export class RayquazaEx extends PokemonCard {
       const temp = new CardList();
       player.deck.moveTo(temp, 3);
       const energyCards = temp.cards.filter(c => c instanceof EnergyCard);
-      temp.moveCardsTo(energyCards, effect.source);
+      temp.moveCardsTo(energyCards, player.active);
       temp.moveTo(player.discard);
       return state;
     }
@@ -84,7 +84,7 @@ export class RayquazaEx extends PokemonCard {
         player.active.moveCardsTo(cards, player.discard);
 
         const dealDamage = new DealDamageEffect(player, damage, this.attacks[1],
-          opponent.active, effect.source);
+          opponent.active, player.active);
         store.reduceEffect(state, dealDamage);
       });
     }

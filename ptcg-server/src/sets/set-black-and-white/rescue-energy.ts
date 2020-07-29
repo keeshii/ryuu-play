@@ -37,7 +37,9 @@ export class RescueEnergy extends EnergyCard {
       const target = effect.target;
       const tool = target.tool;
       const cards = target.cards.filter(c => c instanceof PokemonCard && c !== tool);
-      target.moveCardsTo(cards, player.hand);
+      return store.waitPrompt(state, () => {
+        player.discard.moveCardsTo(cards, player.hand);
+      });
     }
 
     return state;
