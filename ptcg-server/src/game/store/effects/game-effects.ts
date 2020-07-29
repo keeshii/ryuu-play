@@ -2,10 +2,12 @@ import { Attack, Power } from "../card/pokemon-types";
 import { Effect } from "./effect";
 import { Player } from "../state/player";
 import { PokemonCardList } from "../state/pokemon-card-list";
+import { Card } from "../card/card";
 
 export enum GameEffects {
   RETREAT_EFFECT = 'RETREAT_EFFECT',
   USE_ATTACK_EFFECT = 'USE_ATTACK_EFFECT',
+  USE_STADIUM_EFFECT = 'USE_STADIUM_EFFECT',
   USE_POWER_EFFECT = 'USE_POWER_EFFECT',
   POWER_EFFECT = 'POWER_EFFECT',
   DEAL_DAMAGE_EFFECT = 'DEAL_DAMAGE_EFFECT',
@@ -60,6 +62,18 @@ export class UseAttackEffect implements Effect {
   constructor(player: Player, attack: Attack) {
     this.player = player;
     this.attack = attack;
+  }
+}
+
+export class UseStadiumEffect implements Effect {
+  readonly type: string = GameEffects.USE_STADIUM_EFFECT;
+  public preventDefault = false;
+  public player: Player;
+  public stadium: Card;
+
+  constructor(player: Player, stadium: Card) {
+    this.player = player;
+    this.stadium = stadium;
   }
 }
 

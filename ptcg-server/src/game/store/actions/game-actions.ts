@@ -24,6 +24,16 @@ export class UseAbilityAction implements Action {
 
 }
 
+export class UseStadiumAction implements Action {
+
+  readonly type: string = 'USE_STADIUM_ACTION';
+
+  constructor(
+    public clientId: number
+  ) {}
+
+}
+
 export class RetreatAction implements Action {
 
   readonly type: string = 'RETREAT_ACTION';

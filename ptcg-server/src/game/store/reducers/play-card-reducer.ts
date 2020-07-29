@@ -12,6 +12,7 @@ import { StoreLike } from "../store-like";
 import { TrainerCard } from "../card/trainer-card";
 import { TrainerType } from "../card/card-types";
 import { Effect } from "../effects/effect";
+import { StateUtils } from "../state-utils";
 
 function findCardList(state: State, target: CardTarget): CardList | undefined {
   const player = target.player === PlayerType.BOTTOM_PLAYER
@@ -71,9 +72,21 @@ export function playCardReducer(store: StoreLike, state: State, action: Action):
         let effect: Effect;
         switch (handCard.trainerType) {
           case TrainerType.SUPPORTER:
+            if (player.supporterPlayedTurn === state.turn) {
+              throw new GameError(GameMessage.SUPPORTER_ALREADY_PLAYED);
+            }
+            player.supporterPlayedTurn = state.turn;
             effect = new PlaySupporterEffect(player, handCard, target);
             break;
           case TrainerType.STADIUM:
+            if (player.stadiumPlayedTurn === state.turn) {
+              throw new GameError(GameMessage.STADIUM_ALREADY_PLAYED);
+            }
+            const stadium = StateUtils.getStadiumCard(state);
+            if (stadium && stadium.name === handCard.name) {
+              throw new GameError(GameMessage.SAME_STADIUM_ALREADY_IN_PLAY);
+            }
+            player.stadiumPlayedTurn = state.turn;
             effect = new PlayStadiumEffect(player, handCard);
             break;
           case TrainerType.TOOL:

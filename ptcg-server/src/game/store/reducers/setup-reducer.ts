@@ -15,6 +15,7 @@ import { SuperType, Stage } from "../card/card-types";
 import { initNextTurn } from "../effect-reducers/game-phase-effect";
 import { PokemonCardList } from "../state/pokemon-card-list";
 import {WhoBeginsEffect} from "../effects/game-phase-effects";
+import {PlayerType} from "../actions/play-card-action";
 
 
 function putStartingPokemonsAndPrizes(player: Player, cards: Card[]): void {
@@ -110,6 +111,12 @@ function* setupGame(next: Function, store: StoreLike, state: State): IterableIte
       next();
     });
   }
+
+  // Set initial Pokemon Played Turn, so players can't evolve during first turn
+  const first = state.players[state.activePlayer];
+  const second = state.players[state.activePlayer ? 0 : 1];
+  first.forEachPokemon(PlayerType.BOTTOM_PLAYER, cardList => { cardList.pokemonPlayedTurn = 1; });
+  second.forEachPokemon(PlayerType.TOP_PLAYER, cardList => { cardList.pokemonPlayedTurn = 2; });
 
   return initNextTurn(store, state);
 }

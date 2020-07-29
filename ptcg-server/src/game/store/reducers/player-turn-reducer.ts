@@ -1,11 +1,11 @@
 import { Action } from "../actions/action";
-import { PassTurnAction, RetreatAction, AttackAction, UseAbilityAction } from "../actions/game-actions";
+import { PassTurnAction, RetreatAction, AttackAction, UseAbilityAction, UseStadiumAction } from "../actions/game-actions";
 import { State, GamePhase } from "../state/state";
 import { StoreLike } from "../store-like";
 import { GameError, GameMessage } from "../../game-error";
-import { RetreatEffect, UseAttackEffect, UsePowerEffect } from "../effects/game-effects";
+import { RetreatEffect, UseAttackEffect, UsePowerEffect, UseStadiumEffect } from "../effects/game-effects";
 import { EndTurnEffect } from "../effects/game-phase-effects";
-import {StateUtils} from "../state-utils";
+import { StateUtils } from "../state-utils";
 
 export function playerTurnReducer(store: StoreLike, state: State, action: Action): State {
 
@@ -77,6 +77,27 @@ export function playerTurnReducer(store: StoreLike, state: State, action: Action
       }
 
       state = store.reduceEffect(state, new UsePowerEffect(player, power));
+      return state;
+    }
+
+    if (action instanceof UseStadiumAction) {
+      const player = state.players[state.activePlayer];
+
+      if (player === undefined || player.id !== action.clientId) {
+        throw new GameError(GameMessage.NOT_YOUR_TURN);
+      }
+
+      if (player.stadiumUsedTurn === state.turn) {
+        throw new GameError(GameMessage.STADIUM_ALREADY_USED);
+      }
+
+      const stadium = StateUtils.getStadiumCard(state);
+      if (stadium === undefined) {
+        throw new GameError(GameMessage.NO_STADIUM_IN_PLAY);
+      }
+
+      player.stadiumUsedTurn = state.turn;
+      state = store.reduceEffect(state, new UseStadiumEffect(player, stadium));
       return state;
     }
 

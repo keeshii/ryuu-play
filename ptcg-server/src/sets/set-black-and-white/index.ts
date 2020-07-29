@@ -34,6 +34,7 @@ import { RescueEnergy } from "./rescue-energy";
 import { Reshiram } from "./reshiram";
 import { Revive } from "./revive";
 import { Shuckle } from "./shuckle";
+import { SkyarrowBridge } from "./skyarrow-bridge";
 import { Tynamo } from "./tynamo";
 
 export const setBlackAndWhite: Card[] = [
@@ -72,5 +73,6 @@ export const setBlackAndWhite: Card[] = [
   new Reshiram(),
   new Revive(),
   new Shuckle(),
+  new SkyarrowBridge(),
   new Tynamo()
 ];

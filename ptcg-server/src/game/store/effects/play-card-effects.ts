@@ -8,7 +8,12 @@ import {CardList} from "../state/card-list";
 
 export enum PlayCardEffects {
   ATTACH_ENERGY_EFFECT = 'ATTACH_ENERGY_EFFECT',
-  PLAY_BASIC_POKEMON_EFFECT = 'PLAY_BASIC_POKEMON_EFFECT'
+  PLAY_POKEMON_EFFECT = 'PLAY_POKEMON_EFFECT',
+  PLAY_SUPPORTER_EFFECT = 'PLAY_SUPPORTER_EFFECT',
+  PLAY_STADIUM_EFFECT = 'PLAY_STADIUM_EFFECT',
+  PLAY_POKEMON_TOOL_EFFECT = 'PLAY_POKEMON_TOOL_EFFECT',
+  PLAY_ITEM_EFFECT = 'PLAY_ITEM_EFFECT',
+  TRAINER_EFFECT = 'TRAINER_EFFECT'
 }
 
 export class AttachEnergyEffect implements Effect {
@@ -26,7 +31,7 @@ export class AttachEnergyEffect implements Effect {
 }
 
 export class PlayPokemonEffect implements Effect {
-  readonly type: string = PlayCardEffects.PLAY_BASIC_POKEMON_EFFECT;
+  readonly type: string = PlayCardEffects.PLAY_POKEMON_EFFECT;
   public preventDefault = false;
   public player: Player;
   public pokemonCard: PokemonCard;
@@ -40,7 +45,7 @@ export class PlayPokemonEffect implements Effect {
 }
 
 export class PlaySupporterEffect implements Effect {
-  readonly type: string = PlayCardEffects.PLAY_BASIC_POKEMON_EFFECT;
+  readonly type: string = PlayCardEffects.PLAY_SUPPORTER_EFFECT;
   public preventDefault = false;
   public player: Player;
   public trainerCard: TrainerCard;
@@ -54,7 +59,7 @@ export class PlaySupporterEffect implements Effect {
 }
 
 export class PlayStadiumEffect implements Effect {
-  readonly type: string = PlayCardEffects.PLAY_BASIC_POKEMON_EFFECT;
+  readonly type: string = PlayCardEffects.PLAY_STADIUM_EFFECT;
   public preventDefault = false;
   public player: Player;
   public trainerCard: TrainerCard;
@@ -66,7 +71,7 @@ export class PlayStadiumEffect implements Effect {
 }
 
 export class AttachPokemonToolEffect implements Effect {
-  readonly type: string = PlayCardEffects.PLAY_BASIC_POKEMON_EFFECT;
+  readonly type: string = PlayCardEffects.PLAY_POKEMON_TOOL_EFFECT;
   public preventDefault = false;
   public player: Player;
   public trainerCard: TrainerCard;
@@ -80,7 +85,7 @@ export class AttachPokemonToolEffect implements Effect {
 }
 
 export class PlayItemEffect implements Effect {
-  readonly type: string = PlayCardEffects.PLAY_BASIC_POKEMON_EFFECT;
+  readonly type: string = PlayCardEffects.PLAY_ITEM_EFFECT;
   public preventDefault = false;
   public player: Player;
   public trainerCard: TrainerCard;
@@ -94,7 +99,7 @@ export class PlayItemEffect implements Effect {
 }
 
 export class TrainerEffect implements Effect {
-  readonly type: string = PlayCardEffects.PLAY_BASIC_POKEMON_EFFECT;
+  readonly type: string = PlayCardEffects.TRAINER_EFFECT;
   public preventDefault = false;
   public player: Player;
   public trainerCard: TrainerCard;

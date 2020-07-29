@@ -128,4 +128,13 @@ export class StateUtils {
     throw new GameError(GameMessage.INVALID_GAME_STATE);
   }
 
+  public static getStadiumCard(state: State): Card | undefined {
+    for (const player of state.players) {
+      if (player.stadium.cards.length > 0) {
+        return player.stadium.cards[0];
+      }
+    }
+    return undefined;
+  }
+
 }
