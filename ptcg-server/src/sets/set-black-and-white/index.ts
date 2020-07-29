@@ -33,6 +33,7 @@ import { RayquazaEx } from "./rayquaza-ex";
 import { RescueEnergy } from "./rescue-energy";
 import { Reshiram } from "./reshiram";
 import { Revive } from "./revive";
+import { Shuckle } from "./shuckle";
 import { Tynamo } from "./tynamo";
 
 export const setBlackAndWhite: Card[] = [
@@ -70,5 +71,6 @@ export const setBlackAndWhite: Card[] = [
   new RescueEnergy(),
   new Reshiram(),
   new Revive(),
+  new Shuckle(),
   new Tynamo()
 ];
