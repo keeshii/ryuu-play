@@ -33,7 +33,6 @@ export class BetweenTurnsEffect implements Effect {
   public burnDamage: number;
   public burnFlipResult: boolean | undefined;
   public asleepFlipResult: boolean | undefined;
-  public keepParalyzed: boolean;
 
   constructor(player: Player) {
     this.player = player;
@@ -41,6 +40,5 @@ export class BetweenTurnsEffect implements Effect {
     this.burnDamage = 20;
     this.burnFlipResult = undefined;
     this.asleepFlipResult = undefined;
-    this.keepParalyzed = false;
   }
 }

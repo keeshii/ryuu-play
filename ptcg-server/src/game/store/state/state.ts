@@ -6,6 +6,7 @@ export enum GamePhase {
   WAITING_FOR_PLAYERS,
   SETUP,
   PLAYER_TURN,
+  ATTACK,
   BETWEEN_TURNS,
   FINISHED
 }

@@ -6,7 +6,7 @@ import { Effect } from "../../game/store/effects/effect";
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { CoinFlipPrompt } from "../../game/store/prompts/coin-flip-prompt";
 import { CardMessage } from "../card-message";
-import { DiscardCardEffect, BaseAttackEffect } from "../../game/store/effects/attack-effects";
+import { DiscardCardsEffect, AbstractAttackEffect } from "../../game/store/effects/attack-effects";
 import { StateUtils } from "../../game/store/state-utils";
 import { Card } from "../../game/store/card/card";
 import { EnergyCard } from "../../game/store/card/energy-card";
@@ -49,7 +49,7 @@ function* useWhirlpool(next: Function, store: StoreLike, state: State,
     next();
   });
 
-  const discardEnergy = new DiscardCardEffect(player, cards, effect.attack,
+  const discardEnergy = new DiscardCardsEffect(player, cards, effect.attack,
     opponent.active, player.active);
   return store.reduceEffect(state, discardEnergy);
 }
@@ -108,7 +108,7 @@ export class Buizel extends PokemonCard {
 
       let isPachirisuInPlay = false;
       player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card) => {
-        if (card.name === 'Zekrom') {
+        if (card.name === 'Pachirisu') {
           isPachirisuInPlay = true;
         }
       });
@@ -128,7 +128,7 @@ export class Buizel extends PokemonCard {
       return state;
     }
 
-    if (effect instanceof BaseAttackEffect
+    if (effect instanceof AbstractAttackEffect
       && effect.target.marker.hasMarker(this.SUPER_FAST_MARKER)) {
       effect.preventDefault = true;
       return state;

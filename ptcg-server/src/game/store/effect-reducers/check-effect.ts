@@ -1,6 +1,6 @@
 import { State, GamePhase, GameWinner } from "../state/state";
 import { StoreLike } from "../store-like";
-import { CheckHpEffect } from "../effects/check-effects";
+import { CheckHpEffect, CheckProvidedEnergyEffect } from "../effects/check-effects";
 import { PokemonCardList } from "../state/pokemon-card-list";
 import { ChoosePokemonPrompt } from "../prompts/choose-pokemon-prompt";
 import { GameMessage, GameError } from "../../game-error";
@@ -10,6 +10,7 @@ import { PlayerType, SlotType } from "../actions/play-card-action";
 import { GameOverPrompt } from "../prompts/game-over-prompt";
 import { KnockOutEffect } from "../effects/game-effects";
 import { Effect } from "../effects/effect";
+import {EnergyCard} from "../card/energy-card";
 
 interface PokemonItem {
   playerNum: number;
@@ -81,7 +82,7 @@ export function endGame(store: StoreLike, state: State, winner: GameWinner, onCo
     throw new GameError(GameMessage.ILLEGAL_ACTION);
   }
 
-  if (state.phase !== GamePhase.PLAYER_TURN && state.phase !== GamePhase.BETWEEN_TURNS) {
+  if ([GamePhase.PLAYER_TURN, GamePhase.ATTACK, GamePhase.BETWEEN_TURNS].includes(state.phase) === false) {
     throw new GameError(GameMessage.ILLEGAL_ACTION);
   }
 
@@ -234,7 +235,7 @@ function* executeCheckState(next: Function, store: StoreLike, state: State,
 }
 
 export function checkState(store: StoreLike, state: State, onComplete?: () => void): State {
-  if (state.phase !== GamePhase.PLAYER_TURN && state.phase !== GamePhase.BETWEEN_TURNS) {
+  if ([GamePhase.PLAYER_TURN, GamePhase.ATTACK, GamePhase.BETWEEN_TURNS].includes(state.phase) === false) {
     if (onComplete !== undefined) {
       onComplete();
     }
@@ -248,13 +249,15 @@ export function checkState(store: StoreLike, state: State, onComplete?: () => vo
 
 
 export function checkStateReducer(store: StoreLike, state: State, effect: Effect): State {
-  if (effect instanceof KnockOutEffect) {
-    const card = effect.target.getPokemonCard();
-    if (card !== undefined) {
-      store.log(state, `${card.name} is KO.`);
-      effect.target.moveTo(effect.player.discard);
-      effect.target.clearEffects();
-    }
+
+
+  if (effect instanceof CheckProvidedEnergyEffect) {
+    effect.source.cards.forEach(c => {
+      if (c instanceof EnergyCard && !effect.energyMap.some(e => e.card === c)) {
+        effect.energyMap.push({ card: c, provides: c.provides });
+      }
+    });
+    return state;
   }
 
   return state;

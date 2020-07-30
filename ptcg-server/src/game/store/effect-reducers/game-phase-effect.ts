@@ -5,15 +5,15 @@ import { Player } from "../state/player";
 import { SpecialCondition } from "../card/card-types";
 import { State, GamePhase, GameWinner } from "../state/state";
 import { StoreLike } from "../store-like";
-import { checkState, endGame } from "./check-state-effect";
-import {CoinFlipPrompt} from "../prompts/coin-flip-prompt";
+import { checkState, endGame } from "./check-effect";
+import { CoinFlipPrompt } from "../prompts/coin-flip-prompt";
 
 function getActivePlayer(state: State): Player {
   return state.players[state.activePlayer];
 }
 
 export function betweenTurns(store: StoreLike, state: State, onComplete: () => void): State {
-  if (state.phase === GamePhase.PLAYER_TURN) {
+  if (state.phase === GamePhase.PLAYER_TURN || state.phase === GamePhase.ATTACK) {
     state.phase = GamePhase.BETWEEN_TURNS;
   }
 
@@ -43,6 +43,10 @@ export function initNextTurn(store: StoreLike, state: State): State {
     state.phase = GamePhase.PLAYER_TURN;
     player = getActivePlayer(state);
   }
+
+  // Remove Paralyzed at the beginning of the turn
+  const index = player.active.specialConditions.indexOf(SpecialCondition.PARALYZED);
+  player.active.specialConditions.splice(index, 1);
 
   state.turn++;
   store.log(state, `Turn ${state.turn}.`);
@@ -118,13 +122,6 @@ function handleSpecialConditions(store: StoreLike, state: State, effect: Between
             player.active.specialConditions.splice(index, 1);
           }
         })
-        break;
-      case SpecialCondition.PARALYZED:
-        if (effect.keepParalyzed) {
-          break;
-        }
-        const index = player.active.specialConditions.indexOf(sp);
-        player.active.specialConditions.splice(index, 1);
         break;
     }
   }

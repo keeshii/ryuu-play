@@ -18,8 +18,8 @@ import { playPokemonReducer } from "./effect-reducers/play-pokemon-effect";
 import { playTrainerReducer } from "./effect-reducers/play-trainer-effect";
 import { playerTurnReducer } from "./reducers/player-turn-reducer";
 import { gamePhaseReducer } from "./effect-reducers/game-phase-effect";
-import { checkState, checkStateReducer } from "./effect-reducers/check-state-effect";
-import { powerReducer } from "./effect-reducers/power-effect";
+import { gameReducer } from "./effect-reducers/game-effect";
+import { checkState, checkStateReducer } from "./effect-reducers/check-effect";
 import { retreatReducer } from "./effect-reducers/retreat-effect";
 import { reorderReducer} from "./reducers/reorder-reducer";
 import { setupPhaseReducer } from './reducers/setup-reducer';
@@ -84,8 +84,8 @@ export class Store implements StoreLike {
     state = playPokemonReducer(this, state, effect);
     state = playTrainerReducer(this, state, effect);
     state = retreatReducer(this, state, effect);
+    state = gameReducer(this, state, effect);
     state = attackReducer(this, state, effect);
-    state = powerReducer(this, state, effect);
     state = checkStateReducer(this, state, effect);
 
     return state;
