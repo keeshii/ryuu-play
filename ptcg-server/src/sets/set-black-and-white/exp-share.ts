@@ -35,7 +35,7 @@ export class ExpShare extends TrainerCard {
       const active = effect.target;
 
       // Do not activate between turns, or when it's not opponents turn.
-      if (state.phase !== GamePhase.PLAYER_TURN && state.players[state.activePlayer] !== opponent) {
+      if (state.phase !== GamePhase.PLAYER_TURN || state.players[state.activePlayer] !== opponent) {
         return state;
       }
 

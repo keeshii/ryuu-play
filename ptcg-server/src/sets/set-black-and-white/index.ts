@@ -35,6 +35,10 @@ import { Reshiram } from "./reshiram";
 import { Revive } from "./revive";
 import { Shuckle } from "./shuckle";
 import { SkyarrowBridge } from "./skyarrow-bridge";
+import { SuperRod } from "./super-rod";
+import { Switch } from "./switch";
+import { Tepig } from "./tepig";
+import { Terrakion } from "./terrakion";
 import { Tynamo } from "./tynamo";
 
 export const setBlackAndWhite: Card[] = [
@@ -74,5 +78,9 @@ export const setBlackAndWhite: Card[] = [
   new Revive(),
   new Shuckle(),
   new SkyarrowBridge(),
+  new SuperRod(),
+  new Switch(),
+  new Tepig(),
+  new Terrakion(),
   new Tynamo()
 ];
