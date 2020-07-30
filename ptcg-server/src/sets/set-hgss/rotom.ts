@@ -5,9 +5,10 @@ import { PowerType, StoreLike, State, StateUtils, PokemonCardList, GameError,
   EnergyCard } from "../../game";
 import { Effect } from "../../game/store/effects/effect";
 import { PlayPokemonEffect } from "../../game/store/effects/play-card-effects";
-import { PowerEffect, AttackEffect, DealDamageAfterWeaknessEffect } from "../../game/store/effects/game-effects";
+import { PowerEffect, AttackEffect } from "../../game/store/effects/game-effects";
 import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
 import { CardMessage } from "../card-message";
+import { DealDamageAfterWeaknessEffect } from "../../game/store/effects/attack-effects";
 
 export class Rotom extends PokemonCard {
 

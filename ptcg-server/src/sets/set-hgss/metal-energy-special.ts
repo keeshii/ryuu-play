@@ -3,7 +3,7 @@ import { EnergyCard } from "../../game/store/card/energy-card";
 import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
-import { DealDamageAfterWeaknessEffect } from "../../game/store/effects/game-effects";
+import { DealDamageAfterWeaknessEffect } from "../../game/store/effects/attack-effects";
 import { CheckPokemonTypeEffect } from "../../game/store/effects/check-effects";
 
 export class MetalEnergySpecial extends EnergyCard {

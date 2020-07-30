@@ -6,7 +6,7 @@ import { State } from "../../game/store/state/state";
 import { TrainerEffect } from "../../game/store/effects/play-card-effects";
 import { StateUtils } from "../../game/store/state-utils";
 import { GameError, GameMessage } from "../../game/game-error";
-import { DealDamageEffect } from "../../game/store/effects/game-effects";
+import { DealDamageEffect } from "../../game/store/effects/attack-effects";
 import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
 
 export class BlackBelt extends TrainerCard {

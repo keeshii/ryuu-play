@@ -3,7 +3,7 @@ import { TrainerType, Stage } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
-import {DealDamageAfterWeaknessEffect} from "../../game/store/effects/game-effects";
+import { DealDamageAfterWeaknessEffect } from "../../game/store/effects/attack-effects";
 
 export class Eviolite extends TrainerCard {
 

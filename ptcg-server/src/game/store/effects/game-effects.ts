@@ -10,7 +10,6 @@ export enum GameEffects {
   USE_STADIUM_EFFECT = 'USE_STADIUM_EFFECT',
   USE_POWER_EFFECT = 'USE_POWER_EFFECT',
   POWER_EFFECT = 'POWER_EFFECT',
-  DEAL_DAMAGE_EFFECT = 'DEAL_DAMAGE_EFFECT',
   ATTACK_EFFECT = 'ATTACK_EFFECT',
   KNOCK_OUT_EFFECT = 'KNOCK_OUT_EFFECT',
   HEAL_EFFECT = 'HEAL_EFFECT',
@@ -74,42 +73,6 @@ export class UseStadiumEffect implements Effect {
   constructor(player: Player, stadium: Card) {
     this.player = player;
     this.stadium = stadium;
-  }
-}
-
-export class DealDamageEffect implements Effect {
-  readonly type: string = GameEffects.DEAL_DAMAGE_EFFECT;
-  public preventDefault = false;
-  public player: Player;
-  public damage: number;
-  public attack: Attack;
-  public target: PokemonCardList;
-  public source: PokemonCardList;
-
-  constructor(player: Player, damage: number, attack: Attack, target: PokemonCardList, source: PokemonCardList) {
-    this.player = player;
-    this.damage = damage;
-    this.attack = attack;
-    this.target = target;
-    this.source = source;
-  }
-}
-
-export class DealDamageAfterWeaknessEffect implements Effect {
-  readonly type: string = GameEffects.DEAL_DAMAGE_EFFECT;
-  public preventDefault = false;
-  public player: Player;
-  public damage: number;
-  public attack: Attack;
-  public target: PokemonCardList;
-  public source: PokemonCardList;
-
-  constructor(player: Player, damage: number, attack: Attack, target: PokemonCardList, source: PokemonCardList) {
-    this.player = player;
-    this.damage = damage;
-    this.attack = attack;
-    this.target = target;
-    this.source = source;
   }
 }
 

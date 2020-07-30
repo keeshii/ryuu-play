@@ -3,7 +3,8 @@ import { Stage, CardType, SpecialCondition } from "../../game/store/card/card-ty
 import { PowerType, StoreLike, State, StateUtils, ChoosePokemonPrompt, PlayerType,
   SlotType, PokemonCardList, GameError, GameMessage, CoinFlipPrompt } from "../../game";
 import { Effect } from "../../game/store/effects/effect";
-import { PowerEffect, AttackEffect, DealDamageAfterWeaknessEffect } from "../../game/store/effects/game-effects";
+import { PowerEffect, AttackEffect } from "../../game/store/effects/game-effects";
+import { DealDamageAfterWeaknessEffect } from "../../game/store/effects/attack-effects";
 import { CardMessage } from "../card-message";
 import { PlayPokemonEffect } from "../../game/store/effects/play-card-effects";
 import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";

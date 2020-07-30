@@ -4,12 +4,13 @@ import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { PowerType } from "../../game/store/card/pokemon-types";
-import {AttackEffect, DealDamageEffect} from "../../game/store/effects/game-effects";
-import {ChooseCardsPrompt, TrainerCard, StateUtils} from "../../game";
-import {CardMessage} from "../card-message";
-import {TrainerEffect} from "../../game/store/effects/play-card-effects";
-import {CheckHpEffect} from "../../game/store/effects/check-effects";
-import {WhoBeginsEffect} from "../../game/store/effects/game-phase-effects";
+import { AttackEffect } from "../../game/store/effects/game-effects";
+import { ChooseCardsPrompt, TrainerCard, StateUtils } from "../../game";
+import { CardMessage } from "../card-message";
+import { TrainerEffect } from "../../game/store/effects/play-card-effects";
+import { CheckHpEffect } from "../../game/store/effects/check-effects";
+import { WhoBeginsEffect } from "../../game/store/effects/game-phase-effects";
+import { DealDamageEffect } from "../../game/store/effects/attack-effects";
 
 export class Sableye extends PokemonCard {
 

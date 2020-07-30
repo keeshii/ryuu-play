@@ -4,7 +4,7 @@ import { TrainerType } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { TrainerEffect } from "../../game/store/effects/play-card-effects";
-import { DealDamageEffect } from "../../game/store/effects/game-effects";
+import { DealDamageEffect } from "../../game/store/effects/attack-effects";
 import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
 
 export class PlusPower extends TrainerCard {

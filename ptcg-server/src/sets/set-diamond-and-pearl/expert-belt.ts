@@ -4,8 +4,9 @@ import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { CheckHpEffect } from "../../game/store/effects/check-effects";
-import { DealDamageEffect, KnockOutEffect } from "../../game/store/effects/game-effects";
+import { KnockOutEffect } from "../../game/store/effects/game-effects";
 import { StateUtils } from "../../game/store/state-utils";
+import { DealDamageEffect } from "../../game/store/effects/attack-effects";
 
 export class ExpertBelt extends TrainerCard {
 

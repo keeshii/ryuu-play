@@ -8,12 +8,10 @@ import { CheckPokemonTypeEffect, CheckPokemonStatsEffect,
   CheckProvidedEnergyEffect, CheckAttackCostEffect } from "../effects/check-effects";
 import { Weakness, Resistance } from "../card/pokemon-types";
 import { CardType, SpecialCondition } from "../card/card-types";
-import { AttackEffect, DealDamageEffect, UseAttackEffect,
-  DealDamageAfterWeaknessEffect, 
-  HealEffect,
-  ApplyWeaknessEffect} from "../effects/game-effects";
+import { AttackEffect, UseAttackEffect, HealEffect, ApplyWeaknessEffect} from "../effects/game-effects";
 import { CoinFlipPrompt } from "../prompts/coin-flip-prompt";
-import {EnergyCard} from "../card/energy-card";
+import { EnergyCard } from "../card/energy-card";
+import { DealDamageAfterWeaknessEffect, DealDamageEffect } from "../effects/attack-effects";
 
 function applyWeaknessAndResistance(damage: number, cardTypes: CardType[], weakness: Weakness[], resistance: Resistance[]): number {
   let multiply = 1;

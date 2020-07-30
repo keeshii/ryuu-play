@@ -1,7 +1,8 @@
 import { PokemonCard } from "../../game/store/card/pokemon-card";
 import { Stage, CardType } from "../../game/store/card/card-types";
 import { StoreLike, State, CardList, EnergyCard, Card, StateUtils} from "../../game";
-import { AttackEffect, KnockOutEffect, DealDamageEffect } from "../../game/store/effects/game-effects";
+import { AttackEffect, KnockOutEffect } from "../../game/store/effects/game-effects";
+import { DealDamageEffect } from "../../game/store/effects/attack-effects";
 import { Effect } from "../../game/store/effects/effect";
 import { CardMessage } from "../card-message";
 import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";

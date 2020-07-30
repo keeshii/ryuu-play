@@ -1,7 +1,8 @@
 import { PokemonCard } from "../../game/store/card/pokemon-card";
 import { Stage, CardType } from "../../game/store/card/card-types";
 import { StoreLike, State } from "../../game";
-import { AttackEffect, DealDamageEffect } from "../../game/store/effects/game-effects";
+import { AttackEffect } from "../../game/store/effects/game-effects";
+import { DealDamageEffect } from "../../game/store/effects/attack-effects";
 import { Effect } from "../../game/store/effects/effect";
 
 
