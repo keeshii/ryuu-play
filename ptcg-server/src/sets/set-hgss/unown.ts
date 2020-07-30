@@ -28,7 +28,7 @@ function* useReturn(next: Function, store: StoreLike, state: State, effect: Play
     CardMessage.CHOOSE_ONE_POKEMON,
     PlayerType.BOTTOM_PLAYER,
     [ SlotType.ACTIVE, SlotType.BENCH ],
-    { count: 1, allowCancel: true }
+    { allowCancel: true }
   ), selection => {
     targets = selection || [];
     next();

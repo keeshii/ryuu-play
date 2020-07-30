@@ -25,7 +25,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     CardMessage.CHOOSE_ONE_POKEMON,
     PlayerType.BOTTOM_PLAYER,
     [ SlotType.BENCH ],
-    { count: 1, allowCancel: true }
+    { allowCancel: true }
   ), results => {
     targets = results || [];
     next();

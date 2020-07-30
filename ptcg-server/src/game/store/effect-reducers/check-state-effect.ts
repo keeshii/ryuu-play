@@ -46,7 +46,7 @@ function chooseActivePokemons(state: State): ChoosePokemonPrompt[] {
         GameMessage.CHOOSE_NEW_ACTIVE_POKEMON,
         PlayerType.BOTTOM_PLAYER,
         [ SlotType.BENCH ],
-        { count: 1, allowCancel: false }
+        { min: 1, allowCancel: false }
       );
       prompts.push(choose);
     }

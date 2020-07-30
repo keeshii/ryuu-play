@@ -84,7 +84,7 @@ export class SimpleGameHandler {
 
     if (prompt instanceof ChoosePokemonPrompt) {
       const result: PokemonCardList[] = this.buildPokemonToChoose(prompt)
-        .slice(0, prompt.options.count);
+        .slice(0, prompt.options.min);
       this.dispatch(new ResolvePromptAction(prompt.id, result));
       return;
     }

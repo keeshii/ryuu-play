@@ -21,7 +21,8 @@ export class PromptChoosePokemonComponent implements OnInit, OnChanges {
   public blocked: CardTarget[];
   public isInvalid = false;
 
-  private count = 0;
+  private min = 1;
+  private max = 1;
 
   constructor(
     private gameService: GameService
@@ -49,7 +50,7 @@ export class PromptChoosePokemonComponent implements OnInit, OnChanges {
     }
 
     // If we are selecting only one card, unselect all first
-    if (this.count === 1) {
+    if (this.max === 1) {
       this.pokemonData.unselectAll();
     }
 
@@ -59,7 +60,7 @@ export class PromptChoosePokemonComponent implements OnInit, OnChanges {
 
   private updateIsInvalid() {
     const selected = this.pokemonData.countSelected();
-    this.isInvalid = selected !== this.count;
+    this.isInvalid = this.min > selected || this.max < selected;
   }
 
   ngOnChanges() {
@@ -73,7 +74,8 @@ export class PromptChoosePokemonComponent implements OnInit, OnChanges {
       this.pokemonData = new PokemonData(state, playerId, playerType, slots);
       this.allowedCancel = prompt.options.allowCancel;
       this.blocked = prompt.options.blocked;
-      this.count = prompt.options.count;
+      this.min = prompt.options.min;
+      this.max = prompt.options.max;
       this.message = prompt.message;
       this.promptId = prompt.id;
       this.updateIsInvalid();

@@ -29,7 +29,7 @@ function* useFlashBite(next: Function, store: StoreLike, state: State, effect: P
     CardMessage.CHOOSE_OPPONENTS_POKEMON,
     PlayerType.TOP_PLAYER,
     [ SlotType.ACTIVE, SlotType.BENCH ],
-    { count: 1, allowCancel: true },
+    { allowCancel: true },
   ), selected => {
     if (!selected || selected.length === 0) {
       return state;

@@ -57,7 +57,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
       CardMessage.CHOOSE_ONE_POKEMON,
       PlayerType.TOP_PLAYER,
       [ SlotType.ACTIVE, SlotType.BENCH ],
-      { count: 1, allowCancel: false }
+      { allowCancel: false }
     ), targets => {
       if (targets && targets.length > 0) {
         targets[0].damage += 10;
@@ -81,7 +81,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     CardMessage.CHOOSE_ONE_POKEMON,
     PlayerType.TOP_PLAYER,
     [ SlotType.BENCH ],
-    { count: 1, allowCancel: false }
+    { allowCancel: false }
   ), targets => {
     if (!targets || targets.length === 0) {
       return;

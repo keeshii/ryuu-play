@@ -45,7 +45,7 @@ function* usePower(next: Function, store: StoreLike, state: State, self: UnownQ,
     CardMessage.CHOOSE_ONE_POKEMON,
     PlayerType.BOTTOM_PLAYER,
     [ SlotType.ACTIVE, SlotType.BENCH ],
-    { count: 1, allowCancel: true, blocked }
+    { allowCancel: true, blocked }
   ), targets => {
     if (targets && targets.length > 0) {
       // Attach Unown Q as a Pokemon Tool

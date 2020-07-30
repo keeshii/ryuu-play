@@ -36,7 +36,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     CardMessage.CHOOSE_SP_POKEMON,
     PlayerType.BOTTOM_PLAYER,
     [ SlotType.ACTIVE, SlotType.BENCH ],
-    { count: 1, allowCancel: true, blocked }
+    { allowCancel: true, blocked }
   ), targets => {
     if (targets && targets.length > 0) {
       // Discard trainer only when user selected a Pokemon

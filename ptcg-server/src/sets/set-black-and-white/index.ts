@@ -39,6 +39,7 @@ import { SuperRod } from "./super-rod";
 import { Switch } from "./switch";
 import { Tepig } from "./tepig";
 import { Terrakion } from "./terrakion";
+import { ToolScrapper } from "./tool-scrapper";
 import { Tynamo } from "./tynamo";
 
 export const setBlackAndWhite: Card[] = [
@@ -82,5 +83,6 @@ export const setBlackAndWhite: Card[] = [
   new Switch(),
   new Tepig(),
   new Terrakion(),
+  new ToolScrapper(),
   new Tynamo()
 ];

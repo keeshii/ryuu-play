@@ -54,7 +54,7 @@ export class Drowzee extends PokemonCard {
         CardMessage.CHOOSE_ONE_POKEMON,
         PlayerType.TOP_PLAYER,
         [ SlotType.BENCH ],
-        { count: 1, allowCancel: false }
+        { allowCancel: false }
       ), targets => {
         if (!targets || targets.length === 0) {
           return;

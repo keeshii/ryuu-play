@@ -32,7 +32,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     CardMessage.CHOOSE_ONE_POKEMON,
     PlayerType.TOP_PLAYER,
     [ SlotType.BENCH ],
-    { count: 1, allowCancel: false }
+    { allowCancel: false }
   ), result => {
     const cardList = result[0];
     opponent.switchPokemon(cardList);

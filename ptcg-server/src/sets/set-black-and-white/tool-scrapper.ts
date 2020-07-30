@@ -6,37 +6,45 @@ import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { ChoosePokemonPrompt } from "../../game/store/prompts/choose-pokemon-prompt";
 import { TrainerEffect } from "../../game/store/effects/play-card-effects";
-import { PlayerType, SlotType, CardTarget, GameError, GameMessage,
-  PokemonCardList, EnergyCard } from "../../game";
-import { HealEffect } from "../../game/store/effects/game-effects";
+import { PlayerType, SlotType, StateUtils, CardTarget, GameError, GameMessage,
+  PokemonCardList } from "../../game";
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
+  const opponent = StateUtils.getOpponent(state, player);
 
+  let pokemonsWithTool = 0;
   const blocked: CardTarget[] = [];
-  let hasPokemonWithDamage: boolean = false;
   player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card, target) => {
-    if (cardList.damage === 0) {
-      blocked.push(target);
+    if (cardList.tool !== undefined) {
+      pokemonsWithTool += 1;
     } else {
-      hasPokemonWithDamage = true;
+      blocked.push(target);
+    }
+  });
+  opponent.forEachPokemon(PlayerType.TOP_PLAYER, (cardList, card, target) => {
+    if (cardList.tool !== undefined) {
+      pokemonsWithTool += 1;
+    } else {
+      blocked.push(target);
     }
   });
 
-  if (hasPokemonWithDamage === false) {
+  if (pokemonsWithTool === 0) {
     throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
   }
 
-  // Do not discard the card yet
+  // We will discard this card after prompt confirmation
   effect.preventDefault = true;
 
+  const max = Math.min(2, pokemonsWithTool);
   let targets: PokemonCardList[] = [];
   yield store.prompt(state, new ChoosePokemonPrompt(
     player.id,
-    CardMessage.CHOOSE_ONE_POKEMON,
-    PlayerType.BOTTOM_PLAYER,
+    CardMessage.CHOOSE_UP_TO_2_POKEMONS_WITH_TOOL,
+    PlayerType.ANY,
     [ SlotType.ACTIVE, SlotType.BENCH ],
-    { allowCancel: true, blocked }
+    { min: 1, max: max, allowCancel: true, blocked }
   ), results => {
     targets = results || [];
     next();
@@ -50,30 +58,28 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   player.hand.moveCardTo(effect.trainerCard, player.discard);
 
   targets.forEach(target => {
-    // Heal Pokemon
-    const healEffect = new HealEffect(player, target, target.damage);
-    store.reduceEffect(state, healEffect);
-    // Discard its energy cards
-    const cards = target.cards.filter(c => c instanceof EnergyCard);
-    target.moveCardsTo(cards, player.discard);
+    const owner = StateUtils.findOwner(state, target);
+    if (target.tool !== undefined) {
+      target.moveCardTo(target.tool, owner.discard);
+    }
   });
 
   return state;
 }
 
-export class MaxPotion extends TrainerCard {
+export class ToolScrapper extends TrainerCard {
 
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'BW';
 
-  public name: string = 'Max Potion';
+  public name: string = 'Tool Scrapper';
 
-  public fullName: string = 'Max Potion EPO';
+  public fullName: string = 'Tool Scrapper DRX';
 
   public text: string =
-    'Heal all damage from 1 of your Pokemon. Then, discard all Energy ' +
-    'attached to that Pokemon.';
+    'Choose up to 2 Pokemon Tool cards attached to Pokemon in play (yours or ' +
+    'your opponent\'s) and discard them.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {

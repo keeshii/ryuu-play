@@ -8,7 +8,8 @@ import {StateUtils} from "../state-utils";
 export const ChoosePokemonPromptType = 'Choose pokemon';
 
 export interface ChoosePokemonOptions {
-  count: number;
+  min: number;
+  max: number;
   allowCancel: boolean;
   blocked: CardTarget[];
 }
@@ -30,7 +31,8 @@ export class ChoosePokemonPrompt extends Prompt<PokemonCardList[]> {
 
     // Default options
     this.options = Object.assign({}, {
-      count: 1,
+      min: 1,
+      max: 1,
       allowCancel: true,
       blocked: []
     }, options);
@@ -55,7 +57,7 @@ export class ChoosePokemonPrompt extends Prompt<PokemonCardList[]> {
     if (result === null) {
       return this.options.allowCancel;
     }
-    if (result.length !== this.options.count) {
+    if (result.length < this.options.min || result.length > this.options.max) {
       return false;
     }
     if (result.some(cardList => cardList.cards.length === 0)) {

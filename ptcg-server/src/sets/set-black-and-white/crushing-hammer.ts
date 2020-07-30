@@ -43,7 +43,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     CardMessage.CHOOSE_ONE_POKEMON,
     PlayerType.TOP_PLAYER,
     [ SlotType.ACTIVE, SlotType.BENCH ],
-    { count: 1, allowCancel: false, blocked }
+    { allowCancel: false, blocked }
   ), results => {
     targets = results || [];
     next();

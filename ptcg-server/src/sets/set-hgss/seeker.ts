@@ -17,7 +17,7 @@ function pickUpBenchedPokemon(next: Function, store: StoreLike, state: State, pl
     CardMessage.CHOOSE_ONE_POKEMON,
     PlayerType.BOTTOM_PLAYER,
     [ SlotType.BENCH ],
-    { allowCancel: false, count: 1 }
+    { allowCancel: false }
   ), selection => {
     const cardList = selection[0];
     cardList.moveTo(player.hand);
