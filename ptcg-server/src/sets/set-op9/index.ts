@@ -8,6 +8,12 @@ import { Garchomp } from "./garchomp";
 import { Gible } from "./gible";
 import { Lopunny } from "./lopunny";
 import { Pachirisu } from "./pachirisu";
+import { Pichu } from "./pichu";
+import { Pikachu } from "./pikachu";
+import { Piplup } from "./piplup";
+import { Raichu } from "./raichu";
+import { Rotom } from "./rotom";
+import { Turtwig } from "./turtwig";
 
 export const setOp9: Card[] = [
   new Buizel(),
@@ -18,5 +24,11 @@ export const setOp9: Card[] = [
   new Garchomp(),
   new Gible(),
   new Lopunny(),
-  new Pachirisu()
+  new Pachirisu(),
+  new Pichu(),
+  new Pikachu(),
+  new Piplup(),
+  new Raichu(),
+  new Rotom(),
+  new Turtwig()
 ];

@@ -9,11 +9,15 @@ import { Card} from "../../game/store/card/card";
 import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
 import { CardMessage } from "../card-message";
 import { CardList } from "../../game/store/state/card-list";
+import {ShowCardsPrompt} from "../../game/store/prompts/show-cards-prompt";
+import {StateUtils} from "../../game/store/state-utils";
+import {ShuffleDeckPrompt} from "../../game/store/prompts/shuffle-prompt";
 
 
 function* playCard(next: Function, store: StoreLike, state: State,
   self: UltraBall, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
+  const opponent = StateUtils.getOpponent(state, player);
   let cards: Card[] = [];
   
   cards = player.hand.cards.filter(c => c !== self);
@@ -62,8 +66,19 @@ function* playCard(next: Function, store: StoreLike, state: State,
     next();
   });
 
+  if (cards.length > 0) {
+    yield store.prompt(state, new ShowCardsPrompt(
+      opponent.id,
+      CardMessage.CARDS_SHOWED_BY_THE_OPPONENT,
+      cards
+    ), () => next());
+  }
+
   player.deck.moveCardsTo(cards, player.hand);
-  return state;
+
+  return store.prompt(state, new ShuffleDeckPrompt(player.id), order => {
+    player.deck.applyOrder(order);
+  });
 }
 
 export class UltraBall extends TrainerCard {
