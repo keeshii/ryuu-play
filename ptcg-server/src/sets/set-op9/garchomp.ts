@@ -77,10 +77,10 @@ export class Garchomp extends PokemonCard {
         effect.player.active.moveCardsTo(cards, player.discard);
       });
 
-      opponent.bench.forEach(b => {
-        if (b.cards.length > 0) {
+      opponent.bench.forEach(benched => {
+        if (benched.cards.length > 0) {
           const dealDamage = new DealDamageAfterWeaknessEffect(player, 10,
-            effect.attack, player.active, player.active);
+            effect.attack, benched, player.active);
           return store.reduceEffect(state, dealDamage);
         }
       });
