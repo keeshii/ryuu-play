@@ -19,6 +19,12 @@ export class PromptChooseCardsComponent implements OnInit {
     this.promptId = prompt.id;
     this.min = prompt.options.min;
     this.max = prompt.options.max;
+
+    if (prompt.options.isSecret) {
+      prompt.cards.cards.forEach((c, i) => {
+        this.cardbackMap[i] = true;
+      });
+    }
   }
 
   @Input() gameState: GameState;
@@ -30,6 +36,7 @@ export class PromptChooseCardsComponent implements OnInit {
   public filter: Partial<Card>;
   public blocked: number[];
   public isInvalid = false;
+  public cardbackMap: {[index: number]: boolean} = {};
   private min: number;
   private max: number;
   private result: number[] = [];

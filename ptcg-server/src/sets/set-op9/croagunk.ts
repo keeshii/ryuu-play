@@ -42,7 +42,7 @@ function* useKnockOff(next: Function, store: StoreLike, state: State,
     CardMessage.CHOOSE_ANY_CARD,
     opponent.hand,
     { },
-    { min: 1, max: 1, allowCancel: false }
+    { min: 1, max: 1, allowCancel: false, isSecret: true }
   ), selected => {
     cards = selected || [];
     next();

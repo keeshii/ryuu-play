@@ -11,7 +11,8 @@ export interface ChooseCardsOptions {
   min: number;
   max: number;
   allowCancel: boolean;
-  blocked: number[]
+  blocked: number[];
+  isSecret: boolean;
 }
 
 export type FilterType = Partial<PokemonCard | TrainerCard | EnergyCard>;
@@ -36,7 +37,8 @@ export class ChooseCardsPrompt extends Prompt<Card[]> {
       min: 0,
       max: cards.cards.length,
       allowCancel: true,
-      blocked: []
+      blocked: [],
+      isSecret: false
     }, options);
   }
 
