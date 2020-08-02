@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
-import { GameInfo, GameState, UserInfo } from 'ptcg-server';
+import { GameInfo, GameState, ClientInfo, UserInfo } from 'ptcg-server';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map, distinctUntilChanged } from 'rxjs/operators';
 
-import { User } from './user.interface';
 
 export class Session {
   authToken: string;
-  loggedUser: User;
+  loggedUser: UserInfo;
   clientId: number;
   games: GameInfo[] = [];
-  users: UserInfo[] = [];
+  clients: ClientInfo[] = [];
   gameStates: GameState[] = [];
 }
 

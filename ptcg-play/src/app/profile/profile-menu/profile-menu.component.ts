@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { UserInfo } from 'ptcg-server';
 
 import { LoginPopupService } from '../../login/login-popup/login-popup.service';
 import { SessionService } from '../../shared/session/session.service';
-import { User } from '../../shared/session/user.interface';
 import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed';
 
 @Component({
@@ -14,8 +14,8 @@ import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed'
 })
 export class ProfileMenuComponent implements OnInit, OnDestroy {
 
-  private loggedUser$: Observable<User | undefined>;
-  public loggedUser: User | undefined;
+  private loggedUser$: Observable<UserInfo | undefined>;
+  public loggedUser: UserInfo | undefined;
 
   constructor(
     private loginPopupService: LoginPopupService,

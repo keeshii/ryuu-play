@@ -1,12 +1,11 @@
-import { Component, OnDestroy, OnInit, HostListener, HostBinding, ElementRef } from '@angular/core';
-import { GameState } from 'ptcg-server';
+import { Component, OnDestroy, OnInit, HostListener, ElementRef } from '@angular/core';
+import { GameState, UserInfo } from 'ptcg-server';
 import { Observable } from 'rxjs';
 import { skip, takeUntil } from 'rxjs/operators';
 
 import { ProfileService } from './api/services/profile.service';
 import { SessionService } from './shared/session/session.service';
 import { SocketService } from './api/socket.service';
-import { User } from './shared/session/user.interface';
 import { takeUntilDestroyed } from './shared/operators/take-until-destroyed';
 
 @Component({
@@ -17,7 +16,7 @@ import { takeUntilDestroyed } from './shared/operators/take-until-destroyed';
 export class AppComponent implements OnInit, OnDestroy {
 
   public isLoggedIn = false;
-  public loggedUser: User | undefined;
+  public loggedUser: UserInfo | undefined;
   public gameStates$: Observable<GameState[]>;
   private authToken$: Observable<string>;
 

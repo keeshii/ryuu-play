@@ -16,8 +16,8 @@ $padding: (
 $card-aspect-ratio: 1.37;
 
 // Variables from angular material theme
-$mat-toolbar-height-desktop: 64px !default;
-$mat-toolbar-height-mobile: 56px !default;
+$ptcg-toolbar-height-desktop: map-get($ptcg-size, avatar) !default;
+$ptcg-toolbar-height-mobile: map-get($ptcg-size, avatar) !default;
 
 $ptcg-bench-slots: 8;
 $ptcg-disabled-opacity: .5;

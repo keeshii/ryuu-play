@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { GameInfo, CoreInfo, UserInfo, GameState } from 'ptcg-server';
+import { GameInfo, CoreInfo, ClientInfo, GameState } from 'ptcg-server';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
@@ -19,22 +19,22 @@ export class MainService {
   ) { }
 
   public init(coreInfo: CoreInfo): void {
-    this.sessionService.set({ users: coreInfo.users, games: coreInfo.games, clientId: coreInfo.clientId });
-    this.socketService.on('core:join', (userInfo: UserInfo) => this.onJoin(userInfo));
-    this.socketService.on('core:leave', (userInfo: UserInfo) => this.onLeave(userInfo));
+    this.sessionService.set({ clients: coreInfo.users, games: coreInfo.games, clientId: coreInfo.clientId });
+    this.socketService.on('core:join', (userInfo: ClientInfo) => this.onJoin(userInfo));
+    this.socketService.on('core:leave', (userInfo: ClientInfo) => this.onLeave(userInfo));
     this.socketService.on('core:gameInfo', (game: GameInfo) => this.onGameInfo(game));
     this.socketService.on('core:createGame', (game: GameInfo) => this.onCreateGame(game));
     this.socketService.on('core:deleteGame', (gameId: number) => this.onDeleteGame(gameId));
   }
 
-  private onJoin(userInfo: UserInfo): void {
-    const users = [...this.sessionService.session.users, userInfo];
-    this.sessionService.set({ users });
+  private onJoin(userInfo: ClientInfo): void {
+    const clients = [...this.sessionService.session.clients, userInfo];
+    this.sessionService.set({ clients });
   }
 
-  private onLeave(userInfo: UserInfo): void {
-    const users = this.sessionService.session.users.filter(user => user.clientId !== userInfo.clientId);
-    this.sessionService.set({ users });
+  private onLeave(userInfo: ClientInfo): void {
+    const clients = this.sessionService.session.clients.filter(user => user.clientId !== userInfo.clientId);
+    this.sessionService.set({ clients });
   }
 
   private onGameInfo(game: GameInfo): void {

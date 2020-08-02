@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { GameInfo, UserInfo } from 'ptcg-server';
+import { GameInfo, ClientInfo } from 'ptcg-server';
 import { Observable } from 'rxjs';
 
 import { MainService } from '../api/services/main.service';
@@ -17,7 +17,7 @@ export class GamesComponent implements OnDestroy, OnInit {
   title = 'ptcg-play';
 
   displayedColumns: string[] = ['id', 'turn', 'player1', 'player2', 'actions'];
-  public users$: Observable<UserInfo[]>;
+  public users$: Observable<ClientInfo[]>;
   public games$: Observable<GameInfo[]>;
   public isConnected = false;
 
@@ -26,7 +26,7 @@ export class GamesComponent implements OnDestroy, OnInit {
     private sessionService: SessionService,
     private socketService: SocketService
   ) {
-    this.users$ = this.sessionService.get(session => session.users);
+    this.users$ = this.sessionService.get(session => session.clients);
     this.games$ = this.sessionService.get(session => session.games);
   }
 

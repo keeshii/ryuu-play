@@ -9,17 +9,9 @@ $board-min-height: calc(6 * var(--card-size) * #{$card-aspect-ratio} + 2 * #{map
   overflow: auto;
 }
 
-@mixin ptcg-board-size($toolbar-height) {
-  .ptcg-board-container {
-    height: 100%;
-    width: calc(var(--card-size) * #{$ptcg-bench-slots} + #{($ptcg-bench-slots + 1) * map-get($padding, small)});
-  }
-}
-
-@include ptcg-board-size($mat-toolbar-height-desktop);
-
-@media ($mat-xsmall) {
-  @include ptcg-board-size($mat-toolbar-height-mobile);
+.ptcg-board-container {
+  height: 100%;
+  width: calc(var(--card-size) * #{$ptcg-bench-slots} + #{($ptcg-bench-slots + 1) * map-get($padding, small)});
 }
 
 .ptcg-board-container {

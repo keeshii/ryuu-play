@@ -1,4 +1,5 @@
 import { GamePhase, State } from '../../game';
+import { Rang } from '../../storage';
 
 export interface PlayerInfo {
   clientId: number;
@@ -15,21 +16,23 @@ export interface GameInfo {
   players: PlayerInfo[];
 }
 
-export interface UserInfo {
+export interface ClientInfo {
   clientId: number;
   userId: number;
   name: string;
   ranking: number;
+  rang: Rang;
+  avatarFile: string;
 }
 
 export interface CoreInfo {
   clientId: number;
-  users: UserInfo[],
+  users: ClientInfo[],
   games: GameInfo[]
 }
 
 export interface GameState {
   gameId: number;
   state: State;
-  users: UserInfo[]
+  users: ClientInfo[]
 }

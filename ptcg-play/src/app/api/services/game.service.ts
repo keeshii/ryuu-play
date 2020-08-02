@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, UserInfo, GameState, State, CardTarget } from 'ptcg-server';
+import { Action, ClientInfo, GameState, State, CardTarget } from 'ptcg-server';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
@@ -10,7 +10,7 @@ import { SessionService } from '../../shared/session/session.service';
 
 export interface GameUserInfo {
   gameId: number;
-  userInfo: UserInfo;
+  userInfo: ClientInfo;
 }
 
 @Injectable()
@@ -116,8 +116,8 @@ export class GameService {
   public dispatch(action: Action) { }
 
   private startListening(id: number) {
-    this.socketService.on(`game[${id}]:join`, (userInfo: UserInfo) => this.onJoin(id, userInfo));
-    this.socketService.on(`game[${id}]:leave`, (userInfo: UserInfo) => this.onLeave(id, userInfo));
+    this.socketService.on(`game[${id}]:join`, (userInfo: ClientInfo) => this.onJoin(id, userInfo));
+    this.socketService.on(`game[${id}]:leave`, (userInfo: ClientInfo) => this.onLeave(id, userInfo));
     this.socketService.on(`game[${id}]:stateChange`, (state: State) => this.onStateChange(id, state));
   }
 
@@ -137,7 +137,7 @@ export class GameService {
     }
   }
 
-  private onJoin(gameId: number, userInfo: UserInfo) {
+  private onJoin(gameId: number, userInfo: ClientInfo) {
     const index = this.sessionService.session.gameStates.findIndex(g => g.gameId === gameId);
     if (index === -1) {
       return;
@@ -152,7 +152,7 @@ export class GameService {
     }
   }
 
-  private onLeave(gameId: number, userInfo: UserInfo) {
+  private onLeave(gameId: number, userInfo: ClientInfo) {
     const index = this.sessionService.session.gameStates.findIndex(g => g.gameId === gameId);
     if (index === -1) {
       return;
