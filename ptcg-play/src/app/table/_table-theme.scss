@@ -11,7 +11,6 @@
   $table-border: solid 1px mat-color($foreground, divider);
   $active-player-background-color: mat-color($background, focused-button);
   $hand-background-color: mat-color($background, app-bar);
-  $avatar-background-color: mat-color($background, app-bar);
   $table-sidebar-header-background-color: mat-color($background, background);
   $table-sidebar-logs-background-color: mat-color($background, focused-button);
 
@@ -40,9 +39,6 @@
       &:before {
         background-color: mat-color($primary);
       }
-    }
-    .ptcg-player-avatar {
-      background-color: $avatar-background-color;
     }
   }
 

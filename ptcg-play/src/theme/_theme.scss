@@ -1,10 +1,12 @@
 @import '../app/shared/sidebar/_sidebar-theme.scss';
 @import '../app/login/login-popup/_login-popup-theme.scss';
 @import '../app/deck/deck-edit/_deck-edit-theme.scss';
+@import '../app/main/main-theme.scss';
 @import '../app/shared/search-box/_search-box-theme.scss';
 @import '../app/shared/info/_info-theme.scss';
 @import '../app/shared/badge/_badge-theme.scss';
 @import '../app/shared/cards/_cards-theme.scss';
+@import '../app/shared/user-info/_user-info.theme.scss';
 @import '../app/table/_table-theme.scss';
 @import '../app/table/prompt/_prompt-theme.scss';
 
@@ -12,17 +14,20 @@
   @include ptcg-sidebar-theme($theme);
   @include ptcg-deck-edit-theme($theme);
   @include ptcg-login-popup-theme($theme);
+  @include ptcg-main-theme($theme);
   @include ptcg-search-box-theme($theme);
   @include ptcg-info-theme($theme);
   @include ptcg-badge-theme($theme);
   @include ptcg-cards-theme($theme);
   @include ptcg-table-theme($theme);
+  @include ptcg-user-info-theme($theme);
   @include ptcg-prompt-theme($theme);
 }
 
 @mixin ptcg-typography($config) {
   @include ptcg-cards-typography($config);
   @include ptcg-deck-edit-typography($config);
+  @include ptcg-user-info-typography($config);
   @include ptcg-info-typography($config);
   @include ptcg-table-typography($config);
 }

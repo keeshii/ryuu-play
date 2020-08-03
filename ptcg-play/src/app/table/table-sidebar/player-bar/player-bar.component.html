@@ -1,6 +1,6 @@
 <div class="ptcg-player-bar" [ngClass]="{active: active}">
 
-  <div class="ptcg-player-avatar"></div>
+  <ptcg-avatar class="ptcg-player-avatar"></ptcg-avatar>
 
   <div class="ptcg-player-info">
     <div *ngIf="!isEmpty; then playerInfo else emptyInfo"></div>

@@ -1,0 +1,18 @@
+<mat-toolbar color="primary" [ngClass]="{'is-logged-in': loggedUser}">
+  <button mat-button (click)="onLogoClick()">Ryuu Play</button>
+  <span class="ryuu-spacer"></span>
+  
+  <div class="ptcg-toolbar-user-info">
+    <button *ngIf="!loggedUser" mat-button (click)="login()">Login</button>
+    <ptcg-user-bar *ngIf="loggedUser"
+      class="ptcg-logged-user"
+      [user]="loggedUser"
+      [matMenuTriggerFor]="menu">
+    </ptcg-user-bar>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item>Show profile</button>
+      <button mat-menu-item (click)="logout()">Logout</button>
+    </mat-menu>
+  </div>
+
+</mat-toolbar>

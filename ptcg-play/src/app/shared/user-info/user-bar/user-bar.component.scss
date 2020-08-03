@@ -1,0 +1,39 @@
+@import '../../../../theme/variables.scss';
+
+$avatar-size: map-get($ptcg-size, avatar);
+$ptcg-player-bar-active-divider-size: 2px;
+
+:host {
+  align-items: center;
+  display: flex;
+  height: 100%;
+  flex-direction: row;
+  width: 100%;
+}
+
+.ptcg-user-bar {
+  cursor: pointer;
+  position: relative;
+  width: 100%;
+}
+
+ptcg-avatar {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  top: 0;
+}
+
+.ptcg-user-info {
+  display: flex;
+  flex: 1 1;
+  flex-direction: column;
+  margin-left: map-get($ptcg-size, avatar);
+  justify-content: center;
+  padding: 0 map-get($padding, small);
+}
+
+.ptcg-user-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

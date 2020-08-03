@@ -1,9 +1,17 @@
 <ptcg-sidebar-container>
 
   <ptcg-sidebar>
-    <mat-list>
-      <mat-list-item *ngFor="let user of (users$ | async)">{{user.name}}</mat-list-item>
-    </mat-list>    
+    <mat-nav-list>
+      <a mat-list-item *ngFor="let user of (users$ | async)"
+        [matMenuTriggerFor]="menu">
+        <ptcg-user-bar [user]="user"></ptcg-user-bar>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item>Send message</button>
+          <button mat-menu-item>Invite to game</button>
+          <button mat-menu-item>Show profile</button>
+        </mat-menu>
+      </a>
+    </mat-nav-list>
   </ptcg-sidebar>
 
   <mat-toolbar>

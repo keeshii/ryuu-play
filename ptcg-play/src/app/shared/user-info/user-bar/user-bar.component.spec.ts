@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProfileMenuComponent } from './profile-menu.component';
+import { UserBarComponent } from './user-bar.component';
 
-describe('ProfileMenuComponent', () => {
-  let component: ProfileMenuComponent;
-  let fixture: ComponentFixture<ProfileMenuComponent>;
+describe('UserBarComponent', () => {
+  let component: UserBarComponent;
+  let fixture: ComponentFixture<UserBarComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ProfileMenuComponent ]
+      declarations: [ UserBarComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ProfileMenuComponent);
+    fixture = TestBed.createComponent(UserBarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

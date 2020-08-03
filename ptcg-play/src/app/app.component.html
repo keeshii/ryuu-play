@@ -1,10 +1,5 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<mat-toolbar color="primary">
-  <button mat-button (click)="sidenav.toggle()">Ryuu Play</button>
-  <span class="ryuu-spacer"></span>
-  
-  <ptcg-profile-menu></ptcg-profile-menu>
-</mat-toolbar>
+<ptcg-toolbar (logoClick)="sidenav.toggle()"></ptcg-toolbar>
 
 <mat-sidenav-container hasBackdrop="false">
   <mat-sidenav #sidenav opened mode="side" class="ryuu-app-sidenav">

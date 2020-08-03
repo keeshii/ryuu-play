@@ -9,6 +9,7 @@ import { CardsBaseService } from './shared/cards/cards-base.service';
 import { DeckModule } from './deck/deck.module';
 import { GamesModule } from './games/games.module';
 import { LoginModule } from './login/login.module';
+import { MainModule } from './main/main.module';
 import { ProfileModule } from './profile/profile.module';
 import { SharedModule } from './shared/shared.module';
 import { TableModule } from './table/table.module';
@@ -23,6 +24,7 @@ import { TableModule } from './table/table.module';
     DeckModule,
     GamesModule,
     LoginModule,
+    MainModule,
     ProfileModule,
     SharedModule,
     SkyhookDndModule.forRoot({ backend: MultiBackend, options: HTML5ToTouch }),

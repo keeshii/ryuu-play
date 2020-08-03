@@ -1,0 +1,25 @@
+@import '~@angular/material/theming';
+
+
+@mixin ptcg-user-info-theme($theme) {
+  $background: map-get($theme, background);
+
+  $avatar-background-color: mat-color($background, app-bar);
+
+  ptcg-avatar {
+    .ptcg-avatar {
+      background-color: $avatar-background-color;
+    }
+  }
+
+}
+
+@mixin ptcg-user-info-typography($config) {
+  ptcg-user-bar {
+    @include mat-typography-level-to-styles($config, caption);
+    
+    .ptcg-user-name {
+      @include mat-typography-level-to-styles($config, body-2);
+    }
+  }
+}

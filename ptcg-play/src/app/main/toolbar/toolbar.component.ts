@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { UserInfo } from 'ptcg-server';
@@ -8,11 +8,13 @@ import { SessionService } from '../../shared/session/session.service';
 import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed';
 
 @Component({
-  selector: 'ptcg-profile-menu',
-  templateUrl: './profile-menu.component.html',
-  styleUrls: ['./profile-menu.component.scss']
+  selector: 'ptcg-toolbar',
+  templateUrl: './toolbar.component.html',
+  styleUrls: ['./toolbar.component.scss']
 })
-export class ProfileMenuComponent implements OnInit, OnDestroy {
+export class ToolbarComponent implements OnInit, OnDestroy {
+
+  @Output() logoClick = new EventEmitter<void>();
 
   private loggedUser$: Observable<UserInfo | undefined>;
   public loggedUser: UserInfo | undefined;
@@ -41,4 +43,9 @@ export class ProfileMenuComponent implements OnInit, OnDestroy {
     this.sessionService.clear();
     this.router.navigate(['/login']);
   }
+
+  public onLogoClick() {
+    this.logoClick.emit();
+  }
+
 }
