@@ -11,25 +11,31 @@
     ></ptcg-table-sidebar>
   </ptcg-sidebar>
 
-  <!-- Table board -->
-  <ptcg-board
-    [clientId]="clientId"
-    [gameState]="gameState"
-    [topPlayer]="topPlayer"
-    [bottomPlayer]="bottomPlayer"
-  ></ptcg-board>
+  <ptcg-content [loading]="loading || waiting">
+    <div class="ptcg-table">
 
-  <!-- Player's hand -->
-  <ptcg-hand
-    [clientId]="clientId"
-    [gameState]="gameState"
-    [player]="bottomPlayer"
-  ></ptcg-hand>
+      <!-- Table board -->
+      <ptcg-board
+        [clientId]="clientId"
+        [gameState]="gameState"
+        [topPlayer]="topPlayer"
+        [bottomPlayer]="bottomPlayer"
+      ></ptcg-board>
 
-  <!-- Player prompt -->
-  <ptcg-prompt
-    [gameState]="gameState"
-    [clientId]="clientId"
-  ></ptcg-prompt>
+      <!-- Player's hand -->
+      <ptcg-hand
+        [clientId]="clientId"
+        [gameState]="gameState"
+        [player]="bottomPlayer"
+      ></ptcg-hand>
+
+      <!-- Player prompt -->
+      <ptcg-prompt
+        [gameState]="gameState"
+        [clientId]="clientId"
+      ></ptcg-prompt>
+
+    </div>
+  </ptcg-content>
 
 </ptcg-sidebar-container>

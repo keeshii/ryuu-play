@@ -1,7 +1,4 @@
-      <mat-progress-bar class="ptcg-u-top" color="accent" mode="indeterminate">
-      </mat-progress-bar>
-
-<ptcg-content class="ptcg-u-fill">
+<ptcg-content [loading]="loading" class="ptcg-u-padding">
 
   <h1 class="mat-h1">
     Create a new account
@@ -10,9 +7,6 @@
   <div class="ptcg-register-form">
     <!-- Player Name -->
     <mat-card>
-
-      <mat-progress-bar class="ptcg-u-top" *ngIf="loading" mode="indeterminate">
-      </mat-progress-bar>
 
       <mat-card-content>
         <form #form="ngForm">

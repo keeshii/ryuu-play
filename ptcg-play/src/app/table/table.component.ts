@@ -25,6 +25,7 @@ export class TableComponent implements OnInit, OnDestroy {
   public topPlayer: Player;
   public clientId: number;
   public loading: boolean;
+  public waiting: boolean;
   private gameId: number;
 
   constructor(
@@ -108,6 +109,7 @@ export class TableComponent implements OnInit, OnDestroy {
   private updatePlayers(gameState: GameState, clientId: number) {
     this.bottomPlayer = undefined;
     this.topPlayer = undefined;
+    this.waiting = false;
     this.clientId = clientId;
 
     if (!gameState || !gameState.state) {
@@ -130,6 +132,12 @@ export class TableComponent implements OnInit, OnDestroy {
       } else {
         this.bottomPlayer = state.players[1];
       }
+
+      const prompts = state.prompts.filter(p => p.result === undefined);
+      const waitingForOthers = prompts.some(p => p.playerId !== clientId);
+      const waitingForMe = prompts.some(p => p.playerId === clientId);
+      const notMyTurn = state.players[state.activePlayer].id !== clientId;
+      this.waiting = (notMyTurn || waitingForOthers) && !waitingForMe;
     }
   }
 

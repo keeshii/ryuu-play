@@ -9,6 +9,12 @@
 
   > mat-sidenav-container {
     flex: 1 1;
+    z-index: unset;
+  }
+
+  > mat-sidenav-container > mat-sidenav,
+  > mat-sidenav-container > mat-sidenav-content {
+    z-index: unset;
   }
 }
 

@@ -1,14 +1,18 @@
-<ptcg-deck-edit-toolbar
-  [disabled]="loading"
-  [deck]="deck"
-  (filterChange)="toolbarFilter = $event"
-  (save)="saveDeck()"
-></ptcg-deck-edit-toolbar>
+<ptcg-content [loading]="loading">
+  <div class="ptcg-deck-edit">
+    <ptcg-deck-edit-toolbar
+      [disabled]="loading"
+      [deck]="deck"
+      (filterChange)="toolbarFilter = $event"
+      (save)="saveDeck()"
+    ></ptcg-deck-edit-toolbar>
 
-<ptcg-deck-edit-panes 
-  [toolbarFilter]="toolbarFilter"
-  [(deckItems)]="deckItems">
-</ptcg-deck-edit-panes>
+    <ptcg-deck-edit-panes 
+      [toolbarFilter]="toolbarFilter"
+      [(deckItems)]="deckItems">
+    </ptcg-deck-edit-panes>
 
-<ptcg-deck-edit-info [deckItems]="deckItems">
-</ptcg-deck-edit-info>
+    <ptcg-deck-edit-info [deckItems]="deckItems">
+    </ptcg-deck-edit-info>
+  </div>
+</ptcg-content>

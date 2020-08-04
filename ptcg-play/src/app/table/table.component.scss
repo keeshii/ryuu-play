@@ -3,9 +3,10 @@
   height: 100%;
 }
 
-ptcg-sidebar-container {
+.ptcg-table {
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 ptcg-board {

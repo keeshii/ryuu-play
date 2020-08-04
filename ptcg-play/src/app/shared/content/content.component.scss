@@ -1,7 +1,21 @@
-@import '../../../theme/variables.scss';
-
 :host {
   display: block;
-  padding: map-get($padding, normal);
+  height: 100%;
+  position: relative;
+  width: 100%;
+}
+
+mat-progress-bar {
+  left: 0;
+  position: absolute !important;
+  right: 0;
+  top: 0;
+  z-index: 3;
+}
+
+.ptcg-content-container {
+  display: block;
+  height: 100%;
+  overflow: auto;
   width: 100%;
 }
