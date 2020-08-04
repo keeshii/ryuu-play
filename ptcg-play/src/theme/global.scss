@@ -115,6 +115,8 @@ mat-dialog-content {
   }
 }
 
-ptcg-sidebar .mat-list-base .mat-list-item .mat-list-item-content {
-  padding: 0;
+.ptcg-no-padding-list-item {
+  > .mat-list-item-content {
+    padding: 0 !important;
+  }
 }

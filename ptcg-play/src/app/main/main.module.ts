@@ -16,6 +16,7 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
     SharedModule
   ],
   exports: [
+    SidenavComponent,
     ToolbarComponent
   ]
 })

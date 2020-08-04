@@ -3,18 +3,10 @@
 
 @mixin ptcg-main-theme($theme) {
   $background: map-get($theme, background);
-  // $foreground: map-get($theme, foreground);
-  // $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  // $warn: map-get($theme, warn);
-
-  // $table-border: solid 1px mat-color($foreground, divider);
-  // $active-player-background-color: mat-color($background, focused-button);
-  // $hand-background-color: mat-color($background, app-bar);
+  $primary: map-get($theme, primary);
   $avatar-background-color: mat-color($background, app-bar);
-  // $table-sidebar-header-background-color: mat-color($background, background);
-  $logged-user-background-color: mat-color($accent, 200); //mat-color($background, focused-button);
-  $logged-user-text-color: mat-contrast($accent, 200);
+  $logged-user-background-color: mat-color($primary, 200); //mat-color($background, focused-button);
+  $logged-user-text-color: mat-contrast($primary, 200);
 
   ptcg-toolbar {
     .ptcg-logged-user {

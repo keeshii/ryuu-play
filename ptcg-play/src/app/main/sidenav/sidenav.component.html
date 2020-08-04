@@ -1,1 +1,18 @@
-<p>sidenav works!</p>
+<mat-nav-list>
+  <a routerLink="/games" mat-list-item>Games</a>
+  <a routerLink="/deck" mat-list-item>Deck</a>
+  <a mat-list-item>Ranking</a>
+  <a mat-list-item>Profile</a>
+  <a mat-list-item>
+    <span matBadge="1" matBadgeOverlap="false">Messages</span>
+  </a>
+</mat-nav-list>
+
+<mat-divider></mat-divider>
+<mat-nav-list>
+  <h4>Tables</h4>
+  <a mat-list-item *ngFor="let table of (gameStates$ | async)"
+    [routerLink]="['/table', table.gameId]">
+    Table {{table.gameId}}
+  </a>
+</mat-nav-list>

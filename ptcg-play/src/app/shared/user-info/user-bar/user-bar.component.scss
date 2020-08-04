@@ -4,17 +4,11 @@ $avatar-size: map-get($ptcg-size, avatar);
 $ptcg-player-bar-active-divider-size: 2px;
 
 :host {
-  align-items: center;
-  display: flex;
-  height: 100%;
-  flex-direction: row;
   width: 100%;
 }
 
 .ptcg-user-bar {
-  cursor: pointer;
   position: relative;
-  width: 100%;
 }
 
 ptcg-avatar {

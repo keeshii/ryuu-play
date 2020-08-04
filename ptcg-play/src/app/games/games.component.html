@@ -3,6 +3,7 @@
   <ptcg-sidebar>
     <mat-nav-list>
       <a mat-list-item *ngFor="let user of (users$ | async)"
+        class="ptcg-no-padding-list-item"
         [matMenuTriggerFor]="menu">
         <ptcg-user-bar [user]="user"></ptcg-user-bar>
         <mat-menu #menu="matMenu">

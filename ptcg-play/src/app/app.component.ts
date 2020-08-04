@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, HostListener, ElementRef } from '@angular/core';
-import { GameState, UserInfo } from 'ptcg-server';
+import { UserInfo } from 'ptcg-server';
 import { Observable } from 'rxjs';
 import { skip, takeUntil } from 'rxjs/operators';
 
@@ -17,7 +17,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   public isLoggedIn = false;
   public loggedUser: UserInfo | undefined;
-  public gameStates$: Observable<GameState[]>;
   private authToken$: Observable<string>;
 
   constructor(
@@ -27,7 +26,6 @@ export class AppComponent implements OnInit, OnDestroy {
     private socketService: SocketService,
   ) {
     this.authToken$ = this.sessionService.get(session => session.authToken);
-    this.gameStates$ = this.sessionService.get(session => session.gameStates);
     setTimeout(() => this.onResize());
   }
 

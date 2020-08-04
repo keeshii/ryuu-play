@@ -9,11 +9,14 @@
   }
 }
 
+:host {
+  z-index: 2;
+}
+
 mat-toolbar {
   @include mat-elevation(5);
   @include ptcg-toolbar-height();
   flex: 0 0 auto;
-  z-index: 2;
 
   .ryuu-spacer {
     flex: 1 1 auto;
