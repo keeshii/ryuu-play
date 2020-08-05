@@ -1,0 +1,6 @@
+@import '../../../theme/variables.scss';
+
+.ptcg-game-rule-checkbox {
+  display: flex;
+  margin: map-get($padding, small) 0;
+}

@@ -1,0 +1,51 @@
+<h2 mat-dialog-title>Create game</h2>
+
+<mat-dialog-content>
+
+  <form #form="ngForm" autocomplete="off">
+
+    <h4>Game options</h4>
+
+    <!-- Deck -->
+    <mat-form-field>
+      <mat-label>Your deck</mat-label>
+      <mat-select [(value)]="deck">
+        <mat-option *ngFor="let option of deckOptions" [value]="option.value">
+          {{option.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Time limit -->
+    <mat-form-field>
+      <mat-label>Time limit</mat-label>
+      <mat-select [(value)]="time">
+        <mat-option *ngFor="let option of timeOptions" [value]="option.value">
+          {{option.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <h4>Game rules</h4>
+
+    <section class="ptcg-game-rule-checkbox">
+      <mat-checkbox color="primary">
+        First player draws a card.
+      </mat-checkbox>
+    </section>
+    <section class="ptcg-game-rule-checkbox">
+      <mat-checkbox color="primary">
+        Allow to play supporters in the first turn.
+      </mat-checkbox>
+    </section>
+
+  </form>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button (click)="cancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="confirm()" [disabled]="form.invalid">
+    OK
+  </button>
+</mat-dialog-actions>

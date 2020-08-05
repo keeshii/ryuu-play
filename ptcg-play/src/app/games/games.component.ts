@@ -1,7 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GameInfo, ClientInfo } from 'ptcg-server';
+import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 
+import { CreateGamePopupComponent } from './create-game-popup/create-game-popup.component';
 import { MainService } from '../api/services/main.service';
 import { SessionService } from '../shared/session/session.service';
 import { SocketService } from '../api/socket.service';
@@ -21,6 +23,7 @@ export class GamesComponent implements OnDestroy, OnInit {
   public isConnected = false;
 
   constructor(
+    private dialog: MatDialog,
     private mainSevice: MainService,
     private sessionService: SessionService,
     private socketService: SocketService
@@ -40,7 +43,19 @@ export class GamesComponent implements OnDestroy, OnInit {
   ngOnDestroy() { }
 
   public createGame() {
-    this.mainSevice.createGame();
+    const dialog = this.dialog.open(CreateGamePopupComponent, {
+      maxWidth: '100%',
+      width: '350px',
+      data: { }
+    });
+
+    return dialog.afterClosed().toPromise()
+      .then(result => {
+        if (result) {
+          this.mainSevice.createGame();
+        }
+      })
+      .catch(() => false);
   }
 
 }
