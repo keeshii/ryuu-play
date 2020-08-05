@@ -1,6 +1,8 @@
+import { AddPlayerAction } from "../store/actions/add-player-action";
 import { Client } from "./client";
 import { GameError, GameMessage } from "../game-error";
 import { Game } from "./game";
+import { GameSettings } from "./game-settings";
 import { generateId } from "../../utils/utils";
 
 export class Core {
@@ -27,11 +29,13 @@ export class Core {
     this.emit(c => c.onDisconnect(client));
   }
 
-  public createGame(client: Client): Game {
+  public createGame(client: Client, deck: string[],
+    gameSettings: GameSettings = new GameSettings()): Game {
     if (this.clients.indexOf(client) === -1) {
       throw new GameError(GameMessage.CLIENT_NOT_CONNECTED);
     }
-    const game = new Game(this, generateId(this.games));
+    const game = new Game(this, generateId(this.games), gameSettings);
+    game.dispatch(client, new AddPlayerAction(client.id, client.name, deck));
     this.games.push(game);
     this.emit(c => c.onGameAdd(game));
     this.joinGame(client, game);

@@ -45,10 +45,9 @@ storage.connect()
       return deck;
     }
 
-    const game = bot1.createGame();
+    const game = bot1.createGame(createSampleDeck());
     bot2.joinGame(game);
 
-    bot1.playGame(game, createSampleDeck());
     bot2.playGame(game, createSampleDeck());
   })
   .then(() => storage.disconnect());

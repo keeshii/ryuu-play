@@ -4,13 +4,11 @@
 
   <form #form="ngForm" autocomplete="off">
 
-    <h4>Game options</h4>
-
     <!-- Deck -->
     <mat-form-field>
       <mat-label>Your deck</mat-label>
-      <mat-select [(value)]="deck">
-        <mat-option *ngFor="let option of deckOptions" [value]="option.value">
+      <mat-select [(value)]="deckId">
+        <mat-option *ngFor="let option of decks" [value]="option.value">
           {{option.viewValue}}
         </mat-option>
       </mat-select>
@@ -19,23 +17,34 @@
     <!-- Time limit -->
     <mat-form-field>
       <mat-label>Time limit</mat-label>
-      <mat-select [(value)]="time">
-        <mat-option *ngFor="let option of timeOptions" [value]="option.value">
+      <mat-select [(value)]="settings.timeLimit">
+        <mat-option *ngFor="let option of timeLimits" [value]="option.value">
           {{option.viewValue}}
         </mat-option>
       </mat-select>
     </mat-form-field>
 
+    <h4>Ranking</h4>
+
+    <section class="ptcg-game-rule-checkbox">
+      <mat-checkbox color="primary" name="rule1"
+        [(ngModel)]="settings.rankingPlay">
+        Update ranking
+      </mat-checkbox>
+    </section>
+
     <h4>Game rules</h4>
 
     <section class="ptcg-game-rule-checkbox">
-      <mat-checkbox color="primary">
-        First player draws a card.
+      <mat-checkbox color="primary" name="rule1"
+        [(ngModel)]="settings.rules.firstTurnDrawCard">
+        First player draws a card
       </mat-checkbox>
     </section>
     <section class="ptcg-game-rule-checkbox">
-      <mat-checkbox color="primary">
-        Allow to play supporters in the first turn.
+      <mat-checkbox color="primary" name="rule2"
+        [(ngModel)]="settings.rules.firstTurnUseSupporter">
+        Allow to play supporters in the first turn
       </mat-checkbox>
     </section>
 

@@ -12,11 +12,11 @@ export abstract class BotClient extends Client {
     super(user);
   }
 
-  createGame(): Game {
+  createGame(deck: string[]): Game {
     if (this.core === undefined) {
       throw new GameError(GameMessage.BOT_NOT_INITIALIZED);
     }
-    const game = this.core.createGame(this);
+    const game = this.core.createGame(this, deck);
     return game;
   }
 

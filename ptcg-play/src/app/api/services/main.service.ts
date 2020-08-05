@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { GameInfo, CoreInfo, ClientInfo, GameState } from 'ptcg-server';
+import { GameInfo, CoreInfo, ClientInfo, GameState, GameSettings } from 'ptcg-server';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
@@ -68,9 +68,9 @@ export class MainService {
       .pipe(finalize(() => { this.loading = false; }));
   }
 
-  public createGame() {
+  public createGame(deck: string[], gameSettings: GameSettings) {
     this.loading = true;
-    this.socketService.emit('core:createGame')
+    this.socketService.emit('core:createGame', { deck, gameSettings })
       .pipe(finalize(() => { this.loading = false; }))
       .subscribe((gameState: GameState) => {
         this.gameService.appendGameState(gameState);

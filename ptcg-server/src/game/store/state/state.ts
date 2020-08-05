@@ -1,6 +1,7 @@
 import { Player } from "./player";
 import { Prompt } from "../prompts/prompt";
 import { StateLog } from "./state-log";
+import { Rules } from "./rules";
 
 export enum GamePhase {
   WAITING_FOR_PLAYERS,
@@ -21,6 +22,8 @@ export enum GameWinner {
 export class State {
 
   public logs: StateLog[] = [];
+
+  public rules: Rules = new Rules();
 
   public prompts: Prompt<any>[] = [];
 

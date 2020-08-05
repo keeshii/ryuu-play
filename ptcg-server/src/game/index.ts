@@ -1,6 +1,8 @@
 export * from './cards/card-manager';
 export * from './cards/deck-analyser';
 
+export * from './core/game-settings';
+
 export * from './game-error';
 
 export * from './store/actions/action';
@@ -37,6 +39,7 @@ export * from './store/prompts/shuffle-prompt';
 export * from './store/state/card-list';
 export * from './store/state/player';
 export * from './store/state/pokemon-card-list';
+export * from './store/state/rules';
 export * from './store/state/state-log';
 export * from './store/state/state';
 

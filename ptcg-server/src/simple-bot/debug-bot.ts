@@ -7,7 +7,7 @@ export class DebugBot extends SimpleBot {
   public onGameAdd(game: Game): void {
     super.joinGame(game);
     this.addGameHandler(game);
-    const deck = this.createSampleDeck();
+    const deck = DebugBot.createSampleDeck();
     this.playGame(game, deck);
   }
 
@@ -24,7 +24,7 @@ export class DebugBot extends SimpleBot {
     }
   }
 
-  private createSampleDeck(): string[] {
+  public static createSampleDeck(): string[] {
     const deck = [];
     for (let i = 0; i < 56; i++) {
       deck.push('Water Energy EVO');

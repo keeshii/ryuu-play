@@ -1,7 +1,7 @@
 import * as io from 'socket.io';
 import { AddPlayerAction, AppendLogAction, Action, PassTurnAction,
   ReorderHandAction, ReorderBenchAction, PlayCardAction, CardTarget,
-  RetreatAction, AttackAction, UseAbilityAction } from '../../game';
+  RetreatAction, AttackAction, UseAbilityAction, GameSettings } from '../../game';
 import { Client } from '../../game/core/client';
 import { Errors } from '../common/errors';
 import { Game } from '../../game/core/game';
@@ -180,8 +180,8 @@ export class SocketClient extends Client {
     response('ok', this.buildCoreInfo());
   }
 
-  private createGame(data: void, response: Response<GameState>): void {
-    const game = this.core.createGame(this);
+  private createGame(params: { deck: string[], gameSettings: GameSettings }, response: Response<GameState>): void {
+    const game = this.core.createGame(this, params.deck, params.gameSettings);
     response('ok', this.buildGameState(game));
   }
 

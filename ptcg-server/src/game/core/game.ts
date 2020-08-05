@@ -2,6 +2,7 @@ import { Action } from "../store/actions/action";
 import { Arbiter } from "./arbiter";
 import { Client } from "./client";
 import { Core } from "./core";
+import { GameSettings } from "./game-settings";
 import { ResolvePromptAction } from "../store/actions/resolve-prompt-action";
 import { State, GamePhase } from "../store/state/state";
 import { Store } from "../store/store";
@@ -14,9 +15,10 @@ export class Game implements StoreHandler {
   private arbiter = new Arbiter();
   private store: Store;
 
-  constructor(private core: Core, id: number) {
+  constructor(private core: Core, id: number, gameSettings: GameSettings) {
     this.id = id;
     this.store = new Store(this);
+    this.store.state.rules = gameSettings.rules;
   }
 
   public get state(): State {

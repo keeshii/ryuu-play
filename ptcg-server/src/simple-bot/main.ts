@@ -33,8 +33,8 @@ export class SimpleBot extends BotClient {
     }
   }
 
-  public createGame(): Game {
-    const game = super.createGame();
+  public createGame(deck: string[]): Game {
+    const game = super.createGame(deck);
     this.addGameHandler(game);
     return game;
   }
