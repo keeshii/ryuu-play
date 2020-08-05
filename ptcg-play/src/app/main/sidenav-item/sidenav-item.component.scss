@@ -1,0 +1,35 @@
+@import '../../../theme/variables.scss';
+
+$ptcg-sidenav-close-button-size: 40px;
+$ptcg-sidenav-close-margin: $ptcg-sidenav-close-button-size - map-get($padding, normal);
+
+
+.ptcg-sidenav-item {
+  position: relative;
+}
+
+.ptcg-sidenav-label-container {
+  max-width: 100%;
+  padding-right: $ptcg-sidenav-close-margin;
+}
+
+.ptcg-sidenav-label-badge {
+  display: flex;
+  max-width: 100%;
+}
+
+.ptcg-sidenav-label-inner {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ptcg-sidenav-close-button {
+  align-items: center;
+  bottom: 0;
+  display: flex;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: $ptcg-sidenav-close-button-size;
+}

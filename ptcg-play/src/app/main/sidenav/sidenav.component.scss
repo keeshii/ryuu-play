@@ -1,0 +1,5 @@
+@import '../../../theme/variables.scss';
+
+.ptcg-sidenav-header {
+  padding: map-get($padding, small);
+}

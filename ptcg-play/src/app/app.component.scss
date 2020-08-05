@@ -12,16 +12,11 @@
     z-index: unset;
   }
 
-  > mat-sidenav-container > mat-sidenav,
   > mat-sidenav-container > mat-sidenav-content {
     z-index: unset;
   }
 }
 
 .ptcg-app-sidenav {
-  min-width: map-get($ptcg-size, nav-menu);
-
-  h4 {
-    padding: 8px 16px;
-  }
+  width: map-get($ptcg-size, nav-menu);
 }

@@ -8,11 +8,17 @@
   </a>
 </mat-nav-list>
 
-<mat-divider></mat-divider>
 <mat-nav-list>
-  <h4>Tables</h4>
-  <a mat-list-item *ngFor="let table of (gameStates$ | async)"
-    [routerLink]="['/table', table.gameId]">
-    Table {{table.gameId}}
-  </a>
+
+  <mat-divider></mat-divider>
+
+  <div class="ptcg-sidenav-header">
+    <h4>Tables</h4>
+  </div>
+
+  <ptcg-sidenav-item
+    *ngFor="let gameState of (gameStates$ | async)"
+    [gameState]="gameState">
+  </ptcg-sidenav-item>
+
 </mat-nav-list>

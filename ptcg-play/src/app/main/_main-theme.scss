@@ -7,11 +7,27 @@
   $avatar-background-color: mat-color($background, app-bar);
   $logged-user-background-color: mat-color($primary, 200); //mat-color($background, focused-button);
   $logged-user-text-color: mat-contrast($primary, 200);
+  $sidenav-table-header-background-color: mat-color($background, background);
 
   ptcg-toolbar {
     .ptcg-logged-user {
       background-color: $logged-user-background-color;
       color: $logged-user-text-color;
+    }
+  }
+
+  ptcg-sidenav {
+    .ptcg-sidenav-header {
+      background-color: $sidenav-table-header-background-color;
+    }
+  }
+}
+
+
+@mixin ptcg-main-typography($config) {
+  ptcg-sidenav-item {
+    .close-button-icon {
+      font-size: mat-font-size($config, body-1);
     }
   }
 }

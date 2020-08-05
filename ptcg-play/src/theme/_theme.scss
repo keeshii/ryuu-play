@@ -26,6 +26,7 @@
 
 @mixin ptcg-typography($config) {
   @include ptcg-cards-typography($config);
+  @include ptcg-main-typography($config);
   @include ptcg-deck-edit-typography($config);
   @include ptcg-user-info-typography($config);
   @include ptcg-info-typography($config);

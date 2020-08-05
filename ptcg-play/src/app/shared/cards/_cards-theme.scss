@@ -61,26 +61,4 @@
     }
 
   }
-
-/*
-  ptcg-board-card {
-    .ptcg-board-card-label {
-      @include mat-typography-level-to-styles($config, caption);
-    }
-  }
-
-  ptcg-board-card-list {
-    .ptcg-card-damage {
-      @include mat-typography-level-to-styles($config, headline);
-    }
-  }
-
-  ptcg-game-logs {
-    .ptcg-game-logs-header mat-icon {
-      font-size: mat-font-size($config, input);
-    }
-    .ptcg-game-logs-content {
-      @include mat-typography-level-to-styles($config, caption);
-    }
-  }*/
 }

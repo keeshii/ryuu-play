@@ -15,63 +15,61 @@
     </mat-nav-list>
   </ptcg-sidebar>
 
-  <ptcg-content [loading]="loading">
-    <mat-toolbar>
-      <mat-toolbar-row>
-        <h1>Games</h1>
+  <mat-toolbar>
+    <mat-toolbar-row>
+      <h1>Games</h1>
 
-        <span class="ptcg-u-spacer"></span>
+      <span class="ptcg-u-spacer"></span>
 
-        <button mat-raised-button color="primary" (click)="createGame()">
-          Create game
-        </button>
-      </mat-toolbar-row>
-    </mat-toolbar>
+      <button mat-raised-button color="primary" (click)="createGame()">
+        Create game
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
 
-    <div class="ptcg-u-padding">
-      <p>Status: <span>{{isConnected ? 'connected' : 'disconnected' }}</span></p>
+  <div class="ptcg-u-padding">
+    <p>Status: <span>{{isConnected ? 'connected' : 'disconnected' }}</span></p>
 
-      <table mat-table [dataSource]="games$ | async" class="mat-elevation-z2">
-        <!-- Game ID Column -->
-        <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef>No.</th>
-          <td mat-cell *matCellDef="let game">{{game.gameId}}</td>
-        </ng-container>
+    <table mat-table [dataSource]="games$ | async" class="mat-elevation-z2">
+      <!-- Game ID Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>No.</th>
+        <td mat-cell *matCellDef="let game">{{game.gameId}}</td>
+      </ng-container>
 
-        <!-- Current turn -->
-        <ng-container matColumnDef="turn">
-          <th mat-header-cell *matHeaderCellDef>Turn</th>
-          <td mat-cell *matCellDef="let game">{{game.turn}}</td>
-        </ng-container>
+      <!-- Current turn -->
+      <ng-container matColumnDef="turn">
+        <th mat-header-cell *matHeaderCellDef>Turn</th>
+        <td mat-cell *matCellDef="let game">{{game.turn}}</td>
+      </ng-container>
 
-        <!-- Player 1 -->
-        <ng-container matColumnDef="player1">
-          <th mat-header-cell *matHeaderCellDef>Player 1</th>
-          <td mat-cell *matCellDef="let game">
-            <ptcg-player-info [player]="game.players[0]"></ptcg-player-info>
-          </td>
-        </ng-container>
+      <!-- Player 1 -->
+      <ng-container matColumnDef="player1">
+        <th mat-header-cell *matHeaderCellDef>Player 1</th>
+        <td mat-cell *matCellDef="let game">
+          <ptcg-player-info [player]="game.players[0]"></ptcg-player-info>
+        </td>
+      </ng-container>
 
-        <!-- Player 2 -->
-        <ng-container matColumnDef="player2">
-          <th mat-header-cell *matHeaderCellDef>Player 2</th>
-          <td mat-cell *matCellDef="let game">
-            <ptcg-player-info [player]="game.players[1]"></ptcg-player-info>
-          </td>
-        </ng-container>
+      <!-- Player 2 -->
+      <ng-container matColumnDef="player2">
+        <th mat-header-cell *matHeaderCellDef>Player 2</th>
+        <td mat-cell *matCellDef="let game">
+          <ptcg-player-info [player]="game.players[1]"></ptcg-player-info>
+        </td>
+      </ng-container>
 
-        <!-- Actions -->
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef>Actions</th>
-          <td mat-cell *matCellDef="let game">
-            <ptcg-game-actions [game]="game"></ptcg-game-actions>
-          </td>
-        </ng-container>
+      <!-- Actions -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let game">
+          <ptcg-game-actions [game]="game"></ptcg-game-actions>
+        </td>
+      </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
-    </div>
-  </ptcg-content>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
 
 </ptcg-sidebar-container>
