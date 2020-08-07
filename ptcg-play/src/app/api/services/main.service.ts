@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { GameInfo, CoreInfo, ClientInfo, GameState, GameSettings } from 'ptcg-server';
 import { Observable } from 'rxjs';
-import { finalize } from 'rxjs/operators';
+import { finalize, tap } from 'rxjs/operators';
 
+import { AlertService } from 'src/app/shared/alert/alert.service';
+import { ApiError } from '../api.error';
 import { GameService } from './game.service';
 import { SessionService } from '../../shared/session/session.service';
 import { SocketService } from '../socket.service';
@@ -13,6 +15,7 @@ export class MainService {
   public loading = false;
 
   constructor(
+    private alertService: AlertService,
     private gameService: GameService,
     private sessionService: SessionService,
     private socketService: SocketService
@@ -68,13 +71,13 @@ export class MainService {
       .pipe(finalize(() => { this.loading = false; }));
   }
 
-  public createGame(deck: string[], gameSettings: GameSettings) {
+  public createGame(deck: string[], gameSettings: GameSettings, clientId?: number) {
     this.loading = true;
-    this.socketService.emit('core:createGame', { deck, gameSettings })
-      .pipe(finalize(() => { this.loading = false; }))
-      .subscribe((gameState: GameState) => {
-        this.gameService.appendGameState(gameState);
-      }, () => {});
+    return this.socketService.emit('core:createGame', { deck, gameSettings, clientId })
+      .pipe(
+        finalize(() => { this.loading = false; }),
+        tap((gameState: GameState) => this.gameService.appendGameState(gameState))
+      );
   }
 
 }

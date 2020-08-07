@@ -3,6 +3,7 @@ import { Client } from "./client";
 import { GameError, GameMessage } from "../game-error";
 import { Game } from "./game";
 import { GameSettings } from "./game-settings";
+import { InvitePlayerAction } from "../store/actions/invite-player-action";
 import { generateId } from "../../utils/utils";
 
 export class Core {
@@ -29,16 +30,29 @@ export class Core {
     this.emit(c => c.onDisconnect(client));
   }
 
-  public createGame(client: Client, deck: string[],
-    gameSettings: GameSettings = new GameSettings()): Game {
+  public createGame(
+    client: Client,
+    deck: string[],
+    gameSettings: GameSettings = new GameSettings(),
+    invited?: Client
+  ): Game {
     if (this.clients.indexOf(client) === -1) {
+      throw new GameError(GameMessage.CLIENT_NOT_CONNECTED);
+    }
+    if (invited && this.clients.indexOf(invited) === -1) {
       throw new GameError(GameMessage.CLIENT_NOT_CONNECTED);
     }
     const game = new Game(this, generateId(this.games), gameSettings);
     game.dispatch(client, new AddPlayerAction(client.id, client.name, deck));
+    if (invited) {
+      game.dispatch(invited, new InvitePlayerAction(invited.id, invited.name));
+    }
     this.games.push(game);
     this.emit(c => c.onGameAdd(game));
     this.joinGame(client, game);
+    if (invited) {
+      this.joinGame(invited, game);
+    }
     return game;
   }
 

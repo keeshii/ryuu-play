@@ -25,8 +25,10 @@ export class GamesComponent implements OnDestroy, OnInit {
   displayedColumns: string[] = ['id', 'turn', 'player1', 'player2', 'actions'];
   public users$: Observable<ClientInfo[]>;
   public games$: Observable<GameInfo[]>;
+  public clientId$: Observable<number>;
   public isConnected = false;
   public loading = false;
+  public clientId: number;
 
   constructor(
     private alertService: AlertService,
@@ -38,9 +40,16 @@ export class GamesComponent implements OnDestroy, OnInit {
   ) {
     this.users$ = this.sessionService.get(session => session.clients);
     this.games$ = this.sessionService.get(session => session.games);
+    this.clientId$ = this.sessionService.get(session => session.clientId);
   }
 
   ngOnInit() {
+    this.clientId$
+      .pipe(takeUntilDestroyed(this))
+      .subscribe(clientId => {
+        this.clientId = clientId;
+      });
+
     this.socketService.connection
       .pipe(takeUntilDestroyed(this))
       .subscribe(connected => {
@@ -59,7 +68,7 @@ export class GamesComponent implements OnDestroy, OnInit {
     return dialog.afterClosed().toPromise();
   }
 
-  public createGame() {
+  public createGame(invitedId?: number) {
     this.loading = true;
     this.deckService.getList()
       .pipe(
@@ -81,19 +90,22 @@ export class GamesComponent implements OnDestroy, OnInit {
           return from(this.showCreateGamePopup(options));
         }),
         switchMap(result => {
+          this.loading = true;
           return result !== undefined
             ? this.deckService.getDeck(result.deckId).pipe(map(deckResult => ({
               deck: deckResult.deck.cards,
               gameSettings: result.gameSettings
             })))
             : EMPTY;
-        })
+        }),
+        switchMap(data => {
+          return this.mainSevice.createGame(data.deck, data.gameSettings, invitedId);
+        }),
+        finalize(() => { this.loading = false; })
       )
       .subscribe({
-        next: data => {
-          this.mainSevice.createGame(data.deck, data.gameSettings);
-        },
-        error: (error: ApiError) => {}
+        next: () => {},
+        error: (error: ApiError) => this.alertService.toast(error.message)
       });
 
   }

@@ -13,18 +13,26 @@ export class SimpleBot extends BotClient {
 
   public onDisconnect(client: Client): void { }
 
-  public onGameJoin(game: Game, client: Client): void { }
+  public onGameJoin(game: Game, client: Client): void {
+    if (client === this) {
+      const state = game.state;
+      this.addGameHandler(game);
+      this.onStateChange(game, state);
+    }
+  }
 
-  public onGameLeave(game: Game, client: Client): void { }
+  public onGameLeave(game: Game, client: Client): void {
+    if (client === this) {
+      const gameHandler = this.gameHandlers.find(handler => handler.game === game);
+      if (gameHandler !== undefined) {
+        this.deleteGameHandler(gameHandler);
+      }
+    }
+  }
 
   public onGameAdd(game: Game): void { }
 
-  public onGameDelete(game: Game): void {
-    const gameHandler = this.gameHandlers.find(handler => handler.game === game);
-    if (gameHandler !== undefined) {
-      this.deleteGameHandler(gameHandler);
-    }
-  }
+  public onGameDelete(game: Game): void { }
 
   public onStateChange(game: Game, state: State): void {
     const gameHandler = this.gameHandlers.find(handler => handler.game === game);

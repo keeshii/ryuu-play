@@ -9,6 +9,8 @@ import { Game } from '../game/core/game';
 import { ResolvePromptAction } from '../game/store/actions/resolve-prompt-action';
 import { GameMessage } from '../game/game-error';
 import { SimpleTacticsAi } from './simple-tactics-ai';
+import { InvitePlayerPrompt } from '../game/store/prompts/invite-player-prompt';
+import { DebugBot } from './debug-bot';
 
 export class SimpleGameHandler {
 
@@ -51,6 +53,12 @@ export class SimpleGameHandler {
   public resolvePrompt(prompt: Prompt<any>): void {
     if (prompt instanceof AlertPrompt || prompt instanceof ShowCardsPrompt || prompt instanceof GameOverPrompt) {
       this.dispatch(new ResolvePromptAction(prompt.id, 0));
+      return;
+    }
+
+    if (prompt instanceof InvitePlayerPrompt) {
+      const result = DebugBot.createSampleDeck();
+      this.dispatch(new ResolvePromptAction(prompt.id, result));
       return;
     }
 

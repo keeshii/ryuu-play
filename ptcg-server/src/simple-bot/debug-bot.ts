@@ -4,13 +4,6 @@ import { Client } from '../game/core/client';
 
 export class DebugBot extends SimpleBot {
 
-  public onGameAdd(game: Game): void {
-    super.joinGame(game);
-    this.addGameHandler(game);
-    const deck = DebugBot.createSampleDeck();
-    this.playGame(game, deck);
-  }
-
   public onGameLeave(game: Game, client: Client): void {
     if (!this.core) {
       return;

@@ -180,8 +180,10 @@ export class SocketClient extends Client {
     response('ok', this.buildCoreInfo());
   }
 
-  private createGame(params: { deck: string[], gameSettings: GameSettings }, response: Response<GameState>): void {
-    const game = this.core.createGame(this, params.deck, params.gameSettings);
+  private createGame(params: { deck: string[], gameSettings: GameSettings, clientId?: number },
+    response: Response<GameState>): void {
+    const invited = this.core.clients.find(c => c.id === params.clientId);
+    const game = this.core.createGame(this, params.deck, params.gameSettings, invited);
     response('ok', this.buildGameState(game));
   }
 

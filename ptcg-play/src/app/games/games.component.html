@@ -7,9 +7,19 @@
         [matMenuTriggerFor]="menu">
         <ptcg-user-bar [user]="user"></ptcg-user-bar>
         <mat-menu #menu="matMenu">
-          <button mat-menu-item>Send message</button>
-          <button mat-menu-item>Invite to game</button>
-          <button mat-menu-item>Show profile</button>
+          <button mat-menu-item
+            *ngIf="clientId !== user.clientId">
+            Send message
+          </button>
+          <button mat-menu-item
+            *ngIf="clientId !== user.clientId"
+            [disabled]="loading"
+            (click)="createGame(user.clientId)">
+            Invite to game
+          </button>
+          <button mat-menu-item>
+            Show profile
+          </button>
         </mat-menu>
       </a>
     </mat-nav-list>
@@ -22,7 +32,9 @@
 
         <span class="ptcg-u-spacer"></span>
 
-        <button mat-raised-button color="primary" (click)="createGame()">
+        <button mat-raised-button color="primary"
+          [disabled]="loading"
+          (click)="createGame()">
           Create game
         </button>
       </mat-toolbar-row>

@@ -82,7 +82,12 @@ export function endGame(store: StoreLike, state: State, winner: GameWinner, onCo
     throw new GameError(GameMessage.ILLEGAL_ACTION);
   }
 
-  if ([GamePhase.PLAYER_TURN, GamePhase.ATTACK, GamePhase.BETWEEN_TURNS].includes(state.phase) === false) {
+  if ([
+      GamePhase.WAITING_FOR_PLAYERS,
+      GamePhase.PLAYER_TURN,
+      GamePhase.ATTACK,
+      GamePhase.BETWEEN_TURNS
+  ].includes(state.phase) === false) {
     throw new GameError(GameMessage.ILLEGAL_ACTION);
   }
 

@@ -6,16 +6,20 @@ import { CardList } from "../state/card-list";
 import { CoinFlipPrompt } from "../prompts/coin-flip-prompt";
 import { ConfirmPrompt } from "../prompts/confirm-prompt";
 import { ChooseCardsPrompt } from "../prompts/choose-cards-prompt";
+import { DeckAnalyser } from "../../cards/deck-analyser";
+import { InvitePlayerAction } from "../actions/invite-player-action";
+import { InvitePlayerPrompt } from "../prompts/invite-player-prompt";
 import { Player } from "../state/player";
 import { ShuffleDeckPrompt } from "../prompts/shuffle-prompt";
-import { State, GamePhase } from "../state/state";
+import { State, GamePhase, GameWinner } from "../state/state";
 import { GameError, GameMessage } from "../../game-error";
+import { PlayerType } from "../actions/play-card-action";
+import { PokemonCardList } from "../state/pokemon-card-list";
 import { StoreLike } from "../store-like";
 import { SuperType, Stage } from "../card/card-types";
+import { WhoBeginsEffect } from "../effects/game-phase-effects";
+import { endGame } from "../effect-reducers/check-effect";
 import { initNextTurn } from "../effect-reducers/game-phase-effect";
-import { PokemonCardList } from "../state/pokemon-card-list";
-import {WhoBeginsEffect} from "../effects/game-phase-effects";
-import {PlayerType} from "../actions/play-card-action";
 
 
 function putStartingPokemonsAndPrizes(player: Player, cards: Card[]): void {
@@ -121,13 +125,35 @@ function* setupGame(next: Function, store: StoreLike, state: State): IterableIte
   return initNextTurn(store, state);
 }
 
+function createPlayer(id: number, name: string): Player {
+  const player = new Player();
+  player.id = id;
+  player.name = name;
+
+  // Empty prizes, places for 6 cards
+  for (let i = 0; i < 6; i++) {
+    const prize = new CardList();
+    prize.isSecret = true;
+    player.prizes.push(prize);
+  }
+
+  // Empty bench, places for 5 pokemons
+  for (let i = 0; i < 5; i++) {
+    const bench = new PokemonCardList();
+    bench.isPublic = true;
+    player.bench.push(bench);
+  }
+
+  player.active.isPublic = true;
+  player.discard.isPublic = true;
+  return player;
+}
 
 export function setupPhaseReducer(store: StoreLike, state: State, action: Action): State {
 
   if (state.phase === GamePhase.WAITING_FOR_PLAYERS) {
 
     if (action instanceof AddPlayerAction) {
-
       if (state.players.length >= 2) {
         throw new GameError(GameMessage.MAX_PLAYERS_REACHED);
       }
@@ -136,29 +162,14 @@ export function setupPhaseReducer(store: StoreLike, state: State, action: Action
         throw new GameError(GameMessage.ALREADY_PLAYING);
       }
 
-      let player = new Player();
-      player.id = action.clientId;
-      player.name = action.name;
+      const deckAnalyser = new DeckAnalyser(action.deck);
+      if (!deckAnalyser.isValid()) {
+        throw new GameError(GameMessage.INVALID_DECK);
+      }
+
+      const player = createPlayer(action.clientId, action.name);
       player.deck = CardList.fromList(action.deck);
       player.deck.isSecret = true;
-
-      // Empty prizes, places for 6 cards
-      for (let i = 0; i < 6; i++) {
-        const prize = new CardList();
-        prize.isSecret = true;
-        player.prizes.push(prize);
-      }
-
-      // Empty bench, places for 5 pokemons
-      for (let i = 0; i < 5; i++) {
-        const bench = new PokemonCardList();
-        bench.isPublic = true;
-        player.bench.push(bench);
-      }
-
-      player.active.isPublic = true;
-      player.discard.isPublic = true;
-
       state.players.push(player);
 
       if (state.players.length === 2) {
@@ -168,6 +179,46 @@ export function setupPhaseReducer(store: StoreLike, state: State, action: Action
         return generator.next().value;
       }
 
+      return state;
+    }
+
+    if (action instanceof InvitePlayerAction) {
+      if (state.players.length >= 2) {
+        throw new GameError(GameMessage.MAX_PLAYERS_REACHED);
+      }
+
+      if (state.players.length == 1 && state.players[0].id === action.clientId) {
+        throw new GameError(GameMessage.ALREADY_PLAYING);
+      }
+
+      const player = createPlayer(action.clientId, action.name);
+      state.players.push(player);
+
+      state = store.prompt(state, new InvitePlayerPrompt(
+        player.id,
+        GameMessage.GAME_INVITATION_MESSAGE
+      ), deck => {
+        if (deck === null) {
+          store.log(state, `${player.name} has not accepted the invitation.`);
+          const winner = GameWinner.NONE;
+          state = endGame(store, state, winner);
+          return;
+        }
+        const deckAnalyser = new DeckAnalyser(deck);
+        if (!deckAnalyser.isValid()) {
+          throw new GameError(GameMessage.INVALID_DECK);
+        }
+
+        player.deck = CardList.fromList(deck);
+        player.deck.isSecret = true;
+
+        if (state.players.length === 2) {
+          state.phase = GamePhase.SETUP;
+          let generator: IterableIterator<State>;
+          generator = setupGame(() => generator.next(), store, state);
+          return generator.next().value;
+        }
+      });
     }
   }
 
