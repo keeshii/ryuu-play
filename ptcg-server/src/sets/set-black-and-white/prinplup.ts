@@ -15,7 +15,7 @@ export class Prinplup extends PokemonCard {
 
   public hp: number = 80;
 
-  public weakness = [{ type: CardType.WATER }];
+  public weakness = [{ type: CardType.LIGHTNING }];
 
   public retreat = [ CardType.COLORLESS, CardType.COLORLESS ];
 

@@ -6,6 +6,7 @@ import { map, distinctUntilChanged } from 'rxjs/operators';
 export interface LocalGameState extends GameState {
   localId: number;
   deleted: boolean;
+  gameOver: boolean;
   logs: StateLog[];
 }
 

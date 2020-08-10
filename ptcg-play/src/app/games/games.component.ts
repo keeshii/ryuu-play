@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GameInfo, ClientInfo } from 'ptcg-server';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable, EMPTY, from } from 'rxjs';
-import { finalize, switchMap, map } from 'rxjs/operators';
+import { finalize, switchMap, map, take } from 'rxjs/operators';
 
 import { AlertService } from '../shared/alert/alert.service';
 import { ApiError } from '../api/api.error';

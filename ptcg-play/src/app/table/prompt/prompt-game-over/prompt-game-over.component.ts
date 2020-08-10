@@ -1,7 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { GameState, GameWinner } from 'ptcg-server';
+import { GameWinner } from 'ptcg-server';
 
-import { GameService } from '../../../api/services/game.service';
+import { LocalGameState, SessionService } from '../../../shared/session/session.service';
+import { GameOverPrompt } from './game-over.prompt';
 
 @Component({
   selector: 'ptcg-prompt-game-over',
@@ -10,17 +11,23 @@ import { GameService } from '../../../api/services/game.service';
 })
 export class PromptGameOverComponent implements OnInit {
 
-  @Input() prompt: any;
-  @Input() gameState: GameState;
+  @Input() prompt: GameOverPrompt;
+  @Input() gameState: LocalGameState;
 
   public GameWinner = GameWinner;
 
-  constructor(private gameService: GameService) { }
+  constructor(
+    private sessionService: SessionService
+  ) { }
 
   public confirm() {
-    const gameId = this.gameState.gameId;
-    const id = this.prompt.id;
-    this.gameService.resolvePrompt(gameId, id, true);
+    const games = this.sessionService.session.gameStates;
+    const index = games.findIndex(g => g.localId === this.gameState.localId);
+    if (index !== -1) {
+      const gameStates = this.sessionService.session.gameStates.slice();
+      gameStates[index] = { ...gameStates[index], gameOver: true };
+      this.sessionService.set({ gameStates });
+    }
   }
 
   ngOnInit() {

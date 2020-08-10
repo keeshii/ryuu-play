@@ -6,7 +6,7 @@ import { finalize } from 'rxjs/operators';
 import { AlertService } from '../../shared/alert/alert.service';
 import { ApiError } from '../api.error';
 import { SocketService } from '../socket.service';
-import { SessionService } from '../../shared/session/session.service';
+import { SessionService, LocalGameState } from '../../shared/session/session.service';
 
 export interface GameUserInfo {
   gameId: number;
@@ -43,9 +43,10 @@ export class GameService {
       const logs: StateLog[] = [];
       let lastGameId = this.sessionService.session.lastGameId || 0;
       lastGameId++;
-      const localGameState = {
+      const localGameState: LocalGameState = {
         ...gameState,
         localId: lastGameId,
+        gameOver: false,
         deleted: false,
         logs
       };
