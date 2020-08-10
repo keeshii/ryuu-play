@@ -1,6 +1,9 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { GameState } from 'ptcg-server';
-import { GameService } from 'src/app/api/services/game.service';
+
+import { AlertService } from '../../../shared/alert/alert.service';
+import { GameService } from '../../../api/services/game.service';
+import { LocalGameState } from '../../../shared/session/session.service';
 
 @Component({
   selector: 'ptcg-player-actions',
@@ -9,16 +12,36 @@ import { GameService } from 'src/app/api/services/game.service';
 })
 export class PlayerActionsComponent implements OnInit {
 
-  @Input() gameState: GameState;
+  @Input() gameState: LocalGameState;
   @Input() clientId: number;
 
   @Output() join = new EventEmitter<void>();
 
   constructor(
+    private alertService: AlertService,
     private gameService: GameService
   ) { }
 
   ngOnInit() {
+  }
+
+  public async leave() {
+    if (!this.gameState || !this.gameState.gameId) {
+      return;
+    }
+    const result = await this.alertService.confirm(
+      'Do you really want to leave the game?'
+    );
+
+    if (!result) {
+      return;
+    }
+
+    if (this.gameState.deleted) {
+      this.gameService.removeLocalGameState(this.gameState.localId);
+    } else {
+      this.gameService.leave(this.gameState.gameId);
+    }
   }
 
   public passTurn() {

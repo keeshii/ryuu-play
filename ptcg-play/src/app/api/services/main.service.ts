@@ -30,6 +30,19 @@ export class MainService {
     this.socketService.on('core:deleteGame', (gameId: number) => this.onDeleteGame(gameId));
   }
 
+  private autoJoinGame(game: GameInfo) {
+    const games = this.sessionService.session.gameStates;
+    const index = games.findIndex(g => g.gameId === game.gameId && g.deleted === false);
+    if (index !== -1) { // already joined
+      return;
+    }
+    const clientId = this.sessionService.session.clientId;
+    if (game.players.some(p => p.clientId === clientId)) {
+      // we are listed as players, but not connected.
+      this.gameService.join(game.gameId).subscribe(() => {}, () => {});
+    }
+  }
+
   private onJoin(userInfo: ClientInfo): void {
     const clients = [...this.sessionService.session.clients, userInfo];
     this.sessionService.set({ clients });
@@ -48,6 +61,7 @@ export class MainService {
     }
     games[index] = game;
     this.sessionService.set({ games });
+    this.autoJoinGame(game);
   }
 
   private onCreateGame(game: GameInfo): void {
@@ -57,6 +71,7 @@ export class MainService {
     }
     const games = [...this.sessionService.session.games, game];
     this.sessionService.set({ games });
+    this.autoJoinGame(game);
   }
 
   private onDeleteGame(gameId: number): void {
@@ -74,10 +89,7 @@ export class MainService {
   public createGame(deck: string[], gameSettings: GameSettings, clientId?: number) {
     this.loading = true;
     return this.socketService.emit('core:createGame', { deck, gameSettings, clientId })
-      .pipe(
-        finalize(() => { this.loading = false; }),
-        tap((gameState: GameState) => this.gameService.appendGameState(gameState))
-      );
+      .pipe(finalize(() => { this.loading = false; }));
   }
 
 }

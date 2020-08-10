@@ -80,7 +80,7 @@ export class GameService {
     const games = this.sessionService.session.gameStates;
     const index = games.findIndex(g => g.localId === localGameId);
     if (index !== -1) {
-      const gameStates = games.filter(table => table.gameId !== localGameId);
+      const gameStates = games.filter(table => table.localId !== localGameId);
       this.sessionService.set({ gameStates });
     }
   }

@@ -1,14 +1,15 @@
 <div class="ptcg-sidenav-item">
   <a mat-list-item
-    [routerLink]="['/table', gameState.localId]">
+    [routerLink]="['/table', localId]">
     <div class="ptcg-sidenav-label-container">
-      <div matBadge="!" matBadgeOverlap="false" class="ptcg-sidenav-label-badge">
-        <span class="ptcg-sidenav-label-inner">Table {{gameState.gameId}}</span>
+      <div class="ptcg-sidenav-label-badge"
+        [matBadge]="badgeContent" [matBadgeColor]="badgeColor" matBadgeOverlap="false">
+        <span class="ptcg-sidenav-label-inner">{{ label }}</span>
       </div>
     </div>
   </a>
   <div class="ptcg-sidenav-close-button">
-    <button mat-icon-button>
+    <button mat-icon-button (click)="onClose()">
       <mat-icon class="close-button-icon">close</mat-icon>
     </button>
   </div>
