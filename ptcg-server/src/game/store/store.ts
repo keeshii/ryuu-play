@@ -64,7 +64,6 @@ export class Store implements StoreLike {
     }
 
     if (state.prompts.some(p => p.result === undefined)) {
-      console.log(action, state.prompts);
       throw new GameError(GameMessage.ACTION_IN_PROGRESS);
     }
 

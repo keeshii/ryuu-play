@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
-import { GameInfo, CoreInfo, ClientInfo, GameState, GameSettings } from 'ptcg-server';
+import { GameInfo, CoreInfo, ClientInfo, GameSettings } from 'ptcg-server';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
-import { AlertService } from 'src/app/shared/alert/alert.service';
-import { ApiError } from '../api.error';
 import { GameService } from './game.service';
 import { SessionService } from '../../shared/session/session.service';
 import { SocketService } from '../socket.service';
@@ -15,7 +13,6 @@ export class MainService {
   public loading = false;
 
   constructor(
-    private alertService: AlertService,
     private gameService: GameService,
     private sessionService: SessionService,
     private socketService: SocketService
