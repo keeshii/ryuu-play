@@ -1,11 +1,14 @@
-import { Prompt } from 'ptcg-server';
+import { Prompt, GameWinner } from 'ptcg-server';
 
 export class GameOverPrompt extends Prompt<void> {
 
   readonly type: string = 'Game over';
 
-  constructor(playerId: number) {
+  public winner: GameWinner;
+
+  constructor(playerId: number, winner: GameWinner) {
     super(playerId);
+    this.winner = winner;
   }
 
 }

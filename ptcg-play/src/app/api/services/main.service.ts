@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { GameInfo, CoreInfo, ClientInfo, GameState, GameSettings } from 'ptcg-server';
 import { Observable } from 'rxjs';
-import { finalize, tap } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 
 import { AlertService } from 'src/app/shared/alert/alert.service';
 import { ApiError } from '../api.error';
@@ -56,12 +56,11 @@ export class MainService {
   private onGameInfo(game: GameInfo): void {
     const games = this.sessionService.session.games.slice();
     const index = this.sessionService.session.games.findIndex(g => g.gameId === game.gameId);
-    if (index === -1) {
-      return this.onCreateGame(game);
+    if (index !== -1) {
+      games[index] = game;
+      this.sessionService.set({ games });
+      this.autoJoinGame(game);
     }
-    games[index] = game;
-    this.sessionService.set({ games });
-    this.autoJoinGame(game);
   }
 
   private onCreateGame(game: GameInfo): void {

@@ -72,7 +72,7 @@ export class PromptComponent implements OnInit, OnChanges {
 
   private checkGameOver(gameState: LocalGameState): GameOverPrompt | undefined {
     if (gameState.state.phase === GamePhase.FINISHED && gameState.gameOver === false) {
-      return new GameOverPrompt(this.clientId);
+      return new GameOverPrompt(this.clientId, gameState.state.winner);
     }
   }
 
