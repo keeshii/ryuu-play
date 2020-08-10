@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, ClientInfo, GameState, State, CardTarget, GamePhase } from 'ptcg-server';
+import { Action, ClientInfo, GameState, State, CardTarget, GamePhase, StateLog } from 'ptcg-server';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
@@ -40,12 +40,14 @@ export class GameService {
     const games = this.sessionService.session.gameStates;
     const index = games.findIndex(g => g.gameId === gameId && g.deleted === false);
     if (index === -1) {
+      const logs: StateLog[] = [];
       let lastGameId = this.sessionService.session.lastGameId || 0;
       lastGameId++;
       const localGameState = {
         ...gameState,
         localId: lastGameId,
-        deleted: false
+        deleted: false,
+        logs
       };
       const gameStates = [...games, localGameState ];
       this.startListening(gameState.gameId);
@@ -166,7 +168,8 @@ export class GameService {
     const index = games.findIndex(g => g.gameId === gameId && g.deleted === false);
     if (index !== -1) {
       const gameStates = this.sessionService.session.gameStates.slice();
-      gameStates[index] = { ...gameStates[index], state };
+      const logs = [ ...gameStates[index].logs, ...state.logs ];
+      gameStates[index] = { ...gameStates[index], state, logs };
       this.sessionService.set({ gameStates });
     }
   }

@@ -48,7 +48,6 @@ export class TableComponent implements OnInit, OnDestroy {
       )
       .subscribe(([paramMap, gameStates, clientId]) => {
         this.gameId = parseInt(paramMap.get('gameId'), 10);
-        console.log(gameStates);
         this.gameState = gameStates.find(state => state.localId === this.gameId);
         this.updatePlayers(this.gameState, clientId);
       });
@@ -59,7 +58,6 @@ export class TableComponent implements OnInit, OnDestroy {
         withLatestFrom(this.clientId$)
       )
       .subscribe(([gameStates, clientId]) => {
-                console.log(gameStates);
         this.gameState = gameStates.find(state => state.localId === this.gameId);
         this.updatePlayers(this.gameState, clientId);
       });

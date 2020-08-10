@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, ElementRef } from '@angular/core';
-import { GameState, StateLog } from 'ptcg-server';
+import { StateLog } from 'ptcg-server';
 import { GameService } from '../../../api/services/game.service';
+import { LocalGameState } from 'src/app/shared/session/session.service';
 
 interface GameLog {
   id: number;
@@ -21,15 +22,18 @@ export class GameLogsComponent implements OnInit {
   public loading = true;
   public logs: GameLog[] = [];
   public message = '';
-  private state: GameState;
+  private state: LocalGameState;
 
-  @Input() set gameState(gameState: GameState) {
+  @Input() set gameState(gameState: LocalGameState) {
     if (!gameState || !gameState.state) {
       this.logs = [];
       return;
     }
+    if (this.state && this.state.localId !== gameState.localId) {
+      this.logs = [];
+    }
     this.state = gameState;
-    this.appendLogs(gameState.state.logs);
+    this.appendLogs(gameState.logs);
   }
 
   constructor(
@@ -41,6 +45,7 @@ export class GameLogsComponent implements OnInit {
   }
 
   public clearLogs() {
+    this.state.logs = [];
     this.logs = [];
   }
 
@@ -50,6 +55,10 @@ export class GameLogsComponent implements OnInit {
     }
     this.gameService.appendLogAction(this.state.gameId, this.message);
     this.message = '';
+  }
+
+  public trackByFn(log: GameLog) {
+    return log.id;
   }
 
   private appendLogs(logs: StateLog[]) {

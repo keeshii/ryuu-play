@@ -10,7 +10,7 @@
 
 <div class="ptcg-game-logs-content">
   <ul>
-    <li *ngFor="let log of logs">
+    <li *ngFor="let log of logs; trackBy: trackByFn">
       <span [class]="log.className">{{log.name}}</span>
       {{log.message}}
     </li>

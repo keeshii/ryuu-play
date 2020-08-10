@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { GameInfo, GameState, ClientInfo, UserInfo } from 'ptcg-server';
+import { GameInfo, GameState, ClientInfo, UserInfo, StateLog } from 'ptcg-server';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map, distinctUntilChanged } from 'rxjs/operators';
 
 export interface LocalGameState extends GameState {
   localId: number;
   deleted: boolean;
+  logs: StateLog[];
 }
 
 export class Session {
