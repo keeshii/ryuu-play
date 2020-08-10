@@ -1,0 +1,35 @@
+<h2 class="mat-dialog-title">Invite player</h2>
+
+<mat-dialog-content>
+  <p>{{ prompt.message }}</p>
+
+  <div class="ptcg-loading" *ngIf="loading">
+    <mat-progress-bar color="accent" mode="indeterminate">
+    </mat-progress-bar>
+  </div>
+
+  <form #form="ngForm" autocomplete="off" *ngIf="!loading && decks.length > 0">
+    <mat-form-field>
+      <mat-select [(value)]="deckId">
+        <mat-option *ngFor="let deck of decks" [value]="deck.value">
+          {{ deck.viewValue }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+
+  <div class="ptcg-no-decks" *ngIf="!loading && decks.length === 0">
+    <p>You must prepare a valid deck before accepting the invitation.</p>
+    <button mat-raised-button color="primary" routerLink="/deck">
+      Go to decks
+    </button>
+  </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button (click)="cancel()">Cancel</button>
+  <button mat-raised-button color="primary" [disabled]="!deckId" (click)="confirm()">
+    OK
+  </button>
+</mat-dialog-actions>

@@ -1,6 +1,6 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { GameState, Player } from 'ptcg-server';
+import { GameState, Player, GamePhase } from 'ptcg-server';
 import { Observable, from, EMPTY } from 'rxjs';
 import { withLatestFrom, switchMap, finalize } from 'rxjs/operators';
 
@@ -136,7 +136,8 @@ export class TableComponent implements OnInit, OnDestroy {
       const prompts = state.prompts.filter(p => p.result === undefined);
       const waitingForOthers = prompts.some(p => p.playerId !== clientId);
       const waitingForMe = prompts.some(p => p.playerId === clientId);
-      const notMyTurn = state.players[state.activePlayer].id !== clientId;
+      const notMyTurn = state.players[state.activePlayer].id !== clientId
+        && state.phase === GamePhase.PLAYER_TURN;
       this.waiting = (notMyTurn || waitingForOthers) && !waitingForMe;
     }
   }
