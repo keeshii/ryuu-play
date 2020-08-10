@@ -7,10 +7,9 @@ import { GameMessage, GameError } from "../../game-error";
 import { ChoosePrizePrompt } from "../prompts/choose-prize-prompt";
 import { CardList } from "../state/card-list";
 import { PlayerType, SlotType } from "../actions/play-card-action";
-import { GameOverPrompt } from "../prompts/game-over-prompt";
 import { KnockOutEffect } from "../effects/game-effects";
 import { Effect } from "../effects/effect";
-import {EnergyCard} from "../card/energy-card";
+import { EnergyCard } from "../card/energy-card";
 
 interface PokemonItem {
   playerNum: number;
@@ -76,7 +75,7 @@ function choosePrizeCards(state: State, prizesToTake: [number, number]): ChooseP
   return prompts;
 }
 
-export function endGame(store: StoreLike, state: State, winner: GameWinner, onComplete?: () => void): State {
+export function endGame(store: StoreLike, state: State, winner: GameWinner): State {
 
   if (state.players.length !== 2) {
     throw new GameError(GameMessage.ILLEGAL_ACTION);
@@ -107,17 +106,8 @@ export function endGame(store: StoreLike, state: State, winner: GameWinner, onCo
       break;
   }
 
-  state = store.prompt(state, [
-    new GameOverPrompt(state.players[0].id, winner),
-    new GameOverPrompt(state.players[1].id, winner),
-  ], () => {
-    state.winner = winner;
-    state.phase = GamePhase.FINISHED;
-    if (onComplete !== undefined) {
-      onComplete();
-    }
-  });
-
+  state.winner = winner;
+  state.phase = GamePhase.FINISHED;
   return state;
 }
 
@@ -155,7 +145,10 @@ function checkWinner(
     winner = GameWinner.PLAYER_2;
   }
 
-  state = endGame(store, state, winner, onComplete);
+  state = endGame(store, state, winner);
+  if (onComplete) {
+    onComplete();
+  }
   return state;
 }
 

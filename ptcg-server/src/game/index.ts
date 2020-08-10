@@ -28,7 +28,7 @@ export * from './store/prompts/choose-pokemon-prompt';
 export * from './store/prompts/choose-prize-prompt';
 export * from './store/prompts/coin-flip-prompt';
 export * from './store/prompts/confirm-prompt';
-export * from './store/prompts/game-over-prompt';
+export * from './store/prompts/invite-player-prompt';
 export * from './store/prompts/move-energy-prompt';
 export * from './store/prompts/order-cards-prompt';
 export * from './store/prompts/prompt';

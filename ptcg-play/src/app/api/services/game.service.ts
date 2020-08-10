@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, ClientInfo, GameState, State, CardTarget } from 'ptcg-server';
+import { Action, ClientInfo, GameState, State, CardTarget, GamePhase } from 'ptcg-server';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
@@ -38,29 +38,62 @@ export class GameService {
   public appendGameState(gameState: GameState) {
     const gameId = gameState.gameId;
     const games = this.sessionService.session.gameStates;
-    const index = games.findIndex(g => g.gameId === gameId);
+    const index = games.findIndex(g => g.gameId === gameId && g.deleted === false);
     if (index === -1) {
-      const gameStates = [...games, gameState];
+      let lastGameId = this.sessionService.session.lastGameId || 0;
+      lastGameId++;
+      const localGameState = {
+        ...gameState,
+        localId: lastGameId,
+        deleted: false
+      };
+      const gameStates = [...games, localGameState ];
       this.startListening(gameState.gameId);
+      this.sessionService.set({ gameStates, lastGameId });
+    }
+  }
+
+  public markAsDeleted(gameId: number) {
+    const games = this.sessionService.session.gameStates;
+    const index = games.findIndex(g => g.gameId === gameId && g.deleted === false);
+    if (index !== -1) {
+      const gameStates = this.sessionService.session.gameStates.slice();
+      gameStates[index] = { ...gameStates[index], deleted: true };
+      this.stopListening(gameId);
       this.sessionService.set({ gameStates });
     }
   }
 
   public removeGameState(gameId: number) {
     const games = this.sessionService.session.gameStates;
-    const index = games.findIndex(g => g.gameId === gameId);
+    const index = games.findIndex(g => g.gameId === gameId && g.deleted === false);
     if (index !== -1) {
-      const gameStates = games.filter(table => table.gameId !== gameId);
+      const gameStates = games.filter(g => g.gameId !== gameId || g.deleted !== false);
       this.stopListening(gameId);
       this.sessionService.set({ gameStates });
     }
   }
 
+  public removeLocalGameState(localGameId: number) {
+    const games = this.sessionService.session.gameStates;
+    const index = games.findIndex(g => g.localId === localGameId);
+    if (index !== -1) {
+      const gameStates = games.filter(table => table.gameId !== localGameId);
+      this.sessionService.set({ gameStates });
+    }
+  }
+
   public leave(gameId: number) {
-    this.socketService.emit('game:leave', gameId)
-      .subscribe(() => {
-        this.removeGameState(gameId);
-      }, (error: ApiError) => this.alertService.toast(error.message));
+    const games = this.sessionService.session.gameStates;
+    const index = games.findIndex(g => g.gameId === gameId && g.deleted === false);
+    if (index !== -1) {
+      const localGameId = games[index].localId;
+      this.socketService.emit('game:leave', gameId)
+        .subscribe(() => {
+          this.removeGameState(gameId);
+          this.removeLocalGameState(localGameId);
+        }, (error: ApiError) => this.alertService.toast(error.message));
+    }
   }
 
   public ability(gameId: number, ability: string, target: CardTarget) {
@@ -129,7 +162,8 @@ export class GameService {
 
   private onStateChange(gameId: number, state: State) {
     console.log('gameService, onStateChange', gameId, state);
-    const index = this.sessionService.session.gameStates.findIndex(g => g.gameId === gameId);
+    const games = this.sessionService.session.gameStates;
+    const index = games.findIndex(g => g.gameId === gameId && g.deleted === false);
     if (index !== -1) {
       const gameStates = this.sessionService.session.gameStates.slice();
       gameStates[index] = { ...gameStates[index], state };
@@ -138,7 +172,8 @@ export class GameService {
   }
 
   private onJoin(gameId: number, userInfo: ClientInfo) {
-    const index = this.sessionService.session.gameStates.findIndex(g => g.gameId === gameId);
+    const games = this.sessionService.session.gameStates;
+    const index = games.findIndex(g => g.gameId === gameId && g.deleted === false);
     if (index === -1) {
       return;
     }
@@ -153,7 +188,8 @@ export class GameService {
   }
 
   private onLeave(gameId: number, userInfo: ClientInfo) {
-    const index = this.sessionService.session.gameStates.findIndex(g => g.gameId === gameId);
+    const games = this.sessionService.session.gameStates;
+    const index = games.findIndex(g => g.gameId === gameId && g.deleted === false);
     if (index === -1) {
       return;
     }

@@ -8,7 +8,7 @@ import { ApiError } from '../api/api.error';
 import { AlertService } from '../shared/alert/alert.service';
 import { DeckService } from '../api/services/deck.service';
 import { GameService } from '../api/services/game.service';
-import { SessionService } from '../shared/session/session.service';
+import { SessionService, LocalGameState } from '../shared/session/session.service';
 import { takeUntilDestroyed } from '../shared/operators/take-until-destroyed';
 
 @Component({
@@ -19,7 +19,7 @@ import { takeUntilDestroyed } from '../shared/operators/take-until-destroyed';
 export class TableComponent implements OnInit, OnDestroy {
 
   public gameState: GameState;
-  public gameStates$: Observable<GameState[]>;
+  public gameStates$: Observable<LocalGameState[]>;
   public clientId$: Observable<number>;
   public bottomPlayer: Player;
   public topPlayer: Player;
@@ -48,7 +48,8 @@ export class TableComponent implements OnInit, OnDestroy {
       )
       .subscribe(([paramMap, gameStates, clientId]) => {
         this.gameId = parseInt(paramMap.get('gameId'), 10);
-        this.gameState = gameStates.find(state => state.gameId === this.gameId);
+        console.log(gameStates);
+        this.gameState = gameStates.find(state => state.localId === this.gameId);
         this.updatePlayers(this.gameState, clientId);
       });
 
@@ -58,7 +59,8 @@ export class TableComponent implements OnInit, OnDestroy {
         withLatestFrom(this.clientId$)
       )
       .subscribe(([gameStates, clientId]) => {
-        this.gameState = gameStates.find(state => state.gameId === this.gameId);
+                console.log(gameStates);
+        this.gameState = gameStates.find(state => state.localId === this.gameId);
         this.updatePlayers(this.gameState, clientId);
       });
   }

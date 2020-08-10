@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { GameState, GameOverPrompt, GameWinner } from 'ptcg-server';
+import { GameState, GameWinner } from 'ptcg-server';
 
 import { GameService } from '../../../api/services/game.service';
 
@@ -10,7 +10,7 @@ import { GameService } from '../../../api/services/game.service';
 })
 export class PromptGameOverComponent implements OnInit {
 
-  @Input() prompt: GameOverPrompt;
+  @Input() prompt: any;
   @Input() gameState: GameState;
 
   public GameWinner = GameWinner;

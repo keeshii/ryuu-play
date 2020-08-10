@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { GameState } from 'ptcg-server';
+import { LocalGameState } from '../../shared/session/session.service';
 
 @Component({
   selector: 'ptcg-sidenav-item',
@@ -8,7 +8,7 @@ import { GameState } from 'ptcg-server';
 })
 export class SidenavItemComponent implements OnInit {
 
-  @Input() gameState: GameState;
+  @Input() gameState: LocalGameState;
 
   constructor() { }
 

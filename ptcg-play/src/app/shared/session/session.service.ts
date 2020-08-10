@@ -3,6 +3,10 @@ import { GameInfo, GameState, ClientInfo, UserInfo } from 'ptcg-server';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map, distinctUntilChanged } from 'rxjs/operators';
 
+export interface LocalGameState extends GameState {
+  localId: number;
+  deleted: boolean;
+}
 
 export class Session {
   authToken: string;
@@ -10,7 +14,8 @@ export class Session {
   clientId: number;
   games: GameInfo[] = [];
   clients: ClientInfo[] = [];
-  gameStates: GameState[] = [];
+  lastGameId: number;
+  gameStates: LocalGameState[] = [];
 }
 
 @Injectable()

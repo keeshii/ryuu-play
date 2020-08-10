@@ -61,7 +61,7 @@ export class MainService {
 
   private onDeleteGame(gameId: number): void {
     const games = this.sessionService.session.games.filter(g => g.gameId !== gameId);
-    this.gameService.removeGameState(gameId);
+    this.gameService.markAsDeleted(gameId);
     this.sessionService.set({ games });
   }
 
