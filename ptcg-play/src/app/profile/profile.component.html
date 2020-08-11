@@ -1,0 +1,90 @@
+<ptcg-content>
+  <mat-toolbar>
+    <mat-toolbar-row>
+      <h1>Profile summary</h1>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <div class="ptcg-user-details ptcg-u-padding">
+    <mat-card class="example-card">
+      <mat-card-content>
+        <div class="ptcg-profile-avatar">
+          <ptcg-avatar type="profile"></ptcg-avatar>
+        </div>
+        <div class="ptcg-profile-summary">
+          <table>
+            <tr>
+              <th>Name</th>
+              <td>kamil</td>
+            </tr>
+            <tr>
+              <th>Ranking</th>
+              <td>1024 <ptcg-badge color="primary">Master</ptcg-badge></td>
+            </tr>
+            <tr>
+              <th>Last seen</th>
+              <td>2020-01-01</td>
+            </tr>
+            <tr>
+              <th>Win ratio</th>
+              <td>13/24 (50%)</td>
+            </tr>
+          </table>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="primary">Invite to play</button>
+        <button mat-raised-button color="primary">Send message</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <div class="ptcg-recent-matches ptcg-u-padding">
+    <h3>Recent matches</h3>
+    
+    <table mat-table [dataSource]="matches" class="mat-elevation-z2">
+
+      <!-- Game ID Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>No.</th>
+        <td mat-cell *matCellDef="let match">{{match.matchId}}</td>
+      </ng-container>
+
+      <!-- Player 1 -->
+      <ng-container matColumnDef="player1">
+        <th mat-header-cell *matHeaderCellDef>Player 1</th>
+        <td mat-cell *matCellDef="let match">
+          {{ match.player1 }}
+        </td>
+      </ng-container>
+
+      <!-- Player 2 -->
+      <ng-container matColumnDef="player2">
+        <th mat-header-cell *matHeaderCellDef>Player 2</th>
+        <td mat-cell *matCellDef="let match">
+          {{ match.player2 }}
+        </td>
+      </ng-container>
+
+      <!-- Player 2 -->
+      <ng-container matColumnDef="result">
+        <th mat-header-cell *matHeaderCellDef>Result</th>
+        <td mat-cell *matCellDef="let match">
+          {{ match.result }}
+        </td>
+      </ng-container>
+
+      <!-- Actions -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let match">
+          <button mat-button (click)="showReplay()">Replay</button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+
+</ptcg-content>

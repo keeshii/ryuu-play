@@ -10,7 +10,9 @@
       [matMenuTriggerFor]="menu">
     </ptcg-user-bar>
     <mat-menu #menu="matMenu">
-      <button mat-menu-item>Show profile</button>
+      <button mat-menu-item [routerLink]="['/profile', loggedUser?.userId]">
+        Show profile
+      </button>
       <button mat-menu-item (click)="logout()">Logout</button>
     </mat-menu>
   </div>

@@ -1,0 +1,24 @@
+@import '../../theme/variables.scss';
+
+.ptcg-profile-summary > table {
+  width: auto;
+}
+
+.ptcg-profile-summary {
+  padding: 0 map-get($padding, normal);
+}
+
+.ptcg-profile-summary > table td,
+.ptcg-profile-summary > table th {
+  padding: 0 map-get($padding, small);
+  padding-bottom: map-get($padding, small);
+}
+
+mat-card-content {
+  display: flex;
+  margin-bottom: 0;
+}
+
+.ptcg-recent-matches {
+  padding-top: 0;
+}
