@@ -1,5 +1,9 @@
 @import '../../theme/variables.scss';
 
+mat-toolbar-row button {
+  margin-left: map-get($padding, normal);
+}
+
 .ptcg-profile-summary > table {
   width: auto;
 }
@@ -12,6 +16,11 @@
 .ptcg-profile-summary > table th {
   padding: 0 map-get($padding, small);
   padding-bottom: map-get($padding, small);
+}
+
+.ptcg-profile-summary > table tr:last-child td,
+.ptcg-profile-summary > table tr:last-child th {
+  padding-bottom: 0;
 }
 
 mat-card-content {

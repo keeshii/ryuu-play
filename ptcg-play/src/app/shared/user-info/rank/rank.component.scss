@@ -1,0 +1,14 @@
+@import '../../../../theme/variables.scss';
+
+.ptcg-rank {
+  align-items: center;
+  display: flex;
+}
+
+.ptcg-ranking + ptcg-badge {
+  margin-left: map-get($padding, small);
+}
+
+ptcg-badge {
+  display: flex;
+}

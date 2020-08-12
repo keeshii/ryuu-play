@@ -47,7 +47,7 @@ export class Profile extends Controller {
       name: user.name,
       email: user.email,
       ranking: user.ranking,
-      rang: user.rang,
+      rank: user.rank,
       avatarFile: user.avatarFile
     };
   }

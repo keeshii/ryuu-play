@@ -1,3 +1,3 @@
 export * from './model';
-export * from './rang.enum';
+export * from './rank.enum';
 export * from './storage';

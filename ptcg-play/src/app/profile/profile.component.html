@@ -2,6 +2,11 @@
   <mat-toolbar>
     <mat-toolbar-row>
       <h1>Profile summary</h1>
+
+      <span class="ptcg-u-spacer"></span>
+
+      <button mat-raised-button color="primary">Invite to play</button>
+      <button mat-raised-button color="primary">Send message</button>
     </mat-toolbar-row>
   </mat-toolbar>
 
@@ -15,11 +20,11 @@
           <table>
             <tr>
               <th>Name</th>
-              <td>kamil</td>
+              <td>{{ user.name }}</td>
             </tr>
             <tr>
               <th>Ranking</th>
-              <td>1024 <ptcg-badge color="primary">Master</ptcg-badge></td>
+              <td><ptcg-rank [ranking]="user.ranking" [rank]="user.rank"></ptcg-rank></td>
             </tr>
             <tr>
               <th>Last seen</th>
@@ -32,10 +37,6 @@
           </table>
         </div>
       </mat-card-content>
-      <mat-card-actions>
-        <button mat-raised-button color="primary">Invite to play</button>
-        <button mat-raised-button color="primary">Send message</button>
-      </mat-card-actions>
     </mat-card>
   </div>
 

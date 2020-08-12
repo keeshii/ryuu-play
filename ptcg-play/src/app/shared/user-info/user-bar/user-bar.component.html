@@ -5,8 +5,7 @@
   <div class="ptcg-user-info">
     <div class="ptcg-user-name">{{ user.name }}</div>
     <div class="ptcg-user-ranking">
-      1024
-      <ptcg-badge color="primary">Master</ptcg-badge>
+      <ptcg-rank [ranking]="user.ranking" [rank]="user.rank"></ptcg-rank>
     </div>
   </div>
 

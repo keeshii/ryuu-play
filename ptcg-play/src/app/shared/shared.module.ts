@@ -7,9 +7,7 @@ import { SkyhookMultiBackendModule } from '@angular-skyhook/multi-backend';
 import { SkyhookSortableModule } from '@angular-skyhook/sortable';
 
 import { AlertModule } from './alert/alert.module';
-import { AvatarComponent } from './user-info/avatar/avatar.component';
 import { AppRoutingModule } from '../app-routing.module';
-import { BadgeComponent } from './badge/badge.component';
 import { CardsModule } from './cards/cards.module';
 import { ContentComponent } from './content/content.component';
 import { EnergyComponent } from './cards/energy/energy.component';
@@ -18,7 +16,7 @@ import { SearchBoxComponent } from './search-box/search-box.component';
 import { SessionService } from './session/session.service';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { SidebarContainerComponent } from './sidebar/sidebar-container.component';
-import { UserBarComponent } from './user-info/user-bar/user-bar.component';
+import { UserInfoModule } from './user-info/user-info.module';
 import { ValidationModule } from './validation/validation.module';
 
 @NgModule({
@@ -32,23 +30,19 @@ import { ValidationModule } from './validation/validation.module';
     SkyhookDndModule,
     SkyhookMultiBackendModule,
     SkyhookSortableModule,
+    UserInfoModule,
     ValidationModule
   ],
   declarations: [
-    AvatarComponent,
-    BadgeComponent,
     ContentComponent,
     InfoComponent,
     SearchBoxComponent,
     SidebarComponent,
-    SidebarContainerComponent,
-    UserBarComponent
+    SidebarContainerComponent
   ],
   exports: [
     AlertModule,
     AppRoutingModule,
-    AvatarComponent,
-    BadgeComponent,
     BrowserAnimationsModule,
     CardsModule,
     ContentComponent,
@@ -62,7 +56,7 @@ import { ValidationModule } from './validation/validation.module';
     SkyhookDndModule,
     SkyhookMultiBackendModule,
     SkyhookSortableModule,
-    UserBarComponent,
+    UserInfoModule,
     ValidationModule
   ],
   providers: [

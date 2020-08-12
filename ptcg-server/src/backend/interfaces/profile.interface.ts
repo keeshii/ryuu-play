@@ -1,4 +1,4 @@
-import {Rang} from "../../storage";
+import {Rank} from "../../storage";
 
 export interface UserInfo {
   clientIds: number[];
@@ -6,6 +6,6 @@ export interface UserInfo {
   name: string;
   email: string;
   ranking: number;
-  rang: Rang;
+  rank: Rank;
   avatarFile: string;
 }

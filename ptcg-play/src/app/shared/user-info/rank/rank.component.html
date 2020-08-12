@@ -1,0 +1,8 @@
+<div class="ptcg-rank">
+  <div class="ptcg-ranking" *ngIf="ranking !== undefined">
+    {{ ranking }}
+  </div>
+  <ptcg-badge *ngIf="rankName" [color]="rankColor">
+    {{ rankName }}
+  </ptcg-badge>
+</div>

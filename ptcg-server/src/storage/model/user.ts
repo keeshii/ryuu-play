@@ -1,7 +1,7 @@
 import { BaseEntity, Column, Entity, Unique, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Avatar } from './avatar';
 import { Deck } from './deck';
-import { Rang } from '../rang.enum';
+import { Rank } from '../rank.enum';
 
 @Entity()
 @Unique(['name'])
@@ -23,7 +23,7 @@ export class User extends BaseEntity {
   public password: string = '';
 
   @Column()
-  public rang: Rang = Rang.JUNIOR;
+  public rank: Rank = Rank.JUNIOR;
 
   @Column()
   public avatarFile: string = '';
