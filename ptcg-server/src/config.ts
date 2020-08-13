@@ -6,7 +6,8 @@ export const config = {
     serverPassword: '',
     registrationEnabled: true,
     secret: '!secret!',
-    tokenExpire: 86400
+    tokenExpire: 86400,
+    defaultPageSize: 50
   },
   storage: {
     type: 'mysql',

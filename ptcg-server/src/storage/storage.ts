@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { createConnection, EntityManager, Connection } from 'typeorm';
 import { Deck, User, Avatar } from './model';
 import { config } from '../config';
+import { Match } from './model/match';
 
 export class Storage {
 
@@ -16,6 +17,7 @@ export class Storage {
       entities: [
         Avatar,
         Deck,
+        Match,
         User
       ],
       synchronize: true,

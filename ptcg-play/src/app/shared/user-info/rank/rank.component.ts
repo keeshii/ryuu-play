@@ -9,7 +9,6 @@ import { Rank } from 'ptcg-server';
 export class RankComponent implements OnInit {
 
   @Input() set rank(rank: Rank) {
-    console.log(rank);
     switch (rank) {
       case Rank.MASTER:
         this.rankColor = 'warn';

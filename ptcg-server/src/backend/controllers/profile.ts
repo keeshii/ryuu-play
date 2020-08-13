@@ -2,8 +2,9 @@ import { Request, Response } from 'express';
 import { AuthToken } from '../services';
 import { Controller, Get } from './controller';
 import { Errors } from '../common/errors';
-import { User } from '../../storage';
-import { UserInfo } from '../interfaces/profile.interface';
+import { User, Match } from '../../storage';
+import { UserInfo, MatchInfo } from '../interfaces/profile.interface';
+import { config } from '../../config';
 
 
 export class Profile extends Controller {
@@ -12,11 +13,12 @@ export class Profile extends Controller {
   @AuthToken()
   public async onMe(req: Request, res: Response) {
     const userId: number = req.body.userId;
-    const userInfo = await this.getUserInfo(userId);
-    if (userInfo === undefined) {
+    const user = await User.findOne(userId);
+    if (user === undefined) {
       res.send({error: Errors.PROFILE_INVALID});
       return;
     }
+    const userInfo = this.buildUserInfo(user);
     res.send({ok: true, user: userInfo});
   }
 
@@ -24,19 +26,47 @@ export class Profile extends Controller {
   @AuthToken()
   public async onGet(req: Request, res: Response) {
     const userId: number = parseInt(req.params.id, 10);
-    const userInfo = await this.getUserInfo(userId);
-    if (userInfo === undefined) {
+    const user = await User.findOne(userId);
+    if (user === undefined) {
       res.send({error: Errors.PROFILE_INVALID});
       return;
     }
+    const userInfo = this.buildUserInfo(user);
     res.send({ok: true, user: userInfo});
   }
 
-  private async getUserInfo(userId: number): Promise<UserInfo | undefined> {
-    const user = await User.findOne(userId);
-    if (user === undefined) {
-      return;
-    }
+  @Get('/matchHistory/:userId/:page?/:pageSize?')
+  @AuthToken()
+  public async onMatchHistory(req: Request, res: Response) {
+    const userId: number = req.body.userId;
+    const defaultPageSize = config.backend.defaultPageSize;
+    const page: number = parseInt(req.params.page, 10) || 0;
+    const pageSize: number = parseInt(req.params.pageSize, 10) || defaultPageSize;
+
+    const [matchRows, total] = await Match.findAndCount({
+      relations: ['player1', 'player2'],
+      where: [
+        { player1: { id: userId } },
+        { player2: { id: userId } }
+      ],
+      skip: page * pageSize,
+      take: pageSize
+    });
+
+    const matches: MatchInfo[] = matchRows
+      .map(match => ({
+        matchId: match.id,
+        player1: this.buildUserInfo(match.player1),
+        player2: this.buildUserInfo(match.player2),
+        winner: match.winner,
+        rankingStake: match.rankingStake,
+        created: match.created
+      }));
+
+    res.send({ok: true, matches, total});
+  }
+
+  private buildUserInfo(user: User): UserInfo {
     const clientIds = this.core.clients
       .filter(c => c.user.id === user.id)
       .map(c => c.id);

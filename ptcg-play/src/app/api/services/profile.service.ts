@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { ApiService } from '../api.service';
-import { ProfileResponse } from '../interfaces/profile.interface';
+import { ProfileResponse, MatchHistoryResponse } from '../interfaces/profile.interface';
 
 @Injectable()
 export class ProfileService {
@@ -16,6 +16,10 @@ export class ProfileService {
 
   public getUser(userId: number) {
     return this.api.get<ProfileResponse>('/profile/get/' + userId);
+  }
+
+  public getMatchHistory(userId: number) {
+    return this.api.get<MatchHistoryResponse>('/profile/matchHistory/' + userId);
   }
 
 }

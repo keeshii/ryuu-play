@@ -23,6 +23,15 @@ export class User extends BaseEntity {
   public password: string = '';
 
   @Column()
+  public registered: number = Date.now();
+  
+  @Column()
+  public lastSeen: number = Date.now();
+
+  @Column()
+  public lastRankingChange: number = Date.now();
+
+  @Column()
   public avatarFile: string = '';
 
   @OneToMany(type => Deck, deck => deck.user)

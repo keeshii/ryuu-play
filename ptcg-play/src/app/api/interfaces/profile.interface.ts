@@ -1,6 +1,11 @@
 import { Response } from './response.interface';
-import { UserInfo } from 'ptcg-server';
+import { UserInfo, MatchInfo } from 'ptcg-server';
 
 export interface ProfileResponse extends Response {
   user: UserInfo;
+}
+
+export interface MatchHistoryResponse extends Response {
+  matches: MatchInfo[],
+  total: number;
 }

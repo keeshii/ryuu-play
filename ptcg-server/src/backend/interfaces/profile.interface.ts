@@ -1,4 +1,5 @@
 import { Rank } from "./rank.enum";
+import { GameWinner } from "../../game";
 
 export interface UserInfo {
   clientIds: number[];
@@ -8,4 +9,13 @@ export interface UserInfo {
   ranking: number;
   rank: Rank;
   avatarFile: string;
+}
+
+export interface MatchInfo {
+  matchId: number;
+  player1: UserInfo;
+  player2: UserInfo;
+  winner: GameWinner;
+  rankingStake: number;
+  created: number;
 }
