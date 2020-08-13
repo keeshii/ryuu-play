@@ -138,7 +138,7 @@ export class SocketClient extends Client {
       userId: client.user.id,
       name: client.user.name,
       ranking: client.user.ranking,
-      rank: client.user.rank,
+      rank: client.user.getRank(),
       avatarFile: client.user.avatarFile
     };
   }

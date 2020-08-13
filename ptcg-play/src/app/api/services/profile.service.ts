@@ -14,4 +14,8 @@ export class ProfileService {
     return this.api.get<ProfileResponse>('/profile/me');
   }
 
+  public getUser(userId: number) {
+    return this.api.get<ProfileResponse>('/profile/get/' + userId);
+  }
+
 }

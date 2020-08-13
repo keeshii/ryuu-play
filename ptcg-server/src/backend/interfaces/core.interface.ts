@@ -1,5 +1,5 @@
 import { GamePhase, State } from '../../game';
-import { Rank } from '../../storage';
+import { Rank } from './rank.enum';
 
 export interface PlayerInfo {
   clientId: number;

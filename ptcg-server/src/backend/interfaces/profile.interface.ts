@@ -1,4 +1,4 @@
-import {Rank} from "../../storage";
+import { Rank } from "./rank.enum";
 
 export interface UserInfo {
   clientIds: number[];

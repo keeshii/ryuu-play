@@ -8,7 +8,13 @@
     <ng-template #playerInfo>
       <h4>{{ name }}</h4>
       <div class="ptcg-player-rank">
-        <ptcg-rank rank="MASTER"></ptcg-rank>
+        <ptcg-rank *ngIf="playerInfo$ | async as playerInfo; else disconnected"
+          [ranking]="playerInfo.ranking"
+          [rank]="playerInfo.rank">
+        </ptcg-rank>
+        <ng-template #disconnected>
+          <ptcg-badge>Disconnected</ptcg-badge>
+        </ng-template>
       </div>
     </ng-template>
 

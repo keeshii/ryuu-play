@@ -17,7 +17,8 @@
             (click)="createGame(user.clientId)">
             Invite to game
           </button>
-          <button mat-menu-item>
+          <button mat-menu-item
+            [routerLink]="['/profile', user.userId]">
             Show profile
           </button>
         </mat-menu>

@@ -1,4 +1,4 @@
-<ptcg-content>
+<ptcg-content [loading]="loading">
   <mat-toolbar>
     <mat-toolbar-row>
       <h1>Profile summary</h1>
@@ -10,7 +10,7 @@
     </mat-toolbar-row>
   </mat-toolbar>
 
-  <div class="ptcg-user-details ptcg-u-padding">
+  <div class="ptcg-user-details ptcg-u-padding" *ngIf="user">
     <mat-card class="example-card">
       <mat-card-content>
         <div class="ptcg-profile-avatar">

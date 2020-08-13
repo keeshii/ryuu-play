@@ -1,7 +1,7 @@
 import { BaseEntity, Column, Entity, Unique, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Avatar } from './avatar';
 import { Deck } from './deck';
-import { Rank } from '../rank.enum';
+import { Rank, rankLevels } from '../../backend/interfaces/rank.enum';
 
 @Entity()
 @Unique(['name'])
@@ -23,9 +23,6 @@ export class User extends BaseEntity {
   public password: string = '';
 
   @Column()
-  public rank: Rank = Rank.JUNIOR;
-
-  @Column()
   public avatarFile: string = '';
 
   @OneToMany(type => Deck, deck => deck.user)
@@ -33,5 +30,16 @@ export class User extends BaseEntity {
 
   @OneToMany(type => Avatar, avatar => avatar.user)
   avatars!: Avatar[];
+
+  public getRank(): Rank {
+    let rank = rankLevels[0].rank;
+    for (const level of rankLevels) {
+      if (level.points > this.ranking) {
+        break;
+      }
+      rank = level.rank;
+    }
+    return rank;
+  }
 
 }
