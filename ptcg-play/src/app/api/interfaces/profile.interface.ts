@@ -6,6 +6,6 @@ export interface ProfileResponse extends Response {
 }
 
 export interface MatchHistoryResponse extends Response {
-  matches: MatchInfo[],
+  matches: MatchInfo[];
   total: number;
 }

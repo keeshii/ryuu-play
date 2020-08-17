@@ -29,6 +29,7 @@ export class WebSocketServer {
 
       socket.on('disconnect', () => {
         this.core.disconnect(socketClient);
+        user.updateLastSeen();
       });
     });
   }

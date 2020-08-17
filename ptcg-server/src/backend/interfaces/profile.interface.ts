@@ -8,6 +8,9 @@ export interface UserInfo {
   email: string;
   ranking: number;
   rank: Rank;
+  registered: number;
+  lastSeen: number;
+  lastRankingChange: number;
   avatarFile: string;
 }
 

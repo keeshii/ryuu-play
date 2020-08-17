@@ -29,12 +29,21 @@
               <td><ptcg-rank [ranking]="user.ranking" [rank]="user.rank"></ptcg-rank></td>
             </tr>
             <tr>
-              <th>Last seen</th>
-              <td>2020-01-01</td>
+              <th>Registered</th>
+              <td>
+                {{ user.registered | date }}
+              </td>
             </tr>
             <tr>
-              <th>Win ratio</th>
-              <td>13/24 (50%)</td>
+              <th>Last seen</th>
+              <td>
+                <span *ngIf="user.clientIds.length === 0; else connected">
+                  {{ user.lastSeen | date }}
+                </span>
+                <ng-template #connected>
+                  <ptcg-badge>Online</ptcg-badge>
+                </ng-template>
+              </td>
             </tr>
           </table>
         </div>
@@ -42,9 +51,8 @@
     </mat-card>
   </div>
 
-  <div class="ptcg-recent-matches ptcg-u-padding">
-    <h3>Recent matches</h3>
-    <ptcg-match-table></ptcg-match-table>
+  <div class="ptcg-recent-matches" *ngIf="user">
+    <ptcg-match-table [userId]="user.userId"></ptcg-match-table>
   </div>
 
 </ptcg-content>

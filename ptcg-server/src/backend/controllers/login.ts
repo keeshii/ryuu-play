@@ -49,6 +49,7 @@ export class Login extends Controller {
     user.name = body.name;
     user.email = body.email;
     user.password = Md5.init(body.password);
+    user.registered = Date.now() / 1000;
     await user.save();
 
     res.send({ok: true});

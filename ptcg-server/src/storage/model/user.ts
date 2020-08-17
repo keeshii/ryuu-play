@@ -22,14 +22,14 @@ export class User extends BaseEntity {
   @Column()
   public password: string = '';
 
-  @Column()
-  public registered: number = Date.now();
+  @Column({ type: 'bigint' })
+  public registered: number = 0;
   
-  @Column()
-  public lastSeen: number = Date.now();
+  @Column({ type: 'bigint' })
+  public lastSeen: number = 0;
 
-  @Column()
-  public lastRankingChange: number = Date.now();
+  @Column({ type: 'bigint' })
+  public lastRankingChange: number = 0;
 
   @Column()
   public avatarFile: string = '';
@@ -49,6 +49,12 @@ export class User extends BaseEntity {
       rank = level.rank;
     }
     return rank;
+  }
+
+  public async updateLastSeen(): Promise<this> {
+    this.lastSeen = Date.now();
+    await User.update(this.id, { lastSeen: this.lastSeen });
+    return this;
   }
 
 }

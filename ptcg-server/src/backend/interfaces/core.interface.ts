@@ -22,6 +22,7 @@ export interface ClientInfo {
   name: string;
   ranking: number;
   rank: Rank;
+  lastRankingChange: number;
   avatarFile: string;
 }
 
