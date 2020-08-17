@@ -1,6 +1,6 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { UserInfo, Rank } from 'ptcg-server';
+import { UserInfo } from 'ptcg-server';
 import { switchMap } from 'rxjs/operators';
 
 import { AlertService } from '../shared/alert/alert.service';
@@ -43,11 +43,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
       });
   }
 
-  getMatchHistory() {
-    this.profileService.getMatchHistory(this.user.userId)
-      .subscribe({
-        next: response => console.log(response)
-    });
+  inviteToPlay() {
+    return;
   }
 
   ngOnDestroy() {}

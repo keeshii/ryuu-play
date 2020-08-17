@@ -2,59 +2,58 @@
 
   <h3>Recent matches</h3>
 
-  <table mat-table [dataSource]="matches" class="mat-elevation-z2">
+  <ptcg-content [loading]="loading">
+    <table mat-table [dataSource]="matches" class="mat-elevation-z2">
 
-    <!-- Game ID Column -->
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef>No.</th>
-      <td mat-cell *matCellDef="let match">{{match.matchId}}</td>
-    </ng-container>
+      <!-- Game ID Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>No.</th>
+        <td mat-cell *matCellDef="let match">{{match.matchId}}</td>
+      </ng-container>
 
-    <!-- Player 1 -->
-    <ng-container matColumnDef="player1">
-      <th mat-header-cell *matHeaderCellDef>Player 1</th>
-      <td mat-cell *matCellDef="let match">
-        <ptcg-user-bar [user]="match.player1"></ptcg-user-bar>
-      </td>
-    </ng-container>
+      <!-- Player 1 -->
+      <ng-container matColumnDef="player1">
+        <th mat-header-cell *matHeaderCellDef>Player 1</th>
+        <td mat-cell *matCellDef="let match">
+          <ptcg-user-bar [user]="match.player1"></ptcg-user-bar>
+        </td>
+      </ng-container>
 
-    <!-- Player 2 -->
-    <ng-container matColumnDef="player2">
-      <th mat-header-cell *matHeaderCellDef>Player 2</th>
-      <td mat-cell *matCellDef="let match">
-        <ptcg-user-bar [user]="match.player2"></ptcg-user-bar>
-      </td>
-    </ng-container>
+      <!-- Player 2 -->
+      <ng-container matColumnDef="player2">
+        <th mat-header-cell *matHeaderCellDef>Player 2</th>
+        <td mat-cell *matCellDef="let match">
+          <ptcg-user-bar [user]="match.player2"></ptcg-user-bar>
+        </td>
+      </ng-container>
 
-    <!-- Player 2 -->
-    <ng-container matColumnDef="result">
-      <th mat-header-cell *matHeaderCellDef>Result</th>
-      <td mat-cell *matCellDef="let match">
-        {{ match.winner }}
-      </td>
-    </ng-container>
+      <!-- Player 2 -->
+      <ng-container matColumnDef="result">
+        <th mat-header-cell *matHeaderCellDef>Result</th>
+        <td mat-cell *matCellDef="let match">
+          {{ match.winner }}
+        </td>
+      </ng-container>
 
-    <!-- Actions -->
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef>Actions</th>
-      <td mat-cell *matCellDef="let match">
-        <button mat-button (click)="showReplay()">Replay</button>
-      </td>
-    </ng-container>
+      <!-- Actions -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let match">
+          <button mat-button (click)="showReplay()">Replay</button>
+        </td>
+      </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
 
-  <div class="ptcg-u-padding ptcg-table-loading" *ngIf="loading">
-    <mat-spinner color="accent"></mat-spinner>
-  </div>
+    <div class="ptcg-u-padding ptcg-table-loading-failed" *ngIf="loadingFailed">
+      <p>Error while loading the content.</p>
+      <button mat-raised-button color="primary" (click)="loadMatches(id)">
+        Try again
+      </button>
+    </div>
 
-  <div class="ptcg-u-padding ptcg-table-loading-failed" *ngIf="loadingFailed">
-    <p>Error while loading the content.</p>
-    <button mat-raised-button color="primary" (click)="loadMatches(id)">
-      Try again
-    </button>
-  </div>
+  </ptcg-content>
 
 </div>
