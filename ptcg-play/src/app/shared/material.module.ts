@@ -8,13 +8,14 @@ import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import {NgModule} from '@angular/core';
+import { NgModule } from '@angular/core';
 
 @NgModule({
   imports: [
@@ -28,6 +29,7 @@ import {NgModule} from '@angular/core';
     MatListModule,
     MatMenuModule,
     MatProgressBarModule,
+    MatRadioModule,
     MatSelectModule,
     MatSnackBarModule,
     MatSidenavModule,
@@ -46,6 +48,7 @@ import {NgModule} from '@angular/core';
     MatListModule,
     MatMenuModule,
     MatProgressBarModule,
+    MatRadioModule,
     MatSelectModule,
     MatSnackBarModule,
     MatSidenavModule,

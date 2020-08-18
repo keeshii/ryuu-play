@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
 import { ProfileComponent } from './profile.component';
 import { MatchTableComponent } from './match-table/match-table.component';
+import { EditAvatarsPopupComponent } from './edit-avatars-popup/edit-avatars-popup.component';
 
 @NgModule({
   imports: [
@@ -10,7 +11,11 @@ import { MatchTableComponent } from './match-table/match-table.component';
   ],
   declarations: [
     ProfileComponent,
-    MatchTableComponent
+    MatchTableComponent,
+    EditAvatarsPopupComponent
+  ],
+  entryComponents: [
+    EditAvatarsPopupComponent
   ],
   exports: [
   ]

@@ -5,10 +5,23 @@
 
       <span class="ptcg-u-spacer"></span>
 
-      <button mat-raised-button color="primary" (click)="inviteToPlay()">
-        Invite to play
-      </button>
-      <button mat-raised-button color="primary">Send message</button>
+      <div *ngIf="owner ; then ownerActions ; else visitorActions"></div>
+      <ng-template #ownerActions>
+        <button mat-raised-button color="primary" (click)="editAvatars()">
+          Edit avatars
+        </button>
+        <button mat-raised-button color="primary">
+          Change password
+        </button>
+      </ng-template>
+      <ng-template #visitorActions>
+        <button mat-raised-button color="primary" (click)="inviteToPlay()">
+          Invite to play
+        </button>
+        <button mat-raised-button color="primary">
+          Send message
+        </button>
+      </ng-template>
     </mat-toolbar-row>
   </mat-toolbar>
 
@@ -16,7 +29,10 @@
     <mat-card class="example-card">
       <mat-card-content>
         <div class="ptcg-profile-avatar">
-          <ptcg-avatar type="profile"></ptcg-avatar>
+          <ptcg-avatar type="profile"
+            [hoverable]="owner"
+            (click)="owner && editAvatars()">
+          </ptcg-avatar>
         </div>
         <div class="ptcg-profile-summary">
           <table>

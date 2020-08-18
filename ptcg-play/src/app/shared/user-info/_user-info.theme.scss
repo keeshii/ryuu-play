@@ -10,6 +10,10 @@
     .ptcg-avatar {
       background-color: $avatar-background-color;
     }
+
+    .ptcg-avatar.hoverable:hover:after {
+      background-color: mat-color($background, hover);
+    }
   }
 
 }

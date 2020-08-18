@@ -1,4 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, HostBinding } from '@angular/core';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 @Component({
   selector: 'ptcg-avatar',
@@ -8,6 +9,8 @@ import { Component, OnInit, Input } from '@angular/core';
 export class AvatarComponent implements OnInit {
 
   @Input() avatarFile: string;
+
+  @Input() hoverable: boolean;
 
   constructor() { }
 
