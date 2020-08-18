@@ -11,6 +11,7 @@ import { AppRoutingModule } from '../app-routing.module';
 import { CardsModule } from './cards/cards.module';
 import { ContentComponent } from './content/content.component';
 import { EnergyComponent } from './cards/energy/energy.component';
+import { FileInputComponent } from './file-input/file-input.component';
 import { InfoComponent } from './info/info.component';
 import { SearchBoxComponent } from './search-box/search-box.component';
 import { SessionService } from './session/session.service';
@@ -35,6 +36,7 @@ import { ValidationModule } from './validation/validation.module';
   ],
   declarations: [
     ContentComponent,
+    FileInputComponent,
     InfoComponent,
     SearchBoxComponent,
     SidebarComponent,
@@ -47,6 +49,7 @@ import { ValidationModule } from './validation/validation.module';
     CardsModule,
     ContentComponent,
     EnergyComponent,
+    FileInputComponent,
     InfoComponent,
     FormsModule,
     MaterialModule,

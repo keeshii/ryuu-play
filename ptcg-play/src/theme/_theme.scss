@@ -6,6 +6,7 @@
 @import '../app/shared/info/_info-theme.scss';
 @import '../app/shared/user-info/badge/_badge-theme.scss';
 @import '../app/shared/cards/_cards-theme.scss';
+@import '../app/shared/file-input/_file-input.theme.scss';
 @import '../app/shared/user-info/_user-info.theme.scss';
 @import '../app/table/_table-theme.scss';
 @import '../app/table/prompt/_prompt-theme.scss';
@@ -22,6 +23,7 @@
   @include ptcg-table-theme($theme);
   @include ptcg-user-info-theme($theme);
   @include ptcg-prompt-theme($theme);
+  @include ptcg-file-input-theme($theme);
 }
 
 @mixin ptcg-typography($config) {
@@ -31,4 +33,5 @@
   @include ptcg-user-info-typography($config);
   @include ptcg-info-typography($config);
   @include ptcg-table-typography($config);
+  @include ptcg-file-input-typography($config);
 }

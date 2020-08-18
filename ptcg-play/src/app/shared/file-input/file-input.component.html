@@ -1,0 +1,10 @@
+<div class="ptcg-file-input">
+  <input #input type="file"
+    [attr.multiple]="multiple? '' : null"
+    [attr.accept]="accept">
+
+  <span class="ptcg-file-input-value"
+    [title]="fileNames">
+    {{ fileNames }}
+  </span>
+</div>

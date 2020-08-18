@@ -1,0 +1,17 @@
+@import '~@angular/material/theming';
+
+@mixin ptcg-file-input-theme($theme) {
+  .mat-form-field-type-file-input {
+    &:not(.mat-form-field-disabled) .mat-form-field-flex {
+      cursor: pointer;
+    }
+  }
+}
+
+@mixin ptcg-file-input-typography($config) {
+  ptcg-file-input {
+    .ptcg-file-label {
+      @include mat-typography-level-to-styles($config, input);
+    }
+  }
+}

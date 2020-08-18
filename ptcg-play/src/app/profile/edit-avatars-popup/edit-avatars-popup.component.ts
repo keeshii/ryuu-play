@@ -1,6 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
+import { AddAvatarPopupService } from '../add-avatar-popup/add-avatar-popup.service';
+
 @Component({
   selector: 'ptcg-edit-avatars-popup',
   templateUrl: './edit-avatars-popup.component.html',
@@ -14,9 +16,14 @@ export class EditAvatarsPopupComponent implements OnInit {
   public avatars: any[] = [];
 
   constructor(
+    private addAvatarPopupService: AddAvatarPopupService,
     private dialogRef: MatDialogRef<EditAvatarsPopupComponent>,
     @Inject(MAT_DIALOG_DATA) private data: { name: string },
   ) {
+  }
+
+  public addAvatar() {
+    this.addAvatarPopupService.openDialog();
   }
 
   ngOnInit() {

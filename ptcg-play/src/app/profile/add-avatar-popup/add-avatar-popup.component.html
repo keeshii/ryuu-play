@@ -1,0 +1,41 @@
+<h2 mat-dialog-title>Add avatar</h2>
+
+<mat-dialog-content>
+
+  <p class="ptcg-avatar-preview">
+    <ptcg-avatar></ptcg-avatar>
+  </p>
+
+  <form #form="ngForm" autocomplete="off">
+
+    <!-- Avatar image -->
+    <mat-form-field>
+      <mat-label>Avatar image</mat-label>
+      <ptcg-file-input #avatarFileInput></ptcg-file-input>
+      <button mat-icon-button matSuffix *ngIf="!avatarFileInput.empty" (click)="avatarFileInput.clear($event)">
+        <mat-icon>clear</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <!-- Avatar name -->
+    <mat-form-field>
+      <mat-label>Avatar name</mat-label>
+      <input matInput placeholder="Avatar name" name="name"
+        [(ngModel)]="name" [disabled]="loading" #nameField="ngModel"
+        ptcgNameValidator [ptcgInvalidValue]="invalidName" required>
+      <mat-error>
+        <div *ngIf="nameField.errors?.name">VALIDATION_INVALID_NAME</div>
+        <div *ngIf="nameField.errors?.invalidValue">REGISTER_NAME_TAKEN</div>
+      </mat-error>
+    </mat-form-field>
+
+  </form>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button (click)="cancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="confirm()" [disabled]="form.invalid">
+    Upload
+  </button>
+</mat-dialog-actions>
