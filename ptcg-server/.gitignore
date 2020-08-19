@@ -2,3 +2,6 @@
 coverage
 dist
 node_modules
+avatars
+
+!avatars/.keep
