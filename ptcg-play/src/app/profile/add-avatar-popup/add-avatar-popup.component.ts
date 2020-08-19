@@ -7,9 +7,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AddAvatarPopupComponent implements OnInit {
 
+  public loading = false;
+  public invalidName: string;
+  public name: string;
+
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  confirm(): void {
   }
 
 }

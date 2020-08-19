@@ -2,8 +2,11 @@
 
 <mat-dialog-content>
 
+  <mat-progress-bar *ngIf="loading" color="accent" mode="indeterminate" class="ptcg-u-top">
+  </mat-progress-bar>
+
   <p class="ptcg-avatar-preview">
-    <ptcg-avatar></ptcg-avatar>
+    <ptcg-avatar type="profile"></ptcg-avatar>
   </p>
 
   <form #form="ngForm" autocomplete="off">
@@ -11,7 +14,7 @@
     <!-- Avatar image -->
     <mat-form-field>
       <mat-label>Avatar image</mat-label>
-      <ptcg-file-input #avatarFileInput></ptcg-file-input>
+      <ptcg-file-input #avatarFileInput [disabled]="loading"></ptcg-file-input>
       <button mat-icon-button matSuffix *ngIf="!avatarFileInput.empty" (click)="avatarFileInput.clear($event)">
         <mat-icon>clear</mat-icon>
       </button>
@@ -34,7 +37,7 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-raised-button (click)="cancel()">Cancel</button>
+  <button mat-raised-button mat-dialog-close>Cancel</button>
   <button mat-raised-button color="primary" (click)="confirm()" [disabled]="form.invalid">
     Upload
   </button>

@@ -1,12 +1,10 @@
 <h2 class="mat-dialog-title">Invite player</h2>
 
 <mat-dialog-content>
-  <p>{{ prompt.message }}</p>
+  <mat-progress-bar *ngIf="loading" color="accent" mode="indeterminate" class="ptcg-u-top">
+  </mat-progress-bar>
 
-  <div class="ptcg-loading" *ngIf="loading">
-    <mat-progress-bar color="accent" mode="indeterminate">
-    </mat-progress-bar>
-  </div>
+  <p>{{ prompt.message }}</p>
 
   <form #form="ngForm" autocomplete="off" *ngIf="!loading && decks.length > 0">
     <mat-form-field>

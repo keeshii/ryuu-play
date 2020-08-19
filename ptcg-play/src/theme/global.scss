@@ -105,6 +105,10 @@ table {
 
 
 /* Some material overrides, and fixes */
+mat-dialog-container {
+  position: relative;
+}
+
 mat-dialog-actions {
   justify-content: flex-end;
 }

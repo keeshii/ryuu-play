@@ -2,6 +2,7 @@
 @import '../app/login/login-popup/_login-popup-theme.scss';
 @import '../app/deck/deck-edit/_deck-edit-theme.scss';
 @import '../app/main/main-theme.scss';
+@import '../app/profile/_profile.theme.scss';
 @import '../app/shared/search-box/_search-box-theme.scss';
 @import '../app/shared/info/_info-theme.scss';
 @import '../app/shared/user-info/badge/_badge-theme.scss';
@@ -24,6 +25,7 @@
   @include ptcg-user-info-theme($theme);
   @include ptcg-prompt-theme($theme);
   @include ptcg-file-input-theme($theme);
+  @include ptcg-profile-theme($theme);
 }
 
 @mixin ptcg-typography($config) {

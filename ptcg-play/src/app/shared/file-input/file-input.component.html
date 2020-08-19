@@ -1,5 +1,6 @@
 <div class="ptcg-file-input">
   <input #input type="file"
+    [disabled]="disabled"
     [attr.multiple]="multiple? '' : null"
     [attr.accept]="accept">
 
