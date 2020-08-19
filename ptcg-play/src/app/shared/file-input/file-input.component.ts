@@ -98,8 +98,6 @@ export class FileInputComponent extends FileInputMixinBase
 
   onContainerClick(event: MouseEvent) {
     if ((event.target as Element).tagName.toLowerCase() !== 'input' && !this.disabled) {
-      this._elementRef.nativeElement.querySelector('input').focus();
-      this.focused = true;
       this.open();
     }
   }
@@ -198,7 +196,8 @@ export class FileInputComponent extends FileInputMixinBase
 
   open() {
     if (!this.disabled) {
-      this._elementRef.nativeElement.querySelector('input').click();
+      const input = this._elementRef.nativeElement.querySelector('input');
+      input.click();
     }
   }
 

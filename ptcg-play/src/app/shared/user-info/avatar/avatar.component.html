@@ -1,2 +1,3 @@
-<div class="ptcg-avatar" [ngClass]="{empty: !avatarFile, hoverable: hoverable}">
+<div class="ptcg-avatar" [ngClass]="{empty: !imageUrl, hoverable: hoverable}">
+  <img [src]="imageUrl" *ngIf="imageUrl">
 </div>

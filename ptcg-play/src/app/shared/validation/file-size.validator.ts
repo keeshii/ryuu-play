@@ -8,11 +8,11 @@ import { FileInput } from '../file-input/file-input.model';
 })
 export class FileSizeValidatorDirective implements Validator {
 
-  private maxFileSize = 0;
+  private fileSize = 0;
 
-  @Input('max-file-size')
-  set setMaxFileSize(value: string) {
-    this.maxFileSize = parseInt(value, 10);
+  @Input()
+  set maxFileSize(value: string) {
+    this.fileSize = parseInt(value, 10);
   }
 
   validate(control: AbstractControl): ValidationErrors {
@@ -24,13 +24,13 @@ export class FileSizeValidatorDirective implements Validator {
       return null;
     }
     const size = fileInput.files.map(f => f.size).reduce((acc, i) => acc + i, 0);
-    if (size <= this.maxFileSize) {
+    if (size <= this.fileSize) {
       return null;
     }
     return {
       maxFileSize: {
         actualSize: size,
-        maxSize: this.maxFileSize
+        maxSize: this.fileSize
       }
     };
   }

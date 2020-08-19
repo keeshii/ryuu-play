@@ -40,7 +40,7 @@ export class App {
       instance.init();
     };
 
-    app.use(json());
+    app.use(json({limit: 512 + config.backend.avatarFileSize * 4}));
     app.use(cors());
     define('/avatars', Avatars);
     define('/cards', Cards);

@@ -10,9 +10,9 @@ export const config = {
     defaultPageSize: 50,
     avatarsDir: '',
     avatarsUrl: '/avatars/{name}',
-    avatarFileSize: 50 * 1024,
-    avatarMinSize: 50,
-    avatarMaxSize: 200
+    avatarFileSize: 256 * 1024,
+    avatarMinSize: 64,
+    avatarMaxSize: 512
   },
   storage: {
     type: 'mysql',

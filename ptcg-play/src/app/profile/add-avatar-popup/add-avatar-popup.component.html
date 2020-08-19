@@ -6,7 +6,7 @@
   </mat-progress-bar>
 
   <p class="ptcg-avatar-preview">
-    <ptcg-avatar type="profile"></ptcg-avatar>
+    <ptcg-avatar type="profile" [avatarFile]="imageBase64"></ptcg-avatar>
   </p>
 
   <form #form="ngForm" autocomplete="off">
@@ -14,10 +14,25 @@
     <!-- Avatar image -->
     <mat-form-field>
       <mat-label>Avatar image</mat-label>
-      <ptcg-file-input #avatarFileInput [disabled]="loading"></ptcg-file-input>
-      <button mat-icon-button matSuffix *ngIf="!avatarFileInput.empty" (click)="avatarFileInput.clear($event)">
+      <ptcg-file-input #avatarFileInput required
+        ptcgErrorValidator [ptcgErrorValue]="avatarError"
+        ptcgFileSizeValidator [maxFileSize]="avatarFileSize"
+        name="avatar" accept="jpg|jpeg|png"
+        [disabled]="loading"
+        [(ngModel)]="avatar" #avatarField="ngModel"
+        (ngModelChange)="updatePreview($event)">
+      </ptcg-file-input>
+      <button mat-icon-button matSuffix
+        *ngIf="!avatarFileInput.empty"
+        [disabled]="loading"
+        (click)="avatarFileInput.clear($event)">
         <mat-icon>clear</mat-icon>
       </button>
+      <mat-error>
+        <div *ngIf="avatarField.errors?.ptcgError">INVALID_IMAGE</div>
+        <div *ngIf="avatarField.errors?.maxFileSize">MAX_FILE_SIZE</div>
+        <div *ngIf="avatarField.errors?.required">IMAGE_IS_REQUIRED</div>
+      </mat-error>
     </mat-form-field>
 
     <!-- Avatar name -->
@@ -38,7 +53,7 @@
 
 <mat-dialog-actions>
   <button mat-raised-button mat-dialog-close>Cancel</button>
-  <button mat-raised-button color="primary" (click)="confirm()" [disabled]="form.invalid">
+  <button mat-raised-button color="primary" (click)="uploadImage()" [disabled]="form.invalid">
     Upload
   </button>
 </mat-dialog-actions>
