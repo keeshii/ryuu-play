@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { AuthToken, Validate, check, generateToken } from '../services';
 import { Controller, Get, Post } from './controller';
 import { Errors } from '../common/errors';
-import { LoginRequest, RegisterRequest } from '../interfaces';
+import { LoginRequest, RegisterRequest, ServerConfig } from '../interfaces';
 import { Md5 } from '../common/md5';
 import { User } from '../../storage';
 import { config } from '../../config';
@@ -71,7 +71,7 @@ export class Login extends Controller {
     }
 
     const token = generateToken(user.id);
-    res.send({ok: true, token});
+    res.send({ok: true, token, config: this.getServerConfig()});
   }
 
   @Get('/refreshToken')
@@ -79,13 +79,24 @@ export class Login extends Controller {
   public async onRefreshToken(req: Request, res: Response) {
     const userId: number = req.body.userId;
     const token = generateToken(userId);
-    res.send({ok: true, token});
+    res.send({ok: true, token, config: this.getServerConfig()});
   }
 
   @Get('/logout')
   @AuthToken()
   public onLogout(req: Request, res: Response) {
     res.send({ok: true});
+  }
+
+  private getServerConfig(): ServerConfig {
+    return {
+      apiVersion: 1,
+      scansUrl: config.sets.scansUrl,
+      avatarsUrl: config.backend.avatarsUrl,
+      avatarFileSize: config.backend.avatarFileSize,
+      avatarMinSize: config.backend.avatarMinSize,
+      avatarMaxSize: config.backend.avatarMaxSize
+    };
   }
 
 }

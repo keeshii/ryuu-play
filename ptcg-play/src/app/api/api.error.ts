@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { TimeoutError } from 'rxjs';
 
 export enum ApiErrorEnum {
+  ERROR_UNSUPPORTED_API_VERSION = 'ERROR_UNSUPPORTED_API_VERSION',
   ERROR_BAD_TOKEN = 'ERROR_BAD_TOKEN',
   ERROR_REQUESTS_LIMIT_REACHED = 'ERROR_REQUESTS_LIMIT_REACHED',
   ERROR_UNKNOWN_REQUEST = 'ERROR_UNKNOWN_REQUEST',

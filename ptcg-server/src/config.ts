@@ -9,6 +9,7 @@ export const config = {
     tokenExpire: 86400,
     defaultPageSize: 50,
     avatarsDir: '',
+    avatarsUrl: '/avatars/{name}',
     avatarFileSize: 50 * 1024,
     avatarMinSize: 50,
     avatarMaxSize: 200

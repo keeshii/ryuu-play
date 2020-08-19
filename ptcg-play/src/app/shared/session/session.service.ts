@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { GameInfo, GameState, ClientInfo, UserInfo, StateLog } from 'ptcg-server';
+import { GameInfo, GameState, ClientInfo, UserInfo, StateLog, ServerConfig } from 'ptcg-server';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map, distinctUntilChanged } from 'rxjs/operators';
 
@@ -12,6 +12,7 @@ export interface LocalGameState extends GameState {
 
 export class Session {
   authToken: string;
+  config: ServerConfig;
   loggedUser: UserInfo;
   clientId: number;
   games: GameInfo[] = [];

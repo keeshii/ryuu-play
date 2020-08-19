@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 
+import { AlertService } from '../../shared/alert/alert.service';
 import { ApiError } from '../../api/api.error';
 import { LoginService } from '../../api/services/login.service';
 import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed';
@@ -19,6 +20,7 @@ export class LoginPopupComponent implements OnDestroy {
   public password: string;
 
   constructor(
+    private alertService: AlertService,
     private loginService: LoginService,
     public dialogRef: MatDialogRef<LoginPopupComponent>,
     private router: Router,
@@ -31,10 +33,15 @@ export class LoginPopupComponent implements OnDestroy {
       finalize(() => { this.loading = false; }),
       takeUntilDestroyed(this)
     )
-      .subscribe(() => {
-        this.dialogRef.close();
-        this.router.navigate([this.data.redirectUrl]);
-      }, (error: ApiError) => { });
+      .subscribe({
+        next: () => {
+          this.dialogRef.close();
+          this.router.navigate([this.data.redirectUrl]);
+        },
+        error: (error: ApiError) => {
+          this.alertService.toast(error.message);
+        }
+      });
   }
 
   resetPassword() {

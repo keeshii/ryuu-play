@@ -1,3 +1,12 @@
+export interface ServerConfig {
+  apiVersion: number;
+  scansUrl: string;
+  avatarsUrl: string;
+  avatarFileSize: number;
+  avatarMinSize: number;
+  avatarMaxSize: number;
+}
+
 export interface RegisterRequest {
   name: string;
   email: string;

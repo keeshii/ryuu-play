@@ -5,6 +5,7 @@ import { take } from 'rxjs/operators';
 import { CardInfoPopupData, CardInfoPopupComponent, CardInfoPopupResponse } from './card-info-popup/card-info-popup.component';
 import { CardsService } from '../../api/services/cards.service';
 import { MatDialog } from '@angular/material/dialog';
+import { SessionService } from '../session/session.service';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -12,13 +13,13 @@ import { environment } from '../../../environments/environment';
 })
 export class CardsBaseService {
 
-  public scansUrl: string;
   private cards: Card[] = [];
   private names: string[] = [];
 
   constructor(
     private cardsService: CardsService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private sessionService: SessionService
   ) { }
 
   public loadCards() {
@@ -27,7 +28,6 @@ export class CardsBaseService {
       .subscribe(response => {
         this.cards = response.cards;
         this.names = this.cards.map(c => c.fullName);
-        this.scansUrl = response.scansUrl;
       }, () => {});
   }
 
@@ -40,7 +40,9 @@ export class CardsBaseService {
   }
 
   public getScanUrl(card: Card): string {
-    return environment.apiUrl + this.scansUrl
+    const config = this.sessionService.session.config;
+    const scansUrl = config && config.scansUrl || '';
+    return environment.apiUrl + scansUrl
       .replace('{set}', card.set)
       .replace('{name}', card.fullName);
   }
