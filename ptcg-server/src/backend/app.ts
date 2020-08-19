@@ -9,6 +9,7 @@ import { config } from '../config';
 import { cors } from './services/cors';
 
 import {
+  Avatars,
   ControllerClass,
   Cards,
   Decks,
@@ -41,6 +42,7 @@ export class App {
 
     app.use(json());
     app.use(cors());
+    define('/avatars', Avatars);
     define('/cards', Cards);
     define('/decks', Decks);
     define('/game', Game);

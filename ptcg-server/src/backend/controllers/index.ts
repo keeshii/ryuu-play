@@ -1,3 +1,4 @@
+export * from './avatars';
 export * from './cards';
 export * from './decks';
 export * from './game';

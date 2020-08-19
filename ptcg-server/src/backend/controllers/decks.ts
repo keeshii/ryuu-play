@@ -105,7 +105,7 @@ export class Decks extends Controller {
       deck = await deck.save();
     } catch (error) {
       res.status(400);
-      res.send({error: Errors.DECK_NAME_DUPLICATE});
+      res.send({error: Errors.NAME_DUPLICATE});
       return;
     }
 
@@ -177,7 +177,7 @@ export class Decks extends Controller {
       deck = await deck.save();
     } catch (error) {
       res.status(400);
-      res.send({error: Errors.DECK_NAME_DUPLICATE});
+      res.send({error: Errors.NAME_DUPLICATE});
       return;
     }
 

@@ -7,7 +7,11 @@ export const config = {
     registrationEnabled: true,
     secret: '!secret!',
     tokenExpire: 86400,
-    defaultPageSize: 50
+    defaultPageSize: 50,
+    avatarsDir: '',
+    avatarFileSize: 50 * 1024,
+    avatarMinSize: 50,
+    avatarMaxSize: 200
   },
   storage: {
     type: 'mysql',
