@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AlertPopupComponent } from './alert-popup/alert-popup.component';
 import { ConfirmPopupComponent } from './confirm-popup/confirm-popup.component';
 import { InputNumberPopupComponent, InputNumberPopupData } from './input-number-popup/input-number-popup.component';
+import { InputNamePopupComponent, InputNamePopupData } from './input-name-popup/input-name-popup.component';
 import { SelectPopupComponent, SelectPopupData } from './select-popup/select-popup.component';
 
 @Injectable()
@@ -48,6 +49,17 @@ export class AlertService {
 
   public inputNumber(options: InputNumberPopupData = {}): Promise<number | undefined> {
     const dialog = this.dialog.open(InputNumberPopupComponent, {
+      maxWidth: '100%',
+      width: '350px',
+      data: options
+    });
+
+    return dialog.afterClosed().toPromise()
+      .catch(() => undefined);
+  }
+
+  public inputName(options: InputNamePopupData = {}): Promise<string | undefined> {
+    const dialog = this.dialog.open(InputNamePopupComponent, {
       maxWidth: '100%',
       width: '350px',
       data: options

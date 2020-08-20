@@ -4,7 +4,6 @@ import { finalize } from 'rxjs/operators';
 import { AlertService } from '../shared/alert/alert.service';
 import { ApiError } from '../api/api.error';
 import { DeckListEntry } from '../api/interfaces/deck.interface';
-import { DeckNamePopupService } from './deck-name-popup/deck-name-popup.service';
 import { DeckService } from '../api/services/deck.service';
 import { takeUntilDestroyed } from '../shared/operators/take-until-destroyed';
 
@@ -21,8 +20,7 @@ export class DeckComponent implements OnInit, OnDestroy {
 
   constructor(
     private alertService: AlertService,
-    private deckService: DeckService,
-    private deckNamePopupService: DeckNamePopupService
+    private deckService: DeckService
   ) { }
 
   public ngOnInit() {
@@ -44,7 +42,7 @@ export class DeckComponent implements OnInit, OnDestroy {
 
   public async createDeck() {
     const name = await this.getDeckName();
-    if (name === false) {
+    if (name === undefined) {
       return;
     }
 
@@ -74,9 +72,9 @@ export class DeckComponent implements OnInit, OnDestroy {
     });
   }
 
-  public async renameDeck(deckId: number) {
-    const name = await this.getDeckName();
-    if (name === false) {
+  public async renameDeck(deckId: number, previousName: string) {
+    const name = await this.getDeckName(previousName);
+    if (name === undefined) {
       return;
     }
 
@@ -93,7 +91,7 @@ export class DeckComponent implements OnInit, OnDestroy {
 
   public async duplicateDeck(deckId: number) {
     const name = await this.getDeckName();
-    if (name === false) {
+    if (name === undefined) {
       return;
     }
 
@@ -108,18 +106,13 @@ export class DeckComponent implements OnInit, OnDestroy {
     });
   }
 
-  private getDeckName(): Promise<string | false> {
-    const dialog = this.deckNamePopupService.openDialog();
-    return new Promise<string | false>(resolve => {
-      dialog.afterClosed().pipe(
-        takeUntilDestroyed(this)
-      ).subscribe((deckName: string) => {
-        // User canceled the popup
-        if (deckName === undefined) {
-          resolve(false);
-        }
-        resolve(deckName);
-      }, () => resolve(false));
+  private getDeckName(name: string = ''): Promise<string | undefined> {
+    const invalidValues = this.decks.map(d => d.name);
+    return this.alertService.inputName({
+      title: 'Enter deck name',
+      placeholder: 'Deck name',
+      invalidValues,
+      value: name
     });
   }
 

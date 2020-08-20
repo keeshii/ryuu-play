@@ -6,6 +6,7 @@ import { AlertPopupComponent } from './alert-popup/alert-popup.component';
 import { AlertService } from './alert.service';
 import { ConfirmPopupComponent } from './confirm-popup/confirm-popup.component';
 import { InputNumberPopupComponent } from './input-number-popup/input-number-popup.component';
+import { InputNamePopupComponent } from './input-name-popup/input-name-popup.component';
 import { MaterialModule } from '../material.module';
 import { SelectPopupComponent } from './select-popup/select-popup.component';
 import { ValidationModule } from '../validation/validation.module';
@@ -21,12 +22,14 @@ import { ValidationModule } from '../validation/validation.module';
     AlertPopupComponent,
     ConfirmPopupComponent,
     InputNumberPopupComponent,
+    InputNamePopupComponent,
     SelectPopupComponent
   ],
   entryComponents: [
     AlertPopupComponent,
     ConfirmPopupComponent,
     InputNumberPopupComponent,
+    InputNamePopupComponent,
     SelectPopupComponent
   ],
   providers: [
