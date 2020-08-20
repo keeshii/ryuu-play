@@ -1,6 +1,7 @@
-import { Component, OnInit, Input, HostBinding } from '@angular/core';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import {SessionService} from '../../session/session.service';
+import { Component, OnInit, Input } from '@angular/core';
+
+import { SessionService } from '../../session/session.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'ptcg-avatar',
@@ -15,17 +16,19 @@ export class AvatarComponent implements OnInit {
       return;
     }
 
-    const isBase64 = /^data:image\/([a-zA-Z]*);base64,/;
-    const isFullUrl = /^(https?|file):\/\//;
+    const base64pattern = /^data:image\/([a-zA-Z]*);base64,/;
+    const urlPattern = /^(https?|file):\/\//;
 
-    if (fileName.match(isBase64) || fileName.match(isFullUrl)) {
+    if (fileName.match(base64pattern) || fileName.match(urlPattern)) {
       this.imageUrl = fileName;
       return;
     }
 
     const config = this.sessionService.session.config;
-    const url = config && config.avatarsUrl || '';
-    this.imageUrl = url.replace('{name}', fileName);
+    const avatarUrl = config && config.avatarsUrl || '';
+
+    this.imageUrl = environment.apiUrl + avatarUrl
+      .replace('{name}', fileName);
   }
 
   @Input() hoverable: boolean;

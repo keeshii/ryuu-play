@@ -53,12 +53,17 @@ export class Avatars extends Controller {
 
     let avatar = new Avatar();
     avatar.name = body.name;
+    avatar.user = user;
 
     try {
       avatar.fileName = await this.createAvatarFile(body.imageBase64);
     } catch (error) {
       res.status(400);
-      res.send({error: Errors.VALIDATION_INVALID_PARAM, param: 'imageBase64'});
+      res.send({
+        error: Errors.VALIDATION_INVALID_PARAM,
+        param: 'imageBase64',
+        message: error instanceof Error ? error.message : ''
+      });
       return;
     }
 
@@ -156,8 +161,11 @@ export class Avatars extends Controller {
     return unlinkAsync(path);
   }
 
-  private async createAvatarFile(base64: string): Promise<string> {
-    const buf = Buffer.from(base64, 'base64');
+  private async createAvatarFile(imageData: string): Promise<string> {
+    const base64pattern = /^data:image\/([a-zA-Z]*);base64,/;
+    const base64Data = imageData.replace(base64pattern, '');
+    const buf = Buffer.from(base64Data, 'base64');
+
     if (buf.length > config.backend.avatarFileSize) {
       throw new Error('Image size exceeded.');
     }
@@ -169,8 +177,8 @@ export class Avatars extends Controller {
 
     const minSize = config.backend.avatarMinSize;
     const maxSize = config.backend.avatarMaxSize;
-    if (image.bitmap.width <= minSize || image.bitmap.height <= minSize
-      || image.bitmap.width >= maxSize || image.bitmap.height >= maxSize) {
+    if (image.bitmap.width < minSize || image.bitmap.height < minSize
+      || image.bitmap.width > maxSize || image.bitmap.height > maxSize) {
       throw new Error('Invalid image size');
     }
 

@@ -6,7 +6,7 @@
   </mat-progress-bar>
 
   <p class="ptcg-avatar-preview">
-    <ptcg-avatar type="profile" [avatarFile]="imageBase64"></ptcg-avatar>
+    <ptcg-avatar class="mat-elevation-z2" type="profile" [avatarFile]="imageBase64"></ptcg-avatar>
   </p>
 
   <form #form="ngForm" autocomplete="off">
@@ -16,10 +16,10 @@
       <mat-label>Avatar image</mat-label>
       <ptcg-file-input #avatarFileInput required
         ptcgErrorValidator [ptcgErrorValue]="avatarError"
-        ptcgFileSizeValidator [maxFileSize]="avatarFileSize"
+        ptcgFileSizeValidator [maxFileSize]="maxFileSize"
         name="avatar" accept="jpg|jpeg|png"
         [disabled]="loading"
-        [(ngModel)]="avatar" #avatarField="ngModel"
+        [(ngModel)]="imageFile" #avatarField="ngModel"
         (ngModelChange)="updatePreview($event)">
       </ptcg-file-input>
       <button mat-icon-button matSuffix

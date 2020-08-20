@@ -17,9 +17,10 @@ export class AddAvatarPopupComponent implements OnInit, OnDestroy {
 
   public loading = false;
   public invalidName: string;
+  public imageFile: FileInput;
   public name: string;
   public avatarError: string;
-  public avatarFileSize: number;
+  public maxFileSize: number;
   public imageBase64: string;
 
   constructor(
@@ -27,7 +28,7 @@ export class AddAvatarPopupComponent implements OnInit, OnDestroy {
     private avatarService: AvatarService,
     private sessionService: SessionService
   ) {
-    this.avatarFileSize = this.sessionService.session.config.avatarFileSize;
+    this.maxFileSize = this.sessionService.session.config.avatarFileSize;
   }
 
   ngOnInit(): void {
@@ -64,7 +65,7 @@ export class AddAvatarPopupComponent implements OnInit, OnDestroy {
     const url = URL.createObjectURL(file);
 
     // handled by different validator
-    if (file.size > this.avatarFileSize) {
+    if (file.size > this.maxFileSize) {
       this.avatarError = '';
       this.imageBase64 = '';
       return;
