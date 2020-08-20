@@ -30,12 +30,47 @@ export class EditAvatarsPopupComponent implements OnInit, OnDestroy {
   }
 
   public addAvatar() {
-    this.addAvatarPopupService.openDialog();
+    const dialogRef = this.addAvatarPopupService.openDialog();
+    dialogRef.afterClosed()
+      .pipe(takeUntilDestroyed(this))
+      .subscribe({
+        next: avatar => {
+          if (avatar) {
+            this.refreshAvatars();
+          }
+      }});
+  }
+
+  public deleteAvatar(avatarId: number) {
+    this.loading = true;
+    this.avatarService.deleteAvatar(avatarId)
+      .pipe(
+        finalize(() => { this.loading = false; }),
+        takeUntilDestroyed(this)
+      )
+      .subscribe({
+        next: () => {
+          this.refreshAvatars();
+        },
+        error: (error: ApiError) => {
+          this.alertService.toast(error.code);
+        }
+      });
+  }
+
+  public renameAvatar(avatarId: number) {
+    return;
   }
 
   ngOnInit() {
+    this.refreshAvatars();
+  }
+
+  ngOnDestroy() { }
+
+  private refreshAvatars(): void {
     this.loading = true;
-    return this.avatarService.getList()
+    this.avatarService.getList()
       .pipe(
         finalize(() => { this.loading = false; }),
         takeUntilDestroyed(this)
@@ -49,7 +84,5 @@ export class EditAvatarsPopupComponent implements OnInit, OnDestroy {
         }
       });
   }
-
-  ngOnDestroy() { }
 
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 import { finalize } from 'rxjs/operators';
 
 import { AlertService } from 'src/app/shared/alert/alert.service';
@@ -26,6 +27,7 @@ export class AddAvatarPopupComponent implements OnInit, OnDestroy {
   constructor(
     private alertService: AlertService,
     private avatarService: AvatarService,
+    private dialogRef: MatDialogRef<AddAvatarPopupComponent>,
     private sessionService: SessionService
   ) {
     this.maxFileSize = this.sessionService.session.config.avatarFileSize;
@@ -46,10 +48,10 @@ export class AddAvatarPopupComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: response => {
-          console.log('response', response);
+          this.dialogRef.close(response.avatar);
         },
         error: (error: ApiError) => {
-          this.alertService.toast(error.message);
+          this.alertService.toast(error.code);
         }
       });
   }

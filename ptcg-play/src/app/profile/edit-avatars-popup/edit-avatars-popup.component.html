@@ -14,7 +14,8 @@
         <mat-radio-button (click)="$event.stopPropagation()"
           color="primary"
           (change)="defaultAvatar = avatar"
-          [checked]="defaultAvatar === avatar">
+          [checked]="defaultAvatar === avatar"
+          [disabled]="loading">
         </mat-radio-button>
       </td>
     </ng-container>
@@ -39,10 +40,10 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Actions</th>
       <td mat-cell *matCellDef="let avatar">
-        <button mat-button [matMenuTriggerFor]="menu">Actions</button>
+        <button mat-button [matMenuTriggerFor]="menu" [disabled]="loading">Actions</button>
         <mat-menu #menu="matMenu">
           <button mat-menu-item (click)="deleteAvatar(avatar.id)">Delete</button>
-          <button mat-menu-item (click)="renameDeck(avatar.id)">Rename</button>
+          <button mat-menu-item (click)="renameAvatar(avatar.id)">Rename</button>
         </mat-menu>
       </td>
     </ng-container>
@@ -58,7 +59,9 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-raised-button color="primary" (click)="addAvatar()">
+  <button mat-raised-button color="primary"
+    [disabled]="loading"
+    (click)="addAvatar()">
     Add avatar
   </button>
   <span class="ptcg-u-spacer"></span>

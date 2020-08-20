@@ -10,13 +10,10 @@ export class EditAvatarsPopupService {
 
   constructor(public dialog: MatDialog) { }
 
-  public openDialog(
-    name: string = ''
-  ): MatDialogRef<EditAvatarsPopupComponent, string | undefined> {
+  public openDialog(): MatDialogRef<EditAvatarsPopupComponent, string | undefined> {
     const dialogRef = this.dialog.open(EditAvatarsPopupComponent, {
       maxWidth: '100%',
       width: '500px',
-      data: { name },
       autoFocus: false
     });
 
