@@ -155,6 +155,43 @@ export class Avatars extends Controller {
     }});
   }
 
+  @Post('/markAsDefault')
+  @AuthToken()
+  @Validate({
+    id: check().isNumber()
+  })
+  public async onMarkAsDefault(req: Request, res: Response) {
+    const body: { id: number, name: string } = req.body;
+
+    const userId: number = req.body.userId;
+    let user = await User.findOne(userId);
+
+    if (user === undefined) {
+      res.status(400);
+      res.send({error: Errors.PROFILE_INVALID});
+      return;
+    }
+
+    const avatar = await Avatar.findOne(body.id, { relations: ['user'] });
+
+    if (avatar === undefined || avatar.user.id !== user.id) {
+      res.status(400);
+      res.send({error: Errors.AVATAR_INVALID});
+      return;
+    }
+
+    try {
+      user.avatarFile = avatar.fileName;
+      user = await user.save();
+    } catch (error) {
+      res.status(400);
+      res.send({error: Errors.AVATAR_INVALID});
+      return;
+    }
+
+    res.send({ ok: true });
+  }
+
   private async removeAvatarFile(fileName: string): Promise<void> {
     const unlinkAsync = promisify(unlink);
     const path = join(config.backend.avatarsDir, fileName);

@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { AvatarInfo, UserInfo } from 'ptcg-server';
 import { finalize } from 'rxjs/operators';
 
 import { AddAvatarPopupService } from '../add-avatar-popup/add-avatar-popup.service';
@@ -17,16 +18,18 @@ export class EditAvatarsPopupComponent implements OnInit, OnDestroy {
 
   public displayedColumns: string[] = ['default', 'image', 'name', 'actions'];
   public loading = false;
-  public defaultAvatar: any;
-  public avatars: any[] = [];
+  public defaultAvatar: AvatarInfo;
+  public avatars: AvatarInfo[] = [];
+  private user: UserInfo;
 
   constructor(
     private alertService: AlertService,
     private addAvatarPopupService: AddAvatarPopupService,
     private avatarService: AvatarService,
     private dialogRef: MatDialogRef<EditAvatarsPopupComponent>,
-    @Inject(MAT_DIALOG_DATA) private data: { name: string },
+    @Inject(MAT_DIALOG_DATA) private data: { user: UserInfo },
   ) {
+    this.user = data.user;
   }
 
   public addAvatar() {
@@ -58,8 +61,38 @@ export class EditAvatarsPopupComponent implements OnInit, OnDestroy {
       });
   }
 
-  public renameAvatar(avatarId: number) {
-    return;
+  public async renameAvatar(avatarId: number, previousName: string) {
+    const name = await this.getAvatarName(previousName);
+    if (name === undefined) {
+      return;
+    }
+
+    this.loading = true;
+    this.avatarService.rename(avatarId, name).pipe(
+      finalize(() => { this.loading = false; }),
+      takeUntilDestroyed(this)
+    ).subscribe(() => {
+      this.refreshAvatars();
+    }, (error: ApiError) => {
+      this.alertService.toast('Error occured, try again.');
+    });
+  }
+
+  public markAsDefault(avatar: AvatarInfo) {
+    this.loading = true;
+    this.avatarService.markAsDefault(avatar.id)
+      .pipe(
+        finalize(() => { this.loading = false; }),
+        takeUntilDestroyed(this)
+      )
+      .subscribe({
+        next: () => {
+          this.defaultAvatar = avatar;
+        },
+        error: (error: ApiError) => {
+          this.alertService.toast(error.code);
+        }
+      });
   }
 
   ngOnInit() {
@@ -78,11 +111,24 @@ export class EditAvatarsPopupComponent implements OnInit, OnDestroy {
       .subscribe({
         next: response => {
           this.avatars = response.avatars;
+          this.defaultAvatar = this.avatars.find(a => {
+            return a.fileName === this.user.avatarFile;
+          });
         },
         error: (error: ApiError) => {
           this.alertService.toast(error.message);
         }
       });
+  }
+
+  private getAvatarName(name: string = ''): Promise<string | undefined> {
+    const invalidValues = this.avatars.map(a => a.name);
+    return this.alertService.inputName({
+      title: 'Enter avatar name',
+      placeholder: 'Avatar name',
+      invalidValues,
+      value: name
+    });
   }
 
 }

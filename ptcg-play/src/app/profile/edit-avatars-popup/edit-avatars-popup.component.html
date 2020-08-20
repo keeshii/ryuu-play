@@ -13,7 +13,7 @@
       <td mat-cell *matCellDef="let avatar">
         <mat-radio-button (click)="$event.stopPropagation()"
           color="primary"
-          (change)="defaultAvatar = avatar"
+          (change)="markAsDefault(avatar)"
           [checked]="defaultAvatar === avatar"
           [disabled]="loading">
         </mat-radio-button>
@@ -43,7 +43,7 @@
         <button mat-button [matMenuTriggerFor]="menu" [disabled]="loading">Actions</button>
         <mat-menu #menu="matMenu">
           <button mat-menu-item (click)="deleteAvatar(avatar.id)">Delete</button>
-          <button mat-menu-item (click)="renameAvatar(avatar.id)">Rename</button>
+          <button mat-menu-item (click)="renameAvatar(avatar.id, avatar.name)">Rename</button>
         </mat-menu>
       </td>
     </ng-container>

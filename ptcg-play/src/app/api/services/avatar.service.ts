@@ -36,4 +36,10 @@ export class AvatarService {
     });
   }
 
+  public markAsDefault(avatarId: number) {
+    return this.api.post<Response>('/avatars/markAsDefault', {
+      id: avatarId
+    });
+  }
+
 }

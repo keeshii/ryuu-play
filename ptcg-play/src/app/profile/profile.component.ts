@@ -1,7 +1,7 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserInfo } from 'ptcg-server';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, finalize } from 'rxjs/operators';
 
 import { AlertService } from '../shared/alert/alert.service';
 import { EditAvatarsPopupService } from './edit-avatars-popup/edit-avatars-popup.service';
@@ -66,8 +66,25 @@ export class ProfileComponent implements OnInit, OnDestroy {
     return;
   }
 
-  editAvatars() {
-    this.edtiAvatarsPopupService.openDialog();
+  editAvatars(user: UserInfo) {
+    const dialog = this.edtiAvatarsPopupService.openDialog(user);
+    dialog.afterClosed()
+      .pipe(
+        switchMap(() => {
+          this.loading = true;
+          return this.profileService.getUser(user.userId);
+        }),
+        finalize(() => { this.loading = false; }),
+        takeUntilDestroyed(this)
+      )
+      .subscribe({
+        next: response => {
+          this.user = response.user;
+          if (this.isOwner(this.user, this.loggedUser)) {
+            this.sessionService.set({ loggedUser: response.user });
+          }
+        }
+      });
   }
 
   private isOwner(user: UserInfo, loggedUser: UserInfo) {
