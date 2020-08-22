@@ -3,7 +3,8 @@ import { AuthToken } from '../services';
 import { Controller, Get } from './controller';
 import { Errors } from '../common/errors';
 import { User, Match } from '../../storage';
-import { UserInfo, MatchInfo } from '../interfaces/profile.interface';
+import { MatchInfo } from '../interfaces/profile.interface';
+import { UserInfo } from '../interfaces/core.interface';
 import { config } from '../../config';
 
 
@@ -67,12 +68,10 @@ export class Profile extends Controller {
   }
 
   private buildUserInfo(user: User): UserInfo {
-    const clientIds = this.core.clients
-      .filter(c => c.user.id === user.id)
-      .map(c => c.id);
+    const connected = this.core.clients
+      .some(c => c.user.id === user.id);
 
     return {
-      clientIds,
       userId: user.id,
       name: user.name,
       email: user.email,
@@ -81,7 +80,8 @@ export class Profile extends Controller {
       registered: user.registered,
       lastSeen: user.lastSeen,
       lastRankingChange: user.lastRankingChange,
-      avatarFile: user.avatarFile
+      avatarFile: user.avatarFile,
+      connected
     };
   }
 

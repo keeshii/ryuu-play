@@ -1,18 +1,5 @@
-import { Rank } from "./rank.enum";
 import { GameWinner } from "../../game";
-
-export interface UserInfo {
-  clientIds: number[];
-  userId: number;
-  name: string;
-  email: string;
-  ranking: number;
-  rank: Rank;
-  registered: number;
-  lastSeen: number;
-  lastRankingChange: number;
-  avatarFile: string;
-}
+import { UserInfo } from "./core.interface";
 
 export interface MatchInfo {
   matchId: number;

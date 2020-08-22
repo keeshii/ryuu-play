@@ -3,7 +3,7 @@ import { GameState } from 'ptcg-server';
 
 import { AlertService } from '../../../shared/alert/alert.service';
 import { GameService } from '../../../api/services/game.service';
-import { LocalGameState } from '../../../shared/session/session.service';
+import { LocalGameState } from '../../../shared/session/session.interface';
 
 @Component({
   selector: 'ptcg-player-actions',

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { GameInfo, ClientInfo } from 'ptcg-server';
+import { GameInfo, UserInfo } from 'ptcg-server';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable, EMPTY, from } from 'rxjs';
 import { finalize, switchMap, map, take } from 'rxjs/operators';
@@ -23,7 +23,7 @@ export class GamesComponent implements OnDestroy, OnInit {
   title = 'ptcg-play';
 
   displayedColumns: string[] = ['id', 'turn', 'player1', 'player2', 'actions'];
-  public users$: Observable<ClientInfo[]>;
+  public users$: Observable<UserInfo[]>;
   public games$: Observable<GameInfo[]>;
   public clientId$: Observable<number>;
   public isConnected = false;
@@ -38,7 +38,13 @@ export class GamesComponent implements OnDestroy, OnInit {
     private sessionService: SessionService,
     private socketService: SocketService
   ) {
-    this.users$ = this.sessionService.get(session => session.clients);
+    this.users$ = this.sessionService.get(
+      session => session.users,
+      session => session.clients
+    ).pipe(map(([users, clients]) => {
+      return clients.map(c => users[c.userId]);
+    }));
+
     this.games$ = this.sessionService.get(session => session.games);
     this.clientId$ = this.sessionService.get(session => session.clientId);
   }

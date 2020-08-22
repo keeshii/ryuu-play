@@ -1,5 +1,5 @@
 import { GamePhase, State } from '../../game';
-import { Rank } from './rank.enum';
+import { Rank } from "./rank.enum";
 
 export interface PlayerInfo {
   clientId: number;
@@ -19,21 +19,30 @@ export interface GameInfo {
 export interface ClientInfo {
   clientId: number;
   userId: number;
-  name: string;
-  ranking: number;
-  rank: Rank;
-  lastRankingChange: number;
-  avatarFile: string;
 }
 
 export interface CoreInfo {
   clientId: number;
-  users: ClientInfo[],
+  clients: ClientInfo[],
+  users: UserInfo[],
   games: GameInfo[]
 }
 
 export interface GameState {
   gameId: number;
   state: State;
-  users: ClientInfo[]
+  clientIds: number[],
+}
+
+export interface UserInfo {
+  connected: boolean;
+  userId: number;
+  name: string;
+  email: string;
+  ranking: number;
+  rank: Rank;
+  registered: number;
+  lastSeen: number;
+  lastRankingChange: number;
+  avatarFile: string;
 }

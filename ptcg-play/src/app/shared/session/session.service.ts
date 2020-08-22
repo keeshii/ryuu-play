@@ -1,28 +1,10 @@
 import { Injectable } from '@angular/core';
-import { GameInfo, GameState, ClientInfo, UserInfo, StateLog, ServerConfig } from 'ptcg-server';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, of } from 'rxjs';
 import { map, distinctUntilChanged } from 'rxjs/operators';
-
-export interface LocalGameState extends GameState {
-  localId: number;
-  deleted: boolean;
-  gameOver: boolean;
-  logs: StateLog[];
-}
-
-export class Session {
-  authToken: string;
-  config: ServerConfig;
-  loggedUser: UserInfo;
-  clientId: number;
-  games: GameInfo[] = [];
-  clients: ClientInfo[] = [];
-  lastGameId: number;
-  gameStates: LocalGameState[] = [];
-}
+import { SessionGetters, Session } from './session.interface';
 
 @Injectable()
-export class SessionService {
+export class SessionService implements SessionGetters {
 
   private subject: BehaviorSubject<Session>;
 
@@ -35,11 +17,21 @@ export class SessionService {
     return this.subject.value;
   }
 
-  public get<T>(selector: (session: Session) => T): Observable<T> {
+  public get(...selectors: ((session: Session) => any)[]): Observable<any> {
+    if (selectors.length === 0) {
+      return of(null);
+    }
+    if (selectors.length === 1) {
+      return this.subject.asObservable().pipe(
+        map(session => selectors[0](session)),
+        distinctUntilChanged()
+      );
+    }
     return this.subject.asObservable().pipe(
-      map(session => selector(session)),
-      distinctUntilChanged()
-    );
+      map(session => selectors.map(s => s(session))),
+      distinctUntilChanged((a: any[], b: any[]) => {
+        return a.every((value: any, index: number) => b[index] === value);
+      }));
   }
 
   public set(change: Partial<Session>): void {

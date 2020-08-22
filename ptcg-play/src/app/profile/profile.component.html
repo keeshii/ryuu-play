@@ -54,7 +54,7 @@
             <tr>
               <th>Last seen</th>
               <td>
-                <span *ngIf="user.clientIds.length === 0; else connected">
+                <span *ngIf="!user.connected; else connected">
                   {{ user.lastSeen | date }}
                 </span>
                 <ng-template #connected>

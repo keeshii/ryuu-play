@@ -1,7 +1,9 @@
 import { Component, OnInit, Input, ElementRef } from '@angular/core';
 import { StateLog } from 'ptcg-server';
+
 import { GameService } from '../../../api/services/game.service';
-import { LocalGameState } from 'src/app/shared/session/session.service';
+import { LocalGameState } from '../../../shared/session/session.interface';
+import { SessionService } from '../../../shared/session/session.service';
 
 interface GameLog {
   id: number;
@@ -38,7 +40,8 @@ export class GameLogsComponent implements OnInit {
 
   constructor(
     private elementRef: ElementRef<HTMLElement>,
-    private gameService: GameService
+    private gameService: GameService,
+    private sessionService: SessionService
   ) { }
 
   ngOnInit() {
@@ -98,7 +101,7 @@ export class GameLogsComponent implements OnInit {
     let name: string;
     let className: string;
 
-    const user = this.state.users.find(u => u.clientId === log.client);
+    const user = this.sessionService.session.users[log.client];
     const playerIndex = this.state.state.players.findIndex(p => p.id === log.client);
 
     if (user !== undefined) {

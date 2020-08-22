@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/cor
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { UserInfo } from 'ptcg-server';
+import { map } from 'rxjs/internal/operators/map';
 
 import { LoginPopupService } from '../../login/login-popup/login-popup.service';
 import { SessionService } from '../../shared/session/session.service';
@@ -24,7 +25,12 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     private router: Router,
     private sessionService: SessionService
   ) {
-    this.loggedUser$ = this.sessionService.get(session => session.loggedUser);
+    this.loggedUser$ = this.sessionService.get(
+      session => session.loggedUserId,
+      session => session.users
+    ).pipe(map(([loggedUserId, users]) => {
+      return users[loggedUserId];
+    }));
   }
 
   public ngOnInit() {

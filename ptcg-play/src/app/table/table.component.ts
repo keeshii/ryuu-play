@@ -8,7 +8,8 @@ import { ApiError } from '../api/api.error';
 import { AlertService } from '../shared/alert/alert.service';
 import { DeckService } from '../api/services/deck.service';
 import { GameService } from '../api/services/game.service';
-import { SessionService, LocalGameState } from '../shared/session/session.service';
+import { LocalGameState } from '../shared/session/session.interface';
+import { SessionService } from '../shared/session/session.service';
 import { takeUntilDestroyed } from '../shared/operators/take-until-destroyed';
 
 @Component({

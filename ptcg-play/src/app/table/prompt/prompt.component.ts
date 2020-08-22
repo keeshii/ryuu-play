@@ -3,9 +3,9 @@ import { Component, OnInit, Input, OnChanges, Output, EventEmitter } from '@angu
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Prompt, GamePhase } from 'ptcg-server';
 
+import { GameOverPrompt } from './prompt-game-over/game-over.prompt';
+import { LocalGameState } from '../../shared/session/session.interface';
 import { ptcgPromptAnimations } from './prompt.animations';
-import { LocalGameState } from '../../shared/session/session.service';
-import {GameOverPrompt} from './prompt-game-over/game-over.prompt';
 
 @Component({
   selector: 'ptcg-prompt',

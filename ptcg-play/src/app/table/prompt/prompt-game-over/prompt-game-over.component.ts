@@ -1,8 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { GameWinner } from 'ptcg-server';
 
-import { LocalGameState, SessionService } from '../../../shared/session/session.service';
 import { GameOverPrompt } from './game-over.prompt';
+import { LocalGameState } from '../../../shared/session/session.interface';
+import { SessionService } from '../../../shared/session/session.service';
 
 @Component({
   selector: 'ptcg-prompt-game-over',

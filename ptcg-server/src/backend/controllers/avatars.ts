@@ -13,10 +13,10 @@ import { config } from '../../config';
 
 export class Avatars extends Controller {
 
-  @Get('/list')
+  @Get('/list/:id?')
   @AuthToken()
   public async onList(req: Request, res: Response) {
-    const userId: number = req.body.userId;
+    const userId: number = parseInt(req.params.id, 10) || req.body.userId;
     const user = await User.findOne(userId, { relations: ['avatars'] });
 
     if (user === undefined) {
@@ -31,6 +31,23 @@ export class Avatars extends Controller {
     }));
 
     res.send({ok: true, avatars});
+  }
+
+  @Get('/get/:id')
+  @AuthToken()
+  public async onGet(req: Request, res: Response) {
+    const avatarId: number = parseInt(req.params.id, 10);
+    const avatar = await Avatar.findOne(avatarId);
+    if (avatar === undefined) {
+      res.send({error: Errors.AVATAR_INVALID});
+      return;
+    }
+    const avatarInfo: AvatarInfo = {
+      id: avatar.id,
+      name: avatar.name,
+      fileName: avatar.fileName
+    };
+    res.send({ok: true, avatar: avatarInfo});
   }
 
   @Post('/add')

@@ -8,7 +8,7 @@ import { Game } from '../../game/core/game';
 import { State } from '../../game/store/state/state';
 import { User } from '../../storage';
 import { Core } from '../../game/core/core';
-import { CoreInfo, GameInfo, PlayerInfo, ClientInfo, GameState } from '../interfaces/core.interface';
+import { CoreInfo, GameInfo, PlayerInfo, GameState, UserInfo } from '../interfaces/core.interface';
 import { ResolvePromptAction } from '../../game/store/actions/resolve-prompt-action';
 import { deepCompare } from '../../utils/utils';
 
@@ -57,11 +57,14 @@ export class SocketClient extends Client {
   }
 
   public onConnect(client: Client): void {
-    this.socket.emit('core:join', this.buildClientInfo(client));
+    this.socket.emit('core:join', {
+      clientId: client.id,
+      user: this.buildUserInfo(client)
+    });
   }
 
   public onDisconnect(client: Client): void {
-    this.socket.emit('core:leave', this.buildClientInfo(client));
+    this.socket.emit('core:leave', { clientId: client.id });
   }
 
   public onGameAdd(game: Game): void {
@@ -90,11 +93,11 @@ export class SocketClient extends Client {
   }
 
   public onGameJoin(game: Game, client: Client): void {
-    this.socket.emit(`game[${game.id}]:join`, this.buildClientInfo(client));
+    this.socket.emit(`game[${game.id}]:join`, { clientId: client.id });
   }
 
   public onGameLeave(game: Game, client: Client): void {
-    this.socket.emit(`game[${game.id}]:leave`, this.buildClientInfo(client));
+    this.socket.emit(`game[${game.id}]:leave`, { clientId: client.id });
   }
 
   public attachListeners(): void {
@@ -132,11 +135,14 @@ export class SocketClient extends Client {
     this.listeners.push(listener);
   }
 
-  private buildClientInfo(client: Client): ClientInfo {
+  private buildUserInfo(client: Client): UserInfo {
     return {
-      clientId: client.id,
+      connected: true,
       userId: client.user.id,
       name: client.user.name,
+      email: client.user.email,
+      registered: client.user.registered,
+      lastSeen: client.user.lastSeen,
       ranking: client.user.ranking,
       rank: client.user.getRank(),
       lastRankingChange: client.user.lastRankingChange,
@@ -165,14 +171,18 @@ export class SocketClient extends Client {
     return {
       gameId: game.id,
       state: game.state,
-      users: game.clients.map(client => this.buildClientInfo(client))
+      clientIds: game.clients.map(client => client.id)
     };
   }
 
   private buildCoreInfo(): CoreInfo {
     return {
       clientId: this.id,
-      users: this.core.clients.map(client => this.buildClientInfo(client)),
+      clients: this.core.clients.map(client => ({
+        clientId: client.id,
+        userId: client.user.id
+      })),
+      users: this.core.clients.map(client => this.buildUserInfo(client)),
       games: this.core.games.map(game => this.buildGameInfo(game))
     };
   }

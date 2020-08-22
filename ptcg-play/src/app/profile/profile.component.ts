@@ -18,7 +18,7 @@ import { takeUntilDestroyed } from '../shared/operators/take-until-destroyed';
 export class ProfileComponent implements OnInit, OnDestroy {
 
   public user: UserInfo;
-  public loggedUser: UserInfo;
+  public loggedUserId: number;
   public loading: boolean;
   public owner: boolean;
 
@@ -44,7 +44,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         next: response => {
           this.loading = false;
           this.user = response.user;
-          this.owner = this.isOwner(this.user, this.loggedUser);
+          this.owner = this.isOwner(this.user, this.loggedUserId);
         },
         error: async error => {
           await this.alertService.error('Error while loading the profile');
@@ -52,12 +52,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
         }
       });
 
-    this.sessionService.get(session => session.loggedUser)
+    this.sessionService.get(session => session.loggedUserId)
       .pipe(takeUntilDestroyed(this))
       .subscribe({
-        next: loggedUser => {
-          this.loggedUser = loggedUser;
-          this.owner = this.isOwner(this.user, this.loggedUser);
+        next: loggedUserId => {
+          this.loggedUserId = loggedUserId;
+          this.owner = this.isOwner(this.user, this.loggedUserId);
         }
       });
   }
@@ -80,18 +80,18 @@ export class ProfileComponent implements OnInit, OnDestroy {
       .subscribe({
         next: response => {
           this.user = response.user;
-          if (this.isOwner(this.user, this.loggedUser)) {
-            this.sessionService.set({ loggedUser: response.user });
-          }
+          const users = { ...this.sessionService.session.users };
+          users[response.user.userId] = response.user;
+          this.sessionService.set({ users });
         }
       });
   }
 
-  private isOwner(user: UserInfo, loggedUser: UserInfo) {
-    if (!user || !loggedUser) {
+  private isOwner(user: UserInfo, loggedUserId: number) {
+    if (!user || !loggedUserId) {
       return false;
     }
-    return user.userId === loggedUser.userId;
+    return user.userId === loggedUserId;
   }
 
   ngOnDestroy() {}

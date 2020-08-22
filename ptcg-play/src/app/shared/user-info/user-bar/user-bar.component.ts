@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { UserInfo, ClientInfo } from 'ptcg-server';
+import { UserInfo } from 'ptcg-server';
 
 @Component({
   selector: 'ptcg-user-bar',
@@ -8,7 +8,7 @@ import { UserInfo, ClientInfo } from 'ptcg-server';
 })
 export class UserBarComponent implements OnInit {
 
-  @Input() user: UserInfo | ClientInfo;
+  @Input() user: UserInfo;
 
   public active: boolean;
   public name: string;

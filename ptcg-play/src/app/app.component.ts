@@ -66,7 +66,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   private refreshLoggedUser(authToken: string) {
     if (!authToken) {
-      this.sessionService.set({ loggedUser: undefined });
+      this.sessionService.set({ loggedUserId: undefined });
       return;
     }
 
@@ -77,7 +77,9 @@ export class AppComponent implements OnInit, OnDestroy {
         takeUntil(tokenChanged$)
       )
       .subscribe(response => {
-        this.sessionService.set({ loggedUser: response.user });
+        const users = { ...this.sessionService.session.users };
+        users[response.user.userId] = response.user;
+        this.sessionService.set({ users, loggedUserId: response.user.userId });
       });
   }
 

@@ -19,7 +19,15 @@ export class MainService {
   ) { }
 
   public init(coreInfo: CoreInfo): void {
-    this.sessionService.set({ clients: coreInfo.users, games: coreInfo.games, clientId: coreInfo.clientId });
+    const users = { ...this.sessionService.session.users };
+    coreInfo.users.forEach(user => users[user.userId] = user);
+
+    this.sessionService.set({
+      users,
+      clients: coreInfo.clients,
+      games: coreInfo.games,
+      clientId: coreInfo.clientId
+    });
     this.socketService.on('core:join', (userInfo: ClientInfo) => this.onJoin(userInfo));
     this.socketService.on('core:leave', (userInfo: ClientInfo) => this.onLeave(userInfo));
     this.socketService.on('core:gameInfo', (game: GameInfo) => this.onGameInfo(game));

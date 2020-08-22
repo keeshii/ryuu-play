@@ -1,9 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { GamePhase } from 'ptcg-server';
 
 import { AlertService } from '../../shared/alert/alert.service';
 import { GameService } from '../../api/services/game.service';
-import { LocalGameState, SessionService } from '../../shared/session/session.service';
-import {GamePhase} from 'ptcg-server';
+import { LocalGameState } from '../../shared/session/session.interface';
+import { SessionService } from '../../shared/session/session.service';
 
 @Component({
   selector: 'ptcg-sidenav-item',
@@ -56,12 +57,14 @@ export class SidenavItemComponent implements OnInit {
   }
 
   private buildLabel(gameState: LocalGameState): string {
-    if (this.sessionService.session.loggedUser === undefined) {
+    const loggedUserId = this.sessionService.session.loggedUserId;
+    const loggedUser = this.sessionService.session.users[loggedUserId];
+    if (loggedUser === undefined) {
       return `#${gameState.localId} Unknown`;
     }
     const clientId = this.sessionService.session.clientId;
     const opponent = gameState.state.players.find(p => p.id !== clientId);
-    let name = this.sessionService.session.loggedUser.name;
+    let name = loggedUser.name;
     if (opponent !== undefined) {
       name = opponent.name;
     }
