@@ -1,6 +1,7 @@
 <div class="ptcg-player-bar" [ngClass]="{active: active}">
 
-  <ptcg-avatar class="ptcg-player-avatar"></ptcg-avatar>
+  <ptcg-avatar class="ptcg-player-avatar" [avatarFile]="(userInfo$ | async)?.avatarFile">
+  </ptcg-avatar>
 
   <div class="ptcg-player-info">
     <div *ngIf="!isEmpty; then playerInfo else emptyInfo"></div>
@@ -8,9 +9,9 @@
     <ng-template #playerInfo>
       <h4>{{ name }}</h4>
       <div class="ptcg-player-rank">
-        <ptcg-rank *ngIf="playerInfo$ | async as playerInfo; else disconnected"
-          [ranking]="playerInfo.ranking"
-          [rank]="playerInfo.rank">
+        <ptcg-rank *ngIf="userInfo$ | async as userInfo; else disconnected"
+          [ranking]="userInfo.ranking"
+          [rank]="userInfo.rank">
         </ptcg-rank>
         <ng-template #disconnected>
           <ptcg-badge>Disconnected</ptcg-badge>

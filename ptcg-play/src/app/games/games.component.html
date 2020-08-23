@@ -2,23 +2,23 @@
 
   <ptcg-sidebar>
     <mat-nav-list>
-      <a mat-list-item *ngFor="let user of (users$ | async)"
+      <a mat-list-item *ngFor="let client of (clients$ | async)"
         class="ptcg-no-padding-list-item"
         [matMenuTriggerFor]="menu">
-        <ptcg-user-bar [user]="user"></ptcg-user-bar>
+        <ptcg-user-bar [user]="client.user"></ptcg-user-bar>
         <mat-menu #menu="matMenu">
           <button mat-menu-item
-            *ngIf="clientId !== user.clientId">
+            *ngIf="clientId !== client.clientId">
             Send message
           </button>
           <button mat-menu-item
-            *ngIf="clientId !== user.clientId"
+            *ngIf="clientId !== client.clientId"
             [disabled]="loading"
-            (click)="createGame(user.clientId)">
+            (click)="createGame(client.clientId)">
             Invite to game
           </button>
           <button mat-menu-item
-            [routerLink]="['/profile', user.userId]">
+            [routerLink]="['/profile', client.user.userId]">
             Show profile
           </button>
         </mat-menu>

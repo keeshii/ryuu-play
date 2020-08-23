@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Player, ClientInfo } from 'ptcg-server';
+import { Player, UserInfo } from 'ptcg-server';
 import { Observable, EMPTY } from 'rxjs';
 
 import { SessionService } from '../../../shared/session/session.service';
@@ -22,8 +22,9 @@ export class PlayerBarComponent implements OnInit {
     this.discardCount = player.discard.cards.length;
     this.name = player.name;
 
-    this.playerInfo$ = this.sessionService.get(session => {
-      return session.clients.find(c => c.clientId === player.id);
+    this.userInfo$ = this.sessionService.get(session => {
+      const client = session.clients.find(c => c.clientId === player.id);
+      return client !== undefined ? session.users[client.userId] : undefined;
     });
   }
 
@@ -34,7 +35,7 @@ export class PlayerBarComponent implements OnInit {
   public handCount: number;
   public discardCount: number;
   public name: string;
-  public playerInfo$: Observable<ClientInfo | undefined> = EMPTY;
+  public userInfo$: Observable<UserInfo | undefined> = EMPTY;
 
   constructor(
     private sessionService: SessionService

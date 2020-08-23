@@ -1,17 +1,19 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { GameInfo, UserInfo } from 'ptcg-server';
+import { GameInfo, UserInfo, ClientInfo } from 'ptcg-server';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable, EMPTY, from } from 'rxjs';
 import { finalize, switchMap, map, take } from 'rxjs/operators';
 
 import { AlertService } from '../shared/alert/alert.service';
 import { ApiError } from '../api/api.error';
+import { ClientUserData } from '../api/interfaces/main.interface';
 import { CreateGamePopupComponent, CreateGamePopupResult } from './create-game-popup/create-game-popup.component';
 import { DeckService } from '../api/services/deck.service';
 import { MainService } from '../api/services/main.service';
 import { SelectPopupOption } from '../shared/alert/select-popup/select-popup.component';
 import { SessionService } from '../shared/session/session.service';
 import { SocketService } from '../api/socket.service';
+import { UserInfoMap } from '../shared/session/session.interface';
 import { takeUntilDestroyed } from '../shared/operators/take-until-destroyed';
 
 @Component({
@@ -23,7 +25,7 @@ export class GamesComponent implements OnDestroy, OnInit {
   title = 'ptcg-play';
 
   displayedColumns: string[] = ['id', 'turn', 'player1', 'player2', 'actions'];
-  public users$: Observable<UserInfo[]>;
+  public clients$: Observable<ClientUserData[]>;
   public games$: Observable<GameInfo[]>;
   public clientId$: Observable<number>;
   public isConnected = false;
@@ -38,11 +40,14 @@ export class GamesComponent implements OnDestroy, OnInit {
     private sessionService: SessionService,
     private socketService: SocketService
   ) {
-    this.users$ = this.sessionService.get(
+    this.clients$ = this.sessionService.get(
       session => session.users,
       session => session.clients
-    ).pipe(map(([users, clients]) => {
-      return clients.map(c => users[c.userId]);
+    ).pipe(map(([users, clients]: [UserInfoMap, ClientInfo[]]) => {
+      return clients.map(c => ({
+        clientId: c.clientId,
+        user: users[c.userId]
+      }));
     }));
 
     this.games$ = this.sessionService.get(session => session.games);

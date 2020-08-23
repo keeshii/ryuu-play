@@ -64,7 +64,7 @@ export class SocketClient extends Client {
   }
 
   public onDisconnect(client: Client): void {
-    this.socket.emit('core:leave', { clientId: client.id });
+    this.socket.emit('core:leave', client.id);
   }
 
   public onGameAdd(game: Game): void {
@@ -194,6 +194,7 @@ export class SocketClient extends Client {
   private createGame(params: { deck: string[], gameSettings: GameSettings, clientId?: number },
     response: Response<GameState>): void {
     const invited = this.core.clients.find(c => c.id === params.clientId);
+    console.log('invited', params, invited);
     const game = this.core.createGame(this, params.deck, params.gameSettings, invited);
     response('ok', this.buildGameState(game));
   }

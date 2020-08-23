@@ -54,17 +54,26 @@ export class Profile extends Controller {
       take: pageSize
     });
 
+    const users: UserInfo[] = [];
+    matchRows.forEach(match => {
+      [match.player1, match.player2].forEach(player => {
+        if (!users.some(u => u.userId === player.id)) {
+          users.push(this.buildUserInfo(player));
+        }
+      });
+    });
+
     const matches: MatchInfo[] = matchRows
       .map(match => ({
         matchId: match.id,
-        player1: this.buildUserInfo(match.player1),
-        player2: this.buildUserInfo(match.player2),
+        player1Id: match.player1.id,
+        player2Id: match.player2.id,
         winner: match.winner,
         rankingStake: match.rankingStake,
         created: match.created
       }));
 
-    res.send({ok: true, matches, total});
+    res.send({ok: true, matches, users, total});
   }
 
   private buildUserInfo(user: User): UserInfo {
