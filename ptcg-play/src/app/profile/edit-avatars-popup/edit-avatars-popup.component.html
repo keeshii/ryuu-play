@@ -14,7 +14,7 @@
         <mat-radio-button (click)="$event.stopPropagation()"
           color="primary"
           (change)="markAsDefault(avatar)"
-          [checked]="defaultAvatar === avatar"
+          [checked]="(defaultAvatar$ | async) === avatar.fileName"
           [disabled]="loading">
         </mat-radio-button>
       </td>

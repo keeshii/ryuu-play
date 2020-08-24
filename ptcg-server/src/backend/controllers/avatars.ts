@@ -10,6 +10,7 @@ import { AvatarInfo, AvatarAddRequest } from '../interfaces/avatar.interface';
 import { Controller, Get, Post } from './controller';
 import { Errors } from '../common/errors';
 import { config } from '../../config';
+import {Transaction, TransactionManager, EntityManager} from 'typeorm';
 
 export class Avatars extends Controller {
 
@@ -56,7 +57,8 @@ export class Avatars extends Controller {
     name: check().minLength(3).maxLength(32),
     imageBase64: check().required()
   })
-  public async onAdd(req: Request, res: Response) {
+  @Transaction()
+  public async onAdd(req: Request, res: Response, @TransactionManager() manager: EntityManager) {
     const body: AvatarAddRequest = req.body;
 
     const userId: number = req.body.userId;
@@ -85,7 +87,13 @@ export class Avatars extends Controller {
     }
 
     try {
-      avatar = await avatar.save();
+      avatar = await manager.save(avatar);
+      // Set default avatar, if previously not set
+      if (!user.avatarFile) {
+        await manager.update(User, user.id, { avatarFile: avatar.fileName });
+        user.avatarFile = avatar.fileName;
+        this.core.emit(c => c.onUsersUpdate([ user ]));
+      }
     } catch (error) {
       res.status(400);
       res.send({error: Errors.NAME_DUPLICATE});
@@ -104,11 +112,12 @@ export class Avatars extends Controller {
   @Validate({
     id: check().isNumber()
   })
-  public async onDelete(req: Request, res: Response) {
+  @Transaction()
+  public async onDelete(req: Request, res: Response, @TransactionManager() manager: EntityManager) {
     const body: { id: number } = req.body;
 
     const userId: number = req.body.userId;
-    const user = await User.findOne(userId);
+    const user = await User.findOne(userId, { relations: ['avatars'] });
 
     if (user === undefined) {
       res.status(400);
@@ -125,7 +134,16 @@ export class Avatars extends Controller {
     }
 
     await this.removeAvatarFile(avatar.fileName);
-    await avatar.remove();
+    await manager.remove(avatar);
+
+    // Set new avatar if deleted the default one
+    if (user.avatarFile === avatar.fileName) {
+      const newAvatar = user.avatars.find(a => a.fileName !== avatar.fileName);
+      const avatarFile = newAvatar ? newAvatar.fileName : '';
+      await manager.update(User, user.id, { avatarFile });
+      user.avatarFile = avatarFile;
+      this.core.emit(c => c.onUsersUpdate([ user ]));
+    }
 
     res.send({ok: true});
   }
@@ -197,9 +215,15 @@ export class Avatars extends Controller {
       return;
     }
 
+    if (user.avatarFile === avatar.fileName) {
+      res.send({ ok: true });
+      return;
+    }
+
     try {
       user.avatarFile = avatar.fileName;
       user = await user.save();
+      this.core.emit(c => c.onUsersUpdate([ user as User ]));
     } catch (error) {
       res.status(400);
       res.send({error: Errors.AVATAR_INVALID});

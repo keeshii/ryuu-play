@@ -19,7 +19,9 @@ export abstract class Client {
   public abstract onConnect(client: Client): void;
 
   public abstract onDisconnect(client: Client): void;
-  
+
+  public abstract onUsersUpdate(users: User[]): void;
+
   public abstract onGameAdd(game: Game): void;
 
   public abstract onGameDelete(game: Game): void;

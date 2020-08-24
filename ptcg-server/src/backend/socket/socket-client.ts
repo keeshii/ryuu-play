@@ -59,7 +59,7 @@ export class SocketClient extends Client {
   public onConnect(client: Client): void {
     this.socket.emit('core:join', {
       clientId: client.id,
-      user: this.buildUserInfo(client)
+      user: this.buildUserInfo(client.user)
     });
   }
 
@@ -90,6 +90,14 @@ export class SocketClient extends Client {
       state = this.filterState(game.id, state);
       this.socket.emit(`game[${game.id}]:stateChange`, state);
     }
+  }
+
+  public onUsersUpdate(users: User[]): void {
+    const userInfos = users.map(u => {
+      const connected = this.core.clients.some(c => c.user.id === u.id);
+      return this.buildUserInfo(u, connected);
+    });
+    this.socket.emit('core:usersInfo', userInfos);
   }
 
   public onGameJoin(game: Game, client: Client): void {
@@ -135,18 +143,18 @@ export class SocketClient extends Client {
     this.listeners.push(listener);
   }
 
-  private buildUserInfo(client: Client): UserInfo {
+  private buildUserInfo(user: User, connected: boolean = true): UserInfo {
     return {
-      connected: true,
-      userId: client.user.id,
-      name: client.user.name,
-      email: client.user.email,
-      registered: client.user.registered,
-      lastSeen: client.user.lastSeen,
-      ranking: client.user.ranking,
-      rank: client.user.getRank(),
-      lastRankingChange: client.user.lastRankingChange,
-      avatarFile: client.user.avatarFile
+      connected,
+      userId: user.id,
+      name: user.name,
+      email: user.email,
+      registered: user.registered,
+      lastSeen: user.lastSeen,
+      ranking: user.ranking,
+      rank: user.getRank(),
+      lastRankingChange: user.lastRankingChange,
+      avatarFile: user.avatarFile
     };
   }
 
@@ -182,7 +190,7 @@ export class SocketClient extends Client {
         clientId: client.id,
         userId: client.user.id
       })),
-      users: this.core.clients.map(client => this.buildUserInfo(client)),
+      users: this.core.clients.map(client => this.buildUserInfo(client.user)),
       games: this.core.games.map(game => this.buildGameInfo(game))
     };
   }
@@ -194,7 +202,6 @@ export class SocketClient extends Client {
   private createGame(params: { deck: string[], gameSettings: GameSettings, clientId?: number },
     response: Response<GameState>): void {
     const invited = this.core.clients.find(c => c.id === params.clientId);
-    console.log('invited', params, invited);
     const game = this.core.createGame(this, params.deck, params.gameSettings, invited);
     response('ok', this.buildGameState(game));
   }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { GameInfo, CoreInfo, ClientInfo, GameSettings } from 'ptcg-server';
+import { GameInfo, CoreInfo, ClientInfo, GameSettings, UserInfo } from 'ptcg-server';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
@@ -32,6 +32,7 @@ export class MainService {
     this.socketService.on('core:join', (data: ClientUserData) => this.onJoin(data));
     this.socketService.on('core:leave', (clientId: number) => this.onLeave(clientId));
     this.socketService.on('core:gameInfo', (game: GameInfo) => this.onGameInfo(game));
+    this.socketService.on('core:usersInfo', (infos: UserInfo[]) => this.onUsersInfo(infos));
     this.socketService.on('core:createGame', (game: GameInfo) => this.onCreateGame(game));
     this.socketService.on('core:deleteGame', (gameId: number) => this.onDeleteGame(gameId));
   }
@@ -70,6 +71,12 @@ export class MainService {
       this.sessionService.set({ games });
       this.autoJoinGame(game);
     }
+  }
+
+  private onUsersInfo(userInfos: UserInfo[]): void {
+    const users = { ...this.sessionService.session.users };
+    userInfos.forEach(u => { users[u.userId] = u; });
+    this.sessionService.set({ users });
   }
 
   private onCreateGame(game: GameInfo): void {

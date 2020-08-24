@@ -11,12 +11,12 @@ export class EditAvatarsPopupService {
 
   constructor(public dialog: MatDialog) { }
 
-  public openDialog(user: UserInfo): MatDialogRef<EditAvatarsPopupComponent, string | undefined> {
+  public openDialog(userId: number): MatDialogRef<EditAvatarsPopupComponent, string | undefined> {
     const dialogRef = this.dialog.open(EditAvatarsPopupComponent, {
       maxWidth: '100%',
       width: '500px',
       autoFocus: false,
-      data: { user }
+      data: { userId }
     });
 
     return dialogRef;

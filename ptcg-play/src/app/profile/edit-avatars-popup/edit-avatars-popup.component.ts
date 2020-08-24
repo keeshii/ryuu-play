@@ -1,12 +1,14 @@
 import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AvatarInfo, UserInfo } from 'ptcg-server';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { AvatarInfo } from 'ptcg-server';
+import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
 import { AddAvatarPopupService } from '../add-avatar-popup/add-avatar-popup.service';
 import { AlertService } from '../../shared/alert/alert.service';
 import { ApiError } from '../../api/api.error';
 import { AvatarService } from '../../api/services/avatar.service';
+import { SessionService } from '../../shared/session/session.service';
 import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed';
 
 @Component({
@@ -18,18 +20,22 @@ export class EditAvatarsPopupComponent implements OnInit, OnDestroy {
 
   public displayedColumns: string[] = ['default', 'image', 'name', 'actions'];
   public loading = false;
-  public defaultAvatar: AvatarInfo;
+  public defaultAvatar$: Observable<string>;
   public avatars: AvatarInfo[] = [];
-  private user: UserInfo;
+  private userId: number;
 
   constructor(
     private alertService: AlertService,
     private addAvatarPopupService: AddAvatarPopupService,
     private avatarService: AvatarService,
-    private dialogRef: MatDialogRef<EditAvatarsPopupComponent>,
-    @Inject(MAT_DIALOG_DATA) private data: { user: UserInfo },
+    private sessionService: SessionService,
+    @Inject(MAT_DIALOG_DATA) data: { userId: number },
   ) {
-    this.user = data.user;
+    this.userId = data.userId;
+    this.defaultAvatar$ = this.sessionService.get(session => {
+      const user = session.users[data.userId];
+      return user ? user.avatarFile : '';
+    });
   }
 
   public addAvatar() {
@@ -86,9 +92,6 @@ export class EditAvatarsPopupComponent implements OnInit, OnDestroy {
         takeUntilDestroyed(this)
       )
       .subscribe({
-        next: () => {
-          this.defaultAvatar = avatar;
-        },
         error: (error: ApiError) => {
           this.alertService.toast(error.code);
         }
@@ -111,9 +114,6 @@ export class EditAvatarsPopupComponent implements OnInit, OnDestroy {
       .subscribe({
         next: response => {
           this.avatars = response.avatars;
-          this.defaultAvatar = this.avatars.find(a => {
-            return a.fileName === this.user.avatarFile;
-          });
         },
         error: (error: ApiError) => {
           this.alertService.toast(error.message);
