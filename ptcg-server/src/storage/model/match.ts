@@ -16,12 +16,21 @@ export class Match extends BaseEntity {
   player2: User = new User();
 
   @Column()
+  public ranking1: number = 0;
+
+  @Column()
+  public rankingStake1: number = 0;
+
+  @Column()
+  public ranking2: number = 0;
+
+  @Column()
+  public rankingStake2: number = 0;
+
+  @Column()
   public winner: GameWinner = GameWinner.NONE;
 
-  @Column()
+  @Column({ type: 'bigint' })
   public created: number = Date.now();
-
-  @Column()
-  public rankingStake: number = 0;
 
 }

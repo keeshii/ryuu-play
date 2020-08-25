@@ -44,17 +44,30 @@ export class MatchRecorder {
     match.player2 = this.player2;
     match.winner = state.winner;
     match.created = Date.now();
-    match.rankingStake = 0;
+    match.ranking1 = this.player1.ranking;
+    match.ranking2 = this.player2.ranking;
+    match.rankingStake1 = 0;
+    match.rankingStake2 = 0;
 
     try {
-      await manager.save(match);
-
       // Update ranking
       const users = this.ranking.calculateMatch(match);
-      if (users.length > 0) {
+
+      // Update match's ranking
+      if (users.length >= 2) {
+        match.rankingStake1 = users[0].ranking - match.ranking1;
+        match.ranking1 = users[0].ranking;
+        match.rankingStake2 = users[1].ranking - match.ranking2;
+        match.ranking2 = users[1].ranking;
+      }
+
+      await manager.save(match);
+
+      if (users.length >= 2) {
         await manager.save(users);
         this.core.emit(c => c.onUsersUpdate(users));
       }
+
     } catch (error) {
       return;
     }

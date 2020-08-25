@@ -16,7 +16,7 @@ import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed'
 })
 export class MatchTableComponent implements OnInit, OnDestroy {
 
-  public displayedColumns: string[] = ['id', 'player1', 'player2', 'result', 'actions'];
+  public displayedColumns: string[] = ['id', 'player1', 'player2', 'ranking', 'actions'];
   public matches: MatchInfo[] = [];
   public id: number;
   public loading = false;

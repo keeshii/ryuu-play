@@ -69,8 +69,11 @@ export class Profile extends Controller {
         matchId: match.id,
         player1Id: match.player1.id,
         player2Id: match.player2.id,
+        ranking1: match.ranking1,
+        rankingStake1: match.rankingStake1,
+        ranking2: match.ranking2,
+        rankingStake2: match.rankingStake2,
         winner: match.winner,
-        rankingStake: match.rankingStake,
         created: match.created
       }));
 
