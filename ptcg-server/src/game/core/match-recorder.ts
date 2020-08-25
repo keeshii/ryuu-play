@@ -1,14 +1,20 @@
+import { Transaction, TransactionManager, EntityManager } from "typeorm";
+
 import { Core } from "./core";
 import { State, GamePhase, GameWinner } from "../store/state/state";
 import { User, Match } from "../../storage";
+import { RankingCalculator } from "./ranking-calculator";
 
 export class MatchRecorder {
 
   private finished: boolean = false;
   private player1: User | undefined;
   private player2: User | undefined;
+  private ranking: RankingCalculator;
 
-  constructor(private core: Core) { }
+  constructor(private core: Core) {
+    this.ranking = new RankingCalculator();
+  }
 
   public onStateChange(state: State) {
     if (this.finished) {
@@ -27,8 +33,9 @@ export class MatchRecorder {
     }
   }
 
-  private async saveMatch(state: State) {
-    if (!this.player1 || !this.player2) {
+  @Transaction()
+  private async saveMatch(state: State, @TransactionManager() manager?: EntityManager) {
+    if (!this.player1 || !this.player2 || manager === undefined) {
       return;
     }
 
@@ -40,7 +47,14 @@ export class MatchRecorder {
     match.rankingStake = 0;
 
     try {
-      await Match.save(match);
+      await manager.save(match);
+
+      // Update ranking
+      const users = this.ranking.calculateMatch(match);
+      if (users.length > 0) {
+        await manager.save(users);
+        this.core.emit(c => c.onUsersUpdate(users));
+      }
     } catch (error) {
       return;
     }

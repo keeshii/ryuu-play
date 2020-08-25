@@ -4,11 +4,16 @@ import { GameError, GameMessage } from "../game-error";
 import { Game } from "./game";
 import { GameSettings } from "./game-settings";
 import { InvitePlayerAction } from "../store/actions/invite-player-action";
-import { generateId } from "../../utils/utils";
+import { RankingCalculator } from "./ranking-calculator";
+import { Scheduler, generateId } from "../../utils";
 
 export class Core {
   public clients: Client[] = [];
   public games: Game[] = [];
+
+  constructor() {
+    this.startRankingDecrease();
+  }
 
   public connect(client: Client): Client {
     client.id = generateId(this.clients);
@@ -106,6 +111,15 @@ export class Core {
 
   public emit(fn: (client: Client) => void): void {
     this.clients.forEach(fn);
+  }
+
+  private startRankingDecrease() {
+    const scheduler = Scheduler.getInstance();
+    const rankingCalculator = new RankingCalculator();
+    scheduler.run(async () => {
+      const users = await rankingCalculator.decreaseRanking();
+      this.emit(c => c.onUsersUpdate(users));
+    });
   }
 
 }
