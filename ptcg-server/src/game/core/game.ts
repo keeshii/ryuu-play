@@ -3,6 +3,7 @@ import { Arbiter } from "./arbiter";
 import { Client } from "./client";
 import { Core } from "./core";
 import { GameSettings } from "./game-settings";
+import { MatchRecorder } from "./match-recorder";
 import { ResolvePromptAction } from "../store/actions/resolve-prompt-action";
 import { State, GamePhase } from "../store/state/state";
 import { Store } from "../store/store";
@@ -14,11 +15,13 @@ export class Game implements StoreHandler {
   public clients: Client[] = [];
   private arbiter = new Arbiter();
   private store: Store;
+  private matchRecorder: MatchRecorder;
 
-  constructor(private core: Core, id: number, gameSettings: GameSettings) {
+  constructor(private core: Core, id: number, private gameSettings: GameSettings) {
     this.id = id;
     this.store = new Store(this);
     this.store.state.rules = gameSettings.rules;
+    this.matchRecorder = new MatchRecorder(core);
   }
 
   public get state(): State {
@@ -27,6 +30,9 @@ export class Game implements StoreHandler {
 
   public onStateChange(state: State): void {
     this.notifyStateChange(state);
+    if (this.gameSettings.recordingEnabled) {
+      this.matchRecorder.onStateChange(state);
+    }
   }
 
   private notifyStateChange(state: State): void {

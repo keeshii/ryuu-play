@@ -50,6 +50,7 @@ export class Profile extends Controller {
         { player1: { id: userId } },
         { player2: { id: userId } }
       ],
+      order: { created: "DESC" },
       skip: page * pageSize,
       take: pageSize
     });

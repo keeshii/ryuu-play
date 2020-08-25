@@ -6,6 +6,6 @@ export class GameSettings {
 
   timeLimit: number = 0;
 
-  rankingPlay: boolean = true;
+  recordingEnabled: boolean = true;
 
 }
