@@ -80,22 +80,4 @@ export class Profile extends Controller {
     res.send({ok: true, matches, users, total});
   }
 
-  private buildUserInfo(user: User): UserInfo {
-    const connected = this.core.clients
-      .some(c => c.user.id === user.id);
-
-    return {
-      userId: user.id,
-      name: user.name,
-      email: user.email,
-      ranking: user.ranking,
-      rank: user.getRank(),
-      registered: user.registered,
-      lastSeen: user.lastSeen,
-      lastRankingChange: user.lastRankingChange,
-      avatarFile: user.avatarFile,
-      connected
-    };
-  }
-
 }

@@ -1,0 +1,13 @@
+@import '../../theme/variables.scss';
+
+.mat-toolbar-row {
+  > h1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  > button {
+    margin-left: map-get($padding, small);
+    min-width: 80px;
+  }
+}

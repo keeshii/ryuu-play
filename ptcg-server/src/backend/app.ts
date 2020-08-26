@@ -15,7 +15,8 @@ import {
   Decks,
   Game,
   Login,
-  Profile
+  Profile,
+  Ranking
 } from './controllers';
 
 export class App {
@@ -48,6 +49,7 @@ export class App {
     define('/game', Game);
     define('/login', Login);
     define('/profile', Profile);
+    define('/ranking', Ranking);
 
     if (config.sets.scansDir) {
       app.use('/scans', express.static(config.sets.scansDir));
