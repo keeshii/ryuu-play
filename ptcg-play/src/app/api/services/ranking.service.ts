@@ -11,8 +11,10 @@ export class RankingService {
     private api: ApiService,
   ) {}
 
-  public getList(page: number = 0) {
-    return this.api.get<RankingResponse>('/ranking/list/' + page);
+  public getList(page: number = 0, query: string = '') {
+    return query === ''
+      ? this.api.get<RankingResponse>('/ranking/list/' + page)
+      : this.api.post<RankingResponse>('/ranking/list/' + page, { query });
   }
 
 }

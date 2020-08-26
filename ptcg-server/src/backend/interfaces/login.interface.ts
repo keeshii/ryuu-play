@@ -1,5 +1,6 @@
 export interface ServerConfig {
   apiVersion: number;
+  defaultPageSize: number;
   scansUrl: string;
   avatarsUrl: string;
   avatarFileSize: number;
