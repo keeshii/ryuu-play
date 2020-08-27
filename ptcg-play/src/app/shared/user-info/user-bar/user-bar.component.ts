@@ -10,8 +10,7 @@ export class UserBarComponent implements OnInit {
 
   @Input() user: UserInfo;
 
-  public active: boolean;
-  public name: string;
+  @Input() marked = false;
 
   constructor() { }
 

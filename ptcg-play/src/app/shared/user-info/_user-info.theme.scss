@@ -3,6 +3,7 @@
 
 @mixin ptcg-user-info-theme($theme) {
   $background: map-get($theme, background);
+  $primary: map-get($theme, primary);
 
   $avatar-background-color: mat-color($background, app-bar);
 
@@ -13,6 +14,12 @@
 
     .ptcg-avatar.hoverable:hover:after {
       background-color: mat-color($background, hover);
+    }
+  }
+
+  ptcg-user-bar {
+    .ptcg-user-bar.marked .ptcg-user-name {
+      color: mat-color($primary);
     }
   }
 

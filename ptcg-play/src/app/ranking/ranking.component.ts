@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { RankingInfo } from 'ptcg-server';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { debounceTime, switchMap, takeUntil, map } from 'rxjs/operators';
 
 import { AlertService } from '../shared/alert/alert.service';
@@ -27,6 +27,7 @@ export class RankingComponent implements OnInit, OnDestroy {
   public pageSizeOptions: number[] = [];
   public pageSize: number;
   public rankingTotal: number;
+  public loggedUserId: number;
 
   private rankingSearch$ = new Subject<RankingSearch>();
   private searchValue$ = new Subject<string>();
@@ -40,6 +41,14 @@ export class RankingComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
+
+    this.sessionService.get(session => session.loggedUserId).pipe(
+      takeUntilDestroyed(this)
+    ).subscribe({
+      next: loggedUserId => {
+        this.loggedUserId = loggedUserId;
+      }
+    });
 
     this.rankingSearch$.pipe(
       takeUntilDestroyed(this),

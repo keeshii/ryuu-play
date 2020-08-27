@@ -33,7 +33,9 @@
       <ng-container matColumnDef="user">
         <th mat-header-cell *matHeaderCellDef>Player</th>
         <td mat-cell *matCellDef="let rank">
-          <ptcg-user-bar [user]="rank.user"></ptcg-user-bar>
+          <ptcg-user-bar [user]="rank.user"
+            [marked]="loggedUserId === rank.user.userId">
+          </ptcg-user-bar>
         </td>
       </ng-container>
 

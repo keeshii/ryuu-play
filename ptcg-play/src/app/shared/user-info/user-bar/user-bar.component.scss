@@ -1,7 +1,6 @@
 @import '../../../../theme/variables.scss';
 
 $avatar-size: map-get($ptcg-size, avatar);
-$ptcg-player-bar-active-divider-size: 2px;
 
 :host {
   width: 100%;
@@ -9,6 +8,10 @@ $ptcg-player-bar-active-divider-size: 2px;
 
 .ptcg-user-bar {
   position: relative;
+
+  &.marked .ptcg-user-name {
+    text-decoration: underline;
+  }
 }
 
 ptcg-avatar {

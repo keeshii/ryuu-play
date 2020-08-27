@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { MatchInfo } from 'ptcg-server';
+import { MatchInfo, GameWinner } from 'ptcg-server';
 import { SessionService } from 'src/app/shared/session/session.service';
 import { finalize } from 'rxjs/operators';
 
@@ -16,6 +16,7 @@ import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed'
 })
 export class MatchTableComponent implements OnInit, OnDestroy {
 
+  public GameWinner = GameWinner;
   public displayedColumns: string[] = ['id', 'player1', 'player2', 'ranking', 'actions'];
   public matches: MatchInfo[] = [];
   public id: number;
