@@ -4,6 +4,8 @@ import { Core } from "./core";
 import { State, GamePhase, GameWinner } from "../store/state/state";
 import { User, Match } from "../../storage";
 import { RankingCalculator } from "./ranking-calculator";
+import { Replay } from "./replay";
+import { ReplayPlayer } from "./replay-player";
 
 export class MatchRecorder {
 
@@ -11,9 +13,11 @@ export class MatchRecorder {
   private player1: User | undefined;
   private player2: User | undefined;
   private ranking: RankingCalculator;
+  private replay: Replay;
 
   constructor(private core: Core) {
     this.ranking = new RankingCalculator();
+    this.replay = new Replay();
   }
 
   public onStateChange(state: State) {
@@ -23,6 +27,10 @@ export class MatchRecorder {
 
     if (state.players.length >= 2) {
       this.updatePlayers(state);
+    }
+
+    if (state.phase !== GamePhase.WAITING_FOR_PLAYERS) {
+      this.replay.appendState(state);
     }
 
     if (state.phase === GamePhase.FINISHED) {
@@ -48,6 +56,12 @@ export class MatchRecorder {
     match.ranking2 = this.player2.ranking;
     match.rankingStake1 = 0;
     match.rankingStake2 = 0;
+
+    this.replay.setCreated(match.created);
+    this.replay.player1 = this.buildReplayPlayer(match.player1);
+    this.replay.player2 = this.buildReplayPlayer(match.player2);
+    this.replay.winner = match.winner;
+    match.replayData = this.replay.serialize();
 
     try {
       // Update ranking
@@ -89,6 +103,10 @@ export class MatchRecorder {
     if (client !== undefined) {
       return client.user;
     }
+  }
+
+  private buildReplayPlayer(player: User): ReplayPlayer {
+    return { userId: player.id, name: player.name, ranking: player.ranking };
   }
 
 }

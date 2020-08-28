@@ -33,4 +33,7 @@ export class Match extends BaseEntity {
   @Column({ type: 'bigint' })
   public created: number = Date.now();
 
+  @Column({ type: 'blob' })
+  public replayData: string = '';
+
 }

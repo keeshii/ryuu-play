@@ -2,6 +2,9 @@ export * from './cards/card-manager';
 export * from './cards/deck-analyser';
 
 export * from './core/game-settings';
+export * from './core/replay-player';
+export * from './core/replay';
+export * from './serializer';
 
 export * from './game-error';
 

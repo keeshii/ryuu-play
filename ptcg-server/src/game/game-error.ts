@@ -45,13 +45,15 @@ export enum GameMessage {
   POKEMON_CANT_EVOLVE_THIS_TURN = 'POKEMON_CANT_EVOLVE_THIS_TURN',
 
   LOG_SHUFFLE_DECK = '{1} shuffles the deck.',
-  LOG_DRAW_CARDS = '{1} draws {2} cards.'
+  LOG_DRAW_CARDS = '{1} draws {2} cards.',
+  REPLAY_INVALID_STATE = 'REPLAY_INVALID_STATE',
+  SERIALIZER_ERROR = 'SERIALIZER_ERROR'
 }
 
 export class GameError extends Error {
 
-  constructor(message: GameMessage, public param?: string) {
-    super(message);
+  constructor(code: GameMessage, message?: string) {
+    super(message || code);
   }
 
 }
