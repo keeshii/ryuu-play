@@ -16,8 +16,12 @@ cardManager.defineSet(setBlackAndWhite);
 const state = new State();
 
 state.logs.push(new StateLog('111', ['2'], 0));
-state.players.push(new Player());
-state.players[0].deck.cards.push(setOp9[0]);
+
+const player = new Player();
+state.players.push(player);
+player.deck.cards.push(setOp9[0]);
+
+state.players.push(player);
 
 const serializer = new StateSerializer();
 serializer.setKnownCards(cardManager.getAllCards());

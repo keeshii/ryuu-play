@@ -9,6 +9,7 @@ import { CardSerializer } from "./card.serializer";
 import { CardListSerializer } from "./card-list.serializer";
 import { Marker } from "../store/state/card-marker";
 import { StateLogSerializer } from "./state-log.serializer";
+import { PathBuilder } from "./path-builder";
 
 export class StateSerializer {
 
@@ -30,12 +31,22 @@ export class StateSerializer {
   public serialize(state: State): SerializedState {
     const serializers = this.serializers;
     const context = this.createContext(state);
+    const refs: { node: Object, path: string }[] = [];
+    const pathBuilder = new PathBuilder();
 
-    const replacer: any = function(key: string, value: any) {
+    const replacer: any = function(this: any, key: string, value: any) {
+      pathBuilder.goTo(this, key);
+      const path = pathBuilder.getPath();
+
       if (value instanceof Array) {
-        return value.map(item => replacer('', item));
+        return value;
       }
-      if (value instanceof Object) {
+      if (value instanceof Object && value._type !== 'Ref') {
+        let ref = refs.find(r => r.node === value);
+        if (ref !== undefined) {
+          return { _type: 'Ref', path: ref.path };
+        }
+        refs.push({ node: value, path });
         const name = value.constructor.name;
         if (name === 'Object') {
           return value;
@@ -60,14 +71,19 @@ export class StateSerializer {
     const serializers = this.serializers;
     const { data, contextData } = JSON.parse(serializedState);
     const context = this.restoreContext(contextData);
+    const refs: { holder: any, key: string, value: any }[] = [];
 
-    const reviver: any = function (key: string, value: any) {
+    const reviver: any = function (this: any, key: string, value: any) {
       if (value instanceof Array) {
-        return value.map(item => reviver('', item));
+        return value;
       }
       if (value instanceof Object) {
         const name = (value as Serialized)._type;
         if (typeof name === 'string') {
+          if (name === 'Ref') {
+            refs.push({ holder: this, key, value });
+            return value;
+          }
           const serializer = serializers.find(s => s.types.includes(name));
           if (serializer !== undefined) {
             return serializer.deserialize(value, context);
@@ -77,15 +93,28 @@ export class StateSerializer {
       }
       return value;
     };
-    return JSON.parse(data, reviver);
+
+    const state = JSON.parse(data, reviver);
+
+    // Restore Refs
+    const pathBuilder = new PathBuilder();
+    refs.forEach(ref => {
+      const reference = pathBuilder.getValue(state, ref.value.path);
+      if (reference === undefined) {
+        throw new GameError(GameMessage.SERIALIZER_ERROR, `Unknown reference '${ref.value.path}'.`);
+      }
+      ref.holder[ref.key] = reference;
+    });
+
+    return state;
   }
 
   public serializeDiff(base: State, state: State): SerializedState {
-    return '';
+    return this.serialize(state);
   }
 
   public deserializeDiff(base: State, data: SerializedState): State {
-    return base;
+    return this.deserialize(data);
   }
 
   public setKnownCards(cards: Card[]) {
