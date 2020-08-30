@@ -35,6 +35,22 @@ export function deepCompare(x: any, y: any): boolean {
   return true;
 }
 
+export function deepIterate(source: any, callback: (holder: any, key: string, value: any) => void): void {
+  if (source === null) { return; }
+
+  if (source instanceof Array) {
+    source.forEach((item: any) => deepIterate(item, callback));
+  }
+
+  if (source instanceof Object) {
+    for (let key in source) {
+      if (source.hasOwnProperty(key)) {
+        deepIterate(source[key], callback);
+        callback(source, key, source[key]);
+      }
+    }
+  }
+}
 
 export function deepClone(source: any, refMap: {s: Object, d: Object}[] = []): any {
   if (source === null) { return null; }

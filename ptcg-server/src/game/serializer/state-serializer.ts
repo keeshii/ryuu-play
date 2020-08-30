@@ -9,7 +9,9 @@ import { CardSerializer } from "./card.serializer";
 import { CardListSerializer } from "./card-list.serializer";
 import { Marker } from "../store/state/card-marker";
 import { StateLogSerializer } from "./state-log.serializer";
+import { PromptSerializer } from "./prompt.serializer";
 import { PathBuilder } from "./path-builder";
+import { deepIterate } from "../../utils";
 
 export class StateSerializer {
 
@@ -24,7 +26,8 @@ export class StateSerializer {
       new GenericSerializer(Marker),
       new CardSerializer(),
       new CardListSerializer(),
-      new StateLogSerializer()
+      new StateLogSerializer(),
+      new PromptSerializer()
     ];
   }
 
@@ -62,7 +65,7 @@ export class StateSerializer {
       }
       return value;
     };
-    const data = JSON.stringify(state, replacer);
+    const data = JSON.stringify([state.players, state], replacer);
     const contextData = { ...context, cards: context.cards.map(card => card.fullName) };
     return JSON.stringify({ data, contextData });
   }
@@ -71,7 +74,6 @@ export class StateSerializer {
     const serializers = this.serializers;
     const { data, contextData } = JSON.parse(serializedState);
     const context = this.restoreContext(contextData);
-    const refs: { holder: any, key: string, value: any }[] = [];
 
     const reviver: any = function (this: any, key: string, value: any) {
       if (value instanceof Array) {
@@ -81,7 +83,6 @@ export class StateSerializer {
         const name = (value as Serialized)._type;
         if (typeof name === 'string') {
           if (name === 'Ref') {
-            refs.push({ holder: this, key, value });
             return value;
           }
           const serializer = serializers.find(s => s.types.includes(name));
@@ -94,18 +95,21 @@ export class StateSerializer {
       return value;
     };
 
-    const state = JSON.parse(data, reviver);
+    const parsed = JSON.parse(data, reviver);
 
     // Restore Refs
     const pathBuilder = new PathBuilder();
-    refs.forEach(ref => {
-      const reference = pathBuilder.getValue(state, ref.value.path);
-      if (reference === undefined) {
-        throw new GameError(GameMessage.SERIALIZER_ERROR, `Unknown reference '${ref.value.path}'.`);
+    deepIterate(parsed, (holder, key, value) => {
+      if (value instanceof Object && value._type === 'Ref') {
+        const reference = pathBuilder.getValue(parsed, value.path);
+        if (reference === undefined) {
+          throw new GameError(GameMessage.SERIALIZER_ERROR, `Unknown reference '${value.path}'.`);
+        }
+        holder[key] = reference;
       }
-      ref.holder[ref.key] = reference;
     });
 
+    const state = parsed[1];
     return state;
   }
 
