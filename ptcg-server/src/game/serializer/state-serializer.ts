@@ -65,15 +65,13 @@ export class StateSerializer {
       }
       return value;
     };
-    const data = JSON.stringify([state.players, state], replacer);
     const contextData = { ...context, cards: context.cards.map(card => card.fullName) };
-    return JSON.stringify({ data, contextData });
+    return JSON.stringify([contextData, state.players, state], replacer);
   }
 
   public deserialize(serializedState: SerializedState): State {
     const serializers = this.serializers;
-    const { data, contextData } = JSON.parse(serializedState);
-    const context = this.restoreContext(contextData);
+    const context = this.restoreContext(serializedState);
 
     const reviver: any = function (this: any, key: string, value: any) {
       if (value instanceof Array) {
@@ -95,7 +93,7 @@ export class StateSerializer {
       return value;
     };
 
-    const parsed = JSON.parse(data, reviver);
+    const parsed = JSON.parse(serializedState, reviver);
 
     // Restore Refs
     const pathBuilder = new PathBuilder();
@@ -109,7 +107,7 @@ export class StateSerializer {
       }
     });
 
-    const state = parsed[1];
+    const state = parsed[2];
     return state;
   }
 
@@ -125,7 +123,9 @@ export class StateSerializer {
     this.knownCards = cards;
   }
 
-  private restoreContext(contextData: any): SerializerContext {
+  private restoreContext(serializedState: SerializedState): SerializerContext {
+    const parsed = JSON.parse(serializedState);
+    const contextData = parsed[0];
     const names: string[] = contextData.cards;
     const cards: Card[] = [];
     names.forEach(name => {
