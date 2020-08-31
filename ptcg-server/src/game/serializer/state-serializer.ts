@@ -12,6 +12,8 @@ import { StateLogSerializer } from "./state-log.serializer";
 import { PromptSerializer } from "./prompt.serializer";
 import { PathBuilder } from "./path-builder";
 import { deepIterate } from "../../utils";
+import { JsonPatch } from "./json-patch";
+import { JsonDiff } from "./json-patch.interface";
 
 export class StateSerializer {
 
@@ -31,9 +33,8 @@ export class StateSerializer {
     ];
   }
 
-  public serialize(state: State): SerializedState {
+  public serialize(state: State, context: SerializerContext = this.createContext(state)): SerializedState {
     const serializers = this.serializers;
-    const context = this.createContext(state);
     const refs: { node: Object, path: string }[] = [];
     const pathBuilder = new PathBuilder();
 
@@ -111,11 +112,52 @@ export class StateSerializer {
     return state;
   }
 
-  public serializeDiff(base: State, state: State): SerializedState {
-    return this.serialize(state);
+  public serializeDiff(base: SerializedState | undefined, state: State): SerializedState {
+    if (base === undefined) {
+      return this.serialize(state);
+    }
+    const parsedBase = JSON.parse(base);
+
+    // compare contexts
+    const cards1 = parsedBase[0];
+    const context2 = this.createContext(state);
+    const cards2 = context2.cards.map(c => c.fullName);
+
+    // different contexts, use standard serialization instead of differencial
+    const jsonPatch = new JsonPatch();
+    if (jsonPatch.diff(cards1, cards2).length === 0) {
+      return this.serialize(state);
+    }
+
+    const players1 = parsedBase[1];
+    const state1 = parsedBase[2];
+
+    const serialized2 = this.serialize(state, context2);
+    const parsed2 = JSON.parse(serialized2);
+    const players2 = parsed2[1];
+    const state2 = parsed2[2];
+
+    const diff = jsonPatch.diff([players1, state1], [players2, state2]);
+    return JSON.stringify([ diff ]);
   }
 
-  public deserializeDiff(base: State, data: SerializedState): State {
+  public deserializeDiff(base: SerializedState | undefined, data: SerializedState): State {
+    if (base === undefined) {
+      return this.deserialize(data);
+    }
+
+    const parsed = JSON.parse(data);
+    if (parsed.length > 1) {
+      return this.deserialize(data);
+    }
+
+    let [ contextData, players, state ] = JSON.parse(base);
+    const diff: JsonDiff[] = parsed[0];
+
+    const jsonPatch = new JsonPatch();
+    [ players, state ] = jsonPatch.apply([ players, state ], diff);
+
+    data = JSON.stringify([ contextData, players, state ]);
     return this.deserialize(data);
   }
 
@@ -141,17 +183,21 @@ export class StateSerializer {
   private createContext(state: State): SerializerContext {
     const cards: Card[] = [];
     for (let player of state.players) {
-      player.stadium.cards.forEach(c => cards.push(c));
-      player.active.cards.forEach(c => cards.push(c));
+      let list: Card[] = [];
+      player.stadium.cards.forEach(c => list.push(c));
+      player.active.cards.forEach(c => list.push(c));
       for (let bench of player.bench) {
-        bench.cards.forEach(c => cards.push(c));
+        bench.cards.forEach(c => list.push(c));
       }
       for (let prize of player.prizes) {
-        prize.cards.forEach(c => cards.push(c));
+        prize.cards.forEach(c => list.push(c));
       }
-      player.hand.cards.forEach(c => cards.push(c));
-      player.deck.cards.forEach(c => cards.push(c));
-      player.discard.cards.forEach(c => cards.push(c));
+      player.hand.cards.forEach(c => list.push(c));
+      player.deck.cards.forEach(c => list.push(c));
+      player.discard.cards.forEach(c => list.push(c));
+      list.sort((a, b) => a.fullName < b.fullName
+        ? -1 : (a.fullName > b.fullName ? 1 : 0));
+      cards.push(...list);
     }
     return { cards };
   }

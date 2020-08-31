@@ -12,7 +12,8 @@ export class Replay {
   public created: number;
   private turnMap: number[] = [];
   private states: SerializedState[] = [];
-  private baseState: State | undefined;
+  private diffs: SerializedState[] = [];
+  private prevState: SerializedState | undefined;
   private serializer = new StateSerializer();
 
   constructor() {
@@ -30,13 +31,7 @@ export class Replay {
     if (position < 0 || position >= this.states.length) {
       throw new GameError(GameMessage.REPLAY_INVALID_STATE);
     }
-    if (this.baseState === undefined) {
-      this.baseState = this.serializer.deserialize(this.states[position]);
-    }
-    if (position === 0) {
-      return this.baseState;
-    }
-    return this.serializer.deserializeDiff(this.baseState, this.states[position]);
+    return this.serializer.deserialize(this.states[position]);
   }
 
   public getTurnCount(): number {
@@ -55,11 +50,11 @@ export class Replay {
   }
 
   public appendState(state: State): void {
-    const serialized = this.baseState === undefined
-      ? this.serializer.serialize(state)
-      : this.serializer.serializeDiff(this.baseState, state);
-    this.baseState = state;
-    this.states.push(serialized);
+    const full = this.serializer.serialize(state);
+    let diff = this.serializer.serializeDiff(this.prevState, state);
+    this.prevState = full;
+    this.diffs.push(diff);
+    this.states.push(full);
     while (this.turnMap.length <= state.turn) {
       this.turnMap.push(this.states.length - 1);
     }
@@ -72,7 +67,7 @@ export class Replay {
       winner: this.winner,
       created: this.created,
       turnMap: this.turnMap,
-      states: this.states
+      states: this.swapQuotes(this.diffs)
     };
     return JSON.stringify(json);
   }
@@ -85,11 +80,29 @@ export class Replay {
       this.winner = data.winner;
       this.created = data.created;
       this.turnMap = data.turnMap;
-      this.states = data.states;
-      this.baseState = undefined;
+      this.diffs = this.swapQuotes(data.states);
+      this.states = this.restoreStates(this.diffs);
+      this.prevState = this.states.length > 0
+        ? this.states[this.states.length - 1]
+        : undefined;
     } catch (error) {
       throw new GameError(GameMessage.REPLAY_INVALID_STATE);
     }
+  }
+
+  private swapQuotes(diffs: SerializedState[]): SerializedState[] {
+    return diffs.map(diff => diff.replace(/["']/g, c => c === '"' ? '\'' : '"'));
+  }
+
+  private restoreStates(diffs: SerializedState[]): SerializedState[] {
+    const states: SerializedState[] = [];
+    let prevState: SerializedState | undefined;
+    for (const diff of diffs) {
+      const state = this.serializer.deserializeDiff(prevState, diff);
+      prevState = this.serializer.serialize(state);
+      states.push(prevState);
+    }
+    return states;
   }
 
 }
