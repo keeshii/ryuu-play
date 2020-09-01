@@ -1,11 +1,13 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { MatchInfo, GameWinner } from 'ptcg-server';
-import { SessionService } from 'src/app/shared/session/session.service';
+import { Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 
 import { AlertService } from '../../shared/alert/alert.service';
 import { ApiError } from '../../api/api.error';
 import { ProfileService } from '../../api/services/profile.service';
+import { ReplayService } from '../../api/services/replay.service';
+import { SessionService } from '../../shared/session/session.service';
 import { UserInfoMap } from '../../shared/session/session.interface';
 import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed';
 
@@ -32,6 +34,8 @@ export class MatchTableComponent implements OnInit, OnDestroy {
   constructor(
     private alertService: AlertService,
     private profileService: ProfileService,
+    private replayService: ReplayService,
+    private router: Router,
     private sessionService: SessionService
   ) { }
 
@@ -64,6 +68,25 @@ export class MatchTableComponent implements OnInit, OnDestroy {
         },
         error: (error: ApiError) => {
           this.loadingFailed = true;
+          this.alertService.toast(error.message);
+        }
+      });
+  }
+
+  public showReplay(matchId: number): void {
+    this.loading = true;
+    this.replayService.getMatchReplay(matchId)
+      .pipe(
+        finalize(() => { this.loading = false; }),
+        takeUntilDestroyed(this)
+      )
+      .subscribe({
+        next: gameState => {
+          if (gameState !== undefined) {
+            this.router.navigate(['/table', gameState.localId]);
+          }
+        },
+        error: (error: ApiError) => {
           this.alertService.toast(error.message);
         }
       });

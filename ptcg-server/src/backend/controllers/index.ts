@@ -6,3 +6,4 @@ export * from './controller';
 export * from './login';
 export * from './profile';
 export * from './ranking';
+export * from './replays';

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Player, UserInfo } from 'ptcg-server';
+import { Player, UserInfo, ReplayPlayer } from 'ptcg-server';
 import { Observable, EMPTY } from 'rxjs';
 
 import { SessionService } from '../../../shared/session/session.service';
@@ -12,23 +12,19 @@ import { SessionService } from '../../../shared/session/session.service';
 export class PlayerBarComponent implements OnInit {
 
   @Input() set player(player: Player) {
-    this.isEmpty = !player;
-    if (this.isEmpty) {
-      return;
+    this.refreshData(player, this.replayPlayerValue);
+  }
+
+  @Input() set replayPlayer(replayPlayer: ReplayPlayer) {
+    if (this.replayPlayerValue !== replayPlayer) {
+      this.refreshData(this.playerValue, replayPlayer);
     }
-
-    this.deckCount = player.deck.cards.length;
-    this.handCount = player.hand.cards.length;
-    this.discardCount = player.discard.cards.length;
-    this.name = player.name;
-
-    this.userInfo$ = this.sessionService.get(session => {
-      const client = session.clients.find(c => c.clientId === player.id);
-      return client !== undefined ? session.users[client.userId] : undefined;
-    });
   }
 
   @Input() active: boolean;
+
+  private replayPlayerValue: ReplayPlayer;
+  private playerValue: Player;
 
   public isEmpty = true;
   public deckCount: number;
@@ -42,5 +38,29 @@ export class PlayerBarComponent implements OnInit {
   ) { }
 
   ngOnInit() { }
+
+  private refreshData(player: Player, replayPlayer: ReplayPlayer) {
+    this.playerValue = player;
+    this.replayPlayerValue = replayPlayer;
+
+    this.isEmpty = !player;
+    if (this.isEmpty) {
+      return;
+    }
+
+    this.playerValue = player;
+    this.deckCount = player.deck.cards.length;
+    this.handCount = player.hand.cards.length;
+    this.discardCount = player.discard.cards.length;
+    this.name = player.name;
+
+    this.userInfo$ = this.sessionService.get(session => {
+      if (replayPlayer) {
+        return session.users[replayPlayer.userId];
+      }
+      const client = session.clients.find(c => c.clientId === player.id);
+      return client !== undefined ? session.users[client.userId] : undefined;
+    });
+  }
 
 }

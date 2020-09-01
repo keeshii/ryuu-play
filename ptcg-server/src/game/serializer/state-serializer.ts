@@ -18,7 +18,7 @@ import { JsonDiff } from "./json-patch.interface";
 export class StateSerializer {
 
   public serializers: Serializer<any>[];
-  public knownCards: Card[] = [];
+  public static knownCards: Card[] = [];
 
   constructor() {
     this.serializers = [
@@ -161,8 +161,8 @@ export class StateSerializer {
     return this.deserialize(data);
   }
 
-  public setKnownCards(cards: Card[]) {
-    this.knownCards = cards;
+  public static setKnownCards(cards: Card[]) {
+    StateSerializer.knownCards = cards;
   }
 
   private restoreContext(serializedState: SerializedState): SerializerContext {
@@ -171,7 +171,7 @@ export class StateSerializer {
     const names: string[] = contextData.cards;
     const cards: Card[] = [];
     names.forEach(name => {
-      const card = this.knownCards.find(c => c.fullName === name);
+      const card = StateSerializer.knownCards.find(c => c.fullName === name);
       if (card === undefined) {
         throw new GameError(GameMessage.SERIALIZER_ERROR, `Unknown card '${name}'.`);
       }

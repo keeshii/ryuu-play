@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, ClientInfo, GameState, State, CardTarget, GamePhase, StateLog } from 'ptcg-server';
+import { Action, ClientInfo, GameState, State, CardTarget, StateLog, Replay } from 'ptcg-server';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
@@ -36,7 +36,7 @@ export class GameService {
     });
   }
 
-  public appendGameState(gameState: GameState) {
+  public appendGameState(gameState: GameState, replay?: Replay): LocalGameState | undefined {
     const gameId = gameState.gameId;
     const games = this.sessionService.session.gameStates;
     const index = games.findIndex(g => g.gameId === gameId && g.deleted === false);
@@ -47,13 +47,15 @@ export class GameService {
       const localGameState: LocalGameState = {
         ...gameState,
         localId: lastGameId,
-        gameOver: false,
-        deleted: false,
-        logs
+        gameOver: replay ? true : false,
+        deleted: replay ? true : false,
+        logs,
+        replay
       };
       const gameStates = [...games, localGameState ];
       this.startListening(gameState.gameId);
       this.sessionService.set({ gameStates, lastGameId });
+      return localGameState;
     }
   }
 

@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, EventEmitter, Output, OnChanges } from '@angular/core';
-import { GameState, Player, State } from 'ptcg-server';
+import { Player, State, ReplayPlayer } from 'ptcg-server';
+import { LocalGameState } from '../../shared/session/session.interface';
 
 @Component({
   selector: 'ptcg-table-sidebar',
@@ -13,8 +14,10 @@ export class TableSidebarComponent implements OnInit, OnChanges {
   @Input() clientId: number;
   @Input() topPlayer: Player;
   @Input() bottomPlayer: Player;
-  @Input() gameState: GameState;
+  @Input() gameState: LocalGameState;
 
+  public bottomReplayPlayer: ReplayPlayer | undefined;
+  public topReplayPlayer: ReplayPlayer | undefined;
   public turn: number;
   public gameId: number;
   public isTopPlayerActive: boolean;
@@ -32,12 +35,21 @@ export class TableSidebarComponent implements OnInit, OnChanges {
     return player.id === state.players[state.activePlayer].id;
   }
 
+  private isFirstPlayer(state: State, player: Player): boolean {
+    if (!state || !player || state.players.length === 0) {
+      return false;
+    }
+    return player.id === state.players[0].id;
+  }
+
   ngOnChanges() {
     if (!this.gameState) {
       this.turn = 0;
       this.gameId = undefined;
       this.isTopPlayerActive = false;
       this.isBottomPlayerActive = false;
+      this.bottomReplayPlayer = undefined;
+      this.topReplayPlayer = undefined;
       return;
     }
 
@@ -46,6 +58,17 @@ export class TableSidebarComponent implements OnInit, OnChanges {
     this.turn = state.turn;
     this.isTopPlayerActive = this.isPlayerActive(state, this.topPlayer);
     this.isBottomPlayerActive = this.isPlayerActive(state, this.bottomPlayer);
+
+    if (this.gameState.replay !== undefined) {
+      this.bottomReplayPlayer = this.isFirstPlayer(state, this.bottomPlayer)
+        ? this.gameState.replay.player1
+        : this.gameState.replay.player2;
+
+      this.topReplayPlayer = this.isFirstPlayer(state, this.topPlayer)
+        ? this.gameState.replay.player1
+        : this.gameState.replay.player2;
+    }
+
   }
 
 }

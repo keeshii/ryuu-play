@@ -49,7 +49,9 @@
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef>Actions</th>
         <td mat-cell *matCellDef="let match">
-          <button mat-button (click)="showReplay()">Replay</button>
+          <button mat-button (click)="showReplay(match.matchId)" [disabled]="loading">
+            Replay
+          </button>
         </td>
       </ng-container>
 

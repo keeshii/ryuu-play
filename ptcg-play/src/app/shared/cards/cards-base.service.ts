@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Card } from 'ptcg-server';
+import { Card, StateSerializer } from 'ptcg-server';
 import { take } from 'rxjs/operators';
 
 import { CardInfoPopupData, CardInfoPopupComponent, CardInfoPopupResponse } from './card-info-popup/card-info-popup.component';
@@ -28,6 +28,7 @@ export class CardsBaseService {
       .subscribe(response => {
         this.cards = response.cards;
         this.names = this.cards.map(c => c.fullName);
+        StateSerializer.setKnownCards(this.cards);
       }, () => {});
   }
 
