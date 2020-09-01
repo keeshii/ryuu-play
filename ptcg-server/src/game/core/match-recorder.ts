@@ -83,6 +83,7 @@ export class MatchRecorder {
       }
 
     } catch (error) {
+      console.error(error);
       return;
     }
   }

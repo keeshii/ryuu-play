@@ -1,3 +1,5 @@
+import { gzip, ungzip } from 'pako';
+
 import { State, GameWinner } from "../store/state/state";
 import { ReplayPlayer } from "./replay-player";
 import { GameError, GameMessage } from "../game-error";
@@ -69,12 +71,12 @@ export class Replay {
       turnMap: this.turnMap,
       states: this.swapQuotes(this.diffs)
     };
-    return JSON.stringify(json);
+    return this.compress(JSON.stringify(json));
   }
 
   public deserialize(replayData: string): void {
     try {
-      const data = JSON.parse(replayData);
+      const data = JSON.parse(this.decompress(replayData));
       this.player1 = data.player1;
       this.player2 = data.player2;
       this.winner = data.winner;
@@ -92,6 +94,16 @@ export class Replay {
 
   private swapQuotes(diffs: SerializedState[]): SerializedState[] {
     return diffs.map(diff => diff.replace(/["']/g, c => c === '"' ? '\'' : '"'));
+  }
+
+  private compress(data: string): string {
+    const compressed = gzip(data, { to: 'string' });
+    return compressed;
+  }
+
+  private decompress(data: string): string {
+    const text = ungzip(data, { to: 'string' });
+    return text;
   }
 
   private restoreStates(diffs: SerializedState[]): SerializedState[] {
