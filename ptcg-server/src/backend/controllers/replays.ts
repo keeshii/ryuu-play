@@ -4,6 +4,7 @@ import { AuthToken } from '../services';
 import { Controller, Get } from './controller';
 import { Errors } from '../common/errors';
 import { Match } from '../../storage';
+import { Base64 } from '../../utils';
 
 export class Replays extends Controller {
 
@@ -18,9 +19,9 @@ export class Replays extends Controller {
       return;
     }
 
-    const replayData = entity.replayData.toString();
+    const base64 = new Base64();
+    const replayData = base64.encode(Buffer.from(entity.replayData).toString());
     res.send({ok: true, replayData});
   }
-
 
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/internal/operators/map';
-import { Replay, GameState } from 'ptcg-server';
+import { Base64, Replay, GameState } from 'ptcg-server';
 
 import { ApiService } from '../api.service';
 import { GameService } from './game.service';
@@ -19,7 +19,8 @@ export class ReplayService {
     return this.api.get<ReplayResponse>('/replays/match/' + matchId)
       .pipe(map(response => {
         const replay = new Replay();
-        replay.deserialize(response.replayData);
+        const base64 = new Base64();
+        replay.deserialize(base64.decode(response.replayData));
 
         const gameState: GameState = {
           gameId: 0,
