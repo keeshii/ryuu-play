@@ -65,6 +65,12 @@
       border-bottom: $table-border;
     }
   }
+
+  ptcg-replay-controls {
+    .ptcg-replay-controls-header {
+      background-color: $table-sidebar-header-background-color;
+    }
+  }
 }
 
 @mixin ptcg-table-typography($config) {
@@ -87,6 +93,12 @@
     }
     .ptcg-game-logs-content {
       @include mat-typography-level-to-styles($config, caption);
+    }
+  }
+
+  ptcg-replay-controls {
+    .ptcg-replay-controls-header mat-icon {
+      font-size: mat-font-size($config, input);
     }
   }
 }

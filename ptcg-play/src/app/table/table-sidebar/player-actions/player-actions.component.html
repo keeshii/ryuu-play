@@ -1,11 +1,19 @@
 <div class="ptcg-player-actions">
-  <button mat-stroked-button (click)="join.next()" [disabled]="gameState?.deleted">
-    Play
-  </button>
-  <button mat-stroked-button (click)="leave()">
-    Leave
-  </button>
-  <button mat-stroked-button (click)="passTurn()" [disabled]="gameState?.deleted">
-    End your turn
-  </button>
+  <div *ngIf="gameState?.replay ; then replayActions ; else gameActions"></div>
+  <ng-template #gameActions>
+    <button mat-stroked-button (click)="join.next()" [disabled]="gameState?.deleted">
+      Play
+    </button>
+    <button mat-stroked-button (click)="leave()">
+      Leave
+    </button>
+    <button mat-stroked-button (click)="passTurn()" [disabled]="gameState?.deleted">
+      End your turn
+    </button>
+  </ng-template>
+  <ng-template #replayActions>
+    <button mat-stroked-button>
+      Switch sides
+    </button>
+  </ng-template>
 </div>

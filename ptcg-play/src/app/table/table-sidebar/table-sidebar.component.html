@@ -18,11 +18,15 @@
     [active]="isBottomPlayerActive">
   </ptcg-player-bar>
 
-  <ptcg-player-actions *ngIf="!gameState?.replay"
+  <ptcg-player-actions
     [gameState]="gameState"
     [clientId]="clientId"
     (join)="join.next()"
   ></ptcg-player-actions>
+
+  <ptcg-replay-controls *ngIf="gameState?.replay"
+    [gameState]="gameState">
+  </ptcg-replay-controls>
 
   <ptcg-game-logs [gameState]="gameState"></ptcg-game-logs>
 

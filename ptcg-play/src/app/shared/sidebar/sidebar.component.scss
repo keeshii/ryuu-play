@@ -1,6 +1,7 @@
 @import '../../../theme/variables.scss';
 
 :host {
+  box-sizing: content-box;
   display: block;
   height: 100%;
   position: absolute;

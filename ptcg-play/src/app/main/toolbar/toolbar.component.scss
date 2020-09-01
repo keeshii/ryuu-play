@@ -31,5 +31,5 @@ ptcg-user-bar {
   cursor: pointer;
   display: block;
   left: unset;
-  width: calc(#{map-get($ptcg-size, sidebar)} - 1px);
+  width: map-get($ptcg-size, sidebar);
 }

@@ -7,6 +7,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { TableSidebarComponent } from './table-sidebar.component';
 import { PlayerActionsComponent } from './player-actions/player-actions.component';
 import { GameLogsComponent } from './game-logs/game-logs.component';
+import { ReplayControlsComponent } from './replay-controls/replay-controls.component';
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import { GameLogsComponent } from './game-logs/game-logs.component';
     TableSidebarComponent,
     PlayerBarComponent,
     PlayerActionsComponent,
-    GameLogsComponent
+    GameLogsComponent,
+    ReplayControlsComponent
   ],
   exports: [
     TableSidebarComponent

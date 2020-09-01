@@ -1,0 +1,38 @@
+@import '../../../../theme/variables.scss';
+
+:host {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.ptcg-replay-controls-header {
+  align-items: center;
+  display: flex;
+  flex: 0 0 auto;
+  padding: map-get($padding, small);
+
+  & mat-icon {
+    cursor: pointer;
+    height: 1em;
+    overflow: hidden;
+    width: 1em;
+  }
+}
+
+.replay-buttons {
+  display: flex;
+  & > button {
+    flex-shrink: 1;
+  }
+}
+
+.replay-slider,
+.replay-options {
+  padding: 0 map-get($padding, small);
+}
+
+mat-slider,
+mat-select {
+  width: 100%;
+}
