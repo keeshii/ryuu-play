@@ -1,7 +1,7 @@
 <div class="ptcg-replay-controls-header">
   <h4 class="ptcg-replay-controls-header-text">Replay</h4>
   <span class="ptcg-u-spacer"></span>
-  <mat-icon matTooltip="State {{ currentState + 1 }} of {{ stateCount }}">
+  <mat-icon matTooltip="State {{ position }} of {{ stateCount }}">
     info
   </mat-icon>
 </div>
@@ -30,7 +30,8 @@
 
   <div class="replay-slider">
     <mat-slider thumbLabel color="primary"
-      [value]="currentState"
+      [value]="position"
+      [min]="1"
       [max]="stateCount"
       (input)="onSliderChange($event)">
     </mat-slider>

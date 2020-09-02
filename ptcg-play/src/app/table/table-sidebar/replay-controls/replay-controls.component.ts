@@ -32,7 +32,7 @@ export class ReplayControlsComponent implements OnInit, OnDestroy {
     { value: 500, viewValue: '2' }
   ];
 
-  public currentState = 0;
+  public position = 1;
   public stateCount = 0;
   public turnCount = 0;
   public statesPerSecond = 1000;
@@ -74,10 +74,10 @@ export class ReplayControlsComponent implements OnInit, OnDestroy {
   private setPlayInterval(): void {
     this.clearPlayInterval();
     this.playInterval = window.setInterval(() => {
-      const newPosition = this.currentState + 1;
-      this.setState(this.currentState + 1);
+      const newPosition = this.position + 1;
+      this.setState(this.position + 1);
       // end reached, no next tick
-      if (newPosition + 1 >= this.stateCount) {
+      if (newPosition + 1 > this.stateCount) {
         this.clearPlayInterval();
       }
     }, this.statesPerSecond);
@@ -91,24 +91,24 @@ export class ReplayControlsComponent implements OnInit, OnDestroy {
   }
 
   public showPreviousState(): void {
-    this.setState(this.currentState - 1);
+    this.setState(this.position - 1);
   }
 
   public showNextState(): void {
-    this.setState(this.currentState + 1);
+    this.setState(this.position + 1);
   }
 
   public showNextTurn(): void {
     const turnCount = this.replay.getTurnCount();
-    const position = this.currentState;
+    const position = this.position;
     for (let i = 0; i < turnCount; i++) {
-      const newPosition = this.replay.getTurnPosition(i);
+      const newPosition = this.replay.getTurnPosition(i) + 1;
       if (position < newPosition) {
         this.setState(newPosition);
         return;
       }
     }
-    const lastState = this.replay.getStateCount() - 1;
+    const lastState = this.replay.getStateCount();
     if (position < lastState) {
       this.setState(lastState);
     }
@@ -116,16 +116,16 @@ export class ReplayControlsComponent implements OnInit, OnDestroy {
 
   public showPreviousTurn(): void {
     const turnCount = this.replay.getTurnCount();
-    const position = this.currentState;
+    const position = this.position;
     for (let i = turnCount - 1; i >= 0; i--) {
-      const newPosition = this.replay.getTurnPosition(i);
+      const newPosition = this.replay.getTurnPosition(i) + 1;
       if (position > newPosition) {
         this.setState(newPosition);
         return;
       }
     }
-    if (position > 0) {
-      this.setState(0);
+    if (position > 1) {
+      this.setState(1);
     }
   }
 
@@ -141,14 +141,14 @@ export class ReplayControlsComponent implements OnInit, OnDestroy {
   }
 
   private setState(position: number) {
-    if (position < 0 || position >= this.stateCount) {
+    if (position < 1 || position > this.stateCount) {
       return;
     }
     const games = this.sessionService.session.gameStates;
     const index = games.findIndex(g => g.replay === this.replay);
     if (index !== -1) {
-      const state = this.replay.getState(position);
-      this.currentState = position;
+      const state = this.replay.getState(position - 1);
+      this.position = position;
       const gameStates = this.sessionService.session.gameStates.slice();
       const logs = state.logs;
       gameStates[index] = { ...gameStates[index], state, logs };
@@ -158,7 +158,7 @@ export class ReplayControlsComponent implements OnInit, OnDestroy {
 
   private initReplayControls(replay: Replay) {
     this.replay = replay;
-    this.currentState = 0;
+    this.position = 1;
     this.stateCount = replay.getStateCount();
     this.turnCount = replay.getTurnCount();
   }
