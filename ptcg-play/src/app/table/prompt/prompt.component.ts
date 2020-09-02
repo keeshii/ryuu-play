@@ -1,5 +1,5 @@
 import { AnimationEvent } from '@angular/animations';
-import { Component, OnInit, Input, OnChanges, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Prompt, GamePhase } from 'ptcg-server';
 
@@ -34,9 +34,15 @@ export class PromptComponent implements OnInit, OnChanges {
 
   ngOnInit() { }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     if (!this.gameState || !this.clientId) {
       return this.toggle(false);
+    }
+
+    let differentGame = false;
+    if (changes.gameState) {
+      const previousState: LocalGameState = changes.gameState.previousValue;
+      differentGame = !previousState || previousState.localId !== this.gameState.localId;
     }
 
     let prompt = this.gameState.state.prompts.find(p => {
@@ -45,7 +51,7 @@ export class PromptComponent implements OnInit, OnChanges {
 
     prompt = prompt || this.checkGameOver(this.gameState);
 
-    if (!this.prompt || !prompt || this.prompt.id !== prompt.id) {
+    if (!this.prompt || !prompt || this.prompt.id !== prompt.id || differentGame) {
       this.prompt = prompt;
       return this.toggle(prompt !== undefined);
     }

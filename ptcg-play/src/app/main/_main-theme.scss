@@ -3,11 +3,13 @@
 
 @mixin ptcg-main-theme($theme) {
   $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
   $primary: map-get($theme, primary);
   $avatar-background-color: mat-color($background, app-bar);
   $logged-user-background-color: mat-color($primary, 200); //mat-color($background, focused-button);
   $logged-user-text-color: mat-contrast($primary, 200);
   $sidenav-table-header-background-color: mat-color($background, background);
+  $sidenav-deleted-text-color: mat-color($foreground, secondary-text);
 
   ptcg-toolbar {
     .ptcg-logged-user {
@@ -17,6 +19,9 @@
   }
 
   ptcg-sidenav {
+    .ptcg-sidenav-label-container.deleted {
+      color: $sidenav-deleted-text-color;
+    }
     .ptcg-sidenav-header {
       background-color: $sidenav-table-header-background-color;
     }

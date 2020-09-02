@@ -14,13 +14,16 @@ import { SessionService } from '../../shared/session/session.service';
 export class SidenavItemComponent implements OnInit {
 
   @Input() set gameState(gameState: LocalGameState) {
+    const clientId = this.sessionService.session.clientId;
     this.isDeleted = gameState.deleted;
     this.gameId = gameState.gameId;
     this.localId = gameState.localId;
     this.label = this.buildLabel(gameState);
-    this.updateBadge(gameState);
+    this.isPlaying = this.checkPlaying(gameState, clientId);
+    this.updateBadge(gameState, clientId);
   }
 
+  public isPlaying = false;
   public isDeleted = false;
   public label: string;
   public badgeContent: string;
@@ -37,22 +40,37 @@ export class SidenavItemComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  private updateBadge(gameState: LocalGameState): void {
-    const clientId = this.sessionService.session.clientId;
-    const state = gameState.state;
-    const prompts = state.prompts.filter(p => p.result === undefined);
-    const waitingForMe = prompts.some(p => p.playerId === clientId);
-    const myTurn = state.players[state.activePlayer].id === clientId && state.phase === GamePhase.PLAYER_TURN;
-    const waitingForInvitation = prompts.find(p => p.type === 'Invite player');
+  private checkPlaying(gameState: LocalGameState, clientId: number): boolean {
+    if (gameState.replay || gameState.deleted) {
+      return false;
+    }
+    return gameState.state.players.some(p => p.id === clientId);
+  }
 
-    if (waitingForMe && waitingForInvitation) {
-      this.badgeContent = '?';
-      this.badgeColor = 'accent';
-    } else if (waitingForMe || myTurn) {
-      this.badgeContent = '!';
-      this.badgeColor = 'primary';
-    } else {
-      this.badgeContent = '';
+  private updateBadge(gameState: LocalGameState, clientId: number): void {
+    let badgeContent = '';
+    let badgeColor = 'primary';
+
+    if (this.isPlaying && !gameState.deleted) {
+      const state = gameState.state;
+      const prompts = state.prompts.filter(p => p.result === undefined);
+      const waitingForMe = prompts.some(p => p.playerId === clientId);
+      const myTurn = state.players[state.activePlayer].id === clientId && state.phase === GamePhase.PLAYER_TURN;
+      const waitingForInvitation = prompts.find(p => p.type === 'Invite player');
+
+      if (waitingForMe && waitingForInvitation) {
+        badgeContent = '?';
+        badgeColor = 'accent';
+      } else if (waitingForMe || myTurn) {
+        badgeContent = '!';
+        badgeColor = 'primary';
+      } else {
+        badgeContent = '';
+      }
+    }
+    if (this.badgeContent !== badgeContent || this.badgeColor !== badgeColor) {
+      this.badgeContent = badgeContent;
+      this.badgeColor = badgeColor;
     }
   }
 
@@ -72,12 +90,14 @@ export class SidenavItemComponent implements OnInit {
   }
 
   async onClose() {
-    const result = await this.alertService.confirm(
-      'Do you really want to leave the game?'
-    );
+    if (this.isPlaying) {
+      const result = await this.alertService.confirm(
+        'Do you really want to leave the game?'
+      );
 
-    if (!result) {
-      return;
+      if (!result) {
+        return;
+      }
     }
 
     if (this.isDeleted) {

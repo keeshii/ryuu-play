@@ -1,9 +1,7 @@
 <div class="ptcg-replay-controls-header">
   <h4 class="ptcg-replay-controls-header-text">Replay</h4>
   <span class="ptcg-u-spacer"></span>
-  <mat-icon (click)="showInfo()"
-    matTooltip="Show replay info"
-    matTooltipShowDelay="1000">
+  <mat-icon matTooltip="State {{ currentState + 1 }} of {{ stateCount }}">
     info
   </mat-icon>
 </div>
@@ -11,36 +9,41 @@
 <div class="ptcg-replay-controls-content">
 
   <div class="replay-buttons">
-    <button mat-icon-button>
+    <button mat-icon-button (click)="showPreviousTurn()">
       <mat-icon>first_page</mat-icon>
     </button>
     <button mat-icon-button (click)="showPreviousState()">
       <mat-icon>chevron_left</mat-icon>
     </button>
-    <button mat-icon-button>
+    <button mat-icon-button
+      [color]="playInterval !== undefined ? 'primary' : ''"
+      (click)="togglePlay()">
       <mat-icon>play_arrow</mat-icon>
     </button>
     <button mat-icon-button (click)="showNextState()">
       <mat-icon>chevron_right</mat-icon>
     </button>
-    <button mat-icon-button>
+    <button mat-icon-button (click)="showNextTurn()">
       <mat-icon>last_page</mat-icon>
     </button>
   </div>
 
   <div class="replay-slider">
-    <mat-slider thumbLabel color="primary"></mat-slider>
+    <mat-slider thumbLabel color="primary"
+      [value]="currentState"
+      [max]="stateCount"
+      (input)="onSliderChange($event)">
+    </mat-slider>
   </div>
 
   <div class="replay-options">
     <mat-form-field>
       <mat-label>States per second</mat-label>
-      <mat-select>
-        <mat-option value="0.25">0.25</mat-option>
-        <mat-option value="0.5">0.5</mat-option>
-        <mat-option value="1">1</mat-option>
-        <mat-option value="2">2</mat-option>
-        <mat-option value="4">4</mat-option>
+      <mat-select [(value)]="statesPerSecond"
+        (selectionChange)="onStatesPerSecondChange($event)">
+        <mat-option *ngFor="let option of statesPerSecondOptions" [value]="option.value">
+          {{option.viewValue}}
+        </mat-option>
       </mat-select>
     </mat-form-field>
   </div>
