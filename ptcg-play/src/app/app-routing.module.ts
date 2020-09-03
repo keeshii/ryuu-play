@@ -9,6 +9,7 @@ import { LoginComponent } from './login/login/login.component';
 import { ProfileComponent } from './profile/profile.component';
 import { RankingComponent } from './ranking/ranking.component';
 import { RegisterComponent } from './login/register/register.component';
+import { ReplaysComponent } from './replays/replays.component';
 import { ResetPasswordComponent } from './login/reset-password/reset-password.component';
 import { TableComponent } from './table/table.component';
 
@@ -19,6 +20,7 @@ const routes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'ranking', component: RankingComponent, canActivate: [ CanActivateService ] },
     { path: 'register', component: RegisterComponent },
+    { path: 'replays', component: ReplaysComponent, canActivate: [ CanActivateService ] },
     { path: 'profile/:userId', component: ProfileComponent },
     { path: 'reset-password', component: ResetPasswordComponent },
     { path: 'table/:gameId', component: TableComponent, canActivate: [ CanActivateService ] },

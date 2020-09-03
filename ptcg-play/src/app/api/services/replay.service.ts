@@ -4,7 +4,7 @@ import { Base64, Replay, GameState } from 'ptcg-server';
 
 import { ApiService } from '../api.service';
 import { GameService } from './game.service';
-import { ReplayResponse } from '../interfaces/replay.interface';
+import { ReplayResponse, ReplayListResponse } from '../interfaces/replay.interface';
 
 
 @Injectable()
@@ -14,6 +14,10 @@ export class ReplayService {
     private api: ApiService,
     private gameService: GameService
   ) {}
+
+  public getList(page: number = 0, query: string = '') {
+    return this.api.get<ReplayListResponse>('/replays/list/' + page);
+  }
 
   public getMatchReplay(matchId: number) {
     return this.api.get<ReplayResponse>('/replays/match/' + matchId)

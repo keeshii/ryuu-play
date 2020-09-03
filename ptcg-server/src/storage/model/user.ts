@@ -1,6 +1,7 @@
 import { BaseEntity, Column, Entity, Unique, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Avatar } from './avatar';
 import { Deck } from './deck';
+import { Replay } from './replay';
 import { Rank, rankLevels } from '../../backend/interfaces/rank.enum';
 
 @Entity()
@@ -39,6 +40,9 @@ export class User extends BaseEntity {
 
   @OneToMany(type => Avatar, avatar => avatar.user)
   avatars!: Avatar[];
+
+  @OneToMany(type => Replay, replay => replay.user)
+  replays!: Replay[];
 
   public getRank(): Rank {
     let rank = rankLevels[0].rank;

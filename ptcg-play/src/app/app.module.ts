@@ -12,6 +12,7 @@ import { LoginModule } from './login/login.module';
 import { MainModule } from './main/main.module';
 import { ProfileModule } from './profile/profile.module';
 import { RankingModule } from './ranking/ranking.module';
+import { ReplaysModule } from './replays/replays.module';
 import { SharedModule } from './shared/shared.module';
 import { TableModule } from './table/table.module';
 
@@ -28,6 +29,7 @@ import { TableModule } from './table/table.module';
     MainModule,
     ProfileModule,
     RankingModule,
+    ReplaysModule,
     SharedModule,
     SkyhookDndModule.forRoot({ backend: MultiBackend, options: HTML5ToTouch }),
     TableModule

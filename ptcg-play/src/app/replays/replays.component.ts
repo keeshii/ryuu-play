@@ -1,26 +1,26 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
-import { RankingInfo } from 'ptcg-server';
+import { ReplayInfo } from 'ptcg-server';
 import { Subject } from 'rxjs';
 import { debounceTime, switchMap, takeUntil, map } from 'rxjs/operators';
 
 import { AlertService } from '../shared/alert/alert.service';
 import { ApiError } from '../api/api.error';
-import { RankingService } from '../api/services/ranking.service';
-import { RankingResponse, RankingSearch } from '../api/interfaces/ranking.interface';
+import { ReplayService } from '../api/services/replay.service';
+import { ReplayListResponse, ReplaySearch } from '../api/interfaces/replay.interface';
 import { SessionService } from '../shared/session/session.service';
 import { takeUntilDestroyed } from '../shared/operators/take-until-destroyed';
 import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'ptcg-ranking',
-  templateUrl: './ranking.component.html',
-  styleUrls: ['./ranking.component.scss']
+  templateUrl: './replays.component.html',
+  styleUrls: ['./replays.component.scss']
 })
-export class RankingComponent implements OnInit, OnDestroy {
+export class ReplaysComponent implements OnInit, OnDestroy {
 
-  public displayedColumns: string[] = ['position', 'ranking', 'user', 'actions'];
-  public ranking: RankingInfo[] = [];
+  public displayedColumns: string[] = ['name', 'player1', 'player2', 'created', 'actions'];
+  public replays: ReplayInfo[] = [];
   public loading = false;
   public searchValue: string;
   public pageIndex = 0;
@@ -29,12 +29,12 @@ export class RankingComponent implements OnInit, OnDestroy {
   public rankingTotal: number;
   public loggedUserId: number;
 
-  private rankingSearch$ = new Subject<RankingSearch>();
+  private replaysSearch$ = new Subject<ReplaySearch>();
   private searchValue$ = new Subject<string>();
 
   constructor(
     private alertService: AlertService,
-    private rankingService: RankingService,
+    private replayService: ReplayService,
     private sessionService: SessionService
   ) {
     this.initPagination();
@@ -50,14 +50,14 @@ export class RankingComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.rankingSearch$.pipe(
+    this.replaysSearch$.pipe(
       takeUntilDestroyed(this),
       switchMap(search => {
         this.loading = true;
-        return this.rankingService.getList(search.page, search.query).pipe(
-          takeUntil(this.rankingSearch$),
+        return this.replayService.getList(search.page, search.query).pipe(
+          takeUntil(this.replaysSearch$),
           takeUntilDestroyed(this),
-          map(response => [search, response] as [RankingSearch, RankingResponse])
+          map(response => [search, response] as [ReplaySearch, ReplayListResponse])
         );
       }),
     ).subscribe({
@@ -65,7 +65,7 @@ export class RankingComponent implements OnInit, OnDestroy {
         this.loading = false;
         this.searchValue = search.query;
         this.pageIndex = search.page;
-        this.ranking = response.ranking;
+        this.replays = response.replays;
         this.rankingTotal = response.total;
       },
       error: (error: ApiError) => {
@@ -79,11 +79,12 @@ export class RankingComponent implements OnInit, OnDestroy {
       debounceTime(300)
     ).subscribe({
       next: query => {
-        this.rankingSearch$.next({ page: 0, query });
+        this.replaysSearch$.next({ page: 0, query });
       }
     });
 
-    this.refresh();
+    // load initial table data
+    this.replaysSearch$.next({ query: this.searchValue, page: this.pageIndex });
   }
 
   public ngOnDestroy() {
@@ -101,22 +102,18 @@ export class RankingComponent implements OnInit, OnDestroy {
   public onSearch(value: string) {
     this.loading = true;
     return value === ''
-      ? this.rankingSearch$.next({ query: '', page: 0 })
+      ? this.replaysSearch$.next({ query: '', page: 0 })
       : this.searchValue$.next(value);
   }
 
   public onPageChange(event: PageEvent) {
-    this.rankingSearch$.next({
+    this.replaysSearch$.next({
       query: this.searchValue,
       page: event.pageIndex
     });
   }
 
-  public refresh() {
-    this.rankingSearch$.next({
-      query: this.searchValue,
-      page: this.pageIndex
-    });
+  public importFromFile() {
   }
 
 }

@@ -5,3 +5,4 @@ export * from './login.interface';
 export * from './profile.interface';
 export * from './rank.enum';
 export * from './ranking.interface';
+export * from './replay.interface';

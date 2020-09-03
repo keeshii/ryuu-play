@@ -1,0 +1,80 @@
+<ptcg-content [loading]="loading">
+  <mat-toolbar>
+    <mat-toolbar-row>
+      <h1>Replays</h1>
+
+      <span class="ptcg-u-spacer"></span>
+
+      <ptcg-search-box (search)="onSearch($event)"></ptcg-search-box>
+
+      <button mat-raised-button color="primary" (click)="importFromFile()">
+        Import from file
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <div class="ptcg-u-padding">
+    <table mat-table [dataSource]="replays" class="mat-elevation-z2">
+      <!-- Name -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let replay">
+          {{ replay.name }}
+        </td>
+      </ng-container>
+
+      <!-- Player 1 -->
+      <ng-container matColumnDef="player1">
+        <th mat-header-cell *matHeaderCellDef>Player</th>
+        <td mat-cell *matCellDef="let replay">
+          <ptcg-user-bar [user]="undefined"
+            [marked]="loggedUserId === 1">
+          </ptcg-user-bar>
+        </td>
+      </ng-container>
+
+      <!-- Player 2 -->
+      <ng-container matColumnDef="player2">
+        <th mat-header-cell *matHeaderCellDef>Player</th>
+        <td mat-cell *matCellDef="let replay">
+          <ptcg-user-bar [user]="undefined"
+            [marked]="loggedUserId === 2">
+          </ptcg-user-bar>
+        </td>
+      </ng-container>
+
+      <!-- Date -->
+      <ng-container matColumnDef="created">
+        <th mat-header-cell *matHeaderCellDef>Date</th>
+        <td mat-cell *matCellDef="let replay">{{replay.created}}</td>
+      </ng-container>
+
+      <!-- Actions -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let rank">
+          <button mat-button [matMenuTriggerFor]="menu">Actions</button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item
+              [routerLink]="['/profile', rank.user.userId]">
+              Show profile
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator hidePageSize="true"
+      [disabled]="loading"
+      [length]="rankingTotal"
+      [pageIndex]="pageIndex"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions"
+      (page)="onPageChange($event)">
+    </mat-paginator>
+  </div>
+
+</ptcg-content>
