@@ -1,9 +1,10 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, ManyToOne, Unique } from 'typeorm';
 
 import { User } from './user';
 import { GameWinner, ReplayPlayer } from '../../game';
 
 @Entity()
+@Unique(['user', 'name'])
 export class Replay extends BaseEntity {
 
   @PrimaryGeneratedColumn()

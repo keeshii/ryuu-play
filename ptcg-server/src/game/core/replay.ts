@@ -1,7 +1,7 @@
 import { gzip, ungzip } from 'pako';
 
 import { State, GameWinner } from "../store/state/state";
-import { ReplayPlayer } from "./replay-player";
+import { ReplayPlayer, ReplayOptions } from "./replay.interface";
 import { GameError, GameMessage } from "../game-error";
 import { SerializedState } from "../serializer/serializer.interface";
 import { StateSerializer } from "../serializer/state-serializer";
@@ -17,12 +17,17 @@ export class Replay {
   private diffs: SerializedState[] = [];
   private prevState: SerializedState | undefined;
   private serializer = new StateSerializer();
+  private options: ReplayOptions;
 
-  constructor() {
+  constructor(options: Partial<ReplayOptions> = {}) {
     this.player1 = { name: '', userId: 0, ranking: 0 };
     this.player2 = { name: '', userId: 0, ranking: 0 };
     this.winner = GameWinner.NONE;
     this.created = 0;
+    this.options = Object.assign({
+      readStates: true,
+      writeStates: true
+    }, options);
   }
 
   public getStateCount(): number {
@@ -81,12 +86,14 @@ export class Replay {
       this.player2 = data.player2;
       this.winner = data.winner;
       this.created = data.created;
-      this.turnMap = data.turnMap;
-      this.diffs = this.swapQuotes(data.states);
-      this.states = this.restoreStates(this.diffs);
-      this.prevState = this.states.length > 0
-        ? this.states[this.states.length - 1]
-        : undefined;
+      if (this.options.readStates) {
+        this.turnMap = data.turnMap;
+        this.diffs = this.swapQuotes(data.states);
+        this.states = this.restoreStates(this.diffs);
+        this.prevState = this.states.length > 0
+          ? this.states[this.states.length - 1]
+          : undefined;
+      }
     } catch (error) {
       throw new GameError(GameMessage.REPLAY_INVALID_STATE);
     }

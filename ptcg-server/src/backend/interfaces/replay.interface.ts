@@ -1,10 +1,11 @@
-import { ReplayPlayer, GameWinner } from "../../game";
+import { GameWinner } from "../../game";
+import { UserInfo } from "./core.interface";
 
 export interface ReplayInfo {
   replayId: number;
   name: string;
-  player1: ReplayPlayer;
-  player2: ReplayPlayer;
+  player1: UserInfo;
+  player2: UserInfo;
   winner: GameWinner;
   created: number;
 }

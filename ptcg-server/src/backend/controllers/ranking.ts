@@ -71,8 +71,4 @@ export class Ranking extends Controller {
     res.send({ok: true, ranking, total});
   }
 
-  private escapeLikeString(raw: string, escapeChar = '\\'): string {
-    return raw.replace(/[\\%_]/g, match => escapeChar + match);
-  }
-
 }

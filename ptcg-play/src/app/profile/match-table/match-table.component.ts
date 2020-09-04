@@ -92,4 +92,7 @@ export class MatchTableComponent implements OnInit, OnDestroy {
       });
   }
 
+  public saveReplay(matchId: number): void {
+  }
+
 }

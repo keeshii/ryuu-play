@@ -6,12 +6,15 @@ export interface ReplaySearch {
   query: string;
 }
 
-export interface ReplayResponse extends Response {
+export interface ReplayDataResponse extends Response {
   replayData: string;
 }
 
 export interface ReplayListResponse extends Response {
   replays: ReplayInfo[];
-  users: UserInfo[];
   total: number;
+}
+
+export interface ReplayResponse extends Response {
+  replay: ReplayInfo;
 }

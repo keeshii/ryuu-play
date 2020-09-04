@@ -5,7 +5,7 @@ import { State, GamePhase, GameWinner } from "../store/state/state";
 import { User, Match } from "../../storage";
 import { RankingCalculator } from "./ranking-calculator";
 import { Replay } from "./replay";
-import { ReplayPlayer } from "./replay-player";
+import { ReplayPlayer } from "./replay.interface";
 
 export class MatchRecorder {
 

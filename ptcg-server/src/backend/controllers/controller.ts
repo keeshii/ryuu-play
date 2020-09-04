@@ -1,4 +1,4 @@
-import * as express from 'express';
+import { Application } from 'express';
 import { Core } from '../../game/core/core';
 import { Storage, User } from '../../storage';
 import { UserInfo } from '../interfaces/core.interface';
@@ -6,7 +6,7 @@ import { UserInfo } from '../interfaces/core.interface';
 export interface ControllerClass {
   new(
     path: string,
-    app: express.Application,
+    app: Application,
     db: Storage,
     core: Core
   ): Controller;
@@ -16,7 +16,7 @@ export abstract class Controller {
 
   constructor(
     protected path: string,
-    protected app: express.Application,
+    protected app: Application,
     protected db: Storage,
     protected core: Core
   ) { }
@@ -39,6 +39,10 @@ export abstract class Controller {
       avatarFile: user.avatarFile,
       connected
     };
+  }
+
+  protected escapeLikeString(raw: string, escapeChar = '\\'): string {
+    return raw.replace(/[\\%_]/g, match => escapeChar + match);
   }
 }
 

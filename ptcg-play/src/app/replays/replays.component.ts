@@ -42,6 +42,17 @@ export class ReplaysComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
 
+    this.sessionService.get(session => session.users)
+      .pipe(takeUntilDestroyed(this))
+      .subscribe({
+        next: users => {
+          this.replays.forEach(replay => {
+            replay.player1 = users[replay.player1.userId] || replay.player1;
+            replay.player2 = users[replay.player2.userId] || replay.player2;
+          });
+        }
+      });
+
     this.sessionService.get(session => session.loggedUserId).pipe(
       takeUntilDestroyed(this)
     ).subscribe({

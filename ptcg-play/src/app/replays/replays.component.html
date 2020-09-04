@@ -27,7 +27,7 @@
       <ng-container matColumnDef="player1">
         <th mat-header-cell *matHeaderCellDef>Player</th>
         <td mat-cell *matCellDef="let replay">
-          <ptcg-user-bar [user]="undefined"
+          <ptcg-user-bar [user]="replay.player1"
             [marked]="loggedUserId === 1">
           </ptcg-user-bar>
         </td>
@@ -37,7 +37,7 @@
       <ng-container matColumnDef="player2">
         <th mat-header-cell *matHeaderCellDef>Player</th>
         <td mat-cell *matCellDef="let replay">
-          <ptcg-user-bar [user]="undefined"
+          <ptcg-user-bar [user]="replay.player2"
             [marked]="loggedUserId === 2">
           </ptcg-user-bar>
         </td>
@@ -46,7 +46,9 @@
       <!-- Date -->
       <ng-container matColumnDef="created">
         <th mat-header-cell *matHeaderCellDef>Date</th>
-        <td mat-cell *matCellDef="let replay">{{replay.created}}</td>
+        <td mat-cell *matCellDef="let replay">
+          {{replay.created | date }}
+        </td>
       </ng-container>
 
       <!-- Actions -->
@@ -55,9 +57,14 @@
         <td mat-cell *matCellDef="let rank">
           <button mat-button [matMenuTriggerFor]="menu">Actions</button>
           <mat-menu #menu="matMenu">
-            <button mat-menu-item
-              [routerLink]="['/profile', rank.user.userId]">
-              Show profile
+            <button mat-menu-item>
+              Show
+            </button>
+            <button mat-menu-item>
+              Delete
+            </button>
+            <button mat-menu-item>
+              Rename
             </button>
           </mat-menu>
         </td>
