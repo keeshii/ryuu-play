@@ -23,7 +23,7 @@ export class Replays extends Controller {
       where: [
         { user: { id: userId } }
       ],
-      order: { created: "DESC" },
+      order: { created: "DESC", name: "ASC" },
       skip: page * pageSize,
       take: pageSize
     });
@@ -57,7 +57,7 @@ export class Replays extends Controller {
 
     const [replayRows, total] = await Replay.findAndCount({
       where: { name: Like(`%${escapedQuery}%`), user: { id: userId } },
-      order: { created: "DESC" },
+      order: { created: "DESC", name: "ASC" },
       skip: page * pageSize,
       take: pageSize
     });
@@ -130,10 +130,11 @@ export class Replays extends Controller {
 
     const gameReplay = new GameReplay({ readStates: false, writeStates: false });
     try {
-      gameReplay.deserialize(match.replayData);
+      gameReplay.deserialize(Buffer.from(match.replayData).toString());
     } catch (error) {
       res.status(400);
       res.send({error: Errors.REPLAY_INVALID});
+      return;
     }
 
     let replay = new Replay();
@@ -149,7 +150,7 @@ export class Replays extends Controller {
       replay = await replay.save();
     } catch (error) {
       res.status(400);
-      res.send({error: Errors.NAME_DUPLICATE});
+      res.send({error: Errors.REPLAY_INVALID});
       return;
     }
 
@@ -220,7 +221,7 @@ export class Replays extends Controller {
       replay = await replay.save();
     } catch (error) {
       res.status(400);
-      res.send({error: Errors.NAME_DUPLICATE});
+      res.send({error: Errors.REPLAY_INVALID});
       return;
     }
 

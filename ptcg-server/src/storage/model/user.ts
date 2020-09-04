@@ -3,6 +3,7 @@ import { Avatar } from './avatar';
 import { Deck } from './deck';
 import { Replay } from './replay';
 import { Rank, rankLevels } from '../../backend/interfaces/rank.enum';
+import { bigint } from '../transformers/bigint';
 
 @Entity()
 @Unique(['name'])
@@ -23,13 +24,13 @@ export class User extends BaseEntity {
   @Column()
   public password: string = '';
 
-  @Column({ type: 'bigint' })
+  @Column({ type: 'bigint', transformer: [ bigint ] })
   public registered: number = 0;
   
-  @Column({ type: 'bigint' })
+  @Column({ type: 'bigint', transformer: [ bigint ] })
   public lastSeen: number = 0;
 
-  @Column({ type: 'bigint' })
+  @Column({ type: 'bigint', transformer: [ bigint ] })
   public lastRankingChange: number = 0;
 
   @Column()

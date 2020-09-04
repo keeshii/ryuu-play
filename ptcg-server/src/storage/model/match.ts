@@ -2,6 +2,7 @@ import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 't
 
 import { User } from './user';
 import { GameWinner } from '../../game';
+import { bigint } from '../transformers/bigint';
 
 @Entity()
 export class Match extends BaseEntity {
@@ -30,7 +31,7 @@ export class Match extends BaseEntity {
   @Column()
   public winner: GameWinner = GameWinner.NONE;
 
-  @Column({ type: 'bigint' })
+  @Column({ type: 'bigint', transformer: [ bigint ] })
   public created: number = Date.now();
 
   @Column({ type: 'blob' })

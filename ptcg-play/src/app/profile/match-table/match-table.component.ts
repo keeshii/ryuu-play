@@ -92,7 +92,30 @@ export class MatchTableComponent implements OnInit, OnDestroy {
       });
   }
 
-  public saveReplay(matchId: number): void {
+  public async saveReplay(matchId: number) {
+    const name = await this.getReplayName();
+    if (name === undefined) {
+      return;
+    }
+
+    this.loading = true;
+    this.replayService.saveMatch(matchId, name).pipe(
+      finalize(() => { this.loading = false; }),
+      takeUntilDestroyed(this)
+    ).subscribe(() => {
+      this.alertService.toast('Replay saved.');
+    }, (error: ApiError) => {
+      this.alertService.toast('Error occured, try again.');
+    });
+  }
+
+  private getReplayName(name: string = ''): Promise<string | undefined> {
+    return this.alertService.inputName({
+      title: 'Enter replay name',
+      placeholder: 'Replay name',
+      invalidValues: [],
+      value: name
+    });
   }
 
 }

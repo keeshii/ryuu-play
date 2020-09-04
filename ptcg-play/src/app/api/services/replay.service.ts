@@ -61,13 +61,13 @@ export class ReplayService {
   }
 
   public deleteReplay(replayId: number) {
-    return this.api.post<Response>('/decks/delete', {
+    return this.api.post<Response>('/replays/delete', {
       id: replayId
     });
   }
 
   public rename(replayId: number, name: string) {
-    return this.api.post<Response>('/decks/rename', {
+    return this.api.post<Response>('/replays/rename', {
       id: replayId,
       name
     });

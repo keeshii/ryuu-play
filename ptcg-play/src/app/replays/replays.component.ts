@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
-import { ReplayInfo } from 'ptcg-server';
+import { ReplayInfo, GameWinner } from 'ptcg-server';
+import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { debounceTime, switchMap, takeUntil, map } from 'rxjs/operators';
+import { debounceTime, switchMap, takeUntil, map, finalize } from 'rxjs/operators';
 
 import { AlertService } from '../shared/alert/alert.service';
 import { ApiError } from '../api/api.error';
@@ -19,6 +20,7 @@ import { environment } from '../../environments/environment';
 })
 export class ReplaysComponent implements OnInit, OnDestroy {
 
+  public GameWinner = GameWinner;
   public displayedColumns: string[] = ['name', 'player1', 'player2', 'created', 'actions'];
   public replays: ReplayInfo[] = [];
   public loading = false;
@@ -35,6 +37,7 @@ export class ReplaysComponent implements OnInit, OnDestroy {
   constructor(
     private alertService: AlertService,
     private replayService: ReplayService,
+    private router: Router,
     private sessionService: SessionService
   ) {
     this.initPagination();
@@ -94,8 +97,7 @@ export class ReplaysComponent implements OnInit, OnDestroy {
       }
     });
 
-    // load initial table data
-    this.replaysSearch$.next({ query: this.searchValue, page: this.pageIndex });
+    this.refreshList();
   }
 
   public ngOnDestroy() {
@@ -108,6 +110,57 @@ export class ReplaysComponent implements OnInit, OnDestroy {
     }
     this.pageSizeOptions = [ pageSize ];
     this.pageSize = pageSize;
+  }
+
+  public showReplay(replayId: number) {
+    this.loading = true;
+    this.replayService.getReplay(replayId)
+      .pipe(
+        finalize(() => { this.loading = false; }),
+        takeUntilDestroyed(this)
+      )
+      .subscribe({
+        next: gameState => {
+          if (gameState !== undefined) {
+            this.router.navigate(['/table', gameState.localId]);
+          }
+        },
+        error: (error: ApiError) => {
+          this.alertService.toast(error.message);
+        }
+      });
+  }
+
+  public async deleteReplay(replayId: number) {
+    if (!await this.alertService.confirm('Delete the selected replay?')) {
+      return;
+    }
+    this.loading = true;
+    this.replayService.deleteReplay(replayId).pipe(
+      finalize(() => { this.loading = false; }),
+      takeUntilDestroyed(this)
+    ).subscribe(() => {
+      this.refreshList();
+    }, (error: ApiError) => {
+      this.alertService.toast('Error occured, try again.');
+    });
+  }
+
+  public async renameReplay(replayId: number, previousName: string) {
+    const name = await this.getReplayName(previousName);
+    if (name === undefined) {
+      return;
+    }
+
+    this.loading = true;
+    this.replayService.rename(replayId, name).pipe(
+      finalize(() => { this.loading = false; }),
+      takeUntilDestroyed(this)
+    ).subscribe(() => {
+      this.refreshList();
+    }, (error: ApiError) => {
+      this.alertService.toast('Error occured, try again.');
+    });
   }
 
   public onSearch(value: string) {
@@ -125,6 +178,22 @@ export class ReplaysComponent implements OnInit, OnDestroy {
   }
 
   public importFromFile() {
+  }
+
+  private refreshList() {
+    this.replaysSearch$.next({
+      query: this.searchValue,
+      page: this.pageIndex
+    });
+  }
+
+  private getReplayName(name: string = ''): Promise<string | undefined> {
+    return this.alertService.inputName({
+      title: 'Enter replay name',
+      placeholder: 'Replay name',
+      invalidValues: [],
+      value: name
+    });
   }
 
 }

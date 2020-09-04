@@ -1,10 +1,10 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, ManyToOne, Unique } from 'typeorm';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
 import { User } from './user';
 import { GameWinner, ReplayPlayer } from '../../game';
+import { bigint } from '../transformers/bigint';
 
 @Entity()
-@Unique(['user', 'name'])
 export class Replay extends BaseEntity {
 
   @PrimaryGeneratedColumn()
@@ -25,7 +25,7 @@ export class Replay extends BaseEntity {
   @Column()
   public winner: GameWinner = GameWinner.NONE;
 
-  @Column({ type: 'bigint' })
+  @Column({ type: 'bigint', transformer: [ bigint ] })
   public created: number = Date.now();
 
   @Column({ type: 'blob' })

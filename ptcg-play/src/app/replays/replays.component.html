@@ -28,7 +28,7 @@
         <th mat-header-cell *matHeaderCellDef>Player</th>
         <td mat-cell *matCellDef="let replay">
           <ptcg-user-bar [user]="replay.player1"
-            [marked]="loggedUserId === 1">
+            [marked]="replay.winner === GameWinner.PLAYER_1">
           </ptcg-user-bar>
         </td>
       </ng-container>
@@ -38,7 +38,7 @@
         <th mat-header-cell *matHeaderCellDef>Player</th>
         <td mat-cell *matCellDef="let replay">
           <ptcg-user-bar [user]="replay.player2"
-            [marked]="loggedUserId === 2">
+            [marked]="replay.winner === GameWinner.PLAYER_2">
           </ptcg-user-bar>
         </td>
       </ng-container>
@@ -47,23 +47,23 @@
       <ng-container matColumnDef="created">
         <th mat-header-cell *matHeaderCellDef>Date</th>
         <td mat-cell *matCellDef="let replay">
-          {{replay.created | date }}
+          {{replay.created | date:'yyyy-MM-dd HH:mm' }}
         </td>
       </ng-container>
 
       <!-- Actions -->
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef>Actions</th>
-        <td mat-cell *matCellDef="let rank">
+        <td mat-cell *matCellDef="let replay">
           <button mat-button [matMenuTriggerFor]="menu">Actions</button>
           <mat-menu #menu="matMenu">
-            <button mat-menu-item>
+            <button mat-menu-item (click)="showReplay(replay.replayId)">
               Show
             </button>
-            <button mat-menu-item>
+            <button mat-menu-item (click)="deleteReplay(replay.replayId)">
               Delete
             </button>
-            <button mat-menu-item>
+            <button mat-menu-item (click)="renameReplay(replay.replayId, replay.name)">
               Rename
             </button>
           </mat-menu>
