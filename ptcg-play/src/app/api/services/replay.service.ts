@@ -22,8 +22,12 @@ export class ReplayService {
       : this.api.post<ReplayListResponse>('/replays/list/' + page, { query });
   }
 
+  public getMatchReplayData(matchId: number) {
+    return this.api.get<ReplayDataResponse>('/replays/match/' + matchId);
+  }
+
   public getMatchReplay(matchId: number) {
-    return this.api.get<ReplayDataResponse>('/replays/match/' + matchId)
+    return this.getMatchReplayData(matchId)
       .pipe(map(response => {
         const replay = new Replay({ readStates: true, writeStates: false });
         const base64 = new Base64();
@@ -39,8 +43,12 @@ export class ReplayService {
       }));
   }
 
+  public getReplayData(replayId: number) {
+    return this.api.get<ReplayDataResponse>('/replays/get/' + replayId);
+  }
+
   public getReplay(replayId: number) {
-    return this.api.get<ReplayDataResponse>('/replays/get/' + replayId)
+    return this.getReplayData(replayId)
       .pipe(map(response => {
         const replay = new Replay({ readStates: true, writeStates: false });
         const base64 = new Base64();

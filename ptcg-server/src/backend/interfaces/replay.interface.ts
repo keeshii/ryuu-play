@@ -9,3 +9,8 @@ export interface ReplayInfo {
   winner: GameWinner;
   created: number;
 }
+
+export interface ReplayImport {
+  name: string;
+  replayData: string;
+}

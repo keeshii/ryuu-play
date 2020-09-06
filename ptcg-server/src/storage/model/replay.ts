@@ -3,6 +3,7 @@ import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 't
 import { User } from './user';
 import { GameWinner, ReplayPlayer } from '../../game';
 import { bigint } from '../transformers/bigint';
+import { blob } from '../transformers/blob';
 
 @Entity()
 export class Replay extends BaseEntity {
@@ -28,7 +29,7 @@ export class Replay extends BaseEntity {
   @Column({ type: 'bigint', transformer: [ bigint ] })
   public created: number = Date.now();
 
-  @Column({ type: 'blob' })
+  @Column({ type: 'blob', transformer: [ blob ] })
   public replayData: string = '';
 
 }

@@ -49,7 +49,7 @@ export class Login extends Controller {
     user.name = body.name;
     user.email = body.email;
     user.password = Md5.init(body.password);
-    user.registered = Date.now() / 1000;
+    user.registered = Date.now();
     await user.save();
 
     res.send({ok: true});
@@ -96,7 +96,8 @@ export class Login extends Controller {
       avatarsUrl: config.backend.avatarsUrl,
       avatarFileSize: config.backend.avatarFileSize,
       avatarMinSize: config.backend.avatarMinSize,
-      avatarMaxSize: config.backend.avatarMaxSize
+      avatarMaxSize: config.backend.avatarMaxSize,
+      replayFileSize: config.backend.replayFileSize
     };
   }
 

@@ -5,8 +5,8 @@ import { AuthToken, Validate, check } from '../services';
 import { Controller, Get, Post } from './controller';
 import { Errors } from '../common/errors';
 import { Match, User, Replay } from '../../storage';
-import { Replay as GameReplay } from '../../game';
-import { ReplayInfo } from '../interfaces/replay.interface';
+import { Replay as GameReplay, ReplayPlayer } from '../../game';
+import { ReplayInfo, ReplayImport } from '../interfaces/replay.interface';
 import { Base64 } from '../../utils';
 import { config } from '../../config';
 
@@ -82,7 +82,7 @@ export class Replays extends Controller {
     }
 
     const base64 = new Base64();
-    const replayData = base64.encode(Buffer.from(entity.replayData).toString());
+    const replayData = base64.encode(entity.replayData);
     res.send({ok: true, replayData});
   }
 
@@ -99,7 +99,7 @@ export class Replays extends Controller {
     }
 
     const base64 = new Base64();
-    const replayData = base64.encode(Buffer.from(entity.replayData).toString());
+    const replayData = base64.encode(entity.replayData);
     res.send({ok: true, replayData});
   }
 
@@ -130,7 +130,7 @@ export class Replays extends Controller {
 
     const gameReplay = new GameReplay({ readStates: false, writeStates: false });
     try {
-      gameReplay.deserialize(Buffer.from(match.replayData).toString());
+      gameReplay.deserialize(match.replayData);
     } catch (error) {
       res.status(400);
       res.send({error: Errors.REPLAY_INVALID});
@@ -229,6 +229,81 @@ export class Replays extends Controller {
       id: replay.id,
       name: replay.name
     }});
+  }
+
+  @Post('/import')
+  @AuthToken()
+  @Validate({
+    name: check().minLength(3).maxLength(32),
+    replayData: check().isString().required(),
+  })
+  public async onImport(req: Request, res: Response) {
+    const body: ReplayImport = req.body;
+
+    const userId: number = req.body.userId;
+    const user = await User.findOne(userId);
+
+    if (user === undefined) {
+      res.status(400);
+      res.send({error: Errors.PROFILE_INVALID});
+      return;
+    }
+
+    const base64 = new Base64();
+    const gameReplay = new GameReplay();
+
+    try {
+      const replayData = base64.decode(body.replayData);
+      gameReplay.deserialize(replayData);
+
+      gameReplay.player1 = await this.syncReplayPlayer(gameReplay.player1);
+      gameReplay.player2 = await this.syncReplayPlayer(gameReplay.player2);
+      gameReplay.created = Date.now();
+    } catch (error) {
+      res.status(400);
+      res.send({error: Errors.REPLAY_INVALID});
+      return;
+    }
+
+    let replay = new Replay();
+    replay.user = user;
+    replay.name = body.name;
+    replay.player1 = gameReplay.player1;
+    replay.player2 = gameReplay.player2;
+    replay.winner = gameReplay.winner;
+    replay.created = gameReplay.created;
+
+    try {
+      replay.replayData = gameReplay.serialize();
+      replay = await replay.save();
+    } catch (error) {
+      res.status(400);
+      res.send({error: Errors.REPLAY_INVALID});
+      return;
+    }
+
+    const userMap = await this.buildUserMap([replay]);
+    const replayInfo = this.buildReplayInfo(replay, userMap);
+
+    res.send({ok: true, replay: replayInfo});
+  }
+
+  private async syncReplayPlayer(player: ReplayPlayer): Promise<ReplayPlayer> {
+    const name = String(player.name);
+    const ranking = parseInt(String(player.ranking), 10);
+    const userId = 0;
+
+    const userRows = await User.find({ where: { name: player.name } });
+    if (userRows.length > 0) {
+      const user = userRows[0];
+      return {
+        userId: user.id,
+        name: user.name,
+        ranking: user.ranking
+      };
+    }
+
+    return { userId, name, ranking };
   }
 
   private async buildUserMap(replays: Replay[]): Promise<{[id: number]: User}> {

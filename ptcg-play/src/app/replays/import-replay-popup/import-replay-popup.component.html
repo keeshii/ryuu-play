@@ -1,0 +1,89 @@
+<h2 mat-dialog-title>Import replay</h2>
+
+<mat-dialog-content>
+
+  <mat-progress-bar *ngIf="loading" color="accent" mode="indeterminate" class="ptcg-u-top">
+  </mat-progress-bar>
+
+  <table class="ptcg-replay-preview" *ngIf="replay">
+    <tr>
+      <th>Date</th>
+      <td>{{ replay.created | date:'yyyy-MM-dd HH:mm' }}</td>
+    </tr>
+    <tr>
+      <th>Player 1</th>
+      <td>
+        <ptcg-user-bar [user]="player1"
+          [marked]="replay.winner === GameWinner.PLAYER_1">
+        </ptcg-user-bar>
+      </td>
+    </tr>
+    <tr>
+      <th>Player 2</th>
+      <td>
+        <ptcg-user-bar [user]="player2"
+          [marked]="replay.winner === GameWinner.PLAYER_2">
+        </ptcg-user-bar>
+      </td>
+    </tr>
+    <tr>
+      <th>States</th>
+      <td>
+        {{ statesCount }}
+      </td>
+    </tr>
+    <tr>
+      <th>Turns</th>
+      <td>
+        {{ turnsCount }}
+      </td>
+    </tr>
+  </table>
+
+  <form #form="ngForm" autocomplete="off">
+
+    <!-- Avatar image -->
+    <mat-form-field>
+      <mat-label>Replay file</mat-label>
+      <ptcg-file-input #replayFileInput required
+        ptcgErrorValidator [ptcgErrorValue]="replayError"
+        ptcgFileSizeValidator [maxFileSize]="maxFileSize"
+        name="replay" accept="jpg|jpeg|png"
+        [disabled]="loading"
+        [(ngModel)]="replayFile" #replayField="ngModel"
+        (ngModelChange)="updatePreview($event)">
+      </ptcg-file-input>
+      <button mat-icon-button matSuffix
+        *ngIf="!replayFileInput.empty"
+        [disabled]="loading"
+        (click)="replayFileInput.clear($event)">
+        <mat-icon>clear</mat-icon>
+      </button>
+      <mat-error>
+        <div *ngIf="replayField.errors?.ptcgError">INVALID_REPLAY</div>
+        <div *ngIf="replayField.errors?.maxFileSize">MAX_FILE_SIZE</div>
+        <div *ngIf="replayField.errors?.required">IMAGE_IS_REQUIRED</div>
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Avatar name -->
+    <mat-form-field>
+      <mat-label>Replay name</mat-label>
+      <input matInput placeholder="Replay name" name="name"
+        [(ngModel)]="name" [disabled]="loading" #nameField="ngModel"
+        ptcgNameValidator [ptcgInvalidValue]="invalidName" required>
+      <mat-error>
+        <div *ngIf="nameField.errors?.name">VALIDATION_INVALID_NAME</div>
+      </mat-error>
+    </mat-form-field>
+
+  </form>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" (click)="importReplay()" [disabled]="form.invalid">
+    Import
+  </button>
+</mat-dialog-actions>

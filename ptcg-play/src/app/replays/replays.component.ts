@@ -7,6 +7,8 @@ import { debounceTime, switchMap, takeUntil, map, finalize } from 'rxjs/operator
 
 import { AlertService } from '../shared/alert/alert.service';
 import { ApiError } from '../api/api.error';
+import { ImportReplayPopupService } from './import-replay-popup/import-replay-popup.service';
+import { ReplayExportService } from './replay-export.service';
 import { ReplayService } from '../api/services/replay.service';
 import { ReplayListResponse, ReplaySearch } from '../api/interfaces/replay.interface';
 import { SessionService } from '../shared/session/session.service';
@@ -36,6 +38,8 @@ export class ReplaysComponent implements OnInit, OnDestroy {
 
   constructor(
     private alertService: AlertService,
+    private importReplayPopupService: ImportReplayPopupService,
+    private replayExportService: ReplayExportService,
     private replayService: ReplayService,
     private router: Router,
     private sessionService: SessionService
@@ -131,6 +135,24 @@ export class ReplaysComponent implements OnInit, OnDestroy {
       });
   }
 
+  public exportReplay(replayId: number, name: string) {
+    this.loading = true;
+    this.replayService.getReplayData(replayId)
+      .pipe(
+        finalize(() => { this.loading = false; }),
+        takeUntilDestroyed(this)
+      )
+      .subscribe({
+        next: response => {
+          const base64 = response.replayData;
+          this.replayExportService.downloadReplay(base64, name);
+        },
+        error: (error: ApiError) => {
+          this.alertService.toast(error.message);
+        }
+      });
+  }
+
   public async deleteReplay(replayId: number) {
     if (!await this.alertService.confirm('Delete the selected replay?')) {
       return;
@@ -178,6 +200,7 @@ export class ReplaysComponent implements OnInit, OnDestroy {
   }
 
   public importFromFile() {
+    this.importReplayPopupService.openDialog();
   }
 
   private refreshList() {
