@@ -11,15 +11,15 @@ export class ProfileService {
   ) {}
 
   public getMe() {
-    return this.api.get<ProfileResponse>('/profile/me');
+    return this.api.get<ProfileResponse>('/v1/profile/me');
   }
 
   public getUser(userId: number) {
-    return this.api.get<ProfileResponse>('/profile/get/' + userId);
+    return this.api.get<ProfileResponse>('/v1/profile/get/' + userId);
   }
 
   public getMatchHistory(userId: number) {
-    return this.api.get<MatchHistoryResponse>('/profile/matchHistory/' + userId);
+    return this.api.get<MatchHistoryResponse>('/v1/profile/matchHistory/' + userId);
   }
 
 }

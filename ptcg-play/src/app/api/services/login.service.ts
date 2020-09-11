@@ -16,7 +16,7 @@ export class LoginService {
   ) {}
 
   public login(name: string, password: string) {
-    return this.api.post<LoginResponse>('/login', { name, password })
+    return this.api.post<LoginResponse>('/v1/login', { name, password })
       .pipe(map(response => {
         const apiVersion = response.config.apiVersion;
         if (environment.apiVersion !== apiVersion) {
@@ -32,7 +32,7 @@ export class LoginService {
 
   public register(name: string, password: string, email: string, code?: string) {
     return this.api.post<LoginResponse>(
-      '/login/register', { name, password, email, serverPassword: code });
+      '/v1/login/register', { name, password, email, serverPassword: code });
   }
 
   public logout() {

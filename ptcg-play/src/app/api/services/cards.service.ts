@@ -11,7 +11,7 @@ export class CardsService {
   ) {}
 
   public getAll() {
-    return this.api.get<CardsResponse>('/cards/all');
+    return this.api.get<CardsResponse>('/v1/cards/all');
   }
 
 }

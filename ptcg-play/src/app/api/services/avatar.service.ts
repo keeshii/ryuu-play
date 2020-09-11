@@ -13,31 +13,31 @@ export class AvatarService {
   ) {}
 
   public getList() {
-    return this.api.get<AvatarListResponse>('/avatars/list');
+    return this.api.get<AvatarListResponse>('/v1/avatars/list');
   }
 
   public addAvatar(avatarName: string, imageBase64: string) {
-    return this.api.post<AvatarResponse>('/avatars/add', {
+    return this.api.post<AvatarResponse>('/v1/avatars/add', {
       name: avatarName,
       imageBase64
     });
   }
 
   public deleteAvatar(avatarId: number) {
-    return this.api.post<Response>('/avatars/delete', {
+    return this.api.post<Response>('/v1/avatars/delete', {
       id: avatarId
     });
   }
 
   public rename(avatarId: number, name: string) {
-    return this.api.post<AvatarResponse>('/avatars/rename', {
+    return this.api.post<AvatarResponse>('/v1/avatars/rename', {
       id: avatarId,
       name
     });
   }
 
   public markAsDefault(avatarId: number) {
-    return this.api.post<Response>('/avatars/markAsDefault', {
+    return this.api.post<Response>('/v1/avatars/markAsDefault', {
       id: avatarId
     });
   }

@@ -18,12 +18,12 @@ export class ReplayService {
 
   public getList(page: number = 0, query: string = '') {
     return query === ''
-      ? this.api.get<ReplayListResponse>('/replays/list/' + page)
-      : this.api.post<ReplayListResponse>('/replays/list/' + page, { query });
+      ? this.api.get<ReplayListResponse>('/v1/replays/list/' + page)
+      : this.api.post<ReplayListResponse>('/v1/replays/list/' + page, { query });
   }
 
   public getMatchReplayData(matchId: number) {
-    return this.api.get<ReplayDataResponse>('/replays/match/' + matchId);
+    return this.api.get<ReplayDataResponse>('/v1/replays/match/' + matchId);
   }
 
   public getMatchReplay(matchId: number) {
@@ -44,7 +44,7 @@ export class ReplayService {
   }
 
   public getReplayData(replayId: number) {
-    return this.api.get<ReplayDataResponse>('/replays/get/' + replayId);
+    return this.api.get<ReplayDataResponse>('/v1/replays/get/' + replayId);
   }
 
   public getReplay(replayId: number) {
@@ -65,17 +65,17 @@ export class ReplayService {
   }
 
   public saveMatch(matchId: number, name: string) {
-    return this.api.post<ReplayResponse>('/replays/save', { id: matchId, name });
+    return this.api.post<ReplayResponse>('/v1/replays/save', { id: matchId, name });
   }
 
   public deleteReplay(replayId: number) {
-    return this.api.post<Response>('/replays/delete', {
+    return this.api.post<Response>('/v1/replays/delete', {
       id: replayId
     });
   }
 
   public rename(replayId: number, name: string) {
-    return this.api.post<Response>('/replays/rename', {
+    return this.api.post<Response>('/v1/replays/rename', {
       id: replayId,
       name
     });

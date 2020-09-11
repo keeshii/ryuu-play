@@ -13,8 +13,8 @@ export class RankingService {
 
   public getList(page: number = 0, query: string = '') {
     return query === ''
-      ? this.api.get<RankingResponse>('/ranking/list/' + page)
-      : this.api.post<RankingResponse>('/ranking/list/' + page, { query });
+      ? this.api.get<RankingResponse>('/v1/ranking/list/' + page)
+      : this.api.post<RankingResponse>('/v1/ranking/list/' + page, { query });
   }
 
 }

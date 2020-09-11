@@ -44,14 +44,14 @@ export class App {
 
     app.use(json({limit: 512 + config.backend.avatarFileSize * 4}));
     app.use(cors());
-    define('/avatars', Avatars);
-    define('/cards', Cards);
-    define('/decks', Decks);
-    define('/game', Game);
-    define('/login', Login);
-    define('/profile', Profile);
-    define('/ranking', Ranking);
-    define('/replays', Replays);
+    define('/v1/avatars', Avatars);
+    define('/v1/cards', Cards);
+    define('/v1/decks', Decks);
+    define('/v1/game', Game);
+    define('/v1/login', Login);
+    define('/v1/profile', Profile);
+    define('/v1/ranking', Ranking);
+    define('/v1/replays', Replays);
 
     if (config.sets.scansDir) {
       app.use('/scans', express.static(config.sets.scansDir));
