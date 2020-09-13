@@ -7,19 +7,22 @@ import { PokemonCardList } from "../store/state/pokemon-card-list";
 export class CardListSerializer implements Serializer<CardList> {
 
   public readonly types = ['CardList', 'PokemonCardList'];
+  public readonly classes = [CardList, PokemonCardList];
 
   constructor () { }
 
   public serialize(cardList: CardList, context: SerializerContext): Serialized {
     const data: any = { ...cardList };
+    let constructorName = 'CardList';
 
     if (cardList instanceof PokemonCardList && cardList.tool !== undefined) {
       data.tool = this.toIndex(cardList.tool, context);
+      constructorName = 'PokemonCardList';
     }
 
     return {
       ...data,
-      _type: cardList.constructor.name,
+      _type: constructorName,
       cards: cardList.cards.map(card => this.toIndex(card, context))
     };
   }

@@ -22,10 +22,10 @@ export class StateSerializer {
 
   constructor() {
     this.serializers = [
-      new GenericSerializer(State),
-      new GenericSerializer(Rules),
-      new GenericSerializer(Player),
-      new GenericSerializer(Marker),
+      new GenericSerializer(State, 'State'),
+      new GenericSerializer(Rules, 'Rules'),
+      new GenericSerializer(Player, 'Player'),
+      new GenericSerializer(Marker, 'Marker'),
       new CardSerializer(),
       new CardListSerializer(),
       new StateLogSerializer(),
@@ -55,10 +55,7 @@ export class StateSerializer {
         if (name === 'Object') {
           return value;
         }
-        let serializer = serializers.find(s => s.types.includes(name));
-        if (value instanceof Card && serializer === undefined) {
-          serializer = serializers.find(s => s.types.includes('Card'));
-        }
+        let serializer = serializers.find(s => s.classes.some(c => value instanceof c));
         if (serializer !== undefined) {
           return serializer.serialize(value, context);
         }

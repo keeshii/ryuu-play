@@ -3,13 +3,15 @@ import { SerializerContext, Serialized, Serializer } from "./serializer.interfac
 export class GenericSerializer<T extends Object> implements Serializer<T> {
 
   public types: string[];
+  public classes: (new () => T)[];
 
-  constructor(private creatorClass: new () => T) {
-    this.types = [creatorClass.name];
+  constructor(private creatorClass: new () => T, private constructorName: string) {
+    this.types = [constructorName];
+    this.classes = [creatorClass];
   }
 
   public serialize(state: T, context: SerializerContext): Serialized {
-    const constructorName = state.constructor.name;
+    const constructorName = this.constructorName;
     return {
       _type: constructorName,
       ...state

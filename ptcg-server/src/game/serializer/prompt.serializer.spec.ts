@@ -3,6 +3,10 @@ import { Prompt } from "../store/prompts/prompt";
 import { PromptSerializer } from "./prompt.serializer";
 import { SerializerContext } from "./serializer.interface";
 
+class UnknownPrompt extends Prompt<any> {
+  public readonly type = 'Unknown';
+}
+
 describe('PromptSerializer', () => {
   let promptSerializer: PromptSerializer;
   let context: SerializerContext;
@@ -23,6 +27,16 @@ describe('PromptSerializer', () => {
     expect(restored.message).toEqual('message');
     expect(restored instanceof AlertPrompt).toBeTruthy();
     expect(restored instanceof Prompt).toBeTruthy();
+  });
+
+  it('Should throw exception when unknown prompt type', () => {
+    // given
+    const prompt = new UnknownPrompt(1);
+    const message = 'Unknown prompt type \'Unknown\'.'
+    // then
+    expect(function() {
+      promptSerializer.serialize(prompt, context)
+    }).toThrowError(message)
   });
 
   it('Should throw exception when unknown object type', () => {

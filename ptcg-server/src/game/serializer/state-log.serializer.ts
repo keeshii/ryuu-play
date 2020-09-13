@@ -4,13 +4,14 @@ import { StateLog } from "../store/state/state-log";
 export class StateLogSerializer implements Serializer<StateLog> {
 
   public readonly types = ['StateLog'];
+  public readonly classes = [StateLog];
 
   constructor () { }
 
   public serialize(stateLog: StateLog, context: SerializerContext): Serialized {
     return {
       ...stateLog,
-      _type: stateLog.constructor.name
+      _type: 'StateLog'
     };
   }
 
