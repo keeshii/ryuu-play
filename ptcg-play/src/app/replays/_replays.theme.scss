@@ -1,0 +1,13 @@
+@import '~@angular/material/theming';
+
+@mixin ptcg-replays-theme($theme) {
+  $background: map-get($theme, background);
+
+  $avatar-table-background-color: mat-color($background, hover);
+
+  ptcg-import-replay-popup {
+    .ptcg-replay-preview {
+      background-color: $avatar-table-background-color;
+    }
+  }
+}

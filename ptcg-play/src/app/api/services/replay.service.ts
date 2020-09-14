@@ -81,4 +81,8 @@ export class ReplayService {
     });
   }
 
+  public import(replayData: string, name: string) {
+    return this.api.post<ReplayResponse>('/v1/replays/import', { replayData, name });
+  }
+
 }

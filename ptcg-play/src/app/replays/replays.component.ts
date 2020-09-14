@@ -200,7 +200,15 @@ export class ReplaysComponent implements OnInit, OnDestroy {
   }
 
   public importFromFile() {
-    this.importReplayPopupService.openDialog();
+    const dialogRef = this.importReplayPopupService.openDialog();
+    dialogRef.afterClosed()
+      .pipe(takeUntilDestroyed(this))
+      .subscribe({
+        next: avatar => {
+          if (avatar) {
+            this.refreshList();
+          }
+      }});
   }
 
   private refreshList() {

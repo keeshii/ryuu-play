@@ -5,40 +5,50 @@
   <mat-progress-bar *ngIf="loading" color="accent" mode="indeterminate" class="ptcg-u-top">
   </mat-progress-bar>
 
-  <table class="ptcg-replay-preview" *ngIf="replay">
-    <tr>
-      <th>Date</th>
-      <td>{{ replay.created | date:'yyyy-MM-dd HH:mm' }}</td>
-    </tr>
-    <tr>
-      <th>Player 1</th>
-      <td>
-        <ptcg-user-bar [user]="player1"
-          [marked]="replay.winner === GameWinner.PLAYER_1">
-        </ptcg-user-bar>
-      </td>
-    </tr>
-    <tr>
-      <th>Player 2</th>
-      <td>
-        <ptcg-user-bar [user]="player2"
-          [marked]="replay.winner === GameWinner.PLAYER_2">
-        </ptcg-user-bar>
-      </td>
-    </tr>
-    <tr>
-      <th>States</th>
-      <td>
-        {{ statesCount }}
-      </td>
-    </tr>
-    <tr>
-      <th>Turns</th>
-      <td>
-        {{ turnsCount }}
-      </td>
-    </tr>
-  </table>
+  <mat-card class="ptcg-replay-preview mat-elevation-z2" *ngIf="!replayError && replay">
+    <mat-card-content>
+      <table>
+        <tr>
+          <th>File name</th>
+          <td>{{ replayFile.files[0].name }}</td>
+        </tr>
+        <tr>
+          <th>Date</th>
+          <td>{{ replay.created | date:'yyyy-MM-dd HH:mm' }}</td>
+        </tr>
+        <tr>
+          <th>Player 1</th>
+          <td>
+            {{ replay.player1.name }}
+            <span *ngIf="replay.winner === GameWinner.PLAYER_1">
+              (winner)
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <th>Player 2</th>
+          <td>
+            {{ replay.player2.name }}
+            <span *ngIf="replay.winner === GameWinner.PLAYER_2">
+              (winner)
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <th>States</th>
+          <td>
+            {{ statesCount }}
+          </td>
+        </tr>
+        <tr>
+          <th>Turns</th>
+          <td>
+            {{ turnsCount }}
+          </td>
+        </tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
 
   <form #form="ngForm" autocomplete="off">
 
@@ -62,7 +72,7 @@
       <mat-error>
         <div *ngIf="replayField.errors?.ptcgError">INVALID_REPLAY</div>
         <div *ngIf="replayField.errors?.maxFileSize">MAX_FILE_SIZE</div>
-        <div *ngIf="replayField.errors?.required">IMAGE_IS_REQUIRED</div>
+        <div *ngIf="replayField.errors?.required">REPLAY_IS_REQUIRED</div>
       </mat-error>
     </mat-form-field>
 
