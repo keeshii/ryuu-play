@@ -5,6 +5,7 @@ import { GameError, GameMessage } from "../game-error";
 export class CardSerializer implements Serializer<Card> {
 
   public readonly types = ['Card'];
+  public readonly classes = [Card];
 
   constructor () { }
 

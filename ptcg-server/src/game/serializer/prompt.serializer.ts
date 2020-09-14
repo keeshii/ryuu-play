@@ -19,41 +19,49 @@ import { ShuffleDeckPrompt } from "../store/prompts/shuffle-prompt";
 export class PromptSerializer implements Serializer<Prompt<any>> {
 
   public readonly types: string[];
-  private prompts: (new (...params: any[]) => Prompt<any>)[] = [
-    AlertPrompt,
-    AttachEnergyPrompt,
-    ChooseCardsPrompt,
-    ChooseEnergyPrompt,
-    ChoosePokemonPrompt,
-    ChoosePrizePrompt,
-    CoinFlipPrompt,
-    ConfirmPrompt,
-    InvitePlayerPrompt,
-    MoveEnergyPrompt,
-    OrderCardsPrompt,
-    SelectPrompt,
-    ShowCardsPrompt,
-    ShuffleDeckPrompt
+  public readonly classes: any[];
+
+  private rows: { classValue: (new (...params: any[]) => Prompt<any>), type: string }[] = [
+    { classValue: AlertPrompt, type: 'AlertPrompt' },
+    { classValue: AttachEnergyPrompt, type: 'AttachEnergyPrompt' },
+    { classValue: ChooseCardsPrompt, type: 'ChooseCardsPrompt' },
+    { classValue: ChooseEnergyPrompt, type: 'ChooseEnergyPrompt' },
+    { classValue: ChoosePokemonPrompt, type: 'ChoosePokemonPrompt' },
+    { classValue: ChoosePrizePrompt, type: 'ChoosePrizePrompt' },
+    { classValue: CoinFlipPrompt, type: 'CoinFlipPrompt' },
+    { classValue: ConfirmPrompt, type: 'ConfirmPrompt' },
+    { classValue: InvitePlayerPrompt, type: 'InvitePlayerPrompt' },
+    { classValue: MoveEnergyPrompt, type: 'MoveEnergyPrompt' },
+    { classValue: OrderCardsPrompt, type: 'OrderCardsPrompt' },
+    { classValue: SelectPrompt, type: 'SelectPrompt' },
+    { classValue: ShowCardsPrompt, type: 'ShowCardsPrompt' },
+    { classValue: ShuffleDeckPrompt, type: 'ShuffleDeckPrompt' },
   ];
 
   constructor () {
-    this.types = this.prompts.map(p => p.name);
+    this.types = this.rows.map(p => p.type);
+    this.classes = this.rows.map(p => p.classValue);
   }
 
   public serialize(prompt: Prompt<any>, context: SerializerContext): Serialized {
     const data: any = { ...prompt };
+    const row = this.rows.find(r => prompt instanceof r.classValue);
+    if (row === undefined) {
+      throw new GameError(GameMessage.SERIALIZER_ERROR, `Unknown prompt type '${prompt.type}'.`);
+    }
+
     return {
       ...data,
-      _type: prompt.constructor.name,
+      _type: row.type,
     };
   }
 
   public deserialize(data: Serialized, context: SerializerContext): Prompt<any> {
-    const constructorClass = this.prompts.find(p => p.name === data._type);
-    if (constructorClass === undefined) {
+    const row = this.rows.find(p => p.type === data._type);
+    if (row === undefined) {
       throw new GameError(GameMessage.SERIALIZER_ERROR, `Unknown prompt type '${data._type}'.`);
     }
-    const prompt = Object.create(constructorClass.prototype);
+    const prompt = Object.create(row.classValue.prototype);
     delete data._type;
     return Object.assign(prompt, data);
   }
