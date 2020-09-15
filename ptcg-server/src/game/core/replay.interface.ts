@@ -1,7 +1,7 @@
 
 export interface ReplayOptions {
-  readStates: boolean;
-  writeStates: boolean;
+  indexEnabled: boolean;
+  appendEnabled: boolean;
 }
 
 

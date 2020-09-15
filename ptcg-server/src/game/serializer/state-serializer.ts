@@ -139,13 +139,18 @@ export class StateSerializer {
   }
 
   public deserializeDiff(base: SerializedState | undefined, data: SerializedState): State {
+    const updatedData = this.applyDiff(base, data);
+    return this.deserialize(updatedData);
+  }
+
+  public applyDiff(base: SerializedState | undefined, data: SerializedState): SerializedState {
     if (base === undefined) {
-      return this.deserialize(data);
+      return data;
     }
 
     const parsed = JSON.parse(data);
     if (parsed.length > 1) {
-      return this.deserialize(data);
+      return data;
     }
 
     let [ contextData, players, state ] = JSON.parse(base);
@@ -154,8 +159,7 @@ export class StateSerializer {
     const jsonPatch = new JsonPatch();
     [ players, state ] = jsonPatch.apply([ players, state ], diff);
 
-    data = JSON.stringify([ contextData, players, state ]);
-    return this.deserialize(data);
+    return JSON.stringify([ contextData, players, state ]);
   }
 
   public static setKnownCards(cards: Card[]) {

@@ -17,7 +17,7 @@ export class MatchRecorder {
 
   constructor(private core: Core) {
     this.ranking = new RankingCalculator();
-    this.replay = new Replay();
+    this.replay = new Replay({ indexEnabled: false });
   }
 
   public onStateChange(state: State) {

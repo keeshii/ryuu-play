@@ -13,8 +13,8 @@ export class Replay {
   public winner: GameWinner;
   public created: number;
   private turnMap: number[] = [];
-  private states: SerializedState[] = [];
   private diffs: SerializedState[] = [];
+  private indexes: SerializedState[] = [];
   private prevState: SerializedState | undefined;
   private serializer = new StateSerializer();
   private options: ReplayOptions;
@@ -25,20 +25,36 @@ export class Replay {
     this.winner = GameWinner.NONE;
     this.created = 0;
     this.options = Object.assign({
-      readStates: true,
-      writeStates: true
+      indexEnabled: true,
+      appendEnabled: false
     }, options);
   }
 
   public getStateCount(): number {
-    return this.states.length;
+    return this.diffs.length;
   }
 
   public getState(position: number): State {
-    if (position < 0 || position >= this.states.length) {
+    if (position < 0 || position >= this.diffs.length) {
       throw new GameError(GameMessage.REPLAY_INVALID_STATE);
     }
-    return this.serializer.deserialize(this.states[position]);
+
+    let stateData = this.diffs[0];
+    let index = 0;
+    let i = 0;
+    while (i !== position) {
+      const indexPosition = Math.max(i, 2) * 2;
+      if (this.options.indexEnabled && indexPosition <= position) {
+        stateData = this.serializer.applyDiff(stateData, this.indexes[index]);
+        index += 1;
+        i = indexPosition;
+      } else {
+        i++;
+        stateData = this.serializer.applyDiff(stateData, this.diffs[i]);
+      }
+    }
+
+    return this.serializer.deserialize(stateData);
   }
 
   public getTurnCount(): number {
@@ -61,9 +77,11 @@ export class Replay {
     let diff = this.serializer.serializeDiff(this.prevState, state);
     this.prevState = full;
     this.diffs.push(diff);
-    this.states.push(full);
+    if (this.options.indexEnabled) {
+      this.rebuildIndex(this.diffs);
+    }
     while (this.turnMap.length <= state.turn) {
-      this.turnMap.push(this.states.length - 1);
+      this.turnMap.push(this.diffs.length - 1);
     }
   }
 
@@ -86,13 +104,16 @@ export class Replay {
       this.player2 = data.player2;
       this.winner = data.winner;
       this.created = data.created;
-      if (this.options.readStates) {
-        this.turnMap = data.turnMap;
-        this.diffs = this.swapQuotes(data.states);
-        this.states = this.restoreStates(this.diffs);
-        this.prevState = this.states.length > 0
-          ? this.states[this.states.length - 1]
-          : undefined;
+      this.diffs = this.swapQuotes(data.states);
+      this.turnMap = data.turnMap;
+
+      if (this.options.indexEnabled) {
+        this.rebuildIndex(this.diffs);
+      }
+
+      if (this.options.appendEnabled) {
+        const lastState = this.getState(this.diffs.length - 1);
+        this.prevState = this.serializer.serialize(lastState);
       }
     } catch (error) {
       throw new GameError(GameMessage.REPLAY_INVALID_STATE);
@@ -113,15 +134,26 @@ export class Replay {
     return text;
   }
 
-  private restoreStates(diffs: SerializedState[]): SerializedState[] {
-    const states: SerializedState[] = [];
-    let prevState: SerializedState | undefined;
-    for (const diff of diffs) {
-      const state = this.serializer.deserializeDiff(prevState, diff);
-      prevState = this.serializer.serialize(state);
-      states.push(prevState);
+  private rebuildIndex(diffs: SerializedState[]): void {
+    if (diffs.length === 0) {
+      this.indexes = [];
+      return;
     }
-    return states;
+
+    let refData = diffs[0];
+    let stateData = refData;
+    let i = 4;
+    let j = 1;
+    while (i < diffs.length) {
+      for (; j <= i; j++) {
+        stateData = this.serializer.applyDiff(stateData, diffs[j]);
+      }
+      const state = this.serializer.deserialize(stateData);
+      const index = this.serializer.serializeDiff(refData, state);
+      refData = stateData;
+      this.indexes.push(index);
+      i *= 2;
+    }
   }
 
 }

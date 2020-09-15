@@ -29,7 +29,7 @@ export class ReplayService {
   public getMatchReplay(matchId: number) {
     return this.getMatchReplayData(matchId)
       .pipe(map(response => {
-        const replay = new Replay({ readStates: true, writeStates: false });
+        const replay = new Replay();
         const base64 = new Base64();
         replay.deserialize(base64.decode(response.replayData));
 
@@ -50,7 +50,7 @@ export class ReplayService {
   public getReplay(replayId: number) {
     return this.getReplayData(replayId)
       .pipe(map(response => {
-        const replay = new Replay({ readStates: true, writeStates: false });
+        const replay = new Replay();
         const base64 = new Base64();
         replay.deserialize(base64.decode(response.replayData));
 

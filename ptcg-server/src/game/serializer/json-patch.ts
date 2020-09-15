@@ -30,7 +30,7 @@ export class JsonPatch {
 
   private delta(src: any, dest: any, path: string[], results: JsonPathDiff[]): JsonPathDiff[] {
     if (src instanceof Object && dest instanceof Object) {
-      if (src.constructor.name !== dest.constructor.name) {
+      if (src.constructor !== dest.constructor) {
         results.push({op: 'set', path, val: dest});
         return results;
       }

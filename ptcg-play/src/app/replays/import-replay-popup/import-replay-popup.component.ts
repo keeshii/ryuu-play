@@ -68,7 +68,7 @@ export class ImportReplayPopupComponent implements OnInit, OnDestroy {
 
     fileReader.onload = event => {
       const replayData = event.target.result as string;
-      const replay = new Replay({ writeStates: false });
+      const replay = new Replay({ indexEnabled: false });
       const base64 = new Base64();
       try {
         replay.deserialize(base64.decode(replayData));

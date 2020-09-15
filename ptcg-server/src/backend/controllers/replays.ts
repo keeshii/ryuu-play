@@ -128,7 +128,7 @@ export class Replays extends Controller {
       return;
     }
 
-    const gameReplay = new GameReplay({ readStates: false, writeStates: false });
+    const gameReplay = new GameReplay({ indexEnabled: false });
     try {
       gameReplay.deserialize(match.replayData);
     } catch (error) {
@@ -250,7 +250,7 @@ export class Replays extends Controller {
     }
 
     const base64 = new Base64();
-    const gameReplay = new GameReplay();
+    const gameReplay = new GameReplay({ indexEnabled: false });
 
     try {
       const replayData = base64.decode(body.replayData);
