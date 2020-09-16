@@ -11,7 +11,7 @@ import { Marker } from "../store/state/card-marker";
 import { StateLogSerializer } from "./state-log.serializer";
 import { PromptSerializer } from "./prompt.serializer";
 import { PathBuilder } from "./path-builder";
-import { deepIterate } from "../../utils";
+import { deepIterate, deepClone } from "../../utils";
 import { JsonPatch } from "./json-patch";
 import { JsonDiff } from "./json-patch.interface";
 
@@ -176,7 +176,7 @@ export class StateSerializer {
       if (card === undefined) {
         throw new GameError(GameMessage.SERIALIZER_ERROR, `Unknown card '${name}'.`);
       }
-      cards.push(card);
+      cards.push(deepClone(card));
     });
     return { ...contextData, cards };
   }

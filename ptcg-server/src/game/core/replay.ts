@@ -8,6 +8,8 @@ import { StateSerializer } from "../serializer/state-serializer";
 
 export class Replay {
 
+  private readonly indexJumpSize: number = 16;
+
   public player1: ReplayPlayer;
   public player2: ReplayPlayer;
   public winner: GameWinner;
@@ -40,14 +42,14 @@ export class Replay {
     }
 
     let stateData = this.diffs[0];
-    let index = 0;
+    let jumps = this.indexJumps(position);
     let i = 0;
     while (i !== position) {
-      const indexPosition = Math.max(i, 2) * 2;
-      if (this.options.indexEnabled && indexPosition <= position) {
-        stateData = this.serializer.applyDiff(stateData, this.indexes[index]);
-        index += 1;
-        i = indexPosition;
+      if (this.options.indexEnabled && jumps.length > 0) {
+        const jump = jumps.shift() || 0;
+        const index = this.indexes[(jump / this.indexJumpSize) - 1];
+        stateData = this.serializer.applyDiff(stateData, index);
+        i = jump;
       } else {
         i++;
         stateData = this.serializer.applyDiff(stateData, this.diffs[i]);
@@ -140,20 +142,52 @@ export class Replay {
       return;
     }
 
-    let refData = diffs[0];
-    let stateData = refData;
-    let i = 4;
-    let j = 1;
+    this.indexes = [];
+    let i = this.indexJumpSize;
     while (i < diffs.length) {
-      for (; j <= i; j++) {
-        stateData = this.serializer.applyDiff(stateData, diffs[j]);
+      const jumps = this.indexJumps(i);
+      let stateData = diffs[0];
+      let pos = 0;
+      for (let j = 0; j < jumps.length - 1; j++) {
+        pos = jumps[j];
+        const index = this.indexes[(pos / this.indexJumpSize) - 1];
+        stateData = this.serializer.applyDiff(stateData, index);
       }
-      const state = this.serializer.deserialize(stateData);
-      const index = this.serializer.serializeDiff(refData, state);
-      refData = stateData;
-      this.indexes.push(index);
-      i *= 2;
+      let indexData = stateData;
+      while (pos < i) {
+        pos++;
+        indexData = this.serializer.applyDiff(indexData, diffs[pos]);
+      }
+      const indexState = this.serializer.deserialize(indexData);
+      const indexDiff = this.serializer.serializeDiff(stateData, indexState);
+      this.indexes.push(indexDiff);
+      i += this.indexJumpSize;
     }
+  }
+
+  private indexJumps(position: number): number[] {
+      if (position < this.indexJumpSize) {
+          return [];
+      }
+      const jumps = [ this.indexJumpSize ];
+
+      if (position < this.indexJumpSize * 2) {
+          return jumps;
+      }
+
+      let n = Math.floor(Math.log2(position));
+      let jumpSize = Math.pow(2, n);
+      let pos = 0;
+
+      while (jumpSize >= this.indexJumpSize) {
+          if (pos + jumpSize <= position) {
+              jumps.push(pos + jumpSize);
+              pos += jumpSize;
+          }
+          jumpSize = jumpSize / 2;
+      }
+
+      return jumps;
   }
 
 }
