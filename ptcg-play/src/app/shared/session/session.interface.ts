@@ -1,4 +1,5 @@
-import { GameInfo, GameState, ClientInfo, UserInfo, StateLog, ServerConfig, Replay } from 'ptcg-server';
+import { GameInfo, GameState, ClientInfo, UserInfo, StateLog, ServerConfig,
+  Replay, State } from 'ptcg-server';
 import { Observable } from 'rxjs';
 
 export class Session {
@@ -17,6 +18,7 @@ export interface LocalGameState extends GameState {
   localId: number;
   deleted: boolean;
   gameOver: boolean;
+  state: State;
   logs: StateLog[];
   replay?: Replay;
 }

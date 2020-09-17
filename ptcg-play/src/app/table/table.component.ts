@@ -1,6 +1,6 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { GameState, Player, GamePhase } from 'ptcg-server';
+import { Player, GamePhase } from 'ptcg-server';
 import { Observable, from, EMPTY } from 'rxjs';
 import { withLatestFrom, switchMap, finalize } from 'rxjs/operators';
 
@@ -19,7 +19,7 @@ import { takeUntilDestroyed } from '../shared/operators/take-until-destroyed';
 })
 export class TableComponent implements OnInit, OnDestroy {
 
-  public gameState: GameState;
+  public gameState: LocalGameState;
   public gameStates$: Observable<LocalGameState[]>;
   public clientId$: Observable<number>;
   public bottomPlayer: Player;
@@ -107,7 +107,7 @@ export class TableComponent implements OnInit, OnDestroy {
       });
   }
 
-  private updatePlayers(gameState: GameState, clientId: number) {
+  private updatePlayers(gameState: LocalGameState, clientId: number) {
     this.bottomPlayer = undefined;
     this.topPlayer = undefined;
     this.waiting = false;

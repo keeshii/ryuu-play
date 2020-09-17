@@ -1,7 +1,8 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
-import { GameState, Card, ChoosePrizePrompt } from 'ptcg-server';
+import { Card, ChoosePrizePrompt } from 'ptcg-server';
 
 import { GameService } from '../../../api/services/game.service';
+import { LocalGameState } from '../../../shared/session/session.interface';
 
 @Component({
   selector: 'ptcg-prompt-choose-prize',
@@ -11,7 +12,7 @@ import { GameService } from '../../../api/services/game.service';
 export class PromptChoosePrizeComponent implements OnInit, OnChanges {
 
   @Input() prompt: ChoosePrizePrompt;
-  @Input() gameState: GameState;
+  @Input() gameState: LocalGameState;
 
   public cards: Card[];
   public cardbackMap: {[index: number]: boolean} = {};

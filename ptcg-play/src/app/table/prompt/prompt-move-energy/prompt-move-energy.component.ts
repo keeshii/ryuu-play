@@ -1,7 +1,8 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
-import { GameState, Card, MoveEnergyPrompt, CardTarget, FilterType } from 'ptcg-server';
+import { Card, MoveEnergyPrompt, CardTarget, FilterType } from 'ptcg-server';
 
 import { GameService } from '../../../api/services/game.service';
+import { LocalGameState } from '../../../shared/session/session.interface';
 import { PokemonData, PokemonItem } from '../choose-pokemons-pane/pokemon-data';
 
 interface MoveEnergyResult {
@@ -18,7 +19,7 @@ interface MoveEnergyResult {
 export class PromptMoveEnergyComponent implements OnInit, OnChanges {
 
   @Input() prompt: MoveEnergyPrompt;
-  @Input() gameState: GameState;
+  @Input() gameState: LocalGameState;
 
   public pokemonData: PokemonData;
   public selectedItem: PokemonItem | undefined;

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Action, ClientInfo, GameState, State, CardTarget, StateLog, Replay } from 'ptcg-server';
+import { Action, ClientInfo, GameState, State, CardTarget, StateLog, Replay,
+  Base64, StateSerializer } from 'ptcg-server';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
@@ -49,6 +50,7 @@ export class GameService {
         localId: lastGameId,
         gameOver: replay ? true : false,
         deleted: replay ? true : false,
+        state: this.decodeStateData(gameState.stateData),
         logs,
         replay
       };
@@ -157,7 +159,7 @@ export class GameService {
   private startListening(id: number) {
     this.socketService.on(`game[${id}]:join`, (clientId: number) => this.onJoin(id, clientId));
     this.socketService.on(`game[${id}]:leave`, (clientId: number) => this.onLeave(id, clientId));
-    this.socketService.on(`game[${id}]:stateChange`, (state: State) => this.onStateChange(id, state));
+    this.socketService.on(`game[${id}]:stateChange`, (stateData: string) => this.onStateChange(id, stateData));
   }
 
   private stopListening(id: number) {
@@ -166,7 +168,8 @@ export class GameService {
     this.socketService.off(`game[${id}]:stateChange`);
   }
 
-  private onStateChange(gameId: number, state: State) {
+  private onStateChange(gameId: number, stateData: string) {
+    const state = this.decodeStateData(stateData);
     console.log('gameService, onStateChange', gameId, state);
     const games = this.sessionService.session.gameStates;
     const index = games.findIndex(g => g.gameId === gameId && g.deleted === false);
@@ -208,6 +211,13 @@ export class GameService {
       gameStates[index] = { ...gameStates[index], clientIds };
       this.sessionService.set({ gameStates });
     }
+  }
+
+  private decodeStateData(stateData: string): State {
+    const base64 = new Base64();
+    const serializedState = base64.decode(stateData);
+    const serializer = new StateSerializer();
+    return serializer.deserialize(serializedState);
   }
 
 }

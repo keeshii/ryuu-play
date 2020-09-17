@@ -1,4 +1,4 @@
-import { GameSettings } from '../../game';
+import { GameSettings, StateSerializer } from '../../game';
 import { Client } from '../../game/client/client.interface';
 import { Game } from '../../game/core/game';
 import { State } from '../../game/store/state/state';
@@ -8,6 +8,7 @@ import { CoreInfo, GameInfo, PlayerInfo, GameState, UserInfo } from '../interfac
 import { SocketCache } from './socket-cache';
 import { SocketWrapper, Response } from './socket-wrapper';
 import { deepCompare } from '../../utils/utils';
+import {Base64} from '../../utils';
 
 export class CoreSocket {
 
@@ -103,9 +104,13 @@ export class CoreSocket {
   }
 
   public static buildGameState(game: Game): GameState {
+    const serializer = new StateSerializer();
+    const serializedState = serializer.serialize(game.state);
+    const base64 = new Base64();
+    const stateData = base64.encode(serializedState);
     return {
       gameId: game.id,
-      state: game.state,
+      stateData,
       clientIds: game.clients.map(client => client.id)
     };
   }

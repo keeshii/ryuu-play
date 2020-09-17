@@ -1,7 +1,8 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
-import { GameState, Card, AttachEnergyPrompt, CardTarget, FilterType, CardList, AttachEnergyOptions } from 'ptcg-server';
+import { Card, AttachEnergyPrompt, FilterType, CardList, AttachEnergyOptions } from 'ptcg-server';
 
 import { GameService } from '../../../api/services/game.service';
+import { LocalGameState } from '../../../shared/session/session.interface';
 import { PokemonData, PokemonItem } from '../choose-pokemons-pane/pokemon-data';
 
 interface AttachEnergyResult {
@@ -17,7 +18,7 @@ interface AttachEnergyResult {
 export class PromptAttachEnergyComponent implements OnInit, OnChanges {
 
   @Input() prompt: AttachEnergyPrompt;
-  @Input() gameState: GameState;
+  @Input() gameState: LocalGameState;
 
   public pokemonData: PokemonData;
   public allowedCancel: boolean;

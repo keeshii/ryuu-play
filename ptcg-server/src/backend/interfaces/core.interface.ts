@@ -1,4 +1,4 @@
-import { GamePhase, State } from '../../game';
+import { GamePhase } from '../../game';
 import { Rank } from "./rank.enum";
 
 export interface PlayerInfo {
@@ -30,7 +30,7 @@ export interface CoreInfo {
 
 export interface GameState {
   gameId: number;
-  state: State;
+  stateData: string;
   clientIds: number[],
 }
 

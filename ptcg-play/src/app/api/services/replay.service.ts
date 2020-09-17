@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/internal/operators/map';
-import { Base64, Replay, GameState } from 'ptcg-server';
+import { Base64, Replay, GameState, StateSerializer } from 'ptcg-server';
 
 import { ApiService } from '../api.service';
 import { GameService } from './game.service';
@@ -35,7 +35,7 @@ export class ReplayService {
 
         const gameState: GameState = {
           gameId: 0,
-          state: replay.getState(0),
+          stateData: this.getReplayStateData(replay),
           clientIds: []
         };
 
@@ -56,7 +56,7 @@ export class ReplayService {
 
         const gameState: GameState = {
           gameId: 0,
-          state: replay.getState(0),
+          stateData: this.getReplayStateData(replay),
           clientIds: []
         };
 
@@ -83,6 +83,14 @@ export class ReplayService {
 
   public import(replayData: string, name: string) {
     return this.api.post<ReplayResponse>('/v1/replays/import', { replayData, name });
+  }
+
+  private getReplayStateData(replay: Replay): string {
+    const state = replay.getState(0);
+    const serializer = new StateSerializer();
+    const serializedState = serializer.serialize(state);
+    const base64 = new Base64();
+    return base64.encode(serializedState);
   }
 
 }

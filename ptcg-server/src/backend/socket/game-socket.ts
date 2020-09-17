@@ -1,6 +1,6 @@
 import { AddPlayerAction, AppendLogAction, Action, PassTurnAction,
   ReorderHandAction, ReorderBenchAction, PlayCardAction, CardTarget,
-  RetreatAction, AttackAction, UseAbilityAction } from '../../game';
+  RetreatAction, AttackAction, UseAbilityAction, StateSerializer } from '../../game';
 import { Client } from '../../game/client/client.interface';
 import { CoreSocket } from './core-socket';
 import { Errors } from '../common/errors';
@@ -11,6 +11,7 @@ import { GameState } from '../interfaces/core.interface';
 import { ResolvePromptAction } from '../../game/store/actions/resolve-prompt-action';
 import { SocketCache } from './socket-cache';
 import { SocketWrapper, Response } from './socket-wrapper';
+import {Base64} from '../../utils';
 
 export class GameSocket {
 
@@ -52,7 +53,13 @@ export class GameSocket {
   public onStateChange(game: Game, state: State): void {
     if (this.core.games.indexOf(game) !== -1) {
       state = this.filterState(game.id, state);
-      this.socket.emit(`game[${game.id}]:stateChange`, state);
+
+      const serializer = new StateSerializer();
+      const serializedState = serializer.serialize(game.state);
+      const base64 = new Base64();
+      const stateData = base64.encode(serializedState);
+
+      this.socket.emit(`game[${game.id}]:stateChange`, stateData);
     }
   }
 
