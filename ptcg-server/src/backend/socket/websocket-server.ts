@@ -2,8 +2,7 @@ import * as http from 'http';
 import * as io from 'socket.io';
 
 import { Core } from '../../game/core/core';
-import { ClientSocket } from './client-socket';
-import { MessageSocket } from './message-socket';
+import { SocketClient } from './socket-client';
 import { User } from '../../storage';
 import { authMiddleware } from './auth-middleware';
 
@@ -23,15 +22,12 @@ export class WebSocketServer {
     server.on('connection', (socket: io.Socket) => {
       const user: User = (socket as any).user;
 
-      const clientSocket = new ClientSocket(user, this.core, server, socket);
-      this.core.connect(clientSocket);
-      clientSocket.attachListeners();
-
-      const messageSocket = new MessageSocket(user, this.core, server, socket);
-      messageSocket.attachListeners();
+      const socketClient = new SocketClient(user, this.core, server, socket);
+      this.core.connect(socketClient);
+      socketClient.attachListeners();
 
       socket.on('disconnect', () => {
-        this.core.disconnect(clientSocket);
+        this.core.disconnect(socketClient);
         user.updateLastSeen();
       });
     });

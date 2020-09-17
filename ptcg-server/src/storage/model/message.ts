@@ -1,11 +1,10 @@
-import { BaseEntity, Column, Entity, Unique, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
 import { Conversation } from './conversation';
 import { User } from './user';
 import { bigint } from '../transformers/bigint';
 
 @Entity()
-@Unique(['owner', 'user'])
 export class Message extends BaseEntity {
 
   @PrimaryGeneratedColumn()

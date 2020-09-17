@@ -16,7 +16,7 @@ export class SimpleBot extends BotClient {
 
   public onUsersUpdate(users: User[]): void { }
 
-  public onMessage(from: Client, message: string): void { };
+  public onMessage(from: Client, message: string): void { }
 
   public onGameJoin(game: Game, client: Client): void {
     if (client === this) {

@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { createConnection, EntityManager, Connection } from 'typeorm';
-import { Deck, User, Avatar, Match, Replay } from './model';
+import { Deck, User, Avatar, Match, Replay, Conversation, Message } from './model';
 import { config } from '../config';
 
 export class Storage {
@@ -15,8 +15,10 @@ export class Storage {
       ...storageConfig,
       entities: [
         Avatar,
+        Conversation,
         Deck,
         Match,
+        Message,
         Replay,
         User
       ],
