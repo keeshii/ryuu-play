@@ -3,7 +3,7 @@ import { Client } from '../game/client/client.interface';
 import { Game } from '../game/core/game';
 import { SimpleGameHandler } from './simple-game-handler';
 import { State } from '../game/store/state/state';
-import { User } from '../storage';
+import { User, Message } from '../storage';
 
 
 export class SimpleBot extends BotClient {
@@ -16,7 +16,7 @@ export class SimpleBot extends BotClient {
 
   public onUsersUpdate(users: User[]): void { }
 
-  public onMessage(from: Client, message: string): void { }
+  public onMessage(from: Client, message: Message): void { }
 
   public onGameJoin(game: Game, client: Client): void {
     if (client === this) {

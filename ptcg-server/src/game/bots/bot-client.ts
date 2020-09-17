@@ -2,7 +2,7 @@ import { AddPlayerAction } from '../store/actions/add-player-action';
 import { Client } from '../client/client.interface';
 import { Game } from '../core/game';
 import { GameError, GameMessage } from '../game-error';
-import { User } from '../../storage';
+import { User, Message } from '../../storage';
 import { Core } from '../core/core';
 import { State } from '../store/state/state';
 
@@ -36,7 +36,7 @@ export abstract class BotClient implements Client {
 
   public abstract onStateChange(game: Game, state: State): void;
   
-  public abstract onMessage(from: Client, message: string): void;
+  public abstract onMessage(from: Client, message: Message): void;
 
   createGame(deck: string[]): Game {
     if (this.core === undefined) {

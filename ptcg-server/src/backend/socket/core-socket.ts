@@ -31,7 +31,7 @@ export class CoreSocket {
   public onConnect(client: Client): void {
     this.socket.emit('core:join', {
       clientId: client.id,
-      user: this.buildUserInfo(client.user)
+      user: CoreSocket.buildUserInfo(client.user)
     });
   }
 
@@ -41,7 +41,7 @@ export class CoreSocket {
 
   public onGameAdd(game: Game): void {
     this.cache.lastLogIdCache[game.id] = 0;
-    this.cache.gameInfoCache[game.id] = this.buildGameInfo(game);
+    this.cache.gameInfoCache[game.id] = CoreSocket.buildGameInfo(game);
     this.socket.emit('core:createGame', this.cache.gameInfoCache[game.id]);
   }
 
@@ -52,7 +52,7 @@ export class CoreSocket {
   }
 
   public onStateChange(game: Game, state: State): void {
-    const gameInfo = this.buildGameInfo(game);
+    const gameInfo = CoreSocket.buildGameInfo(game);
     if (!deepCompare(gameInfo, this.cache.gameInfoCache[game.id])) {
       this.cache.gameInfoCache[game.id] = gameInfo;
       this.socket.emit('core:gameInfo', gameInfo);
@@ -66,12 +66,35 @@ export class CoreSocket {
     }
     const userInfos = users.map(u => {
       const connected = core.clients.some(c => c.user.id === u.id);
-      return this.buildUserInfo(u, connected);
+      return CoreSocket.buildUserInfo(u, connected);
     });
     this.socket.emit('core:usersInfo', userInfos);
   }
 
-  private buildUserInfo(user: User, connected: boolean = true): UserInfo {
+  private buildCoreInfo(): CoreInfo {
+    return {
+      clientId: this.client.id,
+      clients: this.core.clients.map(client => ({
+        clientId: client.id,
+        userId: client.user.id
+      })),
+      users: this.core.clients.map(client => CoreSocket.buildUserInfo(client.user)),
+      games: this.core.games.map(game => CoreSocket.buildGameInfo(game))
+    };
+  }
+
+  private getCoreInfo(data: void, response: Response<CoreInfo>): void {
+    response('ok', this.buildCoreInfo());
+  }
+
+  private createGame(params: { deck: string[], gameSettings: GameSettings, clientId?: number },
+    response: Response<GameState>): void {
+    const invited = this.core.clients.find(c => c.id === params.clientId);
+    const game = this.core.createGame(this.client, params.deck, params.gameSettings, invited);
+    response('ok', CoreSocket.buildGameState(game));
+  }
+
+  public static buildUserInfo(user: User, connected: boolean = true): UserInfo {
     return {
       connected,
       userId: user.id,
@@ -86,7 +109,7 @@ export class CoreSocket {
     };
   }
 
-  private buildGameInfo(game: Game): GameInfo {
+  private static buildGameInfo(game: Game): GameInfo {
     const state = game.state;
     const players: PlayerInfo[] = state.players.map(player => ({
       clientId: player.id,
@@ -113,29 +136,6 @@ export class CoreSocket {
       stateData,
       clientIds: game.clients.map(client => client.id)
     };
-  }
-
-  private buildCoreInfo(): CoreInfo {
-    return {
-      clientId: this.client.id,
-      clients: this.core.clients.map(client => ({
-        clientId: client.id,
-        userId: client.user.id
-      })),
-      users: this.core.clients.map(client => this.buildUserInfo(client.user)),
-      games: this.core.games.map(game => this.buildGameInfo(game))
-    };
-  }
-
-  private getCoreInfo(data: void, response: Response<CoreInfo>): void {
-    response('ok', this.buildCoreInfo());
-  }
-
-  private createGame(params: { deck: string[], gameSettings: GameSettings, clientId?: number },
-    response: Response<GameState>): void {
-    const invited = this.core.clients.find(c => c.id === params.clientId);
-    const game = this.core.createGame(this.client, params.deck, params.gameSettings, invited);
-    response('ok', CoreSocket.buildGameState(game));
   }
 
 }

@@ -2,7 +2,7 @@ import * as io from 'socket.io';
 import { Client } from '../../game/client/client.interface';
 import { Game } from '../../game/core/game';
 import { State } from '../../game/store/state/state';
-import { User } from '../../storage';
+import { User, Message } from '../../storage';
 import { Core } from '../../game/core/core';
 import { SocketWrapper } from './socket-wrapper';
 import { SocketCache } from './socket-cache';
@@ -66,7 +66,7 @@ export class SocketClient implements Client {
     this.gameSocket.onGameLeave(game, client);
   }
 
-  public onMessage(from: Client, message: string): void {
+  public onMessage(from: Client, message: Message): void {
     this.messageSocket.onMessage(from, message);
   }
 

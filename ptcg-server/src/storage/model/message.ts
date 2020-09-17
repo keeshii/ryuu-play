@@ -23,9 +23,6 @@ export class Message extends BaseEntity {
   public isRead: boolean = false;
 
   @Column()
-  public isSend: boolean = false;
-
-  @Column()
   public text: string = '';
 
 }

@@ -4,15 +4,18 @@ import { GameError, GameMessage } from "../game-error";
 import { Game } from "./game";
 import { GameSettings } from "./game-settings";
 import { InvitePlayerAction } from "../store/actions/invite-player-action";
+import { Messager } from "./messager";
 import { RankingCalculator } from "./ranking-calculator";
 import { Scheduler, generateId } from "../../utils";
 
 export class Core {
   public clients: Client[] = [];
   public games: Game[] = [];
+  public messager: Messager;
 
   constructor() {
     this.startRankingDecrease();
+    this.messager = new Messager(this);
   }
 
   public connect(client: Client): Client {
