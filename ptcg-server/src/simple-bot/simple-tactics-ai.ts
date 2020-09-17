@@ -1,7 +1,7 @@
 import { Player, State, PassTurnAction, Action, PokemonCard, Stage, EnergyMap,
   PokemonCardList, PlayCardAction, CardTarget, PlayerType, SlotType, EnergyCard,
   CardType, StateUtils, AttackAction, SpecialCondition } from '../game';
-import { Client } from '../game/core/client';
+import { Client } from '../game/client/client.interface';
 
 export enum SimpleTactics {
   PLAY_BASIC_POKEMON,

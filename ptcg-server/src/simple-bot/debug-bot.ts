@@ -1,6 +1,6 @@
 import { Game } from '../game/core/game';
 import { SimpleBot } from './main';
-import { Client } from '../game/core/client';
+import { Client } from '../game/client/client.interface';
 
 export class DebugBot extends SimpleBot {
 

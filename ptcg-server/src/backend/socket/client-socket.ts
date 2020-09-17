@@ -10,50 +10,39 @@ import { User } from '../../storage';
 import { Core } from '../../game/core/core';
 import { CoreInfo, GameInfo, PlayerInfo, GameState, UserInfo } from '../interfaces/core.interface';
 import { ResolvePromptAction } from '../../game/store/actions/resolve-prompt-action';
+import { SocketWrapper, Response } from './socket-wrapper';
 import { deepCompare } from '../../utils/utils';
 
-type Response<R = void> = (message: string, data?: R | Errors) => void;
+export class ClientSocket extends Client {
 
-type Handler<T, R> = (data: T, response: Response<R>) => void;
-
-interface Listener<T, R> {
-  message: string,
-  handler: Handler<T, R>
-}
-
-export class SocketClient extends Client {
-
-  public io: io.Server;
-  public socket: io.Socket;
   public core: Core;
-  private listeners: Listener<any, any>[] = [];
+  private socket: SocketWrapper;
   private gameInfoCache: {[id: number]: GameInfo} = {};
   private lastLogIdCache: {[id: number]: number} = {};
 
   constructor(user: User, core: Core, io: io.Server, socket: io.Socket) {
     super(user);
+    this.socket = new SocketWrapper(io, socket);
     this.core = core;
-    this.io = io;
-    this.socket = socket;
 
     // core listeners
-    this.addListener('core:getInfo', this.getCoreInfo.bind(this));
-    this.addListener('core:createGame', this.createGame.bind(this));
+    this.socket.addListener('core:getInfo', this.getCoreInfo.bind(this));
+    this.socket.addListener('core:createGame', this.createGame.bind(this));
 
     // game listeners
-    this.addListener('game:join', this.joinGame.bind(this));
-    this.addListener('game:leave', this.leaveGame.bind(this));
-    this.addListener('game:getStatus', this.getGameStatus.bind(this));
-    this.addListener('game:action:ability', this.ability.bind(this));
-    this.addListener('game:action:attack', this.attack.bind(this));
-    this.addListener('game:action:play', this.playGame.bind(this));
-    this.addListener('game:action:playCard', this.playCard.bind(this));
-    this.addListener('game:action:resolvePrompt', this.resolvePrompt.bind(this));
-    this.addListener('game:action:retreat', this.retreat.bind(this));
-    this.addListener('game:action:reorderBench', this.reorderBench.bind(this));
-    this.addListener('game:action:reorderHand', this.reorderHand.bind(this));
-    this.addListener('game:action:passTurn', this.passTurn.bind(this));
-    this.addListener('game:action:appendLog', this.appendLog.bind(this));
+    this.socket.addListener('game:join', this.joinGame.bind(this));
+    this.socket.addListener('game:leave', this.leaveGame.bind(this));
+    this.socket.addListener('game:getStatus', this.getGameStatus.bind(this));
+    this.socket.addListener('game:action:ability', this.ability.bind(this));
+    this.socket.addListener('game:action:attack', this.attack.bind(this));
+    this.socket.addListener('game:action:play', this.playGame.bind(this));
+    this.socket.addListener('game:action:playCard', this.playCard.bind(this));
+    this.socket.addListener('game:action:resolvePrompt', this.resolvePrompt.bind(this));
+    this.socket.addListener('game:action:retreat', this.retreat.bind(this));
+    this.socket.addListener('game:action:reorderBench', this.reorderBench.bind(this));
+    this.socket.addListener('game:action:reorderHand', this.reorderHand.bind(this));
+    this.socket.addListener('game:action:passTurn', this.passTurn.bind(this));
+    this.socket.addListener('game:action:appendLog', this.appendLog.bind(this));
   }
 
   public onConnect(client: Client): void {
@@ -109,19 +98,7 @@ export class SocketClient extends Client {
   }
 
   public attachListeners(): void {
-    for (let i = 0; i < this.listeners.length; i++) {
-      const listener = this.listeners[i];
-
-      this.socket.on(listener.message, async <T, R>(data: T, fn: Function) => {
-        const response: Response<R> =
-          (message: string, data?: R | Errors) => fn && fn({message, data});
-        try {
-          await listener.handler(data, response);
-        } catch(error) {
-          response('error', error.message);
-        }
-      });
-    }
+    this.socket.attachListeners();
   }
 
   /**
@@ -136,11 +113,6 @@ export class SocketClient extends Client {
       this.lastLogIdCache[gameId] = state.logs[state.logs.length - 1].id;
     }
     return state;
-  }
-
-  private addListener<T, R>(message: string, handler: Handler<T, R>) {
-    const listener = {message, handler};
-    this.listeners.push(listener);
   }
 
   private buildUserInfo(user: User, connected: boolean = true): UserInfo {

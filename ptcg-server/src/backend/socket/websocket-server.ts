@@ -2,9 +2,10 @@ import * as http from 'http';
 import * as io from 'socket.io';
 
 import { Core } from '../../game/core/core';
-import { SocketClient } from './socket-client';
+import { ClientSocket } from './client-socket';
+import { MessageSocket } from './message-socket';
 import { User } from '../../storage';
-import { authSocket } from './auth-socket';
+import { authMiddleware } from './auth-middleware';
 
 export type Middleware = (socket: io.Socket, next: (err?: any) => void) => void;
 
@@ -17,18 +18,20 @@ export class WebSocketServer {
     const server = io.listen(httpServer);
 
     this.server = server;
-    server.use(authSocket);
+    server.use(authMiddleware);
 
     server.on('connection', (socket: io.Socket) => {
       const user: User = (socket as any).user;
 
-      const socketClient = new SocketClient(user, this.core, server, socket);
-      this.core.connect(socketClient);
+      const clientSocket = new ClientSocket(user, this.core, server, socket);
+      this.core.connect(clientSocket);
+      clientSocket.attachListeners();
 
-      socketClient.attachListeners();
+      const messageSocket = new MessageSocket(user, this.core, server, socket);
+      messageSocket.attachListeners();
 
       socket.on('disconnect', () => {
-        this.core.disconnect(socketClient);
+        this.core.disconnect(clientSocket);
         user.updateLastSeen();
       });
     });

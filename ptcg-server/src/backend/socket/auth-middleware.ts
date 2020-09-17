@@ -4,7 +4,7 @@ import { Errors } from '../common/errors';
 import { User } from '../../storage';
 import { validateToken } from '../services/auth-token';
 
-export async function authSocket(socket: io.Socket, next: (err?: any) => void): Promise<void> {
+export async function authMiddleware(socket: io.Socket, next: (err?: any) => void): Promise<void> {
   const token: string = socket.handshake.query && socket.handshake.query.token;
   const userId = validateToken(token);
 

@@ -1,5 +1,5 @@
 import { BotClient } from '../game/bots/bot-client';
-import { Client } from '../game/core/client';
+import { Client } from '../game/client/client.interface';
 import { Game } from '../game/core/game';
 import { SimpleGameHandler } from './simple-game-handler';
 import { State } from '../game/store/state/state';
@@ -15,6 +15,8 @@ export class SimpleBot extends BotClient {
   public onDisconnect(client: Client): void { }
 
   public onUsersUpdate(users: User[]): void { }
+
+  public onMessage(from: Client, message: string): void { };
 
   public onGameJoin(game: Game, client: Client): void {
     if (client === this) {

@@ -3,7 +3,7 @@ import { AlertPrompt, ConfirmPrompt, Player, Prompt, State, GamePhase,
   ChooseEnergyPrompt, StateUtils, ChoosePokemonPrompt, PokemonCardList,
   PlayerType, SlotType, ChoosePrizePrompt, ShowCardsPrompt, EnergyMap } from '../game';
 import { ChooseCardsPrompt } from '../game/store/prompts/choose-cards-prompt';
-import { Client } from '../game/core/client';
+import { Client } from '../game/client/client.interface';
 import { Game } from '../game/core/game';
 import { ResolvePromptAction } from '../game/store/actions/resolve-prompt-action';
 import { GameMessage } from '../game/game-error';

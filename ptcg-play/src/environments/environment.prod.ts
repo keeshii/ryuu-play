@@ -1,5 +1,5 @@
 export const environment = {
-  apiUrl: 'https://ptcg.ryuu.eu',
+  apiUrl: 'http://localhost:12021',
   timeout: 5000,
   production: true,
   apiVersion: 1,

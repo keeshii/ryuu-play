@@ -1,6 +1,6 @@
 import { Action } from "../store/actions/action";
 import { Arbiter } from "./arbiter";
-import { Client } from "./client";
+import { Client } from "../client/client.interface";
 import { Core } from "./core";
 import { GameSettings } from "./game-settings";
 import { MatchRecorder } from "./match-recorder";
