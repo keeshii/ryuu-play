@@ -11,6 +11,7 @@ import { DeckService } from './services/deck.service';
 import { GameService } from './services/game.service';
 import { LoginService } from './services/login.service';
 import { MainService } from './services/main.service';
+import { MessageService } from './services/message.service';
 import { ProfileService } from './services/profile.service';
 import { RankingService } from './services/ranking.service';
 import { ReplayService } from './services/replay.service';
@@ -32,6 +33,7 @@ import { SocketService } from './socket.service';
     GameService,
     LoginService,
     MainService,
+    MessageService,
     ProfileService,
     RankingService,
     ReplayService,

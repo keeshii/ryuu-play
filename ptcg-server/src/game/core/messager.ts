@@ -13,50 +13,41 @@ export class Messager {
   public async sendMessage(client: Client, receiver: User, text: string): Promise<void> {
     const time = Date.now();
 
-    const senderMessage = new Message();
-    senderMessage.sender = client.user;
-    senderMessage.created = time;
-    senderMessage.isRead = true;
-    senderMessage.text = text;
+    const message = new Message();
+    message.sender = client.user;
+    message.created = time;
+    message.text = text;
 
-    const receiverMessage = new Message();
-    receiverMessage.sender = client.user;
-    receiverMessage.created = time;
-    receiverMessage.isRead = false;
-    receiverMessage.text = text;
+    const conversation = await this.getConversation(client.user, receiver);
+    conversation.lastMessage = message;
+    message.conversation = conversation;
 
-    await this.insertMessage(client.user, receiver, senderMessage);
-    await this.insertMessage(client.user, receiver, receiverMessage);
+    await message.save();
+    await conversation.save();
 
     this.core.clients.forEach(c => {
       if (c.user.id === receiver.id) {
-        c.onMessage(client, receiverMessage);
+        c.onMessage(client, message);
       }
     });
   }
 
-  private async insertMessage(sender: User, receiver: User, message: Message): Promise<void> {
-    const owner = message.isRead ? sender : receiver;
-    const user = message.isRead ? receiver : sender;
-
+  private async getConversation(user1: User, user2: User): Promise<Conversation> {
     let conversations = await Conversation.find({
-      where: { owner: { id: owner.id }, user: { id: user.id }}
+      where: [
+        { user1: { id: user1.id }, user2: { id: user2.id }},
+        { user1: { id: user2.id }, user2: { id: user1.id }}
+      ]
     });
     let conversation = (conversations || []).pop();
 
     if (conversation === undefined) {
       conversation = new Conversation();
-      conversation.owner = owner;
-      conversation.user = user;
+      conversation.user1 = user1;
+      conversation.user2 = user2;
     }
 
-    conversation.modified = message.created;
-    conversation.isRead = message.isRead;
-    conversation.lastMessageText = message.text;
-    await conversation.save();
-
-    message.conversation = conversation;
-    await message.save();
+    return conversation;
   }
 
 }

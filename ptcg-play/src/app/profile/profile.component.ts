@@ -10,6 +10,8 @@ import { ProfileService } from '../api/services/profile.service';
 import { SessionService } from '../shared/session/session.service';
 import { takeUntilDestroyed } from '../shared/operators/take-until-destroyed';
 
+import { MessageService } from '../api/services/message.service';
+
 
 @Component({
   selector: 'ptcg-profile',
@@ -27,6 +29,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   constructor(
     private alertService: AlertService,
     private edtiAvatarsPopupService: EditAvatarsPopupService,
+    private messageService: MessageService,
     private profileService: ProfileService,
     private route: ActivatedRoute,
     private router: Router,
@@ -69,6 +72,18 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   inviteToPlay() {
     return;
+  }
+
+  sendMessage() {
+    this.messageService.getConversations()
+      .subscribe({
+        next: response => {
+          console.log(response);
+        },
+        error: async error => {
+          await this.alertService.toast(error);
+        }
+      });
   }
 
   editAvatars(userId: number) {

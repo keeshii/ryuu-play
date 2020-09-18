@@ -15,6 +15,7 @@ import {
   Decks,
   Game,
   Login,
+  Messages,
   Profile,
   Ranking,
   Replays
@@ -49,6 +50,7 @@ export class App {
     define('/v1/decks', Decks);
     define('/v1/game', Game);
     define('/v1/login', Login);
+    define('/v1/messages', Messages);
     define('/v1/profile', Profile);
     define('/v1/ranking', Ranking);
     define('/v1/replays', Replays);

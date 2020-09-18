@@ -1,32 +1,26 @@
-import { BaseEntity, Column, Entity, Unique, PrimaryGeneratedColumn, ManyToOne, OneToMany } from 'typeorm';
+import { BaseEntity, Entity, Unique, PrimaryGeneratedColumn, ManyToOne, OneToOne, JoinColumn, OneToMany } from 'typeorm';
 
 import { Message } from './message';
 import { User } from './user';
-import { bigint } from '../transformers/bigint';
 
 @Entity()
-@Unique(['owner', 'user'])
+@Unique(['user1', 'user2'])
 export class Conversation extends BaseEntity {
 
   @PrimaryGeneratedColumn()
   public id: number = 0;
 
-  @ManyToOne(type => User, user => user.conversations)
-  owner: User = new User();
+  @ManyToOne(type => User)
+  user1: User = new User();
 
   @ManyToOne(type => User)
-  user: User = new User();
+  user2: User = new User();
 
   @OneToMany(type => Message, message => message.conversation)
   messages!: Message[];
 
-  @Column({ type: 'bigint', transformer: [ bigint ] })
-  public modified: number = Date.now();
-
-  @Column()
-  public isRead: boolean = false;
-
-  @Column()
-  public lastMessageText: string = '';
+  @OneToOne(type => Message)
+  @JoinColumn()
+  lastMessage!: Message;
 
 }
