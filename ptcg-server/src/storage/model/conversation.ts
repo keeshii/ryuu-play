@@ -23,4 +23,23 @@ export class Conversation extends BaseEntity {
   @JoinColumn()
   lastMessage!: Message;
 
+  public static async findByUsers(user1: User, user2: User): Promise<Conversation> {
+    let conversations = await Conversation.find({
+      relations: ['user1', 'user2'],
+      where: [
+        { user1: { id: user1.id }, user2: { id: user2.id }},
+        { user1: { id: user2.id }, user2: { id: user1.id }}
+      ]
+    });
+
+    if (conversations.length === 0) {
+      const conversation = new Conversation();
+      conversation.user1 = user1;
+      conversation.user2 = user2;
+      return conversation;
+    }
+
+    return conversations[0];
+  }
+
 }

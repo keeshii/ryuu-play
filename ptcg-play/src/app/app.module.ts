@@ -10,7 +10,7 @@ import { DeckModule } from './deck/deck.module';
 import { GamesModule } from './games/games.module';
 import { LoginModule } from './login/login.module';
 import { MainModule } from './main/main.module';
-import { MessageModule } from './message/message.module';
+import { MessagesModule } from './messages/messages.module';
 import { ProfileModule } from './profile/profile.module';
 import { RankingModule } from './ranking/ranking.module';
 import { ReplaysModule } from './replays/replays.module';
@@ -28,7 +28,7 @@ import { TableModule } from './table/table.module';
     GamesModule,
     LoginModule,
     MainModule,
-    MessageModule,
+    MessagesModule,
     ProfileModule,
     RankingModule,
     ReplaysModule,

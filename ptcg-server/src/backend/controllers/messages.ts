@@ -66,7 +66,7 @@ export class Messages extends Controller {
       return;
     }
 
-    const conversation = await this.core.messager.getConversation(user1, user2);
+    const conversation = await Conversation.findByUsers(user1, user2);
 
     const users: UserInfo[] = [
       this.buildUserInfo(conversation.user1),
@@ -87,7 +87,7 @@ export class Messages extends Controller {
     }
 
     const [messageRows, total] = await Message.findAndCount({
-      relations: ['player1', 'player2'],
+      relations: ['sender'],
       where,
       order: { created: "DESC" },
       skip: page * pageSize,

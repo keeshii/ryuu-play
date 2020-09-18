@@ -1,4 +1,5 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, ManyToOne,
+  Transaction, TransactionManager, EntityManager } from 'typeorm';
 
 import { Conversation } from './conversation';
 import { User } from './user';
@@ -30,5 +31,23 @@ export class Message extends BaseEntity {
 
   @Column()
   public text: string = '';
+
+  @Transaction()
+  public async send(receiver: User, @TransactionManager() manager?: EntityManager): Promise<void> {
+    if (manager === undefined) {
+      return;
+    }
+
+    const conversation = await Conversation.findByUsers(this.sender, receiver);
+
+    if (conversation.id === 0) {
+      await manager.save(conversation);
+    }
+
+    this.conversation = conversation;
+    await manager.save(this);
+    conversation.lastMessage = this;
+    await manager.save(conversation);
+  }
 
 }

@@ -5,10 +5,11 @@
   height: 100%;
 }
 
-.ptcg-messages-content {
-  flex: 1 1;
+mat-toolbar {
+  flex: 0 0;
 }
 
-.ptcg-messages-footer {
-  flex: 0 0;
+ptcg-conversation {
+  display: flex;
+  flex: 1 1;
 }

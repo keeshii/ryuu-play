@@ -1,0 +1,52 @@
+<ptcg-sidebar-container>
+
+  <ptcg-sidebar>
+    <mat-nav-list>
+      <a mat-list-item *ngFor="let conversation of (conversations$ | async)"
+        class="ptcg-no-padding-list-item">
+        <ptcg-contact></ptcg-contact>
+      </a>
+    </mat-nav-list>
+  </ptcg-sidebar>
+
+  <ptcg-content [loading]="loading || loadingMessages">
+    <div class="ptcg-messages-container">
+      <mat-toolbar>
+        <mat-toolbar-row>
+          <h1>Messages</h1>
+
+          <span class="ptcg-u-spacer"></span>
+
+          <button mat-raised-button color="primary" [matMenuTriggerFor]="menu">Actions</button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="newConversation()">
+              New conversation
+            </button>
+            <button mat-menu-item (click)="deleteConversation(userId)"
+             [disabled]="userId === 0">
+              Delete conversation
+            </button>
+          </mat-menu>
+        </mat-toolbar-row>
+      </mat-toolbar>
+
+      <div *ngIf="userId === 0 ; else messages">
+        <div class="ptcg-u-padding">
+          <mat-card class="mat-elevation-z2">
+            No conversation selected
+          </mat-card>
+        </div>
+      </div>
+
+      <ng-template #messages>
+        <ptcg-conversation
+          [loggedUserId]="loggedUserId"
+          [userId]="userId"
+          (loading)="loadingMessages = $event">
+        </ptcg-conversation>
+      </ng-template>
+    </div>
+
+  </ptcg-content>
+
+</ptcg-sidebar-container>

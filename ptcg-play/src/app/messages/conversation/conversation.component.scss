@@ -1,0 +1,16 @@
+
+.ptcg-conversation {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%
+}
+
+.ptcg-conversation-content {
+  display: block;
+  flex: 1 1;
+}
+
+.ptcg-messages-footer {
+  flex: 0 0;
+}
