@@ -19,7 +19,10 @@ export class Messages extends Controller {
     const [conversationRows, total] = await this.db.manager.connection
       .getRepository(Conversation)
       .createQueryBuilder('c')
+      .innerJoinAndSelect('c.user1', 'user1')
+      .innerJoinAndSelect('c.user2', 'user2')
       .innerJoinAndSelect('c.lastMessage', 'lastMessage')
+      .innerJoinAndSelect('lastMessage.sender', 'sender')
       .where('c.user1 = :userId AND lastMessage.isDeletedByUser1 = false', { userId })
       .orWhere('c.user2 = :userId AND lastMessage.isDeletedByUser2 = false', { userId })
       .orderBy('lastMessage.created', 'DESC')

@@ -4,7 +4,11 @@
     <mat-nav-list>
       <a mat-list-item *ngFor="let conversation of (conversations$ | async)"
         class="ptcg-no-padding-list-item">
-        <ptcg-contact></ptcg-contact>
+        <ptcg-contact-bar
+          [active]="userId === conversation.user1Id || userId === conversation.user2Id"
+          [conversation]="conversation"
+          [loggedUserId]="loggedUserId">
+        </ptcg-contact-bar>
       </a>
     </mat-nav-list>
   </ptcg-sidebar>
@@ -32,7 +36,7 @@
 
       <div *ngIf="userId === 0 ; else messages">
         <div class="ptcg-u-padding">
-          <mat-card class="mat-elevation-z2">
+          <mat-card class="mat-elevation-z2" *ngIf="!loading">
             No conversation selected
           </mat-card>
         </div>

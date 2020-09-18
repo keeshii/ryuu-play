@@ -20,6 +20,7 @@ export class ConversationComponent implements OnInit, OnDestroy {
   @Input() loggedUserId: number;
 
   public messages$ = new BehaviorSubject<MessageInfo[]>([]);
+  public text: string;
 
   constructor(
     private alertService: AlertService,

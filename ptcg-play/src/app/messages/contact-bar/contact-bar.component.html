@@ -1,0 +1,15 @@
+<div class="ptcg-contact-bar" [class.active]="active" [class.marked]="marked"
+  [routerLink]="['/message', user.userId]"
+  *ngIf="user$ | async ; let user">
+
+  <ptcg-avatar class="ptcg-contact-avatar" [avatarFile]="user.avatarFile">
+  </ptcg-avatar>
+
+  <div class="ptcg-contact-info">
+    <div class="ptcg-contact-name">{{ user.name }}</div>
+    <div class="ptcg-contact-message">
+      {{ conversation.lastMessage.text }}
+    </div>
+  </div>
+
+</div>

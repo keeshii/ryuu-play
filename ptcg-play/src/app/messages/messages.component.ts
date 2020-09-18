@@ -21,7 +21,7 @@ export class MessagesComponent implements OnInit, OnDestroy {
   public loading = false;
   public loadingMessages = false;
 
-  public conversations$: Observable<ConversationInfo | undefined>;
+  public conversations$: Observable<ConversationInfo[]>;
   public userId = 0;
   public loggedUserId: number;
 
@@ -40,6 +40,21 @@ export class MessagesComponent implements OnInit, OnDestroy {
       takeUntilDestroyed(this)
     ).subscribe({
       next: loggedUserId => this.loggedUserId = loggedUserId
+    });
+
+    this.conversations$.pipe(
+      takeUntilDestroyed(this)
+    ).subscribe({
+      next: conversations => {
+        if (this.userId === 0 && conversations.length > 0) {
+          const c = conversations[0];
+          let userId = c.user1Id;
+          if (userId === this.loggedUserId) {
+            userId = c.user2Id;
+          }
+          this.router.navigate(['/message', userId]);
+        }
+      }
     });
 
     this.route.paramMap.pipe(
@@ -95,7 +110,7 @@ export class MessagesComponent implements OnInit, OnDestroy {
     return;
   }
 
-  public deleteMessages(userId: number) {
+  public deleteConversation(userId: number) {
     return;
   }
 

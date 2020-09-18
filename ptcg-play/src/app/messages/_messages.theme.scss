@@ -1,0 +1,33 @@
+@import '~@angular/material/theming';
+
+
+@mixin ptcg-messages-theme($theme) {
+  $background: map-get($theme, background);
+  $primary: map-get($theme, primary);
+
+  $active-contact-background-color: mat-color($background, focused-button);
+
+  ptcg-contact-bar {
+    .ptcg-contact-bar.active {
+      background-color: $active-contact-background-color;
+      &:after {
+        background-color: mat-color($primary);
+      }
+    }
+
+    .ptcg-contact-bar.marked .ptcg-contact-name {
+      color: mat-color($primary);
+    }
+  }
+
+}
+
+@mixin ptcg-messages-typography($config) {
+  ptcg-contact-bar {
+    @include mat-typography-level-to-styles($config, caption);
+
+    .ptcg-contact-name {
+      @include mat-typography-level-to-styles($config, body-2);
+    }
+  }
+}

@@ -1,0 +1,55 @@
+@import '../../../theme/variables.scss';
+
+$avatar-size: map-get($ptcg-size, avatar);
+$ptcg-contact-bar-active-divider-size: 2px;
+
+:host {
+  height: 100%;
+  width: 100%;
+}
+
+.ptcg-contact-bar {
+  align-items: center;
+  display: flex;
+  height: 100%;
+  outline: 0;
+  position: relative;
+
+  &.marked .ptcg-contact-name {
+    text-decoration: underline;
+  }
+
+  &.active:after {
+    bottom: 0;
+    content: "";
+    display: block;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: $ptcg-contact-bar-active-divider-size;
+  }
+}
+
+ptcg-avatar {
+  flex: 0 0;
+}
+
+.ptcg-contact-info {
+  display: flex;
+  flex: 1 1;
+  flex-direction: column;
+  max-width: calc(100% - #{map-get($ptcg-size, avatar)});
+  justify-content: center;
+  padding: 0 map-get($padding, small);
+}
+
+.ptcg-contact-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ptcg-contact-message {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
