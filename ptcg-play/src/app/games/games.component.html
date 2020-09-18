@@ -8,6 +8,7 @@
         <ptcg-user-bar [user]="client.user"></ptcg-user-bar>
         <mat-menu #menu="matMenu">
           <button mat-menu-item
+            [routerLink]="['/message', client.user.userId]"
             *ngIf="clientId !== client.clientId">
             Send message
           </button>

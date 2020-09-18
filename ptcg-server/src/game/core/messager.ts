@@ -32,7 +32,7 @@ export class Messager {
     });
   }
 
-  private async getConversation(user1: User, user2: User): Promise<Conversation> {
+  public async getConversation(user1: User, user2: User): Promise<Conversation> {
     let conversations = await Conversation.find({
       where: [
         { user1: { id: user1.id }, user2: { id: user2.id }},

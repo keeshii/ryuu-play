@@ -1,60 +1,55 @@
-import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { UserInfo } from 'ptcg-server';
-import { Observable, EMPTY, of } from 'rxjs';
-import { switchMap, map } from 'rxjs/operators';
+import { ActivatedRoute, Router } from '@angular/router';
+import { UserInfo, ConversationInfo } from 'ptcg-server';
+import { BehaviorSubject, Observable, EMPTY } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 import { AlertService } from '../shared/alert/alert.service';
-import { EditAvatarsPopupService } from './edit-avatars-popup/edit-avatars-popup.service';
+import { MessageService } from '../api/services/message.service';
 import { ProfileService } from '../api/services/profile.service';
 import { SessionService } from '../shared/session/session.service';
 import { takeUntilDestroyed } from '../shared/operators/take-until-destroyed';
 
-import { MessageService } from '../api/services/message.service';
-
-
 @Component({
-  selector: 'ptcg-profile',
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss']
+  selector: 'ptcg-message',
+  templateUrl: './message.component.html',
+  styleUrls: ['./message.component.scss']
 })
-export class ProfileComponent implements OnInit, OnDestroy {
+export class MessageComponent implements OnInit, OnDestroy {
 
+  public loading = false;
+  public conversations$ = new BehaviorSubject<ConversationInfo[]>([]);
+  public conversation$: Observable<ConversationInfo | undefined>;
   public user$: Observable<UserInfo | undefined>;
-  public loggedUserId: number;
-  public loading: boolean;
   public userId: number;
-  public owner$: Observable<boolean>;
 
   constructor(
     private alertService: AlertService,
-    private edtiAvatarsPopupService: EditAvatarsPopupService,
     private messageService: MessageService,
     private profileService: ProfileService,
     private route: ActivatedRoute,
     private router: Router,
     private sessionService: SessionService
   ) {
+    this.conversation$ = EMPTY;
     this.user$ = EMPTY;
-    this.owner$ = EMPTY;
   }
 
   ngOnInit(): void {
     this.route.paramMap.pipe(
       switchMap(paramMap => {
-        const userId = parseInt(paramMap.get('userId'), 10);
+        const userId = parseInt(paramMap.get('userId') || '0', 10);
         this.userId = userId;
-        this.owner$ = this.sessionService.get(session => session.loggedUserId === userId);
         this.user$ = this.sessionService.get(session => session.users[userId]);
 
         const user = this.sessionService.session.users[userId];
-        if (user !== undefined) {
+        if (user !== undefined || userId === 0) {
           return EMPTY;
         }
         this.loading = true;
         return this.profileService.getUser(userId);
       }),
-      takeUntilDestroyed(this)
+      takeUntilDestroyed(this),
     )
       .subscribe({
         next: response => {
@@ -69,16 +64,28 @@ export class ProfileComponent implements OnInit, OnDestroy {
           this.router.navigate(['/']);
         }
       });
+
+    this.messageService.getConversations()
+      .subscribe({
+        next: response => {
+          console.log(response);
+        },
+        error: async error => {
+          await this.alertService.toast(error);
+        }
+      });
   }
 
-  inviteToPlay() {
+  ngOnDestroy(): void {
+  }
+
+  public deleteMessages(userId: number) {
     return;
   }
 
-  editAvatars(userId: number) {
-    this.edtiAvatarsPopupService.openDialog(userId);
+  public sendMessage(userId: number, text: string) {
+    console.log('send message', userId, text);
+    return;
   }
-
-  ngOnDestroy() {}
 
 }

@@ -19,6 +19,7 @@ export class MessageSocket {
 
   public onMessage(from: Client, message: Message): void {
     const messageInfo: MessageInfo = {
+      messageId: message.id,
       senderId: message.sender.id,
       created: message.created,
       text: message.text,
@@ -28,11 +29,11 @@ export class MessageSocket {
     this.socket.emit('message:received', { message: messageInfo, user });
   }
 
-  private async sendMessage(params: { text: string, toUserId: number }, response: Response<void>): Promise<void> {
+  private async sendMessage(params: { userId: number, text: string }, response: Response<void>): Promise<void> {
     try {
-      const user = await User.findOne(params.toUserId);
+      const user = await User.findOne(params.userId);
       if (user === undefined) {
-        throw new Error(Errors.CANNOT_SEND_MESSAGE);
+        throw new Error(Errors.PROFILE_INVALID);
       }
       await this.core.messager.sendMessage(this.client, user, params.text);
 

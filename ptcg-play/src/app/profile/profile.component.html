@@ -15,10 +15,7 @@
         </button>
       </ng-template>
       <ng-template #visitorActions>
-        <button mat-raised-button color="primary" (click)="inviteToPlay()">
-          Invite to play
-        </button>
-        <button mat-raised-button color="primary" (click)="sendMessage()">
+        <button mat-raised-button color="primary" [routerLink]="['/message', userId]">
           Send message
         </button>
       </ng-template>

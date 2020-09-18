@@ -1,0 +1,14 @@
+
+.ptcg-messages-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.ptcg-messages-content {
+  flex: 1 1;
+}
+
+.ptcg-messages-footer {
+  flex: 0 0;
+}

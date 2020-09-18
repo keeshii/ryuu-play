@@ -1,6 +1,6 @@
-import { UserInfo } from "./core.interface";
 
 export interface MessageInfo {
+  messageId: number;
   senderId: number;
   created: number;
   text: string;
@@ -8,7 +8,7 @@ export interface MessageInfo {
 }
 
 export interface ConversationInfo {
-  user1: UserInfo;
-  user2: UserInfo;
+  user1Id: number;
+  user2Id: number;
   lastMessage: MessageInfo
 }
