@@ -36,7 +36,7 @@
 
       <div *ngIf="userId === 0 ; else messages">
         <div class="ptcg-u-padding">
-          <mat-card class="mat-elevation-z2" *ngIf="!loading">
+          <mat-card class="mat-elevation-z2">
             No conversation selected
           </mat-card>
         </div>
@@ -46,7 +46,7 @@
         <ptcg-conversation
           [loggedUserId]="loggedUserId"
           [userId]="userId"
-          (loading)="loadingMessages = $event">
+          (loading)="loading = $event">
         </ptcg-conversation>
       </ng-template>
     </div>

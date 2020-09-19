@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, EventEmitter, Output, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, OnDestroy, ElementRef } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { MessageInfo } from 'ptcg-server';
-import { finalize } from 'rxjs/operators';
+import { finalize, skip } from 'rxjs/operators';
 
 import { AlertService } from '../../shared/alert/alert.service';
 import { ApiError } from '../../api/api.error';
@@ -24,11 +24,18 @@ export class ConversationComponent implements OnInit, OnDestroy {
 
   constructor(
     private alertService: AlertService,
+    private elementRef: ElementRef<HTMLElement>,
     private messageService: MessageService
   ) { }
 
   ngOnInit(): void {
     this.loadMessages(this.userId);
+
+    this.messages$
+      .pipe(skip(1), takeUntilDestroyed(this))
+      .subscribe({
+        next: () => this.scrollToBottom()
+      });
   }
 
   ngOnDestroy(): void {
@@ -65,6 +72,16 @@ export class ConversationComponent implements OnInit, OnDestroy {
         this.alertService.toast(error.message);
       }
     });
+  }
+
+  private scrollToBottom(): void {
+    try {
+      const scollablePane = this.elementRef.nativeElement
+        .getElementsByClassName('ptcg-conversation-content')[0] as HTMLElement;
+      setTimeout(() => {
+        scollablePane.scrollTop = scollablePane.scrollHeight;
+      });
+    } catch (err) { }
   }
 
 }

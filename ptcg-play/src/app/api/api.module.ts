@@ -43,6 +43,7 @@ import { SocketService } from './socket.service';
 export class ApiModule {
   constructor(
     mainService: MainService,
+    messageService: MessageService,
     socketService: SocketService
   ) {
 
@@ -51,7 +52,10 @@ export class ApiModule {
         filter(connected => connected),
         switchMap(() => mainService.getCoreInfo())
       )
-      .subscribe(coreInfo => mainService.init(coreInfo));
+      .subscribe(coreInfo => {
+        mainService.init(coreInfo);
+        messageService.init();
+      });
 
   }
 }

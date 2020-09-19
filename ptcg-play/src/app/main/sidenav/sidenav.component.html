@@ -4,7 +4,12 @@
   <a routerLink="/ranking" mat-list-item>Ranking</a>
   <a routerLink="/replays" mat-list-item>Replays</a>
   <a routerLink="/message" mat-list-item>
-    <span matBadge="1" matBadgeOverlap="false">Messages</span>
+    <span
+      [matBadge]="unreadMessages$ | async"
+      matBadgeOverlap="false"
+      [matBadgeHidden]="(unreadMessages$ | async) === 0">
+      Messages
+    </span>
   </a>
 </mat-nav-list>
 

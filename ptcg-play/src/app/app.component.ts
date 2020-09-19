@@ -3,6 +3,7 @@ import { UserInfo } from 'ptcg-server';
 import { Observable } from 'rxjs';
 import { skip, takeUntil } from 'rxjs/operators';
 
+import { MessageService } from './api/services/message.service';
 import { ProfileService } from './api/services/profile.service';
 import { SessionService } from './shared/session/session.service';
 import { SocketService } from './api/socket.service';
@@ -21,6 +22,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private elementRef: ElementRef<HTMLElement>,
+    private messageService: MessageService,
     private profileService: ProfileService,
     private sessionService: SessionService,
     private socketService: SocketService,
@@ -80,6 +82,18 @@ export class AppComponent implements OnInit, OnDestroy {
         const users = { ...this.sessionService.session.users };
         users[response.user.userId] = response.user;
         this.sessionService.set({ users, loggedUserId: response.user.userId });
+      });
+
+    this.messageService.getConversations()
+    .pipe(
+        takeUntilDestroyed(this),
+        takeUntil(tokenChanged$)
+      )
+      .subscribe(response => {
+        this.messageService.setSessionConversations(
+          response.conversations,
+          response.users
+        );
       });
   }
 
