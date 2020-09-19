@@ -1,13 +1,15 @@
 <div class="ptcg-conversation">
   <div class="ptcg-conversation-content ptcg-u-padding">
     <div class="ptcg-conversation-message" *ngFor="let message of (messages$ | async)">
-      <ptcg-message-entry [message]="message">
+      <ptcg-message-entry
+        [message]="message"
+        [loggedUserId]="loggedUserId">
       </ptcg-message-entry>
     </div>
   </div>
 
-  <div class="ptcg-messages-footer">
-    <form class="ptcg-messages-form" autocomplete="off">
+  <div class="ptcg-conversation-footer">
+    <form autocomplete="off">
       <mat-form-field floatLabel="never" appearance="legacy">
         <input
           name="message"

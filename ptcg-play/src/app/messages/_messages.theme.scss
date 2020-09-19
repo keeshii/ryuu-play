@@ -5,6 +5,7 @@
   $background: map-get($theme, background);
   $primary: map-get($theme, primary);
 
+  $input-message-background-color: mat-color($background, app-bar);
   $active-contact-background-color: mat-color($background, focused-button);
 
   ptcg-contact-bar {
@@ -20,6 +21,18 @@
     }
   }
 
+  ptcg-conversation {
+    .ptcg-conversation-footer {
+      background-color: $input-message-background-color;
+    }
+  }
+
+  ptcg-message-entry {
+    .myself mat-card {
+      background-color: mat-color($background, tooltip);
+    }
+  }
+
 }
 
 @mixin ptcg-messages-typography($config) {
@@ -28,6 +41,12 @@
 
     .ptcg-contact-name {
       @include mat-typography-level-to-styles($config, body-2);
+    }
+  }
+
+  ptcg-message-entry {
+    .ptcg-message-footer {
+      @include mat-typography-level-to-styles($config, caption);
     }
   }
 }

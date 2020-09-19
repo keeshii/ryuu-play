@@ -1,18 +1,32 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { MessageInfo } from 'ptcg-server';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { MessageInfo, UserInfo } from 'ptcg-server';
+import { Observable, EMPTY } from 'rxjs';
+
+import { SessionService } from '../../shared/session/session.service';
 
 @Component({
   selector: 'ptcg-message-entry',
   templateUrl: './message-entry.component.html',
   styleUrls: ['./message-entry.component.scss']
 })
-export class MessageEntryComponent implements OnInit {
+export class MessageEntryComponent implements OnInit, OnChanges {
 
   @Input() message: MessageInfo;
+  @Input() loggedUserId: number;
+  public user$: Observable<UserInfo> = EMPTY;
+  public writtenByMe: boolean;
 
-  constructor() { }
+  constructor(private sessionService: SessionService) { }
 
   ngOnInit(): void {
+  }
+
+  ngOnChanges(): void {
+    if (this.message && this.loggedUserId) {
+      const senderId = this.message.senderId;
+      this.writtenByMe = senderId === this.loggedUserId;
+      this.user$ = this.sessionService.get(session => session.users[senderId]);
+    }
   }
 
 }

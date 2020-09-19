@@ -35,6 +35,10 @@ export class ConversationComponent implements OnInit, OnDestroy {
   }
 
   public sendMessage(userId: number, text: string) {
+    if (text.length === 0) {
+      return;
+    }
+
     this.messageService.sendMessage(userId, text)
       .pipe(takeUntilDestroyed(this))
       .subscribe({
@@ -54,7 +58,8 @@ export class ConversationComponent implements OnInit, OnDestroy {
       finalize(() => { this.loading.next(false); })
     ).subscribe({
       next: response => {
-        this.messages$.next(response.messages);
+        const messages = response.messages.reverse();
+        this.messages$.next(messages);
       },
       error: (error: ApiError) => {
         this.alertService.toast(error.message);

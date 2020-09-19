@@ -1,0 +1,39 @@
+@import '../../../theme/variables.scss';
+
+.ptcg-message-entry {
+  display: flex;
+  margin-bottom: map-get($padding, normal);
+
+  &.myself {
+    flex-direction: row-reverse;
+  }
+}
+
+.ptcg-message-avatar {
+  flex: 0 0;
+  margin: 0 map-get($padding, small);
+}
+
+.ptcg-message-text {
+  flex: 1 1;
+  margin: 0 map-get($padding, small);
+
+  mat-card-content {
+    margin-bottom: 0;
+  }
+}
+
+.ptcg-message-footer {
+  align-items: flex-end;
+  display: flex;
+  padding: map-get($padding, small);
+  justify-content: space-between;
+}
+
+.ptcg-message-from {
+  margin: 0 map-get($padding, small);
+}
+
+.ptcg-message-seen {
+  height: 24px;
+}
