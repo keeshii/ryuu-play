@@ -19,7 +19,7 @@ export class Conversation extends BaseEntity {
   @OneToMany(type => Message, message => message.conversation)
   messages!: Message[];
 
-  @OneToOne(type => Message)
+  @OneToOne(type => Message, { onDelete: 'CASCADE' })
   @JoinColumn()
   lastMessage!: Message;
 

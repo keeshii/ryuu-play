@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import { FindConditions } from 'typeorm';
 
-import { AuthToken } from '../services';
-import { Controller, Get } from './controller';
+import { AuthToken, Validate, check } from '../services';
+import { Controller, Get, Post } from './controller';
 import { Conversation, Message, User } from '../../storage';
 import { ConversationInfo, MessageInfo } from '../interfaces/message.interface';
 import { Errors } from '../common/errors';
@@ -106,6 +106,45 @@ export class Messages extends Controller {
     }));
 
     res.send({ok: true, messages, users, total});
+  }
+
+  @Post('/deleteMessages')
+  @AuthToken()
+  @Validate({
+    id: check().isNumber()
+  })
+  public async onDeleteMessages(req: Request, res: Response) {
+    const userId: number = req.body.userId;
+
+    const user1 = await User.findOne(userId);
+    const user2 = await User.findOne(parseInt(req.body.id, 10));
+    if (user1 === undefined || user2 === undefined) {
+      res.status(400);
+      res.send({error: Errors.PROFILE_INVALID});
+      return;
+    }
+
+    const conversation = await Conversation.findByUsers(user1, user2);
+    if (conversation.id === 0) {
+      res.send({ok: true});
+      return;
+    }
+
+    const updateValue = userId === conversation.user1.id
+      ? { isDeletedByUser1: true }
+      : { isDeletedByUser2: true };
+
+    // Mark all messages as deleted for given user
+    await Message.update({ conversation: { id: conversation.id } }, updateValue);
+
+    // Remove from database messages, if both are marked as deleted
+    await Message.delete({
+      conversation: { id: conversation.id },
+      isDeletedByUser1: true,
+      isDeletedByUser2: true
+    });
+
+    res.send({ok: true});
   }
 
 }

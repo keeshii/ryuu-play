@@ -10,8 +10,11 @@
 .ptcg-conversation-content {
   display: block;
   flex: 1 1;
-  padding-bottom: 0;
   overflow: auto;
+}
+
+.ptcg-conversation-content-inner {
+  padding-bottom: 0;
 }
 
 .ptcg-conversation-footer {

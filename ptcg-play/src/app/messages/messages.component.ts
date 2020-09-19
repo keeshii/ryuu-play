@@ -3,8 +3,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ConversationInfo } from 'ptcg-server';
 import { Observable } from 'rxjs';
 
+import { AlertService } from '../shared/alert/alert.service';
+import { ApiError } from '../api/api.error';
+import { MessageService } from '../api/services/message.service';
 import { SessionService } from '../shared/session/session.service';
 import { takeUntilDestroyed } from '../shared/operators/take-until-destroyed';
+import {finalize} from 'rxjs/operators';
 
 @Component({
   selector: 'ptcg-messages',
@@ -20,6 +24,8 @@ export class MessagesComponent implements OnInit, OnDestroy {
   public loggedUserId: number;
 
   constructor(
+    private alertService: AlertService,
+    private messageService: MessageService,
     private route: ActivatedRoute,
     private router: Router,
     private sessionService: SessionService
@@ -69,7 +75,27 @@ export class MessagesComponent implements OnInit, OnDestroy {
   }
 
   public deleteConversation(userId: number) {
-    return;
+    if (userId === 0) {
+      return;
+    }
+
+    this.loading = true;
+    this.messageService.deleteMessages(userId).pipe(
+      takeUntilDestroyed(this),
+      finalize(() => { this.loading = false; })
+    ).subscribe({
+        next: () => {
+          const conversations = this.sessionService.session.conversations
+            .filter(c => c.user1Id !== userId && c.user2Id !== userId);
+          this.sessionService.set({ conversations });
+          if (this.userId === userId) {
+            this.router.navigate(['/message']);
+          }
+        },
+        error: (error: ApiError) => {
+          this.alertService.toast(error.message);
+        }
+      });
   }
 
 }

@@ -1,12 +1,14 @@
 <div class="ptcg-conversation">
-  <div class="ptcg-conversation-content ptcg-u-padding">
-    <div class="ptcg-conversation-message" *ngFor="let message of (messages$ | async)">
-      <ptcg-message-entry
-        [message]="message"
-        [loggedUserId]="loggedUserId">
-      </ptcg-message-entry>
+  <ptcg-content class="ptcg-conversation-content" [loading]="loading">
+    <div class="ptcg-conversation-content-inner ptcg-u-padding">
+      <div class="ptcg-conversation-message" *ngFor="let message of (messages$ | async)">
+        <ptcg-message-entry
+          [message]="message"
+          [loggedUserId]="loggedUserId">
+        </ptcg-message-entry>
+      </div>
     </div>
-  </div>
+  </ptcg-content>
 
   <div class="ptcg-conversation-footer">
     <form autocomplete="off">

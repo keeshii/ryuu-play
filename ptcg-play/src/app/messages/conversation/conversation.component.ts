@@ -15,10 +15,10 @@ import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed'
 })
 export class ConversationComponent implements OnInit, OnDestroy {
 
-  @Output() loading = new EventEmitter<boolean>();
   @Input() userId: number;
   @Input() loggedUserId: number;
 
+  public loading = false;
   public messages$ = new BehaviorSubject<MessageInfo[]>([]);
   public text: string;
 
@@ -59,10 +59,10 @@ export class ConversationComponent implements OnInit, OnDestroy {
   }
 
   private loadMessages(userId: number) {
-    this.loading.next(true);
+    this.loading = true;
     this.messageService.getConversation(userId).pipe(
       takeUntilDestroyed(this),
-      finalize(() => { this.loading.next(false); })
+      finalize(() => { this.loading = false; })
     ).subscribe({
       next: response => {
         const messages = response.messages.reverse();

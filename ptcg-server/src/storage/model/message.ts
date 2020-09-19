@@ -11,7 +11,7 @@ export class Message extends BaseEntity {
   @PrimaryGeneratedColumn()
   public id: number = 0;
 
-  @ManyToOne(type => Conversation, conversation => conversation.messages)
+  @ManyToOne(type => Conversation, conversation => conversation.messages, { onDelete: 'CASCADE' })
   conversation: Conversation = new Conversation();
 
   @ManyToOne(type => User)

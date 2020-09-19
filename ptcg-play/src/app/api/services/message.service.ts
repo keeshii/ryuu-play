@@ -54,6 +54,10 @@ export class MessageService {
     return this.api.get<MessagesResponse>('/v1/messages/get/' + userId);
   }
 
+  public deleteMessages(userId: number): Observable<Response> {
+    return this.api.post<Response>('/v1/messages/deleteMessages', { id: userId });
+  }
+
   public sendMessage(userId: number, text: string): Observable<Response> {
     return this.socketService.emit('message:send', { userId, text });
   }
