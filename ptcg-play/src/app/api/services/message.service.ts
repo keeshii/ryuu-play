@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { MessageInfo, ConversationInfo, UserInfo } from 'ptcg-server';
 
 import { ApiService } from '../api.service';
-import { ConversationsResponse, MessagesResponse } from '../interfaces/message.interface';
+import { ConversationsResponse, MessagesResponse, MessageResponse } from '../interfaces/message.interface';
 import { SessionService } from '../../shared/session/session.service';
 import { SocketService } from '../socket.service';
 
@@ -58,7 +58,7 @@ export class MessageService {
     return this.api.post<Response>('/v1/messages/deleteMessages', { id: userId });
   }
 
-  public sendMessage(userId: number, text: string): Observable<Response> {
+  public sendMessage(userId: number, text: string): Observable<MessageResponse> {
     return this.socketService.emit('message:send', { userId, text });
   }
 

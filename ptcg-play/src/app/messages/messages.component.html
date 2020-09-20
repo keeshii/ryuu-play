@@ -21,16 +21,10 @@
 
           <span class="ptcg-u-spacer"></span>
 
-          <button mat-raised-button color="primary" [matMenuTriggerFor]="menu">Actions</button>
-          <mat-menu #menu="matMenu">
-            <button mat-menu-item (click)="newConversation()">
-              New conversation
-            </button>
-            <button mat-menu-item (click)="deleteConversation(userId)"
-             [disabled]="userId === 0">
-              Delete conversation
-            </button>
-          </mat-menu>
+          <button mat-raised-button color="primary" *ngIf="userId !== 0"
+            (click)="deleteConversation(userId)">
+            Delete conversation
+          </button>
         </mat-toolbar-row>
       </mat-toolbar>
 

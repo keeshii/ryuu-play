@@ -12,3 +12,8 @@ export interface MessagesResponse extends Response {
   users: UserInfo[];
   total: number;
 }
+
+export interface MessageResponse extends Response {
+  message: MessageInfo;
+  user: UserInfo;
+}

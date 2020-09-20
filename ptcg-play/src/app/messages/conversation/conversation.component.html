@@ -15,11 +15,13 @@
       <mat-form-field floatLabel="never" appearance="legacy">
         <input
           name="message"
+          [disabled]="loading"
           [(ngModel)]="text"
           type="text" matInput placeholder="Enter message">
         <button mat-button matSuffix mat-icon-button
           matTooltip="Send message"
           matTooltipShowDelay="1000"
+          [disabled]="loading"
           (click)="sendMessage(userId, text)">
           <mat-icon>play_arrow</mat-icon>
         </button>

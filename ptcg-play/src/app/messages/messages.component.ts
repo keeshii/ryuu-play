@@ -2,13 +2,13 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConversationInfo } from 'ptcg-server';
 import { Observable } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 
 import { AlertService } from '../shared/alert/alert.service';
 import { ApiError } from '../api/api.error';
 import { MessageService } from '../api/services/message.service';
 import { SessionService } from '../shared/session/session.service';
 import { takeUntilDestroyed } from '../shared/operators/take-until-destroyed';
-import {finalize} from 'rxjs/operators';
 
 @Component({
   selector: 'ptcg-messages',
@@ -40,6 +40,18 @@ export class MessagesComponent implements OnInit, OnDestroy {
       next: loggedUserId => this.loggedUserId = loggedUserId
     });
 
+    this.route.paramMap.pipe(
+      takeUntilDestroyed(this)
+    )
+    .subscribe({
+      next: paramMap => {
+        this.loggedUserId = this.sessionService.session.loggedUserId;
+        const userId = parseInt(paramMap.get('userId') || '0', 10);
+        this.userId = userId;
+        this.createConversationIfNotExists(this.loggedUserId, userId);
+      }
+    });
+
     this.conversations$.pipe(
       takeUntilDestroyed(this)
     ).subscribe({
@@ -55,27 +67,46 @@ export class MessagesComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.route.paramMap.pipe(
-      takeUntilDestroyed(this)
-    )
-    .subscribe({
-      next: paramMap => {
-        this.loggedUserId = this.sessionService.session.loggedUserId;
-        const userId = parseInt(paramMap.get('userId') || '0', 10);
-        this.userId = userId;
-      }
-    });
   }
 
   ngOnDestroy(): void {
   }
 
-  public newConversation() {
-    return;
+  private createConversationIfNotExists(user1Id: number, user2Id: number) {
+    if (!user1Id || !user2Id) {
+      return;
+    }
+
+    const conversations = this.sessionService.session.conversations;
+    const conversation: ConversationInfo = conversations.find(c => {
+      return (c.user1Id === user1Id && c.user2Id === user2Id)
+        || (c.user1Id === user2Id || c.user2Id === user1Id);
+    });
+
+    if (conversation === undefined) {
+      const newConversation: ConversationInfo = {
+        user1Id,
+        user2Id,
+        lastMessage: {
+          messageId: 0,
+          senderId: user1Id,
+          created: Date.now(),
+          text: '',
+          isRead: true
+        }
+      };
+      this.sessionService.set({
+        conversations: [ newConversation, ...conversations ]
+      });
+    }
   }
 
-  public deleteConversation(userId: number) {
+  public async deleteConversation(userId: number) {
     if (userId === 0) {
+      return;
+    }
+
+    if (!await this.alertService.confirm('Delete this conversation from your profile?')) {
       return;
     }
 

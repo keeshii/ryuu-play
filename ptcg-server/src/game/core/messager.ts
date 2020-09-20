@@ -10,7 +10,7 @@ export class Messager {
     this.core = core;
   }
 
-  public async sendMessage(client: Client, receiver: User, text: string): Promise<void> {
+  public async sendMessage(client: Client, receiver: User, text: string): Promise<Message> {
     const time = Date.now();
 
     const message = new Message();
@@ -25,6 +25,8 @@ export class Messager {
         c.onMessage(client, message);
       }
     });
+
+    return message;
   }
 
 }
