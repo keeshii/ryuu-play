@@ -105,7 +105,8 @@ export class ConversationComponent implements OnInit, OnDestroy, OnChanges {
       takeUntil(this.userChanged$)
     ).subscribe({
       next: message => {
-        if (message === undefined) {
+        // ignore empty last message when user is starting a new conversation
+        if (message === undefined || message.messageId === 0) {
           return;
         }
         let messages = this.messages$.value;
