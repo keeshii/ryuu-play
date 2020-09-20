@@ -21,6 +21,10 @@ export class MessageService {
     this.socketService.on('message:received', (
       data: {message: MessageInfo, user: UserInfo}
     ) => this.onMessageReceived(data.message, data.user));
+
+    this.socketService.on('message:read', (
+      data: {user: UserInfo}
+    ) => this.onMessageRead(data.user));
   }
 
   public getConversations() {
@@ -62,6 +66,10 @@ export class MessageService {
     return this.socketService.emit('message:send', { userId, text });
   }
 
+  public readMessages(userId: number): Observable<Response> {
+    return this.socketService.emit('message:read', { userId });
+  }
+
   private onMessageReceived(message: MessageInfo, user: UserInfo) {
     const loggedUserId = this.sessionService.session.loggedUserId;
     const senderId = message.senderId;
@@ -79,6 +87,23 @@ export class MessageService {
       };
     } else {
       conversation = { ...conversation, lastMessage: message };
+    }
+
+    this.setSessionConversations([conversation], [user]);
+  }
+
+  private onMessageRead(user: UserInfo) {
+    const loggedUserId = this.sessionService.session.loggedUserId;
+    const userId = user.userId;
+
+    let conversation = this.sessionService.session.conversations.find(c => {
+      return (c.user1Id === loggedUserId && c.user2Id === userId)
+        || (c.user1Id === userId && c.user2Id === loggedUserId);
+    });
+
+    if (conversation !== undefined) {
+      const lastMessage = { ...conversation.lastMessage, isRead: true };
+      conversation = { ...conversation, lastMessage };
     }
 
     this.setSessionConversations([conversation], [user]);

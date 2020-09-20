@@ -70,6 +70,10 @@ export class SocketClient implements Client {
     this.messageSocket.onMessage(from, message);
   }
 
+  public onMessageRead(user: User): void {
+    this.messageSocket.onMessageRead(user);
+  }
+
   public attachListeners(): void {
     this.socket.attachListeners();
   }

@@ -48,7 +48,7 @@ export class MessagesComponent implements OnInit, OnDestroy {
         this.loggedUserId = this.sessionService.session.loggedUserId;
         const userId = parseInt(paramMap.get('userId') || '0', 10);
         this.userId = userId;
-        this.createConversationIfNotExists(this.loggedUserId, userId);
+        this.createOrUpdateConversation(this.loggedUserId, userId);
       }
     });
 
@@ -72,18 +72,29 @@ export class MessagesComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
   }
 
-  private createConversationIfNotExists(user1Id: number, user2Id: number) {
+  private createOrUpdateConversation(user1Id: number, user2Id: number) {
     if (!user1Id || !user2Id) {
       return;
     }
 
-    const conversations = this.sessionService.session.conversations;
-    const conversation: ConversationInfo = conversations.find(c => {
+    let conversations = this.sessionService.session.conversations;
+    const index = conversations.findIndex(c => {
       return (c.user1Id === user1Id && c.user2Id === user2Id)
         || (c.user1Id === user2Id || c.user2Id === user1Id);
     });
 
-    if (conversation === undefined) {
+    // If conversation exists, update message isRead as true
+    if (index !== -1 && conversations[index].lastMessage.isRead === false) {
+      const conversation = conversations[index];
+      const lastMessage = { ...conversation.lastMessage, isRead: true };
+      const newConversation = { ...conversation, lastMessage };
+      conversations = conversations.slice();
+      conversations[index] = newConversation;
+      this.sessionService.set({ conversations });
+    }
+
+    // If conversation does not exist, create new one.
+    if (index === -1) {
       const newConversation: ConversationInfo = {
         user1Id,
         user2Id,

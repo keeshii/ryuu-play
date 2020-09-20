@@ -38,6 +38,8 @@ export abstract class BotClient implements Client {
   
   public abstract onMessage(from: Client, message: Message): void;
 
+  public abstract onMessageRead(user: User): void;
+
   createGame(deck: string[]): Game {
     if (this.core === undefined) {
       throw new GameError(GameMessage.BOT_NOT_INITIALIZED);

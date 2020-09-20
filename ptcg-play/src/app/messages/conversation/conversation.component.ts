@@ -45,7 +45,14 @@ export class ConversationComponent implements OnInit, OnDestroy, OnChanges {
     this.messages$
       .pipe(skip(1), takeUntilDestroyed(this))
       .subscribe({
-        next: () => this.scrollToBottom()
+        next: messages => {
+          this.scrollToBottom();
+
+          // there are some messages marked as not read.
+          if (messages.some(m => m.senderId === this.userId && !m.isRead)) {
+            this.markAsRead(this.userId);
+          }
+        }
       });
 
     this.loadMessages(this.userId);
@@ -62,7 +69,7 @@ export class ConversationComponent implements OnInit, OnDestroy, OnChanges {
       this.lastMessage$ = this.sessionService.get(session => {
         const conversation = session.conversations.find(c => {
           return (c.user1Id === userId && c.user2Id === this.loggedUserId)
-            || (c.user1Id === this.loggedUserId || c.user2Id === userId);
+            || (c.user1Id === this.loggedUserId && c.user2Id === userId);
         });
         return conversation && conversation.lastMessage;
       });
@@ -79,22 +86,12 @@ export class ConversationComponent implements OnInit, OnDestroy, OnChanges {
     this.loading = true;
     this.messageService.sendMessage(userId, text).pipe(
       takeUntilDestroyed(this),
+      takeUntil(this.userChanged$),
       finalize(() => { this.loading = false; })
     ).subscribe({
       next: response => {
         this.text = '';
-        const conversations = this.sessionService.session.conversations;
-        const index = conversations.findIndex(c => {
-          return (c.user1Id === userId && c.user2Id === this.loggedUserId)
-            || (c.user1Id === this.loggedUserId || c.user2Id === userId);
-        });
-        if (index !== -1) {
-          const conversation = { ...conversations[index], lastMessage: response.message };
-          const newConversations = conversations.slice();
-          newConversations.splice(index, 1);
-          newConversations.unshift(conversation);
-          this.sessionService.set({ conversations: newConversations });
-        }
+        this.updateConversation({ lastMessage: response.message });
       },
       error: (error: ApiError) => {
         this.alertService.toast(error.message);
@@ -114,17 +111,46 @@ export class ConversationComponent implements OnInit, OnDestroy, OnChanges {
         let messages = this.messages$.value;
         const index = messages.findIndex(m => m.messageId === message.messageId);
         if (index === -1) {
-          this.messages$.next([...messages, message]);
-          return;
+          messages = [...messages, message];
+          this.messages$.next(messages);
+        } else if (message.senderId === this.loggedUserId) {
+          messages = messages.slice();
+          messages[index] = message;
+          this.messages$.next(messages);
         }
-        messages = messages.slice();
-        messages[index] = message;
-        this.messages$.next(messages);
       }
     });
   }
 
-  private loadMessages(userId: number) {
+  private markAsRead(senderId: number): void {
+    let messages = this.messages$.value;
+
+    // Instantly update converstaion's isRead flag,
+    // this way the new message badge won't blink
+    let lastMessage = messages[messages.length - 1];
+    if (lastMessage.senderId === senderId) {
+      lastMessage = { ...lastMessage, isRead: true };
+      this.updateConversation({ lastMessage });
+    }
+
+    this.messageService.readMessages(senderId).pipe(
+      takeUntilDestroyed(this),
+      takeUntil(this.userChanged$)
+    ).subscribe({
+      next: () => {
+        messages = this.messages$.value.slice();
+        messages
+          .filter(m => m.senderId === senderId)
+          .forEach(m => { m.isRead = true; });
+        this.messages$.next(messages);
+      },
+      error: (error: ApiError) => {
+        this.alertService.toast(error.message);
+      }
+    });
+  }
+
+  private loadMessages(userId: number): void {
     this.loading = true;
     this.messageService.getConversation(userId).pipe(
       takeUntilDestroyed(this),
@@ -141,10 +167,26 @@ export class ConversationComponent implements OnInit, OnDestroy, OnChanges {
     });
   }
 
+  private updateConversation(data: Partial<ConversationInfo>): void {
+    const sessionConversations = this.sessionService.session.conversations;
+    const userId = this.userId;
+    const index = sessionConversations.findIndex(c => {
+      return (c.user1Id === userId && c.user2Id === this.loggedUserId)
+        || (c.user1Id === this.loggedUserId && c.user2Id === userId);
+    });
+    if (index !== -1) {
+      const conversation = { ...sessionConversations[index], ...data };
+      const conversations = sessionConversations.slice();
+      conversations.splice(index, 1);
+      conversations.unshift(conversation);
+      this.sessionService.set({ conversations });
+    }
+  }
+
   private scrollToBottom(): void {
     try {
       const scollablePane = this.elementRef.nativeElement
-        .getElementsByClassName('ptcg-conversation-content')[0] as HTMLElement;
+        .getElementsByClassName('ptcg-content-container')[0] as HTMLElement;
       setTimeout(() => {
         scollablePane.scrollTop = scollablePane.scrollHeight;
       });

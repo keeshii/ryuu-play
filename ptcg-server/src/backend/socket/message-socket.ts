@@ -14,14 +14,19 @@ export class MessageSocket {
   constructor(client: Client, private socket: SocketWrapper, private core: Core) {
     this.client = client;
 
-    // core listeners
+    // message socket listeners
     this.socket.addListener('message:send', this.sendMessage.bind(this));
+    this.socket.addListener('message:read', this.readMessages.bind(this));
   }
 
   public onMessage(from: Client, message: Message): void {
     const messageInfo: MessageInfo = this.buildMessageInfo(message);
     const user = CoreSocket.buildUserInfo(from.user);
     this.socket.emit('message:received', { message: messageInfo, user });
+  }
+
+  public onMessageRead(user: User): void {
+    this.socket.emit('message:read', { user: CoreSocket.buildUserInfo(user) });
   }
 
   private async sendMessage(params: { userId: number, text: string },
@@ -44,6 +49,24 @@ export class MessageSocket {
     }
 
     response('ok', { message: messageInfo, user: userInfo });
+  }
+
+  private async readMessages(params: { userId: number },
+    response: Response<void>): Promise<void> {
+
+    try {
+      const user = await User.findOne(params.userId);
+      if (user === undefined) {
+        throw new Error(Errors.PROFILE_INVALID);
+      }
+      await this.core.messager.readMessages(this.client, user);
+
+    } catch (error) {
+      response('error', Errors.CANNOT_READ_MESSAGE);
+      return;
+    }
+
+    response('ok');
   }
 
   private buildMessageInfo(message: Message): MessageInfo {

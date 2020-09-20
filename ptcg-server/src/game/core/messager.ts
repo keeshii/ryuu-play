@@ -1,6 +1,6 @@
 import { Client } from "../client/client.interface";
 import { Core } from "./core";
-import { User, Message } from "../../storage";
+import { User, Message, Conversation } from "../../storage";
 
 export class Messager {
 
@@ -27,6 +27,27 @@ export class Messager {
     });
 
     return message;
+  }
+
+  public async readMessages(client: Client, conversationUser: User): Promise<void> {
+    const conversation = await Conversation.findByUsers(client.user, conversationUser);
+    if (conversation.id === 0) {
+      return;
+    }
+
+    // Mark all messages as deleted for given user
+    await Message.update({
+      conversation: { id: conversation.id },
+      sender: { id: conversationUser.id },
+    }, {
+      isRead: true
+    });
+
+    this.core.clients.forEach(c => {
+      if (c.user.id === conversationUser.id) {
+        c.onMessageRead(client.user);
+      }
+    });
   }
 
 }

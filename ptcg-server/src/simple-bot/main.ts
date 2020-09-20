@@ -18,6 +18,8 @@ export class SimpleBot extends BotClient {
 
   public onMessage(from: Client, message: Message): void { }
 
+  public onMessageRead(user: User): void { }
+
   public onGameJoin(game: Game, client: Client): void {
     if (client === this) {
       const state = game.state;
