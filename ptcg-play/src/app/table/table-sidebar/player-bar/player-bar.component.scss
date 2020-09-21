@@ -25,6 +25,7 @@ $ptcg-player-bar-active-divider-size: 2px;
 }
 
 .ptcg-player-avatar {
+  cursor: pointer;
   grid-area: avatar;
   height: map-get($ptcg-size, avatar);
   width: map-get($ptcg-size, avatar);

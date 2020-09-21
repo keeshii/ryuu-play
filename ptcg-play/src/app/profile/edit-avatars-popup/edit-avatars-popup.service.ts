@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { UserInfo } from 'ptcg-server';
 
 import { EditAvatarsPopupComponent } from './edit-avatars-popup.component';
 

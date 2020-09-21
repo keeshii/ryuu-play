@@ -13,6 +13,7 @@
   $hand-background-color: mat-color($background, app-bar);
   $table-sidebar-header-background-color: mat-color($background, background);
   $table-sidebar-logs-background-color: mat-color($background, focused-button);
+  $choose-avatar-background-color: mat-color($background, hover);
 
   ptcg-hand {
     background-color: $hand-background-color;
@@ -69,6 +70,12 @@
   ptcg-replay-controls {
     .ptcg-replay-controls-header {
       background-color: $table-sidebar-header-background-color;
+    }
+  }
+
+  ptcg-choose-avatar-popup {
+    .ptcg-avatar-items-container {
+      background-color: $choose-avatar-background-color;
     }
   }
 }

@@ -8,6 +8,7 @@ import { TableSidebarComponent } from './table-sidebar.component';
 import { PlayerActionsComponent } from './player-actions/player-actions.component';
 import { GameLogsComponent } from './game-logs/game-logs.component';
 import { ReplayControlsComponent } from './replay-controls/replay-controls.component';
+import { ChooseAvatarPopupComponent } from './choose-avatar-popup/choose-avatar-popup.component';
 
 @NgModule({
   imports: [
@@ -20,7 +21,11 @@ import { ReplayControlsComponent } from './replay-controls/replay-controls.compo
     PlayerBarComponent,
     PlayerActionsComponent,
     GameLogsComponent,
-    ReplayControlsComponent
+    ReplayControlsComponent,
+    ChooseAvatarPopupComponent
+  ],
+  entryComponents: [
+    ChooseAvatarPopupComponent
   ],
   exports: [
     TableSidebarComponent

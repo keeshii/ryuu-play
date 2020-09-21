@@ -1,6 +1,8 @@
 <div class="ptcg-player-bar" [ngClass]="{active: active}">
 
-  <ptcg-avatar class="ptcg-player-avatar" [avatarFile]="(userInfo$ | async)?.avatarFile">
+  <ptcg-avatar class="ptcg-player-avatar"
+    (click)="avatarClick.next()"
+    [avatarFile]="(userInfo$ | async)?.avatarFile">
   </ptcg-avatar>
 
   <div class="ptcg-player-info">

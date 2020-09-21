@@ -7,12 +7,14 @@
   </div>
 
   <ptcg-player-bar
+    (avatarClick)="onAvatarClick(topPlayer)"
     [player]="topPlayer"
     [replayPlayer]="topReplayPlayer"
     [active]="isTopPlayerActive">
   </ptcg-player-bar>
 
   <ptcg-player-bar
+    (avatarClick)="onAvatarClick(bottomPlayer)"
     [player]="bottomPlayer"
     [replayPlayer]="bottomReplayPlayer"
     [active]="isBottomPlayerActive">

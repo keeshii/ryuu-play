@@ -1,0 +1,14 @@
+@import '../../../../theme/variables.scss';
+
+.ptcg-avatar-items-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.ptcg-avatar-item {
+  align-items: center;
+  display: inline-flex;
+  flex-direction: column;
+  padding: map-get($padding, small);
+}

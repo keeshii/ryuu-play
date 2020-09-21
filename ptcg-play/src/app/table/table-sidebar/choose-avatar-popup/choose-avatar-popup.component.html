@@ -1,0 +1,40 @@
+<h2 mat-dialog-title>Choose avatar</h2>
+
+<mat-dialog-content>
+
+  <mat-progress-bar *ngIf="loading" color="accent" mode="indeterminate" class="ptcg-u-top">
+  </mat-progress-bar>
+
+  <mat-card class="ptcg-avatar-items-container mat-elevation-z2"
+    *ngIf="avatars.length > 0">
+
+    <div class="ptcg-avatar-item" *ngFor="let avatar of avatars">
+      <ptcg-avatar class="mat-elevation-z2"
+        type="profile"
+        (click)="selected = avatar.name"
+        ptcgDropHighlight="outside"
+        [ptcgDropHighlightVisible]="avatar.name === selected"
+        hoverable="true"
+        [avatarFile]="avatar.fileName">
+      </ptcg-avatar>
+      <span class="ptcg-avatar-item-label">
+        {{ avatar.name }}
+      </span>
+    </div>
+
+  </mat-card>
+
+  <div class="ptcg-u-padding" *ngIf="!loading && avatars.length === 0">
+    No avatars defined.
+  </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="primary"
+    [disabled]="loading || avatars.length === 0"
+    (click)="chooseAvatar()">
+    Choose
+  </button>
+</mat-dialog-actions>

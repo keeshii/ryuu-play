@@ -12,7 +12,10 @@ export class AvatarService {
     private api: ApiService,
   ) {}
 
-  public getList() {
+  public getList(userId?: number) {
+    if (userId !== undefined) {
+      return this.api.get<AvatarListResponse>('/v1/avatars/list/' + userId);
+    }
     return this.api.get<AvatarListResponse>('/v1/avatars/list');
   }
 

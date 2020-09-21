@@ -36,6 +36,8 @@ export class Player {
 
   marker = new Marker();
 
+  avatarName: string = '';
+
   getPrizeLeft(): number {
     return this.prizes.reduce((left, p) => left + p.cards.length, 0);
   }

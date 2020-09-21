@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Player, UserInfo, ReplayPlayer } from 'ptcg-server';
 import { Observable, EMPTY } from 'rxjs';
 
@@ -10,6 +10,8 @@ import { SessionService } from '../../../shared/session/session.service';
   styleUrls: ['./player-bar.component.scss']
 })
 export class PlayerBarComponent implements OnInit {
+
+  @Output() avatarClick = new EventEmitter<void>();
 
   @Input() set player(player: Player) {
     this.refreshData(player, this.replayPlayerValue);

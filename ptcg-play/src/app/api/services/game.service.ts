@@ -154,7 +154,7 @@ export class GameService {
       .subscribe(() => {}, (error: ApiError) => this.alertService.toast(error.message));
   }
 
-  public dispatch(action: Action) { }
+  public changeAvatarAction(gameId: number, avatarName: string) { }
 
   private startListening(id: number) {
     this.socketService.on(`game[${id}]:join`, (clientId: number) => this.onJoin(id, clientId));
