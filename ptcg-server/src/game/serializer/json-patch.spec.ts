@@ -152,6 +152,21 @@ describe('JsonPatch', () => {
     expect(restored).toEqual(dest);
   });
 
+  it('Should remove and add items in the array', () => {
+    // given
+    const src = ['very very long string, very very long string', 3, 4];
+    const dest = ['very very long string, very very long string', 2, 3];
+    // when
+    const diff = jsonPatch.diff(src, dest);
+    const restored = jsonPatch.apply(src, diff);
+    // then
+    expect(diff).toEqual([
+      { op: 'add', path: '', val: [1, 2] },
+      { op: 'del', path: '', val: [3] },
+    ]);
+    expect(restored).toEqual(dest);
+  });
+
   it('Should ignore deltas with invalid path', () => {
     // given
     const src = { a: 1 };

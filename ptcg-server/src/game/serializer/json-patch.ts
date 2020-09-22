@@ -71,10 +71,11 @@ export class JsonPatch {
           });
           if (fromIndex === -1) {
             this.delta(src[j], dest[i], [...path, String(i)], results1);
-            j += 1;
           } else {
+            src.splice(j, 0, dest[i]);
             results1.push({op: 'add', path, val: [i, dest[i]]});
           }
+          j += 1;
           i += 1;
         }
       }
