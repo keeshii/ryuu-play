@@ -19,6 +19,13 @@ export class AvatarService {
     return this.api.get<AvatarListResponse>('/v1/avatars/list');
   }
 
+  public find(userId: number, name: string) {
+    return this.api.post<AvatarResponse>('/v1/avatars/find', {
+      id: userId,
+      name
+    });
+  }
+
   public addAvatar(avatarName: string, imageBase64: string) {
     return this.api.post<AvatarResponse>('/v1/avatars/add', {
       name: avatarName,

@@ -9,6 +9,7 @@ import { PlayerActionsComponent } from './player-actions/player-actions.componen
 import { GameLogsComponent } from './game-logs/game-logs.component';
 import { ReplayControlsComponent } from './replay-controls/replay-controls.component';
 import { ChooseAvatarPopupComponent } from './choose-avatar-popup/choose-avatar-popup.component';
+import { PlayerAvatarComponent } from './player-avatar/player-avatar.component';
 
 @NgModule({
   imports: [
@@ -17,12 +18,13 @@ import { ChooseAvatarPopupComponent } from './choose-avatar-popup/choose-avatar-
     SharedModule
   ],
   declarations: [
-    TableSidebarComponent,
-    PlayerBarComponent,
-    PlayerActionsComponent,
+    ChooseAvatarPopupComponent,
     GameLogsComponent,
+    PlayerActionsComponent,
+    PlayerAvatarComponent,
+    PlayerBarComponent,
     ReplayControlsComponent,
-    ChooseAvatarPopupComponent
+    TableSidebarComponent
   ],
   entryComponents: [
     ChooseAvatarPopupComponent

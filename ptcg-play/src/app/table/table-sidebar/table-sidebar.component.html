@@ -7,14 +7,16 @@
   </div>
 
   <ptcg-player-bar
-    (avatarClick)="onAvatarClick(topPlayer)"
+    [gameState]="gameState"
+    [clientId]="clientId"
     [player]="topPlayer"
     [replayPlayer]="topReplayPlayer"
     [active]="isTopPlayerActive">
   </ptcg-player-bar>
 
   <ptcg-player-bar
-    (avatarClick)="onAvatarClick(bottomPlayer)"
+    [gameState]="gameState"
+    [clientId]="clientId"
     [player]="bottomPlayer"
     [replayPlayer]="bottomReplayPlayer"
     [active]="isBottomPlayerActive">
@@ -23,8 +25,8 @@
   <ptcg-player-actions
     [gameState]="gameState"
     [clientId]="clientId"
-    (join)="join.next()"
-  ></ptcg-player-actions>
+    (join)="join.next()">
+  </ptcg-player-actions>
 
   <ptcg-replay-controls *ngIf="gameState?.replay"
     [gameState]="gameState">

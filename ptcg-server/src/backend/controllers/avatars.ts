@@ -51,6 +51,32 @@ export class Avatars extends Controller {
     res.send({ok: true, avatar: avatarInfo});
   }
 
+  @Post('/find')
+  @AuthToken()
+  @Validate({
+    id: check().isNumber(),
+    name: check().minLength(3).maxLength(32)
+  })
+  public async onFind(req: Request, res: Response) {
+    const body: { id: number, name: string } = req.body;
+
+    const avatars = await Avatar.find({
+      where: { user: { id: body.id }, name: body.name }
+    });
+
+    if (avatars.length !== 1) {
+      res.send({error: Errors.AVATAR_INVALID});
+      return;
+    }
+    const avatar = avatars[0];
+    const avatarInfo: AvatarInfo = {
+      id: avatar.id,
+      name: avatar.name,
+      fileName: avatar.fileName
+    };
+    res.send({ok: true, avatar: avatarInfo});
+  }
+
   @Post('/add')
   @AuthToken()
   @Validate({

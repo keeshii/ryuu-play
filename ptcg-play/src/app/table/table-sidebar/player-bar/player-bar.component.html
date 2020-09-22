@@ -1,9 +1,11 @@
 <div class="ptcg-player-bar" [ngClass]="{active: active}">
 
-  <ptcg-avatar class="ptcg-player-avatar"
-    (click)="avatarClick.next()"
-    [avatarFile]="(userInfo$ | async)?.avatarFile">
-  </ptcg-avatar>
+  <ptcg-player-avatar class="ptcg-player-bar-avatar"
+    (click)="allowAvatarClick && onAvatarClick()"
+    [user]="userInfo$ | async"
+    [allowClick]="allowAvatarClick"
+    [avatarName]="avatarName">
+  </ptcg-player-avatar>
 
   <div class="ptcg-player-info">
     <div *ngIf="!isEmpty; then playerInfo else emptyInfo"></div>
