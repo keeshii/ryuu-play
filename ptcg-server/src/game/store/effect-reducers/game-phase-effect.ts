@@ -44,10 +44,6 @@ export function initNextTurn(store: StoreLike, state: State): State {
     player = getActivePlayer(state);
   }
 
-  // Remove Paralyzed at the beginning of the turn
-  const index = player.active.specialConditions.indexOf(SpecialCondition.PARALYZED);
-  player.active.specialConditions.splice(index, 1);
-
   state.turn++;
   store.log(state, `Turn ${state.turn}.`);
 
@@ -68,6 +64,10 @@ export function initNextTurn(store: StoreLike, state: State): State {
 function* startNextTurn(next: Function, store: StoreLike, state: State): IterableIterator<State> {
   const player = state.players[state.activePlayer];
   store.log(state, `${player.name} ends the turn.`);
+
+  // Remove Paralyzed at the end of the turn
+  const index = player.active.specialConditions.indexOf(SpecialCondition.PARALYZED);
+  player.active.specialConditions.splice(index, 1);
 
   yield betweenTurns(store, state, () => {
     next();

@@ -3,6 +3,8 @@ import { UserInfo } from 'ptcg-server';
 import { Observable } from 'rxjs';
 import { skip, takeUntil } from 'rxjs/operators';
 
+import { CardsBaseService } from './shared/cards/cards-base.service';
+import { CardsService } from './api/services/cards.service';
 import { MessageService } from './api/services/message.service';
 import { ProfileService } from './api/services/profile.service';
 import { SessionService } from './shared/session/session.service';
@@ -21,6 +23,8 @@ export class AppComponent implements OnInit, OnDestroy {
   private authToken$: Observable<string>;
 
   constructor(
+    private cardsService: CardsService,
+    private cardsBaseService: CardsBaseService,
     private elementRef: ElementRef<HTMLElement>,
     private messageService: MessageService,
     private profileService: ProfileService,
@@ -94,6 +98,17 @@ export class AppComponent implements OnInit, OnDestroy {
           response.conversations,
           response.users
         );
+      });
+
+    this.cardsService.getAll()
+    .pipe(
+        takeUntilDestroyed(this),
+        takeUntil(tokenChanged$)
+      )
+      .subscribe({
+        next: response => {
+          this.cardsBaseService.setCards(response.cards);
+        }
       });
   }
 

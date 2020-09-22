@@ -5,7 +5,6 @@ import { State, GamePhase } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { KnockOutEffect } from "../../game/store/effects/game-effects";
 import { StateUtils } from "../../game/store/state-utils";
-import { PokemonCard } from "../../game/store/card/pokemon-card";
 
 export class RescueEnergy extends EnergyCard {
 
@@ -35,8 +34,7 @@ export class RescueEnergy extends EnergyCard {
       }
 
       const target = effect.target;
-      const tool = target.tool;
-      const cards = target.cards.filter(c => c instanceof PokemonCard && c !== tool);
+      const cards = target.getPokemons();
       return store.waitPrompt(state, () => {
         player.discard.moveCardsTo(cards, player.hand);
       });

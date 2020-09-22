@@ -62,7 +62,7 @@ export class Pikachu extends PokemonCard {
       if (!(cardList instanceof PokemonCardList)) {
         return state;
       }
-      if (cardList.pokemonPlayedTurn === state.turn) {
+      if (cardList.pokemonPlayedTurn === state.turn && !cardList.isBasic()) {
         opponent.active.addSpecialCondition(SpecialCondition.PARALYZED);
       }
     }

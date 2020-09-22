@@ -1,5 +1,5 @@
 import { TrainerCard } from "../../game/store/card/trainer-card";
-import { TrainerType, Stage } from "../../game/store/card/card-types";
+import { TrainerType } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
@@ -22,11 +22,8 @@ export class Eviolite extends TrainerCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof DealDamageAfterWeaknessEffect) {
-      if (effect.target.tool === this) {
-        const pokemonCard = effect.target.getPokemonCard();
-        if (pokemonCard && pokemonCard.stage === Stage.BASIC) {
-          effect.damage -= 20;
-        }
+      if (effect.target.tool === this && effect.target.isBasic()) {
+        effect.damage -= 20;
       }
     }
 

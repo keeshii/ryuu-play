@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Card, StateSerializer } from 'ptcg-server';
-import { take } from 'rxjs/operators';
 
 import { CardInfoPopupData, CardInfoPopupComponent, CardInfoPopupResponse } from './card-info-popup/card-info-popup.component';
-import { CardsService } from '../../api/services/cards.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SessionService } from '../session/session.service';
 import { environment } from '../../../environments/environment';
@@ -17,19 +15,14 @@ export class CardsBaseService {
   private names: string[] = [];
 
   constructor(
-    private cardsService: CardsService,
     private dialog: MatDialog,
     private sessionService: SessionService
   ) { }
 
-  public loadCards() {
-    this.cardsService.getAll()
-      .pipe(take(1))
-      .subscribe(response => {
-        this.cards = response.cards;
-        this.names = this.cards.map(c => c.fullName);
-        StateSerializer.setKnownCards(this.cards);
-      }, () => {});
+  public setCards(cards: Card[]) {
+    this.cards = cards;
+    this.names = this.cards.map(c => c.fullName);
+    StateSerializer.setKnownCards(this.cards);
   }
 
   public getCards(): Card[] {

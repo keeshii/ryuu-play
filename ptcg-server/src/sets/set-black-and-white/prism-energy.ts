@@ -1,4 +1,4 @@
-import { CardType, EnergyType, Stage } from "../../game/store/card/card-types";
+import { CardType, EnergyType } from "../../game/store/card/card-types";
 import { EnergyCard } from "../../game/store/card/energy-card";
 import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
@@ -23,11 +23,10 @@ export class PrismEnergy extends EnergyCard {
     'only 1 Energy at a time.'
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof CheckProvidedEnergyEffect && effect.source.cards.includes(this)) {
-      const pokemonCard = effect.source.getPokemonCard();
-      if (pokemonCard !== undefined && pokemonCard.stage === Stage.BASIC) {
-        effect.energyMap.push({ card: this, provides: [ CardType.ANY ] });
-      }
+    if (effect instanceof CheckProvidedEnergyEffect
+      && effect.source.cards.includes(this)
+      && effect.source.isBasic()) {
+      effect.energyMap.push({ card: this, provides: [ CardType.ANY ] });
     }
     return state;
   }

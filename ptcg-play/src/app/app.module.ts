@@ -39,8 +39,4 @@ import { TableModule } from './table/table.module';
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule {
-  constructor(cardsBaseService: CardsBaseService) {
-    cardsBaseService.loadCards();
-  }
-}
+export class AppModule { }

@@ -1,6 +1,6 @@
 import { CardList } from "./card-list";
 import { Marker } from "./card-marker";
-import { SpecialCondition } from "../card/card-types";
+import { SpecialCondition, Stage, SuperType } from "../card/card-types";
 import { PokemonCard } from "../card/pokemon-card";
 import { Card } from "../card/card";
 
@@ -18,16 +18,29 @@ export class PokemonCardList extends CardList {
   // we must remember, which card acts as a pokemon tool.
   public tool: Card | undefined;
 
-  public getPokemonCard(): PokemonCard | undefined {
-    let result: PokemonCard | undefined;
+  public getPokemons(): PokemonCard[] {
+    const result: PokemonCard[] = [];
     for (let card of this.cards) {
-      if (card instanceof PokemonCard && card !== this.tool) {
-        if (result === undefined || result.stage < card.stage) {
-          result = card;
-        }
+      if (card.superType === SuperType.POKEMON && card !== this.tool) {
+        result.push(card as PokemonCard);
       }
     }
     return result;
+  }
+
+  public getPokemonCard(): PokemonCard | undefined {
+    const pokemons = this.getPokemons();
+    if (pokemons.length > 0) {
+      return pokemons[pokemons.length - 1];
+    }
+  }
+
+  public isBasic(): boolean {
+    const pokemons = this.getPokemons();
+    if (pokemons.length !== 1) {
+      return false;
+    }
+    return pokemons[0].stage === Stage.BASIC;
   }
 
   clearEffects(): void {
