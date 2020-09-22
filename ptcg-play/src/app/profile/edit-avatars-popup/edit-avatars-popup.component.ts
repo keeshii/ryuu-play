@@ -45,7 +45,7 @@ export class EditAvatarsPopupComponent implements OnInit, OnDestroy {
       .subscribe({
         next: avatar => {
           if (avatar) {
-            this.refreshAvatars();
+            this.avatars = [ ...this.avatars, avatar ];
           }
       }});
   }
@@ -59,7 +59,7 @@ export class EditAvatarsPopupComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: () => {
-          this.refreshAvatars();
+          this.avatars = this.avatars.filter(a => a.id !== avatarId);
         },
         error: (error: ApiError) => {
           this.alertService.toast(error.code);
@@ -77,10 +77,17 @@ export class EditAvatarsPopupComponent implements OnInit, OnDestroy {
     this.avatarService.rename(avatarId, name).pipe(
       finalize(() => { this.loading = false; }),
       takeUntilDestroyed(this)
-    ).subscribe(() => {
-      this.refreshAvatars();
-    }, (error: ApiError) => {
-      this.alertService.toast('Error occured, try again.');
+    ).subscribe({
+      next: response => {
+        const index = this.avatars.findIndex(a => a.id === avatarId);
+        if (index !== -1) {
+          this.avatars = [ ...this.avatars ];
+          this.avatars[index] = response.avatar;
+        }
+      },
+      error: (error: ApiError) => {
+        this.alertService.toast('Error occured, try again.');
+      }
     });
   }
 

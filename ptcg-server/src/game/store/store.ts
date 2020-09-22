@@ -1,6 +1,7 @@
 import { Action } from "./actions/action";
 import { AppendLogAction } from "./actions/append-log-action";
 import { Card } from "./card/card";
+import { ChangeAvatarAction } from "./actions/change-avatar-action";
 import { Effect } from "./effects/effect";
 import { GameError, GameMessage } from "../game-error";
 import { Prompt } from "./prompts/prompt";
@@ -20,8 +21,8 @@ import { playerTurnReducer } from "./reducers/player-turn-reducer";
 import { gamePhaseReducer } from "./effect-reducers/game-phase-effect";
 import { gameReducer } from "./effect-reducers/game-effect";
 import { checkState, checkStateReducer } from "./effect-reducers/check-effect";
+import { playerStateReducer} from "./reducers/player-state-reducer";
 import { retreatReducer } from "./effect-reducers/retreat-effect";
-import { reorderReducer} from "./reducers/reorder-reducer";
 import { setupPhaseReducer } from './reducers/setup-reducer';
 
 interface PromptItem {
@@ -42,8 +43,9 @@ export class Store implements StoreLike {
     let state = this.state;
 
     if (action instanceof ReorderHandAction
-      || action instanceof ReorderBenchAction) {
-      state = reorderReducer(this, state, action);
+      || action instanceof ReorderBenchAction
+      || action instanceof ChangeAvatarAction) {
+      state = playerStateReducer(this, state, action);
       this.handler.onStateChange(state);
       return state;
     }

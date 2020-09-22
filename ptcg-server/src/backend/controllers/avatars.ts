@@ -183,7 +183,7 @@ export class Avatars extends Controller {
       return;
     }
 
-    res.send({ok: true, deck: {
+    res.send({ok: true, avatar: {
       id: avatar.id,
       name: avatar.name,
       fileName: avatar.fileName

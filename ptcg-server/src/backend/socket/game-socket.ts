@@ -12,6 +12,7 @@ import { ResolvePromptAction } from '../../game/store/actions/resolve-prompt-act
 import { SocketCache } from './socket-cache';
 import { SocketWrapper, Response } from './socket-wrapper';
 import {Base64} from '../../utils';
+import {ChangeAvatarAction} from '../../game/store/actions/change-avatar-action';
 
 export class GameSocket {
 
@@ -40,6 +41,7 @@ export class GameSocket {
     this.socket.addListener('game:action:reorderHand', this.reorderHand.bind(this));
     this.socket.addListener('game:action:passTurn', this.passTurn.bind(this));
     this.socket.addListener('game:action:appendLog', this.appendLog.bind(this));
+    this.socket.addListener('game:action:changeAvatar', this.changeAvatar.bind(this));
   }
 
   public onGameJoin(game: Game, client: Client): void {
@@ -191,6 +193,11 @@ export class GameSocket {
 
   private appendLog(params: {gameId: number, message: string}, response: Response<void>) {
     const action = new AppendLogAction(this.client.id, params.message);
+    this.dispatch(params.gameId, action, response);
+  }
+
+  private changeAvatar(params: {gameId: number, avatarName: string}, response: Response<void>) {
+    const action = new ChangeAvatarAction(this.client.id, params.avatarName);
     this.dispatch(params.gameId, action, response);
   }
 

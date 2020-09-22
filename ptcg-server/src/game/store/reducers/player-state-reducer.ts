@@ -1,11 +1,12 @@
 import { Action } from "../actions/action";
+import { ChangeAvatarAction } from "../actions/change-avatar-action";
 import { GameError, GameMessage } from "../../game-error";
 import { ReorderBenchAction, ReorderHandAction } from "../actions/reorder-actions";
 import { State } from "../state/state";
 import { StoreLike } from "../store-like";
 
 
-export function reorderReducer(store: StoreLike, state: State, action: Action): State {
+export function playerStateReducer(store: StoreLike, state: State, action: Action): State {
 
   if (action instanceof ReorderBenchAction) {
     const player = state.players.find(p => p.id === action.id);
@@ -28,6 +29,18 @@ export function reorderReducer(store: StoreLike, state: State, action: Action): 
     }
 
     player.hand.applyOrder(action.order);
+
+    return state;
+  }
+
+  if (action instanceof ChangeAvatarAction) {
+
+    const player = state.players.find(p => p.id === action.id);
+    if (player === undefined) {
+      throw new GameError(GameMessage.ILLEGAL_ACTION);
+    }
+
+    player.avatarName = action.avatarName;
 
     return state;
   }

@@ -65,6 +65,10 @@ export class ChooseAvatarPopupComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
   }
 
+  public close() {
+    this.dialogRef.close();
+  }
+
   public chooseAvatar() {
     let selected = this.selected;
 
