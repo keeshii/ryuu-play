@@ -23,6 +23,7 @@
 .ptcg-card {
   width: 100%;
   position: relative;
+  touch-action: none;
 }
 
 .ptcg-card:after {

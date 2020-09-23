@@ -191,7 +191,7 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
     cards.sort((c1, c2) => c2.stage - c1.stage);
 
     const pokemonCard = cards.pop();
-    return pokemonCard ? this.cardsBaseService.getScanUrl(pokemonCard) : '';
+    return pokemonCard ? this.cardsBaseService.getScanUrl(pokemonCard) : undefined;
   }
 
   private createBoardCardItem(player: PlayerType, slot: SlotType, index: number = 0): BoardCardItem {
