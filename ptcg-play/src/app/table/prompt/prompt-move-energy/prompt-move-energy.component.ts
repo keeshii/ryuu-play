@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
-import { Card, MoveEnergyPrompt, CardTarget, FilterType } from 'ptcg-server';
+import { Card, MoveEnergyPrompt, CardTarget, FilterType, PokemonCardList } from 'ptcg-server';
 
 import { GameService } from '../../../api/services/game.service';
 import { LocalGameState } from '../../../shared/session/session.interface';
@@ -91,10 +91,10 @@ export class PromptMoveEnergyComponent implements OnInit, OnChanges {
   }
 
   private moveCard(from: PokemonItem, to: PokemonItem, card: Card) {
-    from.cardList = { ...from.cardList } as any;
+    from.cardList = Object.assign(new PokemonCardList(), from.cardList);
     from.cardList.cards = [...from.cardList.cards];
 
-    to.cardList = { ...to.cardList } as any;
+    to.cardList = Object.assign(new PokemonCardList(), to.cardList);
     to.cardList.cards = [...to.cardList.cards];
 
     const index = from.cardList.cards.indexOf(card);

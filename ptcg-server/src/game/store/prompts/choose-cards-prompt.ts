@@ -58,8 +58,9 @@ export class ChooseCardsPrompt extends Prompt<Card[]> {
       return false;
     }
     const blocked = this.options.blocked;
-    return result.every((r, index) => {
-      return !blocked.includes(index) && this.matchesFilter(r);
+    return result.every(r => {
+      const index = this.cards.cards.indexOf(r);
+      return index !== -1 && !blocked.includes(index) && this.matchesFilter(r);
     });
   }
 

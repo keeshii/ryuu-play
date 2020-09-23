@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, ClientInfo, GameState, State, CardTarget, StateLog, Replay,
+import { ClientInfo, GameState, State, CardTarget, StateLog, Replay,
   Base64, StateSerializer } from 'ptcg-server';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
@@ -52,6 +52,7 @@ export class GameService {
         deleted: replay ? true : false,
         state: this.decodeStateData(gameState.stateData),
         logs,
+        replayPosition: 1,
         replay
       };
       const gameStates = [...games, localGameState ];

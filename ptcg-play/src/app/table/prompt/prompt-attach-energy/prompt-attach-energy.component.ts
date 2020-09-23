@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
-import { Card, AttachEnergyPrompt, FilterType, CardList, AttachEnergyOptions } from 'ptcg-server';
+import { Card, AttachEnergyPrompt, FilterType, CardList, AttachEnergyOptions,
+  PokemonCardList } from 'ptcg-server';
 
 import { GameService } from '../../../api/services/game.service';
 import { LocalGameState } from '../../../shared/session/session.interface';
@@ -80,7 +81,7 @@ export class PromptAttachEnergyComponent implements OnInit, OnChanges {
   public reset() {
     this.results.forEach(r => {
       const item = r.to;
-      item.cardList = { ...item.cardList } as any;
+      item.cardList = Object.assign(new PokemonCardList(), item.cardList);
       item.cardList.cards = item.cardList.cards.filter(c => c !== r.card);
     });
     this.cardList.cards = [ ...this.initialCards ];
@@ -91,7 +92,7 @@ export class PromptAttachEnergyComponent implements OnInit, OnChanges {
   private moveCard(to: PokemonItem, card: Card) {
     this.cardList.cards = [...this.cardList.cards];
 
-    to.cardList = { ...to.cardList } as any;
+    to.cardList = Object.assign(new PokemonCardList(), to.cardList);
     to.cardList.cards = [...to.cardList.cards];
 
     const index = this.cardList.cards.indexOf(card);

@@ -21,7 +21,7 @@ export class ReplayControlsComponent implements OnInit, OnDestroy {
     this.gameStateValue = gameState;
 
     if (this.replay !== gameState.replay) {
-      this.initReplayControls(gameState.replay);
+      this.initReplayControls(gameState.replay, gameState.replayPosition);
     }
   }
 
@@ -75,7 +75,7 @@ export class ReplayControlsComponent implements OnInit, OnDestroy {
     this.clearPlayInterval();
     this.playInterval = window.setInterval(() => {
       const newPosition = this.position + 1;
-      this.setState(this.position + 1);
+      this.setState(newPosition);
       // end reached, no next tick
       if (newPosition + 1 > this.stateCount) {
         this.clearPlayInterval();
@@ -148,17 +148,18 @@ export class ReplayControlsComponent implements OnInit, OnDestroy {
     const index = games.findIndex(g => g.replay === this.replay);
     if (index !== -1) {
       const state = this.replay.getState(position - 1);
+      const replayPosition = position;
       this.position = position;
       const gameStates = this.sessionService.session.gameStates.slice();
       const logs = state.logs;
-      gameStates[index] = { ...gameStates[index], state, logs };
+      gameStates[index] = { ...gameStates[index], state, logs, replayPosition };
       this.sessionService.set({ gameStates });
     }
   }
 
-  private initReplayControls(replay: Replay) {
+  private initReplayControls(replay: Replay, position: number) {
     this.replay = replay;
-    this.position = 1;
+    this.position = position;
     this.stateCount = replay.getStateCount();
     this.turnCount = replay.getTurnCount();
   }
