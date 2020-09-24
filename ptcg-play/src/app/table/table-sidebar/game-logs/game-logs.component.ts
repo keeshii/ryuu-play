@@ -101,7 +101,8 @@ export class GameLogsComponent implements OnInit {
     let name: string;
     let className: string;
 
-    const user = this.sessionService.session.users[log.client];
+    const client = this.sessionService.session.clients.find(c => c.clientId === log.client);
+    const user = client ? this.sessionService.session.users[client.userId] : undefined;
     const playerIndex = this.state.state.players.findIndex(p => p.id === log.client);
 
     if (user !== undefined) {

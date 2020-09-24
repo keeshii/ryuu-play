@@ -2,7 +2,7 @@ require('./config');
 
 const { App } = require('./dist/backend/app');
 const { BotManager } = require('./dist/game/bots/bot-manager');
-const { DebugBot } = require('./dist/simple-bot/debug-bot');
+const { SimpleBot } = require('./dist/simple-bot/simple-bot');
 const { CardManager } = require('./dist/game/cards/card-manager');
 const { StateSerializer } = require('./dist/game/serializer/state-serializer');
 const { setBlackAndWhite, setDiamondAndPearl, setHgss, setOp9 } = require('./dist/sets');
@@ -18,7 +18,7 @@ cardManager.defineSet(setBlackAndWhite);
 StateSerializer.setKnownCards(cardManager.getAllCards());
 
 const botManager = BotManager.getInstance();
-botManager.registerBot(new DebugBot('computer'));
+botManager.registerBot(new SimpleBot('computer'));
 
 const app = new App();
 

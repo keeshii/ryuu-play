@@ -5,6 +5,7 @@ export const config = {
     port: 12021,
     serverPassword: '',
     registrationEnabled: true,
+    allowCors: true,
     secret: '!secret!',
     tokenExpire: 86400,
     defaultPageSize: 50,
@@ -25,6 +26,10 @@ export const config = {
   },
   core: {
     debug: false
+  },
+  bots: {
+    defaultPassword: '',
+    actionDelay: 250
   },
   sets: {
     scansDir: '',

@@ -70,8 +70,7 @@ export class PromptComponent implements OnInit, OnChanges {
     if (this.animationState !== 'enter' && value === true) {
       this.isPromptActive = true;
       this.animationState = 'enter';
-    }
-    if (this.animationState !== 'exit' && value === false) {
+    } else if (this.animationState !== 'exit' && value === false) {
       this.animationState = 'exit';
     }
   }

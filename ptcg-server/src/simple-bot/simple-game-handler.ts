@@ -1,139 +1,70 @@
 import { Action } from '../game/store/actions/action';
-import { AlertPrompt, ConfirmPrompt, Player, Prompt, State, GamePhase,
-  ChooseEnergyPrompt, StateUtils, ChoosePokemonPrompt, PokemonCardList,
-  PlayerType, SlotType, ChoosePrizePrompt, ShowCardsPrompt, EnergyMap } from '../game';
-import { ChooseCardsPrompt } from '../game/store/prompts/choose-cards-prompt';
+import { State } from '../game';
 import { Client } from '../game/client/client.interface';
 import { Game } from '../game/core/game';
-import { ResolvePromptAction } from '../game/store/actions/resolve-prompt-action';
-import { GameMessage } from '../game/game-error';
 import { SimpleTacticsAi } from './simple-tactics-ai';
-import { InvitePlayerPrompt } from '../game/store/prompts/invite-player-prompt';
-import { DebugBot } from './debug-bot';
+import { config } from '../config';
 
 export class SimpleGameHandler {
 
-  private player: Player = new Player();
-  private ai: SimpleTacticsAi;
+  private ai: SimpleTacticsAi | undefined;
+  private state: State | undefined;
+  private changeInProgress: boolean = false;
 
-  constructor(private client: Client, public game: Game) {
-    this.ai = new SimpleTacticsAi(this.client);
+  constructor(
+    private client: Client,
+    public game: Game,
+    deckPromise: Promise<string[]>
+  ) {
+    this.waitForDeck(deckPromise);
   }
 
-  public onStateChange(state: State): void {
-    for (let i = 0; i < state.players.length; i++) {
-      if (state.players[i].id === this.client.id) {
-        this.player = state.players[i];
-      }
-    }
-
-    if (state.prompts.length > 0) {
-      const prompt = state.prompts.find(p => p.playerId === this.player.id && p.result === undefined);
-      if (prompt !== undefined) {
-        this.resolvePrompt(prompt);
-        return;
-      }
-    }
-
-    // Wait for other players to resolve the prompts.
-    if (state.prompts.filter(p => p.result === undefined).length > 0) {
+  public async onStateChange(state: State): Promise<void> {
+    if (!this.ai || this.changeInProgress) {
+      this.state = state;
       return;
     }
 
-    const activePlayer = state.players[state.activePlayer];
-    const isMyTurn = activePlayer.id === this.client.id;
-    if (state.phase === GamePhase.PLAYER_TURN && isMyTurn) {
-      const action = this.ai.decodeNextAction(state);
-      this.dispatch(action);
-      return;
+    this.state = undefined;
+    this.changeInProgress = true;
+
+    const action = this.ai.decodeNextAction(state);
+    if (action) {
+      await this.dispatch(action);
+    }
+
+    this.changeInProgress = false;
+    // A state change was ignored, because we were processing
+    if (this.state) {
+      this.onStateChange(this.state);
     }
   }
 
-  public resolvePrompt(prompt: Prompt<any>): void {
-    if (prompt instanceof AlertPrompt || prompt instanceof ShowCardsPrompt) {
-      this.dispatch(new ResolvePromptAction(prompt.id, 0));
-      return;
+  private async waitForDeck(deckPromise: Promise<string[]>): Promise<void> {
+    let deck: string[] | null = null;
+    try {
+      deck = await deckPromise;
+    } catch (error) {
     }
 
-    if (prompt instanceof InvitePlayerPrompt) {
-      const result = DebugBot.createSampleDeck();
-      this.dispatch(new ResolvePromptAction(prompt.id, result));
-      return;
-    }
+    this.ai = new SimpleTacticsAi(this.client, deck);
 
-    if (prompt instanceof ConfirmPrompt) {
-      if (prompt.message === GameMessage.SETUP_OPPONENT_NO_BASIC) {
-        const result = this.player.hand.cards.length < 15;
-        this.dispatch(new ResolvePromptAction(prompt.id, result));
-      } else {
-        this.dispatch(new ResolvePromptAction(prompt.id, false));
-      }
-      return;
-    }
-
-    if (prompt instanceof ChooseCardsPrompt) {
-      const result = prompt.cards.filter(prompt.filter);
-      if (result.length > prompt.options.max) {
-        result.length = prompt.options.max;
-      }
-      this.dispatch(new ResolvePromptAction(prompt.id, result));
-      return;
-    }
-
-    if (prompt instanceof ChooseEnergyPrompt) {
-      const result: EnergyMap[] = prompt.energy.slice();
-      while (result.length > 0 && !StateUtils.checkExactEnergy(result, prompt.cost)) {
-        result.splice(result.length - 1, 1);
-      }
-      this.dispatch(new ResolvePromptAction(prompt.id, result));
-      return;
-    }
-
-    if (prompt instanceof ChoosePokemonPrompt) {
-      const result: PokemonCardList[] = this.buildPokemonToChoose(prompt)
-        .slice(0, prompt.options.min);
-      this.dispatch(new ResolvePromptAction(prompt.id, result));
-      return;
-    }
-
-    if (prompt instanceof ChoosePrizePrompt) {
-      const result = this.player.prizes.filter(p => p.cards.length > 0)
-        .slice(0, prompt.options.count);
-      this.dispatch(new ResolvePromptAction(prompt.id, result));
-      return;
+    // A state change was ignored, because we were loading the deck
+    if (this.state) {
+      this.onStateChange(this.state);
     }
   }
 
-  private buildPokemonToChoose(prompt: ChoosePokemonPrompt): PokemonCardList[] {
-    const state = this.game.state;
-    const player = state.players.find(p => p.id === prompt.playerId);
-    const opponent = state.players.find(p => p.id !== prompt.playerId);
-    if (player === undefined || opponent === undefined) {
-      return [];
-    }
-    const hasOpponent = [PlayerType.TOP_PLAYER, PlayerType.ANY].includes(prompt.playerType);
-    const hasPlayer = [PlayerType.BOTTOM_PLAYER, PlayerType.ANY].includes(prompt.playerType);
-    const hasBench = prompt.slots.includes(SlotType.BENCH);
-    const hasActive = prompt.slots.includes(SlotType.ACTIVE);
-
-    let result: PokemonCardList[] = [];
-    if (hasOpponent && hasBench) {
-      opponent.bench.filter(b => b.cards.length).forEach(b => result.push(b));
-    }
-    if (hasOpponent && hasActive) {
-      result.push(opponent.active);
-    }
-    if (hasPlayer && hasActive) {
-      result.push(player.active);
-    }
-    if (hasPlayer && hasBench) {
-      player.bench.filter(b => b.cards.length).forEach(b => result.push(b));
-    }
-    return result;
-  }
-
-  public dispatch(action: Action): State {
-    return this.game.dispatch(this.client, action);
+  private dispatch(action: Action): Promise<void> {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        try {
+          this.game.dispatch(this.client, action);
+        } catch (error) {
+        }
+        resolve();
+      }, config.bots.actionDelay);
+    });
   }
 
 }

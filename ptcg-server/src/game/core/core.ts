@@ -120,7 +120,12 @@ export class Core {
     const scheduler = Scheduler.getInstance();
     const rankingCalculator = new RankingCalculator();
     scheduler.run(async () => {
-      const users = await rankingCalculator.decreaseRanking();
+      let users = await rankingCalculator.decreaseRanking();
+
+      // Notify only about users which are currently connected
+      const connectedUserIds = this.clients.map(c => c.user.id);
+      users = users.filter(u => connectedUserIds.includes(u.id));
+
       this.emit(c => c.onUsersUpdate(users));
     });
   }

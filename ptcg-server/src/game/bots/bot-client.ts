@@ -1,10 +1,12 @@
-import { AddPlayerAction } from '../store/actions/add-player-action';
+import { CardManager } from '../cards/card-manager';
 import { Client } from '../client/client.interface';
+import { DeckAnalyser } from '../cards/deck-analyser';
 import { Game } from '../core/game';
 import { GameError, GameMessage } from '../game-error';
-import { User, Message } from '../../storage';
+import { User, Message, Deck } from '../../storage';
 import { Core } from '../core/core';
 import { State } from '../store/state/state';
+import {GameSettings} from '../core/game-settings';
 
 export abstract class BotClient implements Client {
 
@@ -40,24 +42,40 @@ export abstract class BotClient implements Client {
 
   public abstract onMessageRead(user: User): void;
 
-  createGame(deck: string[]): Game {
+  createGame(deck: string[], gameSettings?: GameSettings, invited?: Client): Game {
     if (this.core === undefined) {
       throw new GameError(GameMessage.BOT_NOT_INITIALIZED);
     }
-    const game = this.core.createGame(this, deck);
+    const game = this.core.createGame(this, deck, gameSettings, invited);
     return game;
   }
 
-  joinGame(game: Game): void {
-    if (this.core === undefined) {
-      throw new GameError(GameMessage.BOT_NOT_INITIALIZED);
+  public async loadDeck(): Promise<string[]> {
+    const deckRows = await Deck.find({
+      user: { id: this.user.id },
+      isValid: true
+    });
+
+    const decks = deckRows
+      .map(d => JSON.parse(d.cards))
+      .filter((cards: string[]) => this.validateDeck(cards));
+
+    if (decks.length === 0) {
+      throw new GameError(GameMessage.BOT_NO_DECK);
     }
-    this.core.joinGame(this, game);
+
+    const num = Math.round(Math.random() * (decks.length - 1));
+    return decks[num];
   }
 
-  playGame(game: Game, deck: string[]): void {
-    const action = new AddPlayerAction(this.id, this.user.name, deck);
-    game.dispatch(this, action);
+  private validateDeck(cards: string[]): boolean {
+    const cardManager = CardManager.getInstance();
+    if (cards.some(c => !cardManager.isCardDefined(c))) {
+      return false;
+    }
+
+    const analyser = new DeckAnalyser(cards);
+    return analyser.isValid();
   }
 
 }

@@ -29,11 +29,16 @@ export class SimpleBot extends BotClient {
   }
 
   public onGameLeave(game: Game, client: Client): void {
-    if (client === this) {
-      const gameHandler = this.gameHandlers.find(handler => handler.game === game);
-      if (gameHandler !== undefined) {
-        this.deleteGameHandler(gameHandler);
-      }
+    const gameHandler = this.gameHandlers.find(gh => gh.game === game);
+
+    if (client === this && gameHandler !== undefined) {
+      this.deleteGameHandler(gameHandler);
+      return;
+    }
+
+    const isAlone = game.clients.length === 1 && game.clients[0].id === this.id;
+    if (this.core && isAlone) {
+      this.core.leaveGame(this, game);
     }
   }
 
@@ -54,13 +59,8 @@ export class SimpleBot extends BotClient {
     return game;
   }
 
-  public joinGame(game: Game): void {
-    super.joinGame(game);
-    this.addGameHandler(game);
-  }
-
   protected addGameHandler(game: Game): SimpleGameHandler {
-    const gameHandler = new SimpleGameHandler(this, game);
+    const gameHandler = new SimpleGameHandler(this, game, this.loadDeck());
     this.gameHandlers.push(gameHandler);
     return gameHandler;
   }

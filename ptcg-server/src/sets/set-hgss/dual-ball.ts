@@ -51,8 +51,6 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     player.deck.applyOrder(order);
     next()
   });
-
-  return state;
 }
 
 export class DualBall extends TrainerCard {

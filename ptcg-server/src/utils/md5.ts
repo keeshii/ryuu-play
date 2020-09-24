@@ -28,7 +28,8 @@ export class Md5 {
   private static S43: number = 15;
   private static S44: number = 21;
 
-  private static RotateLeft: Function = (lValue: number, iShiftBits: number): number => (lValue << iShiftBits) | (lValue >>> (32 - iShiftBits));
+  private static rotateLeft: Function =
+    (lValue: number, iShiftBits: number): number => (lValue << iShiftBits) | (lValue >>> (32 - iShiftBits))
 
   private static AddUnsigned(lX: number, lY: number): number {
     let lX4: number,
@@ -70,30 +71,30 @@ export class Md5 {
 
   private static FF(a: number, b: number, c: number, d: number, x: number, s: number, ac: number): number {
     a = this.AddUnsigned(a, this.AddUnsigned(this.AddUnsigned(this.F(b, c, d), x), ac));
-    return this.AddUnsigned(this.RotateLeft(a, s), b);
+    return this.AddUnsigned(this.rotateLeft(a, s), b);
   }
 
   private static GG(a: number, b: number, c: number, d: number, x: number, s: number, ac: number): number {
     a = this.AddUnsigned(a, this.AddUnsigned(this.AddUnsigned(this.G(b, c, d), x), ac));
-    return this.AddUnsigned(this.RotateLeft(a, s), b);
+    return this.AddUnsigned(this.rotateLeft(a, s), b);
   }
 
   private static HH(a: number, b: number, c: number, d: number, x: number, s: number, ac: number): number {
     a = this.AddUnsigned(a, this.AddUnsigned(this.AddUnsigned(this.H(b, c, d), x), ac));
-    return this.AddUnsigned(this.RotateLeft(a, s), b);
+    return this.AddUnsigned(this.rotateLeft(a, s), b);
   }
 
   private static II(a: number, b: number, c: number, d: number, x: number, s: number, ac: number): number {
     a = this.AddUnsigned(a, this.AddUnsigned(this.AddUnsigned(this.I(b, c, d), x), ac));
-    return this.AddUnsigned(this.RotateLeft(a, s), b);
+    return this.AddUnsigned(this.rotateLeft(a, s), b);
   }
 
-  private static ConvertToWordArray(string: string): Array<number> {
+  private static ConvertToWordArray(str: string): Array<number> {
     let lWordCount: number,
-      lMessageLength: number = string.length,
-      lNumberOfWords_temp1: number = lMessageLength + 8,
-      lNumberOfWords_temp2: number = (lNumberOfWords_temp1 - (lNumberOfWords_temp1 % 64)) / 64,
-      lNumberOfWords: number = (lNumberOfWords_temp2 + 1) * 16,
+      lMessageLength: number = str.length,
+      lNumberOfWordsTemp1: number = lMessageLength + 8,
+      lNumberOfWordsTemp2: number = (lNumberOfWordsTemp1 - (lNumberOfWordsTemp1 % 64)) / 64,
+      lNumberOfWords: number = (lNumberOfWordsTemp2 + 1) * 16,
       lWordArray: Array<number> = Array(lNumberOfWords - 1),
       lBytePosition: number = 0,
       lByteCount: number = 0;
@@ -101,7 +102,7 @@ export class Md5 {
     while (lByteCount < lMessageLength) {
       lWordCount = (lByteCount - (lByteCount % 4)) / 4;
       lBytePosition = (lByteCount % 4) * 8;
-      lWordArray[lWordCount] = (lWordArray[lWordCount] | (string.charCodeAt(lByteCount) << lBytePosition));
+      lWordArray[lWordCount] = (lWordArray[lWordCount] | (str.charCodeAt(lByteCount) << lBytePosition));
       lByteCount++;
     }
 
@@ -115,28 +116,28 @@ export class Md5 {
   }
 
   private static WordToHex(lValue: number): string {
-    let WordToHexValue: string = "",
-      WordToHexValue_temp: string = "",
+    let wordToHexValue: string = '',
+      wordToHexValueTemp: string = '',
       lByte: number,
       lCount: number;
 
     for (lCount = 0; lCount <= 3; lCount++) {
       lByte = (lValue >>> (lCount * 8)) & 255;
-      WordToHexValue_temp = "0" + lByte.toString(16);
-      WordToHexValue = WordToHexValue + WordToHexValue_temp.substr(WordToHexValue_temp.length - 2, 2);
+      wordToHexValueTemp = '0' + lByte.toString(16);
+      wordToHexValue = wordToHexValue + wordToHexValueTemp.substr(wordToHexValueTemp.length - 2, 2);
     }
 
-    return WordToHexValue;
+    return wordToHexValue;
   }
 
-  private static Utf8Encode(string: string): string {
-    let utftext: string = "",
+  private static Utf8Encode(str: string): string {
+    let utftext: string = '',
       c: number;
 
-    string = string.replace(/\r\n/g, "\n");
+    str = str.replace(/\r\n/g, '\n');
 
-    for (let n = 0; n < string.length; n++) {
-      c = string.charCodeAt(n);
+    for (let n = 0; n < str.length; n++) {
+      c = str.charCodeAt(n);
 
       if (c < 128) {
         utftext += String.fromCharCode(c);
@@ -156,13 +157,14 @@ export class Md5 {
     return utftext;
   }
 
-  public static init(string: any): string {
+  public static init(str: any): string {
     let temp: string;
 
-    if (typeof string !== 'string')
-      string = JSON.stringify(string);
+    if (typeof str !== 'string') {
+      str = JSON.stringify(str);
+    }
 
-    this._string = this.Utf8Encode(string);
+    this._string = this.Utf8Encode(str);
     this.x = this.ConvertToWordArray(this._string);
 
     this.a = 0x67452301;

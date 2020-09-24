@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { Errors } from '../common/errors';
-import { Md5 } from '../common/md5';
+import { Md5 } from '../../utils/md5';
 import { config } from '../../config';
 
 

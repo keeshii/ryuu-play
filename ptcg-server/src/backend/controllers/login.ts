@@ -3,7 +3,7 @@ import { AuthToken, Validate, check, generateToken } from '../services';
 import { Controller, Get, Post } from './controller';
 import { Errors } from '../common/errors';
 import { LoginRequest, RegisterRequest, ServerConfig } from '../interfaces';
-import { Md5 } from '../common/md5';
+import { Md5 } from '../../utils/md5';
 import { User } from '../../storage';
 import { config } from '../../config';
 

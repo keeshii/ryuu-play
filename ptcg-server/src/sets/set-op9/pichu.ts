@@ -68,7 +68,7 @@ function* useFindAFriend(next: Function, store: StoreLike, state: State,
     CardMessage.CHOOSE_ONE_POKEMON,
     player.deck,
     { superType: SuperType.POKEMON },
-    { allowCancel: true }
+    { allowCancel: true, min: 1, max: 1 }
   ), selected => {
     cards = selected || [];
     next();

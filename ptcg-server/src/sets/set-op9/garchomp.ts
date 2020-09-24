@@ -56,7 +56,6 @@ export class Garchomp extends PokemonCard {
           effect.damage = 0;
         }
       });
-      return state;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {

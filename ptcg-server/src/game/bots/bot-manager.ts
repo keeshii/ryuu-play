@@ -2,6 +2,8 @@ import { BotClient } from './bot-client';
 import { Core } from '../core/core';
 import { GameError, GameMessage } from '../game-error';
 import { User } from '../../storage';
+import { config } from '../../config';
+import { Md5 } from '../../utils/md5';
 
 export class BotManager {
 
@@ -43,6 +45,11 @@ export class BotManager {
     if (user === undefined) {
       user = new User();
       user.name = name;
+
+      if (config.bots.defaultPassword) {
+        user.password = Md5.init(config.bots.defaultPassword);
+      }
+
       await User.insert(user);
     }
     return user;

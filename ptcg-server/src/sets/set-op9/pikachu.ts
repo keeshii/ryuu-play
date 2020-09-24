@@ -68,7 +68,7 @@ export class Pikachu extends PokemonCard {
     }
 
     if (effect instanceof DealDamageEffect && effect.source.marker.hasMarker(this.GROWL_MARKER, this)) {
-      const reducedDamage = Math.min(0, effect.damage - 20)
+      const reducedDamage = Math.max(0, effect.damage - 20)
       effect.damage = reducedDamage;
       return state;
     }
