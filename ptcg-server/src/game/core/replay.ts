@@ -77,6 +77,13 @@ export class Replay {
   public appendState(state: State): void {
     const full = this.serializer.serialize(state);
     let diff = this.serializer.serializeDiff(this.prevState, state);
+
+    // Ignore the actions, which does not modified the state, like
+    // shuffling an empty deck, or changing the hand order in the same matter
+    if (diff === '[[]]') {
+      return;
+    }
+
     this.prevState = full;
     this.diffs.push(diff);
     if (this.options.indexEnabled) {

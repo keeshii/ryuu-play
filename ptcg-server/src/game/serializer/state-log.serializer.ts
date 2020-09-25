@@ -8,7 +8,7 @@ export class StateLogSerializer implements Serializer<StateLog> {
 
   constructor () { }
 
-  public serialize(stateLog: StateLog, context: SerializerContext): Serialized {
+  public serialize(stateLog: StateLog): Serialized {
     return {
       ...stateLog,
       _type: 'StateLog'

@@ -43,7 +43,7 @@ export class PromptSerializer implements Serializer<Prompt<any>> {
     this.classes = this.rows.map(p => p.classValue);
   }
 
-  public serialize(prompt: Prompt<any>, context: SerializerContext): Serialized {
+  public serialize(prompt: Prompt<any>): Serialized {
     const data: any = { ...prompt };
     const row = this.rows.find(r => prompt instanceof r.classValue);
     if (row === undefined) {

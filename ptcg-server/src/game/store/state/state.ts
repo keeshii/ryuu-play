@@ -21,6 +21,8 @@ export enum GameWinner {
 
 export class State {
 
+  public cardNames: string[] = [];
+
   public logs: StateLog[] = [];
 
   public rules: Rules = new Rules();

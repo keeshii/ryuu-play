@@ -10,7 +10,7 @@ export class GenericSerializer<T extends Object> implements Serializer<T> {
     this.classes = [creatorClass];
   }
 
-  public serialize(state: T, context: SerializerContext): Serialized {
+  public serialize(state: T): Serialized {
     const constructorName = this.constructorName;
     return {
       _type: constructorName,

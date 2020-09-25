@@ -33,7 +33,7 @@ export class StateSerializer {
     ];
   }
 
-  public serialize(state: State, context: SerializerContext = this.createContext(state)): SerializedState {
+  public serialize(state: State): SerializedState {
     const serializers = this.serializers;
     const refs: { node: Object, path: string }[] = [];
     const pathBuilder = new PathBuilder();
@@ -57,14 +57,13 @@ export class StateSerializer {
         }
         let serializer = serializers.find(s => s.classes.some(c => value instanceof c));
         if (serializer !== undefined) {
-          return serializer.serialize(value, context);
+          return serializer.serialize(value);
         }
         throw new GameError(GameMessage.SERIALIZER_ERROR, `Unknown serializer for '${name}'.`);
       }
       return value;
     };
-    const contextData = { ...context, cards: context.cards.map(card => card.fullName) };
-    return JSON.stringify([contextData, state.players, state], replacer);
+    return JSON.stringify([state.players, state], replacer);
   }
 
   public deserialize(serializedState: SerializedState): State {
@@ -105,7 +104,7 @@ export class StateSerializer {
       }
     });
 
-    const state = parsed[2];
+    const state = parsed[1];
     return state;
   }
 
@@ -115,25 +114,15 @@ export class StateSerializer {
     }
     const parsedBase = JSON.parse(base);
 
-    // compare contexts
-    const cards1 = parsedBase[0];
-    const context2 = this.createContext(state);
-    const cards2 = context2.cards.map(c => c.fullName);
+    const players1 = parsedBase[0];
+    const state1 = parsedBase[1];
 
-    // different contexts, use standard serialization instead of differencial
-    const jsonPatch = new JsonPatch();
-    if (jsonPatch.diff(cards1, cards2).length === 0) {
-      return this.serialize(state);
-    }
-
-    const players1 = parsedBase[1];
-    const state1 = parsedBase[2];
-
-    const serialized2 = this.serialize(state, context2);
+    const serialized2 = this.serialize(state);
     const parsed2 = JSON.parse(serialized2);
-    const players2 = parsed2[1];
-    const state2 = parsed2[2];
+    const players2 = parsed2[0];
+    const state2 = parsed2[1];
 
+    const jsonPatch = new JsonPatch();
     const diff = jsonPatch.diff([players1, state1], [players2, state2]);
     return JSON.stringify([ diff ]);
   }
@@ -153,13 +142,13 @@ export class StateSerializer {
       return data;
     }
 
-    let [ contextData, players, state ] = JSON.parse(base);
+    let [ players, state ] = JSON.parse(base);
     const diff: JsonDiff[] = parsed[0];
 
     const jsonPatch = new JsonPatch();
     [ players, state ] = jsonPatch.apply([ players, state ], diff);
 
-    return JSON.stringify([ contextData, players, state ]);
+    return JSON.stringify([ players, state ]);
   }
 
   public static setKnownCards(cards: Card[]) {
@@ -168,38 +157,17 @@ export class StateSerializer {
 
   private restoreContext(serializedState: SerializedState): SerializerContext {
     const parsed = JSON.parse(serializedState);
-    const contextData = parsed[0];
-    const names: string[] = contextData.cards;
+    const names: string[] = parsed[1].cardNames;
     const cards: Card[] = [];
-    names.forEach(name => {
-      const card = StateSerializer.knownCards.find(c => c.fullName === name);
+    names.forEach((name, index) => {
+      let card: Card | undefined = StateSerializer.knownCards.find(c => c.fullName === name);
       if (card === undefined) {
         throw new GameError(GameMessage.SERIALIZER_ERROR, `Unknown card '${name}'.`);
       }
-      cards.push(deepClone(card));
+      card = deepClone(card) as Card;
+      card.id = index;
+      cards.push(card);
     });
-    return { ...contextData, cards };
-  }
-
-  private createContext(state: State): SerializerContext {
-    const cards: Card[] = [];
-    for (let player of state.players) {
-      let list: Card[] = [];
-      player.stadium.cards.forEach(c => list.push(c));
-      player.active.cards.forEach(c => list.push(c));
-      for (let bench of player.bench) {
-        bench.cards.forEach(c => list.push(c));
-      }
-      for (let prize of player.prizes) {
-        prize.cards.forEach(c => list.push(c));
-      }
-      player.hand.cards.forEach(c => list.push(c));
-      player.deck.cards.forEach(c => list.push(c));
-      player.discard.cards.forEach(c => list.push(c));
-      list.sort((a, b) => a.fullName < b.fullName
-        ? -1 : (a.fullName > b.fullName ? 1 : 0));
-      cards.push(...list);
-    }
     return { cards };
   }
 

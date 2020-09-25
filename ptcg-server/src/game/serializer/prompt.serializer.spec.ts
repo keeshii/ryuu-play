@@ -20,7 +20,7 @@ describe('PromptSerializer', () => {
     // given
     const prompt = new AlertPrompt(1, 'message');
     // when
-    const serialized = promptSerializer.serialize(prompt, context);
+    const serialized = promptSerializer.serialize(prompt);
     const restored = promptSerializer.deserialize(serialized, context) as AlertPrompt;
     // then
     expect(restored.playerId).toEqual(1);
@@ -35,7 +35,7 @@ describe('PromptSerializer', () => {
     const message = 'Unknown prompt type \'Unknown\'.'
     // then
     expect(function() {
-      promptSerializer.serialize(prompt, context)
+      promptSerializer.serialize(prompt)
     }).toThrowError(message)
   });
 

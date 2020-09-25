@@ -11,21 +11,21 @@ export class CardListSerializer implements Serializer<CardList> {
 
   constructor () { }
 
-  public serialize(cardList: CardList, context: SerializerContext): Serialized {
+  public serialize(cardList: CardList): Serialized {
     const data: any = { ...cardList };
     let constructorName = 'CardList';
 
     if (cardList instanceof PokemonCardList) {
       constructorName = 'PokemonCardList';
       if (cardList.tool !== undefined) {
-        data.tool = this.toIndex(cardList.tool, context);
+        data.tool = cardList.tool.id;
       }
     }
 
     return {
       ...data,
       _type: constructorName,
-      cards: cardList.cards.map(card => this.toIndex(card, context))
+      cards: cardList.cards.map(card => card.id)
     };
   }
 
@@ -44,14 +44,6 @@ export class CardListSerializer implements Serializer<CardList> {
     data.cards = indexes.map(index => this.fromIndex(index, context));
 
     return Object.assign(instance, data);
-  }
-
-  private toIndex(card: Card, context: SerializerContext): number {
-    const index = context.cards.indexOf(card);
-    if (index === -1) {
-      throw new GameError(GameMessage.SERIALIZER_ERROR, `Card not found '${card.name}'.`);
-    }
-    return index;
   }
 
   private fromIndex(index: number, context: SerializerContext): Card {

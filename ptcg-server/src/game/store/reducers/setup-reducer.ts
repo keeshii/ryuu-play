@@ -170,6 +170,11 @@ export function setupPhaseReducer(store: StoreLike, state: State, action: Action
       const player = createPlayer(action.clientId, action.name);
       player.deck = CardList.fromList(action.deck);
       player.deck.isSecret = true;
+      player.deck.cards.forEach(c => {
+        state.cardNames.push(c.fullName);
+        c.id = state.cardNames.length - 1;
+      });
+
       state.players.push(player);
 
       if (state.players.length === 2) {
@@ -211,6 +216,10 @@ export function setupPhaseReducer(store: StoreLike, state: State, action: Action
 
         player.deck = CardList.fromList(deck);
         player.deck.isSecret = true;
+        player.deck.cards.forEach(c => {
+          state.cardNames.push(c.fullName);
+          c.id = state.cardNames.length - 1;
+        });
 
         if (state.players.length === 2) {
           state.phase = GamePhase.SETUP;

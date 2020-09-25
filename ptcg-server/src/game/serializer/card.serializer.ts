@@ -9,10 +9,10 @@ export class CardSerializer implements Serializer<Card> {
 
   constructor () { }
 
-  public serialize(card: Card, context: SerializerContext): Serialized {
-    const index = context.cards.indexOf(card);
+  public serialize(card: Card): Serialized {
+    const index = card.id;
     if (index === -1) {
-      throw new GameError(GameMessage.SERIALIZER_ERROR, `Card not found '${card.name}'.`);
+      throw new GameError(GameMessage.SERIALIZER_ERROR, `Card not found '${card.fullName}'.`);
     }
 
     return { _type: 'Card', index };

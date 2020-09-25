@@ -29,15 +29,12 @@ export class Game implements StoreHandler {
   }
 
   public onStateChange(state: State): void {
-    this.notifyStateChange(state);
-    if (this.gameSettings.recordingEnabled) {
-      this.matchRecorder.onStateChange(state);
-    }
-  }
-
-  private notifyStateChange(state: State): void {
     if (this.handleArbiterPrompts(state)) {
       return;
+    }
+
+    if (this.gameSettings.recordingEnabled) {
+      this.matchRecorder.onStateChange(state);
     }
 
     this.core.emit(c => c.onStateChange(this, state));

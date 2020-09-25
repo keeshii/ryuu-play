@@ -14,6 +14,6 @@ export interface Serialized {
 export interface Serializer<T extends Object> {
   types: string[];
   classes: any[];
-  serialize(state: T, context: SerializerContext): Serialized;
+  serialize(state: T): Serialized;
   deserialize(data: Serialized, context: SerializerContext): T;
 }
