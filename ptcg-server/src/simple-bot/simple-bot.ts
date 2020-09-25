@@ -53,12 +53,6 @@ export class SimpleBot extends BotClient {
     }
   }
 
-  public createGame(deck: string[]): Game {
-    const game = super.createGame(deck);
-    this.addGameHandler(game);
-    return game;
-  }
-
   protected addGameHandler(game: Game): SimpleGameHandler {
     const gameHandler = new SimpleGameHandler(this, game, this.loadDeck());
     this.gameHandlers.push(gameHandler);

@@ -4,12 +4,14 @@ import { GameError, GameMessage } from '../game-error';
 import { User } from '../../storage';
 import { config } from '../../config';
 import { Md5 } from '../../utils/md5';
+import { BotGameArranger } from './bot-game-arranger';
 
 export class BotManager {
 
   private static instance: BotManager;
 
   private bots: BotClient[] = [];
+  private botGameArranger = new BotGameArranger(this.bots);
 
   public static getInstance(): BotManager {
     if (!BotManager.instance) {
@@ -30,6 +32,8 @@ export class BotManager {
       bot.user = user;
       core.connect(bot);
     }
+
+    this.botGameArranger.startBotGames();
   }
 
   public getBot(botName: string): BotClient {

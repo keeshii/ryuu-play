@@ -30,7 +30,7 @@ export class SimpleGameHandler {
 
     const action = this.ai.decodeNextAction(state);
     if (action) {
-      await this.dispatch(action);
+      await this.waitAndDispatch(action);
     }
 
     this.changeInProgress = false;
@@ -55,7 +55,7 @@ export class SimpleGameHandler {
     }
   }
 
-  private dispatch(action: Action): Promise<void> {
+  private waitAndDispatch(action: Action): Promise<void> {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         try {

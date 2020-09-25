@@ -29,7 +29,8 @@ export const config = {
   },
   bots: {
     defaultPassword: '',
-    actionDelay: 250
+    actionDelay: 250,
+    botGamesInterval: 0
   },
   sets: {
     scansDir: '',
