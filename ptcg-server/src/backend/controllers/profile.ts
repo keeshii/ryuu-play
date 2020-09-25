@@ -39,8 +39,8 @@ export class Profile extends Controller {
   @Get('/matchHistory/:userId/:page?/:pageSize?')
   @AuthToken()
   public async onMatchHistory(req: Request, res: Response) {
-    const userId: number = req.body.userId;
     const defaultPageSize = config.backend.defaultPageSize;
+    const userId: number = parseInt(req.params.userId, 10) || 0;
     const page: number = parseInt(req.params.page, 10) || 0;
     const pageSize: number = parseInt(req.params.pageSize, 10) || defaultPageSize;
 
