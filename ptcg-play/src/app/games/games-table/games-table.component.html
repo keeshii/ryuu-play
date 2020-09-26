@@ -36,8 +36,11 @@
       <ng-container matColumnDef="prizes">
         <th mat-header-cell *matHeaderCellDef>Prizes</th>
         <td mat-cell *matCellDef="let row">
-          <ptcg-player-info [player]="row.game.players[0]"></ptcg-player-info>
-          <ptcg-player-info [player]="row.game.players[1]"></ptcg-player-info>
+          <div *ngIf="row.game.players[0] && row.game.players[1]">
+            <ptcg-badge color="primary">{{ row.game.players[0].prizes }}</ptcg-badge>
+            :
+            <ptcg-badge color="primary">{{ row.game.players[1].prizes }}</ptcg-badge>
+          </div>
       </ng-container>
 
       <!-- Actions -->

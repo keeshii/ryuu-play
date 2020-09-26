@@ -18,8 +18,8 @@ export class ProfileService {
     return this.api.get<ProfileResponse>('/v1/profile/get/' + userId);
   }
 
-  public getMatchHistory(userId: number) {
-    return this.api.get<MatchHistoryResponse>('/v1/profile/matchHistory/' + userId);
+  public getMatchHistory(userId: number = 0, page: number = 0) {
+    return this.api.get<MatchHistoryResponse>('/v1/profile/matchHistory/' + userId + '/' + page);
   }
 
 }

@@ -6,6 +6,7 @@ import { User, Match } from '../../storage';
 import { MatchInfo } from '../interfaces/profile.interface';
 import { UserInfo } from '../interfaces/core.interface';
 import { config } from '../../config';
+import {FindConditions} from 'typeorm';
 
 
 export class Profile extends Controller {
@@ -44,12 +45,12 @@ export class Profile extends Controller {
     const page: number = parseInt(req.params.page, 10) || 0;
     const pageSize: number = parseInt(req.params.pageSize, 10) || defaultPageSize;
 
+    const where: FindConditions<Match>[] = userId === 0 ? []
+      : [ { player1: { id: userId } }, { player2: { id: userId } } ];
+
     const [matchRows, total] = await Match.findAndCount({
       relations: ['player1', 'player2'],
-      where: [
-        { player1: { id: userId } },
-        { player2: { id: userId } }
-      ],
+      where,
       order: { created: "DESC" },
       skip: page * pageSize,
       take: pageSize
