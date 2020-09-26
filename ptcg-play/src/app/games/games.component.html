@@ -5,11 +5,14 @@
       <a mat-list-item *ngFor="let client of (clients$ | async)"
         class="ptcg-no-padding-list-item"
         [matMenuTriggerFor]="menu">
-        <ptcg-user-bar [user]="client.user"></ptcg-user-bar>
+        <ptcg-user-bar
+          [user]="client.user"
+          [marked]="clientId === client.clientId">
+        </ptcg-user-bar>
         <mat-menu #menu="matMenu">
           <button mat-menu-item
-            [routerLink]="['/message', client.user.userId]"
-            *ngIf="clientId !== client.clientId">
+            *ngIf="loggedUserId !== client.user.userId"
+            [routerLink]="['/message', client.user.userId]">
             Send message
           </button>
           <button mat-menu-item

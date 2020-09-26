@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { GameInfo, UserInfo, ClientInfo } from 'ptcg-server';
+import { GameInfo, ClientInfo } from 'ptcg-server';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable, EMPTY, from } from 'rxjs';
-import { finalize, switchMap, map, take } from 'rxjs/operators';
+import { finalize, switchMap, map } from 'rxjs/operators';
 
 import { AlertService } from '../shared/alert/alert.service';
 import { ApiError } from '../api/api.error';
@@ -27,10 +27,10 @@ export class GamesComponent implements OnDestroy, OnInit {
   displayedColumns: string[] = ['id', 'turn', 'player1', 'player2', 'actions'];
   public clients$: Observable<ClientUserData[]>;
   public games$: Observable<GameInfo[]>;
-  public clientId$: Observable<number>;
   public isConnected = false;
   public loading = false;
   public clientId: number;
+  public loggedUserId: number;
 
   constructor(
     private alertService: AlertService,
@@ -51,15 +51,16 @@ export class GamesComponent implements OnDestroy, OnInit {
     }));
 
     this.games$ = this.sessionService.get(session => session.games);
-    this.clientId$ = this.sessionService.get(session => session.clientId);
   }
 
   ngOnInit() {
-    this.clientId$
+    this.sessionService.get(session => session.clientId)
       .pipe(takeUntilDestroyed(this))
-      .subscribe(clientId => {
-        this.clientId = clientId;
-      });
+      .subscribe(clientId => { this.clientId = clientId; });
+
+    this.sessionService.get(session => session.loggedUserId)
+      .pipe(takeUntilDestroyed(this))
+      .subscribe(loggedUserId => { this.loggedUserId = loggedUserId; });
 
     this.socketService.connection
       .pipe(takeUntilDestroyed(this))
