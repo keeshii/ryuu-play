@@ -1,33 +1,23 @@
-import { Player, State, PassTurnAction, Action, PokemonCard, Stage, EnergyMap,
-  PokemonCardList, PlayCardAction, CardTarget, PlayerType, SlotType, EnergyCard,
-  CardType, StateUtils, AttackAction, SpecialCondition, GamePhase } from '../game';
+import { Player, State, PassTurnAction, Action, GamePhase, Prompt,
+  InvitePlayerPrompt, StateLog, ResolvePromptAction } from '../game';
 import { Client } from '../game/client/client.interface';
-import { PromptResolver } from './prompt-resolver';
-
-export enum SimpleTactics {
-  PLAY_BASIC_POKEMON,
-  ATTACH_ENERGY_CARD,
-  USE_BEST_ATTACK
-}
-
-export const allSimpleTactics = [
-  SimpleTactics.PLAY_BASIC_POKEMON,
-  SimpleTactics.ATTACH_ENERGY_CARD,
-  SimpleTactics.USE_BEST_ATTACK
-];
+import { PromptResolver } from './prompt-resolver/prompt-resolver';
+import { SimpleTactic } from './simple-tactics/simple-tactics';
+import { SimpleBotOptions } from './simple-bot-options';
+import { Simulator } from '../game/bots/simulator';
 
 export class SimpleTacticsAi {
 
-  private tactics: SimpleTactics[];
-  private promptResolver: PromptResolver;
+  private tactics: SimpleTactic[];
+  private resolvers: PromptResolver[];
 
   constructor(
     private client: Client,
-    deck: string[] | null,
-    tactics: SimpleTactics[] = allSimpleTactics
+    options: SimpleBotOptions,
+    private deck: string[] | null
   ) {
-    this.tactics = tactics;
-    this.promptResolver = new PromptResolver(deck);
+    this.tactics = options.tactics.map(tactic => new tactic(options));
+    this.resolvers = options.promptResolvers.map(resolver => new resolver(options));
   }
 
   public decodeNextAction(state: State): Action | undefined {
@@ -38,11 +28,15 @@ export class SimpleTacticsAi {
       }
     }
 
-    if (player !== undefined && state.prompts.length > 0) {
+    if (player === undefined) {
+      return;
+    }
+
+    if (state.prompts.length > 0) {
       const playerId = player.id;
       const prompt = state.prompts.find(p => p.playerId === playerId && p.result === undefined);
       if (prompt !== undefined) {
-        return this.promptResolver.resolvePrompt(player, state, prompt);
+        return this.resolvePrompt(player, state, prompt);
       }
     }
 
@@ -58,185 +52,46 @@ export class SimpleTacticsAi {
     }
   }
 
-  private decodePlayerTurnAction(player: Player | undefined, state: State): Action {
-    if (player === undefined) {
-      return new PassTurnAction(this.client.id);
+  private decodePlayerTurnAction(player: Player, state: State): Action {
+    for (let i = 0; i < this.tactics.length; i++) {
+      const action = this.tactics[i].useTactic(state, player);
+      if (action !== undefined && this.isValidAction(state, action)) {
+        return action;
+      }
     }
 
-    const action
-      = this.playBasicPokemon(player, state)
-      || this.attachEnergyCard(player, state)
-      || this.useBestAttack(player, state)
-      || new PassTurnAction(this.client.id);
-
-    return action;
+    return new PassTurnAction(this.client.id);
   }
 
-  private playBasicPokemon(player: Player, state: State): Action | undefined {
-    if (!this.tactics.includes(SimpleTactics.PLAY_BASIC_POKEMON)) {
-      return undefined;
+  public resolvePrompt(player: Player, state: State, prompt: Prompt<any>): Action {
+    if (prompt instanceof InvitePlayerPrompt) {
+      const result = this.deck;
+      let log: StateLog | undefined;
+      if (result === null) {
+        log = new StateLog('Sorry, my deck is not ready.', [], player.id);
+      }
+      return new ResolvePromptAction(prompt.id, result, log);
     }
 
-    const basicPokemon = player.hand.cards
-      .find(c => c instanceof PokemonCard && c.stage === Stage.BASIC);
+    for (let i = 0; i < this.resolvers.length; i++) {
+      const action = this.resolvers[i].resolvePrompt(state, player, prompt);
+      if (action !== undefined) {
+        return action;
+      }
+    }
 
-    const emptyBenchSlot = player.bench
-      .find(b => b.cards.length === 0);
+    // Unknown prompt type. Try to cancel it.
+    return new ResolvePromptAction(prompt.id, null);
+  }
 
+  private isValidAction(state: State, action: Action): boolean {
     try {
-      if (basicPokemon && emptyBenchSlot) {
-        return new PlayCardAction(
-          this.client.id,
-          player.hand.cards.indexOf(basicPokemon),
-          this.getCardTarget(player, state, emptyBenchSlot)
-        );
-      }
-    } catch (error) { }
-  }
-
-  private useBestAttack(player: Player, state: State): Action | undefined {
-    if (!this.tactics.includes(SimpleTactics.USE_BEST_ATTACK)) {
-      return undefined;
+      const simulator = new Simulator(state);
+      simulator.dispatch(action);
+    } catch (error) {
+      return false;
     }
-
-    const sp = player.active.specialConditions;
-    if (sp.includes(SpecialCondition.PARALYZED) || sp.includes(SpecialCondition.ASLEEP)) {
-      return undefined;
-    }
-
-    const active = player.active.getPokemonCard();
-    if (!active) {
-      return undefined;
-    }
-
-    for (let i = active.attacks.length - 1; i >= 0; i--) {
-      const attack = active.attacks[i];
-
-      const energy: EnergyMap[] = [];
-      player.active.cards.forEach(card => {
-        if (card instanceof EnergyCard) {
-          energy.push({ card, provides: card.provides });
-        }
-      });
-
-      if (StateUtils.checkEnoughEnergy(energy, attack.cost)) {
-        return new AttackAction(this.client.id, attack.name);
-      }
-    }
-  }
-
-  private attachEnergyCard(player: Player, state: State): Action | undefined {
-    if (!this.tactics.includes(SimpleTactics.ATTACH_ENERGY_CARD)) {
-      return undefined;
-    }
-    if (player.energyPlayedTurn >= state.turn) {
-      return undefined;
-    }
-
-    const pokemons = [ player.active, ...player.bench ]
-      .filter(p => p.cards.length > 0);
-
-    for (let i = 0; i < pokemons.length; i++) {
-      const cardList = pokemons[i];
-      const missing = this.getMissingEnergies(cardList);
-
-      for (let j = 0; j < missing.length; j++) {
-        const cardType = missing[j];
-        const index = player.hand.cards.findIndex(c => {
-          if (c instanceof EnergyCard) {
-            const isColorless = cardType === CardType.ANY && c.provides.length > 0;
-            const isMatch = c.provides.includes(cardType);
-            if (isColorless || isMatch) {
-              return true;
-            }
-          }
-        });
-        try {
-          if (index !== -1) {
-            return new PlayCardAction(
-              this.client.id,
-              index,
-              this.getCardTarget(player, state, cardList)
-            );
-          }
-        } catch (error) { }
-      }
-    }
-  }
-
-  private getMissingEnergies(cardList: PokemonCardList): CardType[] {
-    const pokemon = cardList.getPokemonCard();
-    if (pokemon === undefined || pokemon.attacks.length === 0) {
-      return [];
-    }
-
-    const cost = pokemon.attacks[pokemon.attacks.length - 1].cost;
-    if (cost.length === 0) {
-      return [];
-    }
-
-    const provided: CardType[] = [];
-    cardList.cards.forEach(card => {
-      if (card instanceof EnergyCard) {
-        card.provides.forEach(energy => provided.push(energy));
-      }
-    });
-
-    const missing: CardType[] = [];
-    let colorless = 0;
-    // First remove from array cards with specific energy types
-    cost.forEach(costType => {
-      switch (costType) {
-        case CardType.ANY:
-        case CardType.NONE:
-          break;
-        case CardType.COLORLESS:
-          colorless += 1;
-          break;
-        default:
-          const index = provided.findIndex(energy => energy === costType);
-          if (index !== -1) {
-            provided.splice(index, 1);
-          } else {
-            missing.push(costType);
-          }
-      }
-    });
-
-    for (let i = 0; i < colorless; i++) {
-      missing.push(CardType.ANY);
-    }
-
-    return missing;
-  }
-
-  private getCardTarget(player: Player, state: State, target: PokemonCardList): CardTarget {
-    if (target === player.active) {
-      return { player: PlayerType.BOTTOM_PLAYER, slot: SlotType.ACTIVE, index: 0 };
-    }
-
-    for (let index = 0; index < player.bench.length; index++) {
-      if (target === player.bench[index]) {
-        return { player: PlayerType.BOTTOM_PLAYER, slot: SlotType.BENCH, index };
-      }
-    }
-
-    const opponent = state.players.find(p => p !== player);
-    if (opponent === undefined) {
-      throw new Error('No opponent');
-    }
-
-    if (target === opponent.active) {
-      return { player: PlayerType.TOP_PLAYER, slot: SlotType.ACTIVE, index: 0 };
-    }
-
-    for (let index = 0; index < opponent.bench.length; index++) {
-      if (target === opponent.bench[index]) {
-        return { player: PlayerType.TOP_PLAYER, slot: SlotType.BENCH, index };
-      }
-    }
-
-    throw new Error('Invalid target');
+    return true;
   }
 
 }

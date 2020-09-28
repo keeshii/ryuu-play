@@ -4,11 +4,24 @@ import { Game } from '../game/core/game';
 import { SimpleGameHandler } from './simple-game-handler';
 import { State } from '../game/store/state/state';
 import { User, Message } from '../storage';
+import { SimpleBotOptions } from './simple-bot-options';
+import { defaultStateScores } from './state-score-calculator';
+import { allSimpleTactics, allPromptResolvers } from './simple-bot-definitions';
 
 
 export class SimpleBot extends BotClient {
 
   protected gameHandlers: SimpleGameHandler[] = [];
+  private options: SimpleBotOptions;
+
+  constructor(name: string, options: Partial<SimpleBotOptions> = {}) {
+    super(name);
+    this.options = Object.assign(options, {
+      tactics: allSimpleTactics,
+      promptResolvers: allPromptResolvers,
+      scores: defaultStateScores
+    });
+  }
 
   public onConnect(client: Client): void { }
 
@@ -54,7 +67,7 @@ export class SimpleBot extends BotClient {
   }
 
   protected addGameHandler(game: Game): SimpleGameHandler {
-    const gameHandler = new SimpleGameHandler(this, game, this.loadDeck());
+    const gameHandler = new SimpleGameHandler(this, this.options, game, this.loadDeck());
     this.gameHandlers.push(gameHandler);
     return gameHandler;
   }

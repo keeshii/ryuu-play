@@ -2,6 +2,7 @@ import { Action } from '../game/store/actions/action';
 import { State } from '../game';
 import { Client } from '../game/client/client.interface';
 import { Game } from '../game/core/game';
+import { SimpleBotOptions } from './simple-bot-options';
 import { SimpleTacticsAi } from './simple-tactics-ai';
 import { config } from '../config';
 
@@ -13,6 +14,7 @@ export class SimpleGameHandler {
 
   constructor(
     private client: Client,
+    private options: SimpleBotOptions,
     public game: Game,
     deckPromise: Promise<string[]>
   ) {
@@ -47,7 +49,7 @@ export class SimpleGameHandler {
     } catch (error) {
     }
 
-    this.ai = new SimpleTacticsAi(this.client, deck);
+    this.ai = new SimpleTacticsAi(this.client, this.options, deck);
 
     // A state change was ignored, because we were loading the deck
     if (this.state) {
