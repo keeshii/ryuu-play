@@ -1,5 +1,5 @@
 import {State, PlayerType, SuperType, PokemonCardList, CardType,
-  EnergyCard} from "../game";
+  EnergyCard} from '../game';
 
 export interface StateScoreOptions {
   prizeCard: number;
@@ -35,7 +35,7 @@ export class StateScore {
     }, options);
   }
 
-  getStateScore(state: State, playerNumber: number): number {
+  public getStateScore(state: State, playerNumber: number): number {
     const player = state.players[playerNumber];
     const opponent = state.players[playerNumber ? 0 : 1];
     const options = this.options;
