@@ -7,9 +7,9 @@ import { Player, State, Action, EnergyMap, PokemonCardList,  PlayerType,
 
 export class PromptResolver {
 
-  constructor(private deck: string[] | null) { }
+  constructor(private deck: string[] | null = null) { }
 
-  public resolvePrompt(player: Player, state: State, prompt: Prompt<any>): Action | undefined {
+  public resolvePrompt(player: Player, state: State, prompt: Prompt<any>): Action {
     if (prompt instanceof AlertPrompt || prompt instanceof ShowCardsPrompt) {
       return new ResolvePromptAction(prompt.id, 0);
     }

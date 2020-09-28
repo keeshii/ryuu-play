@@ -9,7 +9,7 @@ import { deepClone } from "../../utils";
 
 
 export class Simulator implements StoreHandler {
-  private store: Store;
+  public store: Store;
   private botArbiter: BotArbiter;
 
   constructor(state: State, botArbiterOptions: Partial<BotArbiterOptions> = {}) {
@@ -43,11 +43,11 @@ export class Simulator implements StoreHandler {
   }
 
   public dispatch(action: Action): State {
-    let state = this.dispatch(action);
+    let state = this.store.dispatch(action);
 
     let resolve = this.handleArbiterPrompts(this.store.state);
     while (resolve !== undefined) {
-      state = this.dispatch(resolve);
+      state = this.store.dispatch(resolve);
       resolve = this.handleArbiterPrompts(this.store.state);
     }
 
