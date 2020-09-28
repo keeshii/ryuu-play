@@ -1,12 +1,11 @@
 import { Store } from "../store/store";
 import { Action } from "../store/actions/action";
-import { BotArbiter } from "./bot-arbiter";
+import { BotArbiter, BotArbiterOptions } from "./bot-arbiter";
 import { State } from "../store/state/state";
 import { StoreHandler } from "../store/store-handler";
 import { GameError, GameMessage } from "../game-error";
+import { ResolvePromptAction } from "../store/actions/resolve-prompt-action";
 import { deepClone } from "../../utils";
-import {BotArbiterOptions} from "./bot-arbiter-options";
-import {ResolvePromptAction} from "../store/actions/resolve-prompt-action";
 
 
 export class Simulator implements StoreHandler {

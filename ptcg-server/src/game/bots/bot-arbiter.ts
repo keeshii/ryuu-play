@@ -1,4 +1,3 @@
-import { BotArbiterOptions, BotFlipMode, BotShuffleMode } from './bot-arbiter-options';
 import { CardList } from '../store/state/card-list';
 import { CoinFlipPrompt } from '../store/prompts/coin-flip-prompt';
 import { Prompt } from '../store/prompts/prompt';
@@ -6,6 +5,22 @@ import { ShuffleDeckPrompt } from '../store/prompts/shuffle-prompt';
 import { State } from '../store/state/state';
 import { ResolvePromptAction } from '../store/actions/resolve-prompt-action';
 
+export enum BotFlipMode {
+  ALL_HEADS,
+  ALL_TAILS,
+  RANDOM
+}
+
+export enum BotShuffleMode {
+  NO_SHUFFLE,
+  REVERSE,
+  RANDOM
+}
+
+export interface BotArbiterOptions {
+  flipMode: BotFlipMode,
+  shuffleMode: BotShuffleMode
+}
 
 export class BotArbiter {
 
