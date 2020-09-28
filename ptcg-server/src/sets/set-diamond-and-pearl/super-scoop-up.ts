@@ -29,9 +29,8 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     { allowCancel: false }
   ), result => {
     const cardList = result[0];
-    cardList.clearEffects();
-    cardList.damage = 0;
     cardList.moveTo(player.hand);
+    cardList.clearEffects();
     next();
   });
 
