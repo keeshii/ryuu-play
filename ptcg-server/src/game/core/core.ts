@@ -51,9 +51,9 @@ export class Core {
       throw new GameError(GameMessage.CLIENT_NOT_CONNECTED);
     }
     const game = new Game(this, generateId(this.games), gameSettings);
-    game.dispatch(client, new AddPlayerAction(client.id, client.name, deck));
+    game.dispatch(new AddPlayerAction(client.id, client.name, deck));
     if (invited) {
-      game.dispatch(invited, new InvitePlayerAction(invited.id, invited.name));
+      game.dispatch(new InvitePlayerAction(invited.id, invited.name));
     }
     this.games.push(game);
     this.emit(c => c.onGameAdd(game));

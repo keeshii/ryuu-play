@@ -64,7 +64,7 @@ export class Game implements StoreHandler {
     return true;
   }
 
-  public dispatch(client: Client, action: Action): State {
+  public dispatch(action: Action): State {
     return this.store.dispatch(action);
   }
 

@@ -4,14 +4,14 @@ import { GameError, GameMessage } from '../game-error';
 import { User } from '../../storage';
 import { config } from '../../config';
 import { Md5 } from '../../utils/md5';
-import { BotGameArranger } from './bot-game-arranger';
+import { BotGamesTask } from './bot-games-task';
 
 export class BotManager {
 
   private static instance: BotManager;
 
   private bots: BotClient[] = [];
-  private botGameArranger = new BotGameArranger(this.bots);
+  private botGameArranger = new BotGamesTask(this.bots);
 
   public static getInstance(): BotManager {
     if (!BotManager.instance) {

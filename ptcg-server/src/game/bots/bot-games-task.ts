@@ -8,7 +8,7 @@ interface BotsForGame {
   bot2: BotClient,
 };
 
-export class BotGameArranger {
+export class BotGamesTask {
 
   private bots: BotClient[] = [];
 
