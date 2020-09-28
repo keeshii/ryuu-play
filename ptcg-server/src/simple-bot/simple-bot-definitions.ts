@@ -3,6 +3,7 @@ import { PromptResolverList } from './prompt-resolver/prompt-resolver';
 import { AttachEnergyTactic } from './simple-tactics/attach-energy-tactic';
 import { AttackTactic } from './simple-tactics/attack-tactic';
 import { PlayBasicTactic } from './simple-tactics/play-basic-tactic';
+import { RetreatTactic } from './simple-tactics/retreat-tactic';
 import { EvolveTactic } from './simple-tactics/evolve-tactic';
 import { AlertPromptResolver } from './prompt-resolver/alert-prompt-resolver';
 import { ChooseCardsPromptResolver } from './prompt-resolver/choose-cards-prompt-resolver';
@@ -28,5 +29,6 @@ export const allSimpleTactics: SimpleTacticList = [
   EvolveTactic,
   PlayBasicTactic,
   AttachEnergyTactic,
+  RetreatTactic,
   AttackTactic
 ];

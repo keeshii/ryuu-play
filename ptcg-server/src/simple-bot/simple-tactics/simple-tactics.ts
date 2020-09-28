@@ -1,14 +1,18 @@
 import { Action, Player, State, PokemonCardList, CardTarget, PlayerType,
-  SlotType, GameError, GameMessage } from "../../game";
-
-
+  SlotType, GameError, GameMessage, Prompt, ResolvePromptAction } from "../../game";
+import { Simulator } from "../../game/bots/simulator";
 import { SimpleBotOptions } from "../simple-bot-options";
+import { StateScoreCalculator } from "../state-score-calculator";
 
 export type SimpleTacticList = (new (options: SimpleBotOptions) => SimpleTactic)[];
 
 export abstract class SimpleTactic {
 
-  constructor(protected options: SimpleBotOptions) { }
+  private stateScoreCalculator: StateScoreCalculator;
+
+  constructor(protected options: SimpleBotOptions) {
+    this.stateScoreCalculator = new StateScoreCalculator(this.options.scores);
+  }
 
   public abstract useTactic(state: State, player: Player): Action | undefined;
 
@@ -39,6 +43,58 @@ export abstract class SimpleTactic {
     }
 
     throw new GameError(GameMessage.INVALID_TARGET);
+  }
+
+  protected simulateAction(state: State, action: Action): State | undefined {
+    let newState = state;
+    try {
+      const simulator = new Simulator(state);
+      newState = simulator.dispatch(action);
+      
+      while (simulator.store.state.prompts.some(p => p.result === undefined)) {
+        newState = simulator.store.state;
+        const prompt = newState.prompts.find(p => p.result === undefined);
+        if (prompt === undefined) {
+          break;
+        }
+        const player = newState.players.find(p => p.id === prompt.playerId);
+        if (player === undefined) {
+          break;
+        }
+        const resolveAction = this.resolvePrompt(newState, player, prompt);
+        newState = simulator.dispatch(resolveAction);
+      }
+    } catch (error) {
+      return undefined;
+    }
+
+    return newState;
+  }
+
+  private resolvePrompt(state: State, player: Player, prompt: Prompt<any>): Action {
+    const resolvers = this.options.promptResolvers.map(resolver => new resolver(this.options));
+
+    for (let i = 0; i < resolvers.length; i++) {
+      const action = resolvers[i].resolvePrompt(state, player, prompt);
+      if (action !== undefined) {
+        return action;
+      }
+    }
+
+    // Unknown prompt. Try to cancel it.
+    return new ResolvePromptAction(prompt.id, null);
+  }
+
+  protected getStateScore(state: State, player: Player): number {
+    return this.stateScoreCalculator.getStateScore(state, player);
+  }
+
+  protected evaluateAction(state: State, player: Player, action: Action): number | undefined {
+    const newState = this.simulateAction(state, action);
+    const newPlayer = newState && newState.players.find(p => p.id === player.id);
+    if (newState !== undefined && newPlayer !== undefined) {
+      return this.stateScoreCalculator.getStateScore(newState, newPlayer);
+    }
   }
 
 }
