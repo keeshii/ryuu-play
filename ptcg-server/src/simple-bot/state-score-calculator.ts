@@ -1,4 +1,4 @@
-import { State, PlayerType, SuperType, Player, StateUtils } from '../game';
+import { State, PlayerType, SuperType, StateUtils, GameError, GameMessage } from '../game';
 import { StateScores } from './simple-bot-options';
 
 export const defaultStateScores: StateScores = {
@@ -19,7 +19,11 @@ export class StateScoreCalculator {
 
   constructor(private scores: StateScores) { }
 
-  public getStateScore(state: State, player: Player): number {
+  public getStateScore(state: State, playerId: number): number {
+    const player = state.players.find(p => p.id === playerId);
+    if (player === undefined) {
+      throw new GameError(GameMessage.INVALID_GAME_STATE);
+    }
     const opponent = StateUtils.getOpponent(state, player);
     const scores = this.scores;
     let score = 0;

@@ -20,10 +20,12 @@ export class ChooseCardsPromptResolver extends PromptResolver {
 
   private buildCardsToChoose(state: State, prompt: ChooseCardsPrompt): Card[] {
     const cardList = new CardList();
-    cardList.cards = prompt.cards.cards
-      .filter((card, index) => !prompt.options.blocked.includes(index));
-    const cards: Card[] = prompt.cards.filter(prompt.filter);
-    return cards;
+
+    cardList.cards = prompt.cards.cards.filter((card, index) => {
+      return !prompt.options.blocked.includes(index)
+    });
+
+    return cardList.filter(prompt.filter);
   }
 
 }

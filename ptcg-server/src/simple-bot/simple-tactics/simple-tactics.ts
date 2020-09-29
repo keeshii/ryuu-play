@@ -85,15 +85,15 @@ export abstract class SimpleTactic {
     return new ResolvePromptAction(prompt.id, null);
   }
 
-  protected getStateScore(state: State, player: Player): number {
-    return this.stateScoreCalculator.getStateScore(state, player);
+  protected getStateScore(state: State, playerId: number): number {
+    return this.stateScoreCalculator.getStateScore(state, playerId);
   }
 
-  protected evaluateAction(state: State, player: Player, action: Action): number | undefined {
+  protected evaluateAction(state: State, playerId: number, action: Action): number | undefined {
     const newState = this.simulateAction(state, action);
-    const newPlayer = newState && newState.players.find(p => p.id === player.id);
+    const newPlayer = newState && newState.players.find(p => p.id === playerId);
     if (newState !== undefined && newPlayer !== undefined) {
-      return this.stateScoreCalculator.getStateScore(newState, newPlayer);
+      return this.stateScoreCalculator.getStateScore(newState, playerId);
     }
   }
 
