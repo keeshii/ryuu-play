@@ -6,7 +6,7 @@ export type PromptResolverList = (new (options: SimpleBotOptions) => PromptResol
 
 export abstract class PromptResolver {
 
-  private stateScore: StateScore;
+  protected stateScore: StateScore;
 
   constructor(protected options: SimpleBotOptions) {
     this.stateScore = new StateScore(this.options);

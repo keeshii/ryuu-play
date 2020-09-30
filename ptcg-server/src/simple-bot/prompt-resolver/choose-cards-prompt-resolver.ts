@@ -25,7 +25,13 @@ export class ChooseCardsPromptResolver extends PromptResolver {
       return !prompt.options.blocked.includes(index)
     });
 
-    return cardList.filter(prompt.filter);
+    const cards = cardList.filter(prompt.filter).map(card => {
+      const score = this.stateScore.getCardScore(state, prompt.playerId, card);
+      return { card, score };
+    });
+
+    cards.sort((a, b) => b.score - a.score);
+    return cards.map(c => c.card);
   }
 
 }

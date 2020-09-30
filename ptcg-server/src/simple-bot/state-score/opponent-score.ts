@@ -1,4 +1,4 @@
-import { State, StateUtils } from '../../game';
+import { State, StateUtils, EnergyCard, PlayerType } from '../../game';
 import { SimpleScore } from './score';
 
 
@@ -22,6 +22,19 @@ export class OpponentScore extends SimpleScore {
     if (isBenchEmpty) {
       score += scores.emptyBench;
     }
+
+    // Opponent's active has no attached energy
+    const noActiveEnergy = opponent.active.cards.every(c => !(c instanceof EnergyCard));
+    if (noActiveEnergy) {
+      console.log('noActiveEnergy', score)
+      score += scores.noActiveEnergy;
+    }
+
+    opponent.forEachPokemon(PlayerType.TOP_PLAYER, cardList => {
+      const energies = cardList.cards.filter(c => c instanceof EnergyCard);
+      score += scores.energy * energies.length;
+      score += scores.board * cardList.cards.length;
+    });
 
     return score;
   }

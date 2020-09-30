@@ -10,8 +10,15 @@ export class OrderCardsPromptResolver extends PromptResolver {
       if (prompt.options.allowCancel) {
         return new ResolvePromptAction(prompt.id, null);
       }
-      const result: number[] = [];
-      prompt.cards.cards.forEach((c, index) => result.push(index));
+
+      const cards = prompt.cards.cards.map((card, index) => {
+        const score = this.stateScore.getCardScore(state, player.id, card);
+        return { card, score, index };
+      });
+
+      cards.sort((a, b) => b.score - a.score);
+
+      const result = cards.map(c => c.index);
       return new ResolvePromptAction(prompt.id, result);
     }
   }

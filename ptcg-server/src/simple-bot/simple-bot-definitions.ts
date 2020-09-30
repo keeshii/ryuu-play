@@ -20,6 +20,7 @@ import { ChoosePrizePromptResolver } from './prompt-resolver/choose-prize-prompt
 import { ConfirmPromptResolver } from './prompt-resolver/confirm-prompt-resolver';
 import { OrderCardsPromptResolver } from './prompt-resolver/order-cards-prompt-resolver';
 import { SelectPromptResolver } from './prompt-resolver/select-prompt-resolver';
+import { BotFlipMode, BotShuffleMode } from '../game/bots/bot-arbiter';
 
 export const defaultStateScores = {
   hand: {
@@ -74,14 +75,21 @@ export const defaultStateScores = {
   opponent: {
     deck: -1,
     hand: -2,
+    board: -2,
     energy: -3,
-    emptyBench: 50
+    emptyBench: 50,
+    noActiveEnergy: 50
   },
   tools: {
     active: 50,
     hpLeft: 1,
     minScore: 70
   }
+};
+
+export const defaultArbiterOptions = {
+  flipMode: BotFlipMode.ALL_HEADS,
+  shuffleMode: BotShuffleMode.NO_SHUFFLE
 };
 
 export const allPromptResolvers: PromptResolverList = [

@@ -68,10 +68,11 @@ export class BotArbiter {
           result = Math.round(Math.random()) === 0;
           return new ResolvePromptAction(prompt.id, result);
         case BotFlipMode.ALL_TAILS:
-          result = this.flipCount % 10 ? true : false;
+          // Every 10th coin is opposite to avoid infinite loops.
+          result = (this.flipCount % 10 === 9) ? true : false;
           return new ResolvePromptAction(prompt.id, result);
         default:
-          result = this.flipCount % 10 ? false : true;
+          result = (this.flipCount % 10 === 9) ? false : true;
           return new ResolvePromptAction(prompt.id, result);
       }
     }

@@ -48,7 +48,7 @@ export abstract class SimpleTactic {
   protected simulateAction(state: State, action: Action): State | undefined {
     let newState = state;
     try {
-      const simulator = new Simulator(state);
+      const simulator = new Simulator(state, this.options.arbiter);
       newState = simulator.dispatch(action);
       
       while (simulator.store.state.prompts.some(p => p.result === undefined)) {

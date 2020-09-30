@@ -8,8 +8,18 @@ export class ChoosePokemonPromptResolver extends PromptResolver {
 
   public resolvePrompt(state: State, player: Player, prompt: Prompt<any>): Action | undefined {
     if (prompt instanceof ChoosePokemonPrompt) {
-      const result: PokemonCardList[] = this.buildPokemonToChoose(state, prompt)
-        .slice(0, prompt.options.min);
+      const pokemons = this.buildPokemonToChoose(state, prompt).map(cardList => {
+        let score = this.stateScore.getPokemonScore(cardList);
+        // When it comes to the opponent, let's choose the weakest Pokemon
+        if (prompt.playerType === PlayerType.TOP_PLAYER) {
+          score = -score;
+        }
+        return { cardList, score };
+      });
+
+      pokemons.sort((a, b) => b.score - a.score);
+
+      const result = pokemons.map(p => p.cardList).slice(0, prompt.options.min);
       return new ResolvePromptAction(prompt.id, result);
     }
   }

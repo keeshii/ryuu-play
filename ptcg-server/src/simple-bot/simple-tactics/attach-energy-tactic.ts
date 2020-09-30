@@ -10,7 +10,13 @@ export class AttachEnergyTactic extends SimpleTactic {
       return undefined;
     }
 
-    const energies = player.hand.cards.filter(c => c instanceof EnergyCard);
+    // Distinct list with player's energies.
+    const energies: EnergyCard[] = [];
+    player.hand.cards.forEach(c => {
+      if (c instanceof EnergyCard && !energies.some(e => e.fullName === c.fullName)) {
+        energies.push(c);
+      }
+    });
 
     if (energies.length === 0) {
       return;

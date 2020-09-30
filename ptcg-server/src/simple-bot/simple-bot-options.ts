@@ -1,5 +1,6 @@
 import { SimpleTacticList } from './simple-tactics/simple-tactics';
 import { PromptResolverList } from './prompt-resolver/prompt-resolver';
+import { BotArbiterOptions } from '../game/bots/bot-arbiter';
 
 export interface PokemonScores {
   hp: number;
@@ -51,8 +52,10 @@ export interface StateScores {
   opponent: {
     deck: number;
     hand: number;
+    board: number;
     energy: number;
     emptyBench: number;
+    noActiveEnergy: number;
   };
   tools: {
     active: number;
@@ -65,4 +68,5 @@ export interface SimpleBotOptions {
   tactics: SimpleTacticList;
   scores: StateScores;
   promptResolvers: PromptResolverList;
+  arbiter: BotArbiterOptions;
 }
