@@ -8,6 +8,7 @@ import { SpecialConditionsScore } from './special-conditions-score';
 import { ActiveScore } from './active-score';
 import { BenchScore } from './bench-score';
 import { EnergyScore } from './energy-score';
+import { ToolsScore } from './tools-score';
 
 export class StateScore extends SimpleScore {
 
@@ -18,6 +19,7 @@ export class StateScore extends SimpleScore {
   private activeScore: ActiveScore;
   private benchScore: BenchScore;
   private energyScore: EnergyScore;
+  private toolsScore: ToolsScore;
 
   constructor(protected options: SimpleBotOptions) {
     super(options);
@@ -28,6 +30,7 @@ export class StateScore extends SimpleScore {
     this.activeScore = new ActiveScore(options);
     this.benchScore = new BenchScore(options);
     this.energyScore = new EnergyScore(options);
+    this.toolsScore = new ToolsScore(options);
   }
 
   public getScore(state: State, playerId: number): number {
@@ -38,6 +41,7 @@ export class StateScore extends SimpleScore {
     const activeScore = this.activeScore.getScore(state, playerId);
     const benchScore = this.benchScore.getScore(state, playerId);
     const energyScore = this.energyScore.getScore(state, playerId);
+    const toolsScore = this.toolsScore.getScore(state, playerId);
 
     const score = handScore
       + opponentScore
@@ -45,7 +49,8 @@ export class StateScore extends SimpleScore {
       + specialConditionsScore
       + activeScore
       + benchScore
-      + energyScore;
+      + energyScore
+      + toolsScore;
 
     return score;
   }

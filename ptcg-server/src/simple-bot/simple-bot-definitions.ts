@@ -23,7 +23,7 @@ import { SelectPromptResolver } from './prompt-resolver/select-prompt-resolver';
 
 export const defaultStateScores = {
   hand: {
-    hasSupporter: 10,
+    hasSupporter: 5,
     hasEnergy: 5,
     hasPokemon: 2,
     hasBasicWhenBenchEmpty: 20,
@@ -74,7 +74,13 @@ export const defaultStateScores = {
   opponent: {
     deck: -1,
     hand: -2,
+    energy: -3,
     emptyBench: 50
+  },
+  tools: {
+    active: 50,
+    hpLeft: 1,
+    minScore: 70
   }
 };
 

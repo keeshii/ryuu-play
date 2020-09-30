@@ -51,7 +51,13 @@ export interface StateScores {
   opponent: {
     deck: number;
     hand: number;
+    energy: number;
     emptyBench: number;
+  };
+  tools: {
+    active: number;
+    hpLeft: number;
+    minScore: number;
   };
 }
 

@@ -1,10 +1,8 @@
 import { Action, Player, State, PlayCardAction, TrainerCard, TrainerType,
-  CardTarget, PlayerType, SlotType} from "../../game";
+  CardTarget, PlayerType} from "../../game";
 import { SimpleTactic } from "./simple-tactics";
 
 export class AttachToolTactic extends SimpleTactic {
-
-  private readonly minAttachToolScore = 70;
 
   public useTactic(state: State, player: Player): Action | undefined {
     const tools = player.hand.cards.filter(c => {
@@ -15,19 +13,20 @@ export class AttachToolTactic extends SimpleTactic {
       return;
     }
 
+    const tool = tools[0];
+    const baseScore = this.getStateScore(state, player.id);
+
     const targets: { target: CardTarget, score: number }[] = [];
     player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, pokemon, target) => {
       if (cardList.tool !== undefined) {
         return;
       }
 
-      // Better to assign tool to the active Pokemon
-      let score = target.slot === SlotType.ACTIVE ? 50 : 0;
+      cardList.tool = tool;
+      const score = this.getStateScore(state, player.id);
+      cardList.tool = undefined;
 
-      // More HP left is better
-      score += pokemon.hp - cardList.damage;
-
-      if (score >= this.minAttachToolScore) {
+      if (score > baseScore) {
         targets.push({ target, score });
       }
     });
