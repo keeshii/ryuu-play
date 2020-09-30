@@ -175,7 +175,6 @@ export class GameService {
 
   private onStateChange(gameId: number, stateData: string) {
     const state = this.decodeStateData(stateData);
-    console.log('gameService, onStateChange', gameId, state);
     const games = this.sessionService.session.gameStates;
     const index = games.findIndex(g => g.gameId === gameId && g.deleted === false);
     if (index !== -1) {

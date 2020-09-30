@@ -16,10 +16,16 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-raised-button (click)="reset()" [disabled]="results.length === 0">Reset</button>
+  <button mat-raised-button [disabled]="results.length === 0" (click)="reset()">
+    Reset
+  </button>
   <div class="ptcg-u-spacer"></div>
-  <button mat-raised-button *ngIf="allowedCancel" (click)="cancel()">Cancel</button>
-  <button mat-raised-button [disabled]="isInvalid" color="primary" (click)="confirm()">
+  <button mat-raised-button *ngIf="allowedCancel" [disabled]="gameState.deleted"
+    (click)="cancel()">
+    Cancel
+  </button>
+  <button mat-raised-button color="primary" [disabled]="gameState.deleted || isInvalid"
+    (click)="confirm()">
     OK
   </button>
 </mat-dialog-actions>

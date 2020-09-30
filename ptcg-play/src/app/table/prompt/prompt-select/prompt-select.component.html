@@ -18,8 +18,12 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-raised-button *ngIf="allowCancel" (click)="cancel()">Cancel</button>
-  <button mat-raised-button color="primary" (click)="confirm()">
+  <button mat-raised-button *ngIf="allowCancel" [disabled]="gameState.deleted"
+    (click)="cancel()">
+    Cancel
+  </button>
+  <button mat-raised-button color="primary" [disabled]="gameState.deleted"
+    (click)="confirm()">
     OK
   </button>
 </mat-dialog-actions>

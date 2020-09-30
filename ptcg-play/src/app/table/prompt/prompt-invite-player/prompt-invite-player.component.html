@@ -26,8 +26,9 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-raised-button (click)="cancel()">Cancel</button>
-  <button mat-raised-button color="primary" [disabled]="!deckId" (click)="confirm()">
+  <button mat-raised-button [disabled]="gameState.deleted" (click)="cancel()">Cancel</button>
+  <button mat-raised-button color="primary" [disabled]="gameState.deleted || !deckId"
+    (click)="confirm()">
     OK
   </button>
 </mat-dialog-actions>

@@ -10,7 +10,8 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-raised-button color="primary" (click)="confirm()">
+  <button mat-raised-button color="primary" [disabled]="gameState.deleted"
+    (click)="confirm()">
     OK
   </button>
 </mat-dialog-actions>

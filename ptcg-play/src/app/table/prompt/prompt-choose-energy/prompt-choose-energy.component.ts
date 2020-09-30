@@ -1,8 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ChooseEnergyPrompt, GameState, CardList, Card, SuperType, CardType,
-  StateUtils, EnergyMap } from 'ptcg-server';
+import { ChooseEnergyPrompt, CardList, Card, SuperType, CardType, StateUtils,
+  EnergyMap } from 'ptcg-server';
 
 import { GameService } from '../../../api/services/game.service';
+import { LocalGameState } from '../../../shared/session/session.interface';
 
 @Component({
   selector: 'ptcg-prompt-choose-energy',
@@ -23,7 +24,7 @@ export class PromptChooseEnergyComponent implements OnInit {
     this.cost = prompt.cost;
   }
 
-  @Input() gameState: GameState;
+  @Input() gameState: LocalGameState;
 
   public cards: CardList;
   public allowedCancel: boolean;

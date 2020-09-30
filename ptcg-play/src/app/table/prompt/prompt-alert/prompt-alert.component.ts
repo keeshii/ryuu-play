@@ -1,7 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { AlertPrompt, GameState } from 'ptcg-server';
+import { AlertPrompt } from 'ptcg-server';
 
 import { GameService } from '../../../api/services/game.service';
+import { LocalGameState } from '../../../shared/session/session.interface';
 
 @Component({
   selector: 'ptcg-prompt-alert',
@@ -11,7 +12,7 @@ import { GameService } from '../../../api/services/game.service';
 export class PromptAlertComponent implements OnInit {
 
   @Input() prompt: AlertPrompt;
-  @Input() gameState: GameState;
+  @Input() gameState: LocalGameState;
 
   constructor(private gameService: GameService) { }
 

@@ -1,7 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { SelectPrompt, GameState } from 'ptcg-server';
+import { SelectPrompt } from 'ptcg-server';
 
 import { GameService } from '../../../api/services/game.service';
+import { LocalGameState } from '../../../shared/session/session.interface';
 
 @Component({
   selector: 'ptcg-prompt-select',
@@ -18,7 +19,7 @@ export class PromptSelectComponent implements OnInit {
     this.result = prompt.options.defaultValue;
   }
 
-  @Input() gameState: GameState;
+  @Input() gameState: LocalGameState;
 
   private promptId: number;
   public message: string;

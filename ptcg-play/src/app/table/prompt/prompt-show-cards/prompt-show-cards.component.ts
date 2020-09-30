@@ -1,7 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ShowCardsPrompt, GameState } from 'ptcg-server';
+import { ShowCardsPrompt } from 'ptcg-server';
 
 import { GameService } from '../../../api/services/game.service';
+import { LocalGameState } from '../../../shared/session/session.interface';
 
 @Component({
   selector: 'ptcg-prompt-show-cards',
@@ -11,7 +12,7 @@ import { GameService } from '../../../api/services/game.service';
 export class PromptShowCardsComponent implements OnInit {
 
   @Input() prompt: ShowCardsPrompt;
-  @Input() gameState: GameState;
+  @Input() gameState: LocalGameState;
 
   constructor(private gameService: GameService) { }
 

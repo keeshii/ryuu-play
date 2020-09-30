@@ -13,7 +13,7 @@ export function playTrainerReducer(store: StoreLike, state: State, effect: Effec
   if (effect instanceof PlaySupporterEffect) {
     const playTrainer = new TrainerEffect(effect.player, effect.trainerCard, effect.target);
     state = store.reduceEffect(state, playTrainer);
-
+    store.log(state, `${effect.player.name} plays ${effect.trainerCard.name}.`);
     return state;
   }
 

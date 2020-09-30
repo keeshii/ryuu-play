@@ -26,7 +26,6 @@ export class OpponentScore extends SimpleScore {
     // Opponent's active has no attached energy
     const noActiveEnergy = opponent.active.cards.every(c => !(c instanceof EnergyCard));
     if (noActiveEnergy) {
-      console.log('noActiveEnergy', score)
       score += scores.noActiveEnergy;
     }
 

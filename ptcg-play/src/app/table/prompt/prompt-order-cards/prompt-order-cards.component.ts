@@ -1,7 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { GameState, CardList, OrderCardsPrompt } from 'ptcg-server';
+import { CardList, OrderCardsPrompt } from 'ptcg-server';
 
 import { GameService } from '../../../api/services/game.service';
+import { LocalGameState } from '../../../shared/session/session.interface';
 
 @Component({
   selector: 'ptcg-prompt-order-cards',
@@ -17,7 +18,7 @@ export class PromptOrderCardsComponent implements OnInit {
     this.promptId = prompt.id;
   }
 
-  @Input() gameState: GameState;
+  @Input() gameState: LocalGameState;
 
   public cards: CardList;
   public allowedCancel: boolean;

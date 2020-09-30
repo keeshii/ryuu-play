@@ -1,7 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ConfirmPrompt, GameState } from 'ptcg-server';
+import { ConfirmPrompt } from 'ptcg-server';
 
 import { GameService } from '../../../api/services/game.service';
+import { LocalGameState } from '../../../shared/session/session.interface';
 
 @Component({
   selector: 'ptcg-prompt-confirm',
@@ -11,7 +12,7 @@ import { GameService } from '../../../api/services/game.service';
 export class PromptConfirmComponent implements OnInit {
 
   @Input() prompt: ConfirmPrompt;
-  @Input() gameState: GameState;
+  @Input() gameState: LocalGameState;
 
   constructor(private gameService: GameService) { }
 

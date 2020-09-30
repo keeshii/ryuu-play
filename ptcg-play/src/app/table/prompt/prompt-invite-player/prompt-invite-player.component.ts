@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { GameState, InvitePlayerPrompt } from 'ptcg-server';
-import { finalize, switchMap } from 'rxjs/operators';
+import { InvitePlayerPrompt } from 'ptcg-server';
+import { finalize } from 'rxjs/operators';
 
 import { ApiError } from '../../../api/api.error';
 import { AlertService } from '../../../shared/alert/alert.service';
@@ -8,6 +8,7 @@ import { DeckService } from 'src/app/api/services/deck.service';
 import { GameService } from '../../../api/services/game.service';
 import { SelectPopupOption } from '../../../shared/alert/select-popup/select-popup.component';
 import { takeUntilDestroyed} from '../../../shared/operators/take-until-destroyed';
+import { LocalGameState } from '../../../shared/session/session.interface';
 
 @Component({
   selector: 'ptcg-prompt-invite-player',
@@ -17,7 +18,7 @@ import { takeUntilDestroyed} from '../../../shared/operators/take-until-destroye
 export class PromptInvitePlayerComponent implements OnInit, OnDestroy {
 
   @Input() prompt: InvitePlayerPrompt;
-  @Input() gameState: GameState;
+  @Input() gameState: LocalGameState;
 
   public loading = true;
   public decks: SelectPopupOption<number>[] = [];
