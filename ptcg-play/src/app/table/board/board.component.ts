@@ -2,14 +2,14 @@ import { Component, OnInit, OnChanges, Input, OnDestroy } from '@angular/core';
 import { DraggedItem } from '@angular-skyhook/sortable';
 import { DropTarget, SkyhookDndService } from '@angular-skyhook/core';
 import { Observable } from 'rxjs';
-import { GameState, Player, SuperType, SlotType, PlayerType, CardTarget, Card,
-  PokemonCard, Stage } from 'ptcg-server';
+import { Player, SuperType, SlotType, PlayerType, CardTarget, Card, PokemonCard } from 'ptcg-server';
 import { map } from 'rxjs/operators';
 
 import { HandItem, HandCardType } from '../hand/hand-item.interface';
 import { BoardCardItem, BoardCardType } from './board-item.interface';
 import { CardsBaseService } from '../../shared/cards/cards-base.service';
 import { GameService } from '../../api/services/game.service';
+import { LocalGameState } from 'src/app/shared/session/session.interface';
 
 const BENCH_SIZE = 5;
 
@@ -23,7 +23,7 @@ type DropTargetType = DropTarget<DraggedItem<HandItem> | BoardCardItem, any>;
 export class BoardComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input() clientId: number;
-  @Input() gameState: GameState;
+  @Input() gameState: LocalGameState;
   @Input() topPlayer: Player;
   @Input() bottomPlayer: Player;
 
@@ -202,7 +202,8 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
         const isBottomOwner = this.bottomPlayer && this.bottomPlayer.id === this.clientId;
         const isTopOwner = this.topPlayer && this.topPlayer.id === this.clientId;
         const isOwner = isBottomOwner || isTopOwner;
-        return isOwner && this.getScanUrl(boardCardItem) !== undefined;
+        const isDeleted = this.gameState.deleted;
+        return !isDeleted && isOwner && this.getScanUrl(boardCardItem) !== undefined;
       },
       beginDrag: () => {
         return { ...boardCardItem, scanUrl: this.getScanUrl(boardCardItem) };
@@ -220,8 +221,9 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
 
   public onActiveClick(card: Card) {
     const isBottomOwner = this.bottomPlayer && this.bottomPlayer.id === this.clientId;
+    const isDeleted = this.gameState.deleted;
 
-    if (!isBottomOwner) {
+    if (!isBottomOwner || isDeleted) {
       return this.onCardClick(card);
     }
 
@@ -250,8 +252,9 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
 
   public onBenchClick(card: Card, index: number) {
     const isBottomOwner = this.bottomPlayer && this.bottomPlayer.id === this.clientId;
+    const isDeleted = this.gameState.deleted;
 
-    if (!isBottomOwner) {
+    if (!isBottomOwner || isDeleted) {
       return this.onCardClick(card);
     }
 

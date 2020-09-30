@@ -1,10 +1,11 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
-import { Player, Card, CardList, GameState } from 'ptcg-server';
+import { Player, Card, CardList } from 'ptcg-server';
 import { SortableSpec, DraggedItem } from '@angular-skyhook/sortable';
 
 import { CardsBaseService } from '../../shared/cards/cards-base.service';
 import { HandItem, HandCardType } from './hand-item.interface';
-import { GameService } from 'src/app/api/services/game.service';
+import { LocalGameState } from '../../shared/session/session.interface';
+import { GameService } from '../../api/services/game.service';
 
 @Component({
   selector: 'ptcg-hand',
@@ -16,11 +17,12 @@ export class HandComponent implements OnInit, OnChanges {
   public readonly handListId = 'HAND_LIST';
 
   @Input() player: Player;
-  @Input() gameState: GameState;
+  @Input() gameState: LocalGameState;
   @Input() clientId: number;
 
   public cards: Card[] = [];
   public isFaceDown: boolean;
+  public isDeleted: boolean;
   public handSpec: SortableSpec<HandItem>;
   public list: HandItem[] = [];
   public tempList: HandItem[] = [];
@@ -42,7 +44,7 @@ export class HandComponent implements OnInit, OnChanges {
         this.list = this.tempList;
         this.dispatchAction(this.list);
       },
-      canDrag: () => this.isOwner,
+      canDrag: () => this.isOwner && !this.isDeleted,
       endDrag: () => {
         this.tempList = this.list;
       }
@@ -52,6 +54,10 @@ export class HandComponent implements OnInit, OnChanges {
   ngOnInit() { }
 
   ngOnChanges() {
+    if (this.gameState) {
+      this.isDeleted = this.gameState.deleted;
+    }
+
     if (this.player) {
       const hand = this.player.hand;
       this.isOwner = this.player.id === this.clientId;

@@ -1,9 +1,9 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { GameState } from 'ptcg-server';
 
 import { AlertService } from '../../../shared/alert/alert.service';
 import { GameService } from '../../../api/services/game.service';
 import { LocalGameState } from '../../../shared/session/session.interface';
+import { SessionService } from '../../../shared/session/session.service';
 
 @Component({
   selector: 'ptcg-player-actions',
@@ -19,7 +19,8 @@ export class PlayerActionsComponent implements OnInit {
 
   constructor(
     private alertService: AlertService,
-    private gameService: GameService
+    private gameService: GameService,
+    private sessionService: SessionService
   ) { }
 
   ngOnInit() {
@@ -49,6 +50,21 @@ export class PlayerActionsComponent implements OnInit {
       return;
     }
     this.gameService.passTurnAction(this.gameState.gameId);
+  }
+
+  public switchSides() {
+    if (!this.gameState) {
+      return;
+    }
+    const games = this.sessionService.session.gameStates;
+    const index = games.findIndex(g => g.localId === this.gameState.localId);
+    if (index === -1) {
+      return;
+    }
+    const gameStates = this.sessionService.session.gameStates.slice();
+    const switchSide = !this.gameState.switchSide;
+    gameStates[index] = {...gameStates[index], switchSide };
+    this.sessionService.set({ gameStates });
   }
 
 }

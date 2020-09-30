@@ -24,10 +24,12 @@
         #searchInput="matInput"
         name="message"
         [(ngModel)]="message"
+        [disabled]="isDeleted"
         type="text" matInput placeholder="Enter message">
       <button mat-button matSuffix mat-icon-button
         matTooltip="Send message"
         matTooltipShowDelay="1000"
+        [disabled]="isDeleted"
         (click)="sendMessage()">
         <mat-icon>play_arrow</mat-icon>
       </button>
