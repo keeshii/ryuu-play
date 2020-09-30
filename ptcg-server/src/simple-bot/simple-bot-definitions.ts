@@ -22,11 +22,6 @@ import { OrderCardsPromptResolver } from './prompt-resolver/order-cards-prompt-r
 import { SelectPromptResolver } from './prompt-resolver/select-prompt-resolver';
 
 export const defaultStateScores = {
-  state: {
-    prize: 0.5,
-    hand: 0.1,
-    board: 0.4
-  },
   hand: {
     hasSupporter: 10,
     hasEnergy: 5,
@@ -36,17 +31,21 @@ export const defaultStateScores = {
     itemScore: 2,
     cardScore: 1
   },
-  attacker: {
+  active: {
     hp: 0.2,
     damage: 0.4,
-    hasAbility: 1,
+    ability: 1,
     retreat: -5
   },
-  helper: {
+  bench: {
     hp: 0.1,
     damage: 0.1,
-    hasAbility: 25,
+    ability: 25,
     retreat: 0
+  },
+  energy: {
+    active: 10,
+    bench: 10
   },
   board: {
     activeAttaker: 10,

@@ -1,12 +1,14 @@
 import { SimpleTacticList } from './simple-tactics/simple-tactics';
 import { PromptResolverList } from './prompt-resolver/prompt-resolver';
 
+export interface PokemonScores {
+  hp: number;
+  damage: number;
+  ability: number;
+  retreat: number;
+}
+
 export interface StateScores {
-  state: {
-    prize: number;
-    hand: number;
-    board: number;
-  };
   hand: {
     hasSupporter: number;
     hasEnergy: number;
@@ -16,17 +18,11 @@ export interface StateScores {
     itemScore: number;
     cardScore: number;
   };
-  attacker: {
-    hp: number;
-    damage: number;
-    hasAbility: number;
-    retreat: number;
-  };
-  helper: {
-    hp: number;
-    damage: number;
-    hasAbility: number;
-    retreat: number;
+  active: PokemonScores;
+  bench: PokemonScores;
+  energy: {
+    active: number;
+    bench: number;
   };
   board: {
     activeAttaker: number;
