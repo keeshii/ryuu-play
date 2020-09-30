@@ -8,7 +8,9 @@
       <!-- Game ID Column -->
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef>No.</th>
-        <td mat-cell *matCellDef="let match">{{match.matchId}}</td>
+        <td mat-cell *matCellDef="let match; let i = index;">
+          {{ pageIndex * pageSize + i + 1 }}
+        </td>
       </ng-container>
 
       <!-- Player 1 -->
@@ -73,9 +75,18 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 
+    <mat-paginator hidePageSize="true"
+      [disabled]="loading"
+      [length]="matchesTotal"
+      [pageIndex]="pageIndex"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions"
+      (page)="onPageChange($event)">
+    </mat-paginator>
+
     <div class="ptcg-u-padding ptcg-table-loading-failed" *ngIf="loadingFailed">
       <p>Error while loading the content.</p>
-      <button mat-raised-button color="primary" (click)="loadMatches()">
+      <button mat-raised-button color="primary" (click)="loadMatches(id)">
         Try again
       </button>
     </div>
