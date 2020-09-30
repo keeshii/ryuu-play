@@ -1,6 +1,7 @@
-import { Action, Player, State, EnergyCard, CardType, PlayCardAction,
-  PokemonCardList } from "../../game";
+import { Action, Player, State, EnergyCard, PlayCardAction, CardTarget,
+  PlayerType, Card} from "../../game";
 import { SimpleTactic } from "./simple-tactics";
+import { EnergyScore } from "../state-score/energy-score";
 
 export class AttachEnergyTactic extends SimpleTactic {
 
@@ -9,81 +10,35 @@ export class AttachEnergyTactic extends SimpleTactic {
       return undefined;
     }
 
-    const pokemons = [ player.active, ...player.bench ]
-      .filter(p => p.cards.length > 0);
+    const energies = player.hand.cards.filter(c => c instanceof EnergyCard);
 
-    for (let i = 0; i < pokemons.length; i++) {
-      const cardList = pokemons[i];
-      const missing = this.getMissingEnergies(cardList);
-
-      for (let j = 0; j < missing.length; j++) {
-        const cardType = missing[j];
-        const index = player.hand.cards.findIndex(c => {
-          if (c instanceof EnergyCard) {
-            const isColorless = cardType === CardType.ANY && c.provides.length > 0;
-            const isMatch = c.provides.includes(cardType);
-            if (isColorless || isMatch) {
-              return true;
-            }
-          }
-        });
-        try {
-          if (index !== -1) {
-            return new PlayCardAction(
-              player.id,
-              index,
-              this.getCardTarget(player, state, cardList)
-            );
-          }
-        } catch (error) { }
-      }
-    }
-  }
-
-  private getMissingEnergies(cardList: PokemonCardList): CardType[] {
-    const pokemon = cardList.getPokemonCard();
-    if (pokemon === undefined || pokemon.attacks.length === 0) {
-      return [];
+    if (energies.length === 0) {
+      return;
     }
 
-    const cost = pokemon.attacks[pokemon.attacks.length - 1].cost;
-    if (cost.length === 0) {
-      return [];
-    }
+    const energyScore = new EnergyScore(this.options);
+    const baseScore = energyScore.getScore(state, player.id);
+    const targets: { target: CardTarget, card: Card, score: number }[] = [];
+    player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, pokemon, target) => {
 
-    const provided: CardType[] = [];
-    cardList.cards.forEach(card => {
-      if (card instanceof EnergyCard) {
-        card.provides.forEach(energy => provided.push(energy));
+      for (const card of energies) {
+        cardList.cards.push(card);
+        const score = energyScore.getScore(state, player.id);
+        cardList.cards.pop();
+        if (score > baseScore) {
+          targets.push({ target, score, card });
+        }
       }
     });
 
-    const missing: CardType[] = [];
-    let colorless = 0;
-    // First remove from array cards with specific energy types
-    cost.forEach(costType => {
-      switch (costType) {
-        case CardType.ANY:
-        case CardType.NONE:
-          break;
-        case CardType.COLORLESS:
-          colorless += 1;
-          break;
-        default:
-          const index = provided.findIndex(energy => energy === costType);
-          if (index !== -1) {
-            provided.splice(index, 1);
-          } else {
-            missing.push(costType);
-          }
-      }
-    });
-
-    for (let i = 0; i < colorless; i++) {
-      missing.push(CardType.ANY);
+    if (targets.length === 0) {
+      return;
     }
 
-    return missing;
+    targets.sort((a, b) => b.score - a.score);
+    const target = targets[0].target;
+    const index = player.hand.cards.indexOf(targets[0].card);
+    return new PlayCardAction(player.id, index, target); 
   }
 
 }

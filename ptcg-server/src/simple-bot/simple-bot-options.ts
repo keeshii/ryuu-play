@@ -23,6 +23,8 @@ export interface StateScores {
   energy: {
     active: number;
     bench: number;
+    missingColorless: number;
+    missingMatch: number;
   };
   board: {
     activeAttaker: number;

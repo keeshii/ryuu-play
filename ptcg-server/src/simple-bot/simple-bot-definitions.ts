@@ -44,8 +44,10 @@ export const defaultStateScores = {
     retreat: 0
   },
   energy: {
-    active: 10,
-    bench: 10
+    active: 50,
+    bench: 20,
+    missingColorless: -1,
+    missingMatch: -2
   },
   board: {
     activeAttaker: 10,

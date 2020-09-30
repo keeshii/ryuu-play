@@ -6,77 +6,99 @@ export class EnergyScore extends SimpleScore {
   public getScore(state: State, playerId: number): number {
     const player = this.getPlayer(state, playerId);
     const scores = this.options.scores.energy;
-
     let score = 0;
 
-    player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card, target) => {
-      const energies = this.getRequiredEnergies(player.active);
-      const value = cardList === player.active ? scores.active : scores.bench;
-      score += value * energies.length;
-    })
+    player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, pokemon, target) => {
+      let missing: CardType[] = this.getMissingEnergies(cardList, pokemon.retreat);
+      pokemon.attacks.forEach(a => {
+        const missing2 = this.getMissingEnergies(cardList, a.cost);
+        missing = this.mergeMissing(missing, missing2);
+      });
+
+      const multipier = cardList === player.active
+        ? scores.active
+        : scores.bench;
+
+      missing.forEach(p => {
+        score += p === CardType.ANY
+          ? scores.missingColorless * multipier
+          : scores.missingMatch * multipier;
+      });
+    });
 
     return score;
   }
 
-  private getRequiredEnergies(cardList: PokemonCardList): EnergyCard[] {
-    const pokemon = cardList.getPokemonCard();
-    if (pokemon === undefined) {
+  private mergeMissing(missing1: CardType[], missing2: CardType[]): CardType[] {
+    let any1 = 0;
+    missing1.forEach(c => { any1 += c === CardType.ANY ? 1 : 0; });
+    missing1 = missing1.filter(c => c !== CardType.ANY);
+    let any2 = 0;
+    missing2.forEach(c => { any2 += c === CardType.ANY ? 1 : 0; });
+    missing2 = missing2.filter(c => c !== CardType.ANY);
+
+    missing1.forEach(c => {
+      const index = missing2.indexOf(c);
+      if (index !== -1) {
+        missing2.splice(index, 1);
+      } else if (any2 > 0) {
+        any2 -= 1;
+      }
+    });
+
+    missing2.forEach(c => {
+      missing1.push(c);
+    });
+
+    const max = Math.max(any1, any2);
+    for (let i = 0; i < max ; i++) {
+      missing1.push(CardType.ANY);
+    }
+
+    return missing1;
+  }
+
+
+  private getMissingEnergies(cardList: PokemonCardList, cost: CardType[]): CardType[] {
+    if (cost.length === 0) {
       return [];
     }
 
-    let cost: CardType[] = pokemon.retreat;
-    pokemon.attacks.forEach(a => { cost = this.mergeCosts(cost, a.cost); })
-
-    const energies = cardList.cards.filter(c => c instanceof EnergyCard) as EnergyCard[];
-
-    const result: EnergyCard[] = [];
-    energies.forEach(e => {
-      let required = false;
-      for (const provided of e.provides) {
-        const index = cost.findIndex(c => c === provided || c === CardType.COLORLESS);
-        if (index !== -1) {
-          cost.splice(index, 1);
-          required = true;
-        }
-      }
-      if (required) {
-        result.push(e);
+    const provided: CardType[] = [];
+    cardList.cards.forEach(card => {
+      if (card instanceof EnergyCard) {
+        card.provides.forEach(energy => provided.push(energy));
       }
     });
 
-    return result;
-  }
-
-  private mergeCosts(cost1: CardType[], cost2: CardType[]): CardType[] {
-    let c1 = 0;
-    cost1.forEach(c => { c1 += c === CardType.COLORLESS ? 1 : 0; });
-    cost1 = cost1.filter(c => c !== CardType.COLORLESS);
-    let c2 = 0;
-    cost2.forEach(c => { c2 += c === CardType.COLORLESS ? 1 : 0; });
-    cost2 = cost2.filter(c => c !== CardType.COLORLESS);
-
-    let min = Math.min(c1, c2);
-    c1 -= min;
-    c2 -= min;
-
-    cost1.forEach(c => {
-      const index = cost2.indexOf(c);
-      if (index !== -1) {
-        cost2.splice(index, 1);
-      } else if (c2 > 0) {
-        c2 -= 1;
+    const missing: CardType[] = [];
+    let colorless = 0;
+    // First remove from array cards with specific energy types
+    cost.forEach(costType => {
+      switch (costType) {
+        case CardType.ANY:
+        case CardType.NONE:
+          break;
+        case CardType.COLORLESS:
+          colorless += 1;
+          break;
+        default:
+          const index = provided.findIndex(energy => energy === costType);
+          if (index !== -1) {
+            provided.splice(index, 1);
+          } else {
+            missing.push(costType);
+          }
       }
     });
 
-    cost2.forEach(c => {
-      cost1.push(c);
-    });
+    colorless -= provided.length;
 
-    for (let i = 0; i < c1 + c2 ; i++) {
-      cost1.push(CardType.COLORLESS);
+    for (let i = 0; i < colorless; i++) {
+      missing.push(CardType.ANY);
     }
 
-    return cost1;
+    return missing;
   }
 
 }
