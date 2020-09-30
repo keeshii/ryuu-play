@@ -5,8 +5,7 @@ import { SimpleGameHandler } from './simple-game-handler';
 import { State } from '../game/store/state/state';
 import { User, Message } from '../storage';
 import { SimpleBotOptions } from './simple-bot-options';
-import { defaultStateScores } from './state-score-calculator';
-import { allSimpleTactics, allPromptResolvers } from './simple-bot-definitions';
+import { allSimpleTactics, allPromptResolvers, defaultStateScores } from './simple-bot-definitions';
 
 
 export class SimpleBot extends BotClient {

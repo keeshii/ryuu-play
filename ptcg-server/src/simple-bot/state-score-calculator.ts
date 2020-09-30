@@ -1,3 +1,5 @@
+/*
+
 import { State, PlayerType, SuperType, StateUtils, GameError, GameMessage } from '../game';
 import { StateScores } from './simple-bot-options';
 
@@ -75,3 +77,4 @@ export class StateScoreCalculator {
   }
 
 }
+*/

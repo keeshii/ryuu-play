@@ -2,16 +2,16 @@ import { Action, Player, State, PokemonCardList, CardTarget, PlayerType,
   SlotType, GameError, GameMessage, Prompt, ResolvePromptAction } from "../../game";
 import { Simulator } from "../../game/bots/simulator";
 import { SimpleBotOptions } from "../simple-bot-options";
-import { StateScoreCalculator } from "../state-score-calculator";
+import { StateScore } from "../state-score/state-score";
 
 export type SimpleTacticList = (new (options: SimpleBotOptions) => SimpleTactic)[];
 
 export abstract class SimpleTactic {
 
-  private stateScoreCalculator: StateScoreCalculator;
+  private stateScore: StateScore;
 
   constructor(protected options: SimpleBotOptions) {
-    this.stateScoreCalculator = new StateScoreCalculator(this.options.scores);
+    this.stateScore = new StateScore(this.options);
   }
 
   public abstract useTactic(state: State, player: Player): Action | undefined;
@@ -86,14 +86,14 @@ export abstract class SimpleTactic {
   }
 
   protected getStateScore(state: State, playerId: number): number {
-    return this.stateScoreCalculator.getStateScore(state, playerId);
+    return this.stateScore.getScore(state, playerId);
   }
 
   protected evaluateAction(state: State, playerId: number, action: Action): number | undefined {
     const newState = this.simulateAction(state, action);
     const newPlayer = newState && newState.players.find(p => p.id === playerId);
     if (newState !== undefined && newPlayer !== undefined) {
-      return this.stateScoreCalculator.getStateScore(newState, playerId);
+      return this.stateScore.getScore(newState, playerId);
     }
   }
 

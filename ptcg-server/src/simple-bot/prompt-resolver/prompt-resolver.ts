@@ -1,21 +1,21 @@
 import { Player, State, Action, Prompt } from '../../game';
 import { SimpleBotOptions } from '../simple-bot-options';
-import { StateScoreCalculator } from '../state-score-calculator';
+import { StateScore } from '../state-score/state-score';
 
 export type PromptResolverList = (new (options: SimpleBotOptions) => PromptResolver)[];
 
 export abstract class PromptResolver {
 
-  private stateScoreCalculator: StateScoreCalculator;
+  private stateScore: StateScore;
 
   constructor(protected options: SimpleBotOptions) {
-    this.stateScoreCalculator = new StateScoreCalculator(this.options.scores);
+    this.stateScore = new StateScore(this.options);
   }
 
   public abstract resolvePrompt(state: State, player: Player, prompt: Prompt<any>): Action | undefined;
 
   protected getStateScore(state: State, playerId: number): number {
-    return this.stateScoreCalculator.getStateScore(state, playerId);
+    return this.stateScore.getScore(state, playerId);
   }
 
 }
