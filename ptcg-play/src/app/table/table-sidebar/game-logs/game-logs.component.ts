@@ -24,6 +24,7 @@ export class GameLogsComponent implements OnInit {
   public loading = true;
   public logs: GameLog[] = [];
   public message = '';
+  public isDeleted: boolean;
   private state: LocalGameState;
 
   @Input() set gameState(gameState: LocalGameState) {
@@ -35,6 +36,7 @@ export class GameLogsComponent implements OnInit {
       this.logs = [];
     }
     this.state = gameState;
+    this.isDeleted = gameState.deleted;
     this.appendLogs(gameState.logs);
   }
 

@@ -50,10 +50,11 @@ export class GameService {
         localId: lastGameId,
         gameOver: replay ? true : false,
         deleted: replay ? true : false,
+        switchSide: false,
         state: this.decodeStateData(gameState.stateData),
         logs,
         replayPosition: 1,
-        replay
+        replay,
       };
       const gameStates = [...games, localGameState ];
       this.startListening(gameState.gameId);

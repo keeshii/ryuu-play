@@ -134,6 +134,16 @@ export class TableComponent implements OnInit, OnDestroy {
         this.bottomPlayer = state.players[1];
       }
 
+      if (gameState.switchSide) {
+        const tmp = this.topPlayer;
+        this.topPlayer = this.bottomPlayer;
+        this.bottomPlayer = tmp;
+      }
+
+      if (gameState.replay !== undefined) {
+        this.clientId = this.bottomPlayer.id;
+      }
+
       const prompts = state.prompts.filter(p => p.result === undefined);
       const waitingForOthers = prompts.some(p => p.playerId !== clientId);
       const waitingForMe = prompts.some(p => p.playerId === clientId);
