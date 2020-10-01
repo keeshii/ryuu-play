@@ -28,7 +28,12 @@ export class SimpleBot extends BotClient {
 
   public onDisconnect(client: Client): void { }
 
-  public onUsersUpdate(users: User[]): void { }
+  public onUsersUpdate(users: User[]): void {
+    const me = users.find(u => u.id === this.user.id);
+    if (me !== undefined) {
+      this.user = me;
+    }
+  }
 
   public onMessage(from: Client, message: Message): void { }
 

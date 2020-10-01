@@ -64,6 +64,12 @@ export class CoreSocket {
     if (core === undefined) {
       return;
     }
+
+    const me = users.find(u => u.id === this.client.user.id);
+    if (me !== undefined) {
+      this.client.user = me;
+    }
+
     const userInfos = users.map(u => {
       const connected = core.clients.some(c => c.user.id === u.id);
       return CoreSocket.buildUserInfo(u, connected);
