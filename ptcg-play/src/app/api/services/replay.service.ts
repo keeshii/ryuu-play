@@ -36,7 +36,10 @@ export class ReplayService {
         const gameState: GameState = {
           gameId: 0,
           stateData: this.getReplayStateData(replay),
-          clientIds: []
+          clientIds: [],
+          recordingEnabled: false,
+          timeLimit: 0,
+          playerStats: []
         };
 
         return this.gameService.appendGameState(gameState, replay);
@@ -57,7 +60,10 @@ export class ReplayService {
         const gameState: GameState = {
           gameId: 0,
           stateData: this.getReplayStateData(replay),
-          clientIds: []
+          clientIds: [],
+          recordingEnabled: false,
+          timeLimit: 0,
+          playerStats: []
         };
 
         return this.gameService.appendGameState(gameState, replay);

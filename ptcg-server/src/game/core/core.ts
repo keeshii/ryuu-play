@@ -51,9 +51,9 @@ export class Core {
       throw new GameError(GameMessage.CLIENT_NOT_CONNECTED);
     }
     const game = new Game(this, generateId(this.games), gameSettings);
-    game.dispatch(new AddPlayerAction(client.id, client.name, deck));
+    game.dispatch(client, new AddPlayerAction(client.id, client.name, deck));
     if (invited) {
-      game.dispatch(new InvitePlayerAction(invited.id, invited.name));
+      game.dispatch(client, new InvitePlayerAction(invited.id, invited.name));
     }
     this.games.push(game);
     this.emit(c => c.onGameAdd(game));
@@ -105,6 +105,7 @@ export class Core {
       client.games.splice(gameIndex, 1);
       game.clients.splice(clientIndex, 1);
       this.emit(c => c.onGameLeave(game, client));
+      game.handleClientLeave(client);
     }
     // Delete game, if there are no more clients left in the game
     if (game.clients.length === 0) {

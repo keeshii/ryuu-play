@@ -61,7 +61,7 @@ export class SimpleGameHandler {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         try {
-          this.game.dispatch(action);
+          this.game.dispatch(this.client, action);
         } catch (error) {
         }
         resolve();

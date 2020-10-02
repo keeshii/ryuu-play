@@ -117,7 +117,7 @@ export class GameSocket {
       return;
     }
     try {
-      game.dispatch(action);
+      game.dispatch(this.client, action);
     } catch (error) {
       response('error', error.message);
     }

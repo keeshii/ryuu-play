@@ -1,4 +1,5 @@
 import { Action } from "./actions/action";
+import { AbortGameAction } from "./actions/abort-game-action";
 import { AppendLogAction } from "./actions/append-log-action";
 import { Card } from "./card/card";
 import { ChangeAvatarAction } from "./actions/change-avatar-action";
@@ -24,6 +25,7 @@ import { checkState, checkStateReducer } from "./effect-reducers/check-effect";
 import { playerStateReducer} from "./reducers/player-state-reducer";
 import { retreatReducer } from "./effect-reducers/retreat-effect";
 import { setupPhaseReducer } from './reducers/setup-reducer';
+import { abortGameReducer } from "./reducers/abort-game-reducer";
 
 interface PromptItem {
   ids: number[],
@@ -41,6 +43,12 @@ export class Store implements StoreLike {
 
   public dispatch(action: Action): State {
     let state = this.state;
+
+    if (action instanceof AbortGameAction) {
+      state = abortGameReducer(this, state, action);
+      this.handler.onStateChange(state);
+      return state;
+    }
 
     if (action instanceof ReorderHandAction
       || action instanceof ReorderBenchAction

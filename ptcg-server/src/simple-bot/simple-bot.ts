@@ -54,11 +54,6 @@ export class SimpleBot extends BotClient {
       this.deleteGameHandler(gameHandler);
       return;
     }
-
-    const isAlone = game.clients.length === 1 && game.clients[0].id === this.id;
-    if (this.core && isAlone) {
-      this.core.leaveGame(this, game);
-    }
   }
 
   public onGameAdd(game: Game): void { }
