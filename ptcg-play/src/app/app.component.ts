@@ -1,8 +1,10 @@
 import { Component, OnDestroy, OnInit, HostListener, ElementRef } from '@angular/core';
 import { UserInfo } from 'ptcg-server';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 import { skip, takeUntil } from 'rxjs/operators';
 
+import { AlertService } from './shared/alert/alert.service';
 import { CardsBaseService } from './shared/cards/cards-base.service';
 import { CardsService } from './api/services/cards.service';
 import { MessageService } from './api/services/message.service';
@@ -23,11 +25,13 @@ export class AppComponent implements OnInit, OnDestroy {
   private authToken$: Observable<string>;
 
   constructor(
+    private alertService: AlertService,
     private cardsService: CardsService,
     private cardsBaseService: CardsBaseService,
     private elementRef: ElementRef<HTMLElement>,
     private messageService: MessageService,
     private profileService: ProfileService,
+    private router: Router,
     private sessionService: SessionService,
     private socketService: SocketService,
   ) {
@@ -53,6 +57,19 @@ export class AppComponent implements OnInit, OnDestroy {
         // Refresh user profile when user logs in
         this.refreshLoggedUser(authToken);
       });
+
+    this.socketService.connection.pipe(
+      takeUntilDestroyed(this)
+    ).subscribe({
+      next: async connected => {
+        if (!connected && this.isLoggedIn) {
+          this.socketService.disable();
+          await this.alertService.alert('Disconnected from the server.');
+          this.sessionService.clear();
+          this.router.navigate(['/login']);
+        }
+      }
+    });
   }
 
   public ngOnDestroy() { }

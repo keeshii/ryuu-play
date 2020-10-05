@@ -12,7 +12,6 @@ import { DeckService } from '../api/services/deck.service';
 import { MainService } from '../api/services/main.service';
 import { SelectPopupOption } from '../shared/alert/select-popup/select-popup.component';
 import { SessionService } from '../shared/session/session.service';
-import { SocketService } from '../api/socket.service';
 import { UserInfoMap } from '../shared/session/session.interface';
 import { takeUntilDestroyed } from '../shared/operators/take-until-destroyed';
 
@@ -27,7 +26,6 @@ export class GamesComponent implements OnDestroy, OnInit {
   displayedColumns: string[] = ['id', 'turn', 'player1', 'player2', 'actions'];
   public clients$: Observable<ClientUserData[]>;
   public games$: Observable<GameInfo[]>;
-  public isConnected = false;
   public loading = false;
   public clientId: number;
   public loggedUserId: number;
@@ -37,8 +35,7 @@ export class GamesComponent implements OnDestroy, OnInit {
     private deckService: DeckService,
     private dialog: MatDialog,
     private mainSevice: MainService,
-    private sessionService: SessionService,
-    private socketService: SocketService
+    private sessionService: SessionService
   ) {
     this.clients$ = this.sessionService.get(
       session => session.users,
@@ -62,11 +59,6 @@ export class GamesComponent implements OnDestroy, OnInit {
       .pipe(takeUntilDestroyed(this))
       .subscribe(loggedUserId => { this.loggedUserId = loggedUserId; });
 
-    this.socketService.connection
-      .pipe(takeUntilDestroyed(this))
-      .subscribe(connected => {
-        this.isConnected = connected;
-      });
   }
 
   ngOnDestroy() { }

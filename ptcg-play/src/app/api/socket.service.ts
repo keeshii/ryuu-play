@@ -22,6 +22,7 @@ export class SocketService {
   constructor() {
     this.socket = io.connect(environment.apiUrl, {
       autoConnect: false,
+      reconnection: false,
       query: {}
     });
 
