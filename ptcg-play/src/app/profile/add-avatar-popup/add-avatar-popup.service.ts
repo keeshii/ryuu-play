@@ -14,8 +14,7 @@ export class AddAvatarPopupService {
   public openDialog(): MatDialogRef<AddAvatarPopupComponent, AvatarInfo | undefined> {
     const dialogRef = this.dialog.open(AddAvatarPopupComponent, {
       maxWidth: '100%',
-      width: '350px',
-      data: { name }
+      width: '350px'
     });
 
     return dialogRef;

@@ -1,12 +1,14 @@
 import { Request, Response } from 'express';
-import { AuthToken } from '../services';
-import { Controller, Get } from './controller';
+import { FindConditions } from 'typeorm';
+
+import { AuthToken, Validate, check } from '../services';
+import { Controller, Get, Post } from './controller';
 import { Errors } from '../common/errors';
-import { User, Match } from '../../storage';
 import { MatchInfo } from '../interfaces/profile.interface';
+import { Md5 } from '../../utils/md5';
+import { User, Match } from '../../storage';
 import { UserInfo } from '../interfaces/core.interface';
 import { config } from '../../config';
-import {FindConditions} from 'typeorm';
 
 
 export class Profile extends Controller {
@@ -79,6 +81,35 @@ export class Profile extends Controller {
       }));
 
     res.send({ok: true, matches, users, total});
+  }
+
+  @Post('/changePassword')
+  @AuthToken()
+  @Validate({
+    currentPassword: check().minLength(3).maxLength(32),
+    newPassword: check().minLength(3).maxLength(32)
+  })
+  public async onChangePassword(req: Request, res: Response) {
+    const userId: number = req.body.userId;
+    const body: { currentPassword: string, newPassword: string } = req.body;
+    const user = await User.findOne(userId);
+
+    if (user === undefined || user.password !== Md5.init(body.currentPassword)) {
+      res.status(400);
+      res.send({error: Errors.LOGIN_INVALID});
+      return;
+    }
+
+    user.password = Md5.init(body.newPassword);
+    try {
+      await user.save();
+    } catch (error) {
+      res.status(400);
+      res.send({error: Errors.LOGIN_INVALID});
+      return;
+    }
+
+    res.send({ ok: true });
   }
 
 }
