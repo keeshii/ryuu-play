@@ -66,8 +66,7 @@ function* startNextTurn(next: Function, store: StoreLike, state: State): Iterabl
   store.log(state, `${player.name} ends the turn.`);
 
   // Remove Paralyzed at the end of the turn
-  const index = player.active.specialConditions.indexOf(SpecialCondition.PARALYZED);
-  player.active.specialConditions.splice(index, 1);
+  player.active.removeSpecialCondition(SpecialCondition.PARALYZED);
 
   yield betweenTurns(store, state, () => {
     next();
@@ -102,12 +101,11 @@ function handleSpecialConditions(store: StoreLike, state: State, effect: Between
           if (result === false) {
             player.active.damage += effect.burnDamage;
           }
-        })
+        });
         break;
       case SpecialCondition.ASLEEP:
         if (effect.asleepFlipResult === true) {
-          const index = player.active.specialConditions.indexOf(sp);
-          player.active.specialConditions.splice(index, 1);
+          player.active.removeSpecialCondition(SpecialCondition.ASLEEP);
           break;
         }
         if (effect.asleepFlipResult === false) {
@@ -118,10 +116,9 @@ function handleSpecialConditions(store: StoreLike, state: State, effect: Between
           GameMessage.ASLEEP_FLIP
         ), result => {
           if (result === true) {
-            const index = player.active.specialConditions.indexOf(sp);
-            player.active.specialConditions.splice(index, 1);
+            player.active.removeSpecialCondition(SpecialCondition.ASLEEP);
           }
-        })
+        });
         break;
     }
   }
