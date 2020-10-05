@@ -1,0 +1,28 @@
+@import '../../../../theme/variables.scss';
+
+.ptcg-player-time {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  width: 100%;
+}
+
+.ptcg-player-time-progress {
+  bottom: 0;
+  height: 1px;
+  left: 0;
+  position: absolute;
+}
+
+.ptcg-player-time-progress-empty {
+  bottom: 0;
+  height: 1px;
+  left: 0;
+  position: absolute;
+  right: 0;
+}
+
+.ptcg-player-time-label,
+.ptcg-player-time-value {
+  padding: 0 $ptcg-sidebar-tiny-padding;
+}

@@ -13,6 +13,9 @@
   $hand-background-color: mat-color($background, app-bar);
   $table-sidebar-header-background-color: mat-color($background, background);
   $table-sidebar-logs-background-color: mat-color($background, focused-button);
+  $table-sidebar-time-empty-progress: mat-color($foreground, divider);
+  $table-sidebar-time-disabled-progress: mat-color($foreground, disabled-button);
+  $table-sidebar-time-running-progress: mat-color($accent);
   $choose-avatar-background-color: mat-color($background, hover);
 
   ptcg-hand {
@@ -67,6 +70,22 @@
     }
   }
 
+  ptcg-player-time {
+    .ptcg-player-time {
+      .ptcg-player-time-progress-empty {
+        background-color: $table-sidebar-time-empty-progress;
+      }
+
+      .ptcg-player-time-progress {
+        background-color: $table-sidebar-time-running-progress;
+      }
+
+      &.disabled .ptcg-player-time-progress {
+        background-color: $table-sidebar-time-disabled-progress;
+      }
+    }
+  }
+
   ptcg-replay-controls {
     .ptcg-replay-controls-header {
       background-color: $table-sidebar-header-background-color;
@@ -99,6 +118,12 @@
       font-size: mat-font-size($config, input);
     }
     .ptcg-game-logs-content {
+      @include mat-typography-level-to-styles($config, caption);
+    }
+  }
+
+  ptcg-player-time {
+    .ptcg-player-time {
       @include mat-typography-level-to-styles($config, caption);
     }
   }

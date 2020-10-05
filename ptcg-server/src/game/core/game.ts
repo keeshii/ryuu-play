@@ -43,6 +43,8 @@ export class Game implements StoreHandler {
       this.matchRecorder.onStateChange(state);
     }
 
+    this.updateIsTimeRunning(state);
+
     this.core.emit(c => c.onStateChange(this, state));
 
     if (state.phase !== GamePhase.FINISHED && this.timeoutRef === undefined) {
@@ -113,7 +115,10 @@ export class Game implements StoreHandler {
       return state;
     }
 
-    const stats = this.getPlayerStats(playerId);
+    const stats = this.playerStats.find(p => p.clientId === playerId);
+    if (stats === undefined) {
+      return state;
+    }
     stats.invalidMoves = isInvalidMove ? stats.invalidMoves + 1 : 0;
 
     if (stats.invalidMoves > this.maxInvalidMoves) {
@@ -124,24 +129,30 @@ export class Game implements StoreHandler {
     return state;
   }
 
-  private getPlayerStats(clientId: number) {
-    let stats = this.playerStats.find(stats => stats.clientId === clientId);
-    if (stats === undefined) {
-      stats = {
-        clientId,
-        invalidMoves: 0,
-        timeLeft: this.gameSettings.timeLimit
-      };
-      this.playerStats.push(stats);
-    }
-    return stats;
+  private updateIsTimeRunning(state: State) {
+    state.players.forEach(player => {
+      const stats = this.playerStats.find(p => p.clientId === player.id);
+      if (stats === undefined) {
+        this.playerStats.push({
+          clientId: player.id,
+          isTimeRunning: false,
+          invalidMoves: 0,
+          timeLeft: this.gameSettings.timeLimit
+        });
+      }
+    });
+
+    const activePlayers = this.getTimeRunningPlayers(state);
+    this.playerStats.forEach(p => {
+      p.isTimeRunning = activePlayers.includes(p.clientId);
+    });
   }
 
   /**
    * Returns playerIds that needs to make a move.
-   * Used to calculate theri time left.
+   * Used to calculate their time left.
    */
-  private getActivePlayerIds(state: State): number[] {
+  private getTimeRunningPlayers(state: State): number[] {
     if (state.phase === GamePhase.WAITING_FOR_PLAYERS) {
       return [];
     }
@@ -174,14 +185,14 @@ export class Game implements StoreHandler {
     }
 
     this.timeoutRef = setInterval(() => {
-      const state = this.store.state;
-      for (const playerId of this.getActivePlayerIds(state)) {
-        const stats = this.getPlayerStats(playerId);
-        stats.timeLeft -= 1;
-        if (stats.timeLeft <= 0) {
-          const action = new AbortGameAction(playerId, AbortGameReason.TIME_ELAPSED);
-          this.store.dispatch(action);
-          return;
+      for (const stats of this.playerStats) {
+        if (stats.isTimeRunning) {
+          stats.timeLeft -= 1;
+          if (stats.timeLeft <= 0) {
+            const action = new AbortGameAction(stats.clientId, AbortGameReason.TIME_ELAPSED);
+            this.store.dispatch(action);
+            return;
+          }
         }
       }
     }, intervalDelay);

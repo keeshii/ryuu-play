@@ -10,6 +10,7 @@ import { GameLogsComponent } from './game-logs/game-logs.component';
 import { ReplayControlsComponent } from './replay-controls/replay-controls.component';
 import { ChooseAvatarPopupComponent } from './choose-avatar-popup/choose-avatar-popup.component';
 import { PlayerAvatarComponent } from './player-avatar/player-avatar.component';
+import { PlayerTimeComponent } from './player-time/player-time.component';
 
 @NgModule({
   imports: [
@@ -24,7 +25,8 @@ import { PlayerAvatarComponent } from './player-avatar/player-avatar.component';
     PlayerAvatarComponent,
     PlayerBarComponent,
     ReplayControlsComponent,
-    TableSidebarComponent
+    TableSidebarComponent,
+    PlayerTimeComponent
   ],
   entryComponents: [
     ChooseAvatarPopupComponent

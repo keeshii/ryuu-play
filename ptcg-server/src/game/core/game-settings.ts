@@ -4,7 +4,7 @@ export class GameSettings {
 
   rules: Rules = new Rules();
 
-  timeLimit: number = 0;
+  timeLimit: number = 1800;
 
   recordingEnabled: boolean = true;
 

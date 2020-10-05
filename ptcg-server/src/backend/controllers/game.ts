@@ -19,4 +19,17 @@ export class Game extends Controller {
     res.send({ok: true, logs });
   }
 
+  @Get('/:id/playerStats')
+  @AuthToken()
+  public async onPlayerStats(req: Request, res: Response) {
+    const gameId: number = parseInt(req.params.id, 10);
+    const game = this.core.games.find(g => g.id === gameId);
+    if (game === undefined) {
+      res.send({error: Errors.GAME_INVALID_ID});
+      return;
+    }
+    const playerStats = game.playerStats;
+    res.send({ok: true, playerStats });
+  }
+
 }

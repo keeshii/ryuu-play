@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
-import { Player, UserInfo, ReplayPlayer } from 'ptcg-server';
+import { Player, UserInfo, ReplayPlayer, PlayerStats, State, GamePhase } from 'ptcg-server';
 import { Observable, EMPTY } from 'rxjs';
 
 import { ChooseAvatarPopupService } from '../choose-avatar-popup/choose-avatar-popup.service';
@@ -20,7 +20,10 @@ export class PlayerBarComponent implements OnInit, OnDestroy, OnChanges {
   @Input() player: Player;
   @Input() replayPlayer: ReplayPlayer;
   @Input() active: boolean;
+  @Input() playerStats: PlayerStats | undefined;
 
+  public isTimeRunning: boolean;
+  public timeLimit: number;
   public isEmpty = true;
   public deckCount: number;
   public handCount: number;
@@ -91,6 +94,7 @@ export class PlayerBarComponent implements OnInit, OnDestroy, OnChanges {
     this.deckCount = player.deck.cards.length;
     this.handCount = player.hand.cards.length;
     this.discardCount = player.discard.cards.length;
+    this.timeLimit = this.gameState.timeLimit;
     this.name = player.name;
     this.avatarName = player.avatarName;
 

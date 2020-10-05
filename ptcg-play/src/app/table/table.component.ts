@@ -101,7 +101,7 @@ export class TableComponent implements OnInit, OnDestroy {
       .subscribe({
         next: deckResponse => {
           const deck = deckResponse.deck.cards;
-          this.gameService.play(this.gameId, deck);
+          this.gameService.play(this.gameState.gameId, deck);
         },
         error: (error: ApiError) => {}
       });

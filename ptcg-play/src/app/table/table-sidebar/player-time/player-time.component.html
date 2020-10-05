@@ -1,0 +1,7 @@
+<div class="ptcg-player-time" [class.disabled]="disabled">
+  <div class="ptcg-player-time-progress-empty"></div>
+  <div class="ptcg-player-time-progress" [ngStyle]="{ width: value + '%' }"></div>
+
+  <span class="ptcg-player-time-label">Time left:</span>
+  <span class="ptcg-player-time-value">{{ timeString }}</span>
+</div>

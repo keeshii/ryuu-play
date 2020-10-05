@@ -7,7 +7,8 @@ $ptcg-player-bar-active-divider-size: 2px;
   display: grid;
   grid-template-areas:
     "avatar name"
-    "counts counts";
+    "counts counts"
+    "time time";
   grid-template-columns: $avatar-size 1fr;
   grid-template-rows: $avatar-size auto;
   padding: $ptcg-sidebar-tiny-padding;
@@ -59,4 +60,10 @@ $ptcg-player-bar-active-divider-size: 2px;
   & > ptcg-badge:not(:last-child) {
     margin-right: $ptcg-sidebar-tiny-padding;
   }
+}
+
+.ptcg-time-left {
+  display: flex;
+  grid-area: time;
+  padding-top: $ptcg-sidebar-tiny-padding;
 }

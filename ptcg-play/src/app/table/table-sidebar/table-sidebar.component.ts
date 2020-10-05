@@ -1,14 +1,17 @@
-import { Component, OnInit, Input, EventEmitter, Output, OnChanges } from '@angular/core';
-import { Player, State, ReplayPlayer } from 'ptcg-server';
+import { Component, OnInit, Input, EventEmitter, Output, OnChanges, OnDestroy } from '@angular/core';
+import { Player, State, ReplayPlayer, PlayerStats } from 'ptcg-server';
 
 import { LocalGameState } from '../../shared/session/session.interface';
+import { GameService } from '../../api/services/game.service';
+import { SessionService } from 'src/app/shared/session/session.service';
+import { takeUntilDestroyed } from 'src/app/shared/operators/take-until-destroyed';
 
 @Component({
   selector: 'ptcg-table-sidebar',
   templateUrl: './table-sidebar.component.html',
   styleUrls: ['./table-sidebar.component.scss']
 })
-export class TableSidebarComponent implements OnInit, OnChanges {
+export class TableSidebarComponent implements OnInit, OnDestroy, OnChanges {
 
   @Output() join = new EventEmitter<void>();
 
@@ -19,14 +22,25 @@ export class TableSidebarComponent implements OnInit, OnChanges {
 
   public bottomReplayPlayer: ReplayPlayer | undefined;
   public topReplayPlayer: ReplayPlayer | undefined;
+  public bottomPlayerStats: PlayerStats | undefined;
+  public topPlayerStats: PlayerStats | undefined;
   public turn: number;
   public gameId: number;
   public isTopPlayerActive: boolean;
   public isBottomPlayerActive: boolean;
 
-  constructor() { }
+  private timerId: number | undefined;
+
+  constructor(
+    private gameService: GameService,
+    private sessionService: SessionService
+  ) { }
 
   ngOnInit() {
+  }
+
+  ngOnDestroy() {
+    this.stopTimer();
   }
 
   private isPlayerActive(state: State, player: Player): boolean {
@@ -43,6 +57,55 @@ export class TableSidebarComponent implements OnInit, OnChanges {
     return player.id === state.players[0].id;
   }
 
+  private getPlayerStats(gameState: LocalGameState, player: Player): PlayerStats | undefined {
+    if (!player) {
+      return undefined;
+    }
+    return gameState.playerStats.find(p => p.clientId === player.id);
+  }
+
+  private refreshPlayerStats(gameState: LocalGameState) {
+    this.gameService.getPlayerStats(gameState.gameId).pipe(
+      takeUntilDestroyed(this)
+    ).subscribe({
+      next: response => {
+        const gameStates = this.sessionService.session.gameStates.slice();
+        const index = gameStates.findIndex(g => g.localId === gameState.localId);
+        if (index !== -1) {
+          gameStates[index] = { ...gameStates[index], playerStats: response.playerStats };
+          this.sessionService.set({ gameStates });
+        }
+      }
+    });
+  }
+
+  private startTimer() {
+    if (this.timerId !== undefined) {
+      return;
+    }
+    this.timerId = window.setInterval(() => {
+      if (this.topPlayerStats
+        && this.topPlayerStats.isTimeRunning
+        && this.topPlayerStats.timeLeft > 0) {
+        const timeLeft = this.topPlayerStats.timeLeft - 1;
+        this.topPlayerStats = { ...this.topPlayerStats, timeLeft };
+      }
+      if (this.bottomPlayerStats
+        && this.bottomPlayerStats.isTimeRunning
+        && this.bottomPlayerStats.timeLeft > 0) {
+        const timeLeft = this.bottomPlayerStats.timeLeft - 1;
+        this.bottomPlayerStats = { ...this.bottomPlayerStats, timeLeft };
+      }
+    }, 1000);
+  }
+
+  private stopTimer() {
+    if (this.timerId !== undefined) {
+      window.clearInterval(this.timerId);
+      this.timerId = undefined;
+    }
+  }
+
   ngOnChanges() {
     if (!this.gameState) {
       this.turn = 0;
@@ -51,14 +114,29 @@ export class TableSidebarComponent implements OnInit, OnChanges {
       this.isBottomPlayerActive = false;
       this.bottomReplayPlayer = undefined;
       this.topReplayPlayer = undefined;
+      this.bottomPlayerStats = undefined;
+      this.topPlayerStats = undefined;
       return;
     }
 
     const state = this.gameState.state;
+
+    if (!this.gameState.deleted && this.gameId !== this.gameState.gameId) {
+      this.refreshPlayerStats(this.gameState);
+    }
+
     this.gameId = this.gameState.gameId;
     this.turn = state.turn;
     this.isTopPlayerActive = this.isPlayerActive(state, this.topPlayer);
     this.isBottomPlayerActive = this.isPlayerActive(state, this.bottomPlayer);
+    this.topPlayerStats = this.getPlayerStats(this.gameState, this.topPlayer);
+    this.bottomPlayerStats = this.getPlayerStats(this.gameState, this.bottomPlayer);
+
+    if (this.gameState.deleted) {
+      this.stopTimer();
+    } else if (this.gameState.timeLimit > 0) {
+      this.startTimer();
+    }
 
     if (this.gameState.replay !== undefined) {
       this.bottomReplayPlayer = this.isFirstPlayer(state, this.bottomPlayer)

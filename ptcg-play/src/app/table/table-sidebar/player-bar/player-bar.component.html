@@ -34,4 +34,9 @@
     <ptcg-badge>Discard: {{ discardCount }}</ptcg-badge>
   </div>
 
+  <ptcg-player-time class="ptcg-time-left" *ngIf="playerStats && timeLimit > 0"
+    [timeLimit]="timeLimit"
+    [playerStats]="playerStats">
+  </ptcg-player-time>
+
 </div>

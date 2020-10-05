@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { ClientInfo, GameState, State, CardTarget, StateLog, Replay,
-  Base64, StateSerializer } from 'ptcg-server';
+  Base64, StateSerializer, PlayerStats } from 'ptcg-server';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
 import { AlertService } from '../../shared/alert/alert.service';
 import { ApiError } from '../api.error';
+import { ApiService } from '../api.service';
 import { LocalGameState } from '../../shared/session/session.interface';
+import { PlayerStatsResponse } from '../interfaces/game.interface';
 import { SocketService } from '../socket.service';
 import { SessionService } from '../../shared/session/session.service';
 
@@ -19,10 +21,15 @@ export interface GameUserInfo {
 export class GameService {
 
   constructor(
+    private api: ApiService,
     private alertService: AlertService,
     private sessionService: SessionService,
     private socketService: SocketService
   ) { }
+
+  public getPlayerStats(gameId: number) {
+    return this.api.get<PlayerStatsResponse>('/v1/game/' + gameId + '/playerStats');
+  }
 
   public join(gameId: number): Observable<GameState> {
     return new Observable<GameState>(observer => {
@@ -164,7 +171,8 @@ export class GameService {
   private startListening(id: number) {
     this.socketService.on(`game[${id}]:join`, (clientId: number) => this.onJoin(id, clientId));
     this.socketService.on(`game[${id}]:leave`, (clientId: number) => this.onLeave(id, clientId));
-    this.socketService.on(`game[${id}]:stateChange`, (stateData: string) => this.onStateChange(id, stateData));
+    this.socketService.on(`game[${id}]:stateChange`, (data: {stateData: string, playerStats: PlayerStats[]}) =>
+      this.onStateChange(id, data.stateData, data.playerStats));
   }
 
   private stopListening(id: number) {
@@ -173,14 +181,14 @@ export class GameService {
     this.socketService.off(`game[${id}]:stateChange`);
   }
 
-  private onStateChange(gameId: number, stateData: string) {
+  private onStateChange(gameId: number, stateData: string, playerStats: PlayerStats[]) {
     const state = this.decodeStateData(stateData);
     const games = this.sessionService.session.gameStates;
     const index = games.findIndex(g => g.gameId === gameId && g.deleted === false);
     if (index !== -1) {
       const gameStates = this.sessionService.session.gameStates.slice();
       const logs = [ ...gameStates[index].logs, ...state.logs ];
-      gameStates[index] = { ...gameStates[index], state, logs };
+      gameStates[index] = { ...gameStates[index], state, logs, playerStats };
       this.sessionService.set({ gameStates });
     }
   }

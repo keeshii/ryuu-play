@@ -60,8 +60,8 @@ export class GameSocket {
       const serializedState = serializer.serialize(game.state);
       const base64 = new Base64();
       const stateData = base64.encode(serializedState);
-
-      this.socket.emit(`game[${game.id}]:stateChange`, stateData);
+      const playerStats = game.playerStats;
+      this.socket.emit(`game[${game.id}]:stateChange`, { stateData, playerStats });
     }
   }
 
