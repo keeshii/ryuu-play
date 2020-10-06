@@ -150,14 +150,18 @@
         </div>
       </div>
 
-      <div class="power" *ngIf="card.text">
-        <div class="power-header">
-          <div class="power-name">
-            Text on card
+      <ptcg-hover-highlight
+        (click)="options.enableTrainer && close({trainer: true})"
+        [enabled]="options.enableTrainer">
+        <div class="power" *ngIf="card.text">
+          <div class="power-header">
+            <div class="power-name">
+              Text on card
+            </div>
           </div>
+          <div class="card-text">{{ card.text }}</div>
         </div>
-        <div class="card-text">{{ card.text }}</div>
-      </div>
+      </ptcg-hover-highlight>
 
     </div>
 

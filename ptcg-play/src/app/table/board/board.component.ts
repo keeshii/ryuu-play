@@ -276,6 +276,28 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
       });
   }
 
+  public onStadiumClick(card: Card) {
+    const isBottomOwner = this.bottomPlayer && this.bottomPlayer.id === this.clientId;
+    const isDeleted = this.gameState.deleted;
+
+    if (!isBottomOwner || isDeleted) {
+      return this.onCardClick(card);
+    }
+
+    const options = { enableTrainer: true };
+    this.cardsBaseService.showCardInfo(card, options)
+      .then(result => {
+        if (!result) {
+          return;
+        }
+
+        // Use stadium card effect
+        if (result.trainer) {
+          this.gameService.stadium(this.gameState.gameId);
+        }
+      });
+  }
+
   ngOnChanges() { }
 
 }

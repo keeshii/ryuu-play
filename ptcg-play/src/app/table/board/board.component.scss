@@ -25,12 +25,17 @@ $board-min-height: calc(6 * var(--card-size) * #{$card-aspect-ratio} + 2 * #{map
 .ptcg-board-player {
   display: grid;
 
-  grid-template-columns: 2fr #{$ptcg-bench-slots}fr 2fr;
+  grid-template-columns:
+      2fr
+      #{$ptcg-bench-slots / 3}fr
+      #{$ptcg-bench-slots / 3}fr
+      #{$ptcg-bench-slots / 3}fr
+      2fr;
   grid-template-rows: auto;
 
   grid-template-areas:
-    "prizes active deck"
-    "prizes bench deck";
+    "prizes none active stadium deck"
+    "prizes bench bench bench deck";
 
   &.upside-down {
     transform: rotate(180deg);
@@ -48,6 +53,15 @@ $board-min-height: calc(6 * var(--card-size) * #{$card-aspect-ratio} + 2 * #{map
   > .ptcg-board-drop-target {
     max-width: var(--card-size);
     width: calc(#{100 / $ptcg-bench-slots}% - #{map-get($padding, small)});
+  }
+}
+
+.ptcg-board-active,
+.ptcg-board-stadium {
+  > ptcg-board-card,
+  > .ptcg-board-drop-target {
+    max-width: var(--card-size);
+    width: calc(#{100 / $ptcg-bench-slots * 3}% - #{map-get($padding, small)});
   }
 }
 
@@ -70,6 +84,15 @@ ptcg-board-deck {
 
 .ptcg-board-bench {
   grid-area: bench;
+}
+
+.ptcg-board-stadium {
+  align-items: flex-start;
+  grid-area: stadium;
+
+  > ptcg-board-card {
+    transform: translateY(-50%);
+  }
 }
 
 .ptcg-card-preview {

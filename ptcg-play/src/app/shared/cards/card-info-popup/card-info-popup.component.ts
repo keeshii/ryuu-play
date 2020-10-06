@@ -5,11 +5,13 @@ import { Card, SuperType, Stage, PowerType, EnergyType, TrainerType } from 'ptcg
 export interface CardInfoPopupData {
   enableAbility?: boolean;
   enableAttack?: boolean;
+  enableTrainer?: boolean;
 }
 
 export interface CardInfoPopupResponse {
   attack?: string;
   ability?: string;
+  trainer?: boolean;
 }
 
 @Component({

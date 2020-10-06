@@ -1,6 +1,6 @@
 import { AddPlayerAction, AppendLogAction, Action, PassTurnAction,
   ReorderHandAction, ReorderBenchAction, PlayCardAction, CardTarget,
-  RetreatAction, AttackAction, UseAbilityAction, StateSerializer } from '../../game';
+  RetreatAction, AttackAction, UseAbilityAction, StateSerializer, UseStadiumAction } from '../../game';
 import { Client } from '../../game/client/client.interface';
 import { CoreSocket } from './core-socket';
 import { Errors } from '../common/errors';
@@ -33,6 +33,7 @@ export class GameSocket {
     this.socket.addListener('game:getStatus', this.getGameStatus.bind(this));
     this.socket.addListener('game:action:ability', this.ability.bind(this));
     this.socket.addListener('game:action:attack', this.attack.bind(this));
+    this.socket.addListener('game:action:stadium', this.stadium.bind(this));
     this.socket.addListener('game:action:play', this.playGame.bind(this));
     this.socket.addListener('game:action:playCard', this.playCard.bind(this));
     this.socket.addListener('game:action:resolvePrompt', this.resolvePrompt.bind(this));
@@ -131,6 +132,11 @@ export class GameSocket {
 
   private attack(params: {gameId: number, attack: string}, response: Response<void>) {
     const action = new AttackAction(this.client.id, params.attack);
+    this.dispatch(params.gameId, action, response);
+  }
+
+  private stadium(params: {gameId: number}, response: Response<void>) {
+    const action = new UseStadiumAction(this.client.id);
     this.dispatch(params.gameId, action, response);
   }
 

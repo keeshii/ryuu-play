@@ -123,6 +123,11 @@ export class GameService {
       .subscribe(() => {}, (error: ApiError) => this.alertService.toast(error.message));
   }
 
+  public stadium(gameId: number) {
+    this.socketService.emit('game:action:stadium', { gameId })
+      .subscribe(() => {}, (error: ApiError) => this.alertService.toast(error.message));
+  }
+
   public play(gameId: number, deck: string[]) {
     this.socketService.emit('game:action:play', { gameId, deck })
       .subscribe(() => {}, (error: ApiError) => this.alertService.toast(error.message));

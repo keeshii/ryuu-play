@@ -32,6 +32,14 @@
       </ptcg-board-card>
     </div>
 
+    <!-- Top Stadium -->
+    <div class="ptcg-board-row ptcg-board-stadium">
+      <ptcg-board-card
+        [cardList]="topPlayer?.stadium" [owner]="topPlayer?.id === clientId"
+        (cardClick)="onStadiumClick($event)">
+      </ptcg-board-card>
+    </div>
+
     <!-- Top Deck -->
     <ptcg-board-deck [player]="topPlayer" [clientId]="clientId"></ptcg-board-deck>
 
@@ -65,6 +73,14 @@
           (cardClick)="onBenchClick($event, slot.index)">
         </ptcg-board-card>
       </div>
+    </div>
+
+    <!-- Bottom Stadium -->
+    <div class="ptcg-board-row ptcg-board-stadium">
+      <ptcg-board-card
+        [cardList]="bottomPlayer?.stadium" [owner]="bottomPlayer?.id === clientId"
+        (cardClick)="onStadiumClick($event)">
+      </ptcg-board-card>
     </div>
 
     <!-- Deck -->

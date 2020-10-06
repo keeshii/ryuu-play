@@ -1,10 +1,12 @@
 import { Effect } from "../../game/store/effects/effect";
+import { GameError, GameMessage } from "../../game/game-error";
 import { State } from "../../game/store/state/state";
 import { StoreLike } from "../../game/store/store-like";
 import { TrainerCard } from "../../game/store/card/trainer-card";
 import { TrainerType, Stage, CardType } from "../../game/store/card/card-types";
 import { CheckRetreatCostEffect } from "../../game/store/effects/check-effects";
 import { StateUtils } from "../../game/store/state-utils";
+import { UseStadiumEffect } from "../../game/store/effects/game-effects";
 
 export class SkyarrowBridge extends TrainerCard {
 
@@ -30,6 +32,10 @@ export class SkyarrowBridge extends TrainerCard {
           effect.cost.splice(index, 1);
         }
       }
+    }
+
+    if (effect instanceof UseStadiumEffect && StateUtils.getStadiumCard(state) === this) {
+      throw new GameError(GameMessage.CANNOT_USE_STADIUM);
     }
 
     return state;
