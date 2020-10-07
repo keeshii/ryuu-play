@@ -50,7 +50,7 @@ export class CardsBaseService {
 
     const dialog = this.dialog.open(CardInfoPopupComponent, {
       maxWidth: '100%',
-      width: '650px',
+      width: '670px',
       data
     });
 

@@ -1,5 +1,5 @@
 <h2 mat-dialog-title>
-  <span>{{ card.fullName }}</span>
+  <span>{{ facedown ? 'Unknown Card' : card.fullName }}</span>
   <span class="ptcg-u-spacer"></span>
   <button mat-raised-button color="primary" *ngIf="cardList"
     [disabled]="!card"
@@ -12,6 +12,7 @@
   <ptcg-card-info-pane
     *ngIf="pane === CardInfoPopupPanes.CARD"
     [card]="card"
+    [facedown]="facedown"
     [options]="options"
     (action)="close($event)">
   </ptcg-card-info-pane>
@@ -20,11 +21,19 @@
     *ngIf="pane === CardInfoPopupPanes.CARD_LIST"
     [selected]="card"
     [cardList]="cardList"
+    [facedown]="facedown"
     (cardClick)="selectCard($event)">
   </ptcg-card-list-pane>
 </mat-dialog-content>
 
 <mat-dialog-actions>
+  <section class="ptcg-card-info-reveal-cards" *ngIf="allowReveal">
+    <mat-checkbox color="primary" name="reveal-cards"
+      [checked]="!facedown" (change)="facedown = !facedown">
+      Reveal cards
+    </mat-checkbox>
+  </section>
+  <span class="ptcg-u-spacer"></span>
   <button mat-raised-button (click)="close()">
     Close
   </button>

@@ -1,9 +1,17 @@
 <div class="ptcg-board-deck">
 
-  <ptcg-board-card [cardList]="discard" [owner]="isOwner" showCardCount="true">
+  <ptcg-board-card
+    (cardClick)="onDiscardClick($event)"
+    [cardList]="discard"
+    [owner]="isOwner"
+    showCardCount="true">
   </ptcg-board-card>
 
-  <ptcg-board-card [cardList]="deck" [owner]="isOwner" showCardCount="true">
+  <ptcg-board-card
+    (click)="onDeckClick()"
+    [cardList]="deck"
+    [owner]="isOwner"
+    showCardCount="true">
   </ptcg-board-card>
 
 </div>

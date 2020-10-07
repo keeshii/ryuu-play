@@ -41,10 +41,17 @@
     </div>
 
     <!-- Top Deck -->
-    <ptcg-board-deck [player]="topPlayer" [clientId]="clientId"></ptcg-board-deck>
+    <ptcg-board-deck
+      [player]="topPlayer" [clientId]="clientId"
+      (deckClick)="onDeckClick($event, topPlayer?.deck)"
+      (discardClick)="onCardClick($event, topPlayer?.discard)">
+    </ptcg-board-deck>
 
     <!-- Top Prizes -->
-    <ptcg-board-prizes [player]="topPlayer" [clientId]="clientId"></ptcg-board-prizes>
+    <ptcg-board-prizes
+      [player]="topPlayer" [clientId]="clientId"
+      (prizeClick)="onPrizeClick(topPlayer, $event)">
+    </ptcg-board-prizes>
   </div>
 
   <div class="ptcg-board-player">
@@ -84,10 +91,17 @@
     </div>
 
     <!-- Deck -->
-    <ptcg-board-deck [player]="bottomPlayer" [clientId]="clientId"></ptcg-board-deck>
+    <ptcg-board-deck
+      [player]="bottomPlayer" [clientId]="clientId"
+      (deckClick)="onDeckClick($event, bottomPlayer?.deck)"
+      (discardClick)="onCardClick($event, bottomPlayer?.discard)">
+    </ptcg-board-deck>
 
     <!-- Prizes -->
-    <ptcg-board-prizes [player]="bottomPlayer" [clientId]="clientId"></ptcg-board-prizes>
+    <ptcg-board-prizes
+      [player]="bottomPlayer" [clientId]="clientId"
+      (prizeClick)="onPrizeClick(bottomPlayer, $event)">
+    </ptcg-board-prizes>
   </div>
 
 </div>

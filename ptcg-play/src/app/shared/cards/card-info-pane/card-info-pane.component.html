@@ -1,8 +1,9 @@
 <div class="ptcg-card-info-pane">
   <div class="ptcg-card-info-image">
-    <ptcg-card [card]="card"></ptcg-card>
+    <ptcg-card [card]="card" [class.cardback]="facedown"></ptcg-card>
   </div>
-  <div class="ptcg-card-info-text" *ngIf="card.superType === SuperType.POKEMON">
+
+  <div class="ptcg-card-info-text" *ngIf="!facedown && card.superType === SuperType.POKEMON">
     <div class="title">
       <span>{{card.name}}</span>
       <div class="ptcg-u-spacer"></div>
@@ -104,7 +105,7 @@
 
   </div>
 
-  <div class="ptcg-card-info-text" *ngIf="card.superType === SuperType.ENERGY">
+  <div class="ptcg-card-info-text" *ngIf="!facedown && card.superType === SuperType.ENERGY">
     <div class="title">
       {{card.name}}
     </div>
@@ -130,7 +131,7 @@
 
   </div>
 
-  <div class="ptcg-card-info-text" *ngIf="card.superType === SuperType.TRAINER">
+  <div class="ptcg-card-info-text" *ngIf="!facedown && card.superType === SuperType.TRAINER">
     <div class="title">
       {{card.name}}
     </div>
@@ -162,9 +163,18 @@
 
   </div>
 
-  <div class="ptcg-card-info-text" *ngIf="card.superType === SuperType.NONE">
+  <div class="ptcg-card-info-text" *ngIf="!facedown && card.superType === SuperType.NONE">
     <div class="title">
       {{card.name}}
+    </div>
+  </div>
+
+  <div class="ptcg-card-info-text" *ngIf="facedown">
+    <div class="title">
+      Unknown card
+    </div>
+    <div class="power">
+      <div class="card-text">This card is face down.</div>
     </div>
   </div>
 </div>

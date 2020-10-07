@@ -4,7 +4,7 @@ $ptcg-card-list-pane-padding: map-get($padding, small);
 $ptcg-card-list-pane-border-radius: map-get($padding, small);
 
 $ptcg-card-list-pane-min-height: map-get($ptcg-size, card) * $card-aspect-ratio + 2 * map-get($padding, normal);
-$ptcg-card-list-pane-max-height: 2 * map-get($ptcg-size, card) * $card-aspect-ratio + 3 * map-get($padding, normal);
+$ptcg-card-list-pane-max-height: 3 * map-get($ptcg-size, card) * $card-aspect-ratio + 4 * map-get($padding, normal);
 
 .ptcg-card-list-pane {
   border-radius: $ptcg-card-list-pane-border-radius;

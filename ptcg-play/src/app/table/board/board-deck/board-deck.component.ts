@@ -1,5 +1,5 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
-import {Player, CardList} from 'ptcg-server';
+import { Component, OnInit, Input, OnChanges, Output, EventEmitter } from '@angular/core';
+import {Player, CardList, Card} from 'ptcg-server';
 
 @Component({
   selector: 'ptcg-board-deck',
@@ -10,6 +10,8 @@ export class BoardDeckComponent implements OnInit, OnChanges {
 
   @Input() player: Player;
   @Input() clientId: number;
+  @Output() deckClick = new EventEmitter<Card>();
+  @Output() discardClick = new EventEmitter<Card>();
 
   public deck: CardList;
   public discard: CardList;
@@ -29,6 +31,18 @@ export class BoardDeckComponent implements OnInit, OnChanges {
       this.discard = undefined;
       this.isOwner = false;
     }
+  }
+
+  public onDeckClick() {
+    let card;
+    if (this.deck && this.deck.cards.length > 0) {
+      card = this.deck.cards[0];
+    }
+    this.deckClick.next(card);
+  }
+
+  public onDiscardClick(card: Card) {
+    this.discardClick.next(card);
   }
 
 }

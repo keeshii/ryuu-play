@@ -2,6 +2,7 @@
   <ptcg-card *ngFor="let card of (cardList ? cardList.cards : [])"
     ptcgDropHighlight="outside" [ptcgDropHighlightVisible]="card === selected"
     (click)="selectCard(card)"
+    [class.cardback]="facedown"
     [card]="card">
   </ptcg-card>
 </div>

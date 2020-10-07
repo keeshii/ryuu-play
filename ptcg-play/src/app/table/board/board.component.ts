@@ -2,7 +2,7 @@ import { Component, OnInit, OnChanges, Input, OnDestroy } from '@angular/core';
 import { DraggedItem } from '@angular-skyhook/sortable';
 import { DropTarget, SkyhookDndService } from '@angular-skyhook/core';
 import { Observable } from 'rxjs';
-import { Player, SuperType, SlotType, PlayerType, CardTarget, Card, PokemonCard, CardList } from 'ptcg-server';
+import { Player, SuperType, SlotType, PlayerType, CardTarget, Card, PokemonCard, CardList, StateUtils, PokemonCardList } from 'ptcg-server';
 import { map } from 'rxjs/operators';
 
 import { HandItem, HandCardType } from '../hand/hand-item.interface';
@@ -217,6 +217,23 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
 
   public onCardClick(card: Card, cardList: CardList) {
     this.cardsBaseService.showCardInfo({ card, cardList });
+  }
+
+  public onPrizeClick(player: Player, prize: CardList) {
+    const owner = player.id === this.clientId;
+    if (prize.cards.length === 0) {
+      return;
+    }
+    const card = prize.cards[0];
+    const facedown = prize.isSecret || (!prize.isPublic && !owner);
+    const allowReveal = facedown && !!this.gameState.replay;
+    this.cardsBaseService.showCardInfo({ card, allowReveal, facedown });
+  }
+
+  public onDeckClick(card: Card, cardList: CardList) {
+    const facedown = true;
+    const allowReveal = !!this.gameState.replay;
+    this.cardsBaseService.showCardInfo({ card, cardList, allowReveal, facedown });
   }
 
   public onActiveClick(card: Card, cardList: CardList) {

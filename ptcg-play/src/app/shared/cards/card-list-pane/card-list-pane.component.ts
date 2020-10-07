@@ -10,6 +10,7 @@ export class CardListPaneComponent implements OnInit {
 
   @Input() cardList: CardList;
   @Input() selected: Card | undefined;
+  @Input() facedown: boolean;
   @Output() cardClick = new EventEmitter<Card>();
 
   constructor() { }

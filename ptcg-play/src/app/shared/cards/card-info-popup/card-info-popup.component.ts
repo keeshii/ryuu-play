@@ -7,8 +7,8 @@ export interface CardInfoPopupData {
   card?: Card;
   cardList?: CardList;
   options?: CardInfoPaneOptions;
-  allowUncover?: boolean;
-  uncovered?: boolean;
+  allowReveal?: boolean;
+  facedown?: boolean;
 }
 
 export enum CardInfoPopupPanes {
@@ -26,6 +26,8 @@ export class CardInfoPopupComponent implements OnInit {
   public CardInfoPopupPanes = CardInfoPopupPanes;
   public card: Card;
   public cardList: CardList;
+  public facedown: boolean;
+  public allowReveal: boolean;
   public options: CardInfoPaneOptions;
   public pane: CardInfoPopupPanes;
   private data: CardInfoPopupData;
@@ -37,6 +39,8 @@ export class CardInfoPopupComponent implements OnInit {
     this.data = data;
     this.card = data.card;
     this.cardList = data.cardList;
+    this.facedown = data.facedown;
+    this.allowReveal = data.allowReveal;
     this.options = data.options || {};
     this.pane = this.card ? CardInfoPopupPanes.CARD : CardInfoPopupPanes.CARD_LIST;
   }

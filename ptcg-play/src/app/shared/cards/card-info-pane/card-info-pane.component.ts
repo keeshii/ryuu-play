@@ -21,6 +21,7 @@ export interface CardInfoPaneAction {
 export class CardInfoPaneComponent implements OnInit {
 
   @Input() card: Card;
+  @Input() facedown: boolean;
   @Input() options: CardInfoPaneOptions = {};
   @Output() action = new EventEmitter<any>();
 

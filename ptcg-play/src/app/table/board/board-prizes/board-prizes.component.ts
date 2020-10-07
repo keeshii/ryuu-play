@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, Output, EventEmitter } from '@angular/core';
 import { Player, CardList } from 'ptcg-server';
 
 @Component({
@@ -10,6 +10,7 @@ export class BoardPrizesComponent implements OnInit, OnChanges {
 
   @Input() player: Player;
   @Input() clientId: number;
+  @Output() prizeClick = new EventEmitter<CardList>();
 
   public prizes: CardList[] = new Array(6);
   public isOwner: boolean;
@@ -26,6 +27,10 @@ export class BoardPrizesComponent implements OnInit, OnChanges {
       this.prizes = new Array(6);
       this.isOwner = false;
     }
+  }
+
+  public onPrizeClick(cardList: CardList) {
+    this.prizeClick.next(cardList);
   }
 
 }
