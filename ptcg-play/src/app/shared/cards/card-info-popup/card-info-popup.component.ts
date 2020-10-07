@@ -1,17 +1,19 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Card, SuperType, Stage, PowerType, EnergyType, TrainerType } from 'ptcg-server';
+import { Card, CardList } from 'ptcg-server';
+import { CardInfoPaneOptions, CardInfoPaneAction } from '../card-info-pane/card-info-pane.component';
 
 export interface CardInfoPopupData {
-  enableAbility?: boolean;
-  enableAttack?: boolean;
-  enableTrainer?: boolean;
+  card?: Card;
+  cardList?: CardList;
+  options?: CardInfoPaneOptions;
+  allowUncover?: boolean;
+  uncovered?: boolean;
 }
 
-export interface CardInfoPopupResponse {
-  attack?: string;
-  ability?: string;
-  trainer?: boolean;
+export enum CardInfoPopupPanes {
+  CARD,
+  CARD_LIST
 }
 
 @Component({
@@ -21,27 +23,39 @@ export interface CardInfoPopupResponse {
 })
 export class CardInfoPopupComponent implements OnInit {
 
+  public CardInfoPopupPanes = CardInfoPopupPanes;
   public card: Card;
-  public options: CardInfoPopupData;
-  public SuperType = SuperType;
-  public Stage = Stage;
-  public PowerType = PowerType;
-  public EnergyType = EnergyType;
-  public TrainerType = TrainerType;
-  public textOnCard: string;
+  public cardList: CardList;
+  public options: CardInfoPaneOptions;
+  public pane: CardInfoPopupPanes;
+  private data: CardInfoPopupData;
 
   constructor(
     private dialogRef: MatDialogRef<CardInfoPopupComponent>,
     @Inject(MAT_DIALOG_DATA) data: (CardInfoPopupData & {card: Card}),
   ) {
+    this.data = data;
     this.card = data.card;
-    this.options = data;
+    this.cardList = data.cardList;
+    this.options = data.options || {};
+    this.pane = this.card ? CardInfoPopupPanes.CARD : CardInfoPopupPanes.CARD_LIST;
   }
 
   ngOnInit() {
   }
 
-  public close(result: CardInfoPopupResponse = {}) {
+  public toggleCardList(): void {
+    this.pane = this.pane === CardInfoPopupPanes.CARD
+      ? CardInfoPopupPanes.CARD_LIST
+      : CardInfoPopupPanes.CARD;
+  }
+
+  public selectCard(card: Card): void {
+    this.card = card;
+    this.pane = CardInfoPopupPanes.CARD;
+  }
+
+  public close(result: CardInfoPaneAction = {}) {
     this.dialogRef.close(result);
   }
 

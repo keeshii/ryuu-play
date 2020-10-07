@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Card, StateSerializer } from 'ptcg-server';
 
-import { CardInfoPopupData, CardInfoPopupComponent, CardInfoPopupResponse } from './card-info-popup/card-info-popup.component';
+import { CardInfoPopupData, CardInfoPopupComponent } from './card-info-popup/card-info-popup.component';
+import { CardInfoPaneAction } from './card-info-pane/card-info-pane.component';
 import { MatDialog } from '@angular/material/dialog';
 import { SessionService } from '../session/session.service';
 import { environment } from '../../../environments/environment';
@@ -45,12 +46,12 @@ export class CardsBaseService {
     return this.cards.find(c => c.fullName === cardName);
   }
 
-  public showCardInfo(card: Card, options: CardInfoPopupData = {}): Promise<CardInfoPopupResponse> {
+  public showCardInfo(data: CardInfoPopupData = {}): Promise<CardInfoPaneAction> {
 
     const dialog = this.dialog.open(CardInfoPopupComponent, {
       maxWidth: '100%',
       width: '650px',
-      data: {...options, card }
+      data
     });
 
     return dialog.afterClosed().toPromise()

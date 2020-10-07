@@ -13,6 +13,7 @@
 
   $ptcg-card-info-title-background: mat-color($background, app-bar);
   $ptcg-card-info-subtitle-background: mat-color($background, focused-button);
+  $ptcg-card-list-pane-background: mat-color($background, app-bar);
 
   .ptcg-drop-highlight-visible {
     box-shadow: inset $cards-drop-highlight-shadow;
@@ -29,7 +30,7 @@
     }
   }
 
-  ptcg-card-info-popup {
+  ptcg-card-info-pane {
     .title {
       background-color: $ptcg-card-info-title-background;
     }
@@ -44,10 +45,16 @@
     }
   }
 
+  ptcg-card-list-pane {
+    .ptcg-card-list-pane {
+      background-color: $ptcg-card-list-pane-background;
+    }
+  }
+
 }
 
 @mixin ptcg-cards-typography($config) {
-  ptcg-card-info-popup {
+  ptcg-card-info-pane {
     .title, .subtitle-hp-value {
       @include mat-typography-level-to-styles($config, title);
     }

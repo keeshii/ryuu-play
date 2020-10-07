@@ -4,7 +4,9 @@ import { SkyhookDndModule } from '@angular-skyhook/core';
 import { SkyhookMultiBackendModule } from '@angular-skyhook/multi-backend';
 
 import { CardComponent } from './card/card.component';
+import { CardInfoPaneComponent } from './card-info-pane/card-info-pane.component';
 import { CardInfoPopupComponent } from './card-info-popup/card-info-popup.component';
+import { CardListPaneComponent } from './card-list-pane/card-list-pane.component';
 import { DropHighlightDirective } from './drop-highlight/drop-highlight.directive';
 import { EnergyComponent } from './energy/energy.component';
 import { MaterialModule } from '../material.module';
@@ -20,7 +22,9 @@ import { HoverHighlightComponent } from './hover-highlight/hover-highlight.compo
   ],
   declarations: [
     CardComponent,
+    CardInfoPaneComponent,
     CardInfoPopupComponent,
+    CardListPaneComponent,
     EnergyComponent,
     DropHighlightDirective,
     TrainerTypeComponent,

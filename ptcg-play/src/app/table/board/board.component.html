@@ -20,7 +20,7 @@
     <div class="ptcg-board-row ptcg-board-active">
       <ptcg-board-card
         [cardList]="topPlayer?.active" [owner]="topPlayer?.id === clientId"
-        (cardClick)="onCardClick($event)">
+        (cardClick)="onCardClick($event, topPlayer?.active)">
       </ptcg-board-card>
     </div>
 
@@ -28,7 +28,7 @@
     <div class="ptcg-board-row ptcg-board-bench">
       <ptcg-board-card *ngFor="let slot of topBench; index as i"
         [cardList]="topPlayer?.bench[i]" [owner]="topPlayer?.id === clientId"
-        (cardClick)="onCardClick($event)">
+        (cardClick)="onCardClick($event, topPlayer?.bench[i])">
       </ptcg-board-card>
     </div>
 
@@ -57,7 +57,7 @@
         <ptcg-board-card
           [dragSource]="bottomActive.source" [noHTML5Preview]="true"
           [cardList]="bottomPlayer?.active" [owner]="bottomPlayer?.id === clientId"
-          (cardClick)="onActiveClick($event)">
+          (cardClick)="onActiveClick($event, bottomPlayer?.active)">
         </ptcg-board-card>
       </div>
     </div>
@@ -70,7 +70,7 @@
         <ptcg-board-card
           [dragSource]="slot.source" [noHTML5Preview]="true"
           [cardList]="bottomPlayer?.bench[slot.index]" [owner]="bottomPlayer?.id === clientId"
-          (cardClick)="onBenchClick($event, slot.index)">
+          (cardClick)="onBenchClick($event, bottomPlayer?.bench[slot.index], slot.index)">
         </ptcg-board-card>
       </div>
     </div>

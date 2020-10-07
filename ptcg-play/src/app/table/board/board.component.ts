@@ -2,7 +2,7 @@ import { Component, OnInit, OnChanges, Input, OnDestroy } from '@angular/core';
 import { DraggedItem } from '@angular-skyhook/sortable';
 import { DropTarget, SkyhookDndService } from '@angular-skyhook/core';
 import { Observable } from 'rxjs';
-import { Player, SuperType, SlotType, PlayerType, CardTarget, Card, PokemonCard } from 'ptcg-server';
+import { Player, SuperType, SlotType, PlayerType, CardTarget, Card, PokemonCard, CardList } from 'ptcg-server';
 import { map } from 'rxjs/operators';
 
 import { HandItem, HandCardType } from '../hand/hand-item.interface';
@@ -215,16 +215,16 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
     return boardCardItem;
   }
 
-  public onCardClick(card: Card) {
-    this.cardsBaseService.showCardInfo(card);
+  public onCardClick(card: Card, cardList: CardList) {
+    this.cardsBaseService.showCardInfo({ card, cardList });
   }
 
-  public onActiveClick(card: Card) {
+  public onActiveClick(card: Card, cardList: CardList) {
     const isBottomOwner = this.bottomPlayer && this.bottomPlayer.id === this.clientId;
     const isDeleted = this.gameState.deleted;
 
     if (!isBottomOwner || isDeleted) {
-      return this.onCardClick(card);
+      return this.onCardClick(card, cardList);
     }
 
     const player = PlayerType.BOTTOM_PLAYER;
@@ -232,7 +232,7 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
     const target: CardTarget = { player, slot, index: 0 };
 
     const options = { enableAbility: true, enableAttack: true };
-    this.cardsBaseService.showCardInfo(card, options)
+    this.cardsBaseService.showCardInfo({ card, cardList, options })
       .then(result => {
         if (!result) {
           return;
@@ -250,12 +250,12 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
       });
   }
 
-  public onBenchClick(card: Card, index: number) {
+  public onBenchClick(card: Card, cardList: CardList, index: number) {
     const isBottomOwner = this.bottomPlayer && this.bottomPlayer.id === this.clientId;
     const isDeleted = this.gameState.deleted;
 
     if (!isBottomOwner || isDeleted) {
-      return this.onCardClick(card);
+      return this.onCardClick(card, cardList);
     }
 
     const player = PlayerType.BOTTOM_PLAYER;
@@ -263,7 +263,7 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
     const target: CardTarget = { player, slot, index };
 
     const options = { enableAbility: true, enableAttack: false };
-    this.cardsBaseService.showCardInfo(card, options)
+    this.cardsBaseService.showCardInfo({ card, cardList, options })
       .then(result => {
         if (!result) {
           return;
@@ -281,11 +281,11 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
     const isDeleted = this.gameState.deleted;
 
     if (!isBottomOwner || isDeleted) {
-      return this.onCardClick(card);
+      return this.onCardClick(card, undefined);
     }
 
     const options = { enableTrainer: true };
-    this.cardsBaseService.showCardInfo(card, options)
+    this.cardsBaseService.showCardInfo({ card, options })
       .then(result => {
         if (!result) {
           return;

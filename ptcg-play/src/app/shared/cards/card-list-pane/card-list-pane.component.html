@@ -1,0 +1,7 @@
+<div class="ptcg-card-list-pane">
+  <ptcg-card *ngFor="let card of (cardList ? cardList.cards : [])"
+    ptcgDropHighlight="outside" [ptcgDropHighlightVisible]="card === selected"
+    (click)="selectCard(card)"
+    [card]="card">
+  </ptcg-card>
+</div>

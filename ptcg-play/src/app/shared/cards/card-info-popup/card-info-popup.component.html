@@ -1,180 +1,31 @@
-<h2 mat-dialog-title>{{ card.fullName }}</h2>
+<h2 mat-dialog-title>
+  <span>{{ card.fullName }}</span>
+  <span class="ptcg-u-spacer"></span>
+  <button mat-raised-button color="primary" *ngIf="cardList"
+    [disabled]="!card"
+    (click)="toggleCardList()">
+    Toggle card list
+  </button>
+</h2>
 
 <mat-dialog-content>
-  <div class="ptcg-card-info-layout">
-    <div class="ptcg-card-info-image">
-      <ptcg-card [card]="card"></ptcg-card>
-    </div>
-    <div class="ptcg-card-info-text" *ngIf="card.superType === SuperType.POKEMON">
-      <div class="title">
-        <span>{{card.name}}</span>
-        <div class="ptcg-u-spacer"></div>
-        <div class="subtitle-evolves-from" *ngIf="card.evolvesFrom">
-          (evolves from {{card.evolvesFrom}})
-        </div>
-      </div>
-      <div class="subtitle">
-        <div class="subtitle-stage" [ngSwitch]="card.stage">
-          <span *ngSwitchCase="Stage.BASIC">Basic</span>
-          <span *ngSwitchCase="Stage.STAGE_1">Stage 1</span>
-          <span *ngSwitchCase="Stage.STAGE_2">Stage 2</span>
-        </div>
-        <div class="ptcg-u-spacer"></div>
-        <div class="subtitle-hp">
-          <span class="subtitle-hp-unit">HP</span>
-          <span class="subtitle-hp-value">{{card.hp}}</span>
-        </div>
-        <div class="subtitle-card-type">
-          <ptcg-energy [type]="card.cardType"></ptcg-energy>
-        </div>
-      </div>
+  <ptcg-card-info-pane
+    *ngIf="pane === CardInfoPopupPanes.CARD"
+    [card]="card"
+    [options]="options"
+    (action)="close($event)">
+  </ptcg-card-info-pane>
 
-      <ptcg-hover-highlight *ngFor="let power of card.powers"
-        (click)="options.enableAbility && close({ability: power.name})"
-        [enabled]="options.enableAbility">
-        <div class="power">
-          <div class="power-header">
-            <div class="power-type" [ngSwitch]="power.powerType">
-              <div class="ability" *ngSwitchCase="PowerType.ABILITY">Ability</div>
-              <div class="ability" *ngSwitchCase="PowerType.POKEPOWER">Poke-Power</div>
-              <div class="poke-body" *ngSwitchCase="PowerType.POKEBODY">Poke-Body</div>
-            </div>
-            <div class="power-name">
-              {{ power.name }}
-            </div>
-          </div>
-          <div class="card-text">{{ power.text }}</div>
-        </div>
-      </ptcg-hover-highlight>
-
-      <ptcg-hover-highlight *ngFor="let attack of card.attacks"
-        (click)="options.enableAttack && close({attack: attack.name})"
-        [enabled]="options.enableAttack">
-        <div class="attack">
-          <div class="attack-header">
-            <div class="attack-cost">
-              <ptcg-energy *ngIf="attack.cost.length === 0"></ptcg-energy>
-              <ptcg-energy *ngFor="let cost of attack.cost" [type]="cost"></ptcg-energy>
-            </div>
-            <div class="attack-name">
-              {{ attack.name }}
-            </div>
-            <div class="ptcg-u-spacer"></div>
-            <div class="attack-damage" *ngIf="attack.damage > 0">
-              {{ attack.damage }}
-            </div>
-          </div>
-          <div class="card-text" *ngIf="attack.text">
-            {{ attack.text }}
-          </div>
-        </div>
-      </ptcg-hover-highlight>
-
-      <div class="stats">
-        <div class="stats-item">
-          <div class="stats-item-header">Weakness</div>
-          <div class="stats-item-value" *ngFor="let weakness of card.weakness">
-            <div class="stats-item-value-type">
-              <ptcg-energy [type]="weakness.type"></ptcg-energy>
-            </div>
-            <div class="stats-item-value-modifier">
-              {{ weakness.value ? '+' + weakness.value : 'x2' }}
-            </div>
-          </div>
-        </div>
-
-        <div class="stats-item">
-          <div class="stats-item-header">Resistance</div>
-          <div class="stats-item-value" *ngFor="let resistance of card.resistance">
-            <div class="stats-item-value-type">
-              <ptcg-energy [type]="resistance.type"></ptcg-energy>
-            </div>
-            <div class="stats-item-value-modifier">
-              {{ resistance.value }}
-            </div>
-          </div>
-        </div>
-
-        <div class="stats-item">
-          <div class="stats-item-header">Retreat Cost</div>
-          <div class="stats-item-value">
-            <div class="stats-item-value-type">
-              <ptcg-energy *ngFor="let cost of card.retreat" [type]="cost"></ptcg-energy>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="ptcg-card-info-text" *ngIf="card.superType === SuperType.ENERGY">
-      <div class="title">
-        {{card.name}}
-      </div>
-      <div class="subtitle">
-        <div class="subtitle-stage" [ngSwitch]="card.energyType">
-          <span *ngSwitchCase="EnergyType.BASIC">Basic Energy</span>
-          <span *ngSwitchCase="EnergyType.SPECIAL">Special Energy</span>
-        </div>
-        <div class="ptcg-u-spacer"></div>
-        <div class="subtitle-card-type">
-          <ptcg-trainer-type></ptcg-trainer-type>
-        </div>
-      </div>
-
-      <div class="power" *ngIf="card.text">
-        <div class="power-header">
-          <div class="power-name">
-            Text on card
-          </div>
-        </div>
-        <div class="card-text">{{ card.text }}</div>
-      </div>
-
-    </div>
-
-    <div class="ptcg-card-info-text" *ngIf="card.superType === SuperType.TRAINER">
-      <div class="title">
-        {{card.name}}
-      </div>
-      <div class="subtitle">
-        <div class="subtitle-stage" [ngSwitch]="card.trainerType">
-          <span *ngSwitchDefaultCase>Item</span>
-          <span *ngSwitchCase="TrainerType.SUPPORTER">Supporter</span>
-          <span *ngSwitchCase="TrainerType.STADIUM">Stadium</span>
-          <span *ngSwitchCase="TrainerType.TOOL">Pokemon Tool</span>
-        </div>
-        <div class="ptcg-u-spacer"></div>
-        <div class="subtitle-card-type">
-          <ptcg-trainer-type [type]="card.trainerType"></ptcg-trainer-type>
-        </div>
-      </div>
-
-      <ptcg-hover-highlight
-        (click)="options.enableTrainer && close({trainer: true})"
-        [enabled]="options.enableTrainer">
-        <div class="power" *ngIf="card.text">
-          <div class="power-header">
-            <div class="power-name">
-              Text on card
-            </div>
-          </div>
-          <div class="card-text">{{ card.text }}</div>
-        </div>
-      </ptcg-hover-highlight>
-
-    </div>
-
-    <div class="ptcg-card-info-text" *ngIf="card.superType === SuperType.NONE">
-      <div class="title">
-        {{card.name}}
-      </div>
-    </div>
-  </div>
+  <ptcg-card-list-pane
+    *ngIf="pane === CardInfoPopupPanes.CARD_LIST"
+    [selected]="card"
+    [cardList]="cardList"
+    (cardClick)="selectCard($event)">
+  </ptcg-card-list-pane>
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-raised-button color="primary" (click)="close()">
+  <button mat-raised-button (click)="close()">
     Close
   </button>
 </mat-dialog-actions>

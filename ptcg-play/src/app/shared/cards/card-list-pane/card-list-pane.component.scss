@@ -1,0 +1,23 @@
+@import '../../../../theme/variables.scss';
+
+$ptcg-card-list-pane-padding: map-get($padding, small);
+$ptcg-card-list-pane-border-radius: map-get($padding, small);
+
+$ptcg-card-list-pane-min-height: map-get($ptcg-size, card) * $card-aspect-ratio + 2 * map-get($padding, normal);
+$ptcg-card-list-pane-max-height: 2 * map-get($ptcg-size, card) * $card-aspect-ratio + 3 * map-get($padding, normal);
+
+.ptcg-card-list-pane {
+  border-radius: $ptcg-card-list-pane-border-radius;
+  display: flex;
+  flex-wrap: wrap;
+  max-height: $ptcg-card-list-pane-max-height;
+  min-height: $ptcg-card-list-pane-min-height;
+  overflow: auto;
+  padding: $ptcg-card-list-pane-padding;
+}
+
+ptcg-card {
+  cursor: pointer;
+  margin: map-get($padding, small);
+  width: map-get($ptcg-size, card);
+}
