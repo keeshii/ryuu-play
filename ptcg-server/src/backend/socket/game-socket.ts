@@ -1,6 +1,9 @@
 import { AddPlayerAction, AppendLogAction, Action, PassTurnAction,
   ReorderHandAction, ReorderBenchAction, PlayCardAction, CardTarget,
-  RetreatAction, AttackAction, UseAbilityAction, StateSerializer, UseStadiumAction } from '../../game';
+  RetreatAction, AttackAction, UseAbilityAction, StateSerializer,
+  UseStadiumAction } from '../../game';
+import { Base64 } from '../../utils';
+import { ChangeAvatarAction } from '../../game/store/actions/change-avatar-action';
 import { Client } from '../../game/client/client.interface';
 import { CoreSocket } from './core-socket';
 import { Errors } from '../common/errors';
@@ -11,8 +14,7 @@ import { GameState } from '../interfaces/core.interface';
 import { ResolvePromptAction } from '../../game/store/actions/resolve-prompt-action';
 import { SocketCache } from './socket-cache';
 import { SocketWrapper, Response } from './socket-wrapper';
-import {Base64} from '../../utils';
-import {ChangeAvatarAction} from '../../game/store/actions/change-avatar-action';
+import { StateSanitizer } from './state-sanitizer';
 
 export class GameSocket {
 
@@ -20,12 +22,14 @@ export class GameSocket {
   private client: Client;
   private socket: SocketWrapper;
   private core: Core;
+  private stateSanitizer: StateSanitizer;
 
   constructor(client: Client, socket: SocketWrapper, core: Core, cache: SocketCache) {
     this.cache = cache;
     this.client = client;
     this.socket = socket;
     this.core = core;
+    this.stateSanitizer = new StateSanitizer(client, cache);
 
     // game listeners
     this.socket.addListener('game:join', this.joinGame.bind(this));
@@ -55,29 +59,15 @@ export class GameSocket {
 
   public onStateChange(game: Game, state: State): void {
     if (this.core.games.indexOf(game) !== -1) {
-      state = this.filterState(game.id, state);
+      state = this.stateSanitizer.sanitize(game.state, game.id);
 
       const serializer = new StateSerializer();
-      const serializedState = serializer.serialize(game.state);
+      const serializedState = serializer.serialize(state);
       const base64 = new Base64();
       const stateData = base64.encode(serializedState);
       const playerStats = game.playerStats;
       this.socket.emit(`game[${game.id}]:stateChange`, { stateData, playerStats });
     }
-  }
-
-  /**
-   * Clear sensitive data, resolved prompts and old logs.
-   */
-  private filterState(gameId: number, state: State): State {
-    state = { ...state };
-    const lastLogId = this.cache.lastLogIdCache[gameId];
-    state.prompts = state.prompts.filter(prompt => prompt.result === undefined);
-    state.logs = state.logs.filter(log => log.id > lastLogId);
-    if (state.logs.length > 0) {
-      this.cache.lastLogIdCache[gameId] = state.logs[state.logs.length - 1].id;
-    }
-    return state;
   }
 
   private joinGame(gameId: number, response: Response<GameState>): void {
