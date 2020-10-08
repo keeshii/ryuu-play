@@ -13,7 +13,8 @@
         #render="ssRender"
         [dragSource]="render.source" [noHTML5Preview]="true"
         [class.placeholder]="render.isDragging$ | async"
-        [card]="context.data.card">
+        [card]="context.data.card"
+        (click)="showCardPopup(context)">
       </ptcg-card>
     </ng-template>
 
@@ -34,7 +35,8 @@
         #render="ssRender"
         [dragSource]="render.source" [noHTML5Preview]="true"
         [class.placeholder]="render.isDragging$ | async"
-        [card]="context.data.card">
+        [card]="context.data.card"
+        (click)="showCardPopup(context)">
       </ptcg-card>
     </ng-template>
 

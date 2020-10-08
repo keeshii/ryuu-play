@@ -14,7 +14,7 @@
   <ptcg-deck-card
     *ngFor="let card of (cards | filterCards: toolbarFilter)"
     [ssExternal]="card.spec" #ext="ssExternal" [source]="ext.source"
-    (click)="showCardInfo(card)"
+    (cardClick)="showCardInfo(card)"
     [card]="card">
   </ptcg-deck-card>
 </div>
@@ -35,7 +35,9 @@
         #render="ssRender"
         [class.placeholder]="render.isDragging$ | async"
         [source]="render.source"
-        (click)="setCardCount(render.data)"
+        showCardCount="true"
+        (cardClick)="showCardInfo(render.data)"
+        (countClick)="setCardCount(render.data)"
         [card]="render.data">
       </ptcg-deck-card>
     </ng-template>

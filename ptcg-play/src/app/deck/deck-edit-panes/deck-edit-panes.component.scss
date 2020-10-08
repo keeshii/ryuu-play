@@ -24,3 +24,7 @@ ptcg-deck-card.placeholder {
   position: absolute;
   width: map-get($ptcg-size, card);
 }
+
+.ptcg-deck-edit-pane.secondary {
+  border-width: map-get($padding, small);
+}

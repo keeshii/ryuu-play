@@ -1,6 +1,11 @@
 <div class="ptcg-deck-card">
   <ptcg-card [card]="card.card" [dragSource]="source" [noHTML5Preview]="true"
-    matBadge="{{card.count}}x" [matBadgeHidden]="card.count <= 1" matBadgeColor="accent">
+    (click)="onCardClick()">
+    <ptcg-badge color="accent" class="ptcg-deck-card-count mat-title"
+      *ngIf="showCardCount || card.count > 1"
+      (click)="onCountClick($event)">
+      {{ card.count }}x
+    </ptcg-badge>
   </ptcg-card>
   <span class="ptcg-deck-card-label">
     {{ card.card.fullName }}

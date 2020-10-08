@@ -28,3 +28,11 @@ ptcg-card {
   white-space: nowrap;
   width: 100%;
 }
+
+.ptcg-deck-card-count {
+  display: flex;
+  cursor: pointer;
+  position: absolute;
+  right: 0;
+  top: 0;
+}

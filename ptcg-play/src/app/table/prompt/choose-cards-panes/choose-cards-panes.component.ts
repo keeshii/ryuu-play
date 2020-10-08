@@ -38,6 +38,12 @@ export class ChooseCardsPanesComponent implements OnInit, OnChanges {
     this.bottomSortable = this.buildPromptSortable();
   }
 
+  public showCardPopup(context: DraggedItem<PromptItem>) {
+    const card = context.data.card;
+    const facedown = this.cardbackMap[context.data.index];
+    this.cardsBaseService.showCardInfo({ card, facedown });
+  }
+
   private buildPromptSortable(): ChooseCardsSortable {
     const sortable: ChooseCardsSortable = {
       list: [],

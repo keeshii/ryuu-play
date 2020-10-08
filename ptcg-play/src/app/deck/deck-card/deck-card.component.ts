@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { DragSource } from '@angular-skyhook/core';
 
 import { DeckItem } from './deck-card.interface';
@@ -13,13 +13,25 @@ export const DeckCardType = 'DECK_CARD';
 export class DeckCardComponent implements OnInit, OnDestroy {
 
   @Input() source: DragSource<DeckItem, any>;
-
   @Input() card: DeckItem;
+  @Input() showCardCount: boolean;
+
+  @Output() cardClick = new EventEmitter<void>();
+  @Output() countClick = new EventEmitter<void>();
 
   constructor() {}
 
   ngOnInit() {}
 
   ngOnDestroy() {}
+
+  onCountClick(event: MouseEvent) {
+    event.stopPropagation();
+    this.countClick.next();
+  }
+
+  onCardClick() {
+    this.cardClick.next();
+  }
 
 }

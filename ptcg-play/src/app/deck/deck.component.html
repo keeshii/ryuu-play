@@ -30,7 +30,10 @@
       <!-- Is valid -->
       <ng-container matColumnDef="isValid">
         <th mat-header-cell *matHeaderCellDef>Valid</th>
-        <td mat-cell *matCellDef="let deck">{{deck.isValid}}</td>
+        <td mat-cell *matCellDef="let deck">
+          <mat-icon *ngIf="deck.isValid" color="primary">check</mat-icon>
+          <mat-icon *ngIf="!deck.isValid">remove</mat-icon>
+        </td>
       </ng-container>
 
       <!-- Actions -->
