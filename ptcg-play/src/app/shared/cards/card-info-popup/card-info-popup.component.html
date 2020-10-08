@@ -3,38 +3,29 @@
   <span class="ptcg-u-spacer"></span>
   <button mat-raised-button color="primary" *ngIf="cardList"
     [disabled]="!card"
-    (click)="toggleCardList()">
-    Toggle card list
+    (click)="showCardList()">
+    Show card list
   </button>
 </h2>
 
 <mat-dialog-content>
   <ptcg-card-info-pane
-    *ngIf="pane === CardInfoPopupPanes.CARD"
     [card]="card"
     [facedown]="facedown"
     [options]="options"
     (action)="close($event)">
   </ptcg-card-info-pane>
-
-  <ptcg-card-list-pane
-    *ngIf="pane === CardInfoPopupPanes.CARD_LIST"
-    [selected]="card"
-    [cardList]="cardList"
-    [facedown]="facedown"
-    (cardClick)="selectCard($event)">
-  </ptcg-card-list-pane>
 </mat-dialog-content>
 
 <mat-dialog-actions>
   <section class="ptcg-card-info-reveal-cards" *ngIf="allowReveal">
-    <mat-checkbox color="primary" name="reveal-cards"
+    <mat-checkbox color="primary" name="reveal-card"
       [checked]="!facedown" (change)="facedown = !facedown">
-      Reveal cards
+      Reveal card
     </mat-checkbox>
   </section>
   <span class="ptcg-u-spacer"></span>
-  <button mat-raised-button (click)="close()">
+  <button mat-raised-button (click)="close()" cdkFocusInitial>
     Close
   </button>
 </mat-dialog-actions>

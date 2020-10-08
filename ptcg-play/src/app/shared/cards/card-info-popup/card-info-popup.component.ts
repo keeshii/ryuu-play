@@ -1,7 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { Card, CardList } from 'ptcg-server';
 import { CardInfoPaneOptions, CardInfoPaneAction } from '../card-info-pane/card-info-pane.component';
+import { CardListPopupComponent, CardListPopupData } from '../card-list-popup/card-list-popup.component';
 
 export interface CardInfoPopupData {
   card?: Card;
@@ -11,11 +12,6 @@ export interface CardInfoPopupData {
   facedown?: boolean;
 }
 
-export enum CardInfoPopupPanes {
-  CARD,
-  CARD_LIST
-}
-
 @Component({
   selector: 'ptcg-card-info-popup',
   templateUrl: './card-info-popup.component.html',
@@ -23,18 +19,17 @@ export enum CardInfoPopupPanes {
 })
 export class CardInfoPopupComponent implements OnInit {
 
-  public CardInfoPopupPanes = CardInfoPopupPanes;
   public card: Card;
   public cardList: CardList;
   public facedown: boolean;
   public allowReveal: boolean;
   public options: CardInfoPaneOptions;
-  public pane: CardInfoPopupPanes;
   private data: CardInfoPopupData;
 
   constructor(
+    private dialog: MatDialog,
     private dialogRef: MatDialogRef<CardInfoPopupComponent>,
-    @Inject(MAT_DIALOG_DATA) data: (CardInfoPopupData & {card: Card}),
+    @Inject(MAT_DIALOG_DATA) data: CardInfoPopupData,
   ) {
     this.data = data;
     this.card = data.card;
@@ -42,21 +37,28 @@ export class CardInfoPopupComponent implements OnInit {
     this.facedown = data.facedown;
     this.allowReveal = data.allowReveal;
     this.options = data.options || {};
-    this.pane = this.card ? CardInfoPopupPanes.CARD : CardInfoPopupPanes.CARD_LIST;
   }
 
   ngOnInit() {
   }
 
-  public toggleCardList(): void {
-    this.pane = this.pane === CardInfoPopupPanes.CARD
-      ? CardInfoPopupPanes.CARD_LIST
-      : CardInfoPopupPanes.CARD;
-  }
+  public async showCardList(): Promise<void> {
+    const data: CardListPopupData = {
+      card: this.card,
+      cardList: this.cardList,
+      facedown: this.facedown
+    };
 
-  public selectCard(card: Card): void {
-    this.card = card;
-    this.pane = CardInfoPopupPanes.CARD;
+    const dialog = this.dialog.open(CardListPopupComponent, {
+      maxWidth: '100%',
+      width: '670px',
+      data
+    });
+
+    const card = await dialog.afterClosed().toPromise();
+    if (card !== undefined) {
+      this.card = card;
+    }
   }
 
   public close(result: CardInfoPaneAction = {}) {
