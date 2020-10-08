@@ -21,6 +21,7 @@ ptcg-deck-card.placeholder {
 }
 
 .ptcg-card-preview {
+  border-radius: $card-border-radius;
   position: absolute;
   width: map-get($ptcg-size, card);
 }

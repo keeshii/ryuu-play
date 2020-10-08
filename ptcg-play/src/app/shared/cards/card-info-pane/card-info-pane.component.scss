@@ -10,6 +10,10 @@
   padding-right: map-get($padding, normal);
 }
 
+ptcg-card:not(.cardback) {
+  cursor: pointer;
+}
+
 .ptcg-card-info-text {
   flex: 1 1 67%;
 }

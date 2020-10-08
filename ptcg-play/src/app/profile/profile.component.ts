@@ -77,6 +77,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.edtiAvatarsPopupService.openDialog(userId);
   }
 
+  showAvatarImage(avatarFile: string) {
+    this.alertService.avatarImage(avatarFile);
+  }
+
   ngOnDestroy() {}
 
 }

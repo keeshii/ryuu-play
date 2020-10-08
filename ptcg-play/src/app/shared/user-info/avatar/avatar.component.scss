@@ -10,6 +10,11 @@
   width: map-get($ptcg-size, profile-avatar);
 }
 
+:host[type="double"] > .ptcg-avatar {
+  height: 2 * map-get($ptcg-size, profile-avatar);
+  width: 2 * map-get($ptcg-size, profile-avatar);
+}
+
 .empty {
   background-image: url("/assets/avatar.svg");
   background-repeat: no-repeat;

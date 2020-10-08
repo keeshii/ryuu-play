@@ -96,6 +96,7 @@ ptcg-board-deck {
 }
 
 .ptcg-card-preview {
+  border-radius: $card-border-radius;
   position: absolute;
   width: var(--card-size);
 }

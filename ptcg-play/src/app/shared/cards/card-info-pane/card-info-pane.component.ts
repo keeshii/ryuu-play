@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Card, SuperType, Stage, PowerType, EnergyType, TrainerType } from 'ptcg-server';
+import { AlertService } from '../../alert/alert.service';
 
 export interface CardInfoPaneOptions {
   enableAbility?: boolean;
@@ -31,13 +32,19 @@ export class CardInfoPaneComponent implements OnInit {
   public EnergyType = EnergyType;
   public TrainerType = TrainerType;
 
-  constructor() { }
+  constructor(
+    private alertService: AlertService
+  ) { }
 
   ngOnInit(): void {
   }
 
   public clickAction(action: CardInfoPaneAction) {
     this.action.next(action);
+  }
+
+  public showCardImage(card: Card) {
+    this.alertService.cardImage(card);
   }
 
 }

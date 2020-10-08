@@ -27,8 +27,9 @@
       <mat-card-content>
         <div class="ptcg-profile-avatar">
           <ptcg-avatar type="profile"
-            [hoverable]="owner$ | async"
-            [avatarFile]="user.avatarFile">
+            [hoverable]="!!user.avatarFile"
+            [avatarFile]="user.avatarFile"
+            (click)="showAvatarImage(user.avatarFile)">
           </ptcg-avatar>
         </div>
         <div class="ptcg-profile-summary">
