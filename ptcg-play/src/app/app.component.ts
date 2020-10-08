@@ -2,13 +2,8 @@ import { Component, OnDestroy, OnInit, HostListener, ElementRef } from '@angular
 import { UserInfo } from 'ptcg-server';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { skip, takeUntil } from 'rxjs/operators';
 
 import { AlertService } from './shared/alert/alert.service';
-import { CardsBaseService } from './shared/cards/cards-base.service';
-import { CardsService } from './api/services/cards.service';
-import { MessageService } from './api/services/message.service';
-import { ProfileService } from './api/services/profile.service';
 import { SessionService } from './shared/session/session.service';
 import { SocketService } from './api/socket.service';
 import { takeUntilDestroyed } from './shared/operators/take-until-destroyed';
@@ -26,11 +21,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private alertService: AlertService,
-    private cardsService: CardsService,
-    private cardsBaseService: CardsBaseService,
     private elementRef: ElementRef<HTMLElement>,
-    private messageService: MessageService,
-    private profileService: ProfileService,
     private router: Router,
     private sessionService: SessionService,
     private socketService: SocketService,
@@ -53,9 +44,6 @@ export class AppComponent implements OnInit, OnDestroy {
         if (!this.isLoggedIn && this.socketService.isEnabled) {
           this.socketService.disable();
         }
-
-        // Refresh user profile when user logs in
-        this.refreshLoggedUser(authToken);
       });
 
     this.socketService.connection.pipe(
@@ -85,48 +73,6 @@ export class AppComponent implements OnInit, OnDestroy {
     let cardSize = Math.floor(cardHeight / cardAspectRatio);
     cardSize = Math.min(Math.max(cardSize, 50), 100);
     element.style.setProperty('--card-size', cardSize + 'px');
-  }
-
-  private refreshLoggedUser(authToken: string) {
-    if (!authToken) {
-      this.sessionService.set({ loggedUserId: undefined });
-      return;
-    }
-
-    const tokenChanged$ = this.authToken$.pipe(skip(1));
-    this.profileService.getMe()
-    .pipe(
-        takeUntilDestroyed(this),
-        takeUntil(tokenChanged$)
-      )
-      .subscribe(response => {
-        const users = { ...this.sessionService.session.users };
-        users[response.user.userId] = response.user;
-        this.sessionService.set({ users, loggedUserId: response.user.userId });
-      });
-
-    this.messageService.getConversations()
-    .pipe(
-        takeUntilDestroyed(this),
-        takeUntil(tokenChanged$)
-      )
-      .subscribe(response => {
-        this.messageService.setSessionConversations(
-          response.conversations,
-          response.users
-        );
-      });
-
-    this.cardsService.getAll()
-    .pipe(
-        takeUntilDestroyed(this),
-        takeUntil(tokenChanged$)
-      )
-      .subscribe({
-        next: response => {
-          this.cardsBaseService.setCards(response.cards);
-        }
-      });
   }
 
 }

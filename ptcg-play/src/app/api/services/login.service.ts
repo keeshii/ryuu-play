@@ -1,32 +1,75 @@
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs/operators';
+import { map, switchMap, catchError } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
 
+import { ApiError, ApiErrorEnum } from '../api.error';
 import { ApiService } from '../api.service';
+import { CardsBaseService } from '../../shared/cards/cards-base.service';
+import { CardsService } from './cards.service';
 import { LoginResponse } from '../interfaces/login.interface';
+import { MessageService } from './message.service';
+import { ProfileService } from './profile.service';
 import { SessionService } from '../../shared/session/session.service';
 import { environment } from '../../../environments/environment';
-import { ApiError, ApiErrorEnum } from '../api.error';
 
 @Injectable()
 export class LoginService {
 
   constructor(
     private api: ApiService,
+    private cardsBaseService: CardsBaseService,
+    private cardsService: CardsService,
+    private messageService: MessageService,
+    private profileService: ProfileService,
     private sessionService: SessionService
   ) {}
 
   public login(name: string, password: string) {
-    return this.api.post<LoginResponse>('/v1/login', { name, password })
-      .pipe(map(response => {
+    return this.api.post<LoginResponse>('/v1/login', { name, password }).pipe(
+      switchMap(response => {
+        this.sessionService.session.authToken = response.token;
+
         const apiVersion = response.config.apiVersion;
         if (environment.apiVersion !== apiVersion) {
           throw new ApiError(ApiErrorEnum.ERROR_UNSUPPORTED_API_VERSION);
         }
-        this.sessionService.set({
-          authToken: response.token,
-          config: response.config
-        });
-        return response;
+
+        return combineLatest([
+          this.profileService.getMe(),
+          this.messageService.getConversations(),
+          this.cardsService.getAll()
+        ]).pipe(
+          catchError(error => {
+            this.sessionService.session.authToken = '';
+            throw error;
+          }),
+          map(([me, conversations, cards]) => {
+
+            // Fetch logged user data
+            const users = { ...this.sessionService.session.users };
+            users[me.user.userId] = me.user;
+            this.sessionService.set({
+              users,
+              loggedUserId: me.user.userId,
+            });
+
+            // Fetch user's conversations
+            this.messageService.setSessionConversations(
+              conversations.conversations,
+              conversations.users
+            );
+
+            // Fetch cards data
+            this.cardsBaseService.setCards(cards.cards);
+
+            // Store data in the session
+            this.sessionService.set({
+              authToken: response.token,
+              config: response.config,
+            });
+
+            return response;
+        }));
     }));
   }
 

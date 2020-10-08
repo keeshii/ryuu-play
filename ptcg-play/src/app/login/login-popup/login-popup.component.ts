@@ -39,7 +39,7 @@ export class LoginPopupComponent implements OnDestroy {
           this.router.navigate([this.data.redirectUrl]);
         },
         error: (error: ApiError) => {
-          this.alertService.toast(error.message);
+          this.alertService.toast(error.code || error.message);
         }
       });
   }
