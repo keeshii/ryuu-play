@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit, HostListener, ElementRef } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { UserInfo } from 'ptcg-server';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
@@ -21,6 +22,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private alertService: AlertService,
+    private dialog: MatDialog,
     private elementRef: ElementRef<HTMLElement>,
     private router: Router,
     private sessionService: SessionService,
@@ -52,6 +54,7 @@ export class AppComponent implements OnInit, OnDestroy {
       next: async connected => {
         if (!connected && this.isLoggedIn) {
           this.socketService.disable();
+          this.dialog.closeAll();
           await this.alertService.alert('Disconnected from the server.');
           this.sessionService.clear();
           this.router.navigate(['/login']);
