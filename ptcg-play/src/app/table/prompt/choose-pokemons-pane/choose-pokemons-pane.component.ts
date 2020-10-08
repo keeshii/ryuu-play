@@ -5,6 +5,7 @@ import { DropTarget, SkyhookDndService } from '@angular-skyhook/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { CardsBaseService } from '../../../shared/cards/cards-base.service';
 import { PromptItem, PromptCardType } from '../prompt-card-item.interface';
 import { PokemonData, PokemonItem, PokemonRow } from './pokemon-data';
 
@@ -40,7 +41,10 @@ export class ChoosePokemonsPaneComponent implements OnInit, OnDestroy {
 
   public rows: PokemonDropRow[];
 
-  constructor(private dnd: SkyhookDndService) { }
+  constructor(
+    private cardsBaseService: CardsBaseService,
+    private dnd: SkyhookDndService
+  ) { }
 
   private buildDropTargets(pokemonRows: PokemonRow[]): PokemonDropRow[] {
     const rows: PokemonDropRow[] = [];
@@ -89,6 +93,13 @@ export class ChoosePokemonsPaneComponent implements OnInit, OnDestroy {
 
   public onCardClick(item: PokemonItem) {
     this.cardClick.emit(item);
+  }
+
+  public onBadgeClick(event: MouseEvent, item: PokemonItem) {
+    event.stopPropagation();
+    const cardList = item.cardList;
+    const card = cardList.getPokemonCard();
+    this.cardsBaseService.showCardInfo({ card, cardList });
   }
 
   ngOnInit() {

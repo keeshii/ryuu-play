@@ -4,7 +4,8 @@
   <p>{{ prompt.message }}</p>
 
   <ptcg-cards-container [keepInitialSize]="true">
-    <ptcg-card *ngFor="let card of prompt.cards" [card]="card">
+    <ptcg-card *ngFor="let card of prompt.cards" [card]="card"
+      (click)="onCardClick(card)">
     </ptcg-card>
   </ptcg-cards-container>
 </mat-dialog-content>

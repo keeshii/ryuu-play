@@ -20,6 +20,8 @@ export class PromptChoosePrizeComponent implements OnInit, OnChanges {
   public promptId: number;
   public message: string;
   public isInvalid = false;
+  public hasSecret: boolean;
+  public revealed = false;
   private result: number[] = [];
 
   constructor(
@@ -65,6 +67,7 @@ export class PromptChoosePrizeComponent implements OnInit, OnChanges {
         });
       });
 
+      this.hasSecret = player.prizes.some(p => p.cards.length > 0 && p.isSecret);
       this.cards = cards;
       this.cardbackMap = cardbackMap;
       this.allowedCancel = prompt.options.allowCancel;

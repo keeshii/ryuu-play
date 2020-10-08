@@ -14,8 +14,11 @@
     (click)="onCardClick(trainerCard)"></ptcg-card>
   </div>
 
-  <ptcg-card [card]="mainCard" *ngIf="mainCard"
-  (click)="onCardClick(mainCard)"></ptcg-card>
+  <ptcg-card
+    [card]="mainCard" *ngIf="mainCard"
+    (click)="onCardClick(mainCard)">
+    <ng-content></ng-content>
+  </ptcg-card>
 
   <div class="ptcg-card-damage" *ngIf="damage > 0">
     <ptcg-badge color="warn">{{ damage }}</ptcg-badge>

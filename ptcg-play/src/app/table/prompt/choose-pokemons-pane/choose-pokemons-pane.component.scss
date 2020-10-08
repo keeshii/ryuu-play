@@ -33,4 +33,17 @@ ptcg-board-card {
   &.upside-down {
     transform: rotate(180deg);
   }
+
+  &:not(.upside-down) .ptcg-card-button {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+  &.upside-down .ptcg-card-button {
+    bottom: 0;
+    position: absolute;
+    left: 0;
+    transform: rotate(180deg);
+  }
 }

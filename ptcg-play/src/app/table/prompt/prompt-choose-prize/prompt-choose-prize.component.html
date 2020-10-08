@@ -5,12 +5,19 @@
 
   <ptcg-choose-cards-panes
     [cards]="cards"
-    [cardbackMap]="cardbackMap"
+    [cardbackMap]="revealed === false ? cardbackMap : {}"
     (change)="onChange($event)">
   </ptcg-choose-cards-panes>
 </mat-dialog-content>
 
 <mat-dialog-actions>
+  <section class="ptcg-card-info-reveal-cards" *ngIf="hasSecret && gameState.replay">
+    <mat-checkbox color="primary" name="reveal-card"
+      [checked]="revealed" (change)="revealed = !revealed">
+      Reveal cards
+    </mat-checkbox>
+  </section>
+  <span class="ptcg-u-spacer"></span>
   <button mat-raised-button *ngIf="allowedCancel" [disabled]="gameState.deleted"
     (click)="cancel()">
     Cancel
