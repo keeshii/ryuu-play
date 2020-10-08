@@ -105,10 +105,6 @@ export class EditAvatarsPopupComponent implements OnInit, OnDestroy {
       });
   }
 
-  showAvatarImage(avatarFile: string) {
-    this.alertService.avatarImage(avatarFile);
-  }
-
   ngOnInit() {
     this.refreshAvatars();
   }

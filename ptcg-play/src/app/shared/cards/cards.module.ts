@@ -4,6 +4,7 @@ import { SkyhookDndModule } from '@angular-skyhook/core';
 import { SkyhookMultiBackendModule } from '@angular-skyhook/multi-backend';
 
 import { CardComponent } from './card/card.component';
+import { CardImagePopupComponent } from './card-image-popup/card-image-popup.component';
 import { CardInfoPaneComponent } from './card-info-pane/card-info-pane.component';
 import { CardInfoPopupComponent } from './card-info-popup/card-info-popup.component';
 import { CardListPaneComponent } from './card-list-pane/card-list-pane.component';
@@ -23,6 +24,7 @@ import { CardListPopupComponent } from './card-list-popup/card-list-popup.compon
   ],
   declarations: [
     CardComponent,
+    CardImagePopupComponent,
     CardInfoPaneComponent,
     CardInfoPopupComponent,
     CardListPaneComponent,
@@ -33,6 +35,7 @@ import { CardListPopupComponent } from './card-list-popup/card-list-popup.compon
     HoverHighlightComponent,
   ],
   entryComponents: [
+    CardImagePopupComponent,
     CardInfoPopupComponent,
     CardListPopupComponent
   ],

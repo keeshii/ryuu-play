@@ -1,7 +1,7 @@
 <div class="ptcg-card-info-pane">
   <div class="ptcg-card-info-image">
     <ptcg-card [card]="card" [class.cardback]="facedown"
-      (click)="!facedown && showCardImage(card)"></ptcg-card>
+      (click)="showCardImage(card, facedown)"></ptcg-card>
   </div>
 
   <div class="ptcg-card-info-text" *ngIf="!facedown && card.superType === SuperType.POKEMON">

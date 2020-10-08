@@ -5,13 +5,10 @@
 }
 
 .ptcg-card-info-image {
+  cursor: pointer;
   flex: 1 1 33%;
   min-width: map-get($ptcg-size, card);
   padding-right: map-get($padding, normal);
-}
-
-ptcg-card:not(.cardback) {
-  cursor: pointer;
 }
 
 .ptcg-card-info-text {

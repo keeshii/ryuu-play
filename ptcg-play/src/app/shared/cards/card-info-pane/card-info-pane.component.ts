@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Card, SuperType, Stage, PowerType, EnergyType, TrainerType } from 'ptcg-server';
-import { AlertService } from '../../alert/alert.service';
+import { MatDialog } from '@angular/material/dialog';
+
+import { CardImagePopupComponent } from '../card-image-popup/card-image-popup.component';
 
 export interface CardInfoPaneOptions {
   enableAbility?: boolean;
@@ -33,7 +35,7 @@ export class CardInfoPaneComponent implements OnInit {
   public TrainerType = TrainerType;
 
   constructor(
-    private alertService: AlertService
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -43,8 +45,14 @@ export class CardInfoPaneComponent implements OnInit {
     this.action.next(action);
   }
 
-  public showCardImage(card: Card) {
-    this.alertService.cardImage(card);
+  public showCardImage(card: Card, facedown: boolean): Promise<void> {
+    const dialog = this.dialog.open(CardImagePopupComponent, {
+      maxWidth: '100%',
+      data: { card, facedown }
+    });
+
+    return dialog.afterClosed().toPromise()
+      .catch(() => false);
   }
 
 }

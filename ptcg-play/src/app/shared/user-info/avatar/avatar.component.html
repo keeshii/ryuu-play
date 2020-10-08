@@ -1,3 +1,4 @@
-<div class="ptcg-avatar" [ngClass]="{empty: !imageUrl, hoverable: hoverable}">
+<div class="ptcg-avatar" [ngClass]="{empty: !imageUrl, hoverable: hoverable || openPopup}"
+  (click)="openPopup && showAvatarPopup()">
   <img [src]="imageUrl" *ngIf="imageUrl">
 </div>

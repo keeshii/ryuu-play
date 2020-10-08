@@ -26,10 +26,7 @@
     <mat-card class="example-card">
       <mat-card-content>
         <div class="ptcg-profile-avatar">
-          <ptcg-avatar type="profile"
-            [hoverable]="!!user.avatarFile"
-            [avatarFile]="user.avatarFile"
-            (click)="showAvatarImage(user.avatarFile)">
+          <ptcg-avatar type="profile" openPopup="true" [avatarFile]="user.avatarFile">
           </ptcg-avatar>
         </div>
         <div class="ptcg-profile-summary">

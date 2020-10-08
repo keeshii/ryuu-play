@@ -24,10 +24,8 @@
     <ng-container matColumnDef="image">
       <th mat-header-cell *matHeaderCellDef>Image</th>
       <td mat-cell *matCellDef="let avatar">
-      <ptcg-avatar
-        [avatarFile]="avatar.fileName"
-        [hoverable]="true"
-        (click)="showAvatarImage(avatar.fileName)">
+      <ptcg-avatar openPopup="true"
+        [avatarFile]="avatar.fileName">
       </ptcg-avatar>
       </td>
     </ng-container>

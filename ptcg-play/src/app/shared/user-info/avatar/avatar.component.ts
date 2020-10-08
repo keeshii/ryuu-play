@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 
+import { AvatarPopupComponent } from '../avatar-popup/avatar-popup.component';
 import { SessionService } from '../../session/session.service';
 import { environment } from '../../../../environments/environment';
 
@@ -11,6 +13,8 @@ import { environment } from '../../../../environments/environment';
 export class AvatarComponent implements OnInit {
 
   @Input() set avatarFile(fileName: string) {
+    this.avatarFileValue = fileName;
+
     if (!fileName) {
       this.imageUrl = '';
       return;
@@ -32,11 +36,27 @@ export class AvatarComponent implements OnInit {
   }
 
   @Input() hoverable: boolean;
+  @Input() openPopup: boolean;
+  private avatarFileValue: string;
   public imageUrl: string;
 
-  constructor(private sessionService: SessionService) { }
+  constructor(
+    private dialog: MatDialog,
+    private sessionService: SessionService
+  ) { }
 
   ngOnInit(): void {
+  }
+
+  showAvatarPopup() {
+    const avatarFile = this.avatarFileValue;
+    const dialog = this.dialog.open(AvatarPopupComponent, {
+      maxWidth: '100%',
+      data: { avatarFile }
+    });
+
+    return dialog.afterClosed().toPromise()
+      .catch(() => false);
   }
 
 }
