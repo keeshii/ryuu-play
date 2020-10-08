@@ -11,19 +11,10 @@ import { deepClone } from "../../utils";
 
 export class StateSanitizer {
 
-  private unknownCard: Card;
-
   constructor(
     private client: Client,
     private cache: SocketCache
-  ) {
-    this.unknownCard = {
-      superType: SuperType.NONE,
-      fullName: 'Unknown',
-      name: 'Unknown',
-      id: 0
-    } as any;
-  }
+  ) { }
 
   /**
    * Clear sensitive data, resolved prompts and old logs.
@@ -41,9 +32,18 @@ export class StateSanitizer {
       return state;
     }
     this.getSecretCardLists(state).forEach(cardList => {
-      cardList.cards = cardList.cards.map(c => this.unknownCard);
+      cardList.cards = cardList.cards.map((c, i) => this.createUnknownCard(i));
     });
     return state;
+  }
+
+  private createUnknownCard(index: number): Card {
+    return {
+      superType: SuperType.NONE,
+      fullName: 'Unknown',
+      name: 'Unknown',
+      id: index
+    } as any;
   }
 
   private getSecretCardLists(state: State): CardList[] {
