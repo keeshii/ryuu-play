@@ -14,7 +14,8 @@
       <ng-container matColumnDef="player1">
         <th mat-header-cell *matHeaderCellDef>Player 1</th>
         <td mat-cell *matCellDef="let row">
-          <ptcg-user-bar *ngIf="row.users[0]" [user]="row.users[0]"></ptcg-user-bar>
+          <ptcg-user-bar openUserPopup="true" *ngIf="row.users[0]" [user]="row.users[0]">
+          </ptcg-user-bar>
         </td>
       </ng-container>
 
@@ -22,7 +23,8 @@
       <ng-container matColumnDef="player2">
         <th mat-header-cell *matHeaderCellDef>Player 2</th>
         <td mat-cell *matCellDef="let row">
-          <ptcg-user-bar *ngIf="row.users[1]" [user]="row.users[1]"></ptcg-user-bar>
+          <ptcg-user-bar openUserPopup="true" *ngIf="row.users[1]" [user]="row.users[1]">
+          </ptcg-user-bar>
         </td>
       </ng-container>
 

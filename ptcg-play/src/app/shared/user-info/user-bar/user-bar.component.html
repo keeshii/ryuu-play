@@ -1,9 +1,20 @@
-<div class="ptcg-user-bar" [class.marked]="marked">
+<div class="ptcg-user-bar"
+  [class.marked]="marked"
+  [class.clickable]="openUserPopup && user.userId">
 
-  <ptcg-avatar class="ptcg-user-avatar" [avatarFile]="user.avatarFile"></ptcg-avatar>
+  <ptcg-avatar class="ptcg-user-avatar"
+    [avatarFile]="user.avatarFile"
+    [hoverable]="openUserPopup && user.userId"
+    (click)="showUserInfoPopup(user)">
+  </ptcg-avatar>
 
   <div class="ptcg-user-info">
-    <div class="ptcg-user-name">{{ user.name }}</div>
+    <div class="ptcg-user-name">
+      <span class="ptcg-user-name-text"
+        (click)="showUserInfoPopup(user)">
+        {{ user.name }}
+      </span>
+    </div>
     <div class="ptcg-user-ranking">
       <ptcg-rank [ranking]="user.ranking" [rank]="user.rank"></ptcg-rank>
     </div>

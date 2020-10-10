@@ -36,7 +36,7 @@ export class AvatarComponent implements OnInit {
   }
 
   @Input() hoverable: boolean;
-  @Input() openPopup: boolean;
+  @Input() openAvatarPopup: boolean;
   private avatarFileValue: string;
   public imageUrl: string;
 

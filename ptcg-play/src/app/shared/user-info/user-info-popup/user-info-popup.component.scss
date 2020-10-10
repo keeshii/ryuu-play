@@ -1,0 +1,9 @@
+@import '../../../../theme/variables.scss';
+
+$ptcg-user-info-pane-border-radius: map-get($padding, small);
+
+
+.ptcg-user-info-popup-pane {
+  border-radius: $ptcg-user-info-pane-border-radius;
+  padding: map-get($padding, normal);
+}

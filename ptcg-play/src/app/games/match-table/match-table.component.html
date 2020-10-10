@@ -17,7 +17,8 @@
       <ng-container matColumnDef="player1">
         <th mat-header-cell *matHeaderCellDef>Player 1</th>
         <td mat-cell *matCellDef="let match">
-          <ptcg-user-bar [user]="users[match.player1Id]"
+          <ptcg-user-bar openUserPopup="true"
+            [user]="users[match.player1Id]"
             [marked]="match.winner === GameWinner.PLAYER_1">
           </ptcg-user-bar>
         </td>
@@ -27,7 +28,8 @@
       <ng-container matColumnDef="player2">
         <th mat-header-cell *matHeaderCellDef>Player 2</th>
         <td mat-cell *matCellDef="let match">
-          <ptcg-user-bar [user]="users[match.player2Id]"
+          <ptcg-user-bar openUserPopup="true"
+            [user]="users[match.player2Id]"
             [marked]="match.winner === GameWinner.PLAYER_2">
           </ptcg-user-bar>
         </td>

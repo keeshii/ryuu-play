@@ -340,8 +340,8 @@ export class Replays extends Controller {
 
     if (user2 === undefined) {
       user2 = new User();
-      user2.name = replay.player1.name;
-      user2.ranking = replay.player1.ranking;
+      user2.name = replay.player2.name;
+      user2.ranking = replay.player2.ranking;
     }
 
     return {

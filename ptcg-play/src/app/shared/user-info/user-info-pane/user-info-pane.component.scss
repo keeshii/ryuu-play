@@ -1,0 +1,25 @@
+@import '../../../../theme/variables.scss';
+
+
+.ptcg-user-info-pane {
+  display: flex;
+}
+
+.ptcg-profile-summary > table {
+  width: auto;
+}
+
+.ptcg-profile-summary {
+  padding: 0 map-get($padding, normal);
+}
+
+.ptcg-profile-summary > table td,
+.ptcg-profile-summary > table th {
+  padding: 0 map-get($padding, small);
+  padding-bottom: map-get($padding, small);
+}
+
+.ptcg-profile-summary > table tr:last-child td,
+.ptcg-profile-summary > table tr:last-child th {
+  padding-bottom: 0;
+}

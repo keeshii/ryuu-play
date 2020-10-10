@@ -17,6 +17,12 @@
     }
   }
 
+  ptcg-user-info-popup {
+    .ptcg-user-info-popup-pane {
+      background-color: mat-color($background, focused-button);
+    }
+  }
+
   ptcg-user-bar {
     .ptcg-user-bar.marked .ptcg-user-name {
       color: mat-color($primary);

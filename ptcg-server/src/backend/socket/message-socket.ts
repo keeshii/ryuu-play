@@ -34,6 +34,12 @@ export class MessageSocket {
     let messageInfo: MessageInfo;
     let userInfo: UserInfo;
 
+    // Do not send message to yourself
+    if (this.client.user.id === params.userId) {
+      response('error', Errors.CANNOT_SEND_MESSAGE);
+      return;
+    }
+
     try {
       const user = await User.findOne(params.userId);
       if (user === undefined) {
