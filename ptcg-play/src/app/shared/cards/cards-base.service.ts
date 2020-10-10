@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Card, StateSerializer } from 'ptcg-server';
 
 import { CardInfoPopupData, CardInfoPopupComponent } from './card-info-popup/card-info-popup.component';
+import { CardInfoListPopupComponent } from './card-info-list-popup/card-info-list-popup.component';
 import { CardInfoPaneAction } from './card-info-pane/card-info-pane.component';
 import { MatDialog } from '@angular/material/dialog';
 import { SessionService } from '../session/session.service';
@@ -47,8 +48,22 @@ export class CardsBaseService {
   }
 
   public showCardInfo(data: CardInfoPopupData = {}): Promise<CardInfoPaneAction> {
-
     const dialog = this.dialog.open(CardInfoPopupComponent, {
+      maxWidth: '100%',
+      width: '650px',
+      data
+    });
+
+    return dialog.afterClosed().toPromise()
+      .catch(() => undefined);
+  }
+
+  public showCardInfoList(data: CardInfoPopupData = {}): Promise<CardInfoPaneAction> {
+    if (data.cardList === undefined) {
+      return this.showCardInfo(data);
+    }
+
+    const dialog = this.dialog.open(CardInfoListPopupComponent, {
       maxWidth: '100%',
       width: '670px',
       data

@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Card, CardList } from 'ptcg-server';
-import { CardInfoPaneOptions, CardInfoPaneAction } from '../card-info-pane/card-info-pane.component';
+import { CardInfoPaneOptions } from '../card-info-pane/card-info-pane.component';
 
 export interface CardListPopupData {
   card?: Card;
@@ -19,7 +19,6 @@ export class CardListPopupComponent implements OnInit {
   public card: Card;
   public cardList: CardList;
   public facedown: boolean;
-  public allowReveal: boolean;
   public options: CardInfoPaneOptions;
 
   constructor(

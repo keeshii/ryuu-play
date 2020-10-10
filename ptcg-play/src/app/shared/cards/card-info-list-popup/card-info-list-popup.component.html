@@ -1,0 +1,25 @@
+<h2 mat-dialog-title>
+  List of cards
+</h2>
+
+<mat-dialog-content>
+  <ptcg-card-list-pane
+    [selected]="card"
+    [cardList]="cardList"
+    [facedown]="facedown"
+    (cardClick)="showCardInfo($event)">
+  </ptcg-card-list-pane>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <section class="ptcg-card-info-reveal-cards" *ngIf="allowReveal">
+    <mat-checkbox color="primary" name="reveal-card"
+      [checked]="!facedown" (change)="facedown = !facedown">
+      Reveal cards
+    </mat-checkbox>
+  </section>
+  <span class="ptcg-u-spacer"></span>
+  <button mat-raised-button (click)="close()">
+    Close
+  </button>
+</mat-dialog-actions>

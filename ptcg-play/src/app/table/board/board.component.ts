@@ -219,6 +219,10 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
     this.cardsBaseService.showCardInfo({ card, cardList });
   }
 
+  public onCardListClick(card: Card, cardList: CardList) {
+    this.cardsBaseService.showCardInfoList({ card, cardList });
+  }
+
   public onPrizeClick(player: Player, prize: CardList) {
     const owner = player.id === this.clientId;
     if (prize.cards.length === 0) {
@@ -233,7 +237,7 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
   public onDeckClick(card: Card, cardList: CardList) {
     const facedown = true;
     const allowReveal = !!this.gameState.replay;
-    this.cardsBaseService.showCardInfo({ card, cardList, allowReveal, facedown });
+    this.cardsBaseService.showCardInfoList({ card, cardList, allowReveal, facedown });
   }
 
   public onActiveClick(card: Card, cardList: CardList) {

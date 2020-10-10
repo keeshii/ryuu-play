@@ -61,7 +61,7 @@ export class CardInfoPopupComponent implements OnInit {
     }
   }
 
-  public close(result: CardInfoPaneAction = {}) {
+  public close(result?: CardInfoPaneAction) {
     this.dialogRef.close(result);
   }
 

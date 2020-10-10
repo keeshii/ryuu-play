@@ -44,7 +44,7 @@
     <ptcg-board-deck
       [player]="topPlayer" [clientId]="clientId"
       (deckClick)="onDeckClick($event, topPlayer?.deck)"
-      (discardClick)="onCardClick($event, topPlayer?.discard)">
+      (discardClick)="onCardListClick($event, topPlayer?.discard)">
     </ptcg-board-deck>
 
     <!-- Top Prizes -->
@@ -94,7 +94,7 @@
     <ptcg-board-deck
       [player]="bottomPlayer" [clientId]="clientId"
       (deckClick)="onDeckClick($event, bottomPlayer?.deck)"
-      (discardClick)="onCardClick($event, bottomPlayer?.discard)">
+      (discardClick)="onCardListClick($event, bottomPlayer?.discard)">
     </ptcg-board-deck>
 
     <!-- Prizes -->
