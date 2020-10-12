@@ -5,7 +5,7 @@
   <ptcg-avatar class="ptcg-user-avatar"
     [avatarFile]="user.avatarFile"
     [hoverable]="openUserPopup && user.userId"
-    (click)="showUserInfoPopup(user)">
+    [openAvatarPopup]="openUserPopup && user.userId">
   </ptcg-avatar>
 
   <div class="ptcg-user-info">

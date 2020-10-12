@@ -1,8 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { UserInfo } from 'ptcg-server';
 
-import { UserInfoPopupComponent } from '../user-info-popup/user-info-popup.component';
+import { UserInfoPopupService } from '../user-info-popup/user-info-popup.service';
 
 @Component({
   selector: 'ptcg-user-bar',
@@ -16,25 +15,18 @@ export class UserBarComponent implements OnInit {
   @Input() openUserPopup: boolean;
 
   constructor(
-    private dialog: MatDialog
+    private userInfoPopupService: UserInfoPopupService
   ) { }
 
   ngOnInit(): void {
   }
 
   public showUserInfoPopup(user: UserInfo) {
-    if (!this.openUserPopup || !this.user.userId) {
+    if (!this.openUserPopup || !user.userId) {
       return;
     }
 
-    const dialog = this.dialog.open(UserInfoPopupComponent, {
-      maxWidth: '100%',
-      width: '650px',
-      data: { user }
-    });
-
-    return dialog.afterClosed().toPromise()
-      .catch(() => undefined);
+    this.userInfoPopupService.showUserInfo(user);
   }
 
 }

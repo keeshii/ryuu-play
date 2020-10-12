@@ -46,6 +46,10 @@ $ptcg-player-bar-active-divider-size: 2px;
   }
 }
 
+.ptcg-player-name .clickable {
+  cursor: pointer;
+}
+
 .ptcg-empty-info {
   padding: $ptcg-sidebar-tiny-padding;
 }

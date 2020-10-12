@@ -11,7 +11,12 @@
     <div *ngIf="!isEmpty; then playerInfo else emptyInfo"></div>
 
     <ng-template #playerInfo>
-      <h4>{{ name }}</h4>
+      <h4 class="ptcg-player-name">
+        <span (click)="onUserNameClick()"
+          [class.clickable]="userInfo$ | async">
+          {{ name }}
+        </span>
+      </h4>
       <div class="ptcg-player-rank">
         <ptcg-rank *ngIf="userInfo$ | async as userInfo; else disconnected"
           [ranking]="userInfo.ranking"

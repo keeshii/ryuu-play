@@ -7,6 +7,7 @@ import { GameService } from '../../../api/services/game.service';
 import { LocalGameState, Session } from '../../../shared/session/session.interface';
 import { SessionService } from '../../../shared/session/session.service';
 import { takeUntilDestroyed } from '../../../shared/operators/take-until-destroyed';
+import { UserInfoPopupService } from '../../../shared/user-info/user-info-popup/user-info-popup.service';
 
 @Component({
   selector: 'ptcg-player-bar',
@@ -36,7 +37,8 @@ export class PlayerBarComponent implements OnInit, OnDestroy, OnChanges {
   constructor(
     private chooseAvatarPopupService: ChooseAvatarPopupService,
     private gameService: GameService,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private userInfoPopupService: UserInfoPopupService
   ) { }
 
   ngOnInit() { }
@@ -65,6 +67,16 @@ export class PlayerBarComponent implements OnInit, OnDestroy, OnChanges {
         }
       }
     });
+  }
+
+  public onUserNameClick() {
+    // Find user of the current player
+    const session = this.sessionService.session;
+    const user = this.getUserInfo(session, this.player, this.replayPlayer);
+    if (user === undefined) {
+      return;
+    }
+    this.userInfoPopupService.showUserInfo(user);
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
