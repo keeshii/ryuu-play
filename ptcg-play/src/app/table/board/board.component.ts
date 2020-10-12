@@ -179,18 +179,7 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
       ? player.active
       : player.bench[item.index];
 
-    let tool: Card | undefined;
-    if (cardList.tool) {
-      tool = cardList.cards.find(c => cardList.tool.fullName === c.fullName);
-    }
-
-    const cards = cardList.cards
-      .filter(c => c.superType === SuperType.POKEMON)
-      .filter(c => c !== tool) as PokemonCard[];
-
-    cards.sort((c1, c2) => c2.stage - c1.stage);
-
-    const pokemonCard = cards.pop();
+    const pokemonCard = cardList.getPokemonCard();
     return pokemonCard ? this.cardsBaseService.getScanUrl(pokemonCard) : undefined;
   }
 
