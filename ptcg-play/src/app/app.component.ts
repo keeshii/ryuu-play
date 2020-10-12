@@ -1,13 +1,17 @@
 import { Component, OnDestroy, OnInit, HostListener, ElementRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { UserInfo } from 'ptcg-server';
-import { Observable } from 'rxjs';
+import { Observable, interval } from 'rxjs';
 import { Router } from '@angular/router';
+import { switchMap, filter } from 'rxjs/operators';
 
 import { AlertService } from './shared/alert/alert.service';
+import { LoginRememberService } from './login/login-remember.service';
+import { LoginService } from './api/services/login.service';
 import { SessionService } from './shared/session/session.service';
 import { SocketService } from './api/socket.service';
 import { takeUntilDestroyed } from './shared/operators/take-until-destroyed';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'ptcg-app',
@@ -24,6 +28,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private alertService: AlertService,
     private dialog: MatDialog,
     private elementRef: ElementRef<HTMLElement>,
+    private loginService: LoginService,
+    private loginRememberService: LoginRememberService,
     private router: Router,
     private sessionService: SessionService,
     private socketService: SocketService,
@@ -58,6 +64,20 @@ export class AppComponent implements OnInit, OnDestroy {
           await this.alertService.alert('Disconnected from the server.');
           this.sessionService.clear();
           this.router.navigate(['/login']);
+        }
+      }
+    });
+
+    // Refresh token with given interval
+    interval(environment.refreshTokenInterval).pipe(
+      takeUntilDestroyed(this),
+      filter(() => !!this.sessionService.session.authToken),
+      switchMap(() => this.loginService.refreshToken())
+    ).subscribe({
+      next: response => {
+        this.sessionService.session.authToken = response.token;
+        if (this.loginRememberService.token) {
+          this.loginRememberService.rememberToken(response.token);
         }
       }
     });

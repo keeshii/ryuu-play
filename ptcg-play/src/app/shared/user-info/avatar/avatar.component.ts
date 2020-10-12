@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
+import { ApiService } from '../../../api/api.service';
 import { AvatarPopupComponent } from '../avatar-popup/avatar-popup.component';
 import { SessionService } from '../../session/session.service';
 import { environment } from '../../../../environments/environment';
@@ -31,7 +32,8 @@ export class AvatarComponent implements OnInit {
     const config = this.sessionService.session.config;
     const avatarUrl = config && config.avatarsUrl || '';
 
-    this.imageUrl = environment.apiUrl + avatarUrl
+    const apiUrl = this.apiService.getApiUrl();
+    this.imageUrl = apiUrl + avatarUrl
       .replace('{name}', fileName);
   }
 
@@ -41,6 +43,7 @@ export class AvatarComponent implements OnInit {
   public imageUrl: string;
 
   constructor(
+    private apiService: ApiService,
     private dialog: MatDialog,
     private sessionService: SessionService
   ) { }

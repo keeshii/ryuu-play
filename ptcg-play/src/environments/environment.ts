@@ -7,7 +7,9 @@ export const environment = {
   timeout: 5000,
   production: false,
   apiVersion: 1,
-  defaultPageSize: 50
+  defaultPageSize: 50,
+  allowServerChange: true,
+  refreshTokenInterval: 60 * 60 * 1000
 };
 
 /*

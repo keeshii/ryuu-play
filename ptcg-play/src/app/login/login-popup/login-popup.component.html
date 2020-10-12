@@ -48,8 +48,8 @@
 
 <mat-dialog-actions>
   <div class="mat-small">
-    <a class="ptcg-login-popup-link" (click)="changeServer()"
-       [class.disabled]="loading">Change server address</a>
+    <a class="ptcg-login-popup-link" *ngIf="allowServerChange"
+       [class.disabled]="loading" (click)="changeServer()">Change server address</a>
     <a class="ptcg-login-popup-link" (click)="register()">Create a new account</a>
     <a class="ptcg-login-popup-link" (click)="resetPassword()">I forgot my password</a>
   </div>

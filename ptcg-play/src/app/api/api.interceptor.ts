@@ -1,10 +1,13 @@
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Observable, throwError } from 'rxjs';
 import { catchError, timeout } from 'rxjs/operators';
 
 import { ApiError, ApiErrorEnum } from './api.error';
 import { AlertService } from '../shared/alert/alert.service';
+import { Router } from '@angular/router';
+import { SessionService } from '../shared/session/session.service';
 import { environment } from '../../environments/environment';
 
 @Injectable()
@@ -12,23 +15,16 @@ export class ApiInterceptor implements HttpInterceptor {
 
   constructor(
     private alertService: AlertService,
+    private dialog: MatDialog,
+    private router: Router,
+    private sessionService: SessionService,
   ) { }
 
-  private tokenAlert() {
-    /*const alert = this.alertCtrl.create({
-      title: this.translate.instant('API_ERROR_AUTH_TITLE'),
-      subTitle: this.translate.instant('API_ERROR_AUTH_SUBTITLE'),
-        buttons: [{
-          text: this.translate.instant('LABEL_IGNORE'),
-          role: 'cancel'
-        }, {
-          text: this.translate.instant('LABEL_LOGOUT'),
-          handler: () => {
-            SessionSubject.clearAll();
-          }
-        }]
-    });
-    alert.present();*/
+  private async tokenAlert() {
+    this.dialog.closeAll();
+    await this.alertService.alert('Session expired.');
+    this.sessionService.clear();
+    this.router.navigate(['/login']);
   }
 
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {

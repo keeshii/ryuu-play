@@ -5,6 +5,7 @@ import { finalize } from 'rxjs/operators';
 import { ApiError, ApiErrorEnum } from 'src/app/api/api.error';
 import { AlertService } from 'src/app/shared/alert/alert.service';
 import { ApiService } from '../../api/api.service';
+import { LoginRememberService } from '../login-remember.service';
 import { SocketService } from '../../api/socket.service';
 import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed';
 import { environment } from '../../../environments/environment';
@@ -24,6 +25,7 @@ export class ChangeServerPopupComponent implements OnInit, OnDestroy {
     private alertService: AlertService,
     private apiService: ApiService,
     private dialogRef: MatDialogRef<ChangeServerPopupComponent>,
+    private loginRememberService: LoginRememberService,
     private socketService: SocketService
   ) {
     this.value = this.apiService.getApiUrl();
@@ -49,6 +51,10 @@ export class ChangeServerPopupComponent implements OnInit, OnDestroy {
           this.invalidValue = newApiUrl;
           return;
         }
+
+        const rememberApiUrl = newApiUrl !== environment.apiUrl ? newApiUrl : undefined;
+        this.loginRememberService.rememberApiUrl(rememberApiUrl);
+
         this.alertService.toast('CHANGE_SERVER_ADDRESS_SUCCESS');
         this.apiService.setApiUrl(newApiUrl);
         this.socketService.setServerUrl(newApiUrl);

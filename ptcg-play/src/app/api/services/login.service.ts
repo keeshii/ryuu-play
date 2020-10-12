@@ -26,59 +26,70 @@ export class LoginService {
     private socketService: SocketService
   ) {}
 
-  public login(name: string, password: string, loginAborted$: Observable<void>) {
+  public login(name: string, password: string, loginAborted$: Observable<void>): Observable<LoginResponse> {
     return this.api.post<LoginResponse>('/v1/login', { name, password }).pipe(
       takeUntil(loginAborted$),
-      switchMap(response => {
-        this.sessionService.session.authToken = response.token;
+      switchMap(response => this.processLoginResponse(response, loginAborted$))
+    );
+  }
 
-        const apiVersion = response.config.apiVersion;
-        if (environment.apiVersion !== apiVersion) {
-          throw new ApiError(ApiErrorEnum.ERROR_UNSUPPORTED_API_VERSION);
-        }
+  public tokenLogin(token: string, loginAborted$: Observable<void>): Observable<LoginResponse> {
+    this.sessionService.session.authToken = token;
+    return this.api.get<LoginResponse>('/v1/login/refreshToken').pipe(
+      takeUntil(loginAborted$),
+      switchMap(response => this.processLoginResponse(response, loginAborted$))
+    );
+  }
 
-        return combineLatest([
-          this.profileService.getMe(),
-          this.messageService.getConversations(),
-          this.cardsService.getAll(),
-          this.enableSocket(response.token)
-        ]).pipe(
-          takeUntil(loginAborted$),
-          catchError(error => {
-            this.sessionService.session.authToken = '';
-            throw error;
-          }),
-          map(([me, conversations, cards]) => {
+  private processLoginResponse(response: LoginResponse, loginAborted$: Observable<void>): Observable<LoginResponse> {
+    this.sessionService.session.authToken = response.token;
 
-            // Fetch logged user data
-            const users = { ...this.sessionService.session.users };
-            users[me.user.userId] = me.user;
-            this.sessionService.set({
-              users,
-              loggedUserId: me.user.userId,
-            });
+    const apiVersion = response.config.apiVersion;
+    if (environment.apiVersion !== apiVersion) {
+      throw new ApiError(ApiErrorEnum.ERROR_UNSUPPORTED_API_VERSION);
+    }
 
-            // Fetch user's conversations
-            this.messageService.setSessionConversations(
-              conversations.conversations,
-              conversations.users
-            );
+    return combineLatest([
+      this.profileService.getMe(),
+      this.messageService.getConversations(),
+      this.cardsService.getAll(),
+      this.waitForSocketConnection(response.token)
+    ]).pipe(
+      takeUntil(loginAborted$),
+      catchError(error => {
+        this.sessionService.session.authToken = '';
+        throw error;
+      }),
+      map(([me, conversations, cards]) => {
 
-            // Fetch cards data
-            this.cardsBaseService.setCards(cards.cards);
+        // Fetch logged user data
+        const users = { ...this.sessionService.session.users };
+        users[me.user.userId] = me.user;
+        this.sessionService.set({
+          users,
+          loggedUserId: me.user.userId,
+        });
 
-            // Store data in the session
-            this.sessionService.set({
-              authToken: response.token,
-              config: response.config,
-            });
+        // Fetch user's conversations
+        this.messageService.setSessionConversations(
+          conversations.conversations,
+          conversations.users
+        );
 
-            return response;
-        }));
+        // Fetch cards data
+        this.cardsBaseService.setCards(cards.cards);
+
+        // Store data in the session
+        this.sessionService.set({
+          authToken: response.token,
+          config: response.config,
+        });
+
+        return response;
     }));
   }
 
-  private enableSocket(token: string): Observable<boolean> {
+  private waitForSocketConnection(token: string): Observable<boolean> {
     this.socketService.enable(token);
     return this.socketService.connection.pipe(
       filter(connected => connected),
@@ -94,11 +105,15 @@ export class LoginService {
       '/v1/login/register', { name, password, email, serverPassword: code });
   }
 
-  public info() {
+  public info(): Observable<InfoResponse> {
     return this.api.get<InfoResponse>('/v1/login/info');
   }
 
-  public logout() {
+  public refreshToken(): Observable<LoginResponse> {
+    return this.api.get<LoginResponse>('/v1/login/refreshToken');
+  }
+
+  public logout(): void {
     this.sessionService.clear();
   }
 

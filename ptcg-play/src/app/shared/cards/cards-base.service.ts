@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Card, StateSerializer } from 'ptcg-server';
 
+import { ApiService } from '../../api/api.service';
 import { CardInfoPopupData, CardInfoPopupComponent } from './card-info-popup/card-info-popup.component';
 import { CardInfoListPopupComponent } from './card-info-list-popup/card-info-list-popup.component';
 import { CardInfoPaneAction } from './card-info-pane/card-info-pane.component';
@@ -17,6 +18,7 @@ export class CardsBaseService {
   private names: string[] = [];
 
   constructor(
+    private apiService: ApiService,
     private dialog: MatDialog,
     private sessionService: SessionService
   ) { }
@@ -38,7 +40,8 @@ export class CardsBaseService {
   public getScanUrl(card: Card): string {
     const config = this.sessionService.session.config;
     const scansUrl = config && config.scansUrl || '';
-    return environment.apiUrl + scansUrl
+    const apiUrl = this.apiService.getApiUrl();
+    return apiUrl + scansUrl
       .replace('{set}', card.set)
       .replace('{name}', card.fullName);
   }

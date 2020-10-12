@@ -8,7 +8,9 @@ import { AlertService } from '../../shared/alert/alert.service';
 import { ApiError } from '../../api/api.error';
 import { ChangeServerPopupComponent } from '../change-server-popup/change-server-popup.component';
 import { LoginService } from '../../api/services/login.service';
+import { LoginRememberService } from '../login-remember.service';
 import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'ptcg-login-popup',
@@ -21,11 +23,13 @@ export class LoginPopupComponent implements OnDestroy {
   public name: string;
   public password: string;
   public rememberMe = true;
+  public allowServerChange = environment.allowServerChange;
   private loginAborted$ = new Subject<void>();
 
   constructor(
     private alertService: AlertService,
     private loginService: LoginService,
+    private loginRememberService: LoginRememberService,
     private dialog: MatDialog,
     public dialogRef: MatDialogRef<LoginPopupComponent>,
     private router: Router,
@@ -39,8 +43,11 @@ export class LoginPopupComponent implements OnDestroy {
       takeUntilDestroyed(this)
     )
       .subscribe({
-        next: () => {
+        next: response => {
           this.dialogRef.close();
+          if (this.rememberMe) {
+            this.loginRememberService.rememberToken(response.token);
+          }
           this.router.navigate([this.data.redirectUrl]);
         },
         error: (error: ApiError) => {

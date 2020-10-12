@@ -5,6 +5,7 @@ import { UserInfo } from 'ptcg-server';
 import { map } from 'rxjs/internal/operators/map';
 
 import { LoginPopupService } from '../../login/login-popup/login-popup.service';
+import { LoginRememberService } from '../../login/login-remember.service';
 import { SessionService } from '../../shared/session/session.service';
 import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed';
 
@@ -22,6 +23,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   constructor(
     private loginPopupService: LoginPopupService,
+    private loginRememberService: LoginRememberService,
     private router: Router,
     private sessionService: SessionService
   ) {
@@ -46,6 +48,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   }
 
   public logout() {
+    this.loginRememberService.rememberToken();
     this.sessionService.clear();
     this.router.navigate(['/login']);
   }
