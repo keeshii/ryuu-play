@@ -6,4 +6,9 @@
 
 .ptcg-login-popup-link {
   display: block;
+
+  &.disabled {
+    cursor: auto;
+    text-decoration: none;
+  }
 }

@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
-import { map, switchMap, catchError } from 'rxjs/operators';
-import { combineLatest } from 'rxjs';
+import { map, switchMap, catchError, timeout, filter, takeUntil } from 'rxjs/operators';
+import { combineLatest, Observable } from 'rxjs';
 
 import { ApiError, ApiErrorEnum } from '../api.error';
 import { ApiService } from '../api.service';
 import { CardsBaseService } from '../../shared/cards/cards-base.service';
 import { CardsService } from './cards.service';
-import { LoginResponse } from '../interfaces/login.interface';
+import { LoginResponse, InfoResponse } from '../interfaces/login.interface';
 import { MessageService } from './message.service';
 import { ProfileService } from './profile.service';
 import { SessionService } from '../../shared/session/session.service';
+import { SocketService } from '../socket.service';
 import { environment } from '../../../environments/environment';
 
 @Injectable()
@@ -21,11 +22,13 @@ export class LoginService {
     private cardsService: CardsService,
     private messageService: MessageService,
     private profileService: ProfileService,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private socketService: SocketService
   ) {}
 
-  public login(name: string, password: string) {
+  public login(name: string, password: string, loginAborted$: Observable<void>) {
     return this.api.post<LoginResponse>('/v1/login', { name, password }).pipe(
+      takeUntil(loginAborted$),
       switchMap(response => {
         this.sessionService.session.authToken = response.token;
 
@@ -37,8 +40,10 @@ export class LoginService {
         return combineLatest([
           this.profileService.getMe(),
           this.messageService.getConversations(),
-          this.cardsService.getAll()
+          this.cardsService.getAll(),
+          this.enableSocket(response.token)
         ]).pipe(
+          takeUntil(loginAborted$),
           catchError(error => {
             this.sessionService.session.authToken = '';
             throw error;
@@ -73,9 +78,24 @@ export class LoginService {
     }));
   }
 
+  private enableSocket(token: string): Observable<boolean> {
+    this.socketService.enable(token);
+    return this.socketService.connection.pipe(
+      filter(connected => connected),
+      timeout(environment.timeout),
+      catchError(error => {
+        this.socketService.disable();
+        throw error;
+      }));
+  }
+
   public register(name: string, password: string, email: string, code?: string) {
     return this.api.post<LoginResponse>(
       '/v1/login/register', { name, password, email, serverPassword: code });
+  }
+
+  public info() {
+    return this.api.get<InfoResponse>('/v1/login/info');
   }
 
   public logout() {

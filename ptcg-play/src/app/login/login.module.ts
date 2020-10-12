@@ -8,12 +8,14 @@ import { RegisterComponent } from './register/register.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { ServerPasswordPopupComponent } from './server-password-popup/server-password-popup.component';
 import { ServerPasswordPopupService } from './server-password-popup/server-password-popup.service';
+import { ChangeServerPopupComponent } from './change-server-popup/change-server-popup.component';
 
 @NgModule({
   imports: [
     SharedModule
   ],
   declarations: [
+    ChangeServerPopupComponent,
     LoginPopupComponent,
     RegisterComponent,
     ResetPasswordComponent,
@@ -21,6 +23,7 @@ import { ServerPasswordPopupService } from './server-password-popup/server-passw
     LoginComponent
   ],
   entryComponents: [
+    ChangeServerPopupComponent,
     LoginPopupComponent,
     ServerPasswordPopupComponent
   ],

@@ -1,0 +1,31 @@
+<h2 mat-dialog-title>Change server address</h2>
+
+<mat-dialog-content>
+
+  <mat-progress-bar *ngIf="loading" color="accent" mode="indeterminate" class="ptcg-u-top">
+  </mat-progress-bar>
+
+  <form #form="ngForm" autocomplete="off">
+
+    <!-- Number -->
+    <mat-form-field>
+      <mat-label>Server address</mat-label>
+      <input matInput type="text" name="value" placeholder="Server address"
+        ptcgAddressValidator [ptcgInvalidValue]="invalidValue" required
+        [disabled]="loading" [(ngModel)]="value" #inputField="ngModel">
+      <mat-error *ngIf="!inputField.pristine && inputField.invalid">
+        <div *ngIf="inputField.errors?.address">VALIDATION_INVALID_ADDRESS</div>
+        <div *ngIf="inputField.errors?.invalidValue">CANNOT_CONNECT_TO_SERVER</div>
+      </mat-error>
+    </mat-form-field>
+
+  </form>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" (click)="confirm()" [disabled]="loading || form.invalid">
+    OK
+  </button>
+</mat-dialog-actions>

@@ -5,3 +5,7 @@ export interface LoginResponse extends Response {
   token: string;
   config: ServerConfig;
 }
+
+export interface InfoResponse extends Response {
+  config: ServerConfig;
+}

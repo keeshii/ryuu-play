@@ -2,13 +2,16 @@
 
 <mat-dialog-content class="ptcg-login-popup-content">
 
+  <mat-progress-bar *ngIf="loading" color="accent" mode="indeterminate" class="ptcg-u-top">
+  </mat-progress-bar>
+
   <form #form="ngForm">
 
     <!-- Username -->
     <mat-form-field>
       <mat-label>Username</mat-label>
       <input matInput name="name" placeholder="Username" ptcgNameValidator
-        [(ngModel)]="name" #nameField="ngModel">
+        [disabled]="loading" [(ngModel)]="name" #nameField="ngModel">
       <mat-error *ngIf="!nameField.pristine && nameField.invalid">
         Invalid name
       </mat-error>
@@ -19,17 +22,24 @@
       <mat-label>Password</mat-label>
       <input type="password" matInput name="password" placeholder="Password"
         ptcgPasswordValidator password-min-length="1"
-        [(ngModel)]="password" #passwordField="ngModel">
+        [disabled]="loading" [(ngModel)]="password" #passwordField="ngModel">
       <mat-error *ngIf="!nameField.pristine && nameField.invalid">
         Invalid password
       </mat-error>
     </mat-form-field>
 
+    <section class="ptcg-game-rule-checkbox">
+      <mat-checkbox color="primary" name="remember"
+        [disabled]="loading" [(ngModel)]="rememberMe">
+        Remember me
+      </mat-checkbox>
+    </section>
+
   </form>
 
   <p>
     <button mat-raised-button color="primary" (click)="login()"
-      [disabled]="form.invalid">
+      [disabled]="loading || form.invalid">
       Sign in
     </button>
   </p>
@@ -38,6 +48,8 @@
 
 <mat-dialog-actions>
   <div class="mat-small">
+    <a class="ptcg-login-popup-link" (click)="changeServer()"
+       [class.disabled]="loading">Change server address</a>
     <a class="ptcg-login-popup-link" (click)="register()">Create a new account</a>
     <a class="ptcg-login-popup-link" (click)="resetPassword()">I forgot my password</a>
   </div>

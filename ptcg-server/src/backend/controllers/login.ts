@@ -88,6 +88,11 @@ export class Login extends Controller {
     res.send({ok: true});
   }
 
+  @Get('/info')
+  public onInfo(req: Request, res: Response) {
+    res.send({ok: true, config: this.getServerConfig()});
+  }
+
   private getServerConfig(): ServerConfig {
     return {
       apiVersion: 1,

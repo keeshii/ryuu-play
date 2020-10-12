@@ -18,6 +18,10 @@
       }
     }
 
+    .ptcg-login-popup-link.disabled {
+      color: mat-color($foreground, disabled-text);
+    }
+
   }
 }
 

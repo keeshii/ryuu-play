@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, throwError, of } from 'rxjs';
+import { timeout, catchError } from 'rxjs/operators';
 import * as io from 'socket.io-client';
 
+import { ApiError, ApiErrorEnum } from './api.error';
 import { environment } from '../../environments/environment';
-import {ApiError, ApiErrorEnum} from './api.error';
-import {timeout, catchError} from 'rxjs/operators';
 
 interface SocketResponse<T> {
   message: string;
@@ -20,7 +20,20 @@ export class SocketService {
   private connectionSubject = new BehaviorSubject<boolean>(false);
 
   constructor() {
-    this.socket = io.connect(environment.apiUrl, {
+    this.setServerUrl(environment.apiUrl);
+  }
+
+  public setServerUrl(apiUrl: string) {
+    if (this.enabled) {
+      this.disable();
+    }
+
+    if (this.socket) {
+      this.socket.off('connect');
+      this.socket.off('disconnect');
+    }
+
+    this.socket = io.connect(apiUrl, {
       autoConnect: false,
       reconnection: false,
       query: {}

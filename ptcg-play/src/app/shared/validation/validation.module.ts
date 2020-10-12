@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 
+import { AddressValidatorDirective } from './address.validator';
 import { EmailValidatorDirective } from './email.validator';
 import { ErrorValidatorDirective } from './error.validator';
 import { FileSizeValidatorDirective } from './file-size.validator';
@@ -11,6 +12,7 @@ import { PasswordValidatorDirective } from './password.validator';
 
 @NgModule({
   declarations: [
+    AddressValidatorDirective,
     EmailValidatorDirective,
     ErrorValidatorDirective,
     FileSizeValidatorDirective,
@@ -21,6 +23,7 @@ import { PasswordValidatorDirective } from './password.validator';
     PasswordValidatorDirective
   ],
   exports: [
+    AddressValidatorDirective,
     EmailValidatorDirective,
     ErrorValidatorDirective,
     FileSizeValidatorDirective,
