@@ -56,6 +56,10 @@ export class MessagesComponent implements OnInit, OnDestroy {
       takeUntilDestroyed(this)
     ).subscribe({
       next: conversations => {
+        const exists = this.sessionService.session.users[this.userId] !== undefined;
+        if (!exists) {
+          this.userId = 0;
+        }
         if (this.userId === 0 && conversations.length > 0) {
           const c = conversations[0];
           let userId = c.user1Id;
@@ -93,8 +97,10 @@ export class MessagesComponent implements OnInit, OnDestroy {
       this.sessionService.set({ conversations });
     }
 
+    const userExists = this.sessionService.session.users[user2Id] !== undefined;
+
     // If conversation does not exist, create new one.
-    if (index === -1) {
+    if (index === -1 && userExists) {
       const newConversation: ConversationInfo = {
         user1Id,
         user2Id,
@@ -109,6 +115,12 @@ export class MessagesComponent implements OnInit, OnDestroy {
       this.sessionService.set({
         conversations: [ newConversation, ...conversations ]
       });
+    }
+
+    // User does not exists
+    if (index === -1 && !userExists) {
+      // Redirect to the another conversation
+      this.sessionService.set({ conversations: [ ...conversations ] });
     }
   }
 

@@ -2,7 +2,7 @@
   <ptcg-card [card]="card.card" [dragSource]="source" [noHTML5Preview]="true"
     (click)="onCardClick()">
     <ptcg-badge color="accent" class="ptcg-deck-card-count mat-title"
-      *ngIf="showCardCount || card.count > 1"
+      *ngIf="showCardCount && card.count > 0"
       (click)="onCountClick($event)">
       {{ card.count }}x
     </ptcg-badge>

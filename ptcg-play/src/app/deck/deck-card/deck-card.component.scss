@@ -17,6 +17,7 @@ $ptcg-deck-card-width: map-get($ptcg-size, card) + map-get($padding, large);
 
 ptcg-card {
   display: block;
+  touch-action: none;
   width: map-get($ptcg-size, card);
 }
 

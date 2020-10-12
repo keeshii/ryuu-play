@@ -67,6 +67,7 @@ export class RankingComponent implements OnInit, OnDestroy {
         this.pageIndex = search.page;
         this.ranking = response.ranking;
         this.rankingTotal = response.total;
+        this.updateSessionUsers(response.ranking);
       },
       error: (error: ApiError) => {
         this.loading = false;
@@ -96,6 +97,14 @@ export class RankingComponent implements OnInit, OnDestroy {
     }
     this.pageSizeOptions = [ pageSize ];
     this.pageSize = pageSize;
+  }
+
+  private updateSessionUsers(ranking: RankingInfo[]) {
+    const users = this.sessionService.session.users;
+    for (const row of ranking) {
+      users[row.user.userId] = row.user;
+    }
+    this.sessionService.set({ users });
   }
 
   public onSearch(value: string) {

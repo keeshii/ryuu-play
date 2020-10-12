@@ -62,6 +62,7 @@
         [dropTarget]="bottomActiveTarget"
         ptcgDropHighlight="outside" [ptcgDropHighlightVisible]="bottomActiveHighlight$ | async">
         <ptcg-board-card
+          [class.draggable]="!gameState.deleted && bottomPlayer?.id === clientId && bottomPlayer?.active.cards.length > 0"
           [dragSource]="bottomActive.source" [noHTML5Preview]="true"
           [cardList]="bottomPlayer?.active" [owner]="bottomPlayer?.id === clientId"
           (cardClick)="onActiveClick($event, bottomPlayer?.active)">
@@ -75,6 +76,7 @@
         [dropTarget]="bottomBenchTarget[slot.index]"
         ptcgDropHighlight="outside" [ptcgDropHighlightVisible]="bottomBenchHighlight$[slot.index] | async">
         <ptcg-board-card
+          [class.draggable]="!gameState.deleted && bottomPlayer?.id === clientId && bottomPlayer?.bench[slot.index].cards.length > 0"
           [dragSource]="slot.source" [noHTML5Preview]="true"
           [cardList]="bottomPlayer?.bench[slot.index]" [owner]="bottomPlayer?.id === clientId"
           (cardClick)="onBenchClick($event, bottomPlayer?.bench[slot.index], slot.index)">

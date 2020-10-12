@@ -70,6 +70,10 @@ $board-min-height: calc(6 * var(--card-size) * #{$card-aspect-ratio} + 2 * #{map
   width: 100%;
 }
 
+ptcg-board-card.draggable {
+  touch-action: none;
+}
+
 ptcg-board-prizes {
   grid-area: prizes;
 }

@@ -7,6 +7,10 @@ ptcg-card {
   &.unavailable {
     opacity: $ptcg-disabled-opacity;
   }
+
+  &:not(.unavailable) {
+    touch-action: none;
+  }
 }
 
 skyhook-sortable-list {

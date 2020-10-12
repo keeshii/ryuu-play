@@ -50,6 +50,10 @@
               [routerLink]="['/profile', rank.user.userId]">
               Show profile
             </button>
+            <button mat-menu-item *ngIf="rank.user.userId !== loggedUserId"
+              [routerLink]="['/message', rank.user.userId]">
+              Send message
+            </button>
           </mat-menu>
         </td>
       </ng-container>

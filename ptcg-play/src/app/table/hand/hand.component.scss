@@ -23,6 +23,10 @@ skyhook-sortable-list {
 ptcg-card {
   flex: 0 0 auto;
   width: var(--card-size);
+
+  &.draggable {
+    touch-action: none;
+  }
 }
 
 ptcg-card:first-child {

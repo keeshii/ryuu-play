@@ -14,6 +14,7 @@
           [dragSource]="render.source" [noHTML5Preview]="true"
           [card]="context.data.card"
           (click)="showCardInfo(context.data.card)"
+          [class.draggable]="!gameState.deleted && player?.id === clientId"
           [class.placeholder]="render.isDragging$ | async"
           [class.cardback]="isFaceDown">
         </ptcg-card>
