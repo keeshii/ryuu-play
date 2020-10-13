@@ -19,6 +19,12 @@
     <allow-intent href="geo:*" />
     <platform name="android">
         <allow-intent href="market:*" />
+	<icon background="res/drawable/ic_launcher_background.xml" density="ldpi" foreground="res/mipmap-mdpi/ic_launcher_foreground.png" src="res/mipmap-mdpi/ic_launcher.png" />
+	<icon background="res/drawable/ic_launcher_background.xml" density="mdpi" foreground="res/mipmap-mdpi/ic_launcher_foreground.png" src="res/mipmap-mdpi/ic_launcher.png" />
+	<icon background="res/drawable/ic_launcher_background.xml" density="hdpi" foreground="res/mipmap-hdpi/ic_launcher_foreground.png" src="res/mipmap-hdpi/ic_launcher.png" />
+	<icon background="res/drawable/ic_launcher_background.xml" density="xhdpi" foreground="res/mipmap-xhdpi/ic_launcher_foreground.png" src="res/mipmap-xhdpi/ic_launcher.png" />
+	<icon background="res/drawable/ic_launcher_background.xml" density="xxhdpi" foreground="res/mipmap-xxhdpi/ic_launcher_foreground.png" src="res/mipmap-xxhdpi/ic_launcher.png" />
+	<icon background="res/drawable/ic_launcher_background.xml" density="xxxhdpi" foreground="res/mipmap-xxxhdpi/ic_launcher_foreground.png" src="res/mipmap-xxxhdpi/ic_launcher.png" />
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />
