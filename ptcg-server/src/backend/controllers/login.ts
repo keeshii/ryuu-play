@@ -5,10 +5,13 @@ import { Errors } from '../common/errors';
 import { LoginRequest, RegisterRequest, ServerConfig } from '../interfaces';
 import { Md5 } from '../../utils/md5';
 import { User } from '../../storage';
+import { RateLimit } from '../common/rate-limit';
 import { config } from '../../config';
 
 
 export class Login extends Controller {
+
+  private rateLimit = RateLimit.getInstance();
 
   @Post('/register')
   @Validate({
@@ -25,9 +28,16 @@ export class Login extends Controller {
       return;
     }
 
+    if (this.rateLimit.isLimitExceeded(req.ip)) {
+      res.status(400);
+      res.send({error: Errors.REQUESTS_LIMIT_REACHED});
+      return;
+    }
+
     if (config.backend.serverPassword
       && config.backend.serverPassword !== body.serverPassword
     ) {
+      this.rateLimit.increment(req.ip);
       res.status(400);
       res.send({error: Errors.REGISTER_INVALID_SERVER_PASSWORD});
       return;
@@ -44,6 +54,9 @@ export class Login extends Controller {
       res.send({error: Errors.REGISTER_EMAIL_EXISTS});
       return;
     }
+
+    // Don't allow to create to many users
+    this.rateLimit.increment(req.ip);
 
     const user = new User();
     user.name = body.name;
@@ -64,7 +77,14 @@ export class Login extends Controller {
     const body: LoginRequest = req.body;
     const user = await User.findOne({name: body.name});
 
+    if (this.rateLimit.isLimitExceeded(req.ip)) {
+      res.status(400);
+      res.send({error: Errors.REQUESTS_LIMIT_REACHED});
+      return;
+    }
+
     if (user === undefined || user.password !== Md5.init(body.password)) {
+      this.rateLimit.increment(req.ip);
       res.status(400);
       res.send({error: Errors.LOGIN_INVALID});
       return;

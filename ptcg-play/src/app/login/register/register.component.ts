@@ -72,6 +72,9 @@ export class RegisterComponent implements OnInit, OnDestroy {
         this.invalidEmail = this.email;
         break;
 
+      case ApiErrorEnum.ERROR_REQUESTS_LIMIT_REACHED:
+        break;
+
       default:
         this.alertService.error('INVALID_SERVER_RESPONSE');
         break;

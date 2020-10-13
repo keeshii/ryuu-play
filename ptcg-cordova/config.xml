@@ -19,6 +19,9 @@
     <allow-intent href="geo:*" />
     <platform name="android">
         <allow-intent href="market:*" />
+        <edit-config file="AndroidManifest.xml" mode="merge" target="/manifest/application">
+            <application android:usesCleartextTraffic="true" />
+        </edit-config>
 	<icon background="res/drawable/ic_launcher_background.xml" density="ldpi" foreground="res/mipmap-mdpi/ic_launcher_foreground.png" src="res/mipmap-mdpi/ic_launcher.png" />
 	<icon background="res/drawable/ic_launcher_background.xml" density="mdpi" foreground="res/mipmap-mdpi/ic_launcher_foreground.png" src="res/mipmap-mdpi/ic_launcher.png" />
 	<icon background="res/drawable/ic_launcher_background.xml" density="hdpi" foreground="res/mipmap-hdpi/ic_launcher_foreground.png" src="res/mipmap-hdpi/ic_launcher.png" />

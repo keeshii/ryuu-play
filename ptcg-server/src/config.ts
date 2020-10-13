@@ -14,7 +14,9 @@ export const config = {
     avatarFileSize: 256 * 1024,
     avatarMinSize: 64,
     avatarMaxSize: 512,
-    replayFileSize: 512 * 1024
+    replayFileSize: 512 * 1024,
+    rateLimitCount: 10,
+    rateLimitTime: 60 * 60 * 1000
   },
   storage: {
     type: 'mysql',

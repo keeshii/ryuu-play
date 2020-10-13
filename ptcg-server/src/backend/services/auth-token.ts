@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { Errors } from '../common/errors';
 import { Md5 } from '../../utils/md5';
+import { RateLimit } from '../common/rate-limit';
 import { config } from '../../config';
 
 
@@ -31,6 +32,7 @@ export function validateToken(token: string): number {
 export function AuthToken() {
 
   const TOKEN_HEADER: string = 'Auth-Token';
+  const rateLimit = RateLimit.getInstance();
 
   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
     const handler = descriptor.value;
@@ -43,7 +45,14 @@ export function AuthToken() {
       const token = req.header(TOKEN_HEADER) || '';
       const userId = validateToken(token);
 
+      if (rateLimit.isLimitExceeded(req.ip)) {
+        res.status(400);
+        res.send({error: Errors.REQUESTS_LIMIT_REACHED});
+        return;
+      }
+
       if (!userId) {
+        rateLimit.increment(req.ip);
         res.statusCode = 403;
         res.send({error: Errors.AUTH_TOKEN_INVALID});
         return;
