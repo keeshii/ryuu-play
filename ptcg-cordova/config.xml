@@ -1,13 +1,12 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="eu.ryuu.ptcg" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="eu.ryuu.ptcg" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>RyuuPlay</name>
     <description>
-        A sample Apache Cordova application that responds to the deviceready event.
+        Android client for the ptcg server.
     </description>
     <preference name="Orientation" value="landscape" />
-    <preference name="StatusBarOverlaysWebView" value="false" />
     <author email="dev@cordova.apache.org" href="http://cordova.io">
-        Apache Cordova Team
+        None
     </author>
     <content src="index.html" />
     <access origin="*" />
@@ -22,15 +21,19 @@
         <edit-config file="AndroidManifest.xml" mode="merge" target="/manifest/application">
             <application android:usesCleartextTraffic="true" />
         </edit-config>
-	<icon background="res/drawable/ic_launcher_background.xml" density="ldpi" foreground="res/mipmap-mdpi/ic_launcher_foreground.png" src="res/mipmap-mdpi/ic_launcher.png" />
-	<icon background="res/drawable/ic_launcher_background.xml" density="mdpi" foreground="res/mipmap-mdpi/ic_launcher_foreground.png" src="res/mipmap-mdpi/ic_launcher.png" />
-	<icon background="res/drawable/ic_launcher_background.xml" density="hdpi" foreground="res/mipmap-hdpi/ic_launcher_foreground.png" src="res/mipmap-hdpi/ic_launcher.png" />
-	<icon background="res/drawable/ic_launcher_background.xml" density="xhdpi" foreground="res/mipmap-xhdpi/ic_launcher_foreground.png" src="res/mipmap-xhdpi/ic_launcher.png" />
-	<icon background="res/drawable/ic_launcher_background.xml" density="xxhdpi" foreground="res/mipmap-xxhdpi/ic_launcher_foreground.png" src="res/mipmap-xxhdpi/ic_launcher.png" />
-	<icon background="res/drawable/ic_launcher_background.xml" density="xxxhdpi" foreground="res/mipmap-xxxhdpi/ic_launcher_foreground.png" src="res/mipmap-xxxhdpi/ic_launcher.png" />
+        <icon background="res/drawable/ic_launcher_background.xml" density="ldpi" foreground="res/mipmap-mdpi/ic_launcher_foreground.png" src="res/mipmap-mdpi/ic_launcher.png" />
+        <icon background="res/drawable/ic_launcher_background.xml" density="mdpi" foreground="res/mipmap-mdpi/ic_launcher_foreground.png" src="res/mipmap-mdpi/ic_launcher.png" />
+        <icon background="res/drawable/ic_launcher_background.xml" density="hdpi" foreground="res/mipmap-hdpi/ic_launcher_foreground.png" src="res/mipmap-hdpi/ic_launcher.png" />
+        <icon background="res/drawable/ic_launcher_background.xml" density="xhdpi" foreground="res/mipmap-xhdpi/ic_launcher_foreground.png" src="res/mipmap-xhdpi/ic_launcher.png" />
+        <icon background="res/drawable/ic_launcher_background.xml" density="xxhdpi" foreground="res/mipmap-xxhdpi/ic_launcher_foreground.png" src="res/mipmap-xxhdpi/ic_launcher.png" />
+        <icon background="res/drawable/ic_launcher_background.xml" density="xxxhdpi" foreground="res/mipmap-xxxhdpi/ic_launcher_foreground.png" src="res/mipmap-xxxhdpi/ic_launcher.png" />
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
     </platform>
+    <engine name="browser" />
+    <engine name="android" />
+    <plugin name="cordova-plugin-whitelist" />
+    <plugin name="cordova-plugin-statusbar" />
 </widget>

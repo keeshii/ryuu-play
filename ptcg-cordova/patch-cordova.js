@@ -10,6 +10,7 @@ var indexPatches = [{
 }, {
 	find: '</script></body>',
 	replacement: `</script>
+<script src="cordova.js"></script>
 <script>
       window.addEventListener = function () {
         EventTarget.prototype.addEventListener.apply(this, arguments);
