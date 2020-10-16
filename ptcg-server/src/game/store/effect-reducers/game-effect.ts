@@ -79,20 +79,21 @@ function* useAttack(next: Function, store: StoreLike, state: State, effect: UseA
   const attackEffect = new AttackEffect(player, attack);
   state = store.reduceEffect(state, attackEffect);
 
-  yield store.waitPrompt(state, () => {
-    if (attack.damage > 0) {
-      const dealDamage = new DealDamageEffect(
-        player, attackEffect.damage, attack, opponent.active, player.active);
-      state = store.reduceEffect(state, dealDamage);
-    }
-    next();
-  });
+  if (store.hasPrompts()) {
+    yield store.waitPrompt(state, () => next());
+  }
 
-  yield store.waitPrompt(state, () => {
-    state = store.reduceEffect(state, new EndTurnEffect(player));
-  });
+  if (attack.damage > 0) {
+    const dealDamage = new DealDamageEffect(
+      player, attackEffect.damage, attack, opponent.active, player.active);
+    state = store.reduceEffect(state, dealDamage);
+  }
 
-  return state;
+  if (store.hasPrompts()) {
+    yield store.waitPrompt(state, () => next());
+  }
+
+  return store.reduceEffect(state, new EndTurnEffect(player));
 }
 
 export function gameReducer(store: StoreLike, state: State, effect: Effect): State {

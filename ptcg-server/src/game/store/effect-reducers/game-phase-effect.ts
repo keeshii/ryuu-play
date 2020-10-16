@@ -21,10 +21,12 @@ export function betweenTurns(store: StoreLike, state: State, onComplete: () => v
     store.reduceEffect(state, new BetweenTurnsEffect(player));
   }
 
-  state = store.waitPrompt(state, () => {
-    checkState(store, state, () => onComplete());
-  });
-  return state;
+  if (store.hasPrompts()) {
+    return store.waitPrompt(state, () => {
+      checkState(store, state, () => onComplete());
+    });
+  }
+  return checkState(store, state, () => onComplete());
 }
 
 export function initNextTurn(store: StoreLike, state: State): State {
@@ -61,22 +63,18 @@ export function initNextTurn(store: StoreLike, state: State): State {
   return state;
 }
 
-function* startNextTurn(next: Function, store: StoreLike, state: State): IterableIterator<State> {
+function startNextTurn(store: StoreLike, state: State): State {
   const player = state.players[state.activePlayer];
   store.log(state, `${player.name} ends the turn.`);
 
   // Remove Paralyzed at the end of the turn
   player.active.removeSpecialCondition(SpecialCondition.PARALYZED);
 
-  yield betweenTurns(store, state, () => {
-    next();
+  return betweenTurns(store, state, () => {
+    if (state.phase !== GamePhase.FINISHED) {
+      return initNextTurn(store, state);
+    }
   });
-
-  if (state.phase !== GamePhase.FINISHED) {
-    return initNextTurn(store, state);;
-  }
-
-  return state;
 }
 
 function handleSpecialConditions(store: StoreLike, state: State, effect: BetweenTurnsEffect) {
@@ -138,9 +136,7 @@ export function gamePhaseReducer(store: StoreLike, state: State, effect: Effect)
         return;
       }
 
-      let generator: IterableIterator<State>;
-      generator = startNextTurn(() => generator.next(), store, state);
-      return generator.next().value;
+      return startNextTurn(store, state);
     });
 
     return state;

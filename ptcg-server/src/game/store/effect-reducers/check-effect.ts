@@ -202,9 +202,9 @@ function* executeCheckState(next: Function, store: StoreLike, state: State,
     const knockOutEffect = new KnockOutEffect(player, item.cardList);
     state = store.reduceEffect(state, knockOutEffect);
 
-    yield store.waitPrompt(state, () => {
-      next();
-    })
+    if (store.hasPrompts()) {
+      yield store.waitPrompt(state, () => next());
+    }
 
     if (knockOutEffect.preventDefault === false) {
       const opponentNum = item.playerNum === 0 ? 1 : 0

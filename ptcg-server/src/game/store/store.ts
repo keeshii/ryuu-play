@@ -182,6 +182,10 @@ export class Store implements StoreLike {
     }
   }
 
+  public hasPrompts(): boolean {
+    return this.promptItems.length > 0;
+  }
+
   private reduce(state: State, action: Action): State {
     let stateBackup = deepClone(state);
     this.promptItems.length = 0;

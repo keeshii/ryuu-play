@@ -6,6 +6,27 @@ import { Effect } from "../../game/store/effects/effect";
 import { KnockOutEffect } from "../../game/store/effects/game-effects";
 import { StateUtils } from "../../game/store/state-utils";
 
+function* cardEffect(next: Function, store: StoreLike, state: State,
+  effect: KnockOutEffect): IterableIterator<State> {
+
+  const player = effect.player;
+  const opponent = StateUtils.getOpponent(state, player);
+
+  // Do not activate between turns, or when it's not opponents turn.
+  if (state.phase !== GamePhase.ATTACK || state.players[state.activePlayer] !== opponent) {
+    return state;
+  }
+
+  const target = effect.target;
+  const cards = target.getPokemons();
+
+  if (store.hasPrompts()) {
+    yield store.waitPrompt(state, () => next());
+  }
+
+  player.discard.moveCardsTo(cards, player.hand);
+}
+
 export class RescueEnergy extends EnergyCard {
 
   public provides: CardType[] = [ CardType.COLORLESS ];
@@ -25,19 +46,9 @@ export class RescueEnergy extends EnergyCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof KnockOutEffect && effect.target.cards.includes(this)) {
-      const player = effect.player;
-      const opponent = StateUtils.getOpponent(state, player);
-
-      // Do not activate between turns, or when it's not opponents turn.
-      if (state.phase !== GamePhase.ATTACK || state.players[state.activePlayer] !== opponent) {
-        return state;
-      }
-
-      const target = effect.target;
-      const cards = target.getPokemons();
-      return store.waitPrompt(state, () => {
-        player.discard.moveCardsTo(cards, player.hand);
-      });
+      let generator: IterableIterator<State>;
+      generator = cardEffect(() => generator.next(), store, state, effect);
+      return generator.next().value;
     }
 
     return state;

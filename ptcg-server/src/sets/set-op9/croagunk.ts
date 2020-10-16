@@ -52,7 +52,29 @@ function* useKnockOff(next: Function, store: StoreLike, state: State,
   return state;
 }
 
+function* useNimble(next: Function, store: StoreLike, state: State,
+  effect: AttackEffect): IterableIterator<State> {
+  const player = effect.player;
 
+  let isTurtwigInPlay = false;
+  player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card) => {
+    if (card.name === 'Turtwig') {
+      isTurtwigInPlay = true;
+    }
+  });
+
+  if (effect.preventDefault || !isTurtwigInPlay) {
+    return;
+  }
+
+  if (store.hasPrompts()) {
+    yield store.waitPrompt(state, () => next());
+  }
+
+  const heal = Math.min(player.active.damage, effect.damage);
+  player.active.damage -= heal;
+  return state;
+}
 
 export class Croagunk extends PokemonCard {
 
@@ -98,22 +120,9 @@ export class Croagunk extends PokemonCard {
     }
 
     if (effect instanceof DealDamageAfterWeaknessEffect && effect.attack === this.attacks[1]) {
-      const player = effect.player;
-      return store.waitPrompt(state, () => {
-        let isTurtwigInPlay = false;
-        player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card) => {
-          if (card.name === 'Turtwig') {
-            isTurtwigInPlay = true;
-          }
-        });
-
-        if (effect.preventDefault || !isTurtwigInPlay) {
-          return;
-        }
-
-        const heal = Math.min(player.active.damage, effect.damage);
-        player.active.damage -= heal;
-      });
+      let generator: IterableIterator<State>;
+      generator = useNimble(() => generator.next(), store, state, effect);
+      return generator.next().value;
     }
 
     return state;

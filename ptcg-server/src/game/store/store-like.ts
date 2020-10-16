@@ -13,6 +13,8 @@ export interface StoreLike {
 
   waitPrompt(state: State, callback: () => void): State;
 
+  hasPrompts(): boolean;
+
   prompt<T>(
     state: State, prompt: Prompt<T>,
     then: (result: T) => void): State;
