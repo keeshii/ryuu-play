@@ -1,6 +1,6 @@
-<h2 class="mat-dialog-title">Select</h2>
+<h2 class="ptcg-prompt-title">Select</h2>
 
-<mat-dialog-content>
+<div class="ptcg-prompt-content">
   <p>{{ message }}</p>
 
   <form #form="ngForm" autocomplete="off">
@@ -15,9 +15,9 @@
     </mat-form-field>
 
   </form>
-</mat-dialog-content>
+</div>
 
-<mat-dialog-actions>
+<div class="ptcg-prompt-actions">
   <button mat-raised-button *ngIf="allowCancel" [disabled]="gameState.deleted"
     (click)="cancel()">
     Cancel
@@ -26,4 +26,4 @@
     (click)="confirm()">
     OK
   </button>
-</mat-dialog-actions>
+</div>

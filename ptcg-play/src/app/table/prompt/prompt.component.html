@@ -2,7 +2,7 @@
     <ng-template let-type let-item="item">
         <ng-container [ngSwitch]="type">
             <div class="ptcg-card" *ngSwitchCase="'PROMPT_CARD'">
-              <ptcg-card class="ptcg-card-preview"
+              <ptcg-card class="ptcg-prompt-card-preview"
                 [class.cardback]="item.data.isSecret"
                 [card]="item.data.card">
               </ptcg-card>
@@ -16,8 +16,8 @@
   <div class="ptcg-prompt-overlay" [ngClass]="{active: isPromptActive}">
   </div>
 
-  <div class="ptcg-prompt-content-wrapper" [hidden]="!isPromptActive">
-    <div class="ptcg-prompt-content"
+  <div class="ptcg-prompt-container-wrapper" [hidden]="!isPromptActive">
+    <div class="ptcg-prompt-container"
       [@state]="animationState"
       (@state.done)="onAnimationEnd($event)">
       <div [ngSwitch]="prompt.type" *ngIf="prompt">

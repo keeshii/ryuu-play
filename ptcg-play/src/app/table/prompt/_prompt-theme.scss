@@ -12,7 +12,7 @@
       transition: opacity $backdrop-animation-duration $backdrop-animation-timing-function;
     }
 
-    .ptcg-prompt-content {
+    .ptcg-prompt-container {
       @include _mat-theme-elevation(24, $theme);
       background-color: mat-color($background, dialog);
       color: mat-color($foreground, text);

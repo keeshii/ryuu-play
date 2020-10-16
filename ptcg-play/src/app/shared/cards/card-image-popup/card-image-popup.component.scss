@@ -1,8 +1,9 @@
 @import '../../../../theme/variables.scss';
 
-$card-width: calc(65vh / #{$card-aspect-ratio} - 2 * #{map-get($padding, normal)});
+$card-width: calc(85vh / #{$card-aspect-ratio} - 2 * #{map-get($padding, normal)});
 
 mat-dialog-content {
+  max-height: none;
   overflow: hidden;
 }
 

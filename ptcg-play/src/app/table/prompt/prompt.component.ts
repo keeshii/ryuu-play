@@ -1,5 +1,5 @@
 import { AnimationEvent } from '@angular/animations';
-import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Prompt, GamePhase } from 'ptcg-server';
 
@@ -12,6 +12,7 @@ import { ptcgPromptAnimations } from './prompt.animations';
   templateUrl: './prompt.component.html',
   styleUrls: ['./prompt.component.scss'],
   animations: [ptcgPromptAnimations.promptContent],
+  encapsulation: ViewEncapsulation.None
 })
 export class PromptComponent implements OnInit, OnChanges {
 

@@ -1,6 +1,6 @@
-<h2 class="mat-dialog-title">Order cards</h2>
+<h2 class="ptcg-prompt-title">Order cards</h2>
 
-<mat-dialog-content>
+<div class="ptcg-prompt-content">
   <p>{{ message }}</p>
 
   <ptcg-choose-cards-panes
@@ -8,9 +8,9 @@
     [cards]="cards.cards"
     (change)="onChange($event)">
   </ptcg-choose-cards-panes>
-</mat-dialog-content>
+</div>
 
-<mat-dialog-actions>
+<div class="ptcg-prompt-actions">
   <button mat-raised-button *ngIf="allowedCancel" [disabled]="gameState.deleted"
     (click)="cancel()">
     Cancel
@@ -19,4 +19,4 @@
     (click)="confirm()">
     OK
   </button>
-</mat-dialog-actions>
+</div>

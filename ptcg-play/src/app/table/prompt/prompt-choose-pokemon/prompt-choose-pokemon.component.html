@@ -1,6 +1,6 @@
-<h2 class="mat-dialog-title">Choose pokemon</h2>
+<h2 class="ptcg-prompt-title">Choose pokemon</h2>
 
-<mat-dialog-content>
+<div class="ptcg-prompt-content">
   <p>{{ message }}</p>
 
   <ptcg-choose-pokemons-pane
@@ -8,9 +8,9 @@
     (cardClick)="onCardClick($event)">
   </ptcg-choose-pokemons-pane>
 
-</mat-dialog-content>
+</div>
 
-<mat-dialog-actions>
+<div class="ptcg-prompt-actions">
   <button mat-raised-button *ngIf="allowedCancel" [disabled]="gameState.deleted"
     (click)="cancel()">
     Cancel
@@ -19,4 +19,4 @@
     (click)="confirm()">
     OK
   </button>
-</mat-dialog-actions>
+</div>

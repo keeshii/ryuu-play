@@ -1,8 +1,5 @@
 @import '../../../theme/variables.scss';
 
-$ptcg-prompt-padding: 24px !default;
-$ptcg-prompt-border-radius: 4px !default;
-
 .ptcg-prompt-overlay {
   bottom: 0;
   display: none;
@@ -18,18 +15,19 @@ $ptcg-prompt-border-radius: 4px !default;
   }
 }
 
-.ptcg-prompt-content-wrapper {
+.ptcg-prompt-container-wrapper {
   align-items: center;
   bottom: 0;
   display: flex;
   left: 0;
   justify-content: center;
+  overflow: hidden;
   position: absolute;
   right: 0;
   top: 0;
 }
 
-.ptcg-prompt-content {
+.ptcg-prompt-container {
   display: block;
   margin: map-get($padding, normal);
   padding: $ptcg-prompt-padding;
@@ -40,7 +38,38 @@ $ptcg-prompt-border-radius: 4px !default;
   position: relative;
 }
 
-.ptcg-card-preview {
+.ptcg-prompt-card-preview {
   position: absolute;
   width: map-get($ptcg-size, card);
+}
+
+.ptcg-prompt-title {
+  margin: 0 0 20px;
+  display: block;
+}
+
+.ptcg-prompt-content {
+  display: block;
+  margin: 0 $ptcg-prompt-padding * -1;
+  padding: 0 $ptcg-prompt-padding;
+  max-height: $ptcg-prompt-max-height;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ptcg-prompt-actions {
+  padding: 8px 0;
+  display: flex;
+  flex-wrap: wrap;
+  min-height: 52px;
+  align-items: center;
+  justify-content: flex-end;
+
+  // Pull the actions down to avoid their padding stacking with the dialog's padding.
+  margin-bottom: -$ptcg-prompt-padding;
+
+  .mat-button-base + .mat-button-base,
+  .mat-mdc-button-base + .mat-mdc-button-base {
+    margin-left: $ptcg-prompt-button-margin;
+  }
 }
