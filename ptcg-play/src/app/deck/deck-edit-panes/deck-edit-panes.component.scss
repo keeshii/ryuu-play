@@ -9,11 +9,6 @@
 .ptcg-deck-edit-pane {
   flex: 1 1 0;
   max-width: 100%;
-  overflow: auto;
-}
-
-.ptcg-deck-edit-pane {
-  padding: map-get($padding, normal);
 }
 
 ptcg-deck-card.placeholder {
@@ -28,4 +23,5 @@ ptcg-deck-card.placeholder {
 
 .ptcg-deck-edit-pane.secondary {
   border-width: map-get($padding, small);
+  overflow: auto;
 }

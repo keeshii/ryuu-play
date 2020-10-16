@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 
 import { DeckComponent } from './deck.component';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 import { SharedModule } from '../shared/shared.module';
 import { DeckEditComponent } from './deck-edit/deck-edit.component';
 import { DeckEditToolbarComponent } from './deck-edit-toolbar/deck-edit-toolbar.component';
@@ -11,6 +12,7 @@ import { DeckEditInfoComponent } from './deck-edit-info/deck-edit-info.component
 
 @NgModule({
   imports: [
+    ScrollingModule,
     SharedModule
   ],
   declarations: [

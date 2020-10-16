@@ -8,16 +8,16 @@
     </ng-template>
 </skyhook-preview>
 
-<div class="ptcg-deck-edit-pane"
+<cdk-virtual-scroll-viewport class="ptcg-deck-edit-pane"
   [dropTarget]="libraryTarget"
   ptcgDropHighlight [ptcgDropHighlightVisible]="libraryHighlight$ | async">
   <ptcg-deck-card
-    *ngFor="let card of (cards | filterCards: toolbarFilter)"
+    *cdkVirtualFor="let card of (cards | filterCards: toolbarFilter)"
     [ssExternal]="card.spec" #ext="ssExternal" [source]="ext.source"
     (cardClick)="showCardInfo(card)"
     [card]="card">
   </ptcg-deck-card>
-</div>
+</cdk-virtual-scroll-viewport>
 
 <div class="ptcg-deck-edit-pane secondary"
   [dropTarget]="deckTarget"

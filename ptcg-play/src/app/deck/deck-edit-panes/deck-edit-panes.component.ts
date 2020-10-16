@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, NgZone } fro
 import { SkyhookDndService, DropTarget } from '@angular-skyhook/core';
 import { DraggedItem, SortableSpec } from '@angular-skyhook/sortable';
 import { Observable } from 'rxjs';
+import { VIRTUAL_SCROLL_STRATEGY } from '@angular/cdk/scrolling';
 import { map } from 'rxjs/operators';
 
 import { AlertService } from '../../shared/alert/alert.service';
@@ -10,11 +11,19 @@ import { DeckEditPane } from './deck-edit-pane.interface';
 import { DeckEditToolbarFilter } from '../deck-edit-toolbar/deck-edit-toolbar-filter.interface';
 import { DeckItem, LibraryItem } from '../deck-card/deck-card.interface';
 import { DeckCardType } from '../deck-card/deck-card.component';
+import { DeckEditVirtualScrollStrategy } from './deck-edit-virtual-scroll-strategy';
+
+const DECK_CARD_ITEM_WIDTH = 132;
+const DECK_CARD_ITEM_HEIGHT = 173;
 
 @Component({
   selector: 'ptcg-deck-edit-panes',
   templateUrl: './deck-edit-panes.component.html',
-  styleUrls: ['./deck-edit-panes.component.scss']
+  styleUrls: ['./deck-edit-panes.component.scss'],
+  providers: [{
+    provide: VIRTUAL_SCROLL_STRATEGY,
+    useValue: new DeckEditVirtualScrollStrategy(DECK_CARD_ITEM_WIDTH, DECK_CARD_ITEM_HEIGHT)
+  }]
 })
 export class DeckEditPanesComponent implements OnInit, OnDestroy {
 
