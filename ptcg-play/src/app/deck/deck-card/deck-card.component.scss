@@ -11,7 +11,7 @@ $ptcg-deck-card-width: map-get($ptcg-size, card) + map-get($padding, large);
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  margin-top: map-get($padding, normal);
+  margin: map-get($padding, small);
   width: $ptcg-deck-card-width;
 }
 
