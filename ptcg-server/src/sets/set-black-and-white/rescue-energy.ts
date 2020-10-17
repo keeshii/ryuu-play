@@ -25,6 +25,7 @@ function* cardEffect(next: Function, store: StoreLike, state: State,
   }
 
   player.discard.moveCardsTo(cards, player.hand);
+  return state;
 }
 
 export class RescueEnergy extends EnergyCard {
