@@ -3,7 +3,7 @@ import { Stage, CardType, CardTag } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
 import { State, GamePhase } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
-import { AttackEffect, PowerEffect } from "../../game/store/effects/game-effects";
+import { AttackEffect, PowerEffect, UsePowerEffect } from "../../game/store/effects/game-effects";
 import { DealDamageAfterWeaknessEffect } from "../../game/store/effects/attack-effects";
 import { PowerType } from "../../game/store/card/pokemon-types";
 import { StateUtils } from "../../game/store/state-utils";
@@ -91,7 +91,7 @@ export class Beautifly extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
 
-    if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
+    if (effect instanceof UsePowerEffect && effect.power === this.powers[0]) {
       throw new GameError(GameMessage.CANNOT_USE_POWER);
     }
 
@@ -124,6 +124,15 @@ export class Beautifly extends PokemonCard {
       }
 
       if (sourceCard.tags.includes(CardTag.POKEMON_EX)) {
+
+        // Try to reduce PowerEffect, to check if something is blocking our ability
+        try {
+          const powerEffect = new PowerEffect(player, this.powers[0]);
+          store.reduceEffect(state, powerEffect);
+        } catch {
+          return state;
+        }
+
         effect.preventDefault = true;
       }
     }
