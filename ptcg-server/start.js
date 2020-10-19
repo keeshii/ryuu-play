@@ -5,7 +5,13 @@ const { BotManager } = require('./dist/game/bots/bot-manager');
 const { SimpleBot } = require('./dist/simple-bot/simple-bot');
 const { CardManager } = require('./dist/game/cards/card-manager');
 const { StateSerializer } = require('./dist/game/serializer/state-serializer');
-const { setBlackAndWhite, setDiamondAndPearl, setHgss, setOp9 } = require('./dist/sets');
+const {
+  setBlackAndWhite,
+  setBlackAndWhite2,
+  setDiamondAndPearl,
+  setHgss,
+  setOp9
+} = require('./dist/sets');
 const { config } = require('./dist/config');
 const process = require('process');
 
@@ -14,6 +20,7 @@ cardManager.defineSet(setDiamondAndPearl);
 cardManager.defineSet(setOp9);
 cardManager.defineSet(setHgss);
 cardManager.defineSet(setBlackAndWhite);
+cardManager.defineSet(setBlackAndWhite2);
 
 StateSerializer.setKnownCards(cardManager.getAllCards());
 

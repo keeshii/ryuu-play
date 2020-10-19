@@ -94,7 +94,7 @@ export class QuickBall extends TrainerCard {
 
   public text: string =
     'You can play this card only if you discard another card from your hand. ' +
-    'Search your deck for a Basic Pokémon, reveal it, and put it into your + ' +
+    'Search your deck for a Basic Pokemon, reveal it, and put it into your ' +
     'hand. Then, shuffle your deck.';
 
 
