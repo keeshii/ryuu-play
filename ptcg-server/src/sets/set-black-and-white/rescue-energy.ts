@@ -1,32 +1,11 @@
+import { Card } from "../../game/store/card/card";
 import { CardType, EnergyType } from "../../game/store/card/card-types";
+import { BetweenTurnsEffect } from "../../game/store/effects/game-phase-effects";
 import { EnergyCard } from "../../game/store/card/energy-card";
 import { StoreLike } from "../../game/store/store-like";
 import { State, GamePhase } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { KnockOutEffect } from "../../game/store/effects/game-effects";
-import { StateUtils } from "../../game/store/state-utils";
-
-function* cardEffect(next: Function, store: StoreLike, state: State,
-  effect: KnockOutEffect): IterableIterator<State> {
-
-  const player = effect.player;
-  const opponent = StateUtils.getOpponent(state, player);
-
-  // Do not activate between turns, or when it's not opponents turn.
-  if (state.phase !== GamePhase.ATTACK || state.players[state.activePlayer] !== opponent) {
-    return state;
-  }
-
-  const target = effect.target;
-  const cards = target.getPokemons();
-
-  if (store.hasPrompts()) {
-    yield store.waitPrompt(state, () => next());
-  }
-
-  player.discard.moveCardsTo(cards, player.hand);
-  return state;
-}
 
 export class RescueEnergy extends EnergyCard {
 
@@ -40,6 +19,8 @@ export class RescueEnergy extends EnergyCard {
 
   public fullName = 'Rescue Energy TRM';
 
+  public readonly RESCUE_ENERGY_MAREKER = 'RESCUE_ENERGY_MAREKER';
+
   public text =
     'Rescue Energy provides C Energy. If the Pokemon this card is attached ' +
     'to is Knocked Out by damage from an attack, put that Pokemon back into ' +
@@ -47,9 +28,34 @@ export class RescueEnergy extends EnergyCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof KnockOutEffect && effect.target.cards.includes(this)) {
-      let generator: IterableIterator<State>;
-      generator = cardEffect(() => generator.next(), store, state, effect);
-      return generator.next().value;
+      const player = effect.player;
+
+      // Do not activate between turns, or when it's not opponents turn.
+      if (state.phase !== GamePhase.ATTACK) {
+        return state;
+      }
+
+      const target = effect.target;
+      const cards = target.getPokemons();
+      cards.forEach(card => {
+        player.marker.addMarker(this.RESCUE_ENERGY_MAREKER, card);
+      });
+    }
+
+    if (effect instanceof BetweenTurnsEffect) {
+      state.players.forEach(player => {
+
+        if (!player.marker.hasMarker(this.RESCUE_ENERGY_MAREKER)) {
+          return;
+        }
+
+        const rescued: Card[] = player.marker.markers
+          .filter(m => m.name === this.RESCUE_ENERGY_MAREKER)
+          .map(m => m.source);
+
+        player.discard.moveCardsTo(rescued, player.hand);
+        player.marker.removeMarker(this.RESCUE_ENERGY_MAREKER);
+      });
     }
 
     return state;
