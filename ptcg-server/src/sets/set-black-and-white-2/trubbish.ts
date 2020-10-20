@@ -7,37 +7,42 @@ import { AttackEffect } from "../../game/store/effects/game-effects";
 import { StateUtils } from "../../game/store/state-utils";
 
 
-export class Duskull extends PokemonCard {
+export class Trubbish extends PokemonCard {
 
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.PSYCHIC;
 
-  public hp: number = 50;
+  public hp: number = 70;
 
-  public weakness = [{ type: CardType.DARK }];
+  public weakness = [{ type: CardType.PSYCHIC }];
 
-  public retreat = [ CardType.COLORLESS ];
+  public retreat = [ CardType.COLORLESS, CardType.COLORLESS ];
 
   public attacks = [{
-    name: 'Confuse Ray',
-    cost: [ CardType.PSYCHIC ],
-    damage: 0,
-    text: 'The Defending Pokemon is now Confused.'
+    name: 'Pound',
+    cost: [ CardType.COLORLESS, CardType.COLORLESS ],
+    damage: 20,
+    text: ''
+  }, {
+    name: 'Poison Gas',
+    cost: [ CardType.PSYCHIC, CardType.COLORLESS, CardType.COLORLESS ],
+    damage: 30,
+    text: 'The Defending Pokemon is now Poisoned.'
   }];
 
   public set: string = 'BW2';
 
-  public name: string = 'Duskull';
+  public name: string = 'Trubbish';
 
-  public fullName: string = 'Duskull BC';
+  public fullName: string = 'Trubbish LT';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
 
-    if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
+    if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
-      opponent.active.addSpecialCondition(SpecialCondition.CONFUSED);
+      opponent.active.addSpecialCondition(SpecialCondition.POISONED);
     }
     return state;
   }

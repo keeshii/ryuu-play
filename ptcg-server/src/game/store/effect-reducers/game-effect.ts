@@ -58,6 +58,7 @@ function* useAttack(next: Function, store: StoreLike, state: State, effect: UseA
       GameMessage.CONFUSION_FLIP),
       result => {
         flip = result;
+        next();
       });
 
     if (flip === false) {
