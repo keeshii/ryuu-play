@@ -4,7 +4,6 @@ import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { AttackEffect } from "../../game/store/effects/game-effects";
-import { DealDamageEffect } from "../../game/store/effects/attack-effects";
 import { StateUtils } from "../../game/store/state-utils";
 import { GameMessage, GameError } from "../../game/game-error";
 import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
@@ -49,7 +48,7 @@ export class Cobalion extends PokemonCard {
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
 
     // Energy Press
-    if (effect instanceof DealDamageEffect && effect.attack === this.attacks[0]) {
+    if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
 

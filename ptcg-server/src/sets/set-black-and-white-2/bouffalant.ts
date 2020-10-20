@@ -3,8 +3,8 @@ import { Stage, CardType, CardTag } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
 import { State, GamePhase } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
-import { PowerEffect, UsePowerEffect } from "../../game/store/effects/game-effects";
-import { DealDamageAfterWeaknessEffect, DealDamageEffect } from "../../game/store/effects/attack-effects";
+import { PowerEffect, UsePowerEffect, AttackEffect } from "../../game/store/effects/game-effects";
+import { DealDamageAfterWeaknessEffect } from "../../game/store/effects/attack-effects";
 import { PowerType } from "../../game/store/card/pokemon-types";
 import { StateUtils } from "../../game/store/state-utils";
 import { GameMessage, GameError } from "../../game/game-error";
@@ -48,7 +48,7 @@ export class Bouffalant extends PokemonCard {
       throw new GameError(GameMessage.CANNOT_USE_POWER);
     }
 
-    if (effect instanceof DealDamageEffect && effect.attack === this.attacks[0]) {
+    if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
 

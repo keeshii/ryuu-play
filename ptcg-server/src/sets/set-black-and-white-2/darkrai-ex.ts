@@ -2,7 +2,7 @@ import { PokemonCard } from "../../game/store/card/pokemon-card";
 import { Stage, CardType } from "../../game/store/card/card-types";
 import { StoreLike, State, StateUtils, PowerType, ChoosePokemonPrompt,
   PlayerType, SlotType, GameError, GameMessage } from "../../game";
-import { AttackEffect, PowerEffect, UsePowerEffect } from "../../game/store/effects/game-effects";
+import { AttackEffect, PowerEffect, UsePowerEffect, KnockOutEffect } from "../../game/store/effects/game-effects";
 import { DealDamageAfterWeaknessEffect } from "../../game/store/effects/attack-effects";
 import { Effect } from "../../game/store/effects/effect";
 import { CardMessage } from "../card-message";
@@ -108,6 +108,13 @@ export class DarkraiEx extends PokemonCard {
 
         effect.cost = [];
       }
+
+      return state;
+    }
+
+    // Pokemon ex rule
+    if (effect instanceof KnockOutEffect && effect.target.cards.includes(this)) {
+      effect.prizeCount += 1;
     }
 
     return state;

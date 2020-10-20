@@ -7,7 +7,6 @@ import { AttackEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
 import { CardMessage } from "../card-message";
 import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
-import { DealDamageEffect } from "../../game/store/effects/attack-effects";
 
 function* useEntrainment(next: Function, store: StoreLike, state: State,
   effect: AttackEffect): IterableIterator<State> {
@@ -85,19 +84,14 @@ export class Dedenne extends PokemonCard {
       return generator.next().value;
     }
 
-    if (effect instanceof DealDamageEffect && effect.attack === this.attacks[1]) {
+    if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
-      effect.damage = 0;
 
       const checkProvidedEnergyEffect = new CheckProvidedEnergyEffect(opponent);
       store.reduceEffect(state, checkProvidedEnergyEffect);
       const energyCount = checkProvidedEnergyEffect.energyMap.reduce((left, p) => left + p.provides.length, 0);
-      const damage = energyCount * 20;
-
-      const dealDamageEffect = new DealDamageEffect(player, damage,
-        effect.attack, opponent.active, player.active);
-      store.reduceEffect(state, dealDamageEffect);
+      effect.damage = energyCount * 20;
     }
 
     return state;
