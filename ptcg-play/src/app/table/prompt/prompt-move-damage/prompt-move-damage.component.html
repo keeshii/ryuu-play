@@ -1,0 +1,38 @@
+<h2 class="ptcg-prompt-title">Move energy</h2>
+
+<div class="ptcg-prompt-content">
+  <p>{{ message }}</p>
+
+  <ptcg-choose-pokemons-pane
+    [pokemonData]="pokemonData"
+    (cardClick)="onCardClick($event)">
+  </ptcg-choose-pokemons-pane>
+
+  <div class="ptcg-damage-pane">
+    <button mat-mini-fab color="accent" [disabled]="isRemoveDisabled"
+      (click)="removeDamage()">
+      <mat-icon>remove</mat-icon>
+    </button>
+    <ptcg-badge color="warn" class="ptcg-damage-value">{{ damage }}</ptcg-badge>
+    <button mat-mini-fab color="accent" [disabled]="isAddDisabled"
+      (click)="addDamage()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+
+</div>
+
+<div class="ptcg-prompt-actions">
+  <button mat-raised-button (click)="reset()">
+    Reset
+  </button>
+  <div class="ptcg-u-spacer"></div>
+  <button mat-raised-button *ngIf="allowedCancel" [disabled]="gameState.deleted"
+    (click)="cancel()">
+    Cancel
+  </button>
+  <button mat-raised-button color="primary" [disabled]="gameState.deleted || isInvalid"
+    (click)="confirm()">
+    OK
+  </button>
+</div>

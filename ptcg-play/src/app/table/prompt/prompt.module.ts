@@ -17,6 +17,7 @@ import { PromptGameOverComponent } from './prompt-game-over/prompt-game-over.com
 import { PromptShowCardsComponent } from './prompt-show-cards/prompt-show-cards.component';
 import { ChoosePokemonsPaneComponent } from './choose-pokemons-pane/choose-pokemons-pane.component';
 import { PromptOrderCardsComponent } from './prompt-order-cards/prompt-order-cards.component';
+import { PromptMoveDamageComponent } from './prompt-move-damage/prompt-move-damage.component';
 import { PromptMoveEnergyComponent } from './prompt-move-energy/prompt-move-energy.component';
 import { PromptSelectComponent } from './prompt-select/prompt-select.component';
 import { PromptInvitePlayerComponent } from './prompt-invite-player/prompt-invite-player.component';
@@ -38,6 +39,7 @@ import { PromptInvitePlayerComponent } from './prompt-invite-player/prompt-invit
     PromptShowCardsComponent,
     ChoosePokemonsPaneComponent,
     PromptOrderCardsComponent,
+    PromptMoveDamageComponent,
     PromptMoveEnergyComponent,
     PromptSelectComponent,
     PromptInvitePlayerComponent

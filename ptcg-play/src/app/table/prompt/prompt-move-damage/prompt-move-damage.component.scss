@@ -1,0 +1,13 @@
+@import '../../../../theme/variables.scss';
+
+.ptcg-damage-pane {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin-bottom: map-get($padding, small);
+}
+
+.ptcg-damage-value {
+  display: flex;
+  margin: 0 map-get($padding, normal);
+}

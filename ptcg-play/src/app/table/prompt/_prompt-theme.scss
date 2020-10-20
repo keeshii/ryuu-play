@@ -25,3 +25,15 @@
   }
 
 }
+
+
+@mixin ptcg-prompt-typography($config) {
+
+  ptcg-prompt-move-damage {
+    .ptcg-damage-value {
+      @include mat-typography-level-to-styles($config, button);
+      font-size: 1.5em;
+    }
+  }
+
+}

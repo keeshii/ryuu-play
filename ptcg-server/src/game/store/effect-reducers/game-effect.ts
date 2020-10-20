@@ -12,7 +12,12 @@ import { AttackEffect, UseAttackEffect, HealEffect, ApplyWeaknessEffect, KnockOu
 import { CoinFlipPrompt } from "../prompts/coin-flip-prompt";
 import { DealDamageEffect } from "../effects/attack-effects";
 
-function applyWeaknessAndResistance(damage: number, cardTypes: CardType[], weakness: Weakness[], resistance: Resistance[]): number {
+function applyWeaknessAndResistance(
+  damage: number,
+  cardTypes: CardType[],
+  weakness: Weakness[],
+  resistance: Resistance[]
+): number {
   let multiply = 1;
   let modifier = 0;
 

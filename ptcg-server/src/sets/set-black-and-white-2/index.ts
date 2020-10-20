@@ -14,6 +14,7 @@ import { Deino } from "./deino";
 import { DoubleColorlessEnergy } from "./double-colorless-energy";
 import { Dragalge } from "./dragalge";
 import { Dusclops } from "./dusclops";
+import { Dusknoir } from "./dusknoir";
 import { Duskull } from "./duskull";
 import { Shelmet } from "./shelmet";
 import { Silcoon } from "./silcoon";
@@ -36,6 +37,7 @@ export const setBlackAndWhite2: Card[] = [
   new DoubleColorlessEnergy(),
   new Dragalge(),
   new Dusclops(),
+  new Dusknoir(),
   new Duskull(),
   new Shelmet(),
   new Silcoon(),

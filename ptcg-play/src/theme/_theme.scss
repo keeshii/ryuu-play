@@ -37,6 +37,7 @@
   @include ptcg-main-typography($config);
   @include ptcg-deck-edit-typography($config);
   @include ptcg-user-info-typography($config);
+  @include ptcg-prompt-typography($config);
   @include ptcg-info-typography($config);
   @include ptcg-table-typography($config);
   @include ptcg-file-input-typography($config);

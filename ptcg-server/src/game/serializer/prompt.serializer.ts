@@ -9,6 +9,7 @@ import { ChoosePrizePrompt } from "../store/prompts/choose-prize-prompt";
 import { CoinFlipPrompt } from "../store/prompts/coin-flip-prompt";
 import { ConfirmPrompt } from "../store/prompts/confirm-prompt";
 import { InvitePlayerPrompt } from "../store/prompts/invite-player-prompt";
+import { MoveDamagePrompt } from "../store/prompts/move-damage-prompt";
 import { MoveEnergyPrompt } from "../store/prompts/move-energy-prompt";
 import { OrderCardsPrompt } from "../store/prompts/order-cards-prompt";
 import { Prompt } from "../store/prompts/prompt";
@@ -31,6 +32,7 @@ export class PromptSerializer implements Serializer<Prompt<any>> {
     { classValue: CoinFlipPrompt, type: 'CoinFlipPrompt' },
     { classValue: ConfirmPrompt, type: 'ConfirmPrompt' },
     { classValue: InvitePlayerPrompt, type: 'InvitePlayerPrompt' },
+    { classValue: MoveDamagePrompt, type: 'MoveDamagePrompt' },
     { classValue: MoveEnergyPrompt, type: 'MoveEnergyPrompt' },
     { classValue: OrderCardsPrompt, type: 'OrderCardsPrompt' },
     { classValue: SelectPrompt, type: 'SelectPrompt' },
