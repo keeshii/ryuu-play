@@ -28,6 +28,10 @@ import { Litleo } from "./litleo";
 import { Lysandre } from "./lysandre";
 import { MewtwoEx } from "./mewtwo-ex";
 import { Miltank } from "./miltank";
+import { MrMime } from "./mr-mime";
+import { Munna } from "./munna";
+import { Musharna } from "./musharna";
+import { MuscleBand } from "./muscle-band";
 import { Oddish } from "./oddish";
 import { Shelmet } from "./shelmet";
 import { Silcoon } from "./silcoon";
@@ -65,6 +69,10 @@ export const setBlackAndWhite2: Card[] = [
   new Lysandre(),
   new MewtwoEx(),
   new Miltank(),
+  new MrMime(),
+  new Munna(),
+  new MuscleBand(),
+  new Musharna(),
   new Oddish(),
   new Shelmet(),
   new Silcoon(),

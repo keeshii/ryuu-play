@@ -7,9 +7,14 @@ import { TrainerEffect } from "../../game/store/effects/play-card-effects";
 import { CardList } from "../../game/store/state/card-list";
 import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
 import { CardMessage } from "../card-message";
+import { GameError, GameMessage } from "../../game/game-error";
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
+
+  if (player.deck.cards.length === 0) {
+    throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
+  }
 
   const deckTop = new CardList();
   player.deck.moveTo(deckTop, 2);
