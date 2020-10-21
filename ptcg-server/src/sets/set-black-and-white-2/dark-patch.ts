@@ -33,7 +33,7 @@ export class DarkPatch extends TrainerCard {
       const hasEnergyInDiscard = player.discard.cards.some(c => {
         return c instanceof EnergyCard
           && c.energyType === EnergyType.BASIC
-          && c.provides.includes(CardType.METAL);
+          && c.provides.includes(CardType.DARK);
       });
       if (!hasEnergyInDiscard) {
         throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
