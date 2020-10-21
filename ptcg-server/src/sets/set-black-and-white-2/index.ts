@@ -41,11 +41,18 @@ import { PokemonFanClub } from "./pokemon-fan-club";
 import { Pyroar } from "./pyroar";
 import { Raichu } from "./raichu";
 import { RaikouEx } from "./raikou-ex";
+import { RandomReceiver } from "./random-receiver";
+import { Regigigas } from "./regigigas";
+import { RockGuard } from "./rock-guard";
+import { RockyHelmet } from "./rocky-helmet";
+import { Sableye } from "./sableye";
 import { Shelmet } from "./shelmet";
 import { Silcoon } from "./silcoon";
 import { Skrelp } from "./skrelp";
 import { Trubbish } from "./trubbish";
 import { Wurmple } from "./wurmple";
+import { YveltalEx } from "./yveltal-ex";
+import { Zweilous } from "./zweilous";
 
 export const setBlackAndWhite2: Card[] = [
   new Accelgor(),
@@ -90,9 +97,16 @@ export const setBlackAndWhite2: Card[] = [
   new Pyroar(),
   new Raichu(),
   new RaikouEx(),
+  new RandomReceiver(),
+  new Regigigas(),
+  new RockGuard(),
+  new RockyHelmet(),
+  new Sableye(),
   new Shelmet(),
   new Silcoon(),
   new Skrelp(),
   new Trubbish(),
-  new Wurmple()
+  new Wurmple(),
+  new YveltalEx(),
+  new Zweilous()
 ];
