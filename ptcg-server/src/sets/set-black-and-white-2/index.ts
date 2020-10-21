@@ -10,6 +10,7 @@ import { DarkClaw } from "./dark-claw";
 import { DarkPatch } from "./dark-patch";
 import { DarkraiEx } from "./darkrai-ex";
 import { Dedenne } from "./dedenne";
+import { Deino } from "./deino";
 import { DoubleColorlessEnergy } from "./double-colorless-energy";
 import { Dragalge } from "./dragalge";
 import { Dusclops } from "./dusclops";
@@ -21,6 +22,7 @@ import { FloatStone } from "./float-stone";
 import { Garbodor } from "./garbodor";
 import { Gloom } from "./gloom";
 import { HeavyBall } from "./heavy-ball";
+import { Hydreigon } from "./hydreigon";
 import { HypnotoxicLaser } from "./hypnotoxic-laser";
 import { KeldeoEx } from "./keldeo-ex";
 import { LandorusEx } from "./landorus-ex";
@@ -33,6 +35,12 @@ import { Munna } from "./munna";
 import { Musharna } from "./musharna";
 import { MuscleBand } from "./muscle-band";
 import { Oddish } from "./oddish";
+import { Pikachu } from "./pikachu";
+import { PokemonCenter } from "./pokemon-center";
+import { PokemonFanClub } from "./pokemon-fan-club";
+import { Pyroar } from "./pyroar";
+import { Raichu } from "./raichu";
+import { RaikouEx } from "./raikou-ex";
 import { Shelmet } from "./shelmet";
 import { Silcoon } from "./silcoon";
 import { Skrelp } from "./skrelp";
@@ -51,6 +59,7 @@ export const setBlackAndWhite2: Card[] = [
   new DarkPatch(),
   new DarkraiEx(),
   new Dedenne(),
+  new Deino(),
   new DoubleColorlessEnergy(),
   new Dragalge(),
   new Dusclops(),
@@ -62,6 +71,7 @@ export const setBlackAndWhite2: Card[] = [
   new Garbodor(),
   new Gloom(),
   new HeavyBall(),
+  new Hydreigon(),
   new HypnotoxicLaser(),
   new KeldeoEx(),
   new LandorusEx(),
@@ -74,6 +84,12 @@ export const setBlackAndWhite2: Card[] = [
   new MuscleBand(),
   new Musharna(),
   new Oddish(),
+  new Pikachu(),
+  new PokemonCenter(),
+  new PokemonFanClub(),
+  new Pyroar(),
+  new Raichu(),
+  new RaikouEx(),
   new Shelmet(),
   new Silcoon(),
   new Skrelp(),

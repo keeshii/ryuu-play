@@ -21,7 +21,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     CardMessage.CHOOSE_BASIC_POKEMON,
     player.deck,
     { superType: SuperType.POKEMON, stage: Stage.BASIC } as any,
-    { min: 0, max: 3, allowCancel: true }
+    { min: 0, max: 2, allowCancel: true }
   ), selected => {
     cards = selected || [];
     next();
@@ -43,19 +43,19 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   });
 }
 
-export class PokemonCollector extends TrainerCard {
+export class PokemonFanClub extends TrainerCard {
 
   public trainerType: TrainerType = TrainerType.SUPPORTER;
 
-  public set: string = 'HGSS';
+  public set: string = 'BW2';
 
-  public name: string = 'Pokemon Collector';
+  public name: string = 'Pokemon Fan Club';
 
-  public fullName: string = 'Pokemon Collector HGSS';
+  public fullName: string = 'Pokemon Fan Club UPR';
 
   public text: string =
-    'Search your deck for up to 3 Basic Pokemon, show them to your opponent, ' +
-    'and put them into your hand. Shuffle your deck afterward.';
+    'Search your deck for up to 2 Basic Pokemon, reveal them, ' +
+    'and put them into your hand. Then, shuffle your deck.';
 
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {

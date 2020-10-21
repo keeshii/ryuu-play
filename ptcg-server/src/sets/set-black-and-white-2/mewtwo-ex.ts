@@ -4,7 +4,8 @@ import { StoreLike, State, StateUtils, Card, ChooseEnergyPrompt } from "../../ga
 import { KnockOutEffect, AttackEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
 import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
-import {CardMessage} from "../card-message";
+import { CardMessage } from "../card-message";
+import { DiscardCardsEffect } from "../../game/store/effects/attack-effects";
 
 
 export class MewtwoEx extends PokemonCard {
@@ -73,7 +74,9 @@ export class MewtwoEx extends PokemonCard {
         { allowCancel: false }
       ), energy => {
         const cards: Card[] = (energy || []).map(e => e.card);
-        effect.player.active.moveCardsTo(cards, player.discard);
+        const discardEnergy = new DiscardCardsEffect(player, cards,
+          effect.attack, player.active, player.active);
+        return store.reduceEffect(state, discardEnergy);
       });
     }
 

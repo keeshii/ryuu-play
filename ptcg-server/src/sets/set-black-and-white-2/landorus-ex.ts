@@ -2,10 +2,10 @@ import { PokemonCard } from "../../game/store/card/pokemon-card";
 import { Stage, CardType } from "../../game/store/card/card-types";
 import { StoreLike, State, PlayerType, SlotType, StateUtils, ChoosePokemonPrompt, ConfirmPrompt, Card } from "../../game";
 import { KnockOutEffect, AttackEffect } from "../../game/store/effects/game-effects";
-import { DealDamageAfterWeaknessEffect } from "../../game/store/effects/attack-effects";
+import { DealDamageAfterWeaknessEffect, DiscardCardsEffect } from "../../game/store/effects/attack-effects";
 import { Effect } from "../../game/store/effects/effect";
 import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
-import {CardMessage} from "../card-message";
+import { CardMessage } from "../card-message";
 
 
 export class LandorusEx extends PokemonCard {
@@ -89,8 +89,10 @@ export class LandorusEx extends PokemonCard {
             }
           });
 
-          player.active.moveCardsTo(cards, player.discard);
           effect.damage += 70;
+          const discardEnergy = new DiscardCardsEffect(player, cards,
+            effect.attack, player.active, player.active);
+          return store.reduceEffect(state, discardEnergy);
         }
       });
     }

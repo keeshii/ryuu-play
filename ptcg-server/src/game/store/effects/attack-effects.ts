@@ -3,12 +3,14 @@ import { Card } from "../card/card";
 import { Effect } from "./effect";
 import { Player } from "../state/player";
 import { PokemonCardList } from "../state/pokemon-card-list";
+import { SpecialCondition } from "../card/card-types";
 
 export enum AttackEffects {
   DEAL_DAMAGE_EFFECT = 'DEAL_DAMAGE_EFFECT',
   DEAL_DAMAGE_AFTER_WEAKNESS_EFFECT = 'DEAL_DAMAGE_AFTER_WEAKNESS_EFFECT',
   DISCARD_CARD_EFFECT = 'DISCARD_CARD_EFFECT',
-  ADD_MARKER_EFFECT = 'ADD_MARKER_EFFECT'
+  ADD_MARKER_EFFECT = 'ADD_MARKER_EFFECT',
+  ADD_SPECIAL_CONDITIONS_EFFECT = 'ADD_SPECIAL_CONDITIONS_EFFECT'
 }
 
 export abstract class AbstractAttackEffect {
@@ -73,6 +75,18 @@ export class AddMarkerEffect extends AbstractAttackEffect implements Effect {
     super(player, attack, target, source);
     this.markerName = markerName;
     this.markerSource = markerSource;
+  }
+}
+
+export class AddSpecialConditionsEffect extends AbstractAttackEffect implements Effect {
+  readonly type: string = AttackEffects.ADD_SPECIAL_CONDITIONS_EFFECT;
+  public preventDefault = false;
+  public specialConditions: SpecialCondition[];
+
+  constructor(player: Player, specialConditions: SpecialCondition[],
+    attack: Attack, target: PokemonCardList, source: PokemonCardList) {
+    super(player, attack, target, source);
+    this.specialConditions = specialConditions;
   }
 }
 
