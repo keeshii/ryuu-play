@@ -38,7 +38,7 @@ function* useWhirlwind(next: Function, store: StoreLike, state: State, effect: A
   yield store.prompt(state, new ChoosePokemonPrompt(
     player.id,
     GameMessage.CHOOSE_NEW_ACTIVE_POKEMON,
-    PlayerType.BOTTOM_PLAYER,
+    PlayerType.TOP_PLAYER,
     [ SlotType.BENCH ],
     { allowCancel: false },
   ), selected => {

@@ -46,7 +46,7 @@ export class Raichu extends PokemonCard {
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
-      const benched = player.bench.reduce((left, b) => left + b.cards.length ? 1 : 0, 0);
+      const benched = player.bench.reduce((left, b) => left + (b.cards.length ? 1 : 0), 0);
       effect.damage = benched * 20;
       return state;
     }
