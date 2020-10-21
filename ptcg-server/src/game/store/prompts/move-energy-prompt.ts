@@ -22,6 +22,7 @@ export interface MoveEnergyOptions {
   max: number | undefined;
   blockedFrom: CardTarget[];
   blockedTo: CardTarget[];
+  blockedMap: { source: CardTarget, blocked: number[] }[];
 }
 
 export class MoveEnergyPrompt extends Prompt<CardTransfer[]> {
@@ -46,7 +47,8 @@ export class MoveEnergyPrompt extends Prompt<CardTransfer[]> {
       min: 0,
       max: undefined,
       blockedFrom: [],
-      blockedTo: []
+      blockedTo: [],
+      blockedMap: [],
     }, options);
   }
 

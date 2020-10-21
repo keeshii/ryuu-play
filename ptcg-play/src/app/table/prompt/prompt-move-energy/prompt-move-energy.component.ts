@@ -28,12 +28,14 @@ export class PromptMoveEnergyComponent implements OnInit, OnChanges {
   public message: string;
   public filter: FilterType;
   public isInvalid = false;
+  public blocked: number[] = [];
 
   private min: number;
   private max: number | undefined;
 
   private blockedFrom: CardTarget[];
   private blockedTo: CardTarget[];
+  private blockedCardList: Card[];
   private results: MoveEnergyResult[] = [];
 
   constructor(
@@ -67,6 +69,7 @@ export class PromptMoveEnergyComponent implements OnInit, OnChanges {
     this.pokemonData.unselectAll();
     item.selected = true;
     this.selectedItem = item;
+    this.blocked = this.buildBlocked(item);
   }
 
   public onCardDrop([item, card]: [PokemonItem, Card]) {
@@ -127,6 +130,42 @@ export class PromptMoveEnergyComponent implements OnInit, OnChanges {
     this.isInvalid = isInvalid;
   }
 
+  private buildBlocked(item: PokemonItem) {
+    const blocked: number[] = [];
+    item.cardList.cards.forEach((c, index) => {
+      if (this.blockedCardList.includes(c)) {
+        blocked.push(index);
+      }
+    });
+    return blocked;
+  }
+
+  private buildBlockedCardList(
+    pokemonData: PokemonData,
+    blockedMap: { source: CardTarget, blocked: number[] }[]
+  ): Card[] {
+    const cards: Card[] = [];
+
+    const rows = pokemonData.getRows();
+    for (const row of rows) {
+      for (const item of row.items) {
+
+        const blockedItem = blockedMap.find(bm => {
+          return pokemonData.matchesTarget(item, [bm.source]);
+        });
+
+        if (blockedItem !== undefined) {
+          blockedItem.blocked.forEach(b => {
+            cards.push(item.cardList.cards[b]);
+          });
+        }
+
+      }
+    }
+
+    return cards;
+  }
+
   ngOnChanges() {
     if (this.prompt && this.gameState) {
       const state = this.gameState.state;
@@ -138,6 +177,7 @@ export class PromptMoveEnergyComponent implements OnInit, OnChanges {
       this.pokemonData = new PokemonData(state, playerId, playerType, slots);
       this.blockedFrom = prompt.options.blockedFrom;
       this.blockedTo = prompt.options.blockedTo;
+      this.blockedCardList = this.buildBlockedCardList(this.pokemonData, prompt.options.blockedMap);
       this.allowedCancel = prompt.options.allowCancel;
       this.filter = prompt.filter;
       this.message = prompt.message;

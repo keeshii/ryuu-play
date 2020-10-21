@@ -171,7 +171,7 @@ export class PromptMoveDamageComponent implements OnInit, OnChanges {
     }
 
     const results: DamageTransfer[] = [];
-    const len = Math.min(fromItems.length, toItems.length)
+    const len = Math.min(fromItems.length, toItems.length);
     for (let i = 0; i < len; i++ ) {
       results.push({ from: fromItems[i].target, to: toItems[i].target });
     }
