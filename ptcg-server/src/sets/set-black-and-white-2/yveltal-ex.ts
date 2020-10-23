@@ -64,6 +64,11 @@ export class YveltalEx extends PokemonCard {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
       const player = effect.player;
+      const hasBench = player.bench.some(b => b.cards.length > 0);
+
+      if (hasBench === false) {
+        return state;
+      }
 
       return store.prompt(state, new AttachEnergyPrompt(
         player.id,

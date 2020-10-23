@@ -1,5 +1,5 @@
 import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType, EnergyType, SuperType } from "../../game/store/card/card-types";
+import { Stage, CardType, SuperType } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
@@ -67,9 +67,7 @@ export class Bronzong extends PokemonCard {
         throw new GameError(GameMessage.CANNOT_USE_POWER);
       }
       const hasEnergyInDiscard = player.discard.cards.some(c => {
-        return c instanceof EnergyCard
-          && c.energyType === EnergyType.BASIC
-          && c.provides.includes(CardType.METAL);
+        return c instanceof EnergyCard && c.provides.includes(CardType.METAL);
       });
       if (!hasEnergyInDiscard) {
         throw new GameError(GameMessage.CANNOT_USE_POWER);
@@ -79,14 +77,21 @@ export class Bronzong extends PokemonCard {
       }
       player.marker.addMarker(this.METAL_LINKS_MAREKER, this);
 
+      let blocked: number[] = [];
+      player.discard.cards.forEach((card, index) => {
+        if (card instanceof EnergyCard && !card.provides.includes(CardType.METAL)) {
+          blocked.push(index);
+        }
+      });
+
       state = store.prompt(state, new AttachEnergyPrompt(
         player.id,
         CardMessage.ATTACH_METAL_ENERGY,
         player.discard,
         PlayerType.BOTTOM_PLAYER,
         [ SlotType.BENCH ],
-        { superType: SuperType.ENERGY, energyType: EnergyType.BASIC, name: 'Metal Energy' },
-        { allowCancel: false, min: 1, max: 1 }
+        { superType: SuperType.ENERGY },
+        { allowCancel: false, min: 1, max: 1, blocked }
       ), transfers => {
         transfers = transfers || [];
         for (const transfer of transfers) {
