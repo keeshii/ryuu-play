@@ -12,7 +12,8 @@ import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt"
 import { EnergyCard } from "../../game/store/card/energy-card";
 import { ShuffleDeckPrompt } from "../../game/store/prompts/shuffle-prompt";
 
-function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
+function* playCard(next: Function, store: StoreLike, state: State,
+  self: SuperRod, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
 
   let pokemonsOrEnergyInDiscard: number = 0;
@@ -32,6 +33,9 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
   }
 
+  // We will discard this card after prompt confirmation
+  effect.preventDefault = true;
+
   const max = Math.min(3, pokemonsOrEnergyInDiscard);
   let cards: Card[] = [];
   yield store.prompt(state, new ChooseCardsPrompt(
@@ -39,12 +43,18 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     CardMessage.CHOOSE_3_POKEMON_AND_BASIC_ENERGY,
     player.discard,
     { },
-    { min: max, max, allowCancel: false, blocked }
+    { min: max, max, allowCancel: true, blocked }
   ), selected => {
     cards = selected || [];
     next();
   });
 
+  // Operation canceled by the user
+  if (cards.length === 0) {
+    return state;
+  }
+
+  player.hand.moveCardTo(self, player.discard);
   player.discard.moveCardsTo(cards, player.deck);
 
   return store.prompt(state, new ShuffleDeckPrompt(player.id), order => {
@@ -70,7 +80,7 @@ export class SuperRod extends TrainerCard {
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
       let generator: IterableIterator<State>;
-      generator = playCard(() => generator.next(), store, state, effect);
+      generator = playCard(() => generator.next(), store, state, this, effect);
       return generator.next().value;
     }
 

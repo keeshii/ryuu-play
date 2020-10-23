@@ -101,7 +101,7 @@ export class CrobatG extends PokemonCard {
 
     if (effect instanceof BetweenTurnsEffect) {
       if (effect.player.active.marker.hasMarker(this.TOXIC_MARKER)) {
-        effect.poisonDamage = 20;
+        effect.poisonDamage += 10;
       }
     }
 

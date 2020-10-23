@@ -50,6 +50,7 @@ import { Shelmet } from "./shelmet";
 import { Silcoon } from "./silcoon";
 import { Skrelp } from "./skrelp";
 import { Trubbish } from "./trubbish";
+import { VirbankCityGym } from "./virbank-city-gym";
 import { Wurmple } from "./wurmple";
 import { YveltalEx } from "./yveltal-ex";
 import { Zweilous } from "./zweilous";
@@ -106,6 +107,7 @@ export const setBlackAndWhite2: Card[] = [
   new Silcoon(),
   new Skrelp(),
   new Trubbish(),
+  new VirbankCityGym(),
   new Wurmple(),
   new YveltalEx(),
   new Zweilous()
