@@ -1,8 +1,8 @@
 import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType, SpecialCondition } from "../../game/store/card/card-types";
+import { Stage, CardType, SpecialCondition, CardTag } from "../../game/store/card/card-types";
 import { StoreLike, State, StateUtils, Card, CoinFlipPrompt,
   ChoosePokemonPrompt, PlayerType, SlotType } from "../../game";
-import { KnockOutEffect, AttackEffect } from "../../game/store/effects/game-effects";
+import { AttackEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
 import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
 import { CardMessage } from "../card-message";
@@ -11,6 +11,8 @@ import { DiscardCardsEffect, AddSpecialConditionsEffect,
 
 
 export class RaikouEx extends PokemonCard {
+
+  public tags = [ CardTag.POKEMON_EX ];
 
   public stage: Stage = Stage.BASIC;
 
@@ -100,11 +102,6 @@ export class RaikouEx extends PokemonCard {
           player, 100, effect.attack, targets[0], player.active);
         store.reduceEffect(state, damageEffect);
       });
-    }
-
-    // Pokemon ex rule
-    if (effect instanceof KnockOutEffect && effect.target.cards.includes(this)) {
-      effect.prizeCount += 1;
     }
 
     return state;

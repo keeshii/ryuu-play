@@ -1,12 +1,14 @@
 import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType, SuperType } from "../../game/store/card/card-types";
+import { Stage, CardType, SuperType, CardTag } from "../../game/store/card/card-types";
 import { StoreLike, State, StateUtils, AttachEnergyPrompt, PlayerType, SlotType } from "../../game";
-import { KnockOutEffect, AttackEffect } from "../../game/store/effects/game-effects";
+import { AttackEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
 import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
 import { CardMessage } from "../card-message";
 
 export class YveltalEx extends PokemonCard {
+
+  public tags = [ CardTag.POKEMON_EX ];
 
   public stage: Stage = Stage.BASIC;
 
@@ -78,11 +80,6 @@ export class YveltalEx extends PokemonCard {
           player.active.moveCardTo(transfer.card, target);
         }
       });
-    }
-
-    // Pokemon ex rule
-    if (effect instanceof KnockOutEffect && effect.target.cards.includes(this)) {
-      effect.prizeCount += 1;
     }
 
     return state;

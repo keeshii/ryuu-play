@@ -42,6 +42,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     { min: max, max, allowCancel: false, blocked }
   ), selected => {
     cards = selected || [];
+    next();
   });
 
   player.discard.moveCardsTo(cards, player.deck);

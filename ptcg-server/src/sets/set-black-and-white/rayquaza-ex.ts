@@ -1,7 +1,7 @@
 import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType } from "../../game/store/card/card-types";
+import { Stage, CardType, CardTag } from "../../game/store/card/card-types";
 import { StoreLike, State, CardList, EnergyCard, Card, StateUtils} from "../../game";
-import { AttackEffect, KnockOutEffect } from "../../game/store/effects/game-effects";
+import { AttackEffect } from "../../game/store/effects/game-effects";
 import { DealDamageEffect } from "../../game/store/effects/attack-effects";
 import { Effect } from "../../game/store/effects/effect";
 import { CardMessage } from "../card-message";
@@ -10,6 +10,8 @@ import { SelectPrompt } from "../../game/store/prompts/select-prompt";
 
 
 export class RayquazaEx extends PokemonCard {
+
+  public tags = [ CardTag.POKEMON_EX ];
 
   public stage: Stage = Stage.BASIC;
 
@@ -88,11 +90,6 @@ export class RayquazaEx extends PokemonCard {
           opponent.active, player.active);
         store.reduceEffect(state, dealDamage);
       });
-    }
-
-    // Pokemon ex rule
-    if (effect instanceof KnockOutEffect && effect.target.cards.includes(this)) {
-      effect.prizeCount += 1;
     }
 
     return state;

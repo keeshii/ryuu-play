@@ -1,7 +1,7 @@
 import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType } from "../../game/store/card/card-types";
+import { Stage, CardType, CardTag } from "../../game/store/card/card-types";
 import { StoreLike, State, StateUtils, Card, ChooseEnergyPrompt } from "../../game";
-import { KnockOutEffect, AttackEffect } from "../../game/store/effects/game-effects";
+import { AttackEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
 import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
 import { CardMessage } from "../card-message";
@@ -9,6 +9,8 @@ import { DiscardCardsEffect } from "../../game/store/effects/attack-effects";
 
 
 export class MewtwoEx extends PokemonCard {
+
+  public tags = [ CardTag.POKEMON_EX ];
 
   public stage: Stage = Stage.BASIC;
 
@@ -78,11 +80,6 @@ export class MewtwoEx extends PokemonCard {
           effect.attack, player.active, player.active);
         return store.reduceEffect(state, discardEnergy);
       });
-    }
-
-    // Pokemon ex rule
-    if (effect instanceof KnockOutEffect && effect.target.cards.includes(this)) {
-      effect.prizeCount += 1;
     }
 
     return state;

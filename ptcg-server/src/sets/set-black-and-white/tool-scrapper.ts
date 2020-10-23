@@ -61,6 +61,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     const owner = StateUtils.findOwner(state, target);
     if (target.tool !== undefined) {
       target.moveCardTo(target.tool, owner.discard);
+      target.tool = undefined;
     }
   });
 

@@ -7,7 +7,7 @@ import { StateUtils } from "../state-utils";
 import { CheckPokemonTypeEffect, CheckPokemonStatsEffect,
   CheckProvidedEnergyEffect, CheckAttackCostEffect } from "../effects/check-effects";
 import { Weakness, Resistance } from "../card/pokemon-types";
-import { CardType, SpecialCondition } from "../card/card-types";
+import { CardType, SpecialCondition, CardTag } from "../card/card-types";
 import { AttackEffect, UseAttackEffect, HealEffect, ApplyWeaknessEffect, KnockOutEffect, UsePowerEffect, PowerEffect} from "../effects/game-effects";
 import { CoinFlipPrompt } from "../prompts/coin-flip-prompt";
 import { DealDamageEffect } from "../effects/attack-effects";
@@ -107,6 +107,12 @@ export function gameReducer(store: StoreLike, state: State, effect: Effect): Sta
   if (effect instanceof KnockOutEffect) {
     const card = effect.target.getPokemonCard();
     if (card !== undefined) {
+
+      // Pokemon ex rule
+      if (card.tags.includes(CardTag.POKEMON_EX)) {
+        effect.prizeCount += 1;
+      }
+
       store.log(state, `${card.name} is KO.`);
       effect.target.moveTo(effect.player.discard);
       effect.target.clearEffects();
