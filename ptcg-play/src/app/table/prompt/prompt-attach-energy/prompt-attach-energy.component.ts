@@ -27,6 +27,7 @@ export class PromptAttachEnergyComponent implements OnInit, OnChanges {
   public message: string;
   public cardList: CardList;
   public filter: FilterType;
+  public blocked: number[];
   public isInvalid = false;
   public results: AttachEnergyResult[] = [];
   private options: Partial<AttachEnergyOptions> = {};
@@ -122,6 +123,7 @@ export class PromptAttachEnergyComponent implements OnInit, OnChanges {
       this.initialCards = prompt.cardList.cards;
       this.filter = prompt.filter;
       this.message = prompt.message;
+      this.blocked = prompt.options.blocked;
       this.promptId = prompt.id;
       this.results = [];
       this.options = prompt.options;
