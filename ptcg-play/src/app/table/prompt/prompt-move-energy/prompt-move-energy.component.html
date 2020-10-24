@@ -18,6 +18,10 @@
 </div>
 
 <div class="ptcg-prompt-actions">
+  <button mat-raised-button [disabled]="results.length === 0" (click)="reset()">
+    Reset
+  </button>
+  <div class="ptcg-u-spacer"></div>
   <button mat-raised-button *ngIf="allowedCancel" [disabled]="gameState.deleted"
     (click)="cancel()">
     Cancel

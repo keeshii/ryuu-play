@@ -29,6 +29,7 @@ export class PromptMoveEnergyComponent implements OnInit, OnChanges {
   public filter: FilterType;
   public isInvalid = false;
   public blocked: number[] = [];
+  public results: MoveEnergyResult[] = [];
 
   private min: number;
   private max: number | undefined;
@@ -36,7 +37,6 @@ export class PromptMoveEnergyComponent implements OnInit, OnChanges {
   private blockedFrom: CardTarget[];
   private blockedTo: CardTarget[];
   private blockedCardList: Card[];
-  private results: MoveEnergyResult[] = [];
 
   constructor(
     private gameService: GameService
@@ -90,6 +90,14 @@ export class PromptMoveEnergyComponent implements OnInit, OnChanges {
     };
     this.moveCard(result.from, result.to, card);
     this.appendMoveResult(result);
+    this.updateIsInvalid(this.results);
+  }
+
+  public reset() {
+    this.results.forEach(r => {
+      this.moveCard(r.to, r.from, r.card);
+    });
+    this.results = [];
     this.updateIsInvalid(this.results);
   }
 

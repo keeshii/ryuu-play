@@ -61,6 +61,8 @@ import { SilverBangle } from "./silver-bangle";
 import { Skrelp } from "./skrelp";
 import { Skyla } from "./skyla";
 import { StartlingMegaphone } from "./startling-megaphone";
+import { Tornadus } from "./tornadus";
+import { TornadusEx } from "./tornadus-ex";
 import { Trubbish } from "./trubbish";
 import { VirbankCityGym } from "./virbank-city-gym";
 import { Wurmple } from "./wurmple";
@@ -124,12 +126,14 @@ export const setBlackAndWhite2: Card[] = [
   new Shauna(),
   new Shelmet(),
   new Sigilyph(),
+  new Silcoon(),
   new SilentLab(),
   new SilverBangle(),
+  new Skrelp(),
   new Skyla(),
   new StartlingMegaphone(),
-  new Silcoon(),
-  new Skrelp(),
+  new Tornadus(),
+  new TornadusEx(),
   new Trubbish(),
   new VirbankCityGym(),
   new Wurmple(),
