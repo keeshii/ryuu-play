@@ -142,9 +142,10 @@ export function gameReducer(store: StoreLike, state: State, effect: Effect): Sta
   if (effect instanceof UsePowerEffect) {
     const player = effect.player;
     const power = effect.power;
+    const card = effect.card;
 
     store.log(state, `${player.name} uses the ${power.name} ability.`);
-    state = store.reduceEffect(state, new PowerEffect(player, power));
+    state = store.reduceEffect(state, new PowerEffect(player, power, card));
     return state;
   }
 

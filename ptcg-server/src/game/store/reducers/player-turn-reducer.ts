@@ -76,7 +76,7 @@ export function playerTurnReducer(store: StoreLike, state: State, action: Action
         throw new GameError(GameMessage.UNKNOWN_POWER);
       }
 
-      state = store.reduceEffect(state, new UsePowerEffect(player, power));
+      state = store.reduceEffect(state, new UsePowerEffect(player, power, pokemonCard));
       return state;
     }
 

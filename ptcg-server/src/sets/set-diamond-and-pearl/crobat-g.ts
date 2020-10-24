@@ -5,7 +5,7 @@ import { PowerType, StoreLike, State, ChoosePokemonPrompt, PlayerType, SlotType,
 import { Stage, CardType, CardTag, SpecialCondition } from "../../game/store/card/card-types";
 import { PlayPokemonEffect } from "../../game/store/effects/play-card-effects";
 import { CardMessage } from "../card-message";
-import { AttackEffect } from "../../game/store/effects/game-effects";
+import { AttackEffect, PowerEffect } from "../../game/store/effects/game-effects";
 import {BetweenTurnsEffect} from "../../game/store/effects/game-phase-effects";
 
 function* useFlashBite(next: Function, store: StoreLike, state: State, effect: PlayPokemonEffect): IterableIterator<State> {
@@ -75,6 +75,15 @@ export class CrobatG extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof PlayPokemonEffect && effect.pokemonCard === this) {
+      // Try to reduce PowerEffect, to check if something is blocking our ability
+      try {
+        const player = StateUtils.findOwner(state, effect.target);
+        const powerEffect = new PowerEffect(player, this.powers[0], this);
+        store.reduceEffect(state, powerEffect);
+      } catch {
+        return state;
+      }
+
       let generator: IterableIterator<State>;
       generator = useFlashBite(() => generator.next(), store, state, effect);
       return generator.next().value;
@@ -88,7 +97,7 @@ export class CrobatG extends PokemonCard {
 
     if (effect instanceof BetweenTurnsEffect) {
       if (effect.player.active.marker.hasMarker(this.TOXIC_MARKER)) {
-        effect.poisonDamage += 10;
+        effect.poisonDamage = 20;
       }
     }
 

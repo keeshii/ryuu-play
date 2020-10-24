@@ -1,6 +1,7 @@
 import { Attack, Power } from "../card/pokemon-types";
 import { Effect } from "./effect";
 import { Player } from "../state/player";
+import { PokemonCard } from "../card/pokemon-card";
 import { PokemonCardList } from "../state/pokemon-card-list";
 import { Card } from "../card/card";
 
@@ -33,10 +34,12 @@ export class UsePowerEffect implements Effect {
   public preventDefault = false;
   public player: Player;
   public power: Power;
+  public card: PokemonCard;
 
-  constructor(player: Player, power: Power) {
+  constructor(player: Player, power: Power, card: PokemonCard) {
     this.player = player;
     this.power = power;
+    this.card = card;
   }
 }
 
@@ -45,10 +48,12 @@ export class PowerEffect implements Effect {
   public preventDefault = false;
   public player: Player;
   public power: Power;
+  public card: PokemonCard;
 
-  constructor(player: Player, power: Power) {
+  constructor(player: Player, power: Power, card: PokemonCard) {
     this.player = player;
     this.power = power;
+    this.card = card;
   }
 }
 

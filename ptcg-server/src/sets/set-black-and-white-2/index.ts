@@ -54,8 +54,13 @@ import { ScrambleSwitch } from "./scramble-switch";
 import { SeismitoadEx } from "./seismitoad-ex";
 import { Shauna } from "./shauna";
 import { Shelmet } from "./shelmet";
+import { Sigilyph } from "./sigilyph";
 import { Silcoon } from "./silcoon";
+import { SilentLab } from "./silent-lab";
+import { SilverBangle } from "./silver-bangle";
 import { Skrelp } from "./skrelp";
+import { Skyla } from "./skyla";
+import { StartlingMegaphone } from "./startling-megaphone";
 import { Trubbish } from "./trubbish";
 import { VirbankCityGym } from "./virbank-city-gym";
 import { Wurmple } from "./wurmple";
@@ -118,6 +123,11 @@ export const setBlackAndWhite2: Card[] = [
   new SeismitoadEx(),
   new Shauna(),
   new Shelmet(),
+  new Sigilyph(),
+  new SilentLab(),
+  new SilverBangle(),
+  new Skyla(),
+  new StartlingMegaphone(),
   new Silcoon(),
   new Skrelp(),
   new Trubbish(),
