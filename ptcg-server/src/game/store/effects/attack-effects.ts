@@ -90,6 +90,27 @@ export class AddSpecialConditionsEffect extends AbstractAttackEffect implements 
   }
 }
 
+export class RemoveSpecialConditionsEffect extends AbstractAttackEffect implements Effect {
+  readonly type: string = AttackEffects.ADD_SPECIAL_CONDITIONS_EFFECT;
+  public preventDefault = false;
+  public specialConditions: SpecialCondition[];
+
+  constructor(player: Player, specialConditions: SpecialCondition[] | undefined,
+    attack: Attack, target: PokemonCardList, source: PokemonCardList) {
+    super(player, attack, target, source);
+    if (specialConditions === undefined) {
+      specialConditions = [
+        SpecialCondition.PARALYZED,
+        SpecialCondition.CONFUSED,
+        SpecialCondition.ASLEEP,
+        SpecialCondition.POISONED,
+        SpecialCondition.BURNED
+      ];
+    }
+    this.specialConditions = specialConditions;
+  }
+}
+
 export class HealTargetEffect extends AbstractAttackEffect implements Effect {
   readonly type: string = AttackEffects.ADD_MARKER_EFFECT;
   public preventDefault = false;

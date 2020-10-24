@@ -8,7 +8,8 @@ import { CheckPokemonTypeEffect, CheckPokemonStatsEffect,
   CheckProvidedEnergyEffect, CheckAttackCostEffect } from "../effects/check-effects";
 import { Weakness, Resistance } from "../card/pokemon-types";
 import { CardType, SpecialCondition, CardTag } from "../card/card-types";
-import { AttackEffect, UseAttackEffect, HealEffect, ApplyWeaknessEffect, KnockOutEffect, UsePowerEffect, PowerEffect} from "../effects/game-effects";
+import { AttackEffect, UseAttackEffect, HealEffect, ApplyWeaknessEffect,
+  KnockOutEffect, UsePowerEffect, PowerEffect, UseStadiumEffect } from "../effects/game-effects";
 import { CoinFlipPrompt } from "../prompts/coin-flip-prompt";
 import { DealDamageEffect } from "../effects/attack-effects";
 
@@ -145,6 +146,12 @@ export function gameReducer(store: StoreLike, state: State, effect: Effect): Sta
     store.log(state, `${player.name} uses the ${power.name} ability.`);
     state = store.reduceEffect(state, new PowerEffect(player, power));
     return state;
+  }
+
+  if (effect instanceof UseStadiumEffect) {
+    const player = effect.player;
+    store.log(state, `${player.name} uses the stadium ${effect.stadium.name}.`);
+    player.stadiumUsedTurn = state.turn;
   }
 
   if (effect instanceof HealEffect) {

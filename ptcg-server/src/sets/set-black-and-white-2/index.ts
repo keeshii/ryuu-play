@@ -45,7 +45,14 @@ import { RandomReceiver } from "./random-receiver";
 import { Regigigas } from "./regigigas";
 import { RockGuard } from "./rock-guard";
 import { RockyHelmet } from "./rocky-helmet";
+import { Roselia } from "./roselia";
+import { Roserade } from "./roserade";
+import { RoughSeas } from "./rough-seas";
 import { Sableye } from "./sableye";
+import { ScorchedEarth } from "./scorched-earth";
+import { ScrambleSwitch } from "./scramble-switch";
+import { SeismitoadEx } from "./seismitoad-ex";
+import { Shauna } from "./shauna";
 import { Shelmet } from "./shelmet";
 import { Silcoon } from "./silcoon";
 import { Skrelp } from "./skrelp";
@@ -102,7 +109,14 @@ export const setBlackAndWhite2: Card[] = [
   new Regigigas(),
   new RockGuard(),
   new RockyHelmet(),
+  new Roselia(),
+  new Roserade(),
+  new RoughSeas(),
   new Sableye(),
+  new ScorchedEarth(),
+  new ScrambleSwitch(),
+  new SeismitoadEx(),
+  new Shauna(),
   new Shelmet(),
   new Silcoon(),
   new Skrelp(),

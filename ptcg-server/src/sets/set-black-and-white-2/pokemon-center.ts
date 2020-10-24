@@ -45,9 +45,6 @@ export class PokemonCenter extends TrainerCard {
         throw new GameError(GameMessage.CANNOT_USE_STADIUM);
       }
 
-      // Do not discard the card yet
-      effect.preventDefault = true;
-
       return store.prompt(state, new ChoosePokemonPrompt(
         player.id,
         CardMessage.CHOOSE_ONE_POKEMON,

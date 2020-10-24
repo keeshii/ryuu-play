@@ -3,7 +3,8 @@ import { Effect } from "../effects/effect";
 import { State } from "../state/state";
 import { StoreLike } from "../store-like";
 import { DealDamageAfterWeaknessEffect, DealDamageEffect, DiscardCardsEffect,
-  AddMarkerEffect, HealTargetEffect, AddSpecialConditionsEffect } from "../effects/attack-effects";
+  AddMarkerEffect, HealTargetEffect, AddSpecialConditionsEffect,
+  RemoveSpecialConditionsEffect } from "../effects/attack-effects";
 import { ApplyWeaknessEffect, HealEffect } from "../effects/game-effects";
 import { StateUtils } from "../state-utils";
 
@@ -57,6 +58,14 @@ export function attackReducer(store: StoreLike, state: State, effect: Effect): S
     const target = effect.target;
     effect.specialConditions.forEach(sp => {
       target.addSpecialCondition(sp);
+    });
+    return state;
+  }
+
+  if (effect instanceof RemoveSpecialConditionsEffect) {
+    const target = effect.target;
+    effect.specialConditions.forEach(sp => {
+      target.removeSpecialCondition(sp);
     });
     return state;
   }

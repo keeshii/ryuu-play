@@ -96,7 +96,6 @@ export function playerTurnReducer(store: StoreLike, state: State, action: Action
         throw new GameError(GameMessage.NO_STADIUM_IN_PLAY);
       }
 
-      player.stadiumUsedTurn = state.turn;
       state = store.reduceEffect(state, new UseStadiumEffect(player, stadium));
       return state;
     }

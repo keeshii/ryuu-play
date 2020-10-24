@@ -1,7 +1,7 @@
 import { Effect } from "../../game/store/effects/effect";
 import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { PowerType, StoreLike, State, ConfirmPrompt, ChoosePokemonPrompt,
-  PlayerType, SlotType, StateUtils } from "../../game";
+import { PowerType, StoreLike, State, ChoosePokemonPrompt, PlayerType, SlotType,
+  StateUtils } from "../../game";
 import { Stage, CardType, CardTag, SpecialCondition } from "../../game/store/card/card-types";
 import { PlayPokemonEffect } from "../../game/store/effects/play-card-effects";
 import { CardMessage } from "../card-message";
@@ -10,19 +10,6 @@ import {BetweenTurnsEffect} from "../../game/store/effects/game-phase-effects";
 
 function* useFlashBite(next: Function, store: StoreLike, state: State, effect: PlayPokemonEffect): IterableIterator<State> {
   const player = effect.player;
-
-  let wantToUse = false;
-  yield store.prompt(state, new ConfirmPrompt(
-    effect.player.id,
-    CardMessage.USE_FLASH_BITE_ABILITY
-  ), result => {
-    wantToUse = result;
-    next();
-  });
-
-  if (!wantToUse) {
-    return state;
-  }
 
   yield store.prompt(state, new ChoosePokemonPrompt(
     player.id,
