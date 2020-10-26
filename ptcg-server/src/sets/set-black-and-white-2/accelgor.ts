@@ -1,3 +1,4 @@
+import { AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
 import { PokemonCard } from "../../game/store/card/pokemon-card";
 import { Stage, CardType, SpecialCondition } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
@@ -5,7 +6,6 @@ import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { ShuffleDeckPrompt } from "../../game/store/prompts/shuffle-prompt";
-import { StateUtils } from "../../game/store/state-utils";
 
 
 export class Accelgor extends PokemonCard {
@@ -45,10 +45,11 @@ export class Accelgor extends PokemonCard {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
       const player = effect.player;
-      const opponent = StateUtils.getOpponent(state, player);
 
-      opponent.active.addSpecialCondition(SpecialCondition.PARALYZED);
-      opponent.active.addSpecialCondition(SpecialCondition.POISONED);
+      const specialConditionEffect = new AddSpecialConditionsEffect(
+        effect, [ SpecialCondition.PARALYZED, SpecialCondition.POISONED ]
+      );
+      store.reduceEffect(state, specialConditionEffect);
 
       player.active.moveTo(player.deck);
       player.active.clearEffects();

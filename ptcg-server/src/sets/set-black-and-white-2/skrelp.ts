@@ -5,8 +5,8 @@ import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { CardMessage } from "../card-message";
-import { StateUtils } from "../../game/store/state-utils";
 import { CoinFlipPrompt } from "../../game/store/prompts/coin-flip-prompt";
+import { AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
 
 
 export class Skrelp extends PokemonCard {
@@ -39,13 +39,13 @@ export class Skrelp extends PokemonCard {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
-      const opponent = StateUtils.getOpponent(state, player);
 
       return store.prompt(state, [
         new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP)
       ], result => {
         if (result === true) {
-          opponent.active.addSpecialCondition(SpecialCondition.POISONED);
+          const specialCondition = new AddSpecialConditionsEffect(effect, [SpecialCondition.POISONED]);
+          store.reduceEffect(state, specialCondition);
         }
       });
     }

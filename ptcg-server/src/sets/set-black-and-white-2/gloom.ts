@@ -4,15 +4,14 @@ import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { AttackEffect } from "../../game/store/effects/game-effects";
-import { StateUtils } from "../../game/store/state-utils";
 import { CardMessage } from "../card-message";
 import { CoinFlipPrompt } from "../../game/store/prompts/coin-flip-prompt";
 import { SelectPrompt } from "../../game/store/prompts/select-prompt";
+import { AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
 
 function* useMiraclePowder(next: Function, store: StoreLike, state: State,
   effect: AttackEffect): IterableIterator<State> {
   const player = effect.player;
-  const opponent = StateUtils.getOpponent(state, player);
 
   let flip = false;
   yield store.prompt(state, [
@@ -43,7 +42,8 @@ function* useMiraclePowder(next: Function, store: StoreLike, state: State,
     const option = options[choice];
 
     if (option !== undefined) {
-      opponent.active.addSpecialCondition(option.value);
+      const specialConditionEffect = new AddSpecialConditionsEffect(effect, [option.value]);
+      store.reduceEffect(state, specialConditionEffect);
     }
   });
 }

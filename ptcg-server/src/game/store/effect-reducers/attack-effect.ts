@@ -4,7 +4,7 @@ import { State } from "../state/state";
 import { StoreLike } from "../store-like";
 import { PutDamageEffect, DealDamageEffect, DiscardCardsEffect,
   AddMarkerEffect, HealTargetEffect, AddSpecialConditionsEffect,
-  RemoveSpecialConditionsEffect, ApplyWeaknessEffect} from "../effects/attack-effects";
+  RemoveSpecialConditionsEffect, ApplyWeaknessEffect, AfterDamageEffect} from "../effects/attack-effects";
 import { HealEffect } from "../effects/game-effects";
 import { StateUtils } from "../state-utils";
 
@@ -17,13 +17,21 @@ export function attackReducer(store: StoreLike, state: State, effect: Effect): S
       throw new GameError(GameMessage.ILLEGAL_ACTION);
     }
 
+    const damage = Math.max(0, effect.damage);
     target.damage += Math.max(0, effect.damage);
+
+    if (damage > 0) {
+      const afterDamageEffect = new AfterDamageEffect(effect.attackEffect, damage);
+      store.reduceEffect(state, afterDamageEffect);
+    }
   }
 
   if (effect instanceof DealDamageEffect) {
     const base = effect.attackEffect;
 
     const applyWeakness = new ApplyWeaknessEffect(base, effect.damage);
+    applyWeakness.ignoreWeakness = base.ignoreWeakness;
+    applyWeakness.ignoreResistance = base.ignoreResistance;
     state = store.reduceEffect(state, applyWeakness);
 
     const dealDamage = new PutDamageEffect(base, applyWeakness.damage);
@@ -59,6 +67,9 @@ export function attackReducer(store: StoreLike, state: State, effect: Effect): S
     effect.specialConditions.forEach(sp => {
       target.addSpecialCondition(sp);
     });
+    if (effect.poisonDamage !== undefined) {
+      target.poisonDamage = effect.poisonDamage;
+    }
     return state;
   }
 

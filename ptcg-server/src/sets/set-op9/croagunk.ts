@@ -9,9 +9,8 @@ import { CoinFlipPrompt } from "../../game/store/prompts/coin-flip-prompt";
 import { CardMessage } from "../card-message";
 import { StateUtils } from "../../game/store/state-utils";
 import { PlayerType } from "../../game/store/actions/play-card-action";
-import { PutDamageEffect } from "../../game/store/effects/attack-effects";
 import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
-
+import { AfterDamageEffect, HealTargetEffect } from "../../game/store/effects/attack-effects";
 
 function* useKnockOff(next: Function, store: StoreLike, state: State,
   effect: AttackEffect): IterableIterator<State> {
@@ -49,30 +48,6 @@ function* useKnockOff(next: Function, store: StoreLike, state: State,
   });
 
   opponent.hand.moveCardsTo(cards, opponent.discard);
-  return state;
-}
-
-function* useNimble(next: Function, store: StoreLike, state: State,
-  effect: AttackEffect): IterableIterator<State> {
-  const player = effect.player;
-
-  let isTurtwigInPlay = false;
-  player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card) => {
-    if (card.name === 'Turtwig') {
-      isTurtwigInPlay = true;
-    }
-  });
-
-  if (effect.preventDefault || !isTurtwigInPlay) {
-    return;
-  }
-
-  if (store.hasPrompts()) {
-    yield store.waitPrompt(state, () => next());
-  }
-
-  const heal = Math.min(player.active.damage, effect.damage);
-  player.active.damage -= heal;
   return state;
 }
 
@@ -119,10 +94,23 @@ export class Croagunk extends PokemonCard {
       return generator.next().value;
     }
 
-    if (effect instanceof PutDamageEffect && effect.attack === this.attacks[1]) {
-      let generator: IterableIterator<State>;
-      generator = useNimble(() => generator.next(), store, state, effect);
-      return generator.next().value;
+    if (effect instanceof AfterDamageEffect && effect.attack === this.attacks[1]) {
+      const player = effect.player;
+
+      let isTurtwigInPlay = false;
+      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card) => {
+        if (card.name === 'Turtwig') {
+          isTurtwigInPlay = true;
+        }
+      });
+
+      if (!isTurtwigInPlay) {
+        return state;
+      }
+
+      const healEffect = new HealTargetEffect(effect.attackEffect, effect.damage);
+      healEffect.target = player.active;
+      return store.reduceEffect(state, healEffect);
     }
 
     return state;

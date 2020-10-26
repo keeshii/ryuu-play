@@ -6,8 +6,8 @@ import { Effect } from "../../game/store/effects/effect";
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { CoinFlipPrompt } from "../../game/store/prompts/coin-flip-prompt";
 import { CardMessage } from "../card-message";
-import { StateUtils } from "../../game/store/state-utils";
 import { PlayerType } from "../../game/store/actions/play-card-action";
+import { AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
 
 
 export class Pachirisu extends PokemonCard {
@@ -53,21 +53,20 @@ export class Pachirisu extends PokemonCard {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
-      const opponent = StateUtils.getOpponent(state, player);
 
       return store.prompt(state, new CoinFlipPrompt(
         player.id,
         CardMessage.COIN_FLIP
       ), flipResult => {
         if (flipResult) {
-          opponent.active.addSpecialCondition(SpecialCondition.PARALYZED);
+          const specialCondition = new AddSpecialConditionsEffect(effect, [SpecialCondition.PARALYZED]);
+          store.reduceEffect(state, specialCondition);
         }
       });
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
       const player = effect.player;
-      const opponent = StateUtils.getOpponent(state, player);
 
       let isCroagunkInPlay = false;
       player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card) => {
@@ -78,7 +77,8 @@ export class Pachirisu extends PokemonCard {
 
       if (isCroagunkInPlay) {
         effect.damage += 20;
-        opponent.active.addSpecialCondition(SpecialCondition.POISONED);
+        const specialCondition = new AddSpecialConditionsEffect(effect, [SpecialCondition.POISONED]);
+        store.reduceEffect(state, specialCondition);
       }
 
       return state;

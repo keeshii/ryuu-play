@@ -50,8 +50,8 @@ export class Pikachu extends PokemonCard {
         new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP)
       ], result => {
         if (result === true) {
-          const specialConditions = new AddSpecialConditionsEffect(effect, [SpecialCondition.PARALYZED]);
-          store.reduceEffect(state, specialConditions);
+          const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.PARALYZED]);
+          store.reduceEffect(state, specialConditionEffect);
         }
       });
     }

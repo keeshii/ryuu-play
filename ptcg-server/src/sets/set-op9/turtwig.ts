@@ -4,9 +4,8 @@ import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { AttackEffect } from "../../game/store/effects/game-effects";
-import { StateUtils } from "../../game/store/state-utils";
 import { PlayerType } from "../../game/store/actions/play-card-action";
-import { HealTargetEffect } from "../../game/store/effects/attack-effects";
+import { HealTargetEffect, AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
 
 
 export class Turtwig extends PokemonCard {
@@ -59,7 +58,6 @@ export class Turtwig extends PokemonCard {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
       const player = effect.player;
-      const opponent = StateUtils.getOpponent(state, player);
 
       let isChimcharInPlay = false;
       player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card) => {
@@ -70,7 +68,8 @@ export class Turtwig extends PokemonCard {
 
       if (isChimcharInPlay) {
         effect.damage += 20;
-        opponent.active.addSpecialCondition(SpecialCondition.BURNED);
+        const specialCondition = new AddSpecialConditionsEffect(effect, [SpecialCondition.BURNED]);
+        store.reduceEffect(state, specialCondition);
       }
     }
 

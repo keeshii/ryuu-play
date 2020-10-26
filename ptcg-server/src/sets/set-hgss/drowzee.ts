@@ -4,6 +4,7 @@ import { StoreLike, State, StateUtils, ChoosePokemonPrompt, PlayerType, SlotType
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
 import {CardMessage} from "../card-message";
+import {AddSpecialConditionsEffect} from "../../game/store/effects/attack-effects";
 
 export class Drowzee extends PokemonCard {
 
@@ -60,7 +61,9 @@ export class Drowzee extends PokemonCard {
           return;
         }
         opponent.switchPokemon(targets[0]);
-        opponent.active.addSpecialCondition(SpecialCondition.ASLEEP);
+        const specialCondition = new AddSpecialConditionsEffect(effect, [SpecialCondition.ASLEEP]);
+        specialCondition.target = targets[0];
+        store.reduceEffect(state, specialCondition);
       });
     }
 

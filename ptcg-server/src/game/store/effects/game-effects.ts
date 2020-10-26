@@ -13,7 +13,8 @@ export enum GameEffects {
   POWER_EFFECT = 'POWER_EFFECT',
   ATTACK_EFFECT = 'ATTACK_EFFECT',
   KNOCK_OUT_EFFECT = 'KNOCK_OUT_EFFECT',
-  HEAL_EFFECT = 'HEAL_EFFECT'
+  HEAL_EFFECT = 'HEAL_EFFECT',
+  SPECIAL_CONDITION_EFFECT = 'SPECIAL_CONDITION_EFFECT'
 }
 
 export class RetreatEffect implements Effect {
@@ -87,6 +88,8 @@ export class AttackEffect implements Effect {
   public opponent: Player;
   public attack: Attack;
   public damage: number;
+  public ignoreWeakness = false;
+  public ignoreResistance = false;
 
   constructor(player: Player, opponent: Player, attack: Attack) {
     this.player = player;

@@ -10,6 +10,7 @@ export enum AttackEffects {
   APPLY_WEAKNESS_EFFECT = 'APPLY_WEAKNESS_EFFECT',
   DEAL_DAMAGE_EFFECT = 'DEAL_DAMAGE_EFFECT',
   DEAL_DAMAGE_AFTER_WEAKNESS_EFFECT = 'DEAL_DAMAGE_AFTER_WEAKNESS_EFFECT',
+  DEAL_DAMAGE_COMPLETE_EFFECT = 'DEAL_DAMAGE_COMPLETE_EFFECT',
   DISCARD_CARD_EFFECT = 'DISCARD_CARD_EFFECT',
   ADD_MARKER_EFFECT = 'ADD_MARKER_EFFECT',
   ADD_SPECIAL_CONDITIONS_EFFECT = 'ADD_SPECIAL_CONDITIONS_EFFECT'
@@ -68,6 +69,17 @@ export class PutDamageEffect extends AbstractAttackEffect implements Effect {
   }
 }
 
+export class AfterDamageEffect extends AbstractAttackEffect implements Effect {
+  readonly type: string = AttackEffects.DEAL_DAMAGE_COMPLETE_EFFECT;
+  public preventDefault = false;
+  public damage: number;
+
+  constructor(base: AttackEffect, damage: number) {
+    super(base);
+    this.damage = damage;
+  }
+}
+
 export class DiscardCardsEffect extends AbstractAttackEffect implements Effect {
   readonly type: string = AttackEffects.DISCARD_CARD_EFFECT;
   public preventDefault = false;
@@ -95,6 +107,7 @@ export class AddMarkerEffect extends AbstractAttackEffect implements Effect {
 export class AddSpecialConditionsEffect extends AbstractAttackEffect implements Effect {
   readonly type: string = AttackEffects.ADD_SPECIAL_CONDITIONS_EFFECT;
   public preventDefault = false;
+  public poisonDamage?: number;
   public specialConditions: SpecialCondition[];
 
   constructor(base: AttackEffect, specialConditions: SpecialCondition[]) {

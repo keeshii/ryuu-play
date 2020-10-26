@@ -4,7 +4,7 @@ import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { AttackEffect } from "../../game/store/effects/game-effects";
-import { StateUtils } from "../../game/store/state-utils";
+import {AddSpecialConditionsEffect} from "../../game/store/effects/attack-effects";
 
 
 export class Duskull extends PokemonCard {
@@ -35,9 +35,8 @@ export class Duskull extends PokemonCard {
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      const player = effect.player;
-      const opponent = StateUtils.getOpponent(state, player);
-      opponent.active.addSpecialCondition(SpecialCondition.CONFUSED);
+      const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.CONFUSED]);
+      store.reduceEffect(state, specialConditionEffect);
     }
     return state;
   }

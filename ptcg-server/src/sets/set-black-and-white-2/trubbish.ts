@@ -4,7 +4,7 @@ import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { AttackEffect } from "../../game/store/effects/game-effects";
-import { StateUtils } from "../../game/store/state-utils";
+import { AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
 
 
 export class Trubbish extends PokemonCard {
@@ -40,9 +40,8 @@ export class Trubbish extends PokemonCard {
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      const player = effect.player;
-      const opponent = StateUtils.getOpponent(state, player);
-      opponent.active.addSpecialCondition(SpecialCondition.POISONED);
+      const specialCondition = new AddSpecialConditionsEffect(effect, [SpecialCondition.POISONED]);
+      store.reduceEffect(state, specialCondition);
     }
     return state;
   }

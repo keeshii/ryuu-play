@@ -6,7 +6,7 @@ import { Stage, CardType, CardTag, SpecialCondition } from "../../game/store/car
 import { PlayPokemonEffect } from "../../game/store/effects/play-card-effects";
 import { CardMessage } from "../card-message";
 import { AttackEffect, PowerEffect } from "../../game/store/effects/game-effects";
-import {BetweenTurnsEffect} from "../../game/store/effects/game-phase-effects";
+import { AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
 
 function* useFlashBite(next: Function, store: StoreLike, state: State, effect: PlayPokemonEffect): IterableIterator<State> {
   const player = effect.player;
@@ -71,8 +71,6 @@ export class CrobatG extends PokemonCard {
 
   public fullName: string = 'Crobat G PL';
 
-  private readonly TOXIC_MARKER = 'CROBAT_G_TOXIC_FANG';
-
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof PlayPokemonEffect && effect.pokemonCard === this) {
       // Try to reduce PowerEffect, to check if something is blocking our ability
@@ -90,15 +88,9 @@ export class CrobatG extends PokemonCard {
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      const defending = StateUtils.getOpponent(state, effect.player).active;
-      defending.addSpecialCondition(SpecialCondition.POISONED);
-      defending.marker.addMarker(this.TOXIC_MARKER, this);
-    }
-
-    if (effect instanceof BetweenTurnsEffect) {
-      if (effect.player.active.marker.hasMarker(this.TOXIC_MARKER)) {
-        effect.poisonDamage = 20;
-      }
+      const specialCondition = new AddSpecialConditionsEffect(effect, [SpecialCondition.POISONED]);
+      specialCondition.poisonDamage = 20;
+      store.reduceEffect(state, specialCondition);
     }
 
     return state;

@@ -3,7 +3,7 @@ import { Stage, CardType } from "../../game/store/card/card-types";
 import { StoreLike, State, StateUtils} from "../../game";
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
-import { ApplyWeaknessEffect } from "../../game/store/effects/attack-effects";
+import { ApplyWeaknessEffect, AfterDamageEffect } from "../../game/store/effects/attack-effects";
 
 
 export class Rayquaza extends PokemonCard {
@@ -53,10 +53,15 @@ export class Rayquaza extends PokemonCard {
 
       const applyWeakness = new ApplyWeaknessEffect(effect, 90);
       store.reduceEffect(state, applyWeakness);
+      const damage = applyWeakness.damage;
 
       effect.damage = 0;
-      opponent.active.damage += applyWeakness.damage;
-      return state;
+
+      if (damage > 0) {
+        opponent.active.damage += damage;
+        const afterDamage = new AfterDamageEffect(effect, damage);
+        state = store.reduceEffect(state, afterDamage);
+      }
     }
 
     return state;

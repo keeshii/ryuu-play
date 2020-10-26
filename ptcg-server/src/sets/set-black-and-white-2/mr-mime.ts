@@ -8,9 +8,9 @@ import { PowerType } from "../../game/store/card/pokemon-types";
 import { StateUtils } from "../../game/store/state-utils";
 import { PlayerType } from "../../game/store/actions/play-card-action";
 import { GameMessage, GameError } from "../../game/game-error";
-import {CoinFlipPrompt} from "../../game/store/prompts/coin-flip-prompt";
-import {CardMessage} from "../card-message";
-import {PutDamageEffect} from "../../game/store/effects/attack-effects";
+import { CoinFlipPrompt } from "../../game/store/prompts/coin-flip-prompt";
+import { CardMessage } from "../card-message";
+import { PutDamageEffect, AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
 
 export class MrMime extends PokemonCard {
 
@@ -51,13 +51,13 @@ export class MrMime extends PokemonCard {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
-      const opponent = StateUtils.getOpponent(state, player);
 
       return store.prompt(state, [
         new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP)
       ], result => {
         if (result === true) {
-          opponent.active.addSpecialCondition(SpecialCondition.PARALYZED);
+          const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.PARALYZED]);
+          store.reduceEffect(state, specialConditionEffect);
         }
       });
     }

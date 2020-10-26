@@ -36,8 +36,8 @@ export class BetweenTurnsEffect implements Effect {
 
   constructor(player: Player) {
     this.player = player;
-    this.poisonDamage = 10;
-    this.burnDamage = 20;
+    this.poisonDamage = player.active.poisonDamage;
+    this.burnDamage = player.active.burnDamage;
     this.burnFlipResult = undefined;
     this.asleepFlipResult = undefined;
   }

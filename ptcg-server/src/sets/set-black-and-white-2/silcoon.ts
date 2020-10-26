@@ -5,8 +5,8 @@ import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { CardMessage } from "../card-message";
-import { StateUtils } from "../../game/store/state-utils";
 import { CoinFlipPrompt } from "../../game/store/prompts/coin-flip-prompt";
+import { AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
 
 
 export class Silcoon extends PokemonCard {
@@ -40,13 +40,13 @@ export class Silcoon extends PokemonCard {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
-      const opponent = StateUtils.getOpponent(state, player);
 
       return store.prompt(state, [
         new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP)
       ], result => {
         if (result === true) {
-          opponent.active.addSpecialCondition(SpecialCondition.PARALYZED);
+          const specialCondition = new AddSpecialConditionsEffect(effect, [SpecialCondition.PARALYZED]);
+          store.reduceEffect(state, specialCondition);
         }
       });
     }

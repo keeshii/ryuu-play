@@ -11,6 +11,7 @@ import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
 import { PlayPokemonEffect } from "../../game/store/effects/play-card-effects";
 import { CardList } from "../../game/store/state/card-list";
 import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
+import {AddSpecialConditionsEffect} from "../../game/store/effects/attack-effects";
 
 
 export class Musharna extends PokemonCard {
@@ -59,7 +60,9 @@ export class Musharna extends PokemonCard {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
-      player.active.addSpecialCondition(SpecialCondition.ASLEEP);
+      const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.ASLEEP]);
+      specialConditionEffect.target = player.active;
+      store.reduceEffect(state, specialConditionEffect);
     }
 
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {

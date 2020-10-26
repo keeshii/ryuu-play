@@ -2,7 +2,7 @@ import { PokemonCard } from "../../game/store/card/pokemon-card";
 import { Stage, CardType, SpecialCondition } from "../../game/store/card/card-types";
 import { PowerType, StoreLike, State } from "../../game";
 import { AttackEffect } from "../../game/store/effects/game-effects";
-import { PutDamageEffect } from "../../game/store/effects/attack-effects";
+import { PutDamageEffect, AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
 import { Effect } from "../../game/store/effects/effect";
 
 export class Tyrogue extends PokemonCard {
@@ -42,11 +42,12 @@ export class Tyrogue extends PokemonCard {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
 
-      effect.damage = 0;
+      const specialCondition = new AddSpecialConditionsEffect(effect, [SpecialCondition.PARALYZED]);
+      specialCondition.target = player.active;
+      store.reduceEffect(state, specialCondition);
 
-      store.reduceEffect(state, new PutDamageEffect(effect, 30));
-
-      player.active.addSpecialCondition(SpecialCondition.ASLEEP);
+      effect.ignoreWeakness = true;
+      effect.ignoreResistance = true;
       return state;
     }
 

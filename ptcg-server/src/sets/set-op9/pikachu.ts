@@ -3,7 +3,7 @@ import { Stage, CardType, SpecialCondition } from "../../game/store/card/card-ty
 import { StoreLike, State, StateUtils, PokemonCardList } from "../../game";
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
-import { DealDamageEffect } from "../../game/store/effects/attack-effects";
+import { DealDamageEffect, AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
 import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
 
 
@@ -56,15 +56,15 @@ export class Pikachu extends PokemonCard {
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      const player = effect.player;
-      const opponent = StateUtils.getOpponent(state, player);
       const cardList = StateUtils.findCardList(state, this);
       if (!(cardList instanceof PokemonCardList)) {
         return state;
       }
       if (cardList.pokemonPlayedTurn === state.turn && !cardList.isBasic()) {
-        opponent.active.addSpecialCondition(SpecialCondition.PARALYZED);
+        const specialCondition = new AddSpecialConditionsEffect(effect, [SpecialCondition.PARALYZED]);
+        store.reduceEffect(state, specialCondition);
       }
+      return state;
     }
 
     if (effect instanceof DealDamageEffect && effect.source.marker.hasMarker(this.GROWL_MARKER, this)) {

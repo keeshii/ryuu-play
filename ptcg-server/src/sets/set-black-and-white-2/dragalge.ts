@@ -1,3 +1,4 @@
+import { AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
 import { PokemonCard } from "../../game/store/card/pokemon-card";
 import { Stage, CardType, SpecialCondition } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
@@ -53,13 +54,15 @@ export class Dragalge extends PokemonCard {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
-      const opponent = StateUtils.getOpponent(state, player);
 
       return store.prompt(state, [
         new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP)
       ], result => {
         if (result === true) {
-          opponent.active.addSpecialCondition(SpecialCondition.POISONED);
+          const specialConditionEffect = new AddSpecialConditionsEffect(
+            effect, [SpecialCondition.POISONED]
+          );
+          store.reduceEffect(state, specialConditionEffect);
         }
       });
     }

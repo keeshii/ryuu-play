@@ -10,6 +10,10 @@ export class PokemonCardList extends CardList {
 
   public specialConditions: SpecialCondition[] = [];
 
+  public poisonDamage: number = 10;
+
+  public burnDamage: number = 20;
+
   public marker = new Marker();
 
   public pokemonPlayedTurn: number = 0;
@@ -46,6 +50,8 @@ export class PokemonCardList extends CardList {
   clearEffects(): void {
     this.marker.markers = [];
     this.specialConditions = [];
+    this.poisonDamage = 10;
+    this.burnDamage = 20;
     if (this.cards.length === 0) {
       this.damage = 0;
     }
@@ -63,6 +69,12 @@ export class PokemonCardList extends CardList {
   }
 
   addSpecialCondition(sp: SpecialCondition): void {
+    if (sp === SpecialCondition.POISONED) {
+      this.poisonDamage = 10;
+    }
+    if (sp === SpecialCondition.BURNED) {
+      this.burnDamage = 20;
+    }
     if (this.specialConditions.includes(sp)) {
       return;
     }

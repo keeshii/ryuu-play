@@ -6,8 +6,8 @@ import { Effect } from "../../game/store/effects/effect";
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { CoinFlipPrompt } from "../../game/store/prompts/coin-flip-prompt";
 import { CardMessage } from "../card-message";
-import { StateUtils } from "../../game/store/state-utils";
 import { PlayerType } from "../../game/store/actions/play-card-action";
+import { AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
 
 
 export class Chimchar extends PokemonCard {
@@ -62,7 +62,6 @@ export class Chimchar extends PokemonCard {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
       const player = effect.player;
-      const opponent = StateUtils.getOpponent(state, player);
 
       let isPiplupInPlay = false;
       player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card) => {
@@ -73,7 +72,8 @@ export class Chimchar extends PokemonCard {
 
       if (isPiplupInPlay) {
         effect.damage += 20;
-        opponent.active.addSpecialCondition(SpecialCondition.ASLEEP);
+        const specialCondition = new AddSpecialConditionsEffect(effect, [SpecialCondition.ASLEEP]);
+        store.reduceEffect(state, specialCondition);
       }
 
       return state;
