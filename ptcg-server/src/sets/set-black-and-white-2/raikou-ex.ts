@@ -1,13 +1,12 @@
 import { PokemonCard } from "../../game/store/card/pokemon-card";
 import { Stage, CardType, SpecialCondition, CardTag } from "../../game/store/card/card-types";
-import { StoreLike, State, StateUtils, Card, CoinFlipPrompt,
-  ChoosePokemonPrompt, PlayerType, SlotType } from "../../game";
+import { StoreLike, State, Card, CoinFlipPrompt, ChoosePokemonPrompt, PlayerType, SlotType } from "../../game";
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
 import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
 import { CardMessage } from "../card-message";
 import { DiscardCardsEffect, AddSpecialConditionsEffect,
-  DealDamageAfterWeaknessEffect } from "../../game/store/effects/attack-effects";
+  PutDamageEffect } from "../../game/store/effects/attack-effects";
 
 
 export class RaikouEx extends PokemonCard {
@@ -50,24 +49,20 @@ export class RaikouEx extends PokemonCard {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
-      const opponent = StateUtils.getOpponent(state, player);
 
       return store.prompt(state, [
         new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP)
       ], result => {
         if (result === true) {
-          const addSpecialConditionsEffect = new AddSpecialConditionsEffect(
-            player, [SpecialCondition.PARALYZED],
-            effect.attack, opponent.active, player.active
-          );
-          store.reduceEffect(state, addSpecialConditionsEffect);
+          const specialCondition = new AddSpecialConditionsEffect(effect, [SpecialCondition.PARALYZED]);
+          store.reduceEffect(state, specialCondition);
         }
       });
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
       const player = effect.player;
-      const opponent = StateUtils.getOpponent(state, player);
+      const opponent = effect.opponent;
 
       const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);
       state = store.reduceEffect(state, checkProvidedEnergy);
@@ -79,8 +74,8 @@ export class RaikouEx extends PokemonCard {
         }
       });
 
-      const discardEnergy = new DiscardCardsEffect(player, cards,
-        effect.attack, player.active, player.active);
+      const discardEnergy = new DiscardCardsEffect(effect, cards);
+      discardEnergy.target = player.active;
       store.reduceEffect(state, discardEnergy);
 
       const hasBenched = opponent.bench.some(b => b.cards.length > 0);
@@ -98,8 +93,8 @@ export class RaikouEx extends PokemonCard {
         if (!targets || targets.length === 0) {
           return;
         }
-        const damageEffect = new DealDamageAfterWeaknessEffect(
-          player, 100, effect.attack, targets[0], player.active);
+        const damageEffect = new PutDamageEffect(effect, 100);
+        damageEffect.target = targets[0];
         store.reduceEffect(state, damageEffect);
       });
     }

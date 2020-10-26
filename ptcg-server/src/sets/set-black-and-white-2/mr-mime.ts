@@ -10,7 +10,7 @@ import { PlayerType } from "../../game/store/actions/play-card-action";
 import { GameMessage, GameError } from "../../game/game-error";
 import {CoinFlipPrompt} from "../../game/store/prompts/coin-flip-prompt";
 import {CardMessage} from "../card-message";
-import {DealDamageAfterWeaknessEffect} from "../../game/store/effects/attack-effects";
+import {PutDamageEffect} from "../../game/store/effects/attack-effects";
 
 export class MrMime extends PokemonCard {
 
@@ -62,7 +62,7 @@ export class MrMime extends PokemonCard {
       });
     }
 
-    if (effect instanceof DealDamageAfterWeaknessEffect) {
+    if (effect instanceof PutDamageEffect) {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
 

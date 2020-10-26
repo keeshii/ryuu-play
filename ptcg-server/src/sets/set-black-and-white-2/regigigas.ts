@@ -4,8 +4,7 @@ import { StoreLike } from "../../game/store/store-like";
 import { State, GamePhase } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { AttackEffect } from "../../game/store/effects/game-effects";
-import { DealDamageAfterWeaknessEffect, AddMarkerEffect } from "../../game/store/effects/attack-effects";
-import { StateUtils } from "../../game/store/state-utils";
+import { PutDamageEffect, AddMarkerEffect } from "../../game/store/effects/attack-effects";
 import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
 
 export class Regigigas extends PokemonCard {
@@ -45,16 +44,12 @@ export class Regigigas extends PokemonCard {
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      const player = effect.player;
-      const opponent = StateUtils.getOpponent(state, player);
-
-      const addMarkerEffect = new AddMarkerEffect(player, this.DAUNT_MARKER,
-        this, effect.attack, opponent.active, player.active);
+      const addMarkerEffect = new AddMarkerEffect(effect, this.DAUNT_MARKER, this);
       return store.reduceEffect(state, addMarkerEffect);
     }
 
     // Reduce damage by 40
-    if (effect instanceof DealDamageAfterWeaknessEffect
+    if (effect instanceof PutDamageEffect
       && effect.source.marker.hasMarker(this.DAUNT_MARKER, this)) {
 
       // It's not an attack

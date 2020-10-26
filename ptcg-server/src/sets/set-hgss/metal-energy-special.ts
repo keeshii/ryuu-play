@@ -3,7 +3,7 @@ import { EnergyCard } from "../../game/store/card/energy-card";
 import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
-import { DealDamageAfterWeaknessEffect } from "../../game/store/effects/attack-effects";
+import { PutDamageEffect } from "../../game/store/effects/attack-effects";
 import { CheckPokemonTypeEffect } from "../../game/store/effects/check-effects";
 
 export class MetalEnergySpecial extends EnergyCard {
@@ -25,7 +25,7 @@ export class MetalEnergySpecial extends EnergyCard {
     'Energy card.)';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof DealDamageAfterWeaknessEffect) {
+    if (effect instanceof PutDamageEffect) {
       if (effect.target.cards.includes(this)) {
         const checkPokemonType = new CheckPokemonTypeEffect(effect.target);
         store.reduceEffect(state, checkPokemonType);

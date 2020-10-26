@@ -42,8 +42,7 @@ function* useWhirlpool(next: Function, store: StoreLike, state: State,
     next();
   });
 
-  const discardEnergy = new DiscardCardsEffect(player, cards, effect.attack,
-    opponent.active, player.active);
+  const discardEnergy = new DiscardCardsEffect(effect, cards);
   return store.reduceEffect(state, discardEnergy);
 }
 

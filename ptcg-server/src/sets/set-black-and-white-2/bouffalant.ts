@@ -4,7 +4,7 @@ import { StoreLike } from "../../game/store/store-like";
 import { State, GamePhase } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { PowerEffect, UsePowerEffect, AttackEffect } from "../../game/store/effects/game-effects";
-import { DealDamageAfterWeaknessEffect } from "../../game/store/effects/attack-effects";
+import { PutDamageEffect } from "../../game/store/effects/attack-effects";
 import { PowerType } from "../../game/store/card/pokemon-types";
 import { StateUtils } from "../../game/store/state-utils";
 import { GameMessage, GameError } from "../../game/game-error";
@@ -59,7 +59,7 @@ export class Bouffalant extends PokemonCard {
     }
 
     // Reduce damage by 20
-    if (effect instanceof DealDamageAfterWeaknessEffect && effect.target.cards.includes(this)) {
+    if (effect instanceof PutDamageEffect && effect.target.cards.includes(this)) {
       const pokemonCard = effect.target.getPokemonCard();
 
       // It's not this pokemon card

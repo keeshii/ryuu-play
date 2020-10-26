@@ -6,7 +6,7 @@ import { AttackEffect } from "../../game/store/effects/game-effects";
 import { CardMessage } from "../card-message";
 import { AttachEnergyEffect } from "../../game/store/effects/play-card-effects";
 import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
-import { DealDamageAfterWeaknessEffect } from "../../game/store/effects/attack-effects";
+import { PutDamageEffect } from "../../game/store/effects/attack-effects";
 
 export class Shuckle extends PokemonCard {
 
@@ -58,7 +58,7 @@ export class Shuckle extends PokemonCard {
       return state;
     }
 
-    if (effect instanceof DealDamageAfterWeaknessEffect
+    if (effect instanceof PutDamageEffect
       && effect.target.marker.hasMarker(this.SHELL_STUNNER_MAREKER)) {
       effect.preventDefault = true;
       return state;

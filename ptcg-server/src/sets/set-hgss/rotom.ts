@@ -8,7 +8,7 @@ import { PlayPokemonEffect } from "../../game/store/effects/play-card-effects";
 import { PowerEffect, AttackEffect } from "../../game/store/effects/game-effects";
 import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
 import { CardMessage } from "../card-message";
-import { DealDamageAfterWeaknessEffect } from "../../game/store/effects/attack-effects";
+import { PutDamageEffect } from "../../game/store/effects/attack-effects";
 
 export class Rotom extends PokemonCard {
 
@@ -106,8 +106,8 @@ export class Rotom extends PokemonCard {
             damage += 20 * c.provides.length;
           }
         });
-        const damageEffect = new DealDamageAfterWeaknessEffect(
-          player, damage, effect.attack, targets[0], player.active);
+        const damageEffect = new PutDamageEffect(effect, damage);
+        damageEffect.target = targets[0];
         store.reduceEffect(state, damageEffect);
       });
 

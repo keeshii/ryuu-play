@@ -4,7 +4,7 @@ import { StoreLike } from "../../game/store/store-like";
 import { State, GamePhase } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { AttackEffect, PowerEffect, UsePowerEffect } from "../../game/store/effects/game-effects";
-import { DealDamageAfterWeaknessEffect } from "../../game/store/effects/attack-effects";
+import { PutDamageEffect } from "../../game/store/effects/attack-effects";
 import { PowerType } from "../../game/store/card/pokemon-types";
 import { StateUtils } from "../../game/store/state-utils";
 import { ConfirmPrompt } from "../../game/store/prompts/confirm-prompt";
@@ -102,7 +102,7 @@ export class Beautifly extends PokemonCard {
     }
 
     // Prevent damage from Pokemon-EX
-    if (effect instanceof DealDamageAfterWeaknessEffect && effect.target.cards.includes(this)) {
+    if (effect instanceof PutDamageEffect && effect.target.cards.includes(this)) {
       const pokemonCard = effect.target.getPokemonCard();
       const sourceCard = effect.source.getPokemonCard();
 

@@ -2,7 +2,7 @@ import { PokemonCard } from "../../game/store/card/pokemon-card";
 import { Stage, CardType } from "../../game/store/card/card-types";
 import { StoreLike, State, CoinFlipPrompt, ChooseEnergyPrompt, Card, StateUtils } from "../../game";
 import { AttackEffect } from "../../game/store/effects/game-effects";
-import { DealDamageAfterWeaknessEffect } from "../../game/store/effects/attack-effects";
+import { PutDamageEffect } from "../../game/store/effects/attack-effects";
 import { Effect } from "../../game/store/effects/effect";
 import { CardMessage } from "../card-message";
 import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
@@ -78,8 +78,8 @@ export class Garchomp extends PokemonCard {
 
       opponent.bench.forEach(benched => {
         if (benched.cards.length > 0) {
-          const dealDamage = new DealDamageAfterWeaknessEffect(player, 10,
-            effect.attack, benched, player.active);
+          const dealDamage = new PutDamageEffect(effect, 10);
+          dealDamage.target = benched;
           return store.reduceEffect(state, dealDamage);
         }
       });

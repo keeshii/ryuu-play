@@ -52,9 +52,9 @@ export class Turtwig extends PokemonCard {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
-      const healTarget = new HealTargetEffect(player, 10, effect.attack,
-        player.active, player.active);
-      return store.reduceEffect(state, healTarget);
+      const healEffect = new HealTargetEffect(effect, 10);
+      healEffect.target = player.active;
+      return store.reduceEffect(state, healEffect);
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {

@@ -5,7 +5,7 @@ import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { CardMessage } from "../card-message";
-import { DealDamageAfterWeaknessEffect } from "../../game/store/effects/attack-effects";
+import { PutDamageEffect } from "../../game/store/effects/attack-effects";
 import { StateUtils } from "../../game/store/state-utils";
 import { PlayerType, SlotType } from "../../game/store/actions/play-card-action";
 import { ChoosePokemonPrompt } from "../../game/store/prompts/choose-pokemon-prompt";
@@ -67,8 +67,8 @@ export class Lopunny extends PokemonCard {
         { allowCancel: false }
       ), targets => {
         targets.forEach(target => {
-          const dealDamage = new DealDamageAfterWeaknessEffect(player, 20,
-            effect.attack, target, player.active);
+          const dealDamage = new PutDamageEffect(effect, 20);
+          dealDamage.target = target;
           return store.reduceEffect(state, dealDamage);
         });
       });

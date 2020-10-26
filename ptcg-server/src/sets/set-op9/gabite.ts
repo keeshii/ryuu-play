@@ -6,7 +6,7 @@ import { Effect } from "../../game/store/effects/effect";
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { CoinFlipPrompt } from "../../game/store/prompts/coin-flip-prompt";
 import { CardMessage } from "../card-message";
-import { DealDamageAfterWeaknessEffect, HealTargetEffect } from "../../game/store/effects/attack-effects";
+import { PutDamageEffect, HealTargetEffect } from "../../game/store/effects/attack-effects";
 import { StateUtils } from "../../game/store/state-utils";
 import { PlayerType } from "../../game/store/actions/play-card-action";
 import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
@@ -69,15 +69,11 @@ export class Gabite extends PokemonCard {
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      const player = effect.player;
-      const opponent = StateUtils.getOpponent(state, player);
-
-      const healTarget = new HealTargetEffect(player, 20, effect.attack,
-        opponent.active, player.active);
+      const healTarget = new HealTargetEffect(effect, 20);
       return store.reduceEffect(state, healTarget);
     }
 
-    if (effect instanceof DealDamageAfterWeaknessEffect
+    if (effect instanceof PutDamageEffect
       && effect.target.marker.hasMarker(this.BURROW_MARKER)) {
       effect.preventDefault = true;
       return state;

@@ -1,6 +1,6 @@
 import { Effect } from "../../game/store/effects/effect";
 import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { PowerType, StoreLike, State, StateUtils, CoinFlipPrompt,
+import { PowerType, StoreLike, State, CoinFlipPrompt,
   ChooseCardsPrompt} from "../../game";
 import { Stage, CardType, SpecialCondition } from "../../game/store/card/card-types";
 import { PlayPokemonEffect } from "../../game/store/effects/play-card-effects";
@@ -79,18 +79,14 @@ export class Roserade extends PokemonCard {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
-      const opponent = StateUtils.getOpponent(state, player);
 
       return store.prompt(state, [
         new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP)
       ], result => {
         if (result === true) {
-          const addSpecialConditionsEffect = new AddSpecialConditionsEffect(
-            player, [SpecialCondition.PARALYZED],
-            effect.attack, opponent.active, player.active
-          );
+          const addSpecialCondition = new AddSpecialConditionsEffect(effect, [SpecialCondition.PARALYZED]);
           effect.damage += 20;
-          store.reduceEffect(state, addSpecialConditionsEffect);
+          store.reduceEffect(state, addSpecialCondition);
         }
       });
     }

@@ -1,8 +1,9 @@
 import { PokemonCard } from "../../game/store/card/pokemon-card";
 import { Stage, CardType } from "../../game/store/card/card-types";
 import { StoreLike, State, StateUtils} from "../../game";
-import { AttackEffect, ApplyWeaknessEffect } from "../../game/store/effects/game-effects";
+import { AttackEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
+import { ApplyWeaknessEffect } from "../../game/store/effects/attack-effects";
 
 
 export class Rayquaza extends PokemonCard {
@@ -50,7 +51,7 @@ export class Rayquaza extends PokemonCard {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
 
-      const applyWeakness = new ApplyWeaknessEffect(player, 90, opponent.active, player.active);
+      const applyWeakness = new ApplyWeaknessEffect(effect, 90);
       store.reduceEffect(state, applyWeakness);
 
       effect.damage = 0;

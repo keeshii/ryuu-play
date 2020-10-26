@@ -3,7 +3,7 @@ import { TrainerType, CardTag } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
 import { State, GamePhase } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
-import { DealDamageAfterWeaknessEffect } from "../../game/store/effects/attack-effects";
+import { PutDamageEffect } from "../../game/store/effects/attack-effects";
 import { StateUtils } from "../../game/store/state-utils";
 
 export class RockGuard extends TrainerCard {
@@ -24,7 +24,7 @@ export class RockGuard extends TrainerCard {
     'put 6 damage counters on the Attacking Pokemon.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof DealDamageAfterWeaknessEffect && effect.target.tool === this) {
+    if (effect instanceof PutDamageEffect && effect.target.tool === this) {
       const player = effect.player;
       const targetPlayer = StateUtils.findOwner(state, effect.target);
 

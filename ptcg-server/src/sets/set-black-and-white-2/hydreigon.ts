@@ -115,8 +115,8 @@ export class Hydreigon extends PokemonCard {
       ), energy => {
         const cards: Card[] = (energy || []).map(e => e.card);
 
-        const discardEnergy = new DiscardCardsEffect(player, cards,
-          effect.attack, player.active, player.active);
+        const discardEnergy = new DiscardCardsEffect(effect, cards);
+        discardEnergy.target = player.active;
         return store.reduceEffect(state, discardEnergy);
       });
     }

@@ -3,7 +3,7 @@ import { Stage, CardType, CardTag } from "../../game/store/card/card-types";
 import { StoreLike, State, StateUtils, PowerType, ChoosePokemonPrompt,
   PlayerType, SlotType, GameError, GameMessage } from "../../game";
 import { AttackEffect, PowerEffect, UsePowerEffect } from "../../game/store/effects/game-effects";
-import { DealDamageAfterWeaknessEffect } from "../../game/store/effects/attack-effects";
+import { PutDamageEffect } from "../../game/store/effects/attack-effects";
 import { Effect } from "../../game/store/effects/effect";
 import { CardMessage } from "../card-message";
 import { CheckRetreatCostEffect, CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
@@ -73,8 +73,8 @@ export class DarkraiEx extends PokemonCard {
         if (!targets || targets.length === 0) {
           return;
         }
-        const damageEffect = new DealDamageAfterWeaknessEffect(
-          player, 30, effect.attack, targets[0], player.active);
+        const damageEffect = new PutDamageEffect(effect, 30);
+        damageEffect.target = targets[0];
         store.reduceEffect(state, damageEffect);
       });
     }

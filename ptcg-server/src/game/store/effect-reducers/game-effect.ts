@@ -8,10 +8,10 @@ import { CheckPokemonTypeEffect, CheckPokemonStatsEffect,
   CheckProvidedEnergyEffect, CheckAttackCostEffect } from "../effects/check-effects";
 import { Weakness, Resistance } from "../card/pokemon-types";
 import { CardType, SpecialCondition, CardTag } from "../card/card-types";
-import { AttackEffect, UseAttackEffect, HealEffect, ApplyWeaknessEffect,
-  KnockOutEffect, UsePowerEffect, PowerEffect, UseStadiumEffect } from "../effects/game-effects";
+import { AttackEffect, UseAttackEffect, HealEffect, KnockOutEffect,
+  UsePowerEffect, PowerEffect, UseStadiumEffect } from "../effects/game-effects";
 import { CoinFlipPrompt } from "../prompts/coin-flip-prompt";
-import { DealDamageEffect } from "../effects/attack-effects";
+import { DealDamageEffect, ApplyWeaknessEffect } from "../effects/attack-effects";
 
 function applyWeaknessAndResistance(
   damage: number,
@@ -83,7 +83,7 @@ function* useAttack(next: Function, store: StoreLike, state: State, effect: UseA
 
   store.log(state, `${player.name} attacks with ${attack.name}.`);
   state.phase = GamePhase.ATTACK;
-  const attackEffect = new AttackEffect(player, attack);
+  const attackEffect = new AttackEffect(player, opponent, attack);
   state = store.reduceEffect(state, attackEffect);
 
   if (store.hasPrompts()) {
@@ -91,8 +91,7 @@ function* useAttack(next: Function, store: StoreLike, state: State, effect: UseA
   }
 
   if (attack.damage > 0) {
-    const dealDamage = new DealDamageEffect(
-      player, attackEffect.damage, attack, opponent.active, player.active);
+    const dealDamage = new DealDamageEffect(attackEffect, attackEffect.damage);
     state = store.reduceEffect(state, dealDamage);
   }
 
@@ -127,8 +126,8 @@ export function gameReducer(store: StoreLike, state: State, effect: Effect): Sta
     state = store.reduceEffect(state, checkPokemonStats);
 
     const cardType = checkPokemonType.cardTypes;
-    const weakness = checkPokemonStats.weakness;
-    const resistance = checkPokemonStats.resistance;
+    const weakness = effect.ignoreWeakness ? [] : checkPokemonStats.weakness;
+    const resistance = effect.ignoreResistance ? [] : checkPokemonStats.resistance;
     effect.damage = applyWeaknessAndResistance(effect.damage, cardType, weakness, resistance);
     return state;
   }

@@ -1,8 +1,7 @@
 import { PokemonCard } from "../../game/store/card/pokemon-card";
 import { Stage, CardType, CardTag } from "../../game/store/card/card-types";
-import { StoreLike, State, CardList, EnergyCard, Card, StateUtils} from "../../game";
+import { StoreLike, State, CardList, EnergyCard, Card } from "../../game";
 import { AttackEffect } from "../../game/store/effects/game-effects";
-import { DealDamageEffect } from "../../game/store/effects/attack-effects";
 import { Effect } from "../../game/store/effects/effect";
 import { CardMessage } from "../card-message";
 import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
@@ -60,8 +59,6 @@ export class RayquazaEx extends PokemonCard {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
       const player = effect.player;
-      const opponent = StateUtils.getOpponent(state, player);
-      effect.damage = 0;
 
       const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);
       state = store.reduceEffect(state, checkProvidedEnergy);
@@ -85,10 +82,7 @@ export class RayquazaEx extends PokemonCard {
         }
 
         player.active.moveCardsTo(cards, player.discard);
-
-        const dealDamage = new DealDamageEffect(player, damage, this.attacks[1],
-          opponent.active, player.active);
-        store.reduceEffect(state, dealDamage);
+        effect.damage = damage;
       });
     }
 

@@ -7,7 +7,7 @@ import { AttackEffect } from "../../game/store/effects/game-effects";
 import { StateUtils } from "../../game/store/state-utils";
 import { PlayerType } from "../../game/store/actions/play-card-action";
 import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
-import { DealDamageAfterWeaknessEffect } from "../../game/store/effects/attack-effects";
+import { PutDamageEffect } from "../../game/store/effects/attack-effects";
 
 
 export class Piplup extends PokemonCard {
@@ -85,8 +85,8 @@ export class Piplup extends PokemonCard {
       if (isBuizelInPlay) {
         opponent.bench.forEach(benched => {
           if (benched.cards.length > 0) {
-            const dealDamage = new DealDamageAfterWeaknessEffect(player, 10,
-              effect.attack, benched, player.active);
+            const dealDamage = new PutDamageEffect(effect, 10);
+            dealDamage.target = benched;
             return store.reduceEffect(state, dealDamage);
           }
         });

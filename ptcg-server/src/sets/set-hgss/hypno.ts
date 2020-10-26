@@ -4,7 +4,7 @@ import { PowerType, StoreLike, State, StateUtils, ChoosePokemonPrompt, PlayerTyp
   SlotType, PokemonCardList, GameError, GameMessage, CoinFlipPrompt } from "../../game";
 import { Effect } from "../../game/store/effects/effect";
 import { PowerEffect, AttackEffect } from "../../game/store/effects/game-effects";
-import { DealDamageAfterWeaknessEffect } from "../../game/store/effects/attack-effects";
+import { PutDamageEffect } from "../../game/store/effects/attack-effects";
 import { CardMessage } from "../card-message";
 import { PlayPokemonEffect } from "../../game/store/effects/play-card-effects";
 import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
@@ -106,8 +106,8 @@ export class Hypno extends PokemonCard {
         if (!targets || targets.length === 0) {
           return;
         }
-        const damageEffect = new DealDamageAfterWeaknessEffect(
-          player, 10, effect.attack, targets[0], player.active);
+        const damageEffect = new PutDamageEffect(effect, 10);
+        damageEffect.target = targets[0];
         store.reduceEffect(state, damageEffect);
       });
 

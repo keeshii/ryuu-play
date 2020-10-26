@@ -40,8 +40,8 @@ function* usePowerBlast(next: Function, store: StoreLike, state: State,
     next();
   });
 
-  const discardEnergy = new DiscardCardsEffect(player, cards, effect.attack,
-    player.active, player.active);
+  const discardEnergy = new DiscardCardsEffect(effect, cards);
+  discardEnergy.target = player.active;
   return store.reduceEffect(state, discardEnergy);
 }
 

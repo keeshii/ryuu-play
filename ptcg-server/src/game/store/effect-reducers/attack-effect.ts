@@ -2,15 +2,15 @@ import { GameError, GameMessage } from "../../game-error";
 import { Effect } from "../effects/effect";
 import { State } from "../state/state";
 import { StoreLike } from "../store-like";
-import { DealDamageAfterWeaknessEffect, DealDamageEffect, DiscardCardsEffect,
+import { PutDamageEffect, DealDamageEffect, DiscardCardsEffect,
   AddMarkerEffect, HealTargetEffect, AddSpecialConditionsEffect,
-  RemoveSpecialConditionsEffect } from "../effects/attack-effects";
-import { ApplyWeaknessEffect, HealEffect } from "../effects/game-effects";
+  RemoveSpecialConditionsEffect, ApplyWeaknessEffect} from "../effects/attack-effects";
+import { HealEffect } from "../effects/game-effects";
 import { StateUtils } from "../state-utils";
 
 export function attackReducer(store: StoreLike, state: State, effect: Effect): State {
 
-  if (effect instanceof DealDamageAfterWeaknessEffect) {
+  if (effect instanceof PutDamageEffect) {
     const target = effect.target;
     const pokemonCard = target.getPokemonCard();
     if (pokemonCard === undefined) {
@@ -21,12 +21,12 @@ export function attackReducer(store: StoreLike, state: State, effect: Effect): S
   }
 
   if (effect instanceof DealDamageEffect) {
-    const applyWeakness = new ApplyWeaknessEffect(
-      effect.player, effect.damage, effect.target, effect.source);
+    const base = effect.attackEffect;
+
+    const applyWeakness = new ApplyWeaknessEffect(base, effect.damage);
     state = store.reduceEffect(state, applyWeakness);
 
-    const dealDamage = new DealDamageAfterWeaknessEffect(
-      effect.player, applyWeakness.damage, effect.attack, effect.target, effect.source);
+    const dealDamage = new PutDamageEffect(base, applyWeakness.damage);
     state = store.reduceEffect(state, dealDamage);
 
     return state;

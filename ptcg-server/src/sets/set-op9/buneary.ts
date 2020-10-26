@@ -6,7 +6,7 @@ import { Effect } from "../../game/store/effects/effect";
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { CoinFlipPrompt } from "../../game/store/prompts/coin-flip-prompt";
 import { CardMessage } from "../card-message";
-import { DealDamageAfterWeaknessEffect } from "../../game/store/effects/attack-effects";
+import { PutDamageEffect } from "../../game/store/effects/attack-effects";
 import { StateUtils } from "../../game/store/state-utils";
 import { PlayerType } from "../../game/store/actions/play-card-action";
 import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
@@ -77,7 +77,7 @@ export class Buneary extends PokemonCard {
       });
     }
 
-    if (effect instanceof DealDamageAfterWeaknessEffect
+    if (effect instanceof PutDamageEffect
       && effect.target.marker.hasMarker(this.DEFENSE_CURL_MARKER)) {
       effect.preventDefault = true;
       return state;

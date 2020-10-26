@@ -54,8 +54,8 @@ export class Raichu extends PokemonCard {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
       const player = effect.player;
       const cards = player.active.cards.filter(c => c instanceof EnergyCard);
-      const discardEnergy = new DiscardCardsEffect(player, cards,
-        effect.attack, player.active, player.active);
+      const discardEnergy = new DiscardCardsEffect(effect, cards);
+      discardEnergy.target = player.active;
       return store.reduceEffect(state, discardEnergy);
     }
 

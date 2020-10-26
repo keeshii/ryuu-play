@@ -2,7 +2,7 @@ import { PokemonCard } from "../../game/store/card/pokemon-card";
 import { Stage, CardType, CardTag } from "../../game/store/card/card-types";
 import { StoreLike, State, PlayerType, SlotType, StateUtils, ChoosePokemonPrompt, ConfirmPrompt, Card } from "../../game";
 import { AttackEffect } from "../../game/store/effects/game-effects";
-import { DealDamageAfterWeaknessEffect, DiscardCardsEffect } from "../../game/store/effects/attack-effects";
+import { PutDamageEffect, DiscardCardsEffect } from "../../game/store/effects/attack-effects";
 import { Effect } from "../../game/store/effects/effect";
 import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
 import { CardMessage } from "../card-message";
@@ -67,8 +67,8 @@ export class LandorusEx extends PokemonCard {
         if (!targets || targets.length === 0) {
           return;
         }
-        const damageEffect = new DealDamageAfterWeaknessEffect(
-          player, 30, effect.attack, targets[0], player.active);
+        const damageEffect = new PutDamageEffect(effect, 30);
+        damageEffect.target = targets[0];
         store.reduceEffect(state, damageEffect);
       });
     }
@@ -92,8 +92,8 @@ export class LandorusEx extends PokemonCard {
           });
 
           effect.damage += 70;
-          const discardEnergy = new DiscardCardsEffect(player, cards,
-            effect.attack, player.active, player.active);
+          const discardEnergy = new DiscardCardsEffect(effect, cards);
+          discardEnergy.target = player.active;
           return store.reduceEffect(state, discardEnergy);
         }
       });

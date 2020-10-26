@@ -59,15 +59,14 @@ export class Roselia extends PokemonCard {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
       const player = effect.player;
-      const target = effect.player.active;
 
-      const healTargetEffect = new HealTargetEffect(player, 30,
-        effect.attack, target, target);
+      const healTargetEffect = new HealTargetEffect(effect, 30);
+      healTargetEffect.target = player.active;
       state = store.reduceEffect(state, healTargetEffect);
 
-      const removeSpecialConditionsEffect = new RemoveSpecialConditionsEffect(
-        player, undefined, effect.attack, target, target);
-      state = store.reduceEffect(state, removeSpecialConditionsEffect);
+      const removeSpecialCondition = new RemoveSpecialConditionsEffect(effect, undefined);
+      removeSpecialCondition.target = player.active;
+      state = store.reduceEffect(state, removeSpecialCondition);
       return state;
     }
 

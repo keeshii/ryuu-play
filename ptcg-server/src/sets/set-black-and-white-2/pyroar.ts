@@ -11,7 +11,7 @@ import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effect
 import { ChooseEnergyPrompt } from "../../game/store/prompts/choose-energy-prompt";
 import { CardMessage } from "../card-message";
 import { Card } from "../../game/store/card/card";
-import { DiscardCardsEffect, DealDamageAfterWeaknessEffect } from "../../game/store/effects/attack-effects";
+import { DiscardCardsEffect, PutDamageEffect } from "../../game/store/effects/attack-effects";
 
 export class Pyroar extends PokemonCard {
 
@@ -70,14 +70,14 @@ export class Pyroar extends PokemonCard {
         const cards: Card[] = (energy || []).map(e => e.card);
         if (cards.length > 0) {
           effect.damage += 30;
-          const discardEnergy = new DiscardCardsEffect(player, cards,
-            effect.attack, player.active, player.active);
+          const discardEnergy = new DiscardCardsEffect(effect, cards);
+          discardEnergy.target = player.active;
           return store.reduceEffect(state, discardEnergy);
         }
       });
     }
 
-    if (effect instanceof DealDamageAfterWeaknessEffect && effect.target.cards.includes(this)) {
+    if (effect instanceof PutDamageEffect && effect.target.cards.includes(this)) {
       const pokemonCard = effect.target.getPokemonCard();
 
       // It's not this pokemon card

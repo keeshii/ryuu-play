@@ -48,8 +48,8 @@ export class Zekrom extends PokemonCard {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
       const player = effect.player;
 
-      const dealDamage = new DealDamageEffect(player, 40, effect.attack,
-        player.active, player.active);
+      const dealDamage = new DealDamageEffect(effect, 40);
+      dealDamage.target = player.active;
       return store.reduceEffect(state, dealDamage);
     }
 

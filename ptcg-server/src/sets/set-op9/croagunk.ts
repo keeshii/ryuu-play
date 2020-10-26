@@ -9,7 +9,7 @@ import { CoinFlipPrompt } from "../../game/store/prompts/coin-flip-prompt";
 import { CardMessage } from "../card-message";
 import { StateUtils } from "../../game/store/state-utils";
 import { PlayerType } from "../../game/store/actions/play-card-action";
-import { DealDamageAfterWeaknessEffect } from "../../game/store/effects/attack-effects";
+import { PutDamageEffect } from "../../game/store/effects/attack-effects";
 import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
 
 
@@ -119,7 +119,7 @@ export class Croagunk extends PokemonCard {
       return generator.next().value;
     }
 
-    if (effect instanceof DealDamageAfterWeaknessEffect && effect.attack === this.attacks[1]) {
+    if (effect instanceof PutDamageEffect && effect.attack === this.attacks[1]) {
       let generator: IterableIterator<State>;
       generator = useNimble(() => generator.next(), store, state, effect);
       return generator.next().value;

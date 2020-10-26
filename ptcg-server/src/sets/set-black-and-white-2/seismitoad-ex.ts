@@ -3,7 +3,7 @@ import { Stage, CardType, CardTag } from "../../game/store/card/card-types";
 import { StoreLike, State, PlayerType, SlotType, StateUtils,
   ChoosePokemonPrompt, GameError, GameMessage } from "../../game";
 import { AttackEffect } from "../../game/store/effects/game-effects";
-import { DealDamageAfterWeaknessEffect } from "../../game/store/effects/attack-effects";
+import { PutDamageEffect } from "../../game/store/effects/attack-effects";
 import { Effect } from "../../game/store/effects/effect";
 import { CardMessage } from "../card-message";
 import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
@@ -76,8 +76,8 @@ export class SeismitoadEx extends PokemonCard {
       ), selected => {
         const targets = selected || [];
         targets.forEach(target => {
-          const damageEffect = new DealDamageAfterWeaknessEffect(
-            player, 30, effect.attack, target, player.active);
+          const damageEffect = new PutDamageEffect(effect, 30);
+          damageEffect.target = target;
           store.reduceEffect(state, damageEffect);
         });
       });
