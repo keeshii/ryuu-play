@@ -1,6 +1,7 @@
 import { Accelgor } from "./accelgor";
 import { AspertiaCityGym } from "./aspertia-city-gym";
 import { Beautifly } from "./beautifly";
+import { Bicycle } from "./bicycle";
 import { Bouffalant } from "./bouffalant";
 import { Bronzong } from "./bronzong";
 import { Bronzor } from "./bronzor";
@@ -25,6 +26,7 @@ import { HeavyBall } from "./heavy-ball";
 import { Hydreigon } from "./hydreigon";
 import { HypnotoxicLaser } from "./hypnotoxic-laser";
 import { KeldeoEx } from "./keldeo-ex";
+import { Kyurem } from "./kyurem";
 import { LandorusEx } from "./landorus-ex";
 import { Litleo } from "./litleo";
 import { Lysandre } from "./lysandre";
@@ -38,6 +40,7 @@ import { Oddish } from "./oddish";
 import { Pikachu } from "./pikachu";
 import { PokemonCenter } from "./pokemon-center";
 import { PokemonFanClub } from "./pokemon-fan-club";
+import { ProfessorsLetter } from "./professors-letter";
 import { Pyroar } from "./pyroar";
 import { Raichu } from "./raichu";
 import { RaikouEx } from "./raikou-ex";
@@ -81,6 +84,7 @@ export const setBlackAndWhite2: Card[] = [
   new Accelgor(),
   new AspertiaCityGym(),
   new Beautifly(),
+  new Bicycle(),
   new Bouffalant(),
   new Bronzong(),
   new Bronzor(),
@@ -104,6 +108,7 @@ export const setBlackAndWhite2: Card[] = [
   new Hydreigon(),
   new HypnotoxicLaser(),
   new KeldeoEx(),
+  new Kyurem(),
   new LandorusEx(),
   new Litleo(),
   new Lysandre(),
@@ -117,6 +122,7 @@ export const setBlackAndWhite2: Card[] = [
   new Pikachu(),
   new PokemonCenter(),
   new PokemonFanClub(),
+  new ProfessorsLetter(),
   new Pyroar(),
   new Raichu(),
   new RaikouEx(),
