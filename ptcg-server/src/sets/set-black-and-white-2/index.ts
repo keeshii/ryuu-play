@@ -7,6 +7,7 @@ import { Bronzong } from "./bronzong";
 import { Bronzor } from "./bronzor";
 import { Card } from "../../game/store/card/card";
 import { Cobalion } from "./cobalion";
+import { Copycat } from "./copycat";
 import { DarkClaw } from "./dark-claw";
 import { DarkPatch } from "./dark-patch";
 import { DarkraiEx } from "./darkrai-ex";
@@ -89,6 +90,7 @@ export const setBlackAndWhite2: Card[] = [
   new Bronzong(),
   new Bronzor(),
   new Cobalion(),
+  new Copycat(),
   new DarkClaw(),
   new DarkPatch(),
   new DarkraiEx(),

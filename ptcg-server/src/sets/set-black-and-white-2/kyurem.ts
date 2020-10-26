@@ -3,7 +3,7 @@ import { Stage, CardType } from "../../game/store/card/card-types";
 import { StoreLike, State } from "../../game";
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
-import { PutDamageEffect } from "../../game/store/effects/attack-effects";
+import { PutDamageEffect, DealDamageEffect } from "../../game/store/effects/attack-effects";
 
 
 export class Kyurem extends PokemonCard {
@@ -50,7 +50,8 @@ export class Kyurem extends PokemonCard {
       const opponent = effect.opponent;
       const benched = opponent.bench.filter(b => b.cards.length > 0);
 
-      effect.damage = 30;
+      const activeDamageEffect = new DealDamageEffect(effect, 30);
+      store.reduceEffect(state, activeDamageEffect);
 
       benched.forEach(target => {
         const damageEffect = new PutDamageEffect(effect, 30);

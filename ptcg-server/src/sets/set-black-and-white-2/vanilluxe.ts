@@ -25,7 +25,7 @@ export class Vanilluxe extends PokemonCard {
 
   public attacks = [{
     name: 'Double Freeze',
-    cost: [ CardType.WATER ],
+    cost: [ CardType.WATER, CardType.COLORLESS ],
     damage: 40,
     text: 'Flip 2 coins. This attack does 40 damage times the number of heads. ' +
       'If either of them is heads, the Defending Pokemon is now Paralyzed.'
@@ -39,9 +39,9 @@ export class Vanilluxe extends PokemonCard {
 
   public set: string = 'BW2';
 
-  public name: string = 'Vanillite';
+  public name: string = 'Vanilluxe';
 
-  public fullName: string = 'Vanillite NV';
+  public fullName: string = 'Vanilluxe NV';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
 
