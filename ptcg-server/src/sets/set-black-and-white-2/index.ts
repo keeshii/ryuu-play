@@ -63,8 +63,16 @@ import { Skyla } from "./skyla";
 import { StartlingMegaphone } from "./startling-megaphone";
 import { Tornadus } from "./tornadus";
 import { TornadusEx } from "./tornadus-ex";
+import { ToxicroakEx } from "./toxicroak-ex";
+import { TrainingCenter } from "./training-center";
 import { Trubbish } from "./trubbish";
+import { Vanillish } from "./vanillish";
+import { Vanillite } from "./vanillite";
+import { Vanilluxe } from "./vanilluxe";
 import { VirbankCityGym } from "./virbank-city-gym";
+import { Vileplume } from "./vileplume";
+import { ViridianForest } from "./viridian-forest";
+import { VsSeeker } from "./vs-seeker";
 import { Wurmple } from "./wurmple";
 import { YveltalEx } from "./yveltal-ex";
 import { Zweilous } from "./zweilous";
@@ -134,8 +142,16 @@ export const setBlackAndWhite2: Card[] = [
   new StartlingMegaphone(),
   new Tornadus(),
   new TornadusEx(),
+  new ToxicroakEx(),
+  new TrainingCenter(),
+  new Vanillish(),
+  new Vanillite(),
+  new Vanilluxe(),
   new Trubbish(),
+  new Vileplume(),
   new VirbankCityGym(),
+  new ViridianForest(),
+  new VsSeeker(),
   new Wurmple(),
   new YveltalEx(),
   new Zweilous()

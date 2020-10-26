@@ -1,11 +1,13 @@
 import { Effect } from "../../game/store/effects/effect";
 import { PokemonCard } from "../../game/store/card/pokemon-card";
 import { PowerType, StoreLike, State, ChoosePokemonPrompt, PlayerType, SlotType,
-  StateUtils } from "../../game";
+  StateUtils, 
+  GameError,
+  GameMessage} from "../../game";
 import { Stage, CardType, CardTag, SpecialCondition } from "../../game/store/card/card-types";
 import { PlayPokemonEffect } from "../../game/store/effects/play-card-effects";
 import { CardMessage } from "../card-message";
-import { AttackEffect, PowerEffect } from "../../game/store/effects/game-effects";
+import { AttackEffect, PowerEffect, UsePowerEffect } from "../../game/store/effects/game-effects";
 import { AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
 
 function* useFlashBite(next: Function, store: StoreLike, state: State, effect: PlayPokemonEffect): IterableIterator<State> {
@@ -72,6 +74,10 @@ export class CrobatG extends PokemonCard {
   public fullName: string = 'Crobat G PL';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    if (effect instanceof UsePowerEffect && effect.power === this.powers[0]) {
+      throw new GameError(GameMessage.CANNOT_USE_POWER);
+    }
+
     if (effect instanceof PlayPokemonEffect && effect.pokemonCard === this) {
       // Try to reduce PowerEffect, to check if something is blocking our ability
       try {
