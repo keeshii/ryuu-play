@@ -39,6 +39,7 @@ export function playPokemonReducer(store: StoreLike, state: State, effect: Effec
       store.log(state, `${effect.player.name} evolves ${pokemonCard.name} into ${effect.pokemonCard.name}.`);
       effect.player.hand.moveCardTo(effect.pokemonCard, effect.target);
       effect.target.pokemonPlayedTurn = state.turn;
+      effect.target.clearEffects();
       return state;
     }
 
