@@ -18,10 +18,11 @@ export function attackReducer(store: StoreLike, state: State, effect: Effect): S
     }
 
     const damage = Math.max(0, effect.damage);
-    target.damage += Math.max(0, effect.damage);
+    target.damage += damage;
 
     if (damage > 0) {
       const afterDamageEffect = new AfterDamageEffect(effect.attackEffect, damage);
+      afterDamageEffect.target = effect.target;
       store.reduceEffect(state, afterDamageEffect);
     }
   }
@@ -30,11 +31,13 @@ export function attackReducer(store: StoreLike, state: State, effect: Effect): S
     const base = effect.attackEffect;
 
     const applyWeakness = new ApplyWeaknessEffect(base, effect.damage);
+    applyWeakness.target = effect.target;
     applyWeakness.ignoreWeakness = base.ignoreWeakness;
     applyWeakness.ignoreResistance = base.ignoreResistance;
     state = store.reduceEffect(state, applyWeakness);
 
     const dealDamage = new PutDamageEffect(base, applyWeakness.damage);
+    dealDamage.target = effect.target;
     state = store.reduceEffect(state, dealDamage);
 
     return state;
