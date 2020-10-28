@@ -33,8 +33,7 @@
               [(ngModel)]="email" [disabled]="loading" #emailField="ngModel"
               ptcgEmailValidator [ptcgInvalidValue]="invalidEmail" required>
             <mat-hint>
-              You will be able to use this e-mail to notify yourself on custom events.
-              No spam, we promise.
+              You will be able to use this e-mail to recover your password.
             </mat-hint>
             <mat-error>
               <div *ngIf="emailField.errors?.email">VALIDATION_INVALID_EMAIL</div>

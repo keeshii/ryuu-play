@@ -9,6 +9,7 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { ServerPasswordPopupComponent } from './server-password-popup/server-password-popup.component';
 import { ServerPasswordPopupService } from './server-password-popup/server-password-popup.service';
 import { ChangeServerPopupComponent } from './change-server-popup/change-server-popup.component';
+import { SetNewPasswordComponent } from './set-new-password/set-new-password.component';
 
 @NgModule({
   imports: [
@@ -20,6 +21,7 @@ import { ChangeServerPopupComponent } from './change-server-popup/change-server-
     RegisterComponent,
     ResetPasswordComponent,
     ServerPasswordPopupComponent,
+    SetNewPasswordComponent,
     LoginComponent
   ],
   entryComponents: [

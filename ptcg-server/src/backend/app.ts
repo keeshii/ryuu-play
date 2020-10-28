@@ -18,7 +18,8 @@ import {
   Messages,
   Profile,
   Ranking,
-  Replays
+  Replays,
+  ResetPassword
 } from './controllers';
 
 export class App {
@@ -54,6 +55,7 @@ export class App {
     define('/v1/profile', Profile);
     define('/v1/ranking', Ranking);
     define('/v1/replays', Replays);
+    define('/v1/resetPassword', ResetPassword);
 
     if (config.sets.scansDir) {
       app.use('/scans', express.static(config.sets.scansDir));

@@ -12,6 +12,7 @@ import { RankingComponent } from './ranking/ranking.component';
 import { RegisterComponent } from './login/register/register.component';
 import { ReplaysComponent } from './replays/replays.component';
 import { ResetPasswordComponent } from './login/reset-password/reset-password.component';
+import { SetNewPasswordComponent } from './login/set-new-password/set-new-password.component';
 import { TableComponent } from './table/table.component';
 
 const routes: Routes = [
@@ -25,7 +26,8 @@ const routes: Routes = [
     { path: 'register', component: RegisterComponent },
     { path: 'replays', component: ReplaysComponent, canActivate: [ CanActivateService ] },
     { path: 'profile/:userId', component: ProfileComponent, canActivate: [ CanActivateService ] },
-    { path: 'reset-password', component: ResetPasswordComponent },
+    { path: 'reset-password', component: ResetPasswordComponent, pathMatch: 'full' },
+    { path: 'reset-password/:token', component: SetNewPasswordComponent },
     { path: 'table/:gameId', component: TableComponent, canActivate: [ CanActivateService ] },
     { path: '', redirectTo: '/games', pathMatch: 'full' },
 ];

@@ -15,6 +15,7 @@ import { MessageService } from './services/message.service';
 import { ProfileService } from './services/profile.service';
 import { RankingService } from './services/ranking.service';
 import { ReplayService } from './services/replay.service';
+import { ResetPasswordService } from './services/reset-password.service';
 import { SharedModule } from '../shared/shared.module';
 import { SocketService } from './socket.service';
 
@@ -37,6 +38,7 @@ import { SocketService } from './socket.service';
     ProfileService,
     RankingService,
     ReplayService,
+    ResetPasswordService,
     SocketService
   ]
 })

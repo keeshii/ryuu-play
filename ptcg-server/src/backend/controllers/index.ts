@@ -8,3 +8,4 @@ export * from './messages';
 export * from './profile';
 export * from './ranking';
 export * from './replays';
+export * from './reset-password';

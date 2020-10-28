@@ -37,5 +37,15 @@ export const config = {
   sets: {
     scansDir: '',
     scansUrl: '/scans/{set}/{name}.jpg'
+  },
+  email: {
+    transporter: {
+      sendmail: true,
+      newline: 'unix',
+      path: '/usr/sbin/sendmail'
+    },
+    sender: 'no-reply@ryuu.eu',
+    appName: 'RyuuPlay',
+    publicAddress: 'https://ptcg.ryuu.eu'
   }
 };
