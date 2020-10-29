@@ -13,7 +13,7 @@ export class RankingCalculator {
     const rank1 = player1.getRank();
     const rank2 = player2.getRank();
 
-    const kValue = rank1 === rank2 ? 50 : 2.5;
+    const kValue = 50;
     const totalDiff = player2.ranking - player1.ranking;
     const diff = Math.max(-400, Math.min(400, totalDiff));
     const winExp = 1.0 / (1 + Math.pow(10.0, diff / 400.0));
@@ -36,15 +36,35 @@ export class RankingCalculator {
         break;
     }
 
-    const stake = Math.min(0.5, kValue * (outcome - winExp));
-    player1.ranking = Math.max(0, player1.ranking + Math.round(stake * rankMultipier1));
-    player2.ranking = Math.max(0, match.player2.ranking - Math.round(stake * rankMultipier2));
+    const stake = kValue * (outcome - winExp);
+    const diff1 = this.getRankingDiff(rank1, rank2, Math.round(stake * rankMultipier1));
+    const diff2 = this.getRankingDiff(rank1, rank2, Math.round(stake * rankMultipier2));
+
+    player1.ranking = Math.max(0, player1.ranking + diff1);
+    player2.ranking = Math.max(0, player2.ranking - diff2);
 
     const today = Date.now();
     player1.lastRankingChange = today;
     player2.lastRankingChange = today;
 
     return [ player1, player2 ];
+  }
+
+  private getRankingDiff(rank1: Rank, rank2: Rank, diff: number): number {
+    const sign = diff >= 0;
+    let value = Math.abs(diff);
+
+    // Maximum ranking change for different ranks = 10
+    if (rank1 !== rank2 && value > 10) {
+      value = 10;
+    }
+
+    // Minimum ranking change = 5
+    if (value < 5) {
+      value = 5;
+    }
+
+    return sign ? value : -value;
   }
 
   private getRankMultipier(rank: Rank): number {
