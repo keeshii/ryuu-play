@@ -12,11 +12,8 @@ export class RankingCalculator {
     const player2 = match.player2;
     const rank1 = player1.getRank();
     const rank2 = player2.getRank();
-    if (rank1 !== rank2) {
-      return [];
-    }
 
-    const kValue = 50;
+    const kValue = rank1 === rank2 ? 50 : 2.5;
     const totalDiff = player2.ranking - player1.ranking;
     const diff = Math.max(-400, Math.min(400, totalDiff));
     const winExp = 1.0 / (1 + Math.pow(10.0, diff / 400.0));
@@ -39,7 +36,7 @@ export class RankingCalculator {
         break;
     }
 
-    const stake = kValue * (outcome - winExp);
+    const stake = Math.min(0.5, kValue * (outcome - winExp));
     player1.ranking = Math.max(0, player1.ranking + Math.round(stake * rankMultipier1));
     player2.ranking = Math.max(0, match.player2.ranking - Math.round(stake * rankMultipier2));
 
