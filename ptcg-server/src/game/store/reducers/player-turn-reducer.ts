@@ -7,6 +7,8 @@ import { GameMessage } from "../../game-message";
 import { RetreatEffect, UseAttackEffect, UsePowerEffect, UseStadiumEffect } from "../effects/game-effects";
 import { EndTurnEffect } from "../effects/game-phase-effects";
 import { StateUtils } from "../state-utils";
+import {SlotType} from "../actions/play-card-action";
+import {PokemonCard} from "../card/pokemon-card";
 
 export function playerTurnReducer(store: StoreLike, state: State, action: Action): State {
 
@@ -66,8 +68,28 @@ export function playerTurnReducer(store: StoreLike, state: State, action: Action
         throw new GameError(GameMessage.NOT_YOUR_TURN);
       }
 
-      const target = StateUtils.getTarget(state, player, action.target);
-      const pokemonCard = target.getPokemonCard();
+      let pokemonCard: PokemonCard | undefined;
+
+      switch (action.target.slot) {
+        case SlotType.ACTIVE:
+        case SlotType.BENCH:
+          const target = StateUtils.getTarget(state, player, action.target);
+          pokemonCard = target.getPokemonCard();
+          break;
+        case SlotType.DISCARD:
+          const discardCard = player.discard.cards[action.target.index];
+          if (discardCard instanceof PokemonCard) {
+            pokemonCard = discardCard;
+          }
+          break;
+        case SlotType.HAND:
+          const handCard = player.hand.cards[action.target.index];
+          if (handCard instanceof PokemonCard) {
+            pokemonCard = handCard;
+          }
+          break;
+      }
+
       if (pokemonCard === undefined) {
         throw new GameError(GameMessage.INVALID_TARGET);
       }
@@ -75,6 +97,21 @@ export function playerTurnReducer(store: StoreLike, state: State, action: Action
       const power = pokemonCard.powers.find(a => a.name === action.name);
       if (power === undefined) {
         throw new GameError(GameMessage.UNKNOWN_POWER);
+      }
+
+      const slot = action.target.slot;
+      if (slot === SlotType.ACTIVE || slot === SlotType.BENCH) {
+        if (!power.useWhenInPlay) {
+          throw new GameError(GameMessage.CANNOT_USE_POWER);
+        }
+      }
+
+      if (slot === SlotType.HAND && !power.useFromHand) {
+        throw new GameError(GameMessage.CANNOT_USE_POWER);
+      }
+
+      if (slot === SlotType.DISCARD && !power.useFromDiscard) {
+        throw new GameError(GameMessage.CANNOT_USE_POWER);
       }
 
       state = store.reduceEffect(state, new UsePowerEffect(player, power, pokemonCard));

@@ -9,7 +9,9 @@ export enum PlayerType {
 export enum SlotType {
   BOARD,
   ACTIVE,
-  BENCH
+  BENCH,
+  HAND,
+  DISCARD
 }
 
 export interface CardTarget {

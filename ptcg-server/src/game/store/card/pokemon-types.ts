@@ -27,4 +27,7 @@ export interface Power {
   name: string;
   powerType: PowerType;
   text: string;
+  useWhenInPlay?: boolean;
+  useFromHand?: boolean;
+  useFromDiscard?: boolean;
 }

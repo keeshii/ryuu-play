@@ -88,6 +88,9 @@ export class StateUtils {
     if (target.slot === SlotType.ACTIVE) {
       return player.active;
     }
+    if (target.slot !== SlotType.BENCH) {
+      throw new GameError(GameMessage.INVALID_TARGET);
+    }
     if (player.bench[target.index] === undefined) {
       throw new GameError(GameMessage.INVALID_TARGET);
     }
