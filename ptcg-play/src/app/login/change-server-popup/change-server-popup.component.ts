@@ -1,8 +1,10 @@
+import { ApiErrorEnum } from 'ptcg-server';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs/operators';
 
-import { ApiError, ApiErrorEnum } from 'src/app/api/api.error';
+import { ApiError } from 'src/app/api/api.error';
 import { AlertService } from 'src/app/shared/alert/alert.service';
 import { ApiService } from '../../api/api.service';
 import { LoginRememberService } from '../login-remember.service';
@@ -26,7 +28,8 @@ export class ChangeServerPopupComponent implements OnInit, OnDestroy {
     private apiService: ApiService,
     private dialogRef: MatDialogRef<ChangeServerPopupComponent>,
     private loginRememberService: LoginRememberService,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private translate: TranslateService
   ) {
     this.value = this.apiService.getApiUrl();
   }
@@ -47,7 +50,7 @@ export class ChangeServerPopupComponent implements OnInit, OnDestroy {
     ).subscribe({
       next: response => {
         if (response.config.apiVersion > environment.apiVersion) {
-          this.alertService.toast(ApiErrorEnum.ERROR_UNSUPPORTED_API_VERSION);
+          this.alertService.toast(this.translate.instant('ERROR_UNSUPPORTED_VERSION'));
           this.invalidValue = newApiUrl;
           return;
         }
@@ -55,13 +58,12 @@ export class ChangeServerPopupComponent implements OnInit, OnDestroy {
         const rememberApiUrl = newApiUrl !== environment.apiUrl ? newApiUrl : undefined;
         this.loginRememberService.rememberApiUrl(rememberApiUrl);
 
-        this.alertService.toast('CHANGE_SERVER_ADDRESS_SUCCESS');
+        this.alertService.toast(this.translate.instant('LOGIN_CHANGE_SERVER_SUCCESS'));
         this.apiService.setApiUrl(newApiUrl);
         this.socketService.setServerUrl(newApiUrl);
         this.dialogRef.close();
       },
       error: (error: ApiError) => {
-        this.alertService.toast(error.code || error.message);
         this.invalidValue = newApiUrl;
       }
     });

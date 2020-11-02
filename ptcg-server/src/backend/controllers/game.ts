@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { AuthToken } from '../services';
 import { Controller, Get } from './controller';
-import { Errors } from '../common/errors';
+import { ApiErrorEnum } from '../common/errors';
 
 
 export class Game extends Controller {
@@ -12,7 +12,7 @@ export class Game extends Controller {
     const gameId: number = parseInt(req.params.id, 10);
     const game = this.core.games.find(g => g.id === gameId);
     if (game === undefined) {
-      res.send({error: Errors.GAME_INVALID_ID});
+      res.send({error: ApiErrorEnum.GAME_INVALID_ID});
       return;
     }
     const logs = game.state.logs;
@@ -25,7 +25,7 @@ export class Game extends Controller {
     const gameId: number = parseInt(req.params.id, 10);
     const game = this.core.games.find(g => g.id === gameId);
     if (game === undefined) {
-      res.send({error: Errors.GAME_INVALID_ID});
+      res.send({error: ApiErrorEnum.GAME_INVALID_ID});
       return;
     }
     const playerStats = game.playerStats;

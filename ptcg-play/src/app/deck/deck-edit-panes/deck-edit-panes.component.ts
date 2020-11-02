@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, NgZone } fro
 import { SkyhookDndService, DropTarget } from '@angular-skyhook/core';
 import { DraggedItem, SortableSpec } from '@angular-skyhook/sortable';
 import { Observable } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 import { VIRTUAL_SCROLL_STRATEGY } from '@angular/cdk/scrolling';
 import { map } from 'rxjs/operators';
 
@@ -50,7 +51,8 @@ export class DeckEditPanesComponent implements OnInit, OnDestroy {
     private alertService: AlertService,
     private cardsBaseService: CardsBaseService,
     private ngZone: NgZone,
-    private dnd: SkyhookDndService
+    private dnd: SkyhookDndService,
+    private translate: TranslateService
   ) {
     [this.deckTarget, this.deckHighlight$] = this.initDropTarget(DeckEditPane.DECK);
     [this.libraryTarget, this.libraryHighlight$] = this.initDropTarget(DeckEditPane.LIBRARY);
@@ -201,7 +203,7 @@ export class DeckEditPanesComponent implements OnInit, OnDestroy {
     }
 
     const count = await this.alertService.inputNumber({
-      title: 'How many cards?',
+      title: this.translate.instant('DECK_EDIT_HOW_MANY_CARDS'),
       value: item.count,
       minValue: 0,
       maxValue: MAX_CARD_VALUE

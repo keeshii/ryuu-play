@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
+import { ApiErrorEnum } from 'ptcg-server';
 import { map, switchMap, catchError, timeout, filter, takeUntil } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
 
-import { ApiError, ApiErrorEnum } from '../api.error';
+import { ApiError } from '../api.error';
 import { ApiService } from '../api.service';
 import { CardsBaseService } from '../../shared/cards/cards-base.service';
 import { CardsService } from './cards.service';
@@ -46,7 +47,7 @@ export class LoginService {
 
     const apiVersion = response.config.apiVersion;
     if (environment.apiVersion !== apiVersion) {
-      throw new ApiError(ApiErrorEnum.ERROR_UNSUPPORTED_API_VERSION);
+      throw new ApiError(ApiErrorEnum.UNSUPPORTED_VERSION);
     }
 
     return combineLatest([

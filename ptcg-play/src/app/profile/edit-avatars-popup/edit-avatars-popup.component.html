@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Edit avatars</h2>
+<h2 mat-dialog-title translate>PROFILE_EDIT_AVATARS</h2>
 
 <mat-dialog-content>
 
@@ -9,7 +9,7 @@
 
     <!-- Checkbox Column -->
     <ng-container matColumnDef="default">
-      <th mat-header-cell *matHeaderCellDef>Default</th>
+      <th mat-header-cell *matHeaderCellDef translate>LABEL_DEFAULT</th>
       <td mat-cell *matCellDef="let avatar">
         <mat-radio-button (click)="$event.stopPropagation()"
           color="primary"
@@ -22,7 +22,7 @@
 
     <!-- Image -->
     <ng-container matColumnDef="image">
-      <th mat-header-cell *matHeaderCellDef>Image</th>
+      <th mat-header-cell *matHeaderCellDef translate>LABEL_IMAGE</th>
       <td mat-cell *matCellDef="let avatar">
       <ptcg-avatar openAvatarPopup="true"
         [avatarFile]="avatar.fileName">
@@ -32,7 +32,7 @@
 
     <!-- Name -->
     <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <th mat-header-cell *matHeaderCellDef translate>LABEL_NAME</th>
       <td mat-cell *matCellDef="let avatar">
         {{ avatar.name }}
       </td>
@@ -40,12 +40,18 @@
 
     <!-- Actions -->
     <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <th mat-header-cell *matHeaderCellDef translate>LABEL_ACTIONS</th>
       <td mat-cell *matCellDef="let avatar">
-        <button mat-button [matMenuTriggerFor]="menu" [disabled]="loading">Actions</button>
+        <button mat-button [matMenuTriggerFor]="menu" [disabled]="loading">
+          {{ 'BUTTON_ACTIONS' | translate }}
+        </button>
         <mat-menu #menu="matMenu">
-          <button mat-menu-item (click)="deleteAvatar(avatar.id)">Delete</button>
-          <button mat-menu-item (click)="renameAvatar(avatar.id, avatar.name)">Rename</button>
+          <button mat-menu-item (click)="deleteAvatar(avatar.id)">
+            {{ 'BUTTON_DELETE' | translate }}
+          </button>
+          <button mat-menu-item (click)="renameAvatar(avatar.id, avatar.name)">
+            {{ 'BUTTON_RENAME' | translate }}
+          </button>
         </mat-menu>
       </td>
     </ng-container>
@@ -54,8 +60,8 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 
-  <div class="ptcg-u-padding" *ngIf="avatars.length === 0">
-    No avatars defined.
+  <div class="ptcg-u-padding" *ngIf="avatars.length === 0" translate>
+    PROFILE_NO_AVATARS
   </div>
 
 </mat-dialog-content>
@@ -64,8 +70,10 @@
   <button mat-raised-button color="primary"
     [disabled]="loading"
     (click)="addAvatar()">
-    Add avatar
+    {{ 'PROFILE_ADD_AVATAR' | translate }}
   </button>
   <span class="ptcg-u-spacer"></span>
-  <button mat-raised-button mat-dialog-close>Close</button>
+  <button mat-raised-button mat-dialog-close>
+    {{ 'BUTTON_CLOSE' | translate }}
+  </button>
 </mat-dialog-actions>

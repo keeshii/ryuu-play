@@ -4,7 +4,7 @@
     <ptcg-badge color="accent" class="ptcg-deck-card-count mat-title"
       *ngIf="showCardCount && card.count > 0"
       (click)="onCountClick($event)">
-      {{ card.count }}x
+      {{ 'DECK_CARDS_X' | translate:{count: card.count } }}
     </ptcg-badge>
   </ptcg-card>
   <span class="ptcg-deck-card-label">

@@ -1,8 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ApiErrorEnum } from 'ptcg-server';
 import { MatDialogRef } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs/operators';
 
-import { ApiError, ApiErrorEnum } from '../../api/api.error';
+import { ApiError } from '../../api/api.error';
 import { AlertService } from '../../shared/alert/alert.service';
 import { ProfileService } from '../../api/services/profile.service';
 import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed';
@@ -22,7 +24,8 @@ export class ChangePasswordPopupComponent implements OnInit, OnDestroy {
   constructor(
     private alertService: AlertService,
     private dialogRef: MatDialogRef<ChangePasswordPopupComponent>,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private translate: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -39,13 +42,12 @@ export class ChangePasswordPopupComponent implements OnInit, OnDestroy {
     ).subscribe({
       next: () => {
         this.dialogRef.close();
-        this.alertService.toast('PROFILE_CHANGE_PASSWORD_SUCCESS');
+        this.alertService.toast(this.translate.instant('SET_PASSWORD_SUCCESS'));
       },
       error: (error: ApiError) => {
-        if (error.code === ApiErrorEnum.ERROR_LOGIN_INVALID) {
+        if (error.code === ApiErrorEnum.LOGIN_INVALID) {
           this.invalidPassword = this.currentPassword;
         }
-        this.alertService.toast(error.message);
       }
     });
   }

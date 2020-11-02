@@ -1,16 +1,22 @@
 <mat-nav-list>
-  <a routerLink="/games" mat-list-item translate>
-    {{ 'SIDENAV_GAMES' | translate }}
+  <a routerLink="/games" mat-list-item>
+    {{ 'MAIN_GAMES' | translate }}
   </a>
-  <a routerLink="/deck" mat-list-item>Deck</a>
-  <a routerLink="/ranking" mat-list-item>Ranking</a>
-  <a routerLink="/replays" mat-list-item>Replays</a>
+  <a routerLink="/deck" mat-list-item>
+    {{ 'MAIN_DECKS' | translate }}
+  </a>
+  <a routerLink="/ranking" mat-list-item>
+    {{ 'MAIN_RANKING' | translate }}
+  </a>
+  <a routerLink="/replays" mat-list-item>
+    {{ 'MAIN_REPLAYS' | translate }}
+  </a>
   <a routerLink="/message" mat-list-item>
     <span
       [matBadge]="unreadMessages$ | async"
       matBadgeOverlap="false"
       [matBadgeHidden]="(unreadMessages$ | async) === 0">
-      Messages
+      {{ 'MAIN_MESSAGES' | translate }}
     </span>
   </a>
 </mat-nav-list>
@@ -20,7 +26,7 @@
   <mat-divider></mat-divider>
 
   <div class="ptcg-sidenav-header">
-    <h4>Tables</h4>
+    <h4 translate>MAIN_TABLES</h4>
   </div>
 
   <ptcg-sidenav-item

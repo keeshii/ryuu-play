@@ -6,13 +6,13 @@
     <table mat-table [dataSource]="games$ | async" class="mat-elevation-z2">
       <!-- Game ID Column -->
       <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef>No.</th>
+        <th mat-header-cell *matHeaderCellDef translate>LABEL_NUMBER</th>
         <td mat-cell *matCellDef="let row">{{row.game.gameId}}</td>
       </ng-container>
 
       <!-- Player 1 -->
       <ng-container matColumnDef="player1">
-        <th mat-header-cell *matHeaderCellDef>Player 1</th>
+        <th mat-header-cell *matHeaderCellDef translate>LABEL_PLAYER_1</th>
         <td mat-cell *matCellDef="let row">
           <ptcg-user-bar openUserPopup="true" *ngIf="row.users[0]" [user]="row.users[0]">
           </ptcg-user-bar>
@@ -21,7 +21,7 @@
 
       <!-- Player 2 -->
       <ng-container matColumnDef="player2">
-        <th mat-header-cell *matHeaderCellDef>Player 2</th>
+        <th mat-header-cell *matHeaderCellDef translate>LABEL_PLAYER_2</th>
         <td mat-cell *matCellDef="let row">
           <ptcg-user-bar openUserPopup="true" *ngIf="row.users[1]" [user]="row.users[1]">
           </ptcg-user-bar>
@@ -30,13 +30,13 @@
 
       <!-- Current turn -->
       <ng-container matColumnDef="turn">
-        <th mat-header-cell *matHeaderCellDef>Turn</th>
+        <th mat-header-cell *matHeaderCellDef translate>GAMES_TURN</th>
         <td mat-cell *matCellDef="let row">{{row.game.turn}}</td>
       </ng-container>
 
       <!-- prizes -->
       <ng-container matColumnDef="prizes">
-        <th mat-header-cell *matHeaderCellDef>Prizes</th>
+        <th mat-header-cell *matHeaderCellDef translate>GAMES_PRIZES</th>
         <td mat-cell *matCellDef="let row">
           <div *ngIf="row.game.players[0] && row.game.players[1]">
             <ptcg-badge color="primary">{{ row.game.players[0].prizes }}</ptcg-badge>
@@ -47,7 +47,7 @@
 
       <!-- Actions -->
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <th mat-header-cell *matHeaderCellDef translate>LABEL_ACTIONS</th>
         <td mat-cell *matCellDef="let row">
           <ptcg-game-actions [game]="row.game"></ptcg-game-actions>
         </td>

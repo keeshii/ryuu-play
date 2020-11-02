@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { RankingInfo } from 'ptcg-server';
 import { Subject } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 import { debounceTime, switchMap, takeUntil, map } from 'rxjs/operators';
 
 import { AlertService } from '../shared/alert/alert.service';
@@ -35,7 +36,8 @@ export class RankingComponent implements OnInit, OnDestroy {
   constructor(
     private alertService: AlertService,
     private rankingService: RankingService,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private translate: TranslateService
   ) {
     this.initPagination();
   }
@@ -71,7 +73,9 @@ export class RankingComponent implements OnInit, OnDestroy {
       },
       error: (error: ApiError) => {
         this.loading = false;
-        this.alertService.toast(error.code);
+        if (!error.handled) {
+          this.alertService.toast(this.translate.instant('ERROR_UNKNOWN'));
+        }
       }
     });
 

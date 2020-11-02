@@ -5,7 +5,7 @@ import { AuthToken, Validate, check } from '../services';
 import { Controller, Get, Post } from './controller';
 import { Conversation, Message, User } from '../../storage';
 import { ConversationInfo, MessageInfo } from '../interfaces/message.interface';
-import { Errors } from '../common/errors';
+import { ApiErrorEnum } from '../common/errors';
 import { UserInfo } from '../interfaces/core.interface';
 import { config } from '../../config';
 
@@ -65,7 +65,7 @@ export class Messages extends Controller {
     const user2 = await User.findOne(parseInt(req.params.id, 10));
     if (user1 === undefined || user2 === undefined) {
       res.status(400);
-      res.send({error: Errors.PROFILE_INVALID});
+      res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
     }
 
@@ -120,7 +120,7 @@ export class Messages extends Controller {
     const user2 = await User.findOne(parseInt(req.body.id, 10));
     if (user1 === undefined || user2 === undefined) {
       res.status(400);
-      res.send({error: Errors.PROFILE_INVALID});
+      res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
     }
 

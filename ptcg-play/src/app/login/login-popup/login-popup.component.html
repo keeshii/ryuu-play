@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Sign in</h2>
+<h2 mat-dialog-title translate>LOGIN_SIGN_IN</h2>
 
 <mat-dialog-content class="ptcg-login-popup-content">
 
@@ -9,29 +9,29 @@
 
     <!-- Username -->
     <mat-form-field>
-      <mat-label>Username</mat-label>
-      <input matInput name="name" placeholder="Username" ptcgNameValidator
+      <mat-label translate>LOGIN_USERNAME</mat-label>
+      <input matInput name="name" [placeholder]="'LOGIN_USERNAME' | translate" ptcgNameValidator
         [disabled]="loading" [(ngModel)]="name" #nameField="ngModel">
-      <mat-error *ngIf="!nameField.pristine && nameField.invalid">
-        Invalid name
+      <mat-error *ngIf="!nameField.pristine && nameField.invalid" translate>
+        VALIDATION_INVALID_NAME_FORMAT
       </mat-error>
     </mat-form-field>
 
     <!-- Password -->
     <mat-form-field>
-      <mat-label>Password</mat-label>
-      <input type="password" matInput name="password" placeholder="Password"
+      <mat-label translate>LOGIN_PASSWORD</mat-label>
+      <input type="password" matInput name="password" [placeholder]="'LOGIN_PASSWORD' | translate"
         ptcgPasswordValidator password-min-length="1"
         [disabled]="loading" [(ngModel)]="password" #passwordField="ngModel">
-      <mat-error *ngIf="!nameField.pristine && nameField.invalid">
-        Invalid password
+      <mat-error *ngIf="!passwordField.pristine && passwordField.invalid" translate>
+        VALIDATION_INVALID_PASSWORD_FORMAT
       </mat-error>
     </mat-form-field>
 
     <section class="ptcg-game-rule-checkbox">
       <mat-checkbox color="primary" name="remember"
         [disabled]="loading" [(ngModel)]="rememberMe">
-        Remember me
+        {{ 'LOGIN_REMEMBER_ME' | translate }}
       </mat-checkbox>
     </section>
 
@@ -39,8 +39,8 @@
 
   <p>
     <button mat-raised-button color="primary" (click)="login()"
-      [disabled]="loading || form.invalid">
-      Sign in
+      [disabled]="loading || form.invalid" translate>
+      {{ 'LOGIN_SIGN_IN' | translate }}
     </button>
   </p>
 
@@ -49,8 +49,8 @@
 <mat-dialog-actions>
   <div class="mat-small">
     <a class="ptcg-login-popup-link" *ngIf="allowServerChange"
-       [class.disabled]="loading" (click)="changeServer()">Change server address</a>
-    <a class="ptcg-login-popup-link" (click)="register()">Create a new account</a>
-    <a class="ptcg-login-popup-link" (click)="resetPassword()">I forgot my password</a>
+       [class.disabled]="loading" (click)="changeServer()" translate>LOGIN_CHANGE_SERVER</a>
+    <a class="ptcg-login-popup-link" (click)="register()" translate>LOGIN_CREATE_ACCOUNT</a>
+    <a class="ptcg-login-popup-link" (click)="resetPassword()" translate>LOGIN_RESET_PASSWORD</a>
   </div>
 </mat-dialog-actions>

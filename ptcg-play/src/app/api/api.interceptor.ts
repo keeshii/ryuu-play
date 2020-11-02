@@ -1,10 +1,12 @@
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
+import { ApiErrorEnum } from 'ptcg-server';
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable, throwError } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 import { catchError, timeout } from 'rxjs/operators';
 
-import { ApiError, ApiErrorEnum } from './api.error';
+import { ApiError } from './api.error';
 import { AlertService } from '../shared/alert/alert.service';
 import { Router } from '@angular/router';
 import { SessionService } from '../shared/session/session.service';
@@ -18,11 +20,12 @@ export class ApiInterceptor implements HttpInterceptor {
     private dialog: MatDialog,
     private router: Router,
     private sessionService: SessionService,
+    private translate: TranslateService
   ) { }
 
   private async tokenAlert() {
     this.dialog.closeAll();
-    await this.alertService.alert('Session expired.');
+    await this.alertService.alert(this.translate.instant('ERROR_SESSION_EXPIRED'));
     this.sessionService.clear();
     this.router.navigate(['/login']);
   }
@@ -34,22 +37,27 @@ export class ApiInterceptor implements HttpInterceptor {
         const apiError = ApiError.fromError(response);
 
         if (apiError.timeout) {
-          this.alertService.toast('API_ERROR_TIMEOUT');
+          this.alertService.toast(this.translate.instant('ERROR_TIMEOUT'));
+          apiError.handled = true;
         }
 
         if (!apiError.timeout && !apiError.code) {
-          this.alertService.toast('API_ERROR_CONNECT');
+          this.alertService.toast(this.translate.instant('ERROR_SERVER_CONNECT'));
+          apiError.handled = true;
         }
 
         switch (apiError.code) {
-          case ApiErrorEnum.ERROR_BAD_TOKEN:
+          case ApiErrorEnum.AUTH_TOKEN_INVALID:
+            apiError.handled = true;
             this.tokenAlert();
             break;
-          case ApiErrorEnum.ERROR_REQUESTS_LIMIT_REACHED:
-            this.alertService.toast('API_ERROR_REQUEST_LIMIT');
+          case ApiErrorEnum.REQUESTS_LIMIT_REACHED:
+            this.alertService.toast(this.translate.instant('ERROR_REQUESTS_LIMIT_REACHED'));
+            apiError.handled = true;
             break;
-          case ApiErrorEnum.ERROR_UNKNOWN_REQUEST:
-            this.alertService.toast('API_ERROR_UNKNOWN');
+          case ApiErrorEnum.VALIDATION_INVALID_PARAM:
+            this.alertService.toast(this.translate.instant('ERROR_INVALID_REQUEST'));
+            apiError.handled = true;
             break;
         }
 

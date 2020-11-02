@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Errors } from '../common/errors';
+import { ApiErrorEnum } from '../common/errors';
 import { Md5 } from '../../utils/md5';
 import { RateLimit } from '../common/rate-limit';
 import { config } from '../../config';
@@ -47,14 +47,14 @@ export function AuthToken() {
 
       if (rateLimit.isLimitExceeded(req.ip)) {
         res.status(400);
-        res.send({error: Errors.REQUESTS_LIMIT_REACHED});
+        res.send({error: ApiErrorEnum.REQUESTS_LIMIT_REACHED});
         return;
       }
 
       if (!userId) {
         rateLimit.increment(req.ip);
         res.statusCode = 403;
-        res.send({error: Errors.AUTH_TOKEN_INVALID});
+        res.send({error: ApiErrorEnum.AUTH_TOKEN_INVALID});
         return;
       }
 

@@ -5,7 +5,7 @@ import { Message, User } from '../../storage';
 import { MessageInfo } from '../interfaces/message.interface';
 import { SocketWrapper, Response } from './socket-wrapper';
 import { UserInfo } from '../interfaces/core.interface';
-import { Errors } from '../common/errors';
+import { ApiErrorEnum } from '../common/errors';
 
 export class MessageSocket {
 
@@ -36,21 +36,21 @@ export class MessageSocket {
 
     // Do not send message to yourself
     if (this.client.user.id === params.userId) {
-      response('error', Errors.CANNOT_SEND_MESSAGE);
+      response('error', ApiErrorEnum.CANNOT_SEND_MESSAGE);
       return;
     }
 
     try {
       const user = await User.findOne(params.userId);
       if (user === undefined) {
-        throw new Error(Errors.PROFILE_INVALID);
+        throw new Error(ApiErrorEnum.PROFILE_INVALID);
       }
       const message = await this.core.messager.sendMessage(this.client, user, params.text);
       messageInfo = this.buildMessageInfo(message);
       userInfo = CoreSocket.buildUserInfo(user);
 
     } catch (error) {
-      response('error', Errors.CANNOT_SEND_MESSAGE);
+      response('error', ApiErrorEnum.CANNOT_SEND_MESSAGE);
       return;
     }
 
@@ -63,12 +63,12 @@ export class MessageSocket {
     try {
       const user = await User.findOne(params.userId);
       if (user === undefined) {
-        throw new Error(Errors.PROFILE_INVALID);
+        throw new Error(ApiErrorEnum.PROFILE_INVALID);
       }
       await this.core.messager.readMessages(this.client, user);
 
     } catch (error) {
-      response('error', Errors.CANNOT_READ_MESSAGE);
+      response('error', ApiErrorEnum.CANNOT_READ_MESSAGE);
       return;
     }
 

@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Import replay</h2>
+<h2 mat-dialog-title translate>REPLAY_IMPORT_TITLE</h2>
 
 <mat-dialog-content>
 
@@ -9,39 +9,39 @@
     <mat-card-content>
       <table>
         <tr>
-          <th>File name</th>
+          <th translate>REPLAY_FILE_NAME</th>
           <td>{{ replayFile.files[0].name }}</td>
         </tr>
         <tr>
-          <th>Date</th>
+          <th translate>LABEL_DATE</th>
           <td>{{ replay.created | date:'yyyy-MM-dd HH:mm' }}</td>
         </tr>
         <tr>
-          <th>Player 1</th>
+          <th translate>LABEL_PLAYER_1</th>
           <td>
             {{ replay.player1.name }}
-            <span *ngIf="replay.winner === GameWinner.PLAYER_1">
-              (winner)
+            <span *ngIf="replay.winner === GameWinner.PLAYER_1" translate>
+              REPLAY_WINNER
             </span>
           </td>
         </tr>
         <tr>
-          <th>Player 2</th>
+          <th translate>LABEL_PLAYER_2</th>
           <td>
             {{ replay.player2.name }}
-            <span *ngIf="replay.winner === GameWinner.PLAYER_2">
-              (winner)
+            <span *ngIf="replay.winner === GameWinner.PLAYER_2" translate>
+              REPLAY_WINNER
             </span>
           </td>
         </tr>
         <tr>
-          <th>States</th>
+          <th translate>REPLAY_STATES</th>
           <td>
             {{ statesCount }}
           </td>
         </tr>
         <tr>
-          <th>Turns</th>
+          <th translate>REPLAY_TURNS</th>
           <td>
             {{ turnsCount }}
           </td>
@@ -54,7 +54,7 @@
 
     <!-- Avatar image -->
     <mat-form-field>
-      <mat-label>Replay file</mat-label>
+      <mat-label translate>REPLAY_FILE</mat-label>
       <ptcg-file-input #replayFileInput required
         ptcgErrorValidator [ptcgErrorValue]="replayError"
         ptcgFileSizeValidator [maxFileSize]="maxFileSize"
@@ -70,20 +70,20 @@
         <mat-icon>clear</mat-icon>
       </button>
       <mat-error>
-        <div *ngIf="replayField.errors?.ptcgError">INVALID_REPLAY</div>
-        <div *ngIf="replayField.errors?.maxFileSize">MAX_FILE_SIZE</div>
-        <div *ngIf="replayField.errors?.required">REPLAY_IS_REQUIRED</div>
+        <div *ngIf="replayField.errors?.ptcgError" translate>VALIDATION_INVALID_REPLAY</div>
+        <div *ngIf="replayField.errors?.maxFileSize" translsate>VALIDATION_MAX_FILE_SIZE</div>
+        <div *ngIf="replayField.errors?.required" translate>VALIDATION_FIELD_REQUIRED</div>
       </mat-error>
     </mat-form-field>
 
     <!-- Avatar name -->
     <mat-form-field>
-      <mat-label>Replay name</mat-label>
-      <input matInput placeholder="Replay name" name="name"
+      <mat-label translate>REPLAY_NAME</mat-label>
+      <input matInput [placeholder]="'REPLAY_NAME' | translate" name="name"
         [(ngModel)]="name" [disabled]="loading" #nameField="ngModel"
         ptcgNameValidator [ptcgInvalidValue]="invalidName" required>
       <mat-error>
-        <div *ngIf="nameField.errors?.name">VALIDATION_INVALID_NAME</div>
+        <div *ngIf="nameField.errors?.name" translate>VALIDATION_INVALID_NAME_FORMAT</div>
       </mat-error>
     </mat-form-field>
 
@@ -92,8 +92,10 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-raised-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button mat-dialog-close>
+    {{ 'BUTTON_CANCEL' | translate }}
+  </button>
   <button mat-raised-button color="primary" (click)="importReplay()" [disabled]="form.invalid">
-    Import
+    {{ 'BUTTON_IMPORT' | translate }}
   </button>
 </mat-dialog-actions>

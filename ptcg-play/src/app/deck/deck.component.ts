@@ -1,4 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ApiErrorEnum } from 'ptcg-server';
+import { TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs/operators';
 
 import { AlertService } from '../shared/alert/alert.service';
@@ -20,7 +22,8 @@ export class DeckComponent implements OnInit, OnDestroy {
 
   constructor(
     private alertService: AlertService,
-    private deckService: DeckService
+    private deckService: DeckService,
+    private translate: TranslateService
   ) { }
 
   public ngOnInit() {
@@ -37,7 +40,9 @@ export class DeckComponent implements OnInit, OnDestroy {
     )
       .subscribe(response => {
         this.decks = response.decks;
-      }, (error: ApiError) => { });
+      }, (error: ApiError) => {
+        this.handleError(error);
+      });
   }
 
   public async createDeck() {
@@ -53,12 +58,12 @@ export class DeckComponent implements OnInit, OnDestroy {
     ).subscribe(() => {
       this.refreshList();
     }, (error: ApiError) => {
-      this.alertService.toast('Error occured, try again.');
+      this.handleError(error);
     });
   }
 
   public async deleteDeck(deckId: number) {
-    if (!await this.alertService.confirm('Delete the selected deck?')) {
+    if (!await this.alertService.confirm(this.translate.instant('DECK_DELETE_SELECTED'))) {
       return;
     }
     this.loading = true;
@@ -68,7 +73,7 @@ export class DeckComponent implements OnInit, OnDestroy {
     ).subscribe(() => {
       this.refreshList();
     }, (error: ApiError) => {
-      this.alertService.toast('Error occured, try again.');
+      this.handleError(error);
     });
   }
 
@@ -85,7 +90,7 @@ export class DeckComponent implements OnInit, OnDestroy {
     ).subscribe(() => {
       this.refreshList();
     }, (error: ApiError) => {
-      this.alertService.toast('Error occured, try again.');
+      this.handleError(error);
     });
   }
 
@@ -102,18 +107,24 @@ export class DeckComponent implements OnInit, OnDestroy {
     ).subscribe(() => {
       this.refreshList();
     }, (error: ApiError) => {
-      this.alertService.toast('Error occured, try again.');
+      this.handleError(error);
     });
   }
 
   private getDeckName(name: string = ''): Promise<string | undefined> {
     const invalidValues = this.decks.map(d => d.name);
     return this.alertService.inputName({
-      title: 'Enter deck name',
-      placeholder: 'Deck name',
+      title: this.translate.instant('DECK_ENTER_NAME_TITLE'),
+      placeholder: this.translate.instant('DECK_ENTER_NAME_INPUT'),
       invalidValues,
       value: name
     });
+  }
+
+  private handleError(error: ApiError): void {
+    if (!error.handled) {
+      this.alertService.toast(this.translate.instant('ERROR_UNKNOWN'));
+    }
   }
 
 }

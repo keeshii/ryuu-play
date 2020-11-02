@@ -1,13 +1,13 @@
 <div class="ptcg-match-table ptcg-u-padding">
 
-  <h3>Recent matches</h3>
+  <h3 translate>GAMES_RECENT_GAMES_TITLE</h3>
 
   <ptcg-content [loading]="loading">
     <table mat-table [dataSource]="matches" class="mat-elevation-z2">
 
       <!-- Game ID Column -->
       <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef>No.</th>
+        <th mat-header-cell *matHeaderCellDef translate>LABEL_NUMBER</th>
         <td mat-cell *matCellDef="let match; let i = index;">
           {{ pageIndex * pageSize + i + 1 }}
         </td>
@@ -15,7 +15,7 @@
 
       <!-- Player 1 -->
       <ng-container matColumnDef="player1">
-        <th mat-header-cell *matHeaderCellDef>Player 1</th>
+        <th mat-header-cell *matHeaderCellDef translate>LABEL_PLAYER_1</th>
         <td mat-cell *matCellDef="let match">
           <ptcg-user-bar openUserPopup="true"
             [user]="users[match.player1Id]"
@@ -26,7 +26,7 @@
 
       <!-- Player 2 -->
       <ng-container matColumnDef="player2">
-        <th mat-header-cell *matHeaderCellDef>Player 2</th>
+        <th mat-header-cell *matHeaderCellDef translate>LABEL_PLAYER_2</th>
         <td mat-cell *matCellDef="let match">
           <ptcg-user-bar openUserPopup="true"
             [user]="users[match.player2Id]"
@@ -37,15 +37,15 @@
 
       <!-- Date -->
       <ng-container matColumnDef="date">
-        <th mat-header-cell *matHeaderCellDef>Date</th>
+        <th mat-header-cell *matHeaderCellDef translate>LABEL_DATE</th>
         <td mat-cell *matCellDef="let match">
-          {{ match.created | date:'yyyy-MM-dd HH:mm' }}
+          {{ match.created | date: ('DATE_FORMAT' | translate) }}
         </td>
       </ng-container>
 
       <!-- Ranking -->
       <ng-container matColumnDef="ranking">
-        <th mat-header-cell *matHeaderCellDef>Ranking</th>
+        <th mat-header-cell *matHeaderCellDef translate>LABEL_RANKING</th>
         <td mat-cell *matCellDef="let match">
           <div *ngIf="id === match.player1Id; then ranking1; else ranking2"></div>
           <ng-template #ranking1>
@@ -59,15 +59,17 @@
 
       <!-- Actions -->
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <th mat-header-cell *matHeaderCellDef translate>LABEL_ACTIONS</th>
         <td mat-cell *matCellDef="let match">
-          <button mat-button [matMenuTriggerFor]="menu">Replay</button>
+          <button mat-button [matMenuTriggerFor]="menu" translate>
+            {{ 'BUTTON_REPLAY' | translate }}
+          </button>
           <mat-menu #menu="matMenu">
             <button mat-menu-item [disabled]="loading" (click)="showReplay(match.matchId)">
-              Show
+              {{ 'BUTTON_SHOW' | translate }}
             </button>
             <button mat-menu-item [disabled]="loading" (click)="saveReplay(match.matchId)">
-              Save
+              {{ 'BUTTON_SAVE' | translate }}
             </button>
           </mat-menu>
         </td>
@@ -87,9 +89,9 @@
     </mat-paginator>
 
     <div class="ptcg-u-padding ptcg-table-loading-failed" *ngIf="loadingFailed">
-      <p>Error while loading the content.</p>
+      <p translate>TABLE_ERROR_LOADING</p>
       <button mat-raised-button color="primary" (click)="loadMatches(id)">
-        Try again
+        {{ 'BUTTON_TRY_AGAIN' | translate }}
       </button>
     </div>
 

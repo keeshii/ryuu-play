@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Create game</h2>
+<h2 mat-dialog-title translate>GAMES_CREATE_GAME_TITLE</h2>
 
 <mat-dialog-content>
 
@@ -6,7 +6,7 @@
 
     <!-- Deck -->
     <mat-form-field>
-      <mat-label>Your deck</mat-label>
+      <mat-label translate>Your deck</mat-label>
       <mat-select [(value)]="deckId">
         <mat-option *ngFor="let option of decks" [value]="option.value">
           {{option.viewValue}}

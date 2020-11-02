@@ -3,7 +3,7 @@
     [hidden]="isActivated"
     (click)="activateSearch()">
     <mat-icon>search</mat-icon>
-    Search
+    {{ 'BUTTON_SEARCH' | translate }}
   </button>
 
   <form class="search-form" autocomplete="off" [hidden]="!isActivated">
@@ -14,10 +14,10 @@
         (blur)="onBlur()"
         (input)="onChange()"
         [(ngModel)]="searchValue"
-        type="text" matInput placeholder="Search">
+        type="text" matInput [placeholder]="'BUTTON_SEARCH' | translate">
     </mat-form-field>
     <button mat-button
-      matTooltip="Clear filter"
+      [matTooltip]="'SHARED_CLEAR_FILTER' | translate"
       matTooltipShowDelay="1000"
       (click)="clearSearch()">
       <mat-icon matSuffix >close</mat-icon>

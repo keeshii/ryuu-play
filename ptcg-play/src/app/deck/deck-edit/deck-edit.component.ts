@@ -1,5 +1,7 @@
 import { ActivatedRoute, Router } from '@angular/router';
+import { ApiErrorEnum } from 'ptcg-server';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { switchMap, finalize } from 'rxjs/operators';
 
 import { ApiError } from '../../api/api.error';
@@ -30,7 +32,8 @@ export class DeckEditComponent implements OnInit, OnDestroy {
     private cardsBaseService: CardsBaseService,
     private deckService: DeckService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) { }
 
   ngOnInit() {
@@ -47,7 +50,7 @@ export class DeckEditComponent implements OnInit, OnDestroy {
         this.deck = response.deck;
         this.deckItems = this.loadDeckItems(response.deck.cards);
       }, async error => {
-        await this.alertService.error('Error while loading the deck');
+        await this.alertService.error(this.translate.instant('DECK_EDIT_LOADING_ERROR'));
         this.router.navigate(['/decks']);
       });
   }
@@ -95,9 +98,11 @@ export class DeckEditComponent implements OnInit, OnDestroy {
       finalize(() => { this.loading = false; }),
       takeUntilDestroyed(this)
     ).subscribe(() => {
-      this.alertService.toast('Deck saved.');
+      this.alertService.toast(this.translate.instant('DECK_EDIT_SAVED'));
     }, (error: ApiError) => {
-      this.alertService.toast('Error occured, try again.');
+      if (!error.handled) {
+        this.alertService.toast(this.translate.instant('ERROR_UNKNOWN'));
+      }
     });
   }
 

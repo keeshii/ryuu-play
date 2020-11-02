@@ -4,7 +4,7 @@ import { AuthToken, Validate, check } from '../services';
 import { CardManager, DeckAnalyser } from '../../game';
 import { Controller, Get, Post } from './controller';
 import { DeckSaveRequest } from '../interfaces';
-import { Errors } from '../common/errors';
+import { ApiErrorEnum } from '../common/errors';
 import { User, Deck } from '../../storage';
 
 export class Decks extends Controller {
@@ -16,7 +16,7 @@ export class Decks extends Controller {
     const user = await User.findOne(userId, { relations: ['decks'] });
 
     if (user === undefined) {
-      res.send({error: Errors.PROFILE_INVALID});
+      res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
     }
 
@@ -38,7 +38,7 @@ export class Decks extends Controller {
     const entity = await Deck.findOne(deckId, { relations: ['user'] });
 
     if (entity === undefined || entity.user.id !== userId) {
-      res.send({error: Errors.DECK_INVALID});
+      res.send({error: ApiErrorEnum.DECK_INVALID});
       return;
     }
 
@@ -65,14 +65,14 @@ export class Decks extends Controller {
     // optional id parameter, without ID new deck will be created
     if (body.id !== undefined && typeof body.id !== 'number') {
       res.status(400);
-      res.send({error: Errors.VALIDATION_INVALID_PARAM, param: 'id'});
+      res.send({error: ApiErrorEnum.VALIDATION_INVALID_PARAM, param: 'id'});
       return;
     }
 
     // check if all cards exist in our database
     if (!this.validateCards(body.cards)) {
       res.status(400);
-      res.send({error: Errors.VALIDATION_INVALID_PARAM, param: 'cards'});
+      res.send({error: ApiErrorEnum.VALIDATION_INVALID_PARAM, param: 'cards'});
       return;
     }
 
@@ -81,7 +81,7 @@ export class Decks extends Controller {
 
     if (user === undefined) {
       res.status(400);
-      res.send({error: Errors.PROFILE_INVALID});
+      res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
     }
 
@@ -91,7 +91,7 @@ export class Decks extends Controller {
 
     if (deck === undefined || deck.user.id !== user.id) {
       res.status(400);
-      res.send({error: Errors.DECK_INVALID});
+      res.send({error: ApiErrorEnum.DECK_INVALID});
       return;
     }
 
@@ -105,7 +105,7 @@ export class Decks extends Controller {
       deck = await deck.save();
     } catch (error) {
       res.status(400);
-      res.send({error: Errors.NAME_DUPLICATE});
+      res.send({error: ApiErrorEnum.NAME_DUPLICATE});
       return;
     }
 
@@ -129,7 +129,7 @@ export class Decks extends Controller {
 
     if (user === undefined) {
       res.status(400);
-      res.send({error: Errors.PROFILE_INVALID});
+      res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
     }
 
@@ -137,7 +137,7 @@ export class Decks extends Controller {
 
     if (deck === undefined || deck.user.id !== user.id) {
       res.status(400);
-      res.send({error: Errors.DECK_INVALID});
+      res.send({error: ApiErrorEnum.DECK_INVALID});
       return;
     }
 
@@ -160,7 +160,7 @@ export class Decks extends Controller {
 
     if (user === undefined) {
       res.status(400);
-      res.send({error: Errors.PROFILE_INVALID});
+      res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
     }
 
@@ -168,7 +168,7 @@ export class Decks extends Controller {
 
     if (deck === undefined || deck.user.id !== user.id) {
       res.status(400);
-      res.send({error: Errors.DECK_INVALID});
+      res.send({error: ApiErrorEnum.DECK_INVALID});
       return;
     }
 
@@ -177,7 +177,7 @@ export class Decks extends Controller {
       deck = await deck.save();
     } catch (error) {
       res.status(400);
-      res.send({error: Errors.NAME_DUPLICATE});
+      res.send({error: ApiErrorEnum.NAME_DUPLICATE});
       return;
     }
 
@@ -201,7 +201,7 @@ export class Decks extends Controller {
 
     if (user === undefined) {
       res.status(400);
-      res.send({error: Errors.PROFILE_INVALID});
+      res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
     }
 
@@ -209,7 +209,7 @@ export class Decks extends Controller {
 
     if (deck === undefined || deck.user.id !== user.id) {
       res.status(400);
-      res.send({error: Errors.DECK_INVALID});
+      res.send({error: ApiErrorEnum.DECK_INVALID});
       return;
     }
 

@@ -1,7 +1,7 @@
 import * as io from 'socket.io';
-import { Errors } from '../common/errors';
+import { ApiErrorEnum } from '../common/errors';
 
-export type Response<R = void> = (message: string, data?: R | Errors) => void;
+export type Response<R = void> = (message: string, data?: R | ApiErrorEnum) => void;
 
 export type Handler<T, R> = (data: T, response: Response<R>) => void;
 
@@ -27,7 +27,7 @@ export class SocketWrapper {
 
       this.socket.on(listener.message, async <T, R>(data: T, fn: Function) => {
         const response: Response<R> =
-          (message: string, data?: R | Errors) => fn && fn({message, data});
+          (message: string, data?: R | ApiErrorEnum) => fn && fn({message, data});
         try {
           await listener.handler(data, response);
         } catch(error) {

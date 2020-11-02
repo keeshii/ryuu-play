@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { AlertPopupComponent } from './alert-popup/alert-popup.component';
 import { AlertService } from './alert.service';
@@ -16,6 +17,7 @@ import { ValidationModule } from '../validation/validation.module';
     CommonModule,
     FormsModule,
     MaterialModule,
+    TranslateModule,
     ValidationModule
   ],
   declarations: [

@@ -1,5 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 
 export interface SelectPopupOption<T> {
   value: T;
@@ -29,9 +30,10 @@ export class SelectPopupComponent {
 
   constructor(
     private dialogRef: MatDialogRef<SelectPopupComponent>,
+    translate: TranslateService,
     @Inject(MAT_DIALOG_DATA) data: SelectPopupData<any>,
   ) {
-    const DEFAULT_TITLE = 'Select';
+    const DEFAULT_TITLE = translate.instant('ALERT_SELECT_TITLE');
 
     this.title = data.title || DEFAULT_TITLE;
     this.message = data.message;

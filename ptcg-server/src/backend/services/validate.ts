@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Errors } from '../common/errors';
+import { ApiErrorEnum } from '../common/errors';
 
 const EMAIL_PATTERN = /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/;
 const NAME_PATTERN = /^[a-zA-Z0-9]{3,255}$/;
@@ -26,7 +26,7 @@ export function Validate(validationMap: ValidationMap) {
           const value = req.body[param];
           if (!validationMap[param].validate(value)) {
             res.statusCode = 400;
-            res.send({error: Errors.VALIDATION_INVALID_PARAM, param});
+            res.send({error: ApiErrorEnum.VALIDATION_INVALID_PARAM, param});
             return;
           }
         }

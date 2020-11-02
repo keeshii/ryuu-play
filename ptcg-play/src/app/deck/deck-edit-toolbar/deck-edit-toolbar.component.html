@@ -1,32 +1,34 @@
 <mat-toolbar class="ptcg-deck-edit-toolbar">
   <mat-toolbar-row>
-    <h1 *ngIf="deck">Editing deck: {{deck.name}}</h1>
+    <h1 *ngIf="deck" translate [translateParams]="{name: deck.name}">
+      DECK_EDIT_TITLE
+    </h1>
 
     <span class="ptcg-u-spacer"></span>
 
     <button mat-raised-button [routerLink]="['/deck']">
       <mat-icon>arrow_back</mat-icon>
-      <span>Back</span>
+      <span translate>DECK_EDIT_BACK</span>
     </button>
 
     <button mat-raised-button color="primary" [disabled]="disabled" (click)="onSave()">
-      <span>Save</span>
+      <span translate>DECK_EDIT_SAVE</span>
     </button>
   </mat-toolbar-row>
 
   <mat-toolbar-row class="search-toolbar">
     <mat-form-field floatLabel="never" appearance="legacy">
-      <mat-select multiple placeholder="All cards" (selectionChange)="onSuperTypeChange($event)">
+      <mat-select multiple [placeholder]="'DECK_EDIT_ALL_CARDS' | translate" (selectionChange)="onSuperTypeChange($event)">
         <mat-option *ngFor="let superType of superTypes" [value]="superType.value">
-          {{ superType.label }}
+          {{ superType.label | translate }}
         </mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field floatLabel="never" appearance="legacy">
-      <mat-select multiple placeholder="All types" (selectionChange)="onCardTypeChange($event)">
+      <mat-select multiple [placeholder]="'DECK_EDIT_ALL_TYPES' | translate" (selectionChange)="onCardTypeChange($event)">
         <mat-option *ngFor="let cardType of cardTypes" [value]="cardType.value">
-          {{ cardType.label }}
+          {{ cardType.label | translate }}
         </mat-option>
       </mat-select>
     </mat-form-field>

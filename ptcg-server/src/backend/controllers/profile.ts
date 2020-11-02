@@ -3,7 +3,7 @@ import { FindConditions } from 'typeorm';
 
 import { AuthToken, Validate, check } from '../services';
 import { Controller, Get, Post } from './controller';
-import { Errors } from '../common/errors';
+import { ApiErrorEnum } from '../common/errors';
 import { MatchInfo } from '../interfaces/profile.interface';
 import { Md5 } from '../../utils/md5';
 import { User, Match } from '../../storage';
@@ -19,7 +19,7 @@ export class Profile extends Controller {
     const userId: number = req.body.userId;
     const user = await User.findOne(userId);
     if (user === undefined) {
-      res.send({error: Errors.PROFILE_INVALID});
+      res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
     }
     const userInfo = this.buildUserInfo(user);
@@ -32,7 +32,7 @@ export class Profile extends Controller {
     const userId: number = parseInt(req.params.id, 10);
     const user = await User.findOne(userId);
     if (user === undefined) {
-      res.send({error: Errors.PROFILE_INVALID});
+      res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
     }
     const userInfo = this.buildUserInfo(user);
@@ -96,7 +96,7 @@ export class Profile extends Controller {
 
     if (user === undefined || user.password !== Md5.init(body.currentPassword)) {
       res.status(400);
-      res.send({error: Errors.LOGIN_INVALID});
+      res.send({error: ApiErrorEnum.LOGIN_INVALID});
       return;
     }
 
@@ -105,7 +105,7 @@ export class Profile extends Controller {
       await user.save();
     } catch (error) {
       res.status(400);
-      res.send({error: Errors.LOGIN_INVALID});
+      res.send({error: ApiErrorEnum.LOGIN_INVALID});
       return;
     }
 

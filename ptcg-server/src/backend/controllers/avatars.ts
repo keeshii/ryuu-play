@@ -8,7 +8,7 @@ import { AuthToken, Validate, check } from '../services';
 import { Avatar, User } from '../../storage';
 import { AvatarInfo, AvatarAddRequest } from '../interfaces/avatar.interface';
 import { Controller, Get, Post } from './controller';
-import { Errors } from '../common/errors';
+import { ApiErrorEnum } from '../common/errors';
 import { config } from '../../config';
 import {Transaction, TransactionManager, EntityManager} from 'typeorm';
 
@@ -21,7 +21,7 @@ export class Avatars extends Controller {
     const user = await User.findOne(userId, { relations: ['avatars'] });
 
     if (user === undefined) {
-      res.send({error: Errors.PROFILE_INVALID});
+      res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
     }
 
@@ -40,7 +40,7 @@ export class Avatars extends Controller {
     const avatarId: number = parseInt(req.params.id, 10);
     const avatar = await Avatar.findOne(avatarId);
     if (avatar === undefined) {
-      res.send({error: Errors.AVATAR_INVALID});
+      res.send({error: ApiErrorEnum.AVATAR_INVALID});
       return;
     }
     const avatarInfo: AvatarInfo = {
@@ -65,7 +65,7 @@ export class Avatars extends Controller {
     });
 
     if (avatars.length !== 1) {
-      res.send({error: Errors.AVATAR_INVALID});
+      res.send({error: ApiErrorEnum.AVATAR_INVALID});
       return;
     }
     const avatar = avatars[0];
@@ -92,7 +92,7 @@ export class Avatars extends Controller {
 
     if (user === undefined) {
       res.status(400);
-      res.send({error: Errors.PROFILE_INVALID});
+      res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
     }
 
@@ -105,7 +105,7 @@ export class Avatars extends Controller {
     } catch (error) {
       res.status(400);
       res.send({
-        error: Errors.VALIDATION_INVALID_PARAM,
+        error: ApiErrorEnum.VALIDATION_INVALID_PARAM,
         param: 'imageBase64',
         message: error instanceof Error ? error.message : ''
       });
@@ -122,7 +122,7 @@ export class Avatars extends Controller {
       }
     } catch (error) {
       res.status(400);
-      res.send({error: Errors.NAME_DUPLICATE});
+      res.send({error: ApiErrorEnum.NAME_DUPLICATE});
       return;
     }
 
@@ -147,7 +147,7 @@ export class Avatars extends Controller {
 
     if (user === undefined) {
       res.status(400);
-      res.send({error: Errors.PROFILE_INVALID});
+      res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
     }
 
@@ -155,7 +155,7 @@ export class Avatars extends Controller {
 
     if (avatar === undefined || avatar.user.id !== user.id) {
       res.status(400);
-      res.send({error: Errors.AVATAR_INVALID});
+      res.send({error: ApiErrorEnum.AVATAR_INVALID});
       return;
     }
 
@@ -188,7 +188,7 @@ export class Avatars extends Controller {
 
     if (user === undefined) {
       res.status(400);
-      res.send({error: Errors.PROFILE_INVALID});
+      res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
     }
 
@@ -196,7 +196,7 @@ export class Avatars extends Controller {
 
     if (avatar === undefined || avatar.user.id !== user.id) {
       res.status(400);
-      res.send({error: Errors.AVATAR_INVALID});
+      res.send({error: ApiErrorEnum.AVATAR_INVALID});
       return;
     }
 
@@ -205,7 +205,7 @@ export class Avatars extends Controller {
       avatar = await avatar.save();
     } catch (error) {
       res.status(400);
-      res.send({error: Errors.NAME_DUPLICATE});
+      res.send({error: ApiErrorEnum.NAME_DUPLICATE});
       return;
     }
 
@@ -229,7 +229,7 @@ export class Avatars extends Controller {
 
     if (user === undefined) {
       res.status(400);
-      res.send({error: Errors.PROFILE_INVALID});
+      res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
     }
 
@@ -237,7 +237,7 @@ export class Avatars extends Controller {
 
     if (avatar === undefined || avatar.user.id !== user.id) {
       res.status(400);
-      res.send({error: Errors.AVATAR_INVALID});
+      res.send({error: ApiErrorEnum.AVATAR_INVALID});
       return;
     }
 
@@ -252,7 +252,7 @@ export class Avatars extends Controller {
       this.core.emit(c => c.onUsersUpdate([ user as User ]));
     } catch (error) {
       res.status(400);
-      res.send({error: Errors.AVATAR_INVALID});
+      res.send({error: ApiErrorEnum.AVATAR_INVALID});
       return;
     }
 
