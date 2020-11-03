@@ -12,19 +12,19 @@ export class RankComponent implements OnInit {
     switch (rank) {
       case Rank.MASTER:
         this.rankColor = 'warn';
-        this.rankName = 'Master';
+        this.rankName = 'USERS_RANK_MASTER';
         break;
       case Rank.SENIOR:
         this.rankColor = 'primary';
-        this.rankName = 'Senior';
+        this.rankName = 'USERS_RANK_SENIOR';
         break;
       case Rank.JUNIOR:
         this.rankColor = 'accent';
-        this.rankName = 'Junior';
+        this.rankName = 'USERS_RANK_JUNIOR';
         break;
       default:
         this.rankColor = '';
-        this.rankName = 'Unknown';
+        this.rankName = 'USERS_RANK_UNKNOWN';
     }
   }
 

@@ -9,18 +9,18 @@
       <span>{{card.name}}</span>
       <div class="ptcg-u-spacer"></div>
       <div class="subtitle-evolves-from" *ngIf="card.evolvesFrom">
-        (evolves from {{card.evolvesFrom}})
+        {{ 'CARDS_EVOLVES_FROM' | translate: { name: card.evolvesFrom } }}
       </div>
     </div>
     <div class="subtitle">
       <div class="subtitle-stage" [ngSwitch]="card.stage">
-        <span *ngSwitchCase="Stage.BASIC">Basic</span>
-        <span *ngSwitchCase="Stage.STAGE_1">Stage 1</span>
-        <span *ngSwitchCase="Stage.STAGE_2">Stage 2</span>
+        <span *ngSwitchCase="Stage.BASIC" translate>CARDS_BASIC</span>
+        <span *ngSwitchCase="Stage.STAGE_1" translate>CARDS_STAGE_1</span>
+        <span *ngSwitchCase="Stage.STAGE_2" translate>CARDS_STAGE_2</span>
       </div>
       <div class="ptcg-u-spacer"></div>
       <div class="subtitle-hp">
-        <span class="subtitle-hp-unit">HP</span>
+        <span class="subtitle-hp-unit" translate>CARDS_HP</span>
         <span class="subtitle-hp-value">{{card.hp}}</span>
       </div>
       <div class="subtitle-card-type">
@@ -34,9 +34,9 @@
       <div class="power">
         <div class="power-header">
           <div class="power-type" [ngSwitch]="power.powerType">
-            <div class="ability" *ngSwitchCase="PowerType.ABILITY">Ability</div>
-            <div class="ability" *ngSwitchCase="PowerType.POKEPOWER">Poke-Power</div>
-            <div class="poke-body" *ngSwitchCase="PowerType.POKEBODY">Poke-Body</div>
+            <div class="ability" *ngSwitchCase="PowerType.ABILITY" translate>CARDS_ABILITY</div>
+            <div class="ability" *ngSwitchCase="PowerType.POKEPOWER" translate>CARDS_POKE_POWER</div>
+            <div class="poke-body" *ngSwitchCase="PowerType.POKEBODY" translate>CARDS_POKE_BODY</div>
           </div>
           <div class="power-name">
             {{ power.name }}
@@ -71,7 +71,7 @@
 
     <div class="stats">
       <div class="stats-item">
-        <div class="stats-item-header">Weakness</div>
+        <div class="stats-item-header" translate>CARDS_WEAKNESS</div>
         <div class="stats-item-value" *ngFor="let weakness of card.weakness">
           <div class="stats-item-value-type">
             <ptcg-energy [type]="weakness.type"></ptcg-energy>
@@ -83,7 +83,7 @@
       </div>
 
       <div class="stats-item">
-        <div class="stats-item-header">Resistance</div>
+        <div class="stats-item-header" translate>CARDS_RESISTANCE</div>
         <div class="stats-item-value" *ngFor="let resistance of card.resistance">
           <div class="stats-item-value-type">
             <ptcg-energy [type]="resistance.type"></ptcg-energy>
@@ -95,7 +95,7 @@
       </div>
 
       <div class="stats-item">
-        <div class="stats-item-header">Retreat Cost</div>
+        <div class="stats-item-header" translate>CARDS_RETREAT_COST</div>
         <div class="stats-item-value">
           <div class="stats-item-value-type">
             <ptcg-energy *ngFor="let cost of card.retreat" [type]="cost"></ptcg-energy>
@@ -112,8 +112,8 @@
     </div>
     <div class="subtitle">
       <div class="subtitle-stage" [ngSwitch]="card.energyType">
-        <span *ngSwitchCase="EnergyType.BASIC">Basic Energy</span>
-        <span *ngSwitchCase="EnergyType.SPECIAL">Special Energy</span>
+        <span *ngSwitchCase="EnergyType.BASIC" translate>CARDS_BASIC_ENERGY</span>
+        <span *ngSwitchCase="EnergyType.SPECIAL" translate>CARDS_SPECIAL_ENERGY</span>
       </div>
       <div class="ptcg-u-spacer"></div>
       <div class="subtitle-card-type">
@@ -123,8 +123,8 @@
 
     <div class="power" *ngIf="card.text">
       <div class="power-header">
-        <div class="power-name">
-          Text on card
+        <div class="power-name" translate>
+          CARDS_TEXT_ON_CARD
         </div>
       </div>
       <div class="card-text">{{ card.text }}</div>
@@ -138,10 +138,10 @@
     </div>
     <div class="subtitle">
       <div class="subtitle-stage" [ngSwitch]="card.trainerType">
-        <span *ngSwitchDefaultCase>Item</span>
-        <span *ngSwitchCase="TrainerType.SUPPORTER">Supporter</span>
-        <span *ngSwitchCase="TrainerType.STADIUM">Stadium</span>
-        <span *ngSwitchCase="TrainerType.TOOL">Pokemon Tool</span>
+        <span *ngSwitchDefaultCase translate>CARDS_ITEM</span>
+        <span *ngSwitchCase="TrainerType.SUPPORTER" translate>CARDS_SUPPORTER</span>
+        <span *ngSwitchCase="TrainerType.STADIUM" translate>CARDS_STADIUM</span>
+        <span *ngSwitchCase="TrainerType.TOOL" translate>CARDS_POKEMON_TOOL</span>
       </div>
       <div class="ptcg-u-spacer"></div>
       <div class="subtitle-card-type">
@@ -154,8 +154,8 @@
       [enabled]="options.enableTrainer">
       <div class="power" *ngIf="card.text">
         <div class="power-header">
-          <div class="power-name">
-            Text on card
+          <div class="power-name" translate>
+            CARDS_TEXT_ON_CARD
           </div>
         </div>
         <div class="card-text">{{ card.text }}</div>
@@ -171,11 +171,11 @@
   </div>
 
   <div class="ptcg-card-info-text" *ngIf="facedown">
-    <div class="title">
-      Unknown card
+    <div class="title" translate>
+      CARDS_UNKNOWN
     </div>
     <div class="power">
-      <div class="card-text">This card is face down.</div>
+      <div class="card-text" translate>CARDS_FACE_DOWN_HINT</div>
     </div>
   </div>
 </div>

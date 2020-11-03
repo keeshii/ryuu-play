@@ -23,20 +23,28 @@
           [rank]="userInfo.rank">
         </ptcg-rank>
         <ng-template #disconnected>
-          <ptcg-badge>Disconnected</ptcg-badge>
+          <ptcg-badge>
+            {{ 'TABLE_DISCONNECTED' | translate }}
+          </ptcg-badge>
         </ng-template>
       </div>
     </ng-template>
 
     <ng-template #emptyInfo>
-      <div class="ptcg-empty-info mat-caption">No player</div>
+      <div class="ptcg-empty-info mat-caption" translate>TABLE_NO_PLAYER</div>
     </ng-template>
   </div>
 
   <div class="ptcg-card-counts" *ngIf="!isEmpty">
-    <ptcg-badge>Deck: {{ deckCount }}</ptcg-badge>
-    <ptcg-badge>Hand: {{ handCount }}</ptcg-badge>
-    <ptcg-badge>Discard: {{ discardCount }}</ptcg-badge>
+    <ptcg-badge>
+      {{ 'TABLE_DECK_COUNT' | translate: { count: deckCount } }}
+    </ptcg-badge>
+    <ptcg-badge>
+      {{ 'TABLE_HAND_COUNT' | translate: { count: handCount } }}
+    </ptcg-badge>
+    <ptcg-badge>
+      {{ 'TABLE_DISCARD_COUNT' | translate: { count: discardCount } }}
+    </ptcg-badge>
   </div>
 
   <ptcg-player-time class="ptcg-time-left" *ngIf="playerStats && timeLimit > 0"

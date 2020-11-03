@@ -7,8 +7,8 @@
       [gameState]="gameState"
       [topPlayer]="topPlayer"
       [bottomPlayer]="bottomPlayer"
-      (join)="play()"
-    ></ptcg-table-sidebar>
+      (join)="play()">
+    </ptcg-table-sidebar>
   </ptcg-sidebar>
 
   <ptcg-content [loading]="loading || waiting">
@@ -19,21 +19,21 @@
         [clientId]="clientId"
         [gameState]="gameState"
         [topPlayer]="topPlayer"
-        [bottomPlayer]="bottomPlayer"
-      ></ptcg-board>
+        [bottomPlayer]="bottomPlayer">
+      </ptcg-board>
 
       <!-- Player's hand -->
       <ptcg-hand
         [clientId]="clientId"
         [gameState]="gameState"
-        [player]="bottomPlayer"
-      ></ptcg-hand>
+        [player]="bottomPlayer">
+      </ptcg-hand>
 
       <!-- Player prompt -->
       <ptcg-prompt
         [gameState]="gameState"
-        [clientId]="clientId"
-      ></ptcg-prompt>
+        [clientId]="clientId">
+      </ptcg-prompt>
 
     </div>
   </ptcg-content>

@@ -1,4 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 import { AlertService } from '../../../shared/alert/alert.service';
 import { GameService } from '../../../api/services/game.service';
@@ -20,7 +21,8 @@ export class PlayerActionsComponent implements OnInit {
   constructor(
     private alertService: AlertService,
     private gameService: GameService,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private translate: TranslateService
   ) { }
 
   ngOnInit() {
@@ -31,7 +33,7 @@ export class PlayerActionsComponent implements OnInit {
       return;
     }
     const result = await this.alertService.confirm(
-      'Do you really want to leave the game?'
+      this.translate.instant('MAIN_LEAVE_GAME')
     );
 
     if (!result) {

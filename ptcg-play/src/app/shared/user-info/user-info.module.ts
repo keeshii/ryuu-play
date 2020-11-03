@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { AvatarComponent } from './avatar/avatar.component';
 import { AvatarPopupComponent } from './avatar-popup/avatar-popup.component';
@@ -28,7 +29,8 @@ import { UserInfoPopupComponent } from './user-info-popup/user-info-popup.compon
   imports: [
     CommonModule,
     MaterialModule,
-    RouterModule
+    RouterModule,
+    TranslateModule
   ],
   exports: [
     AvatarComponent,

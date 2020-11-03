@@ -1,7 +1,7 @@
 <div class="ptcg-replay-controls-header">
-  <h4 class="ptcg-replay-controls-header-text">Replay</h4>
+  <h4 class="ptcg-replay-controls-header-text" translate>TABLE_REPLAY</h4>
   <span class="ptcg-u-spacer"></span>
-  <mat-icon matTooltip="State {{ position }} of {{ stateCount }}">
+  <mat-icon [matTooltip]="'TABLE_REPLAY_POSITION' | translate: { position: position, count: stateCount}">
     info
   </mat-icon>
 </div>
@@ -39,7 +39,7 @@
 
   <div class="replay-options">
     <mat-form-field>
-      <mat-label>States per second</mat-label>
+      <mat-label translate>TABLE_REPLAY_STATES_PER_SECOND</mat-label>
       <mat-select [(value)]="statesPerSecond"
         (selectionChange)="onStatesPerSecondChange($event)">
         <mat-option *ngFor="let option of statesPerSecondOptions" [value]="option.value">

@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Choose avatar</h2>
+<h2 mat-dialog-title translate>TABLE_CHOOSE_AVATAR</h2>
 
 <mat-dialog-content>
 
@@ -24,17 +24,19 @@
 
   </mat-card>
 
-  <div class="ptcg-u-padding" *ngIf="!loading && avatars.length === 0">
-    No avatars defined.
+  <div class="ptcg-u-padding" *ngIf="!loading && avatars.length === 0" translate>
+    PROFILE_NO_AVATARS
   </div>
 
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-raised-button (click)="close()">Close</button>
+  <button mat-raised-button (click)="close()">
+    {{ 'BUTTON_CLOSE' | translate }}
+  </button>
   <button mat-raised-button color="primary"
     [disabled]="loading || avatars.length === 0"
     (click)="chooseAvatar()">
-    Choose
+    {{ 'BUTTON_CHOOSE' | translate }}
   </button>
 </mat-dialog-actions>

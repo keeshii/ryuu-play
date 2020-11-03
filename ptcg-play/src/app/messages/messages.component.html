@@ -17,21 +17,21 @@
     <div class="ptcg-messages-container">
       <mat-toolbar>
         <mat-toolbar-row>
-          <h1>Messages</h1>
+          <h1 translate>MESSAGES_TITLE</h1>
 
           <span class="ptcg-u-spacer"></span>
 
           <button mat-raised-button color="primary" *ngIf="userId !== 0"
             (click)="deleteConversation(userId)">
-            Delete conversation
+            {{ 'MESSAGES_DELETE_CONVERSATION' | translate }}
           </button>
         </mat-toolbar-row>
       </mat-toolbar>
 
       <div *ngIf="userId === 0 ; else messages">
         <div class="ptcg-u-padding">
-          <mat-card class="mat-elevation-z2">
-            No conversation selected
+          <mat-card class="mat-elevation-z2" translate>
+            MESSAGES_NO_CONVERSATION_SELECTED
           </mat-card>
         </div>
       </div>

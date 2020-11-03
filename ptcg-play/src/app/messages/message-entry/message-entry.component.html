@@ -9,8 +9,8 @@
     <mat-card-footer>
       <div class="ptcg-message-footer">
         <div class="ptcg-message-from">
-          Message from {{ user.name }},
-          {{ message.created | date }}
+          {{ 'MESSAGES_MESSAGE_FROM' | translate: { name: user.name } }},
+          {{ message.created | date: ('DATE_FORMAT' | translate) }}
         </div>
         <div class="ptcg-message-seen" *ngIf="message.isRead">
           <mat-icon>done</mat-icon>

@@ -1,9 +1,11 @@
 <div class="table-sidebar">
 
   <div class="ptcg-table-sidebar-header">
-    <h3>Table {{ gameId }}</h3>
+    <h3 translate [translateParams]="{ id: gameId }">TABLE_TABLE_NAME</h3>
     <span class="ptcg-u-spacer"></span>
-    <ptcg-badge>Turn {{ turn }}</ptcg-badge>
+    <ptcg-badge>
+      {{ 'TABLE_TURN_NUMBER' | translate: { turn: turn } }}
+    </ptcg-badge>
   </div>
 
   <ptcg-player-bar
