@@ -53,8 +53,12 @@ export class PromptComponent implements OnInit, OnChanges {
     prompt = prompt || this.checkGameOver(this.gameState);
 
     if (!this.prompt || !prompt || this.prompt.id !== prompt.id || differentGame) {
-      this.prompt = prompt;
-      return this.toggle(prompt !== undefined);
+      this.prompt = undefined;
+      // setTimeout, because we would like the new prompt animate before displaying
+      window.setTimeout(() => {
+        this.prompt = prompt;
+        this.toggle(prompt !== undefined);
+      });
     }
   }
 

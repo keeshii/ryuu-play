@@ -7,12 +7,12 @@
       [gameState]="gameState"
       [topPlayer]="topPlayer"
       [bottomPlayer]="bottomPlayer"
-      (join)="play()"
-    ></ptcg-table-sidebar>
+      (join)="play()">
+    </ptcg-table-sidebar>
   </ptcg-sidebar>
 
   <ptcg-content [loading]="loading || waiting">
-    <div class="ptcg-table">
+    <div class="ptcg-table" *ngIf="gameState">
 
       <!-- Table board -->
       <ptcg-board
