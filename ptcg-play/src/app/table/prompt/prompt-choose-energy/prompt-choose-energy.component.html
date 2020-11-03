@@ -1,4 +1,4 @@
-<h2 class="ptcg-prompt-title">Choose energy</h2>
+<h2 class="ptcg-prompt-title" translate>PROMPT_CHOOSE_ENERGY_TITLE</h2>
 
 <div class="ptcg-prompt-content">
   <p>{{ message }}</p>
@@ -13,10 +13,10 @@
 <div class="ptcg-prompt-actions">
   <button mat-raised-button *ngIf="allowedCancel" [disabled]="gameState.deleted"
     (click)="cancel()">
-    Cancel
+    {{ 'BUTTON_CANCEL' | translate }}
   </button>
   <button mat-raised-button color="primary" [disabled]="gameState.deleted || isInvalid"
     (click)="confirm()">
-    OK
+    {{ 'BUTTON_OK' | translate }}
   </button>
 </div>

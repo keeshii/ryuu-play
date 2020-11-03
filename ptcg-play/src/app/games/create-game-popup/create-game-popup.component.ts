@@ -24,10 +24,10 @@ export class CreateGamePopupComponent {
   public settings = new GameSettings();
 
   public timeLimits: SelectPopupOption<number>[] = [
-    { value: 0, viewValue: 'No limit' },
-    { value: 600, viewValue: '10 min' },
-    { value: 1200, viewValue: '20 min' },
-    { value: 1800, viewValue: '30 min' }
+    { value: 0, viewValue: 'GAMES_LIMIT_NO_LIMIT' },
+    { value: 600, viewValue: 'GAMES_LIMIT_10_MIN' },
+    { value: 1200, viewValue: 'GAMES_LIMIT_20_MIN' },
+    { value: 1800, viewValue: 'GAMES_LIMIT_30_MIN' }
   ];
 
   constructor(

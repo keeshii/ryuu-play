@@ -1,4 +1,4 @@
-<h2 class="ptcg-prompt-title">Choose prize</h2>
+<h2 class="ptcg-prompt-title" translate>PROMPT_CHOOSE_PRIZE_TITLE</h2>
 
 <div class="ptcg-prompt-content">
   <p>{{ message }}</p>
@@ -14,16 +14,16 @@
   <section class="ptcg-card-info-reveal-cards" *ngIf="hasSecret && gameState.replay">
     <mat-checkbox color="primary" name="reveal-card"
       [checked]="revealed" (change)="revealed = !revealed">
-      Reveal cards
+      {{ 'CARDS_REVEAL_CARDS' | translate }}
     </mat-checkbox>
   </section>
   <span class="ptcg-u-spacer"></span>
   <button mat-raised-button *ngIf="allowedCancel" [disabled]="gameState.deleted"
     (click)="cancel()">
-    Cancel
+    {{ 'BUTTON_CANCEL' | translate }}
   </button>
   <button mat-raised-button color="primary" [disabled]="gameState.deleted || isInvalid"
     (click)="confirm()">
-    OK
+    {{ 'BUTTON_OK' | translate }}
   </button>
 </div>

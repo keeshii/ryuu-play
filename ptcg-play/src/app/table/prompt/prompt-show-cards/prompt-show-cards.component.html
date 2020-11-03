@@ -1,4 +1,4 @@
-<h2 class="ptcg-prompt-title">Show cards</h2>
+<h2 class="ptcg-prompt-title" translate>PROMPT_SHOW_CARDS_TITLE</h2>
 
 <div class="ptcg-prompt-content">
   <p>{{ prompt.message }}</p>
@@ -13,6 +13,6 @@
 <div class="ptcg-prompt-actions">
   <button mat-raised-button color="primary" [disabled]="gameState.deleted"
     (click)="confirm()">
-    OK
+    {{ 'BUTTON_OK' | translate }}
   </button>
 </div>

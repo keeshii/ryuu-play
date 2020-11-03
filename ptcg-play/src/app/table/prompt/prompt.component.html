@@ -35,9 +35,7 @@
         <ptcg-prompt-order-cards *ngSwitchCase="'Order cards'" [gameState]="gameState" [prompt]="prompt"></ptcg-prompt-order-cards>
         <ptcg-prompt-show-cards *ngSwitchCase="'Show cards'" [gameState]="gameState" [prompt]="prompt"></ptcg-prompt-show-cards>
         <ptcg-prompt-select *ngSwitchCase="'Select'" [gameState]="gameState" [prompt]="prompt"></ptcg-prompt-select>
-        <div *ngSwitchDefault>
-          Unknown prompt type: '{{prompt?.type}}'.
-        </div>
+        <div *ngSwitchDefault translate [translateParams]="{type: prompt?.type}">PROMPT_UNKNOWN_TYPE</div>
       </div>
     </div>
   </div>

@@ -1,12 +1,14 @@
-<h2 class="ptcg-prompt-title">Confirm</h2>
+<h2 class="ptcg-prompt-title" translate>PROMPT_CONFIRM_TITLE</h2>
 
 <div class="ptcg-prompt-content">
   <p>{{ prompt.message }}</p>
 </div>
 
 <div class="ptcg-prompt-actions">
-  <button mat-raised-button [disabled]="gameState.deleted" (click)="cancel()">Cancel</button>
+  <button mat-raised-button [disabled]="gameState.deleted" (click)="cancel()">
+    {{ 'BUTTON_CANCEL' | translate }}
+  </button>
   <button mat-raised-button color="primary" [disabled]="gameState.deleted" (click)="confirm()">
-    OK
+    {{ 'BUTTON_OK' | translate }}
   </button>
 </div>

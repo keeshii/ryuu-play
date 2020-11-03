@@ -1,4 +1,4 @@
-<h2 class="ptcg-prompt-title">Invite player</h2>
+<h2 class="ptcg-prompt-title" translate>PROMPT_INVITE_TITLE</h2>
 
 <div class="ptcg-prompt-content">
   <mat-progress-bar *ngIf="loading" color="accent" mode="indeterminate" class="ptcg-u-top">
@@ -17,18 +17,20 @@
   </form>
 
   <div class="ptcg-no-decks" *ngIf="!loading && decks.length === 0">
-    <p>You must prepare a valid deck before accepting the invitation.</p>
+    <p translate>PROMPT_INVITE_NO_DECK</p>
     <button mat-raised-button color="primary" routerLink="/deck">
-      Go to decks
+      {{ 'PROMPT_INVITE_GO_TO_DECKS' | translate }}
     </button>
   </div>
 
 </div>
 
 <div class="ptcg-prompt-actions">
-  <button mat-raised-button [disabled]="gameState.deleted" (click)="cancel()">Cancel</button>
+  <button mat-raised-button [disabled]="gameState.deleted" (click)="cancel()">
+    {{ 'BUTTON_CANCEL' | translate }}
+  </button>
   <button mat-raised-button color="primary" [disabled]="gameState.deleted || !deckId"
     (click)="confirm()">
-    OK
+    {{ 'BUTTON_OK' | translate }}
   </button>
 </div>

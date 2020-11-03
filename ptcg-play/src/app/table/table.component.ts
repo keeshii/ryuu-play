@@ -88,8 +88,8 @@ export class TableComponent implements OnInit, OnDestroy {
           }
 
           return from(this.alertService.select({
-            title: 'Choose your deck',
-            placeholder: 'Your deck',
+            title: this.translate.instant('GAMES_YOUR_DECK_TITLE'),
+            placeholder: this.translate.instant('GAMES_YOUR_DECK'),
             options,
             value: options[0].value
           }));
