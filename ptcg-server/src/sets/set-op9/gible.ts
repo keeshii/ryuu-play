@@ -4,7 +4,7 @@ import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { AttackEffect } from "../../game/store/effects/game-effects";
-import { CardMessage } from "../card-message";
+import { GameMessage } from "../../game/game-message";
 import { StateUtils } from "../../game/store/state-utils";
 import { PlayerType, SlotType } from "../../game/store/actions/play-card-action";
 import { ChoosePokemonPrompt } from "../../game/store/prompts/choose-pokemon-prompt";
@@ -53,7 +53,7 @@ export class Gible extends PokemonCard {
 
       return store.prompt(state, new ChoosePokemonPrompt(
         opponent.id,
-        CardMessage.CHOOSE_ONE_POKEMON,
+        GameMessage.CHOOSE_ONE_POKEMON,
         PlayerType.BOTTOM_PLAYER,
         [ SlotType.BENCH ],
         { allowCancel: false }

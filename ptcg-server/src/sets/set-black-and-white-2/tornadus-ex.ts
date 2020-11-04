@@ -5,7 +5,7 @@ import { StoreLike, State, StateUtils, Card, EnergyCard, CoinFlipPrompt,
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { DiscardCardsEffect } from "../../game/store/effects/attack-effects";
 import { Effect } from "../../game/store/effects/effect";
-import { CardMessage } from "../card-message";
+import { GameMessage } from "../../game/game-message";
 
 function* usePowerBlast(next: Function, store: StoreLike, state: State,
   effect: AttackEffect): IterableIterator<State> {
@@ -18,7 +18,7 @@ function* usePowerBlast(next: Function, store: StoreLike, state: State,
 
   let flipResult = false;
   yield store.prompt(state, new CoinFlipPrompt(
-    player.id, CardMessage.COIN_FLIP
+    player.id, GameMessage.COIN_FLIP
   ), result => {
     flipResult = result;
     next();
@@ -31,7 +31,7 @@ function* usePowerBlast(next: Function, store: StoreLike, state: State,
   let cards: Card[] = [];
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    CardMessage.CHOOSE_ENERGY_CARD,
+    GameMessage.CHOOSE_ENERGY_CARD,
     player.active,
     { superType: SuperType.ENERGY },
     { min: 1, max: 1, allowCancel: false }

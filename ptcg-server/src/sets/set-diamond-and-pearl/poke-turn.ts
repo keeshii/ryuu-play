@@ -1,6 +1,6 @@
 import { CardTarget, PlayerType, SlotType } from "../../game/store/actions/play-card-action";
-import { CardMessage } from "../card-message";
-import { GameError, GameMessage } from "../../game/game-error";
+import { GameError } from "../../game/game-error";
+import { GameMessage } from "../../game/game-message";
 import { TrainerCard } from "../../game/store/card/trainer-card";
 import { TrainerType, CardTag } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
@@ -33,7 +33,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 
   yield store.prompt(state, new ChoosePokemonPrompt(
     player.id,
-    CardMessage.CHOOSE_SP_POKEMON,
+    GameMessage.CHOOSE_SP_POKEMON,
     PlayerType.BOTTOM_PLAYER,
     [ SlotType.ACTIVE, SlotType.BENCH ],
     { allowCancel: true, blocked }

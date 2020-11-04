@@ -3,7 +3,7 @@ import { Card } from "../../game/store/card/card";
 import { CardList } from "../../game/store/state/card-list";
 import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
 import { Client } from "../../game/client/client.interface";
-import { GameMessage } from "../../game/game-error";
+import { GameMessage } from "../../game/game-message";
 import { SocketCache } from "./socket-cache";
 import { State } from "../../game/store/state/state";
 import { SuperType } from "../../game/store/card/card-types";

@@ -1,5 +1,6 @@
 import { Effect } from "../../game/store/effects/effect";
-import { GameError, GameMessage } from "../../game/game-error";
+import { GameError } from "../../game/game-error";
+import { GameMessage } from "../../game/game-message";
 import { TrainerEffect } from "../../game/store/effects/play-card-effects";
 import { State } from "../../game/store/state/state";
 import { StoreLike } from "../../game/store/store-like";

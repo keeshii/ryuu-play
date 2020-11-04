@@ -1,10 +1,10 @@
 import { PokemonCard } from "../../game/store/card/pokemon-card";
+import { GameMessage } from "../../game/game-message";
 import { Stage, CardType, SpecialCondition } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { AttackEffect } from "../../game/store/effects/game-effects";
-import { CardMessage } from "../card-message";
 import { CoinFlipPrompt } from "../../game/store/prompts/coin-flip-prompt";
 import { SelectPrompt } from "../../game/store/prompts/select-prompt";
 import { AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
@@ -15,7 +15,7 @@ function* useMiraclePowder(next: Function, store: StoreLike, state: State,
 
   let flip = false;
   yield store.prompt(state, [
-    new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP)
+    new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)
   ], result => {
     flip = result;
     next();
@@ -25,17 +25,17 @@ function* useMiraclePowder(next: Function, store: StoreLike, state: State,
     return state;
   }
 
-  const options: { message: CardMessage, value: SpecialCondition }[] = [
-    { message: CardMessage.PARALYZED, value: SpecialCondition.PARALYZED },
-    { message: CardMessage.CONFUSED, value: SpecialCondition.CONFUSED },
-    { message: CardMessage.ASLEEP, value: SpecialCondition.ASLEEP },
-    { message: CardMessage.POISONED, value: SpecialCondition.POISONED },
-    { message: CardMessage.BURNED, value: SpecialCondition.BURNED }
+  const options: { message: GameMessage, value: SpecialCondition }[] = [
+    { message: GameMessage.PARALYZED, value: SpecialCondition.PARALYZED },
+    { message: GameMessage.CONFUSED, value: SpecialCondition.CONFUSED },
+    { message: GameMessage.ASLEEP, value: SpecialCondition.ASLEEP },
+    { message: GameMessage.POISONED, value: SpecialCondition.POISONED },
+    { message: GameMessage.BURNED, value: SpecialCondition.BURNED }
   ];
 
   return store.prompt(state, new SelectPrompt(
     player.id,
-    CardMessage.CHOOSE_SPECIAL_CONDITION,
+    GameMessage.CHOOSE_SPECIAL_CONDITION,
     options.map(c => c.message),
     { allowCancel: false }
   ), choice => {

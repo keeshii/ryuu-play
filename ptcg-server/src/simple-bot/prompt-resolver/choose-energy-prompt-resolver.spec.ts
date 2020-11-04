@@ -1,4 +1,4 @@
-import { CardType, SuperType, State, Player, ResolvePromptAction } from '../../game';
+import { CardType, SuperType, State, Player, ResolvePromptAction, GameMessage } from '../../game';
 import { ChooseEnergyPrompt, EnergyMap } from '../../game/store/prompts/choose-energy-prompt';
 import { ChooseEnergyPromptResolver } from './choose-energy-prompt-resolver';
 import {
@@ -28,7 +28,7 @@ describe('ChooseEnergyPromptResolver', () => {
       arbiter: defaultArbiterOptions
     };
     resolver = new ChooseEnergyPromptResolver(simpleBotOptions);    
-    prompt = new ChooseEnergyPrompt(1, '', [], []);
+    prompt = new ChooseEnergyPrompt(1, GameMessage.CHOOSE_ONE_POKEMON, [], []);
     state = new State();
     player = new Player();
   });

@@ -1,5 +1,6 @@
 import { Effect } from "../../game/store/effects/effect";
-import { GameError, GameMessage } from "../../game/game-error";
+import { GameError } from "../../game/game-error";
+import { GameMessage } from "../../game/game-message";
 import { State } from "../../game/store/state/state";
 import { StoreLike } from "../../game/store/store-like";
 import { TrainerCard } from "../../game/store/card/trainer-card";
@@ -7,7 +8,6 @@ import { TrainerType, CardType, SuperType } from "../../game/store/card/card-typ
 import { StateUtils } from "../../game/store/state-utils";
 import { UseStadiumEffect } from "../../game/store/effects/game-effects";
 import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
-import { CardMessage } from "../card-message";
 import { EnergyCard } from "../../game/store/card/energy-card";
 
 export class ScorchedEarth extends TrainerCard {
@@ -48,7 +48,7 @@ export class ScorchedEarth extends TrainerCard {
 
       return store.prompt(state, new ChooseCardsPrompt(
         player.id,
-        CardMessage.CHOOSE_CARD_TO_DISCARD,
+        GameMessage.CHOOSE_CARD_TO_DISCARD,
         player.hand,
         { superType: SuperType.ENERGY },
         { allowCancel: true, min: 1, max: 1, blocked }

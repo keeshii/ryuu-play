@@ -1,5 +1,6 @@
 import { Card } from "../card/card";
 import { CardType } from "../card/card-types";
+import { GameMessage } from "../../game-message";
 import { Prompt } from "./prompt";
 import { StateUtils } from "../state-utils";
 
@@ -19,7 +20,7 @@ export class ChooseEnergyPrompt extends Prompt<EnergyMap[]> {
 
   constructor(
     playerId: number,
-    public message: string,
+    public message: GameMessage,
     public energy: EnergyMap[],
     public cost: CardType[],
     options?: Partial<ChooseEnergyOptions>

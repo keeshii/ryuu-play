@@ -1,5 +1,6 @@
 import { SerializerContext, Serialized, Serializer } from "./serializer.interface";
-import { GameError, GameMessage } from "../game-error";
+import { GameError } from "../game-error";
+import { GameCoreError } from "../game-message";
 import { AlertPrompt } from "../store/prompts/alert-prompt";
 import { AttachEnergyPrompt } from "../store/prompts/attach-energy-prompt";
 import { ChooseCardsPrompt } from "../store/prompts/choose-cards-prompt";
@@ -49,7 +50,7 @@ export class PromptSerializer implements Serializer<Prompt<any>> {
     const data: any = { ...prompt };
     const row = this.rows.find(r => prompt instanceof r.classValue);
     if (row === undefined) {
-      throw new GameError(GameMessage.SERIALIZER_ERROR, `Unknown prompt type '${prompt.type}'.`);
+      throw new GameError(GameCoreError.SERIALIZER_ERROR, `Unknown prompt type '${prompt.type}'.`);
     }
 
     return {
@@ -61,7 +62,7 @@ export class PromptSerializer implements Serializer<Prompt<any>> {
   public deserialize(data: Serialized, context: SerializerContext): Prompt<any> {
     const row = this.rows.find(p => p.type === data._type);
     if (row === undefined) {
-      throw new GameError(GameMessage.SERIALIZER_ERROR, `Unknown prompt type '${data._type}'.`);
+      throw new GameError(GameCoreError.SERIALIZER_ERROR, `Unknown prompt type '${data._type}'.`);
     }
     const prompt = Object.create(row.classValue.prototype);
     delete data._type;

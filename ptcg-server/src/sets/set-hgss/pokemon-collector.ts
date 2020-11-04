@@ -1,5 +1,5 @@
 import { Card } from "../../game/store/card/card";
-import { CardMessage } from "../card-message";
+import { GameMessage } from "../../game/game-message";
 import { Effect } from "../../game/store/effects/effect";
 import { TrainerCard } from "../../game/store/card/trainer-card";
 import { TrainerType, SuperType, Stage } from "../../game/store/card/card-types";
@@ -18,7 +18,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    CardMessage.CHOOSE_BASIC_POKEMON,
+    GameMessage.CHOOSE_BASIC_POKEMON,
     player.deck,
     { superType: SuperType.POKEMON, stage: Stage.BASIC } as any,
     { min: 0, max: 3, allowCancel: true }
@@ -32,7 +32,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   if (cards.length > 0) {
     yield store.prompt(state, new ShowCardsPrompt(
       opponent.id,
-      CardMessage.CARDS_SHOWED_BY_THE_OPPONENT,
+      GameMessage.CARDS_SHOWED_BY_THE_OPPONENT,
       cards
     ), () => next());
   }

@@ -7,7 +7,8 @@ import { AttackEffect, PowerEffect, UsePowerEffect } from "../../game/store/effe
 import { AbstractAttackEffect } from "../../game/store/effects/attack-effects";
 import { PowerType } from "../../game/store/card/pokemon-types";
 import { StateUtils } from "../../game/store/state-utils";
-import { GameMessage, GameError } from "../../game/game-error";
+import { GameError } from "../../game/game-error";
+import { GameMessage } from "../../game/game-message";
 import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
 
 

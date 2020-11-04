@@ -1,7 +1,7 @@
 <h2 class="ptcg-prompt-title" translate>PROMPT_CHOOSE_CARDS_TITLE</h2>
 
 <div class="ptcg-prompt-content">
-  <p>{{ message }}</p>
+  <p [translate]="'GAME_MESSAGES.' + message"></p>
 
   <ptcg-choose-cards-panes
     [cards]="cards.cards"

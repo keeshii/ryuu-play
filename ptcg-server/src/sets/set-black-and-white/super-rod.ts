@@ -1,6 +1,6 @@
 import { Card } from "../../game/store/card/card";
-import { CardMessage } from "../card-message";
-import { GameError, GameMessage } from "../../game/game-error";
+import { GameError } from "../../game/game-error";
+import { GameMessage } from "../../game/game-message";
 import { TrainerCard } from "../../game/store/card/trainer-card";
 import { TrainerType, EnergyType } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
@@ -40,7 +40,7 @@ function* playCard(next: Function, store: StoreLike, state: State,
   let cards: Card[] = [];
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    CardMessage.CHOOSE_3_POKEMON_AND_BASIC_ENERGY,
+    GameMessage.CHOOSE_3_POKEMON_AND_BASIC_ENERGY,
     player.discard,
     { },
     { min: max, max, allowCancel: true, blocked }

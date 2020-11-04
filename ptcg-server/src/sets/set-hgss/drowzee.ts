@@ -3,8 +3,8 @@ import { Stage, CardType, SpecialCondition } from "../../game/store/card/card-ty
 import { StoreLike, State, StateUtils, ChoosePokemonPrompt, PlayerType, SlotType } from "../../game";
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
-import {CardMessage} from "../card-message";
-import {AddSpecialConditionsEffect} from "../../game/store/effects/attack-effects";
+import { GameMessage } from "../../game/game-message";
+import { AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
 
 export class Drowzee extends PokemonCard {
 
@@ -52,7 +52,7 @@ export class Drowzee extends PokemonCard {
 
       store.prompt(state, new ChoosePokemonPrompt(
         player.id,
-        CardMessage.CHOOSE_ONE_POKEMON,
+        GameMessage.CHOOSE_ONE_POKEMON,
         PlayerType.TOP_PLAYER,
         [ SlotType.BENCH ],
         { allowCancel: false }

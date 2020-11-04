@@ -6,9 +6,9 @@ import { Effect } from "../../game/store/effects/effect";
 import { PowerEffect } from "../../game/store/effects/game-effects";
 import { PowerType } from "../../game/store/card/pokemon-types";
 import { StateUtils } from "../../game/store/state-utils";
-import { GameMessage, GameError } from "../../game/game-error";
+import { GameError } from "../../game/game-error";
+import { GameMessage } from "../../game/game-message";
 import { CoinFlipPrompt } from "../../game/store/prompts/coin-flip-prompt";
-import { CardMessage } from "../card-message";
 import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
 import { PlayPokemonEffect } from "../../game/store/effects/play-card-effects";
 
@@ -65,7 +65,7 @@ export class Munna extends PokemonCard {
 
       return store.prompt(state, new CoinFlipPrompt(
         player.id,
-        CardMessage.COIN_FLIP
+        GameMessage.COIN_FLIP
       ), result => {
         if (result) {
           opponent.active.addSpecialCondition(SpecialCondition.ASLEEP);

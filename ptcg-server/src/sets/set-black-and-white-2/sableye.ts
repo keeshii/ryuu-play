@@ -3,8 +3,8 @@ import { Stage, CardType, SpecialCondition, TrainerType, SuperType } from "../..
 import { StoreLike, State, CoinFlipPrompt, TrainerCard, ChooseCardsPrompt } from "../../game";
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
-import { CardMessage } from "../card-message";
 import { AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
+import { GameMessage } from "../../game/game-message";
 
 export class Sableye extends PokemonCard {
 
@@ -44,7 +44,7 @@ export class Sableye extends PokemonCard {
       const player = effect.player;
 
       return store.prompt(state, [
-        new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP)
+        new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)
       ], result => {
         if (result === true) {
           const addSpecialCondition = new AddSpecialConditionsEffect(effect, [SpecialCondition.CONFUSED]);
@@ -70,7 +70,7 @@ export class Sableye extends PokemonCard {
       return store.prompt(state, [
         new ChooseCardsPrompt(
           player.id,
-          CardMessage.CHOOSE_ANY_TWO_CARDS,
+          GameMessage.CHOOSE_ANY_TWO_CARDS,
           player.discard,
           { superType: SuperType.TRAINER, trainerType: TrainerType.ITEM },
           { min, max, allowCancel: false }

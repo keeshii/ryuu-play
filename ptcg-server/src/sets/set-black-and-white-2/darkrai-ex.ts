@@ -5,7 +5,6 @@ import { StoreLike, State, StateUtils, PowerType, ChoosePokemonPrompt,
 import { AttackEffect, PowerEffect, UsePowerEffect } from "../../game/store/effects/game-effects";
 import { PutDamageEffect } from "../../game/store/effects/attack-effects";
 import { Effect } from "../../game/store/effects/effect";
-import { CardMessage } from "../card-message";
 import { CheckRetreatCostEffect, CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
 
 
@@ -65,7 +64,7 @@ export class DarkraiEx extends PokemonCard {
 
       return store.prompt(state, new ChoosePokemonPrompt(
         player.id,
-        CardMessage.CHOOSE_ONE_POKEMON,
+        GameMessage.CHOOSE_ONE_POKEMON,
         PlayerType.TOP_PLAYER,
         [ SlotType.BENCH ],
         { allowCancel: false }

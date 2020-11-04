@@ -1,4 +1,5 @@
-import { GameError, GameMessage } from "../../game-error";
+import { GameError } from "../../game-error";
+import { GameMessage } from "../../game-message";
 import { Prompt } from "./prompt";
 import { PlayerType, SlotType, CardTarget } from "../actions/play-card-action";
 import { State } from "../state/state";
@@ -34,7 +35,7 @@ export class MoveDamagePrompt extends Prompt<DamageTransfer[]> {
 
   constructor(
     playerId: number,
-    public message: string,
+    public message: GameMessage,
     public playerType: PlayerType,
     public slots: SlotType[],
     public maxAllowedDamage: DamageMap[],

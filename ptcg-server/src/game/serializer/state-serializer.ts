@@ -1,4 +1,5 @@
-import { GameError, GameMessage } from "../game-error";
+import { GameError } from "../game-error";
+import { GameMessage } from "../game-message";
 import { Serializer, SerializerContext, SerializedState, Serialized } from "./serializer.interface";
 import { State } from "../store/state/state";
 import { Card } from "../store/card/card";

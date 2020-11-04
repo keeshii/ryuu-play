@@ -4,7 +4,6 @@ import { PowerType, StoreLike, State, StateUtils, GameError, GameMessage,
   PlayerType, ChooseCardsPrompt } from "../../game";
 import { Effect } from "../../game/store/effects/effect";
 import { PowerEffect, AttackEffect } from "../../game/store/effects/game-effects";
-import { CardMessage } from "../card-message";
 import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
 import { PlayPokemonEffect } from "../../game/store/effects/play-card-effects";
 
@@ -63,7 +62,7 @@ export class Empoleon extends PokemonCard {
       }
       state = store.prompt(state, new ChooseCardsPrompt(
         player.id,
-        CardMessage.CHOOSE_CARD_TO_DISCARD,
+        GameMessage.CHOOSE_CARD_TO_DISCARD,
         player.hand,
         { },
         { allowCancel: true, min: 1, max: 1 }

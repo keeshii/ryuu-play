@@ -4,11 +4,11 @@ import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { TrainerEffect } from "../../game/store/effects/play-card-effects";
-import { GameError, GameMessage } from "../../game/game-error";
+import { GameError } from "../../game/game-error";
+import { GameMessage } from "../../game/game-message";
 import { Card} from "../../game/store/card/card";
 import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
-import { CardMessage } from "../card-message";
-import {CardList} from "../../game/store/state/card-list";
+import { CardList } from "../../game/store/state/card-list";
 
 function* playCard(next: Function, store: StoreLike, state: State, self: JunkArm, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -39,7 +39,7 @@ function* playCard(next: Function, store: StoreLike, state: State, self: JunkArm
 
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    CardMessage.CHOOSE_ANY_TWO_CARDS,
+    GameMessage.CHOOSE_ANY_TWO_CARDS,
     handTemp,
     { },
     { min: 2, max: 2, allowCancel: true }
@@ -70,7 +70,7 @@ function* playCard(next: Function, store: StoreLike, state: State, self: JunkArm
 
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    CardMessage.CHOOSE_TRAINER_CARD,
+    GameMessage.CHOOSE_TRAINER_CARD,
     player.discard,
     { },
     { min: 1, max: 1, allowCancel: false, blocked }

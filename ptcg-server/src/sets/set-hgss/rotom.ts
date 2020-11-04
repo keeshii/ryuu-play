@@ -7,7 +7,6 @@ import { Effect } from "../../game/store/effects/effect";
 import { PlayPokemonEffect } from "../../game/store/effects/play-card-effects";
 import { PowerEffect, AttackEffect } from "../../game/store/effects/game-effects";
 import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
-import { CardMessage } from "../card-message";
 import { PutDamageEffect } from "../../game/store/effects/attack-effects";
 
 export class Rotom extends PokemonCard {
@@ -92,7 +91,7 @@ export class Rotom extends PokemonCard {
 
       state = store.prompt(state, new ChoosePokemonPrompt(
         player.id,
-        CardMessage.CHOOSE_ONE_POKEMON,
+        GameMessage.CHOOSE_ONE_POKEMON,
         PlayerType.TOP_PLAYER,
         [ SlotType.ACTIVE, SlotType.BENCH ],
         { allowCancel: false }

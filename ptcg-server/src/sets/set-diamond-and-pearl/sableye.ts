@@ -6,7 +6,7 @@ import { Effect } from "../../game/store/effects/effect";
 import { PowerType } from "../../game/store/card/pokemon-types";
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { ChooseCardsPrompt, TrainerCard, StateUtils } from "../../game";
-import { CardMessage } from "../card-message";
+import { GameMessage, GameLog } from "../../game/game-message";
 import { TrainerEffect } from "../../game/store/effects/play-card-effects";
 import { CheckHpEffect } from "../../game/store/effects/check-effects";
 import { WhoBeginsEffect } from "../../game/store/effects/game-phase-effects";
@@ -70,7 +70,10 @@ export class Sableye extends PokemonCard {
         return state;
       }
       if (cardList === player.active) {
-        store.log(state, CardMessage.LOG_STARTS_BECAUSE_OVEREAGER, [player.name]);
+        store.log(state, GameLog.LOG_STARTS_BECAUSE_OF_ABILITY, {
+          name: player.name,
+          ability: this.powers[0].name
+        });
         effect.player = player;
       }
       return state;
@@ -82,7 +85,7 @@ export class Sableye extends PokemonCard {
 
       store.prompt(state, new ChooseCardsPrompt(
         player.id,
-        CardMessage.CHOOSE_SUPPORTER_CARD,
+        GameMessage.CHOOSE_SUPPORTER_CARD,
         player.deck,
         { superType: SuperType.TRAINER, trainerType: TrainerType.SUPPORTER },
         { min: 1, max: 1, allowCancel: true }

@@ -1,5 +1,6 @@
 import { PlayPokemonEffect } from "../effects/play-card-effects";
-import { GameError, GameMessage } from "../../game-error";
+import { GameError } from "../../game-error";
+import { GameMessage } from "../../game-message";
 import { Effect } from "../effects/effect";
 import { Stage } from "../card/card-types";
 import { State } from "../state/state";

@@ -1,5 +1,5 @@
-import { CardMessage } from "../card-message";
-import { GameError, GameMessage } from "../../game/game-error";
+import { GameError } from "../../game/game-error";
+import { GameMessage } from "../../game/game-message";
 import { TrainerCard } from "../../game/store/card/trainer-card";
 import { TrainerType, SuperType } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
@@ -21,7 +21,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    CardMessage.CHOOSE_ONE_POKEMON,
+    GameMessage.CHOOSE_ONE_POKEMON,
     player.discard,
     { superType: SuperType.POKEMON },
     { min: 1, max: 1, allowCancel: true }

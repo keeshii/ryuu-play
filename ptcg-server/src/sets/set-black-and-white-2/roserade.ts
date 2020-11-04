@@ -1,12 +1,11 @@
 import { Effect } from "../../game/store/effects/effect";
 import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { PowerType, StoreLike, State, CoinFlipPrompt,
-  ChooseCardsPrompt} from "../../game";
+import { PowerType, StoreLike, State, CoinFlipPrompt, ChooseCardsPrompt } from "../../game";
 import { Stage, CardType, SpecialCondition } from "../../game/store/card/card-types";
 import { PlayPokemonEffect } from "../../game/store/effects/play-card-effects";
-import { CardMessage } from "../card-message";
 import { AttackEffect, PowerEffect } from "../../game/store/effects/game-effects";
 import { AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
+import { GameMessage } from "../../game/game-message";
 
 
 export class Roserade extends PokemonCard {
@@ -67,7 +66,7 @@ export class Roserade extends PokemonCard {
 
       return store.prompt(state, new ChooseCardsPrompt(
         player.id,
-        CardMessage.CHOOSE_ANY_CARD,
+        GameMessage.CHOOSE_ANY_CARD,
         player.deck,
         { },
         { min: 1, max: 1, allowCancel: true }
@@ -81,7 +80,7 @@ export class Roserade extends PokemonCard {
       const player = effect.player;
 
       return store.prompt(state, [
-        new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP)
+        new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)
       ], result => {
         if (result === true) {
           const addSpecialCondition = new AddSpecialConditionsEffect(effect, [SpecialCondition.PARALYZED]);

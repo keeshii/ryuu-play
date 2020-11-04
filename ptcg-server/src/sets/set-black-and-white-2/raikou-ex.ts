@@ -4,9 +4,9 @@ import { StoreLike, State, Card, CoinFlipPrompt, ChoosePokemonPrompt, PlayerType
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
 import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
-import { CardMessage } from "../card-message";
 import { DiscardCardsEffect, AddSpecialConditionsEffect,
   PutDamageEffect } from "../../game/store/effects/attack-effects";
+import { GameMessage } from "../../game/game-message";
 
 
 export class RaikouEx extends PokemonCard {
@@ -51,7 +51,7 @@ export class RaikouEx extends PokemonCard {
       const player = effect.player;
 
       return store.prompt(state, [
-        new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP)
+        new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)
       ], result => {
         if (result === true) {
           const specialCondition = new AddSpecialConditionsEffect(effect, [SpecialCondition.PARALYZED]);
@@ -85,7 +85,7 @@ export class RaikouEx extends PokemonCard {
 
       return store.prompt(state, new ChoosePokemonPrompt(
         player.id,
-        CardMessage.CHOOSE_ONE_POKEMON,
+        GameMessage.CHOOSE_ONE_POKEMON,
         PlayerType.TOP_PLAYER,
         [ SlotType.BENCH ],
         { allowCancel: false }

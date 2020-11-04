@@ -5,7 +5,7 @@ import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { CoinFlipPrompt } from "../../game/store/prompts/coin-flip-prompt";
-import { CardMessage } from "../card-message";
+import { GameMessage } from "../../game/game-message";
 import { DiscardCardsEffect, AbstractAttackEffect } from "../../game/store/effects/attack-effects";
 import { StateUtils } from "../../game/store/state-utils";
 import { Card } from "../../game/store/card/card";
@@ -27,7 +27,7 @@ function* useWhirlpool(next: Function, store: StoreLike, state: State,
 
   let flipResult = false;
   yield store.prompt(state, new CoinFlipPrompt(
-    player.id, CardMessage.COIN_FLIP
+    player.id, GameMessage.COIN_FLIP
   ), result => {
     flipResult = result;
     next();
@@ -40,7 +40,7 @@ function* useWhirlpool(next: Function, store: StoreLike, state: State,
   let cards: Card[] = [];
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    CardMessage.CHOOSE_ENERGY_CARD,
+    GameMessage.CHOOSE_ENERGY_CARD,
     opponent.active,
     { superType: SuperType.ENERGY },
     { min: 1, max: 1, allowCancel: false }
@@ -115,7 +115,7 @@ export class Buizel extends PokemonCard {
       if (isPachirisuInPlay) {
         const opponent = StateUtils.getOpponent(state, player);
         state = store.prompt(state, new CoinFlipPrompt(
-          player.id, CardMessage.COIN_FLIP
+          player.id, GameMessage.COIN_FLIP
         ), flipResult => {
           if (flipResult) {
             player.active.marker.addMarker(this.SUPER_FAST_MARKER, this);

@@ -1,5 +1,6 @@
 import { ChooseEnergyPrompt } from "../prompts/choose-energy-prompt";
-import { GameError, GameMessage } from "../../game-error";
+import { GameError } from "../../game-error";
+import { GameMessage } from "../../game-message";
 import { Effect } from "../effects/effect";
 import { State } from "../state/state";
 import { StoreLike } from "../store-like";

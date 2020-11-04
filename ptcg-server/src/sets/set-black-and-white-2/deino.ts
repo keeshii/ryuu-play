@@ -1,9 +1,8 @@
 import { PokemonCard } from "../../game/store/card/pokemon-card";
 import { Stage, CardType, SpecialCondition } from "../../game/store/card/card-types";
-import { StoreLike, State, CoinFlipPrompt, ChooseEnergyPrompt, Card } from "../../game";
+import { StoreLike, State, CoinFlipPrompt, ChooseEnergyPrompt, Card, GameMessage } from "../../game";
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
-import { CardMessage } from "../card-message";
 import { DiscardCardsEffect, AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
 import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
 
@@ -45,7 +44,7 @@ export class Deino extends PokemonCard {
       const player = effect.player;
 
       return store.prompt(state, [
-        new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP)
+        new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)
       ], result => {
         if (result === true) {
           const specialConditionEffect = new AddSpecialConditionsEffect(
@@ -64,7 +63,7 @@ export class Deino extends PokemonCard {
 
       state = store.prompt(state, new ChooseEnergyPrompt(
         player.id,
-        CardMessage.CHOOSE_ENERGIES_TO_DISCARD,
+        GameMessage.CHOOSE_ENERGIES_TO_DISCARD,
         checkProvidedEnergy.energyMap,
         [ CardType.COLORLESS ],
         { allowCancel: false }

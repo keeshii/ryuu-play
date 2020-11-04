@@ -1,3 +1,4 @@
+import { GameMessage } from "../../game/game-message";
 import { TrainerCard } from "../../game/store/card/trainer-card";
 import { TrainerType, SuperType, EnergyType } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
@@ -5,7 +6,6 @@ import { State, GamePhase } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { KnockOutEffect } from "../../game/store/effects/game-effects";
 import { AttachEnergyPrompt } from "../../game/store/prompts/attach-energy-prompt";
-import { CardMessage } from "../card-message";
 import { PlayerType, SlotType, CardTarget } from "../../game/store/actions/play-card-action";
 import { StateUtils } from "../../game/store/state-utils";
 import { PokemonCardList } from "../../game/store/state/pokemon-card-list";
@@ -70,7 +70,7 @@ export class ExpShare extends TrainerCard {
 
       state = store.prompt(state, new AttachEnergyPrompt(
         player.id,
-        CardMessage.ATTACH_ENERGY_TO_EXP_SHARE,
+        GameMessage.ATTACH_ENERGY_TO_EXP_SHARE,
         activeCopy,
         PlayerType.BOTTOM_PLAYER,
         [ SlotType.BENCH ],

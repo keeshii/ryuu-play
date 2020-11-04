@@ -3,10 +3,10 @@ import { TrainerType } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
-import {TrainerEffect} from "../../game/store/effects/play-card-effects";
-import {ShowCardsPrompt} from "../../game/store/prompts/show-cards-prompt";
-import {CardMessage} from "../card-message";
-import {Card} from "../../game/store/card/card";
+import { TrainerEffect } from "../../game/store/effects/play-card-effects";
+import { ShowCardsPrompt } from "../../game/store/prompts/show-cards-prompt";
+import { GameMessage } from "../../game/game-message";
+import { Card } from "../../game/store/card/card";
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -22,7 +22,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 
   yield store.prompt(state, new ShowCardsPrompt(
     player.id,
-    CardMessage.PRIZE_CARDS,
+    GameMessage.PRIZE_CARDS,
     prizes,
   ), () => { next(); });
 

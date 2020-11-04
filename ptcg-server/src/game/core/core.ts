@@ -1,6 +1,7 @@
 import { AddPlayerAction } from "../store/actions/add-player-action";
 import { Client } from "../client/client.interface";
-import { GameError, GameMessage } from "../game-error";
+import { GameError } from "../game-error";
+import { GameMessage } from "../game-message";
 import { Game } from "./game";
 import { GameSettings } from "./game-settings";
 import { InvitePlayerAction } from "../store/actions/invite-player-action";

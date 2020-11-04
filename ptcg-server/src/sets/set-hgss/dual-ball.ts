@@ -5,7 +5,7 @@ import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { CoinFlipPrompt, ChooseCardsPrompt, Card, StateUtils, ShowCardsPrompt,
   ShuffleDeckPrompt } from "../../game";
-import { CardMessage } from "../card-message";
+import { GameMessage } from "../../game/game-message";
 import { TrainerEffect } from "../../game/store/effects/play-card-effects";
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
@@ -14,8 +14,8 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 
   let heads: number = 0;
   yield store.prompt(state, [
-    new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP),
-    new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP)
+    new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP),
+    new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)
   ], results => {
     results.forEach(r => { heads += r ? 1 : 0; });
     next();
@@ -28,7 +28,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   let cards: Card[] = [];
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    CardMessage.CHOOSE_BASIC_POKEMON,
+    GameMessage.CHOOSE_BASIC_POKEMON,
     player.deck,
     { superType: SuperType.POKEMON, stage: Stage.BASIC },
     { allowCancel: true, min: 0, max: heads }
@@ -42,7 +42,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   if (cards.length > 0) {
     yield store.prompt(state, new ShowCardsPrompt(
       opponent.id,
-      CardMessage.CARDS_SHOWED_BY_THE_OPPONENT,
+      GameMessage.CARDS_SHOWED_BY_THE_OPPONENT,
       cards
     ), () => next());
   }

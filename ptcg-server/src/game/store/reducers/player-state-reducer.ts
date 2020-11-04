@@ -1,6 +1,7 @@
 import { Action } from "../actions/action";
 import { ChangeAvatarAction } from "../actions/change-avatar-action";
-import { GameError, GameMessage } from "../../game-error";
+import { GameError } from "../../game-error";
+import { GameMessage } from "../../game-message";
 import { ReorderBenchAction, ReorderHandAction } from "../actions/reorder-actions";
 import { State } from "../state/state";
 import { StoreLike } from "../store-like";

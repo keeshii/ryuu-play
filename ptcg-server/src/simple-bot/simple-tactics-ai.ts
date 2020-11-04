@@ -68,7 +68,7 @@ export class SimpleTacticsAi {
       const result = this.deck;
       let log: StateLog | undefined;
       if (result === null) {
-        log = new StateLog('Sorry, my deck is not ready.', [], player.id);
+        log = new StateLog('Sorry, my deck is not ready.', {}, player.id);
       }
       return new ResolvePromptAction(prompt.id, result, log);
     }

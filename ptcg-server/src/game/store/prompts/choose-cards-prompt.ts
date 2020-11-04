@@ -1,6 +1,7 @@
 import { Card } from "../card/card";
 import { CardList } from "../state/card-list";
 import { EnergyCard } from "../card/energy-card";
+import { GameMessage } from "../../game-message";
 import { Prompt } from "./prompt";
 import { PokemonCard } from "../card/pokemon-card";
 import { TrainerCard } from "../card/trainer-card";
@@ -25,7 +26,7 @@ export class ChooseCardsPrompt extends Prompt<Card[]> {
 
   constructor(
     playerId: number,
-    public message: string,
+    public message: GameMessage,
     public cards: CardList,
     public filter: FilterType,
     options?: Partial<ChooseCardsOptions>

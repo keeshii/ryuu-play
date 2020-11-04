@@ -4,7 +4,7 @@ import { StoreLike, State, ChooseCardsPrompt, PokemonCardList, Card,
   ShuffleDeckPrompt } from "../../game";
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
-import { CardMessage } from "../card-message";
+import { GameMessage } from "../../game/game-message";
 
 function* useFlock(next: Function, store: StoreLike, state: State,
   effect: AttackEffect): IterableIterator<State> {
@@ -15,7 +15,7 @@ function* useFlock(next: Function, store: StoreLike, state: State,
   let cards: Card[] = [];
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    CardMessage.CHOOSE_ONE_POKEMON,
+    GameMessage.CHOOSE_ONE_POKEMON,
     player.deck,
     { superType: SuperType.POKEMON, stage: Stage.BASIC, name: 'Wurmple' },
     { min: 0, max, allowCancel: true }

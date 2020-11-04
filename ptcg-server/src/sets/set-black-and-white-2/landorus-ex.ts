@@ -5,7 +5,7 @@ import { AttackEffect } from "../../game/store/effects/game-effects";
 import { PutDamageEffect, DiscardCardsEffect } from "../../game/store/effects/attack-effects";
 import { Effect } from "../../game/store/effects/effect";
 import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
-import { CardMessage } from "../card-message";
+import { GameMessage } from "../../game/game-message";
 
 
 export class LandorusEx extends PokemonCard {
@@ -59,7 +59,7 @@ export class LandorusEx extends PokemonCard {
 
       return store.prompt(state, new ChoosePokemonPrompt(
         player.id,
-        CardMessage.CHOOSE_ONE_POKEMON,
+        GameMessage.CHOOSE_ONE_POKEMON,
         PlayerType.TOP_PLAYER,
         [ SlotType.BENCH ],
         { allowCancel: false }
@@ -78,7 +78,7 @@ export class LandorusEx extends PokemonCard {
 
       return store.prompt(state, new ConfirmPrompt(
         effect.player.id,
-        CardMessage.WANT_DISCARD_ENERGY
+        GameMessage.WANT_DISCARD_ENERGY
       ), result => {
         if (result) {
           const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);

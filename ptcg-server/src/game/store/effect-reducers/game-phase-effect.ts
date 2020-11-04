@@ -1,6 +1,7 @@
 import { Effect } from "../effects/effect";
 import { EndTurnEffect, BetweenTurnsEffect } from "../effects/game-phase-effects";
-import { GameError, GameMessage } from "../../game-error";
+import { GameError } from "../../game-error";
+import { GameMessage } from "../../game-message";
 import { Player } from "../state/player";
 import { SpecialCondition } from "../card/card-types";
 import { State, GamePhase, GameWinner } from "../state/state";

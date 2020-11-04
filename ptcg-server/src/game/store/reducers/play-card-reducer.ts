@@ -3,7 +3,8 @@ import { AttachEnergyEffect, PlayPokemonEffect, PlayStadiumEffect,
   PlaySupporterEffect, AttachPokemonToolEffect, PlayItemEffect } from "../effects/play-card-effects";
 import { CardList } from "../state/card-list";
 import { EnergyCard } from "../card/energy-card";
-import { GameError, GameMessage } from "../../game-error";
+import { GameError } from "../../game-error";
+import { GameMessage } from "../../game-message";
 import { PlayCardAction, PlayerType, SlotType, CardTarget } from "../actions/play-card-action";
 import { PokemonCard } from "../card/pokemon-card";
 import { PokemonCardList } from "../state/pokemon-card-list";

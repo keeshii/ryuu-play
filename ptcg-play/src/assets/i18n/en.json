@@ -295,5 +295,12 @@
   "VALIDATION_INVALID_IMAGE": "The selected image is not supported.",
   "VALIDATION_MAX_FILE_SIZE": "Maximum file size exceeded.",
   "VALIDATION_FIELD_REQUIRED": "This field is required.",
-  "VALIDATION_INVALID_REPLAY": "The replay file could not be decoded."
+  "VALIDATION_INVALID_REPLAY": "The replay file could not be decoded.",
+
+  "GAME_MESSAGES": {
+    "CHOOSE_STARTING_POKEMONS": "Choose active and benched Pokemons."
+  },
+  "GAME_LOGS": {
+    "LOG_SHUFFLE_DECK": "{{ name }} shuffles the deck."
+  }
 }

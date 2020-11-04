@@ -5,8 +5,8 @@ import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { PowerEffect, AttackEffect } from "../../game/store/effects/game-effects";
 import { PowerType } from "../../game/store/card/pokemon-types";
-import { GameMessage, GameError } from "../../game/game-error";
-import { CardMessage } from "../card-message";
+import { GameError } from "../../game/game-error";
+import { GameMessage } from "../../game/game-message";
 import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
 import { PlayPokemonEffect } from "../../game/store/effects/play-card-effects";
 import { CardList } from "../../game/store/state/card-list";
@@ -82,7 +82,7 @@ export class Musharna extends PokemonCard {
 
       return store.prompt(state, new ChooseCardsPrompt(
         player.id,
-        CardMessage.CHOOSE_ANY_CARD,
+        GameMessage.CHOOSE_ANY_CARD,
         deckTop,
         { },
         { min: 1, max: 1, allowCancel: false }

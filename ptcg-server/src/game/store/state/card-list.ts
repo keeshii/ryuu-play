@@ -1,6 +1,7 @@
 import { Card } from "../card/card";
 import { CardManager } from "../../cards/card-manager";
-import { GameError, GameMessage } from "../../game-error";
+import { GameError } from "../../game-error";
+import { GameMessage } from "../../game-message";
 
 export class CardList {
 

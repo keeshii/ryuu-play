@@ -4,8 +4,8 @@ import { StoreLike, State, StateUtils, Card, ChooseEnergyPrompt } from "../../ga
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
 import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
-import { CardMessage } from "../card-message";
 import { DiscardCardsEffect } from "../../game/store/effects/attack-effects";
+import { GameMessage } from "../../game/game-message";
 
 
 export class MewtwoEx extends PokemonCard {
@@ -70,7 +70,7 @@ export class MewtwoEx extends PokemonCard {
 
       state = store.prompt(state, new ChooseEnergyPrompt(
         player.id,
-        CardMessage.CHOOSE_ENERGIES_TO_DISCARD,
+        GameMessage.CHOOSE_ENERGIES_TO_DISCARD,
         checkProvidedEnergy.energyMap,
         [ CardType.COLORLESS ],
         { allowCancel: false }

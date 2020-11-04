@@ -5,7 +5,6 @@ import { PowerType, StoreLike, State, GameError, GameMessage, StateUtils,
 import { CheckRetreatCostEffect } from "../../game/store/effects/check-effects";
 import { Effect } from "../../game/store/effects/effect";
 import { PowerEffect } from "../../game/store/effects/game-effects";
-import {CardMessage} from "../card-message";
 
 function* usePower(next: Function, store: StoreLike, state: State, self: UnownQ, effect: PowerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -42,7 +41,7 @@ function* usePower(next: Function, store: StoreLike, state: State, self: UnownQ,
   // everything checked, we are ready to attach UnownQ as a tool.
   yield store.prompt(state, new ChoosePokemonPrompt(
     player.id,
-    CardMessage.CHOOSE_ONE_POKEMON,
+    GameMessage.CHOOSE_ONE_POKEMON,
     PlayerType.BOTTOM_PLAYER,
     [ SlotType.ACTIVE, SlotType.BENCH ],
     { allowCancel: true, blocked }

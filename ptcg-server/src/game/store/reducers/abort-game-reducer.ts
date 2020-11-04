@@ -1,6 +1,7 @@
 import { Action } from "../actions/action";
 import { State, GamePhase, GameWinner } from "../state/state";
-import { GameError, GameMessage } from "../../game-error";
+import { GameError } from "../../game-error";
+import { GameMessage } from "../../game-message";
 import { StoreLike } from "../store-like";
 import { AbortGameAction, AbortGameReason} from "../actions/abort-game-action";
 import { endGame } from "../effect-reducers/check-effect";

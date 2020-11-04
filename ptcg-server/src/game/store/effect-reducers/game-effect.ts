@@ -1,4 +1,5 @@
-import { GameError, GameMessage } from "../../game-error";
+import { GameError } from "../../game-error";
+import { GameMessage } from "../../game-message";
 import { EndTurnEffect } from "../effects/game-phase-effects";
 import { Effect } from "../effects/effect";
 import { State, GamePhase } from "../state/state";

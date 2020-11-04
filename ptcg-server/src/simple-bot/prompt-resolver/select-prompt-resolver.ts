@@ -1,7 +1,7 @@
 import { Player, State, Action, ResolvePromptAction, Prompt, EnergyCard, CardType } from '../../game';
 import { PromptResolver } from './prompt-resolver';
 import { SelectPrompt } from '../../game/store/prompts/select-prompt';
-import { CardMessage } from '../../sets/card-message';
+import { GameMessage } from "../../game/game-message";
 
 
 export class SelectPromptResolver extends PromptResolver {
@@ -14,10 +14,10 @@ export class SelectPromptResolver extends PromptResolver {
   }
 
   private handleDiscardAllEnergiesPrompt(state: State, player: Player, prompt: SelectPrompt): number | undefined {
-    const values = [ CardMessage.ALL_FIRE_ENERGIES, CardMessage.ALL_LIGHTNING_ENERGIES ];
+    const values = [ GameMessage.ALL_FIRE_ENERGIES, GameMessage.ALL_LIGHTNING_ENERGIES ];
 
     // Different kind of the select message
-    if (prompt.message !== CardMessage.CHOOSE_ENERGIES_TO_DISCARD
+    if (prompt.message !== GameMessage.CHOOSE_ENERGIES_TO_DISCARD
       || prompt.values.length !== values.length
       || prompt.values.some((value, index) => value !== values[index])) {
       return undefined;

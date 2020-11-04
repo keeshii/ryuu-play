@@ -5,11 +5,11 @@ import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { AttackEffect } from "../../game/store/effects/game-effects";
-import { CardMessage } from "../card-message";
 import { StateUtils } from "../../game/store/state-utils";
 import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
 import { ShowCardsPrompt } from "../../game/store/prompts/show-cards-prompt";
 import { ShuffleDeckPrompt } from "../../game/store/prompts/shuffle-prompt";
+import { GameMessage } from "../../game/game-message";
 
 
 function* useAstonish(next: Function, store: StoreLike, state: State,
@@ -26,7 +26,7 @@ function* useAstonish(next: Function, store: StoreLike, state: State,
   let cards: Card[] = [];
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    CardMessage.CHOOSE_ANY_CARD,
+    GameMessage.CHOOSE_ANY_CARD,
     opponent.hand,
     { },
     { min: 1, max: 1, allowCancel: false, isSecret: true }
@@ -38,7 +38,7 @@ function* useAstonish(next: Function, store: StoreLike, state: State,
   if (cards.length > 0) {
     yield store.prompt(state, new ShowCardsPrompt(
       player.id,
-      CardMessage.CARDS_SHOWED_BY_THE_OPPONENT,
+      GameMessage.CARDS_SHOWED_BY_THE_OPPONENT,
       cards
     ), () => next());
   }

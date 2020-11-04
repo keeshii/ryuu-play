@@ -1,5 +1,4 @@
 import { AttackEffect, UsePowerEffect } from "../../game/store/effects/game-effects";
-import { CardMessage } from "../card-message";
 import { Effect } from "../../game/store/effects/effect";
 import { PokemonCard } from "../../game/store/card/pokemon-card";
 import { Stage, CardType } from "../../game/store/card/card-types";
@@ -14,7 +13,7 @@ function* usePsychicRestore(next: Function, store: StoreLike, state: State, effe
   let wantToUse = false;
   yield store.prompt(state, new ConfirmPrompt(
     effect.player.id,
-    CardMessage.PUT_POKEMON_INTO_THE_DECK
+    GameMessage.PUT_POKEMON_INTO_THE_DECK
   ), result => {
     wantToUse = result;
     next();
@@ -26,7 +25,7 @@ function* usePsychicRestore(next: Function, store: StoreLike, state: State, effe
 
   yield store.prompt(state, new OrderCardsPrompt(
     player.id,
-    CardMessage.CHOOSE_CARDS_ORDER,
+    GameMessage.CHOOSE_CARDS_ORDER,
     target,
     { allowCancel: true },
   ), order => {
@@ -52,7 +51,7 @@ function* useSetUp(next: Function, store: StoreLike, state: State, effect: PlayP
   let wantToUse = false;
   yield store.prompt(state, new ConfirmPrompt(
     effect.player.id,
-    CardMessage.USE_SET_UP_ABILITY,
+    GameMessage.USE_SET_UP_ABILITY,
   ), result => {
     wantToUse = result;
     next();

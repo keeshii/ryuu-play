@@ -6,10 +6,10 @@ import { Effect } from "../../game/store/effects/effect";
 import { StateUtils } from "../../game/store/state-utils";
 import { CheckPokemonTypeEffect } from "../../game/store/effects/check-effects";
 import { TrainerEffect } from "../../game/store/effects/play-card-effects";
-import { GameError, GameMessage } from "../../game/game-error";
+import { GameError } from "../../game/game-error";
+import { GameMessage } from "../../game/game-message";
 import { EnergyCard } from "../../game/store/card/energy-card";
 import { AttachEnergyPrompt } from "../../game/store/prompts/attach-energy-prompt";
-import { CardMessage } from "../card-message";
 import { PlayerType, SlotType, CardTarget } from "../../game/store/actions/play-card-action";
 
 export class DarkPatch extends TrainerCard {
@@ -69,7 +69,7 @@ export class DarkPatch extends TrainerCard {
 
       state = store.prompt(state, new AttachEnergyPrompt(
         player.id,
-        CardMessage.ATTACH_DARK_ENERGY,
+        GameMessage.ATTACH_DARK_ENERGY,
         player.discard,
         PlayerType.BOTTOM_PLAYER,
         [ SlotType.BENCH ],

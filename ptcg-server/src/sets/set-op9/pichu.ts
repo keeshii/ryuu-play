@@ -5,7 +5,6 @@ import { StoreLike, State, ChooseCardsPrompt, Card, ShuffleDeckPrompt,
   GameMessage, PokemonCardList } from "../../game";
 import { AttackEffect, PowerEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
-import { CardMessage } from "../card-message";
 
 function* useBabyEvolution(next: Function, store: StoreLike, state: State,
   self: Pichu, effect: PowerEffect): IterableIterator<State> {
@@ -22,7 +21,7 @@ function* useBabyEvolution(next: Function, store: StoreLike, state: State,
   let cards: Card[] = [];
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    CardMessage.CHOOSE_ONE_POKEMON,
+    GameMessage.CHOOSE_ONE_POKEMON,
     player.hand,
     { superType: SuperType.POKEMON, name: 'Pikachu' },
     { min:1, max: 1, allowCancel: true }
@@ -52,7 +51,7 @@ function* useFindAFriend(next: Function, store: StoreLike, state: State,
   let coinResult: boolean = false;
   yield store.prompt(state, new CoinFlipPrompt(
     player.id,
-    CardMessage.COIN_FLIP
+    GameMessage.COIN_FLIP
   ), result => {
     coinResult = result;
     next();
@@ -65,7 +64,7 @@ function* useFindAFriend(next: Function, store: StoreLike, state: State,
   let cards: Card[] = [];
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    CardMessage.CHOOSE_ONE_POKEMON,
+    GameMessage.CHOOSE_ONE_POKEMON,
     player.deck,
     { superType: SuperType.POKEMON },
     { allowCancel: true, min: 1, max: 1 }
@@ -77,7 +76,7 @@ function* useFindAFriend(next: Function, store: StoreLike, state: State,
   if (cards.length > 0) {
     yield store.prompt(state, new ShowCardsPrompt(
       opponent.id,
-      CardMessage.CARDS_SHOWED_BY_THE_OPPONENT,
+      GameMessage.CARDS_SHOWED_BY_THE_OPPONENT,
       cards
     ), () => next());
   }

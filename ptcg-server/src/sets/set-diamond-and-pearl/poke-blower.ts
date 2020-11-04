@@ -5,7 +5,7 @@ import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { TrainerEffect } from "../../game/store/effects/play-card-effects";
 import { ConfirmPrompt } from "../../game/store/prompts/confirm-prompt";
-import { CardMessage } from "../card-message";
+import { GameMessage } from "../../game/game-message";
 import { CoinFlipPrompt } from "../../game/store/prompts/coin-flip-prompt";
 import { ChoosePokemonPrompt } from "../../game/store/prompts/choose-pokemon-prompt";
 import { PlayerType, SlotType } from "../../game/store/actions/play-card-action";
@@ -31,7 +31,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   if (benchCount > 0 && count >= 2) {
     yield store.prompt(state, new ConfirmPrompt(
       player.id,
-      CardMessage.PLAY_BOTH_CARDS_AT_ONCE
+      GameMessage.PLAY_BOTH_CARDS_AT_ONCE
     ), result => {
       playTwoCards = result;
       next();
@@ -42,7 +42,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     let coinFlip = false;
     yield store.prompt(state, new CoinFlipPrompt(
       player.id,
-      CardMessage.COIN_FLIP
+      GameMessage.COIN_FLIP
     ), result => {
       coinFlip = result;
       next();
@@ -54,7 +54,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 
     yield store.prompt(state, new ChoosePokemonPrompt(
       player.id,
-      CardMessage.CHOOSE_ONE_POKEMON,
+      GameMessage.CHOOSE_ONE_POKEMON,
       PlayerType.TOP_PLAYER,
       [ SlotType.ACTIVE, SlotType.BENCH ],
       { allowCancel: false }
@@ -78,7 +78,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 
   yield store.prompt(state, new ChoosePokemonPrompt(
     player.id,
-    CardMessage.CHOOSE_ONE_POKEMON,
+    GameMessage.CHOOSE_ONE_POKEMON,
     PlayerType.TOP_PLAYER,
     [ SlotType.BENCH ],
     { allowCancel: false }

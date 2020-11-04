@@ -1,3 +1,4 @@
+import { GameMessage } from "../../game-message";
 import { Prompt } from "./prompt";
 
 export interface SelectOptions {
@@ -13,7 +14,7 @@ export class SelectPrompt extends Prompt<number> {
 
   constructor(
     playerId: number,
-    public message: string,
+    public message: GameMessage,
     public values: string[],
     options?: Partial<SelectOptions>
   ) {

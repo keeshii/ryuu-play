@@ -3,7 +3,7 @@ import { Stage, CardType } from "../../game/store/card/card-types";
 import { StoreLike, State, StateUtils, PokemonCardList, CoinFlipPrompt } from "../../game";
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
-import { CardMessage } from "../card-message";
+import { GameMessage } from "../../game/game-message";
 
 
 export class Raichu extends PokemonCard {
@@ -49,8 +49,8 @@ export class Raichu extends PokemonCard {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
       return store.prompt(state, [
-        new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP),
-        new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP),
+        new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP),
+        new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP),
       ], results => {
         let heads: number = 0;
         results.forEach(r => { heads += r ? 1 : 0; });

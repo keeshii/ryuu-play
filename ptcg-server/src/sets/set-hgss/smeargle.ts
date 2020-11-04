@@ -6,7 +6,6 @@ import { Effect } from "../../game/store/effects/effect";
 import { PlayPokemonEffect, TrainerEffect } from "../../game/store/effects/play-card-effects";
 import { PowerEffect, AttackEffect } from "../../game/store/effects/game-effects";
 import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
-import { CardMessage } from "../card-message";
 
 export class Smeargle extends PokemonCard {
 
@@ -74,7 +73,7 @@ export class Smeargle extends PokemonCard {
 
       return store.prompt(state, new ChooseCardsPrompt(
         player.id,
-        CardMessage.CHOOSE_SUPPORTER_CARD,
+        GameMessage.CHOOSE_SUPPORTER_CARD,
         opponent.hand,
         { superType: SuperType.TRAINER, trainerType: TrainerType.SUPPORTER },
         { allowCancel: true , min: 1, max: 1}
@@ -91,8 +90,8 @@ export class Smeargle extends PokemonCard {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
       state = store.prompt(state, [
-        new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP),
-        new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP)
+        new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP),
+        new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)
       ], results => {
         let heads: number = 0;
         results.forEach(r => { heads += r ? 1 : 0; });

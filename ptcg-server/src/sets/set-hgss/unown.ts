@@ -1,4 +1,4 @@
-import { CardMessage } from "../card-message";
+import { GameMessage } from "../../game/game-message";
 import { Effect } from "../../game/store/effects/effect";
 import { PokemonCard } from "../../game/store/card/pokemon-card";
 import { Stage, CardType, SuperType } from "../../game/store/card/card-types";
@@ -12,7 +12,7 @@ function* useReturn(next: Function, store: StoreLike, state: State, effect: Play
   let wantToUse = false;
   yield store.prompt(state, new ConfirmPrompt(
     effect.player.id,
-    CardMessage.USE_RETURN_ABILITY,
+    GameMessage.USE_RETURN_ABILITY,
   ), result => {
     wantToUse = result;
     next();
@@ -25,7 +25,7 @@ function* useReturn(next: Function, store: StoreLike, state: State, effect: Play
   let targets: PokemonCardList[] = [];
   yield store.prompt(state, new ChoosePokemonPrompt(
     player.id,
-    CardMessage.CHOOSE_ONE_POKEMON,
+    GameMessage.CHOOSE_ONE_POKEMON,
     PlayerType.BOTTOM_PLAYER,
     [ SlotType.ACTIVE, SlotType.BENCH ],
     { allowCancel: true }

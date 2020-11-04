@@ -7,10 +7,10 @@ import { Effect } from "../../game/store/effects/effect";
 import { TrainerEffect } from "../../game/store/effects/play-card-effects";
 import { CardList } from "../../game/store/state/card-list";
 import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
-import { CardMessage } from "../card-message";
+import { GameMessage } from "../../game/game-message";
 import { ShowCardsPrompt } from "../../game/store/prompts/show-cards-prompt";
 import { StateUtils } from "../../game/store/state-utils";
-import {ShuffleDeckPrompt} from "../../game/store/prompts/shuffle-prompt";
+import { ShuffleDeckPrompt } from "../../game/store/prompts/shuffle-prompt";
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -22,7 +22,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   let cards: Card[] = [];
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    CardMessage.CHOOSE_SUPPORTER_CARD,
+    GameMessage.CHOOSE_SUPPORTER_CARD,
     deckTop,
     { superType: SuperType.TRAINER, trainerType: TrainerType.SUPPORTER },
     { min: 1, max: 1, allowCancel: true }
@@ -37,7 +37,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   if (cards.length > 0) {
     yield store.prompt(state, new ShowCardsPrompt(
       opponent.id,
-      CardMessage.CARDS_SHOWED_BY_THE_OPPONENT,
+      GameMessage.CARDS_SHOWED_BY_THE_OPPONENT,
       cards
     ), () => next());
   }

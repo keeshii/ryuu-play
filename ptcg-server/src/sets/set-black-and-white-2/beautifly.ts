@@ -8,10 +8,10 @@ import { PutDamageEffect } from "../../game/store/effects/attack-effects";
 import { PowerType } from "../../game/store/card/pokemon-types";
 import { StateUtils } from "../../game/store/state-utils";
 import { ConfirmPrompt } from "../../game/store/prompts/confirm-prompt";
-import { CardMessage } from "../card-message";
 import { ChoosePokemonPrompt } from "../../game/store/prompts/choose-pokemon-prompt";
 import { PlayerType, SlotType } from "../../game/store/actions/play-card-action";
-import { GameMessage, GameError } from "../../game/game-error";
+import { GameError } from "../../game/game-error";
+import { GameMessage } from "../../game/game-message";
 
 function* useWhirlwind(next: Function, store: StoreLike, state: State, effect: AttackEffect): IterableIterator<State> {
   const player = effect.player;
@@ -25,7 +25,7 @@ function* useWhirlwind(next: Function, store: StoreLike, state: State, effect: A
   let wantToUse = false;
   yield store.prompt(state, new ConfirmPrompt(
     effect.player.id,
-    CardMessage.WANT_OPPONENT_TO_SWITCH_POKEMON
+    GameMessage.WANT_OPPONENT_TO_SWITCH_POKEMON
   ), result => {
     wantToUse = result;
     next();
