@@ -26,11 +26,11 @@ function* useMiraclePowder(next: Function, store: StoreLike, state: State,
   }
 
   const options: { message: GameMessage, value: SpecialCondition }[] = [
-    { message: GameMessage.PARALYZED, value: SpecialCondition.PARALYZED },
-    { message: GameMessage.CONFUSED, value: SpecialCondition.CONFUSED },
-    { message: GameMessage.ASLEEP, value: SpecialCondition.ASLEEP },
-    { message: GameMessage.POISONED, value: SpecialCondition.POISONED },
-    { message: GameMessage.BURNED, value: SpecialCondition.BURNED }
+    { message: GameMessage.SPECIAL_CONDITION_PARALYZED, value: SpecialCondition.PARALYZED },
+    { message: GameMessage.SPECIAL_CONDITION_CONFUSED, value: SpecialCondition.CONFUSED },
+    { message: GameMessage.SPECIAL_CONDITION_ASLEEP, value: SpecialCondition.ASLEEP },
+    { message: GameMessage.SPECIAL_CONDITION_POISONED, value: SpecialCondition.POISONED },
+    { message: GameMessage.SPECIAL_CONDITION_BURNED, value: SpecialCondition.BURNED }
   ];
 
   return store.prompt(state, new SelectPrompt(

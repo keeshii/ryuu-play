@@ -26,7 +26,7 @@ function* playCard(next: Function, store: StoreLike, state: State, self: VsSeeke
   let cards: Card[] = [];
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    GameMessage.CHOOSE_TRAINER_CARD,
+    GameMessage.CHOOSE_CARD_TO_HAND,
     player.discard,
     { superType: SuperType.TRAINER, trainerType: TrainerType.SUPPORTER },
     { min: 1, max: 1, allowCancel: true }

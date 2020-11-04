@@ -38,7 +38,7 @@ function* useKnockOff(next: Function, store: StoreLike, state: State,
   let cards: Card[] = [];
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    GameMessage.CHOOSE_ANY_CARD,
+    GameMessage.CHOOSE_CARD_TO_DISCARD,
     opponent.hand,
     { },
     { min: 1, max: 1, allowCancel: false, isSecret: true }

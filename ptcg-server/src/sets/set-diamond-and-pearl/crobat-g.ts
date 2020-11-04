@@ -13,7 +13,7 @@ function* useFlashBite(next: Function, store: StoreLike, state: State, effect: P
 
   yield store.prompt(state, new ChoosePokemonPrompt(
     player.id,
-    GameMessage.CHOOSE_OPPONENTS_POKEMON,
+    GameMessage.CHOOSE_POKEMON_TO_DAMAGE,
     PlayerType.TOP_PLAYER,
     [ SlotType.ACTIVE, SlotType.BENCH ],
     { allowCancel: true },

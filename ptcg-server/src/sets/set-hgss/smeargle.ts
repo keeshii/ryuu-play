@@ -73,7 +73,7 @@ export class Smeargle extends PokemonCard {
 
       return store.prompt(state, new ChooseCardsPrompt(
         player.id,
-        GameMessage.CHOOSE_SUPPORTER_CARD,
+        GameMessage.CHOOSE_CARD_TO_COPY_EFFECT,
         opponent.hand,
         { superType: SuperType.TRAINER, trainerType: TrainerType.SUPPORTER },
         { allowCancel: true , min: 1, max: 1}

@@ -40,7 +40,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   let targets: PokemonCardList[] = [];
   yield store.prompt(state, new ChoosePokemonPrompt(
     player.id,
-    GameMessage.CHOOSE_UP_TO_2_POKEMONS_WITH_TOOL,
+    GameMessage.CHOOSE_POKEMON_TO_DISCARD_CARDS,
     PlayerType.ANY,
     [ SlotType.ACTIVE, SlotType.BENCH ],
     { min: 1, max: max, allowCancel: true, blocked }

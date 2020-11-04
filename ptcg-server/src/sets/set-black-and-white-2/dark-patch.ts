@@ -69,7 +69,7 @@ export class DarkPatch extends TrainerCard {
 
       state = store.prompt(state, new AttachEnergyPrompt(
         player.id,
-        GameMessage.ATTACH_DARK_ENERGY,
+        GameMessage.ATTACH_ENERGY_TO_BENCH,
         player.discard,
         PlayerType.BOTTOM_PLAYER,
         [ SlotType.BENCH ],

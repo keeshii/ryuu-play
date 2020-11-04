@@ -22,7 +22,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   if (count >= 2) {
     yield store.prompt(state, new ConfirmPrompt(
       player.id,
-      GameMessage.PLAY_BOTH_CARDS_AT_ONCE
+      GameMessage.WANT_TO_PLAY_BOTH_CARDS_AT_ONCE
     ), result => {
       playTwoCards = result;
       next();
@@ -45,7 +45,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   let cards: Card[] = [];
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    GameMessage.CHOOSE_ANY_TWO_CARDS,
+    GameMessage.CHOOSE_CARD_TO_HAND,
     player.deck,
     { },
     { min: 0, max: 2, allowCancel: true }

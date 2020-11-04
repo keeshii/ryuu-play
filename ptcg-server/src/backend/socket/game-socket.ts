@@ -1,7 +1,8 @@
 import { AddPlayerAction, AppendLogAction, Action, PassTurnAction,
   ReorderHandAction, ReorderBenchAction, PlayCardAction, CardTarget,
   RetreatAction, AttackAction, UseAbilityAction, StateSerializer,
-  UseStadiumAction } from '../../game';
+  UseStadiumAction, 
+  GameLog} from '../../game';
 import { Base64 } from '../../utils';
 import { ChangeAvatarAction } from '../../game/store/actions/change-avatar-action';
 import { Client } from '../../game/client/client.interface';
@@ -188,7 +189,7 @@ export class GameSocket {
   }
 
   private appendLog(params: {gameId: number, message: string}, response: Response<void>) {
-    const action = new AppendLogAction(this.client.id, params.message);
+    const action = new AppendLogAction(this.client.id, GameLog.LOG_TEXT, { text: params.message });
     this.dispatch(params.gameId, action, response);
   }
 

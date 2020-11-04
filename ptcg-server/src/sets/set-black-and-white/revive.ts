@@ -29,7 +29,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 
   return store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    GameMessage.CHOOSE_ONE_POKEMON,
+    GameMessage.CHOOSE_CARD_TO_PUT_ONTO_BENCH,
     player.discard,
     { superType: SuperType.POKEMON, stage: Stage.BASIC },
     { min: 1, max: 1, allowCancel: true }

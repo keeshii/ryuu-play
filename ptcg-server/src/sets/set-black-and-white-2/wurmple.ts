@@ -15,7 +15,7 @@ function* useFlock(next: Function, store: StoreLike, state: State,
   let cards: Card[] = [];
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    GameMessage.CHOOSE_ONE_POKEMON,
+    GameMessage.CHOOSE_CARD_TO_PUT_ONTO_BENCH,
     player.deck,
     { superType: SuperType.POKEMON, stage: Stage.BASIC, name: 'Wurmple' },
     { min: 0, max, allowCancel: true }

@@ -42,7 +42,7 @@ function* useStadium(next: Function, store: StoreLike, state: State, effect: Use
 
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    GameMessage.CHOOSE_ENERGY_CARD,
+    GameMessage.CHOOSE_CARD_TO_HAND,
     player.deck,
     { superType: SuperType.ENERGY, energyType: EnergyType.BASIC },
     { min: 1, max: 1, allowCancel: true }

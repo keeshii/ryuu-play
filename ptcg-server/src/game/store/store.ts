@@ -5,7 +5,7 @@ import { Card } from "./card/card";
 import { ChangeAvatarAction } from "./actions/change-avatar-action";
 import { Effect } from "./effects/effect";
 import { GameError } from "../game-error";
-import { GameMessage } from "../game-message";
+import { GameMessage, GameLog } from "../game-message";
 import { Prompt } from "./prompts/prompt";
 import { ReorderHandAction, ReorderBenchAction } from "./actions/reorder-actions";
 import { ResolvePromptAction } from "./actions/resolve-prompt-action";
@@ -69,7 +69,7 @@ export class Store implements StoreLike {
     }
 
     if (action instanceof AppendLogAction) {
-      this.log(state, action.message, undefined, action.id);
+      this.log(state, action.message, action.params, action.id);
       this.handler.onStateChange(state);
       return state;
     }
@@ -127,7 +127,7 @@ export class Store implements StoreLike {
     return state;
   }
 
-  public log(state: State, message: string, params?: StateLogParam, client?: number): void {
+  public log(state: State, message: GameLog, params?: StateLogParam, client?: number): void {
     const log = new StateLog(message, params, client);
     log.id = ++this.logId;
     state.logs.push(log);

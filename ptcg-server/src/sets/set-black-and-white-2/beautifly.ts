@@ -25,7 +25,7 @@ function* useWhirlwind(next: Function, store: StoreLike, state: State, effect: A
   let wantToUse = false;
   yield store.prompt(state, new ConfirmPrompt(
     effect.player.id,
-    GameMessage.WANT_OPPONENT_TO_SWITCH_POKEMON
+    GameMessage.WANT_TO_SWITCH_POKEMON
   ), result => {
     wantToUse = result;
     next();

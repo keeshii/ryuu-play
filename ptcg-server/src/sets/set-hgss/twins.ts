@@ -22,7 +22,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   let cards: Card[] = [];
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    GameMessage.CHOOSE_ANY_TWO_CARDS,
+    GameMessage.CHOOSE_CARD_TO_HAND,
     player.deck,
     { },
     { min: 0, max: 2, allowCancel: true }

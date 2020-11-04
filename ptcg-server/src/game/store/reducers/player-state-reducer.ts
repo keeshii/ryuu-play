@@ -43,6 +43,10 @@ export function playerStateReducer(store: StoreLike, state: State, action: Actio
 
     player.avatarName = action.avatarName;
 
+    if (action.log) {
+      store.log(state, action.log.message, action.log.params, player.id);
+    }
+
     return state;
   }
 

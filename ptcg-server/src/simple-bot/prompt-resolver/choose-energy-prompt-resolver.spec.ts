@@ -28,7 +28,7 @@ describe('ChooseEnergyPromptResolver', () => {
       arbiter: defaultArbiterOptions
     };
     resolver = new ChooseEnergyPromptResolver(simpleBotOptions);    
-    prompt = new ChooseEnergyPrompt(1, GameMessage.CHOOSE_ONE_POKEMON, [], []);
+    prompt = new ChooseEnergyPrompt(1, GameMessage.CHOOSE_CARD_TO_HAND, [], []);
     state = new State();
     player = new Player();
   });

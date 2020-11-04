@@ -47,7 +47,7 @@ export class PokemonCenter extends TrainerCard {
 
       return store.prompt(state, new ChoosePokemonPrompt(
         player.id,
-        GameMessage.CHOOSE_ONE_POKEMON,
+        GameMessage.CHOOSE_POKEMON_TO_HEAL,
         PlayerType.BOTTOM_PLAYER,
         [ SlotType.BENCH ],
         { allowCancel: true, blocked }

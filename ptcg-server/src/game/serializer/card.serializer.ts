@@ -13,7 +13,7 @@ export class CardSerializer implements Serializer<Card> {
   public serialize(card: Card): Serialized {
     const index = card.id;
     if (index === -1) {
-      throw new GameError(GameCoreError.SERIALIZER_ERROR, `Card not found '${card.fullName}'.`);
+      throw new GameError(GameCoreError.ERROR_SERIALIZER, `Card not found '${card.fullName}'.`);
     }
 
     return { _type: 'Card', index };
@@ -23,7 +23,7 @@ export class CardSerializer implements Serializer<Card> {
     const index: number = data.index;
     const card = context.cards[index];
     if (card === undefined) {
-      throw new GameError(GameCoreError.SERIALIZER_ERROR, `Card not found on index '${index}'.`);
+      throw new GameError(GameCoreError.ERROR_SERIALIZER, `Card not found on index '${index}'.`);
     }
     return card;
   }

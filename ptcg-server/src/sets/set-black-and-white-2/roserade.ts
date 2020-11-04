@@ -66,7 +66,7 @@ export class Roserade extends PokemonCard {
 
       return store.prompt(state, new ChooseCardsPrompt(
         player.id,
-        GameMessage.CHOOSE_ANY_CARD,
+        GameMessage.CHOOSE_CARD_TO_HAND,
         player.deck,
         { },
         { min: 1, max: 1, allowCancel: true }

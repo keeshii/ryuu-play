@@ -15,7 +15,7 @@ export class Simulator implements StoreHandler {
 
   constructor(state: State, botArbiterOptions: Partial<BotArbiterOptions> = {}) {
     if (state.prompts.some(p => p.result === undefined)) {
-      throw new GameError(GameCoreError.SIMULATOR_STATE_NOT_STABLE);
+      throw new GameError(GameCoreError.ERROR_SIMULATOR_NOT_STABLE);
     }
     this.botArbiter = new BotArbiter(botArbiterOptions);
     this.store = new Store(this);

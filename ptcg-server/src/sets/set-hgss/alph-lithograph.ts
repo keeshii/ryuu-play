@@ -22,7 +22,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 
   yield store.prompt(state, new ShowCardsPrompt(
     player.id,
-    GameMessage.PRIZE_CARDS,
+    GameMessage.CARDS_SHOWED_BY_EFFECT,
     prizes,
   ), () => { next(); });
 

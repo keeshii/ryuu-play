@@ -40,7 +40,7 @@ function* playCard(next: Function, store: StoreLike, state: State,
   let cards: Card[] = [];
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    GameMessage.CHOOSE_3_POKEMON_AND_BASIC_ENERGY,
+    GameMessage.CHOOSE_CARD_TO_HAND,
     player.discard,
     { },
     { min: max, max, allowCancel: true, blocked }

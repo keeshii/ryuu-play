@@ -13,7 +13,7 @@ function* usePsychicRestore(next: Function, store: StoreLike, state: State, effe
   let wantToUse = false;
   yield store.prompt(state, new ConfirmPrompt(
     effect.player.id,
-    GameMessage.PUT_POKEMON_INTO_THE_DECK
+    GameMessage.WANT_TO_SHUFFLE_POKEMON_INTO_DECK
   ), result => {
     wantToUse = result;
     next();
@@ -51,7 +51,7 @@ function* useSetUp(next: Function, store: StoreLike, state: State, effect: PlayP
   let wantToUse = false;
   yield store.prompt(state, new ConfirmPrompt(
     effect.player.id,
-    GameMessage.USE_SET_UP_ABILITY,
+    GameMessage.WANT_TO_USE_ABILITY,
   ), result => {
     wantToUse = result;
     next();

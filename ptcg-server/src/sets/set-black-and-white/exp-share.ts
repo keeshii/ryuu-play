@@ -70,7 +70,7 @@ export class ExpShare extends TrainerCard {
 
       state = store.prompt(state, new AttachEnergyPrompt(
         player.id,
-        GameMessage.ATTACH_ENERGY_TO_EXP_SHARE,
+        GameMessage.ATTACH_ENERGY_TO_BENCH,
         activeCopy,
         PlayerType.BOTTOM_PLAYER,
         [ SlotType.BENCH ],

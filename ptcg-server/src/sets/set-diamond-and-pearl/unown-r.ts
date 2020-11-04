@@ -10,7 +10,7 @@ function* useHiddenPower(next: Function, store: StoreLike, state: State, effect:
 
   yield store.prompt(state, new MoveEnergyPrompt(
     effect.player.id,
-    GameMessage.MOVE_BASIC_ENERGY,
+    GameMessage.MOVE_ENERGY_CARDS,
     PlayerType.BOTTOM_PLAYER,
     [ SlotType.ACTIVE, SlotType.BENCH ],
     { superType: SuperType.ENERGY, energyType: EnergyType.BASIC },

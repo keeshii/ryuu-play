@@ -68,7 +68,7 @@ export class SeismitoadEx extends PokemonCard {
 
       return store.prompt(state, new ChoosePokemonPrompt(
         player.id,
-        GameMessage.CHOOSE_OPPONENTS_POKEMON,
+        GameMessage.CHOOSE_POKEMON_TO_DAMAGE,
         PlayerType.TOP_PLAYER,
         [ SlotType.BENCH ],
         { min: max, max, allowCancel: false }

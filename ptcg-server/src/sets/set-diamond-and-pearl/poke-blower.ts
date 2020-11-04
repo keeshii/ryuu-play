@@ -31,7 +31,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   if (benchCount > 0 && count >= 2) {
     yield store.prompt(state, new ConfirmPrompt(
       player.id,
-      GameMessage.PLAY_BOTH_CARDS_AT_ONCE
+      GameMessage.WANT_TO_PLAY_BOTH_CARDS_AT_ONCE
     ), result => {
       playTwoCards = result;
       next();
@@ -54,7 +54,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 
     yield store.prompt(state, new ChoosePokemonPrompt(
       player.id,
-      GameMessage.CHOOSE_ONE_POKEMON,
+      GameMessage.CHOOSE_POKEMON_TO_DAMAGE,
       PlayerType.TOP_PLAYER,
       [ SlotType.ACTIVE, SlotType.BENCH ],
       { allowCancel: false }
@@ -78,7 +78,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 
   yield store.prompt(state, new ChoosePokemonPrompt(
     player.id,
-    GameMessage.CHOOSE_ONE_POKEMON,
+    GameMessage.CHOOSE_POKEMON_TO_SWITCH,
     PlayerType.TOP_PLAYER,
     [ SlotType.BENCH ],
     { allowCancel: false }

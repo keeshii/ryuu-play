@@ -38,7 +38,7 @@ function* playCard(next: Function, store: StoreLike, state: State,
 
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    GameMessage.CHOOSE_ANY_CARD,
+    GameMessage.CHOOSE_CARD_TO_DISCARD,
     handTemp,
     { },
     { min: 1, max: 1, allowCancel: true }
@@ -57,7 +57,7 @@ function* playCard(next: Function, store: StoreLike, state: State,
 
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    GameMessage.CHOOSE_BASIC_POKEMON,
+    GameMessage.CHOOSE_CARD_TO_HAND,
     player.deck,
     { superType: SuperType.POKEMON, stage: Stage.BASIC },
     { min: 1, max: 1, allowCancel: true }

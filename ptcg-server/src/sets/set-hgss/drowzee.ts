@@ -52,7 +52,7 @@ export class Drowzee extends PokemonCard {
 
       store.prompt(state, new ChoosePokemonPrompt(
         player.id,
-        GameMessage.CHOOSE_ONE_POKEMON,
+        GameMessage.CHOOSE_POKEMON_TO_SWITCH,
         PlayerType.TOP_PLAYER,
         [ SlotType.BENCH ],
         { allowCancel: false }

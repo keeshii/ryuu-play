@@ -1,5 +1,5 @@
 import { GameError } from "../../game-error";
-import { GameMessage } from "../../game-message";
+import { GameMessage, GameLog } from "../../game-message";
 import { EndTurnEffect } from "../effects/game-phase-effects";
 import { Effect } from "../effects/effect";
 import { State, GamePhase } from "../state/state";
@@ -54,17 +54,17 @@ function* useAttack(next: Function, store: StoreLike, state: State, effect: UseA
   if (sp.includes(SpecialCondition.CONFUSED)) {
     let flip = false;
 
-    store.log(state, `${player.name} flips a coin for the confusion.`);
+    store.log(state, GameLog.LOG_FLIP_CONFUSION, { name: player.name });
     yield store.prompt(state, new CoinFlipPrompt(
       player.id,
-      GameMessage.CONFUSION_FLIP),
+      GameMessage.FLIP_CONFUSION),
       result => {
         flip = result;
         next();
       });
 
     if (flip === false) {
-      store.log(state, `Attacking Pokemon hurts itself.`);
+      store.log(state, GameLog.LOG_HURTS_ITSELF);
       player.active.damage += 30;
       state = store.reduceEffect(state, new EndTurnEffect(player));
       return state;
@@ -82,7 +82,7 @@ function* useAttack(next: Function, store: StoreLike, state: State, effect: UseA
     throw new GameError(GameMessage.NOT_ENOUGH_ENERGY);
   }
 
-  store.log(state, `${player.name} attacks with ${attack.name}.`);
+  store.log(state, GameLog.LOG_PLAYER_USES_ATTACK, { name: player.name, attack: attack.name });
   state.phase = GamePhase.ATTACK;
   const attackEffect = new AttackEffect(player, opponent, attack);
   state = store.reduceEffect(state, attackEffect);
@@ -114,7 +114,7 @@ export function gameReducer(store: StoreLike, state: State, effect: Effect): Sta
         effect.prizeCount += 1;
       }
 
-      store.log(state, `${card.name} is KO.`);
+      store.log(state, GameLog.LOG_POKEMON_KO, { name: card.name });
       effect.target.moveTo(effect.player.discard);
       effect.target.clearEffects();
     }
@@ -144,14 +144,14 @@ export function gameReducer(store: StoreLike, state: State, effect: Effect): Sta
     const power = effect.power;
     const card = effect.card;
 
-    store.log(state, `${player.name} uses the ${power.name} ability.`);
+    store.log(state, GameLog.LOG_PLAYER_USES_ABILITY, { name: player.name, ability: power.name });
     state = store.reduceEffect(state, new PowerEffect(player, power, card));
     return state;
   }
 
   if (effect instanceof UseStadiumEffect) {
     const player = effect.player;
-    store.log(state, `${player.name} uses the stadium ${effect.stadium.name}.`);
+    store.log(state, GameLog.LOG_PLAYER_USES_STADIUM, { name: player.name, stadium: effect.stadium.name });
     player.stadiumUsedTurn = state.turn;
   }
 

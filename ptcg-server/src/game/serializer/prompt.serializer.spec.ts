@@ -19,13 +19,13 @@ describe('PromptSerializer', () => {
 
   it('Should restore prompt instance', () => {
     // given
-    const prompt = new AlertPrompt(1, GameMessage.CHOOSE_ONE_POKEMON);
+    const prompt = new AlertPrompt(1, GameMessage.CHOOSE_CARD_TO_HAND);
     // when
     const serialized = promptSerializer.serialize(prompt);
     const restored = promptSerializer.deserialize(serialized, context) as AlertPrompt;
     // then
     expect(restored.playerId).toEqual(1);
-    expect(restored.message).toEqual(GameMessage.CHOOSE_ONE_POKEMON);
+    expect(restored.message).toEqual(GameMessage.CHOOSE_CARD_TO_HAND);
     expect(restored instanceof AlertPrompt).toBeTruthy();
     expect(restored instanceof Prompt).toBeTruthy();
   });

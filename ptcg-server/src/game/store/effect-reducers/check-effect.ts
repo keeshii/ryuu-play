@@ -4,7 +4,7 @@ import { CheckHpEffect, CheckProvidedEnergyEffect } from "../effects/check-effec
 import { PokemonCardList } from "../state/pokemon-card-list";
 import { ChoosePokemonPrompt } from "../prompts/choose-pokemon-prompt";
 import { GameError } from "../../game-error";
-import { GameMessage } from "../../game-message";
+import { GameMessage, GameLog } from "../../game-message";
 import { ChoosePrizePrompt } from "../prompts/choose-prize-prompt";
 import { CardList } from "../state/card-list";
 import { PlayerType, SlotType } from "../actions/play-card-action";
@@ -93,17 +93,17 @@ export function endGame(store: StoreLike, state: State, winner: GameWinner): Sta
 
   switch (winner) {
     case GameWinner.NONE:
-      store.log(state, 'Game finished.');
+      store.log(state, GameLog.LOG_GAME_FINISHED);
       break;
     case GameWinner.DRAW:
-      store.log(state, 'Game finished. It\'s a draw.');
+      store.log(state, GameLog.LOG_GAME_FINISHED_DRAW);
       break;
     case GameWinner.PLAYER_1:
     case GameWinner.PLAYER_2:
       const winnerName = winner === GameWinner.PLAYER_1
         ? state.players[0].name
         : state.players[1].name;
-      store.log(state, `Game finished. Winner ${winnerName}.`);
+      store.log(state, GameLog.LOG_GAME_FINISHED_WINNER, { name: winnerName });
       break;
   }
 
@@ -122,12 +122,12 @@ function checkWinner(
     const player = state.players[i];
     // Player has no active Pokemon, opponent wins.
     if (player.active.cards.length === 0) {
-      store.log(state, `${player.name} has no active Pokemon.`);
+      store.log(state, GameLog.LOG_PLAYER_NO_ACTIVE_POKEMON, { name: player.name });
       points[i === 0 ? 1 : 0]++;
     }
     // Player has no Prize cards left, player wins.
     if (player.prizes.every(p => p.cards.length === 0)) {
-      store.log(state, `${player.name} has no more Prize cards left.`);
+      store.log(state, GameLog.LOG_PLAYER_NO_PRIZE_CARD, { name: player.name });
       points[i]++;
     }
   }

@@ -53,7 +53,7 @@ export class Gible extends PokemonCard {
 
       return store.prompt(state, new ChoosePokemonPrompt(
         opponent.id,
-        GameMessage.CHOOSE_ONE_POKEMON,
+        GameMessage.CHOOSE_POKEMON_TO_SWITCH,
         PlayerType.BOTTOM_PLAYER,
         [ SlotType.BENCH ],
         { allowCancel: false }

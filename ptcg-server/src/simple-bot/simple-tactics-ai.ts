@@ -1,5 +1,5 @@
 import { Player, State, PassTurnAction, Action, GamePhase, Prompt,
-  InvitePlayerPrompt, StateLog, ResolvePromptAction } from '../game';
+  InvitePlayerPrompt, StateLog, ResolvePromptAction, GameLog } from '../game';
 import { Client } from '../game/client/client.interface';
 import { PromptResolver } from './prompt-resolver/prompt-resolver';
 import { SimpleTactic } from './simple-tactics/simple-tactics';
@@ -68,7 +68,9 @@ export class SimpleTacticsAi {
       const result = this.deck;
       let log: StateLog | undefined;
       if (result === null) {
-        log = new StateLog('Sorry, my deck is not ready.', {}, player.id);
+        log = new StateLog(GameLog.LOG_TEXT, {
+          text: 'Sorry, my deck is not ready.'
+        }, player.id);
       }
       return new ResolvePromptAction(prompt.id, result, log);
     }

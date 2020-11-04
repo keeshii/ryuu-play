@@ -22,7 +22,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   if (opponentHasBench) {
     yield store.prompt(state, new ChoosePokemonPrompt(
       opponent.id,
-      GameMessage.CHOOSE_ONE_POKEMON,
+      GameMessage.CHOOSE_POKEMON_TO_SWITCH,
       PlayerType.BOTTOM_PLAYER,
       [ SlotType.BENCH ],
       { allowCancel: false }
@@ -39,7 +39,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   if (playerHasBench) {
     yield store.prompt(state, new ChoosePokemonPrompt(
       player.id,
-      GameMessage.CHOOSE_ONE_POKEMON,
+      GameMessage.CHOOSE_POKEMON_TO_SWITCH,
       PlayerType.BOTTOM_PLAYER,
       [ SlotType.BENCH ],
       { allowCancel: false }

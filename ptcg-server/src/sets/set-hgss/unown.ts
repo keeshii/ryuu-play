@@ -12,7 +12,7 @@ function* useReturn(next: Function, store: StoreLike, state: State, effect: Play
   let wantToUse = false;
   yield store.prompt(state, new ConfirmPrompt(
     effect.player.id,
-    GameMessage.USE_RETURN_ABILITY,
+    GameMessage.WANT_TO_USE_ABILITY,
   ), result => {
     wantToUse = result;
     next();
@@ -25,7 +25,7 @@ function* useReturn(next: Function, store: StoreLike, state: State, effect: Play
   let targets: PokemonCardList[] = [];
   yield store.prompt(state, new ChoosePokemonPrompt(
     player.id,
-    GameMessage.CHOOSE_ONE_POKEMON,
+    GameMessage.CHOOSE_POKEMON_TO_PICK_UP,
     PlayerType.BOTTOM_PLAYER,
     [ SlotType.ACTIVE, SlotType.BENCH ],
     { allowCancel: true }

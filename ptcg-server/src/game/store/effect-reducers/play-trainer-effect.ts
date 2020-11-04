@@ -1,7 +1,7 @@
 import { AttachPokemonToolEffect, TrainerEffect, PlaySupporterEffect,
   PlayItemEffect, PlayStadiumEffect } from "../effects/play-card-effects";
 import { GameError } from "../../game-error";
-import { GameMessage } from "../../game-message";
+import { GameMessage, GameLog } from "../../game-message";
 import { Effect } from "../effects/effect";
 import { State } from "../state/state";
 import { StoreLike } from "../store-like";
@@ -14,7 +14,10 @@ export function playTrainerReducer(store: StoreLike, state: State, effect: Effec
   if (effect instanceof PlaySupporterEffect) {
     const playTrainer = new TrainerEffect(effect.player, effect.trainerCard, effect.target);
     state = store.reduceEffect(state, playTrainer);
-    store.log(state, `${effect.player.name} plays ${effect.trainerCard.name}.`);
+    store.log(state, GameLog.LOG_PLAYER_PLAYS_SUPPORTER, {
+      name: effect.player.name,
+      card: effect.trainerCard.name
+    });
     return state;
   }
 
@@ -28,7 +31,10 @@ export function playTrainerReducer(store: StoreLike, state: State, effect: Effec
     if (opponent.stadium.cards.length > 0) {
       opponent.stadium.moveTo(opponent.discard);
     }
-    store.log(state, `${effect.player.name} put ${effect.trainerCard.name} in play.`);
+    store.log(state, GameLog.LOG_PLAYER_PLAYS_STADIUM, {
+      name: effect.player.name,
+      card: effect.trainerCard.name
+    });
     player.stadiumUsedTurn = 0;
     player.hand.moveCardTo(effect.trainerCard, player.stadium);
     return state;
@@ -44,7 +50,11 @@ export function playTrainerReducer(store: StoreLike, state: State, effect: Effec
       throw new GameError(GameMessage.POKEMON_TOOL_ALREADY_ATTACHED);
     }
 
-    store.log(state, `${effect.player.name} attaches ${effect.trainerCard.name}. to ${pokemonCard.name}`);
+    store.log(state, GameLog.LOG_PLAYER_PLAYS_TOOL, {
+      name: effect.player.name,
+      card: effect.trainerCard.name,
+      pokemon: pokemonCard.name
+    });
     effect.player.hand.moveCardTo(effect.trainerCard, effect.target);
     effect.target.tool = effect.trainerCard;
 
@@ -58,7 +68,10 @@ export function playTrainerReducer(store: StoreLike, state: State, effect: Effec
   if (effect instanceof PlayItemEffect) {
     const playTrainer = new TrainerEffect(effect.player, effect.trainerCard, effect.target);
     state = store.reduceEffect(state, playTrainer);
-    store.log(state, `${effect.player.name} plays ${effect.trainerCard.name}.`);
+    store.log(state, GameLog.LOG_PLAYER_PLAYS_ITEM, {
+      name: effect.player.name,
+      card: effect.trainerCard.name
+    });
     return state;
   }
 

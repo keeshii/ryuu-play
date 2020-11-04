@@ -39,7 +39,7 @@ function* playCard(next: Function, store: StoreLike, state: State, self: JunkArm
 
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    GameMessage.CHOOSE_ANY_TWO_CARDS,
+    GameMessage.CHOOSE_CARD_TO_DISCARD,
     handTemp,
     { },
     { min: 2, max: 2, allowCancel: true }
@@ -70,7 +70,7 @@ function* playCard(next: Function, store: StoreLike, state: State, self: JunkArm
 
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    GameMessage.CHOOSE_TRAINER_CARD,
+    GameMessage.CHOOSE_CARD_TO_HAND,
     player.discard,
     { },
     { min: 1, max: 1, allowCancel: false, blocked }

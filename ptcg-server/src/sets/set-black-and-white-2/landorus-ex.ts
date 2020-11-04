@@ -59,7 +59,7 @@ export class LandorusEx extends PokemonCard {
 
       return store.prompt(state, new ChoosePokemonPrompt(
         player.id,
-        GameMessage.CHOOSE_ONE_POKEMON,
+        GameMessage.CHOOSE_POKEMON_TO_DAMAGE,
         PlayerType.TOP_PLAYER,
         [ SlotType.BENCH ],
         { allowCancel: false }
@@ -78,7 +78,7 @@ export class LandorusEx extends PokemonCard {
 
       return store.prompt(state, new ConfirmPrompt(
         effect.player.id,
-        GameMessage.WANT_DISCARD_ENERGY
+        GameMessage.WANT_TO_DISCARD_ENERGY
       ), result => {
         if (result) {
           const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);

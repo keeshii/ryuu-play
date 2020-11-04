@@ -50,7 +50,7 @@ export class CardListSerializer implements Serializer<CardList> {
   private fromIndex(index: number, context: SerializerContext): Card {
     const card = context.cards[index];
     if (card === undefined) {
-      throw new GameError(GameCoreError.SERIALIZER_ERROR, `Card not found on index '${index}'.`);
+      throw new GameError(GameCoreError.ERROR_SERIALIZER, `Card not found on index '${index}'.`);
     }
     return card;
   }

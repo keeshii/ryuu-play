@@ -39,7 +39,7 @@ export class Replay {
 
   public getState(position: number): State {
     if (position < 0 || position >= this.diffs.length) {
-      throw new GameError(GameCoreError.REPLAY_INVALID_STATE);
+      throw new GameError(GameCoreError.ERROR_INVALID_STATE);
     }
 
     let stateData = this.diffs[0];
@@ -66,7 +66,7 @@ export class Replay {
 
   public getTurnPosition(turn: number): number {
     if (turn < 0 || turn >= this.turnMap.length) {
-      throw new GameError(GameCoreError.REPLAY_INVALID_STATE);
+      throw new GameError(GameCoreError.ERROR_INVALID_STATE);
     }
     return this.turnMap[turn];
   }
@@ -126,7 +126,7 @@ export class Replay {
         this.prevState = this.serializer.serialize(lastState);
       }
     } catch (error) {
-      throw new GameError(GameCoreError.REPLAY_INVALID_STATE);
+      throw new GameError(GameCoreError.ERROR_INVALID_STATE);
     }
   }
 

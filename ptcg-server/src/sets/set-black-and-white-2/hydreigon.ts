@@ -38,7 +38,7 @@ function* useDarkTrance(next: Function, store: StoreLike, state: State, effect: 
 
   return store.prompt(state, new MoveEnergyPrompt(
     effect.player.id,
-    GameMessage.MOVE_ENERGY,
+    GameMessage.MOVE_ENERGY_CARDS,
     PlayerType.BOTTOM_PLAYER,
     [ SlotType.ACTIVE, SlotType.BENCH ],
     { superType: SuperType.ENERGY },

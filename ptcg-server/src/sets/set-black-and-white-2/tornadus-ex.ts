@@ -31,7 +31,7 @@ function* usePowerBlast(next: Function, store: StoreLike, state: State,
   let cards: Card[] = [];
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    GameMessage.CHOOSE_ENERGY_CARD,
+    GameMessage.CHOOSE_CARD_TO_DISCARD,
     player.active,
     { superType: SuperType.ENERGY },
     { min: 1, max: 1, allowCancel: false }

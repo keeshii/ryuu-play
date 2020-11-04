@@ -14,7 +14,7 @@ import { StateUtils } from "../../game/store/state-utils";
 function pickUpBenchedPokemon(next: Function, store: StoreLike, state: State, player: Player): State {
   return store.prompt(state, new ChoosePokemonPrompt(
     player.id,
-    GameMessage.CHOOSE_ONE_POKEMON,
+    GameMessage.CHOOSE_POKEMON_TO_PICK_UP,
     PlayerType.BOTTOM_PLAYER,
     [ SlotType.BENCH ],
     { allowCancel: false }
