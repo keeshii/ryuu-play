@@ -155,7 +155,7 @@ export class Store implements StoreLike {
       });
 
       if (action.log !== undefined) {
-        this.log(state, action.log.message, undefined, action.log.client);
+        this.log(state, action.log.message, action.log.params, action.log.client);
       }
 
       if (results.every(result => result !== undefined)) {

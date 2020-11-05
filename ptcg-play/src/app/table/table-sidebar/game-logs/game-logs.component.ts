@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ElementRef } from '@angular/core';
-import { StateLog } from 'ptcg-server';
+import { StateLog, StateLogParam } from 'ptcg-server';
 
 import { GameService } from '../../../api/services/game.service';
 import { LocalGameState } from '../../../shared/session/session.interface';
@@ -10,6 +10,7 @@ interface GameLog {
   name: string;
   className: string;
   message: string;
+  params: StateLogParam;
 }
 
 @Component({
@@ -116,14 +117,16 @@ export class GameLogsComponent implements OnInit {
         id: log.id,
         name,
         className,
-        message: log.message
+        message: log.message,
+        params: log.params
       };
     } else if (log.client === 0) {
       return {
         id: log.id,
         name: 'System',
         className: 'ptcg-system',
-        message: log.message
+        message: log.message,
+        params: log.params
       };
     }
     return undefined;

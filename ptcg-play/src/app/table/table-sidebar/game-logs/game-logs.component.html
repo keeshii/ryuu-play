@@ -12,7 +12,7 @@
   <ul>
     <li *ngFor="let log of logs; trackBy: trackByFn">
       <span [class]="log.className">{{log.name}}</span>
-      {{log.message}}
+      {{ 'GAME_LOGS.' + log.message | translate: log.params }}
     </li>
   </ul>
 </div>
