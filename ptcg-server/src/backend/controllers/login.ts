@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { AuthToken, Validate, check, generateToken } from '../services';
 import { Controller, Get, Post } from './controller';
-import { Errors } from '../common/errors';
+import { ApiErrorEnum } from '../common/errors';
 import { LoginRequest, RegisterRequest, ServerConfig } from '../interfaces';
 import { Md5 } from '../../utils/md5';
 import { User } from '../../storage';
@@ -24,13 +24,13 @@ export class Login extends Controller {
 
     if (config.backend.registrationEnabled === false) {
       res.status(400);
-      res.send({error: Errors.REGISTER_DISABLED});
+      res.send({error: ApiErrorEnum.REGISTER_DISABLED});
       return;
     }
 
     if (this.rateLimit.isLimitExceeded(req.ip)) {
       res.status(400);
-      res.send({error: Errors.REQUESTS_LIMIT_REACHED});
+      res.send({error: ApiErrorEnum.REQUESTS_LIMIT_REACHED});
       return;
     }
 
@@ -39,19 +39,19 @@ export class Login extends Controller {
     ) {
       this.rateLimit.increment(req.ip);
       res.status(400);
-      res.send({error: Errors.REGISTER_INVALID_SERVER_PASSWORD});
+      res.send({error: ApiErrorEnum.REGISTER_INVALID_SERVER_PASSWORD});
       return;
     }
 
     if (await User.findOne({name: body.name})) {
       res.status(400);
-      res.send({error: Errors.REGISTER_NAME_EXISTS});
+      res.send({error: ApiErrorEnum.REGISTER_NAME_EXISTS});
       return;
     }
 
     if (await User.findOne({email: body.email})) {
       res.status(400);
-      res.send({error: Errors.REGISTER_EMAIL_EXISTS});
+      res.send({error: ApiErrorEnum.REGISTER_EMAIL_EXISTS});
       return;
     }
 
@@ -79,14 +79,14 @@ export class Login extends Controller {
 
     if (this.rateLimit.isLimitExceeded(req.ip)) {
       res.status(400);
-      res.send({error: Errors.REQUESTS_LIMIT_REACHED});
+      res.send({error: ApiErrorEnum.REQUESTS_LIMIT_REACHED});
       return;
     }
 
     if (user === undefined || user.password !== Md5.init(body.password)) {
       this.rateLimit.increment(req.ip);
       res.status(400);
-      res.send({error: Errors.LOGIN_INVALID});
+      res.send({error: ApiErrorEnum.LOGIN_INVALID});
       return;
     }
 

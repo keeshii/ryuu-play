@@ -3,8 +3,8 @@ import { Stage, CardType, SpecialCondition } from "../../game/store/card/card-ty
 import { StoreLike, State, CoinFlipPrompt } from "../../game";
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
-import { CardMessage } from "../card-message";
 import { AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
+import { GameMessage } from "../../game/game-message";
 
 export class Pikachu extends PokemonCard {
 
@@ -47,7 +47,7 @@ export class Pikachu extends PokemonCard {
       const player = effect.player;
 
       return store.prompt(state, [
-        new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP)
+        new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)
       ], result => {
         if (result === true) {
           const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.PARALYZED]);
@@ -60,7 +60,7 @@ export class Pikachu extends PokemonCard {
       const player = effect.player;
 
       return store.prompt(state, [
-        new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP)
+        new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)
       ], result => {
         if (result === true) {
           effect.damage += 10;

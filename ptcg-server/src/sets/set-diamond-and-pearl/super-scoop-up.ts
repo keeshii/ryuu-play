@@ -1,4 +1,4 @@
-import { CardMessage } from "../card-message";
+import { GameMessage } from "../../game/game-message";
 import { TrainerCard } from "../../game/store/card/trainer-card";
 import { TrainerType } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
@@ -12,7 +12,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   const player = effect.player;
 
   let coinResult: boolean = false;
-  yield store.prompt(state, new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP), result => {
+  yield store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
     coinResult = result;
     next();
   });
@@ -23,7 +23,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 
   yield store.prompt(state, new ChoosePokemonPrompt(
     player.id,
-    CardMessage.CHOOSE_ONE_POKEMON,
+    GameMessage.CHOOSE_POKEMON_TO_PICK_UP,
     PlayerType.BOTTOM_PLAYER,
     [ SlotType.ACTIVE, SlotType.BENCH ],
     { allowCancel: false }

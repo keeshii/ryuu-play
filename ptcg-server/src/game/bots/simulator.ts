@@ -3,7 +3,8 @@ import { Action } from "../store/actions/action";
 import { BotArbiter, BotArbiterOptions } from "./bot-arbiter";
 import { State } from "../store/state/state";
 import { StoreHandler } from "../store/store-handler";
-import { GameError, GameMessage } from "../game-error";
+import { GameError } from "../game-error";
+import { GameCoreError } from "../game-message";
 import { ResolvePromptAction } from "../store/actions/resolve-prompt-action";
 import { deepClone } from "../../utils";
 
@@ -14,7 +15,7 @@ export class Simulator implements StoreHandler {
 
   constructor(state: State, botArbiterOptions: Partial<BotArbiterOptions> = {}) {
     if (state.prompts.some(p => p.result === undefined)) {
-      throw new GameError(GameMessage.SIMULATOR_STATE_NOT_STABLE);
+      throw new GameError(GameCoreError.ERROR_SIMULATOR_NOT_STABLE);
     }
     this.botArbiter = new BotArbiter(botArbiterOptions);
     this.store = new Store(this);

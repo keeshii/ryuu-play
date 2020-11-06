@@ -1,12 +1,12 @@
 <ptcg-content [loading]="loading">
   <mat-toolbar>
     <mat-toolbar-row>
-      <h1>Decks</h1>
+      <h1 translate>DECK_TITLE</h1>
 
       <span class="ptcg-u-spacer"></span>
 
       <button mat-raised-button color="primary" (click)="createDeck()">
-        Create deck
+        {{ 'DECK_CREATE' | translate }}
       </button>
     </mat-toolbar-row>
   </mat-toolbar>
@@ -15,13 +15,13 @@
     <table mat-table [dataSource]="decks" class="mat-elevation-z2">
       <!-- Deck name -->
       <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <th mat-header-cell *matHeaderCellDef translate>DECK_NAME</th>
         <td mat-cell *matCellDef="let deck">{{deck.name}}</td>
       </ng-container>
 
       <!-- Card types -->
       <ng-container matColumnDef="cardTypes">
-        <th mat-header-cell *matHeaderCellDef>Type</th>
+        <th mat-header-cell *matHeaderCellDef translate>DECK_TYPE</th>
         <td mat-cell *matCellDef="let deck">
           <ptcg-energy *ngFor="let type of deck.cardTypes" [type]="type"></ptcg-energy>
         </td>
@@ -29,7 +29,7 @@
 
       <!-- Is valid -->
       <ng-container matColumnDef="isValid">
-        <th mat-header-cell *matHeaderCellDef>Valid</th>
+        <th mat-header-cell *matHeaderCellDef translate>DECK_VALID</th>
         <td mat-cell *matCellDef="let deck">
           <mat-icon *ngIf="deck.isValid" color="primary">check</mat-icon>
           <mat-icon *ngIf="!deck.isValid">remove</mat-icon>
@@ -38,14 +38,24 @@
 
       <!-- Actions -->
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <th mat-header-cell *matHeaderCellDef translate>LABEL_ACTIONS</th>
         <td mat-cell *matCellDef="let deck">
-          <button mat-button [matMenuTriggerFor]="menu">Actions</button>
+          <button mat-button [matMenuTriggerFor]="menu">
+            {{ 'BUTTON_ACTIONS' | translate }}
+          </button>
           <mat-menu #menu="matMenu">
-            <button mat-menu-item [routerLink]="['/deck', deck.id]">Edit</button>
-            <button mat-menu-item (click)="deleteDeck(deck.id)">Delete</button>
-            <button mat-menu-item (click)="renameDeck(deck.id, deck.name)">Rename</button>
-            <button mat-menu-item (click)="duplicateDeck(deck.id)">Duplicate</button>
+            <button mat-menu-item [routerLink]="['/deck', deck.id]">
+              {{ 'BUTTON_EDIT' | translate }}
+            </button>
+            <button mat-menu-item (click)="deleteDeck(deck.id)">
+              {{ 'BUTTON_DELETE' | translate }}
+            </button>
+            <button mat-menu-item (click)="renameDeck(deck.id, deck.name)">
+              {{ 'BUTTON_RENAME' | translate }}
+            </button>
+            <button mat-menu-item (click)="duplicateDeck(deck.id)">
+              {{ 'DECK_DUPLICATE' | translate }}
+            </button>
           </mat-menu>
         </td>
       </ng-container>

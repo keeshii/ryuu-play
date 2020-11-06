@@ -1,6 +1,7 @@
 import { Action } from "../actions/action";
 import { ChangeAvatarAction } from "../actions/change-avatar-action";
-import { GameError, GameMessage } from "../../game-error";
+import { GameError } from "../../game-error";
+import { GameMessage } from "../../game-message";
 import { ReorderBenchAction, ReorderHandAction } from "../actions/reorder-actions";
 import { State } from "../state/state";
 import { StoreLike } from "../store-like";
@@ -41,6 +42,10 @@ export function playerStateReducer(store: StoreLike, state: State, action: Actio
     }
 
     player.avatarName = action.avatarName;
+
+    if (action.log) {
+      store.log(state, action.log.message, action.log.params, player.id);
+    }
 
     return state;
   }

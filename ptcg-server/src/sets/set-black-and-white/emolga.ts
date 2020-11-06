@@ -1,10 +1,9 @@
 import { PokemonCard } from "../../game/store/card/pokemon-card";
 import { Stage, CardType, SuperType } from "../../game/store/card/card-types";
 import { StoreLike, State, ChooseCardsPrompt, PokemonCardList, Card,
-  ShuffleDeckPrompt } from "../../game";
+  ShuffleDeckPrompt, GameMessage } from "../../game";
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
-import { CardMessage } from "../card-message";
 
 function* useCallForFamily(next: Function, store: StoreLike, state: State,
   effect: AttackEffect): IterableIterator<State> {
@@ -15,7 +14,7 @@ function* useCallForFamily(next: Function, store: StoreLike, state: State,
   let cards: Card[] = [];
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    CardMessage.CHOOSE_BASIC_POKEMON,
+    GameMessage.CHOOSE_CARD_TO_PUT_ONTO_BENCH,
     player.deck,
     { superType: SuperType.POKEMON, stage: Stage.BASIC },
     { min: 0, max, allowCancel: true }

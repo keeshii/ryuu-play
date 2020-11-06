@@ -4,9 +4,9 @@ import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { AttackEffect } from "../../game/store/effects/game-effects";
-import { CardMessage } from "../card-message";
 import { CoinFlipPrompt } from "../../game/store/prompts/coin-flip-prompt";
 import { AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
+import { GameMessage } from "../../game/game-message";
 
 
 export class Skrelp extends PokemonCard {
@@ -41,7 +41,7 @@ export class Skrelp extends PokemonCard {
       const player = effect.player;
 
       return store.prompt(state, [
-        new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP)
+        new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)
       ], result => {
         if (result === true) {
           const specialCondition = new AddSpecialConditionsEffect(effect, [SpecialCondition.POISONED]);

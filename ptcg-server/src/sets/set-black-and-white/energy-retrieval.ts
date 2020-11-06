@@ -1,5 +1,5 @@
-import { CardMessage } from "../card-message";
-import { GameError, GameMessage } from "../../game/game-error";
+import { GameError } from "../../game/game-error";
+import { GameMessage } from "../../game/game-message";
 import { TrainerCard } from "../../game/store/card/trainer-card";
 import { TrainerType, SuperType, EnergyType } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
@@ -7,7 +7,7 @@ import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { TrainerEffect } from "../../game/store/effects/play-card-effects";
 import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
-import {EnergyCard} from "../../game/store/card/energy-card";
+import { EnergyCard } from "../../game/store/card/energy-card";
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -29,7 +29,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   const min = Math.min(basicEnergyCards, 2);
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    CardMessage.CHOOSE_ENERGY_CARD,
+    GameMessage.CHOOSE_CARD_TO_HAND,
     player.discard,
     { superType: SuperType.ENERGY, energyType: EnergyType.BASIC },
     { min, max: min, allowCancel: true }

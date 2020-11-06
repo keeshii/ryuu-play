@@ -6,27 +6,29 @@
   <div class="ptcg-profile-summary">
     <table>
       <tr>
-        <th>Name</th>
+        <th translate>LABEL_NAME</th>
         <td>{{ user.name }}</td>
       </tr>
       <tr>
-        <th>Ranking</th>
+        <th translate>LABEL_RANKING</th>
         <td><ptcg-rank [ranking]="user.ranking" [rank]="user.rank"></ptcg-rank></td>
       </tr>
       <tr>
-        <th>Registered</th>
+        <th translate>USERS_REGISTERED</th>
         <td>
           {{ user.registered | date }}
         </td>
       </tr>
       <tr>
-        <th>Last seen</th>
+        <th translate>USERS_LAST_SEEN</th>
         <td>
           <span *ngIf="!user.connected; else connected">
             {{ user.lastSeen | date }}
           </span>
       <ng-template #connected>
-        <ptcg-badge>Online</ptcg-badge>
+        <ptcg-badge>
+          {{ 'USERS_ONLINE' | translate }}
+        </ptcg-badge>
       </ng-template>
       </td>
       </tr>

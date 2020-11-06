@@ -8,6 +8,7 @@ export * from './core/replay';
 export * from './serializer';
 
 export * from './game-error';
+export * from './game-message';
 
 export * from './store/actions/action';
 export * from './store/actions/add-player-action';

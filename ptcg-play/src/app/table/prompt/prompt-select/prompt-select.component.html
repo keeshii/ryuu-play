@@ -1,7 +1,7 @@
-<h2 class="ptcg-prompt-title">Select</h2>
+<h2 class="ptcg-prompt-title" translate>PROMPT_SELECT_TITLE</h2>
 
 <div class="ptcg-prompt-content">
-  <p>{{ message }}</p>
+  <p [translate]="'GAME_MESSAGES.' + message"></p>
 
   <form #form="ngForm" autocomplete="off">
 
@@ -20,10 +20,10 @@
 <div class="ptcg-prompt-actions">
   <button mat-raised-button *ngIf="allowCancel" [disabled]="gameState.deleted"
     (click)="cancel()">
-    Cancel
+    {{ 'BUTTON_CANCEL' | translate }}
   </button>
   <button mat-raised-button color="primary" [disabled]="gameState.deleted"
     (click)="confirm()">
-    OK
+    {{ 'BUTTON_OK' | translate }}
   </button>
 </div>

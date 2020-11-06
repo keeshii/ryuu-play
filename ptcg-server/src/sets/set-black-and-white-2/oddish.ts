@@ -7,9 +7,9 @@ import { Effect } from "../../game/store/effects/effect";
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { StateUtils } from "../../game/store/state-utils";
 import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
-import { CardMessage } from "../card-message";
 import { ShowCardsPrompt } from "../../game/store/prompts/show-cards-prompt";
 import { ShuffleDeckPrompt } from "../../game/store/prompts/shuffle-prompt";
+import { GameMessage } from "../../game/game-message";
 
 
 function* useFindAFriend(next: Function, store: StoreLike, state: State,
@@ -20,7 +20,7 @@ function* useFindAFriend(next: Function, store: StoreLike, state: State,
   let cards: Card[] = [];
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    CardMessage.CHOOSE_ONE_POKEMON,
+    GameMessage.CHOOSE_CARD_TO_HAND,
     player.deck,
     { superType: SuperType.POKEMON, cardType: CardType.GRASS },
     { min: 1, max: 1, allowCancel: true }
@@ -34,7 +34,7 @@ function* useFindAFriend(next: Function, store: StoreLike, state: State,
   if (cards.length > 0) {
     yield store.prompt(state, new ShowCardsPrompt(
       opponent.id,
-      CardMessage.CARDS_SHOWED_BY_THE_OPPONENT,
+      GameMessage.CARDS_SHOWED_BY_THE_OPPONENT,
       cards
     ), () => next());
   }

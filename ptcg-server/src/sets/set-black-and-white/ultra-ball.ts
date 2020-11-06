@@ -4,14 +4,14 @@ import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { TrainerEffect } from "../../game/store/effects/play-card-effects";
-import { GameError, GameMessage } from "../../game/game-error";
+import { GameError } from "../../game/game-error";
+import { GameMessage } from "../../game/game-message";
 import { Card} from "../../game/store/card/card";
 import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
-import { CardMessage } from "../card-message";
 import { CardList } from "../../game/store/state/card-list";
-import {ShowCardsPrompt} from "../../game/store/prompts/show-cards-prompt";
-import {StateUtils} from "../../game/store/state-utils";
-import {ShuffleDeckPrompt} from "../../game/store/prompts/shuffle-prompt";
+import { ShowCardsPrompt } from "../../game/store/prompts/show-cards-prompt";
+import { StateUtils } from "../../game/store/state-utils";
+import { ShuffleDeckPrompt } from "../../game/store/prompts/shuffle-prompt";
 
 
 function* playCard(next: Function, store: StoreLike, state: State,
@@ -38,7 +38,7 @@ function* playCard(next: Function, store: StoreLike, state: State,
 
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    CardMessage.CHOOSE_ANY_TWO_CARDS,
+    GameMessage.CHOOSE_CARD_TO_DISCARD,
     handTemp,
     { },
     { min: 2, max: 2, allowCancel: true }
@@ -57,7 +57,7 @@ function* playCard(next: Function, store: StoreLike, state: State,
 
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    CardMessage.CHOOSE_ONE_POKEMON,
+    GameMessage.CHOOSE_CARD_TO_HAND,
     player.deck,
     { superType: SuperType.POKEMON },
     { min: 1, max: 1, allowCancel: true }
@@ -69,7 +69,7 @@ function* playCard(next: Function, store: StoreLike, state: State,
   if (cards.length > 0) {
     yield store.prompt(state, new ShowCardsPrompt(
       opponent.id,
-      CardMessage.CARDS_SHOWED_BY_THE_OPPONENT,
+      GameMessage.CARDS_SHOWED_BY_THE_OPPONENT,
       cards
     ), () => next());
   }

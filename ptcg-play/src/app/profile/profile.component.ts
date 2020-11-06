@@ -1,8 +1,9 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserInfo } from 'ptcg-server';
-import { Observable, EMPTY, of } from 'rxjs';
-import { switchMap, map } from 'rxjs/operators';
+import { Observable, EMPTY } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { switchMap } from 'rxjs/operators';
 
 import { AlertService } from '../shared/alert/alert.service';
 import { ChangePasswordPopupService } from './change-password-popup/change-password-popup.service';
@@ -31,7 +32,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private profileService: ProfileService,
     private route: ActivatedRoute,
     private router: Router,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private translate: TranslateService
   ) {
     this.user$ = EMPTY;
     this.owner$ = EMPTY;
@@ -63,7 +65,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
           this.loading = false;
         },
         error: async error => {
-          await this.alertService.error('Error while loading the profile');
+          await this.alertService.error(this.translate.instant('PROFILE_LOADING_ERROR'));
           this.router.navigate(['/']);
         }
       });

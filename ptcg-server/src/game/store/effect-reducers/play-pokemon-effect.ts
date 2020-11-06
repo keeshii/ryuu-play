@@ -1,5 +1,6 @@
 import { PlayPokemonEffect } from "../effects/play-card-effects";
-import { GameError, GameMessage } from "../../game-error";
+import { GameError } from "../../game-error";
+import { GameMessage, GameLog } from "../../game-message";
 import { Effect } from "../effects/effect";
 import { Stage } from "../card/card-types";
 import { State } from "../state/state";
@@ -15,7 +16,10 @@ export function playPokemonReducer(store: StoreLike, state: State, effect: Effec
     const isBasic = stage === Stage.BASIC;
 
     if (isBasic && effect.target.cards.length === 0) {
-      store.log(state, `${effect.player.name} puts ${effect.pokemonCard.name} on the Bench.`);
+      store.log(state, GameLog.LOG_PLAYER_PLAYS_BASIC_POKEMON, {
+        name: effect.player.name,
+        card: effect.pokemonCard.name
+      });
       effect.player.hand.moveCardTo(effect.pokemonCard, effect.target);
       effect.target.pokemonPlayedTurn = state.turn;
       return state;
@@ -36,7 +40,11 @@ export function playPokemonReducer(store: StoreLike, state: State, effect: Effec
         throw new GameError(GameMessage.POKEMON_CANT_EVOLVE_THIS_TURN);
       }
 
-      store.log(state, `${effect.player.name} evolves ${pokemonCard.name} into ${effect.pokemonCard.name}.`);
+      store.log(state, GameLog.LOG_PLAYER_EVOLVES_POKEMON, {
+        name: effect.player.name,
+        pokemon: pokemonCard.name,
+        card: effect.pokemonCard.name
+      });
       effect.player.hand.moveCardTo(effect.pokemonCard, effect.target);
       effect.target.pokemonPlayedTurn = state.turn;
       effect.target.clearEffects();

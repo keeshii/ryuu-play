@@ -1,7 +1,8 @@
 import { SerializerContext, Serialized, Serializer } from "./serializer.interface";
 import { CardList } from "../store/state/card-list";
 import { Card } from "../store/card/card";
-import { GameError, GameMessage } from "../game-error";
+import { GameError } from "../game-error";
+import { GameCoreError } from "../game-message";
 import { PokemonCardList } from "../store/state/pokemon-card-list";
 
 export class CardListSerializer implements Serializer<CardList> {
@@ -49,7 +50,7 @@ export class CardListSerializer implements Serializer<CardList> {
   private fromIndex(index: number, context: SerializerContext): Card {
     const card = context.cards[index];
     if (card === undefined) {
-      throw new GameError(GameMessage.SERIALIZER_ERROR, `Card not found on index '${index}'.`);
+      throw new GameError(GameCoreError.ERROR_SERIALIZER, `Card not found on index '${index}'.`);
     }
     return card;
   }

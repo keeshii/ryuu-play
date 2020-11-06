@@ -4,7 +4,7 @@ import { StoreLike, State, CoinFlipPrompt, ChooseEnergyPrompt, Card, StateUtils 
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { PutDamageEffect } from "../../game/store/effects/attack-effects";
 import { Effect } from "../../game/store/effects/effect";
-import { CardMessage } from "../card-message";
+import { GameMessage } from "../../game/game-message";
 import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
 
 
@@ -49,8 +49,8 @@ export class Garchomp extends PokemonCard {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
       return store.prompt(state, [
-        new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP),
-        new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP)
+        new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP),
+        new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)
       ], results => {
         if (results.some(r => r === false)) {
           effect.damage = 0;
@@ -67,7 +67,7 @@ export class Garchomp extends PokemonCard {
 
       state = store.prompt(state, new ChooseEnergyPrompt(
         player.id,
-        CardMessage.CHOOSE_ENERGIES_TO_DISCARD,
+        GameMessage.CHOOSE_ENERGIES_TO_DISCARD,
         checkProvidedEnergy.energyMap,
         [ CardType.COLORLESS, CardType.COLORLESS ],
         { allowCancel: false }

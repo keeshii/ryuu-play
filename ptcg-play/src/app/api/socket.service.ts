@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, throwError, of } from 'rxjs';
+import { ApiErrorEnum } from 'ptcg-server';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { timeout, catchError } from 'rxjs/operators';
 import * as io from 'socket.io-client';
 
-import { ApiError, ApiErrorEnum } from './api.error';
+import { ApiError } from './api.error';
 import { environment } from '../../environments/environment';
 
 interface SocketResponse<T> {
@@ -64,7 +65,7 @@ export class SocketService {
 
       this.socket.emit(message, data, (response: SocketResponse<R>) => {
         if (response && response.message !== 'ok') {
-          observer.error(new ApiError(ApiErrorEnum.ERROR_SOCKET, String(response.data)));
+          observer.error(new ApiError(ApiErrorEnum.SOCKET_ERROR, String(response.data)));
           observer.complete();
           return;
         }

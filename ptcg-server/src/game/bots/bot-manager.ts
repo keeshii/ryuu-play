@@ -1,6 +1,7 @@
 import { BotClient } from './bot-client';
 import { Core } from '../core/core';
-import { GameError, GameMessage } from '../game-error';
+import { GameError } from '../game-error';
+import { GameMessage } from "../game-message";
 import { User } from '../../storage';
 import { config } from '../../config';
 import { Md5 } from '../../utils/md5';
@@ -39,7 +40,7 @@ export class BotManager {
   public getBot(botName: string): BotClient {
     const bot = this.bots.find(bot => bot.user.name === botName);
     if (bot === undefined) {
-      throw new GameError(GameMessage.BOT_NOT_FOUND);
+      throw new GameError(GameMessage.ERROR_BOT_NOT_FOUND);
     }
     return bot;
   }

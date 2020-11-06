@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GameInfo, ClientInfo } from 'ptcg-server';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable, EMPTY, from } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 import { finalize, switchMap, map } from 'rxjs/operators';
 
 import { AlertService } from '../shared/alert/alert.service';
@@ -35,7 +36,8 @@ export class GamesComponent implements OnDestroy, OnInit {
     private deckService: DeckService,
     private dialog: MatDialog,
     private mainSevice: MainService,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private translate: TranslateService
   ) {
     this.clients$ = this.sessionService.get(
       session => session.users,
@@ -85,8 +87,8 @@ export class GamesComponent implements OnDestroy, OnInit {
 
           if (options.length === 0) {
             this.alertService.alert(
-              'You must prepare a valid deck before starting a game',
-              'No valid decks'
+              this.translate.instant('GAMES_NEED_DECK'),
+              this.translate.instant('GAMES_NEED_DECK_TITLE')
             );
             return EMPTY;
           }

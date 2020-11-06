@@ -1,7 +1,8 @@
 import { CardList } from "../state/card-list";
 import { Prompt } from "./prompt";
 import { State } from "../state/state";
-import { GameError, GameMessage } from "../../game-error";
+import { GameError } from "../../game-error";
+import { GameMessage } from "../../game-message";
 
 export const ChoosePrizePromptType = 'Choose prize';
 
@@ -18,7 +19,7 @@ export class ChoosePrizePrompt extends Prompt<CardList[]> {
 
   constructor(
     playerId: number,
-    public message: string,
+    public message: GameMessage,
     options?: Partial<ChoosePrizeOptions>
   ) {
     super(playerId);

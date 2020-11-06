@@ -1,4 +1,3 @@
-import { CardMessage } from "../card-message";
 import { TrainerCard } from "../../game/store/card/trainer-card";
 import { TrainerType } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
@@ -19,7 +18,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 
   return store.prompt(state, new ChoosePokemonPrompt(
     player.id,
-    CardMessage.CHOOSE_ONE_POKEMON,
+    GameMessage.CHOOSE_POKEMON_TO_SWITCH,
     PlayerType.TOP_PLAYER,
     [ SlotType.BENCH ],
     { allowCancel: false }

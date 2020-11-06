@@ -4,6 +4,7 @@ import { SharedModule } from '../shared/shared.module';
 import { SidenavComponent } from './sidenav/sidenav.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { SidenavItemComponent } from './sidenav-item/sidenav-item.component';
+import { LanguageSelectComponent } from './language-select/language-select.component';
 
 
 
@@ -11,7 +12,8 @@ import { SidenavItemComponent } from './sidenav-item/sidenav-item.component';
   declarations: [
     SidenavComponent,
     ToolbarComponent,
-    SidenavItemComponent
+    SidenavItemComponent,
+    LanguageSelectComponent
   ],
   imports: [
     CommonModule,

@@ -4,7 +4,6 @@ import { PowerType, StoreLike, State, StateUtils,
   GameError, GameMessage, EnergyCard, PlayerType, SlotType } from "../../game";
 import { Effect } from "../../game/store/effects/effect";
 import { PowerEffect } from "../../game/store/effects/game-effects";
-import { CardMessage } from "../card-message";
 import { PlayPokemonEffect } from "../../game/store/effects/play-card-effects";
 import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
 import {AttachEnergyPrompt} from "../../game/store/prompts/attach-energy-prompt";
@@ -75,7 +74,7 @@ export class Eelektrik extends PokemonCard {
 
       state = store.prompt(state, new AttachEnergyPrompt(
         player.id,
-        CardMessage.ATTACH_LIGHTNING_ENERGY,
+        GameMessage.ATTACH_ENERGY_TO_BENCH,
         player.discard,
         PlayerType.BOTTOM_PLAYER,
         [ SlotType.BENCH ],

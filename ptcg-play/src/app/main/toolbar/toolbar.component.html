@@ -1,9 +1,14 @@
 <mat-toolbar color="primary" [ngClass]="{'is-logged-in': loggedUser}">
-  <button mat-button (click)="onLogoClick()">Ryuu Play</button>
+  <button mat-button (click)="onLogoClick()">{{ 'MAIN_TITLE' | translate }}</button>
   <span class="ryuu-spacer"></span>
-  
+
+  <!-- Language select -->
+  <ptcg-language-select *ngIf="!loggedUser"></ptcg-language-select>
+
   <div class="ptcg-toolbar-user-info">
-    <button *ngIf="!loggedUser" mat-button (click)="login()">Login</button>
+    <button *ngIf="!loggedUser" mat-button (click)="login()">
+      {{ 'BUTTON_LOGIN' | translate }}
+    </button>
     <ptcg-user-bar *ngIf="loggedUser"
       class="ptcg-logged-user"
       [user]="loggedUser"
@@ -11,9 +16,11 @@
     </ptcg-user-bar>
     <mat-menu #menu="matMenu">
       <button mat-menu-item [routerLink]="['/profile', loggedUser?.userId]">
-        Show profile
+        {{ 'BUTTON_SHOW_PROFILE' | translate }}
       </button>
-      <button mat-menu-item (click)="logout()">Logout</button>
+      <button mat-menu-item (click)="logout()">
+        {{ 'BUTTON_LOGOUT' | translate }}
+      </button>
     </mat-menu>
   </div>
 

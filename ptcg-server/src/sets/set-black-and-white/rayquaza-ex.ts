@@ -3,7 +3,7 @@ import { Stage, CardType, CardTag } from "../../game/store/card/card-types";
 import { StoreLike, State, CardList, EnergyCard, Card } from "../../game";
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
-import { CardMessage } from "../card-message";
+import { GameMessage } from "../../game/game-message";
 import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
 import { SelectPrompt } from "../../game/store/prompts/select-prompt";
 
@@ -65,8 +65,8 @@ export class RayquazaEx extends PokemonCard {
 
       return store.prompt(state, new SelectPrompt(
         player.id,
-        CardMessage.CHOOSE_ENERGIES_TO_DISCARD,
-        [ CardMessage.ALL_FIRE_ENERGIES, CardMessage.ALL_LIGHTNING_ENERGIES ],
+        GameMessage.CHOOSE_ENERGIES_TO_DISCARD,
+        [ GameMessage.ALL_FIRE_ENERGIES, GameMessage.ALL_LIGHTNING_ENERGIES ],
         { allowCancel: false }
       ), choice => {
         const cardType = choice === 0 ? CardType.FIRE : CardType.LIGHTNING;

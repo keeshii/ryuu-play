@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Create game</h2>
+<h2 mat-dialog-title translate>GAMES_CREATE_GAME_TITLE</h2>
 
 <mat-dialog-content>
 
@@ -6,7 +6,7 @@
 
     <!-- Deck -->
     <mat-form-field>
-      <mat-label>Your deck</mat-label>
+      <mat-label translate>GAMES_YOUR_DECK</mat-label>
       <mat-select [(value)]="deckId">
         <mat-option *ngFor="let option of decks" [value]="option.value">
           {{option.viewValue}}
@@ -16,35 +16,35 @@
 
     <!-- Time limit -->
     <mat-form-field>
-      <mat-label>Time limit</mat-label>
+      <mat-label translate>GAMES_TIME_LIMIT</mat-label>
       <mat-select [(value)]="settings.timeLimit">
         <mat-option *ngFor="let option of timeLimits" [value]="option.value">
-          {{option.viewValue}}
+          {{option.viewValue | translate }}
         </mat-option>
       </mat-select>
     </mat-form-field>
 
-    <h4>Ranking</h4>
+    <h4 translate>LABEL_RANKING</h4>
 
     <section class="ptcg-game-rule-checkbox">
       <mat-checkbox color="primary" name="rule1"
         [(ngModel)]="settings.recordingEnabled">
-        Record the game
+        {{ 'GAMES_RECORD_GAME' | translate }}
       </mat-checkbox>
     </section>
 
-    <h4>Game rules</h4>
+    <h4 translate>GAMES_GAME_RULES</h4>
 
     <section class="ptcg-game-rule-checkbox">
       <mat-checkbox color="primary" name="rule1"
         [(ngModel)]="settings.rules.firstTurnDrawCard">
-        First player draws a card
+        {{ 'GAMES_DRAW_CARD_FIRST_TURN' | translate }}
       </mat-checkbox>
     </section>
     <section class="ptcg-game-rule-checkbox">
       <mat-checkbox color="primary" name="rule2"
         [(ngModel)]="settings.rules.firstTurnUseSupporter">
-        Allow to play supporters in the first turn
+        {{ 'GAMES_PLAY_SUPPORTER_FIRST_TURN' | translate }}
       </mat-checkbox>
     </section>
 
@@ -53,8 +53,10 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-raised-button (click)="cancel()">Cancel</button>
+  <button mat-raised-button (click)="cancel()">
+    {{ 'BUTTON_CANCEL' | translate }}
+  </button>
   <button mat-raised-button color="primary" (click)="confirm()" [disabled]="form.invalid">
-    OK
+    {{ 'BUTTON_OK' | translate }}
   </button>
 </mat-dialog-actions>

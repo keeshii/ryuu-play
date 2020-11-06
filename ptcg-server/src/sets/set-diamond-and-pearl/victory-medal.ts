@@ -1,8 +1,8 @@
 import { Card } from "../../game/store/card/card";
-import { CardMessage } from "../card-message";
 import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
 import { CoinFlipPrompt } from "../../game/store/prompts/coin-flip-prompt";
-import { GameError, GameMessage } from "../../game/game-error";
+import { GameError } from "../../game/game-error";
+import { GameMessage } from "../../game/game-message";
 import { TrainerCard } from "../../game/store/card/trainer-card";
 import { TrainerType } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
@@ -20,8 +20,8 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 
   let coinResults: boolean[] = [];
   yield store.prompt(state, [
-    new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP),
-    new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP)
+    new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP),
+    new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)
   ], results => {
     coinResults = results;
     next();
@@ -31,7 +31,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     let cards: Card[] = [];
     yield store.prompt(state, new ChooseCardsPrompt(
       player.id,
-      CardMessage.CHOOSE_ANY_CARD,
+      GameMessage.CHOOSE_CARD_TO_HAND,
       player.deck,
       { },
       { min: 1, max: 1, allowCancel: false }

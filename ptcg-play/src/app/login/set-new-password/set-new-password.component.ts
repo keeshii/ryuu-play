@@ -1,5 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ApiErrorEnum } from 'ptcg-server';
 import { Router, ActivatedRoute } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs/operators';
 
 import { AlertService } from '../../shared/alert/alert.service';
@@ -15,6 +17,7 @@ import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed'
 export class SetNewPasswordComponent implements OnInit, OnDestroy {
 
   public loading = false;
+  public confirmPassword: string;
   public newPassword: string;
   public token: string;
 
@@ -22,7 +25,8 @@ export class SetNewPasswordComponent implements OnInit, OnDestroy {
     private alertService: AlertService,
     private resetPasswordService: ResetPasswordService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -43,11 +47,13 @@ export class SetNewPasswordComponent implements OnInit, OnDestroy {
       takeUntilDestroyed(this)
     ).subscribe({
       next: async () => {
-        await this.alertService.alert('RESET_PASSWORD_SUCCESS');
+        await this.alertService.alert(this.translate.instant('SET_PASSWORD_SUCCESS'));
         this.router.navigate(['/games']);
       },
       error: (error: ApiError) => {
-        this.alertService.toast(error.code || error.message);
+        if (error.code === ApiErrorEnum.LOGIN_INVALID) {
+          this.alertService.toast(this.translate.instant('SET_PASSWORD_INVALID_TOKEN'));
+        }
       }
     });
   }

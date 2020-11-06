@@ -1,11 +1,11 @@
 import { PokemonCard } from "../../game/store/card/pokemon-card";
 import { Stage, CardType, SpecialCondition } from "../../game/store/card/card-types";
 import { PowerType, StoreLike, State, StateUtils, ChoosePokemonPrompt, PlayerType,
-  SlotType, PokemonCardList, GameError, GameMessage, CoinFlipPrompt } from "../../game";
+  SlotType, PokemonCardList, GameError, CoinFlipPrompt } from "../../game";
 import { Effect } from "../../game/store/effects/effect";
 import { PowerEffect, AttackEffect } from "../../game/store/effects/game-effects";
 import { PutDamageEffect } from "../../game/store/effects/attack-effects";
-import { CardMessage } from "../card-message";
+import { GameMessage } from "../../game/game-message";
 import { PlayPokemonEffect } from "../../game/store/effects/play-card-effects";
 import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
 
@@ -77,7 +77,7 @@ export class Hypno extends PokemonCard {
 
       state = store.prompt(state, new CoinFlipPrompt(
         player.id,
-        CardMessage.COIN_FLIP
+        GameMessage.COIN_FLIP
       ), result => {
         if (result) {
           opponent.active.addSpecialCondition(SpecialCondition.ASLEEP);
@@ -98,7 +98,7 @@ export class Hypno extends PokemonCard {
 
       state = store.prompt(state, new ChoosePokemonPrompt(
         player.id,
-        CardMessage.CHOOSE_ONE_POKEMON,
+        GameMessage.CHOOSE_POKEMON_TO_DAMAGE,
         PlayerType.TOP_PLAYER,
         [ SlotType.BENCH ],
         { allowCancel: false }

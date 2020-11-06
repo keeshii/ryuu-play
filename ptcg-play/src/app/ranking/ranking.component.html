@@ -1,14 +1,14 @@
 <ptcg-content [loading]="loading">
   <mat-toolbar>
     <mat-toolbar-row>
-      <h1>Ranking</h1>
+      <h1 translate>RANKING_TITLE</h1>
 
       <span class="ptcg-u-spacer"></span>
 
       <ptcg-search-box (search)="onSearch($event)"></ptcg-search-box>
 
       <button mat-raised-button color="primary" (click)="refresh()">
-        Refresh
+        {{ 'BUTTON_REFRESH' | translate }}
       </button>
     </mat-toolbar-row>
   </mat-toolbar>
@@ -17,13 +17,13 @@
     <table mat-table [dataSource]="ranking" class="mat-elevation-z2">
       <!-- Position -->
       <ng-container matColumnDef="position">
-        <th mat-header-cell *matHeaderCellDef>Position</th>
+        <th mat-header-cell *matHeaderCellDef translate>RANKING_POSITION</th>
         <td mat-cell *matCellDef="let rank">{{rank.position}}</td>
       </ng-container>
 
       <!-- Ranking -->
       <ng-container matColumnDef="ranking">
-        <th mat-header-cell *matHeaderCellDef>Ranking</th>
+        <th mat-header-cell *matHeaderCellDef translate>LABEL_RANKING</th>
         <td mat-cell *matCellDef="let rank">
           {{ rank.user.ranking }}
         </td>
@@ -31,7 +31,7 @@
 
       <!-- User -->
       <ng-container matColumnDef="user">
-        <th mat-header-cell *matHeaderCellDef>Player</th>
+        <th mat-header-cell *matHeaderCellDef translate>LABEL_PLAYER</th>
         <td mat-cell *matCellDef="let rank">
           <ptcg-user-bar openUserPopup="true"
             [user]="rank.user"
@@ -42,17 +42,19 @@
 
       <!-- Actions -->
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <th mat-header-cell *matHeaderCellDef translate>LABEL_ACTIONS</th>
         <td mat-cell *matCellDef="let rank">
-          <button mat-button [matMenuTriggerFor]="menu">Actions</button>
+          <button mat-button [matMenuTriggerFor]="menu">
+            {{ 'BUTTON_ACTIONS' | translate }}
+          </button>
           <mat-menu #menu="matMenu">
             <button mat-menu-item
               [routerLink]="['/profile', rank.user.userId]">
-              Show profile
+              {{ 'BUTTON_SHOW_PROFILE' | translate }}
             </button>
             <button mat-menu-item *ngIf="rank.user.userId !== loggedUserId"
               [routerLink]="['/message', rank.user.userId]">
-              Send message
+              {{ 'BUTTON_SEND_MESSAGE' | translate }}
             </button>
           </mat-menu>
         </td>

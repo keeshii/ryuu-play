@@ -3,7 +3,7 @@ import { Stage, CardType } from "../../game/store/card/card-types";
 import { PowerType, StoreLike, State, StateUtils, PlayerType, CoinFlipPrompt } from "../../game";
 import { Effect } from "../../game/store/effects/effect";
 import { AttackEffect } from "../../game/store/effects/game-effects";
-import { CardMessage } from "../card-message";
+import { GameMessage } from "../../game/game-message";
 import { AttachEnergyEffect } from "../../game/store/effects/play-card-effects";
 import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
 import { PutDamageEffect } from "../../game/store/effects/attack-effects";
@@ -70,7 +70,7 @@ export class Shuckle extends PokemonCard {
 
       state = store.prompt(state, new CoinFlipPrompt(
         player.id,
-        CardMessage.COIN_FLIP
+        GameMessage.COIN_FLIP
       ), flipResult => {
         if (flipResult) {
           player.active.marker.addMarker(this.SHELL_STUNNER_MAREKER, this);

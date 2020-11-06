@@ -6,9 +6,9 @@ import { Effect } from "../../game/store/effects/effect";
 import { PowerEffect } from "../../game/store/effects/game-effects";
 import { PowerType } from "../../game/store/card/pokemon-types";
 import { StateUtils } from "../../game/store/state-utils";
-import { CardMessage } from "../card-message";
 import { PlayerType, SlotType } from "../../game/store/actions/play-card-action";
-import { GameMessage, GameError } from "../../game/game-error";
+import { GameError } from "../../game/game-error";
+import { GameMessage } from "../../game/game-message";
 import { PlayPokemonEffect } from "../../game/store/effects/play-card-effects";
 import { EnergyCard } from "../../game/store/card/energy-card";
 import { AttachEnergyPrompt } from "../../game/store/prompts/attach-energy-prompt";
@@ -86,7 +86,7 @@ export class Bronzong extends PokemonCard {
 
       state = store.prompt(state, new AttachEnergyPrompt(
         player.id,
-        CardMessage.ATTACH_METAL_ENERGY,
+        GameMessage.ATTACH_ENERGY_CARDS,
         player.discard,
         PlayerType.BOTTOM_PLAYER,
         [ SlotType.BENCH ],

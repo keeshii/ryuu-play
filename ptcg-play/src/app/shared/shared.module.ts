@@ -5,6 +5,7 @@ import { NgModule } from '@angular/core';
 import { SkyhookDndModule } from '@angular-skyhook/core';
 import { SkyhookMultiBackendModule } from '@angular-skyhook/multi-backend';
 import { SkyhookSortableModule } from '@angular-skyhook/sortable';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { AlertModule } from './alert/alert.module';
 import { AppRoutingModule } from '../app-routing.module';
@@ -31,6 +32,7 @@ import { ValidationModule } from './validation/validation.module';
     SkyhookDndModule,
     SkyhookMultiBackendModule,
     SkyhookSortableModule,
+    TranslateModule,
     UserInfoModule,
     ValidationModule
   ],
@@ -59,6 +61,7 @@ import { ValidationModule } from './validation/validation.module';
     SkyhookDndModule,
     SkyhookMultiBackendModule,
     SkyhookSortableModule,
+    TranslateModule,
     UserInfoModule,
     ValidationModule
   ],

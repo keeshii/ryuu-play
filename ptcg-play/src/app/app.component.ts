@@ -10,6 +10,7 @@ import { LoginRememberService } from './login/login-remember.service';
 import { LoginService } from './api/services/login.service';
 import { SessionService } from './shared/session/session.service';
 import { SocketService } from './api/socket.service';
+import { TranslateService } from '@ngx-translate/core';
 import { takeUntilDestroyed } from './shared/operators/take-until-destroyed';
 import { environment } from '../environments/environment';
 
@@ -33,6 +34,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private router: Router,
     private sessionService: SessionService,
     private socketService: SocketService,
+    private translate: TranslateService
   ) {
     this.authToken$ = this.sessionService.get(session => session.authToken);
     setTimeout(() => this.onResize());
@@ -61,7 +63,7 @@ export class AppComponent implements OnInit, OnDestroy {
         if (!connected && this.isLoggedIn) {
           this.socketService.disable();
           this.dialog.closeAll();
-          await this.alertService.alert('Disconnected from the server.');
+          await this.alertService.alert(this.translate.instant('ERROR_DISCONNECTED_FROM_SERVER'));
           this.sessionService.clear();
           this.router.navigate(['/login']);
         }

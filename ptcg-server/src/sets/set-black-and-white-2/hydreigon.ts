@@ -2,9 +2,9 @@ import { PokemonCard } from "../../game/store/card/pokemon-card";
 import { Stage, CardType, SuperType } from "../../game/store/card/card-types";
 import { StoreLike, State, Card, ChooseEnergyPrompt, PowerType, StateUtils,
   CardTarget, PlayerType, MoveEnergyPrompt, SlotType} from "../../game";
+import { GameMessage } from "../../game/game-message";
 import { AttackEffect, PowerEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
-import { CardMessage } from "../card-message";
 import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
 import { DiscardCardsEffect } from "../../game/store/effects/attack-effects";
 
@@ -38,7 +38,7 @@ function* useDarkTrance(next: Function, store: StoreLike, state: State, effect: 
 
   return store.prompt(state, new MoveEnergyPrompt(
     effect.player.id,
-    CardMessage.MOVE_ENERGY,
+    GameMessage.MOVE_ENERGY_CARDS,
     PlayerType.BOTTOM_PLAYER,
     [ SlotType.ACTIVE, SlotType.BENCH ],
     { superType: SuperType.ENERGY },
@@ -108,7 +108,7 @@ export class Hydreigon extends PokemonCard {
 
       state = store.prompt(state, new ChooseEnergyPrompt(
         player.id,
-        CardMessage.CHOOSE_ENERGIES_TO_DISCARD,
+        GameMessage.CHOOSE_ENERGIES_TO_DISCARD,
         checkProvidedEnergy.energyMap,
         [ CardType.DARK, CardType.DARK ],
         { allowCancel: false }

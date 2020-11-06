@@ -5,7 +5,6 @@ import { StoreLike, State, PlayerType, SlotType, StateUtils,
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { PutDamageEffect } from "../../game/store/effects/attack-effects";
 import { Effect } from "../../game/store/effects/effect";
-import { CardMessage } from "../card-message";
 import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
 import { PlayItemEffect } from "../../game/store/effects/play-card-effects";
 
@@ -69,7 +68,7 @@ export class SeismitoadEx extends PokemonCard {
 
       return store.prompt(state, new ChoosePokemonPrompt(
         player.id,
-        CardMessage.CHOOSE_OPPONENTS_POKEMON,
+        GameMessage.CHOOSE_POKEMON_TO_DAMAGE,
         PlayerType.TOP_PLAYER,
         [ SlotType.BENCH ],
         { min: max, max, allowCancel: false }

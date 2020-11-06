@@ -4,13 +4,13 @@ import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { AttackEffect, PowerEffect } from "../../game/store/effects/game-effects";
-import { CardMessage } from "../card-message";
 import { StateUtils } from "../../game/store/state-utils";
 import { PowerType } from "../../game/store/card/pokemon-types";
 import { CheckPokemonStatsEffect, CheckHpEffect } from "../../game/store/effects/check-effects";
 import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
 import { PlayerType, SlotType } from "../../game/store/actions/play-card-action";
 import { MoveDamagePrompt, DamageMap } from "../../game/store/prompts/move-damage-prompt";
+import { GameMessage } from "../../game/game-message";
 
 
 function* useSinisterHand(next: Function, store: StoreLike, state: State, effect: PowerEffect): IterableIterator<State> {
@@ -26,7 +26,7 @@ function* useSinisterHand(next: Function, store: StoreLike, state: State, effect
 
   return store.prompt(state, new MoveDamagePrompt(
     effect.player.id,
-    CardMessage.MOVE_DAMAGE,
+    GameMessage.MOVE_DAMAGE,
     PlayerType.TOP_PLAYER,
     [ SlotType.ACTIVE, SlotType.BENCH ],
     maxAllowedDamage,

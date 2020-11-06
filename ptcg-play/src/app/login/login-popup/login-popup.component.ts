@@ -1,6 +1,8 @@
 import { Component, OnDestroy, Inject } from '@angular/core';
+import { ApiErrorEnum } from 'ptcg-server';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
@@ -33,6 +35,7 @@ export class LoginPopupComponent implements OnDestroy {
     private dialog: MatDialog,
     public dialogRef: MatDialogRef<LoginPopupComponent>,
     private router: Router,
+    private translate: TranslateService,
     @Inject(MAT_DIALOG_DATA) private data: { redirectUrl: string },
   ) { }
 
@@ -51,7 +54,14 @@ export class LoginPopupComponent implements OnDestroy {
           this.router.navigate([this.data.redirectUrl]);
         },
         error: (error: ApiError) => {
-          this.alertService.toast(error.code || error.message);
+          switch (error.code) {
+            case ApiErrorEnum.LOGIN_INVALID:
+              this.alertService.toast(this.translate.instant('ERROR_INVALID_NAME_OR_PASSWORD'));
+              break;
+            case ApiErrorEnum.UNSUPPORTED_VERSION:
+              this.alertService.toast(this.translate.instant('ERROR_UNSUPPORTED_VERSION'));
+              break;
+          }
         }
       });
   }

@@ -1,4 +1,3 @@
-import { CardMessage } from "../card-message";
 import { TrainerCard } from "../../game/store/card/trainer-card";
 import { TrainerType } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
@@ -41,7 +40,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   let targets: PokemonCardList[] = [];
   yield store.prompt(state, new ChoosePokemonPrompt(
     player.id,
-    CardMessage.CHOOSE_UP_TO_2_POKEMONS_WITH_TOOL,
+    GameMessage.CHOOSE_POKEMON_TO_DISCARD_CARDS,
     PlayerType.ANY,
     [ SlotType.ACTIVE, SlotType.BENCH ],
     { min: 1, max: max, allowCancel: true, blocked }

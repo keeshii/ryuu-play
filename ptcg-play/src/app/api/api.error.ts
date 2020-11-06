@@ -1,18 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { TimeoutError } from 'rxjs';
-
-export enum ApiErrorEnum {
-  ERROR_UNSUPPORTED_API_VERSION = 'ERROR_UNSUPPORTED_API_VERSION',
-  ERROR_BAD_TOKEN = 'ERROR_BAD_TOKEN',
-  ERROR_REQUESTS_LIMIT_REACHED = 'ERROR_REQUESTS_LIMIT_REACHED',
-  ERROR_UNKNOWN_REQUEST = 'ERROR_UNKNOWN_REQUEST',
-  ERROR_LOGIN_INVALID = 'ERROR_LOGIN_INVALID',
-  ERROR_SOCKET = 'ERROR_SOCKET',
-  ERROR_NAME_EXISTS = 'ERROR_NAME_EXISTS',
-  ERROR_EMAIL_EXISTS = 'ERROR_EMAIL_EXISTS',
-  ERROR_REGISTER_DISABLED = 'ERROR_REGISTER_DISABLED',
-  ERROR_REGISTER_INVALID_SERVER_PASSWORD = 'ERROR_REGISTER_INVALID_SERVER_PASSWORD',
-}
+import { ApiErrorEnum } from 'ptcg-server';
 
 export class ApiError implements Error {
   code: ApiErrorEnum;
@@ -20,6 +8,7 @@ export class ApiError implements Error {
   message: string;
   stack: string;
   timeout: boolean;
+  handled: boolean;
 
   public static fromError(ex: HttpErrorResponse | TimeoutError): ApiError {
     if (ex instanceof ApiError) {

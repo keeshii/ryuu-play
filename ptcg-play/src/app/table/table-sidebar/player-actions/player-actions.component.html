@@ -2,18 +2,18 @@
   <div *ngIf="gameState?.replay ; then replayActions ; else gameActions"></div>
   <ng-template #gameActions>
     <button mat-stroked-button (click)="join.next()" [disabled]="gameState?.deleted">
-      Play
+      {{ 'TABLE_PLAY' | translate }}
     </button>
     <button mat-stroked-button (click)="leave()">
-      Leave
+      {{ 'BUTTON_LEAVE' | translate }}
     </button>
     <button mat-stroked-button (click)="passTurn()" [disabled]="gameState?.deleted">
-      End your turn
+      {{ 'TABLE_END_YOUR_TURN' | translate }}
     </button>
   </ng-template>
   <ng-template #replayActions>
     <button mat-stroked-button (click)="switchSides()">
-      Switch sides
+      {{ 'TABLE_SWITCH_SIDES' | translate }}
     </button>
   </ng-template>
 </div>

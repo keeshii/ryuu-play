@@ -1,6 +1,7 @@
 import { Effect } from "../effects/effect";
 import { EndTurnEffect, BetweenTurnsEffect } from "../effects/game-phase-effects";
-import { GameError, GameMessage } from "../../game-error";
+import { GameError } from "../../game-error";
+import { GameMessage, GameLog } from "../../game-message";
 import { Player } from "../state/player";
 import { SpecialCondition } from "../card/card-types";
 import { State, GamePhase, GameWinner } from "../state/state";
@@ -47,13 +48,13 @@ export function initNextTurn(store: StoreLike, state: State): State {
   }
 
   state.turn++;
-  store.log(state, `Turn ${state.turn}.`);
+  store.log(state, GameLog.LOG_TURN, { turn: state.turn });
 
   // Draw card at the beginning
-  store.log(state, `${player.name} draws a card.`);
+  store.log(state, GameLog.LOG_PLAYER_DRAWS_CARD, { name: player.name });
   if (player.deck.cards.length === 0) {
 
-    store.log(state, `${player.name} has no more cards in the deck.`);
+    store.log(state, GameLog.LOG_PLAYER_NO_CARDS_IN_DECK, { name: player.name });
     const winner = state.activePlayer ? GameWinner.PLAYER_1 : GameWinner.PLAYER_2;
     state = endGame(store, state, winner);
     return state;
@@ -65,7 +66,7 @@ export function initNextTurn(store: StoreLike, state: State): State {
 
 function startNextTurn(store: StoreLike, state: State): State {
   const player = state.players[state.activePlayer];
-  store.log(state, `${player.name} ends the turn.`);
+  store.log(state, GameLog.LOG_PLAYER_ENDS_TURN, { name: player.name });
 
   // Remove Paralyzed at the end of the turn
   player.active.removeSpecialCondition(SpecialCondition.PARALYZED);
@@ -94,7 +95,7 @@ function handleSpecialConditions(store: StoreLike, state: State, effect: Between
         }
         store.prompt(state, new CoinFlipPrompt(
           player.id,
-          GameMessage.BURNED_DAMAGE_FLIP
+          GameMessage.FLIP_BURNED
         ), result => {
           if (result === false) {
             player.active.damage += effect.burnDamage;
@@ -109,9 +110,10 @@ function handleSpecialConditions(store: StoreLike, state: State, effect: Between
         if (effect.asleepFlipResult === false) {
           break;
         }
+        store.log(state, GameLog.LOG_FLIP_ASLEEP, { name: player.name });
         store.prompt(state, new CoinFlipPrompt(
           player.id,
-          GameMessage.ASLEEP_FLIP
+          GameMessage.FLIP_ASLEEP
         ), result => {
           if (result === true) {
             player.active.removeSpecialCondition(SpecialCondition.ASLEEP);

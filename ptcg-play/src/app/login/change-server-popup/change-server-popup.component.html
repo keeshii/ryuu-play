@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Change server address</h2>
+<h2 mat-dialog-title translate>LOGIN_CHANGE_SERVER</h2>
 
 <mat-dialog-content>
 
@@ -9,13 +9,13 @@
 
     <!-- Number -->
     <mat-form-field>
-      <mat-label>Server address</mat-label>
-      <input matInput type="text" name="value" placeholder="Server address"
+      <mat-label translate>LOGIN_SERVER_ADDRESS</mat-label>
+      <input matInput type="text" name="value" [placeholder]="'LOGIN_SERVER_ADDRESS' | translate"
         ptcgAddressValidator [ptcgInvalidValue]="invalidValue" required
         [disabled]="loading" [(ngModel)]="value" #inputField="ngModel">
       <mat-error *ngIf="!inputField.pristine && inputField.invalid">
-        <div *ngIf="inputField.errors?.address">VALIDATION_INVALID_ADDRESS</div>
-        <div *ngIf="inputField.errors?.invalidValue">CANNOT_CONNECT_TO_SERVER</div>
+        <div *ngIf="inputField.errors?.address" translate>VALIDATION_INVALID_ADDRESS</div>
+        <div *ngIf="inputField.errors?.invalidValue" translate>VALIDATION_CANNOT_CONNECT_TO_SERVER</div>
       </mat-error>
     </mat-form-field>
 
@@ -24,8 +24,10 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-raised-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button mat-dialog-close translate>
+    {{ 'BUTTON_CANCEL' | translate }}
+  </button>
   <button mat-raised-button color="primary" (click)="confirm()" [disabled]="loading || form.invalid">
-    OK
+    {{ 'BUTTON_OK' | translate }}
   </button>
 </mat-dialog-actions>

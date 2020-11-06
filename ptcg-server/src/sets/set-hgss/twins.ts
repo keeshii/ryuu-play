@@ -1,8 +1,8 @@
 import { Card } from "../../game/store/card/card";
-import { CardMessage } from "../card-message";
 import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
 import { Effect } from "../../game/store/effects/effect";
-import { GameError, GameMessage } from "../../game/game-error";
+import { GameError } from "../../game/game-error";
+import { GameMessage } from "../../game/game-message";
 import { TrainerCard } from "../../game/store/card/trainer-card";
 import { TrainerType } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
@@ -22,7 +22,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   let cards: Card[] = [];
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    CardMessage.CHOOSE_ANY_TWO_CARDS,
+    GameMessage.CHOOSE_CARD_TO_HAND,
     player.deck,
     { },
     { min: 0, max: 2, allowCancel: true }

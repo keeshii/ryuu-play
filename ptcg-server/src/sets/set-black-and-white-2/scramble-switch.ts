@@ -1,4 +1,3 @@
-import { CardMessage } from "../card-message";
 import { TrainerCard } from "../../game/store/card/trainer-card";
 import { TrainerType, CardTag, SuperType } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
@@ -6,7 +5,9 @@ import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { ChoosePokemonPrompt } from "../../game/store/prompts/choose-pokemon-prompt";
 import { TrainerEffect } from "../../game/store/effects/play-card-effects";
-import { PlayerType, SlotType, GameError, GameMessage, PokemonCardList, ChooseCardsPrompt, EnergyCard } from "../../game";
+import { PlayerType, SlotType, GameError, PokemonCardList, ChooseCardsPrompt, EnergyCard } from "../../game";
+import { GameMessage } from "../../game/game-message";
+
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -22,7 +23,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   let targets: PokemonCardList[] = [];
   yield store.prompt(state, new ChoosePokemonPrompt(
     player.id,
-    CardMessage.CHOOSE_ONE_POKEMON,
+    GameMessage.CHOOSE_POKEMON_TO_SWITCH,
     PlayerType.BOTTOM_PLAYER,
     [ SlotType.BENCH ],
     { allowCancel: true }
@@ -41,7 +42,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   if (hasEnergies) {
     yield store.prompt(state, new ChooseCardsPrompt(
       player.id,
-      CardMessage.ATTACH_ENERGY_TO_BENCH,
+      GameMessage.ATTACH_ENERGY_TO_BENCH,
       player.active,
       { superType: SuperType.ENERGY },
       { allowCancel: false, min: 0 }

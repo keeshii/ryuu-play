@@ -2,7 +2,8 @@ import { gzip, ungzip } from 'pako';
 
 import { State, GameWinner } from "../store/state/state";
 import { ReplayPlayer, ReplayOptions } from "./replay.interface";
-import { GameError, GameMessage } from "../game-error";
+import { GameError } from "../game-error";
+import { GameCoreError } from "../game-message";
 import { SerializedState } from "../serializer/serializer.interface";
 import { StateSerializer } from "../serializer/state-serializer";
 
@@ -38,7 +39,7 @@ export class Replay {
 
   public getState(position: number): State {
     if (position < 0 || position >= this.diffs.length) {
-      throw new GameError(GameMessage.REPLAY_INVALID_STATE);
+      throw new GameError(GameCoreError.ERROR_INVALID_STATE);
     }
 
     let stateData = this.diffs[0];
@@ -65,7 +66,7 @@ export class Replay {
 
   public getTurnPosition(turn: number): number {
     if (turn < 0 || turn >= this.turnMap.length) {
-      throw new GameError(GameMessage.REPLAY_INVALID_STATE);
+      throw new GameError(GameCoreError.ERROR_INVALID_STATE);
     }
     return this.turnMap[turn];
   }
@@ -125,7 +126,7 @@ export class Replay {
         this.prevState = this.serializer.serialize(lastState);
       }
     } catch (error) {
-      throw new GameError(GameMessage.REPLAY_INVALID_STATE);
+      throw new GameError(GameCoreError.ERROR_INVALID_STATE);
     }
   }
 

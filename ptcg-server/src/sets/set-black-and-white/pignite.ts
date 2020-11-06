@@ -3,7 +3,7 @@ import { Stage, CardType, SuperType, EnergyType } from "../../game/store/card/ca
 import { StoreLike, State, StateUtils, ChooseCardsPrompt } from "../../game";
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
-import {CardMessage} from "../card-message";
+import { GameMessage } from "../../game/game-message";
 
 export class Pignite extends PokemonCard {
 
@@ -52,7 +52,7 @@ export class Pignite extends PokemonCard {
 
       return store.prompt(state, new ChooseCardsPrompt(
         player.id,
-        CardMessage.CHOOSE_ENERGY_CARD,
+        GameMessage.CHOOSE_CARD_TO_ATTACH,
         player.deck,
         { superType: SuperType.ENERGY, energyType: EnergyType.BASIC, name: 'Fire Energy' },
         { min: 1, max: 1, allowCancel: true }

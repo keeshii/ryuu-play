@@ -4,9 +4,9 @@ import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { TrainerEffect } from "../../game/store/effects/play-card-effects";
-import { CardMessage } from "../card-message";
 import { StateUtils } from "../../game/store/state-utils";
-import { GameError, GameMessage } from "../../game/game-error";
+import { GameError } from "../../game/game-error";
+import { GameMessage } from "../../game/game-message";
 import { CoinFlipPrompt } from "../../game/store/prompts/coin-flip-prompt";
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
@@ -25,7 +25,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 
   let coinResult: boolean = false;
   yield store.prompt(state, [
-    new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP)
+    new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)
   ], result => {
     coinResult = result;
     next();

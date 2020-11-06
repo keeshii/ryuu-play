@@ -7,9 +7,9 @@ import { AttackEffect, PowerEffect, UsePowerEffect } from "../../game/store/effe
 import { AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
 import { PowerType } from "../../game/store/card/pokemon-types";
 import { StateUtils } from "../../game/store/state-utils";
-import { CardMessage } from "../card-message";
 import { PlayerType } from "../../game/store/actions/play-card-action";
-import { GameMessage, GameError } from "../../game/game-error";
+import { GameError } from "../../game/game-error";
+import { GameMessage } from "../../game/game-message";
 import { CoinFlipPrompt } from "../../game/store/prompts/coin-flip-prompt";
 import { PlayItemEffect } from "../../game/store/effects/play-card-effects";
 
@@ -56,7 +56,7 @@ export class Vileplume extends PokemonCard {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
       return store.prompt(state, [
-        new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP)
+        new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)
       ], result => {
         if (result) {
           effect.damage += 20;

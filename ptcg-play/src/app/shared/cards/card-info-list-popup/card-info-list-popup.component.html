@@ -1,5 +1,5 @@
-<h2 mat-dialog-title>
-  List of cards
+<h2 mat-dialog-title translate>
+  CARDS_LIST_OF_CARDS
 </h2>
 
 <mat-dialog-content>
@@ -15,11 +15,11 @@
   <section class="ptcg-card-info-reveal-cards" *ngIf="allowReveal">
     <mat-checkbox color="primary" name="reveal-card"
       [checked]="!facedown" (change)="facedown = !facedown">
-      Reveal cards
+      {{ 'CARDS_REVEAL_CARDS' | translate }}
     </mat-checkbox>
   </section>
   <span class="ptcg-u-spacer"></span>
   <button mat-raised-button (click)="close()">
-    Close
+    {{ 'BUTTON_CLOSE' | translate }}
   </button>
 </mat-dialog-actions>

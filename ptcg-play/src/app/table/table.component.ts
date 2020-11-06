@@ -2,6 +2,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Player, GamePhase } from 'ptcg-server';
 import { Observable, from, EMPTY } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 import { withLatestFrom, switchMap, finalize } from 'rxjs/operators';
 
 import { ApiError } from '../api/api.error';
@@ -35,7 +36,8 @@ export class TableComponent implements OnInit, OnDestroy {
     private deckService: DeckService,
     private route: ActivatedRoute,
     private router: Router,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private translate: TranslateService
   ) {
     this.gameStates$ = this.sessionService.get(session => session.gameStates);
     this.clientId$ = this.sessionService.get(session => session.clientId);
@@ -79,15 +81,15 @@ export class TableComponent implements OnInit, OnDestroy {
 
           if (options.length === 0) {
             this.alertService.alert(
-              'You must prepare a valid deck before joining the game',
-              'No valid decks'
+              this.translate.instant('GAMES_NEED_DECK'),
+              this.translate.instant('GAMES_NEED_DECK_TITLE')
             );
             return EMPTY;
           }
 
           return from(this.alertService.select({
-            title: 'Choose your deck',
-            placeholder: 'Your deck',
+            title: this.translate.instant('GAMES_YOUR_DECK_TITLE'),
+            placeholder: this.translate.instant('GAMES_YOUR_DECK'),
             options,
             value: options[0].value
           }));

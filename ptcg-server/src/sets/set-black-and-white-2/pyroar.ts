@@ -6,10 +6,10 @@ import { Effect } from "../../game/store/effects/effect";
 import { PowerEffect, UsePowerEffect, AttackEffect } from "../../game/store/effects/game-effects";
 import { PowerType } from "../../game/store/card/pokemon-types";
 import { StateUtils } from "../../game/store/state-utils";
-import { GameMessage, GameError } from "../../game/game-error";
+import { GameError } from "../../game/game-error";
+import { GameMessage } from "../../game/game-message";
 import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
 import { ChooseEnergyPrompt } from "../../game/store/prompts/choose-energy-prompt";
-import { CardMessage } from "../card-message";
 import { Card } from "../../game/store/card/card";
 import { DiscardCardsEffect, PutDamageEffect } from "../../game/store/effects/attack-effects";
 
@@ -62,7 +62,7 @@ export class Pyroar extends PokemonCard {
 
       state = store.prompt(state, new ChooseEnergyPrompt(
         player.id,
-        CardMessage.CHOOSE_ENERGIES_TO_DISCARD,
+        GameMessage.CHOOSE_ENERGIES_TO_DISCARD,
         checkProvidedEnergy.energyMap,
         [ CardType.FIRE ],
         { allowCancel: true }

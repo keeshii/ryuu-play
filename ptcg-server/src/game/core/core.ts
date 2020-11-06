@@ -1,6 +1,7 @@
 import { AddPlayerAction } from "../store/actions/add-player-action";
 import { Client } from "../client/client.interface";
-import { GameError, GameMessage } from "../game-error";
+import { GameError } from "../game-error";
+import { GameMessage } from "../game-message";
 import { Game } from "./game";
 import { GameSettings } from "./game-settings";
 import { InvitePlayerAction } from "../store/actions/invite-player-action";
@@ -30,7 +31,7 @@ export class Core {
   public disconnect(client: Client): void {
     const index = this.clients.indexOf(client);
     if (index === -1) {
-      throw new GameError(GameMessage.CLIENT_NOT_CONNECTED);
+      throw new GameError(GameMessage.ERROR_CLIENT_NOT_CONNECTED);
     }
     client.games.forEach(game => this.leaveGame(client, game));
     this.clients.splice(index, 1);
@@ -45,10 +46,10 @@ export class Core {
     invited?: Client
   ): Game {
     if (this.clients.indexOf(client) === -1) {
-      throw new GameError(GameMessage.CLIENT_NOT_CONNECTED);
+      throw new GameError(GameMessage.ERROR_CLIENT_NOT_CONNECTED);
     }
     if (invited && this.clients.indexOf(invited) === -1) {
-      throw new GameError(GameMessage.CLIENT_NOT_CONNECTED);
+      throw new GameError(GameMessage.ERROR_CLIENT_NOT_CONNECTED);
     }
     const game = new Game(this, generateId(this.games), gameSettings);
     game.dispatch(client, new AddPlayerAction(client.id, client.name, deck));
@@ -66,10 +67,10 @@ export class Core {
 
   public joinGame(client: Client, game: Game): void {
     if (this.clients.indexOf(client) === -1) {
-      throw new GameError(GameMessage.CLIENT_NOT_CONNECTED);
+      throw new GameError(GameMessage.ERROR_CLIENT_NOT_CONNECTED);
     }
     if (this.games.indexOf(game) === -1) {
-      throw new GameError(GameMessage.GAME_NOT_FOUND);
+      throw new GameError(GameMessage.ERROR_GAME_NOT_FOUND);
     }
     if (client.games.indexOf(game) === -1) {
       this.emit(c => c.onGameJoin(game, client));
@@ -94,10 +95,10 @@ export class Core {
 
   public leaveGame(client: Client, game: Game): void {
     if (this.clients.indexOf(client) === -1) {
-      throw new GameError(GameMessage.CLIENT_NOT_CONNECTED);
+      throw new GameError(GameMessage.ERROR_CLIENT_NOT_CONNECTED);
     }
     if (this.games.indexOf(game) === -1) {
-      throw new GameError(GameMessage.GAME_NOT_FOUND);
+      throw new GameError(GameMessage.ERROR_GAME_NOT_FOUND);
     }
     const gameIndex = client.games.indexOf(game);
     const clientIndex = game.clients.indexOf(client);

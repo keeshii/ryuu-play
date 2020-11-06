@@ -1,5 +1,6 @@
 import { ChooseEnergyPrompt } from "../prompts/choose-energy-prompt";
-import { GameError, GameMessage } from "../../game-error";
+import { GameError } from "../../game-error";
+import { GameMessage, GameLog } from "../../game-message";
 import { Effect } from "../effects/effect";
 import { State } from "../state/state";
 import { StoreLike } from "../store-like";
@@ -17,7 +18,11 @@ function retreatPokemon(store: StoreLike, state: State, effect: RetreatEffect) {
     return;
   }
 
-  store.log(state, `${player.name} retreats ${activePokemon.name} to ${benchedPokemon.name}.`);
+  store.log(state, GameLog.LOG_PLAYER_RETREATS, {
+    name: player.name,
+    active: activePokemon.name,
+    benched: benchedPokemon.name
+  });
   player.retreatedTurn = state.turn;
   player.switchPokemon(player.bench[effect.benchIndex]);
 }
@@ -59,7 +64,7 @@ export function retreatReducer(store: StoreLike, state: State, effect: Effect): 
 
     return store.prompt(state, new ChooseEnergyPrompt(
       player.id,
-      GameMessage.RETREAT_MESSAGE,
+      GameMessage.CHOOSE_POKEMON_TO_SWITCH,
       checkProvidedEnergy.energyMap,
       checkRetreatCost.cost
     ), energy => {

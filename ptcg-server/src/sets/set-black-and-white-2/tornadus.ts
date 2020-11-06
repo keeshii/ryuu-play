@@ -4,7 +4,7 @@ import { StoreLike, State, StateUtils, AttachEnergyPrompt, PlayerType, SlotType,
   EnergyCard, MoveEnergyPrompt, CardTarget } from "../../game";
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
-import { CardMessage } from "../card-message";
+import { GameMessage } from "../../game/game-message";
 
 export class Tornadus extends PokemonCard {
 
@@ -66,7 +66,7 @@ export class Tornadus extends PokemonCard {
 
       return store.prompt(state, new MoveEnergyPrompt(
         effect.player.id,
-        CardMessage.MOVE_ENERGY,
+        GameMessage.MOVE_ENERGY_TO_ACTIVE,
         PlayerType.BOTTOM_PLAYER,
         [ SlotType.ACTIVE, SlotType.BENCH ],
         { superType: SuperType.ENERGY },
@@ -94,7 +94,7 @@ export class Tornadus extends PokemonCard {
 
       return store.prompt(state, new AttachEnergyPrompt(
         player.id,
-        CardMessage.ATTACH_ENERGY_TO_BENCH,
+        GameMessage.ATTACH_ENERGY_TO_BENCH,
         player.active,
         PlayerType.BOTTOM_PLAYER,
         [ SlotType.BENCH ],

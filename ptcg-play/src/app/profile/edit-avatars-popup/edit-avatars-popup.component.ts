@@ -1,7 +1,8 @@
 import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AvatarInfo } from 'ptcg-server';
+import { AvatarInfo, ApiErrorEnum } from 'ptcg-server';
 import { Observable } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs/operators';
 
 import { AddAvatarPopupService } from '../add-avatar-popup/add-avatar-popup.service';
@@ -29,6 +30,7 @@ export class EditAvatarsPopupComponent implements OnInit, OnDestroy {
     private addAvatarPopupService: AddAvatarPopupService,
     private avatarService: AvatarService,
     private sessionService: SessionService,
+    private translate: TranslateService,
     @Inject(MAT_DIALOG_DATA) data: { userId: number },
   ) {
     this.userId = data.userId;
@@ -62,7 +64,9 @@ export class EditAvatarsPopupComponent implements OnInit, OnDestroy {
           this.avatars = this.avatars.filter(a => a.id !== avatarId);
         },
         error: (error: ApiError) => {
-          this.alertService.toast(error.code);
+          if (!error.handled) {
+            this.alertService.toast(this.translate.instant('ERROR_UNKNOWN'));
+          }
         }
       });
   }
@@ -86,7 +90,9 @@ export class EditAvatarsPopupComponent implements OnInit, OnDestroy {
         }
       },
       error: (error: ApiError) => {
-        this.alertService.toast('Error occured, try again.');
+        if (!error.handled) {
+          this.alertService.toast(this.translate.instant('ERROR_UNKNOWN'));
+        }
       }
     });
   }
@@ -100,7 +106,9 @@ export class EditAvatarsPopupComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         error: (error: ApiError) => {
-          this.alertService.toast(error.code);
+          if (!error.handled) {
+            this.alertService.toast(this.translate.instant('ERROR_UNKNOWN'));
+          }
         }
       });
   }
@@ -123,7 +131,9 @@ export class EditAvatarsPopupComponent implements OnInit, OnDestroy {
           this.avatars = response.avatars;
         },
         error: (error: ApiError) => {
-          this.alertService.toast(error.message);
+          if (!error.handled) {
+            this.alertService.toast(this.translate.instant('ERROR_UNKNOWN'));
+          }
         }
       });
   }
@@ -131,8 +141,8 @@ export class EditAvatarsPopupComponent implements OnInit, OnDestroy {
   private getAvatarName(name: string = ''): Promise<string | undefined> {
     const invalidValues = this.avatars.map(a => a.name);
     return this.alertService.inputName({
-      title: 'Enter avatar name',
-      placeholder: 'Avatar name',
+      title: this.translate.instant('PROFILE_ENTER_AVATAR_NAME'),
+      placeholder: this.translate.instant('PROFILE_AVATAR_NAME'),
       invalidValues,
       value: name
     });

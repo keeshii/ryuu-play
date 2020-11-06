@@ -1,12 +1,13 @@
 import { AddPlayerAction, AppendLogAction, Action, PassTurnAction,
   ReorderHandAction, ReorderBenchAction, PlayCardAction, CardTarget,
   RetreatAction, AttackAction, UseAbilityAction, StateSerializer,
-  UseStadiumAction } from '../../game';
+  UseStadiumAction, 
+  GameLog} from '../../game';
 import { Base64 } from '../../utils';
 import { ChangeAvatarAction } from '../../game/store/actions/change-avatar-action';
 import { Client } from '../../game/client/client.interface';
 import { CoreSocket } from './core-socket';
-import { Errors } from '../common/errors';
+import { ApiErrorEnum } from '../common/errors';
 import { Game } from '../../game/core/game';
 import { State } from '../../game/store/state/state';
 import { Core } from '../../game/core/core';
@@ -73,7 +74,7 @@ export class GameSocket {
   private joinGame(gameId: number, response: Response<GameState>): void {
     const game = this.core.games.find(g => g.id === gameId);
     if (game === undefined) {
-      response('error', Errors.GAME_INVALID_ID);
+      response('error', ApiErrorEnum.GAME_INVALID_ID);
       return;
     }
     this.cache.lastLogIdCache[game.id] = 0;
@@ -84,7 +85,7 @@ export class GameSocket {
   private leaveGame(gameId: number, response: Response<void>): void {
     const game = this.core.games.find(g => g.id === gameId);
     if (game === undefined) {
-      response('error', Errors.GAME_INVALID_ID);
+      response('error', ApiErrorEnum.GAME_INVALID_ID);
       return;
     }
     delete this.cache.lastLogIdCache[game.id];
@@ -95,7 +96,7 @@ export class GameSocket {
   private getGameStatus(gameId: number, response: Response<GameState>): void {
     const game = this.core.games.find(g => g.id === gameId);
     if (game === undefined) {
-      response('error', Errors.GAME_INVALID_ID);
+      response('error', ApiErrorEnum.GAME_INVALID_ID);
       return;
     }
     response('ok', CoreSocket.buildGameState(game));
@@ -104,7 +105,7 @@ export class GameSocket {
   private dispatch(gameId: number, action: Action, response: Response<void>) {
     const game = this.core.games.find(g => g.id === gameId);
     if (game === undefined) {
-      response('error', Errors.GAME_INVALID_ID);
+      response('error', ApiErrorEnum.GAME_INVALID_ID);
       return;
     }
     try {
@@ -143,19 +144,19 @@ export class GameSocket {
   private resolvePrompt(params: {gameId: number, id: number, result: any}, response: Response<void>) {
     const game = this.core.games.find(g => g.id === params.gameId);
     if (game === undefined) {
-      response('error', Errors.GAME_INVALID_ID);
+      response('error', ApiErrorEnum.GAME_INVALID_ID);
       return;
     }
     const prompt = game.state.prompts.find(p => p.id === params.id);
     if (prompt === undefined) {
-      response('error', Errors.PROMPT_INVALID_ID);
+      response('error', ApiErrorEnum.PROMPT_INVALID_ID);
       return;
     }
 
     try {
       params.result = prompt.decode(params.result, game.state);
       if (prompt.validate(params.result, game.state) === false) {
-        response('error', Errors.PROMPT_INVALID_RESULT);
+        response('error', ApiErrorEnum.PROMPT_INVALID_RESULT);
         return;
       }
     } catch (error) {
@@ -188,7 +189,7 @@ export class GameSocket {
   }
 
   private appendLog(params: {gameId: number, message: string}, response: Response<void>) {
-    const action = new AppendLogAction(this.client.id, params.message);
+    const action = new AppendLogAction(this.client.id, GameLog.LOG_TEXT, { text: params.message });
     this.dispatch(params.gameId, action, response);
   }
 

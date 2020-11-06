@@ -1,5 +1,6 @@
 import { Effect } from "../../game/store/effects/effect";
-import { GameError, GameMessage } from "../../game/game-error";
+import { GameError } from "../../game/game-error";
+import { GameMessage } from "../../game/game-message";
 import { State } from "../../game/store/state/state";
 import { StoreLike } from "../../game/store/store-like";
 import { TrainerCard } from "../../game/store/card/trainer-card";
@@ -8,7 +9,6 @@ import { StateUtils } from "../../game/store/state-utils";
 import { UseStadiumEffect, HealEffect } from "../../game/store/effects/game-effects";
 import { CardTarget, PlayerType, SlotType } from "../../game/store/actions/play-card-action";
 import { ChoosePokemonPrompt } from "../../game/store/prompts/choose-pokemon-prompt";
-import { CardMessage } from "../card-message";
 
 export class PokemonCenter extends TrainerCard {
 
@@ -47,7 +47,7 @@ export class PokemonCenter extends TrainerCard {
 
       return store.prompt(state, new ChoosePokemonPrompt(
         player.id,
-        CardMessage.CHOOSE_ONE_POKEMON,
+        GameMessage.CHOOSE_POKEMON_TO_HEAL,
         PlayerType.BOTTOM_PLAYER,
         [ SlotType.BENCH ],
         { allowCancel: true, blocked }

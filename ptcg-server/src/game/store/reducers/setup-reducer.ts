@@ -12,7 +12,8 @@ import { InvitePlayerPrompt } from "../prompts/invite-player-prompt";
 import { Player } from "../state/player";
 import { ShuffleDeckPrompt } from "../prompts/shuffle-prompt";
 import { State, GamePhase, GameWinner } from "../state/state";
-import { GameError, GameMessage } from "../../game-error";
+import { GameError } from "../../game-error";
+import { GameMessage, GameLog } from "../../game-message";
 import { PlayerType } from "../actions/play-card-action";
 import { PokemonCardList } from "../state/pokemon-card-list";
 import { StoreLike } from "../store-like";
@@ -66,7 +67,7 @@ function* setupGame(next: Function, store: StoreLike, state: State): IterableIte
     }
 
     if (playerHasBasic && !opponentHasBasic) {
-      store.log(state, `${opponent.name} has no basic Pokemon on the hand.`);
+      store.log(state, GameLog.LOG_SETUP_NO_BASIC_POKEMON, { name: opponent.name });
       yield store.prompt(state, [
         new ConfirmPrompt(player.id, GameMessage.SETUP_OPPONENT_NO_BASIC),
         new AlertPrompt(opponent.id, GameMessage.SETUP_PLAYER_NO_BASIC)
@@ -79,7 +80,7 @@ function* setupGame(next: Function, store: StoreLike, state: State): IterableIte
     }
 
     if (!playerHasBasic && opponentHasBasic) {
-      store.log(state, `${player.name} has no basic Pokemon on the hand.`);
+      store.log(state, GameLog.LOG_SETUP_NO_BASIC_POKEMON, { name: player.name });
       yield store.prompt(state, [
         new ConfirmPrompt(opponent.id, GameMessage.SETUP_OPPONENT_NO_BASIC),
         new AlertPrompt(player.id, GameMessage.SETUP_PLAYER_NO_BASIC)
@@ -202,10 +203,10 @@ export function setupPhaseReducer(store: StoreLike, state: State, action: Action
 
       state = store.prompt(state, new InvitePlayerPrompt(
         player.id,
-        GameMessage.GAME_INVITATION_MESSAGE
+        GameMessage.INVITATION_MESSAGE
       ), deck => {
         if (deck === null) {
-          store.log(state, `${player.name} has not accepted the invitation.`);
+          store.log(state, GameLog.LOG_INVITATION_NOT_ACCEPTED, { name: player.name });
           const winner = GameWinner.NONE;
           state = endGame(store, state, winner);
           return;

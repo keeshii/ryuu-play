@@ -5,7 +5,7 @@ import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { CoinFlipPrompt } from "../../game/store/prompts/coin-flip-prompt";
-import { CardMessage } from "../card-message";
+import { GameMessage } from "../../game/game-message";
 import { PutDamageEffect } from "../../game/store/effects/attack-effects";
 import { StateUtils } from "../../game/store/state-utils";
 import { PlayerType } from "../../game/store/actions/play-card-action";
@@ -55,8 +55,8 @@ export class Buneary extends PokemonCard {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
       return store.prompt(state, [
-        new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP),
-        new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP)
+        new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP),
+        new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)
       ], results => {
         let heads: number = 0;
         results.forEach(r => { heads += r ? 1 : 0; });
@@ -68,7 +68,7 @@ export class Buneary extends PokemonCard {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
       return store.prompt(state, new CoinFlipPrompt(
-        player.id, CardMessage.COIN_FLIP
+        player.id, GameMessage.COIN_FLIP
       ), flipResult => {
         if (flipResult) {
           player.active.marker.addMarker(this.DEFENSE_CURL_MARKER, this);

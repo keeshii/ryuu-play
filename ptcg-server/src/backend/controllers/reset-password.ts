@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { Validate, check } from '../services';
 import { Controller, Post } from './controller';
-import { Errors } from '../common/errors';
+import { ApiErrorEnum } from '../common/errors';
 import { Mailer, resetPasswordTemplates } from '../../email';
 import { Md5 } from '../../utils/md5';
 import { User } from '../../storage';
@@ -29,7 +29,7 @@ export class ResetPassword extends Controller {
 
     if (this.rateLimit.isLimitExceeded(req.ip)) {
       res.status(400);
-      res.send({error: Errors.REQUESTS_LIMIT_REACHED});
+      res.send({error: ApiErrorEnum.REQUESTS_LIMIT_REACHED});
       return;
     }
 
@@ -40,7 +40,7 @@ export class ResetPassword extends Controller {
 
     if (user === undefined) {
       res.status(400);
-      res.send({error: Errors.LOGIN_INVALID});
+      res.send({error: ApiErrorEnum.LOGIN_INVALID});
       return;
     }
 
@@ -57,7 +57,7 @@ export class ResetPassword extends Controller {
       await this.mailer.sendEmail(body.email, template, params);
     } catch (error) {
       res.status(400);
-      res.send({error: Errors.CANNOT_SEND_MESSAGE});
+      res.send({error: ApiErrorEnum.CANNOT_SEND_MESSAGE});
       return;
     }
 
@@ -75,7 +75,7 @@ export class ResetPassword extends Controller {
     const token = this.validateToken(body.token);
     if (token === undefined) {
       res.status(400);
-      res.send({error: Errors.AUTH_TOKEN_INVALID});
+      res.send({error: ApiErrorEnum.LOGIN_INVALID});
       return;
     }
 
@@ -84,7 +84,7 @@ export class ResetPassword extends Controller {
 
     if (user === undefined) {
       res.status(400);
-      res.send({error: Errors.LOGIN_INVALID});
+      res.send({error: ApiErrorEnum.LOGIN_INVALID});
       return;
     }
 
@@ -93,7 +93,7 @@ export class ResetPassword extends Controller {
       await user.save();
     } catch (error) {
       res.status(400);
-      res.send({error: Errors.LOGIN_INVALID});
+      res.send({error: ApiErrorEnum.LOGIN_INVALID});
       return;
     }
 

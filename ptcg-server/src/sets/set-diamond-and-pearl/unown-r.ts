@@ -2,16 +2,15 @@ import { PokemonCard } from "../../game/store/card/pokemon-card";
 import { Stage, CardType, SuperType, EnergyType } from "../../game/store/card/card-types";
 import { PowerType, StoreLike, State, StateUtils, GameError, GameMessage,
   PokemonCardList, MoveEnergyPrompt, PlayerType, SlotType} from "../../game";
-import {Effect} from "../../game/store/effects/effect";
-import {PowerEffect, AttackEffect} from "../../game/store/effects/game-effects";
-import {CardMessage} from "../card-message";
+import { Effect } from "../../game/store/effects/effect";
+import { PowerEffect, AttackEffect } from "../../game/store/effects/game-effects";
 
 function* useHiddenPower(next: Function, store: StoreLike, state: State, effect: AttackEffect): IterableIterator<State> {
   const player = effect.player;
 
   yield store.prompt(state, new MoveEnergyPrompt(
     effect.player.id,
-    CardMessage.MOVE_BASIC_ENERGY,
+    GameMessage.MOVE_ENERGY_CARDS,
     PlayerType.BOTTOM_PLAYER,
     [ SlotType.ACTIVE, SlotType.BENCH ],
     { superType: SuperType.ENERGY, energyType: EnergyType.BASIC },

@@ -4,9 +4,8 @@ import { StoreLike, State, ShowCardsPrompt, StateUtils, PowerType, GameError,
   GameMessage, PokemonCardList, PlayerType, TrainerCard } from "../../game";
 import { AttackEffect, PowerEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
-import { CardMessage } from "../card-message";
-import {EndTurnEffect} from "../../game/store/effects/game-phase-effects";
-import {CheckPokemonTypeEffect} from "../../game/store/effects/check-effects";
+import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
+import { CheckPokemonTypeEffect } from "../../game/store/effects/check-effects";
 
 
 export class Rotom extends PokemonCard {
@@ -74,7 +73,7 @@ export class Rotom extends PokemonCard {
       }
       return store.prompt(state, new ShowCardsPrompt(
         player.id,
-        CardMessage.CARDS_SHOWED_BY_THE_OPPONENT,
+        GameMessage.CARDS_SHOWED_BY_THE_OPPONENT,
         opponent.hand.cards
       ), () => {
         const trainers = opponent.hand.cards.filter(c => c instanceof TrainerCard);

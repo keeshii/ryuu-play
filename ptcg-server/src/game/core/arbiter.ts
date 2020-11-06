@@ -5,6 +5,7 @@ import { ShuffleDeckPrompt } from '../store/prompts/shuffle-prompt';
 import { StateLog } from '../store/state/state-log';
 import { State } from '../store/state/state';
 import { ResolvePromptAction } from '../store/actions/resolve-prompt-action';
+import {GameLog} from '../game-message';
 
 
 export class Arbiter {
@@ -25,8 +26,10 @@ export class Arbiter {
 
     if (prompt instanceof CoinFlipPrompt) {
       const result = Math.round(Math.random()) === 0;
-      const message = `${player.name} flips a coin. It's ${result ? 'HEAD' : 'TAILS'}.`;
-      const log = new StateLog(message);
+      const message = result
+        ? GameLog.LOG_PLAYER_FLIPS_HEADS
+        : GameLog.LOG_PLAYER_FLIPS_TAILS;
+      const log = new StateLog(message, { name: player.name });
       return new ResolvePromptAction(prompt.id, result, log);
     }
   }

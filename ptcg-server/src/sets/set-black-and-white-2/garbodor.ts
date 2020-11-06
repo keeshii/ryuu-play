@@ -7,7 +7,8 @@ import { PowerEffect, UsePowerEffect } from "../../game/store/effects/game-effec
 import { PowerType } from "../../game/store/card/pokemon-types";
 import { StateUtils } from "../../game/store/state-utils";
 import { PlayerType } from "../../game/store/actions/play-card-action";
-import { GameMessage, GameError } from "../../game/game-error";
+import { GameError } from "../../game/game-error";
+import { GameMessage } from "../../game/game-message";
 
 export class Garbodor extends PokemonCard {
 

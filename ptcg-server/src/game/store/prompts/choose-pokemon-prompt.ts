@@ -2,8 +2,9 @@ import { Prompt } from "./prompt";
 import { PlayerType, SlotType, CardTarget } from "../actions/play-card-action";
 import { PokemonCardList } from "../state/pokemon-card-list";
 import { State } from "../state/state";
-import { GameError, GameMessage } from "../../game-error";
-import {StateUtils} from "../state-utils";
+import { GameError } from "../../game-error";
+import { GameMessage } from "../../game-message";
+import { StateUtils } from "../state-utils";
 
 export const ChoosePokemonPromptType = 'Choose pokemon';
 
@@ -22,7 +23,7 @@ export class ChoosePokemonPrompt extends Prompt<PokemonCardList[]> {
 
   constructor(
     playerId: number,
-    public message: string,
+    public message: GameMessage,
     public playerType: PlayerType,
     public slots: SlotType[],
     options?: Partial<ChoosePokemonOptions>

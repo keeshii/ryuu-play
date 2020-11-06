@@ -1,5 +1,5 @@
 <div class="ptcg-game-logs-header">
-  <h4 class="ptcg-game-logs-header-text">Messages</h4>
+  <h4 class="ptcg-game-logs-header-text" translate>TABLE_LOGS</h4>
   <span class="ptcg-u-spacer"></span>
   <mat-icon (click)="clearLogs()"
     matTooltip="Clear logs"
@@ -12,7 +12,7 @@
   <ul>
     <li *ngFor="let log of logs; trackBy: trackByFn">
       <span [class]="log.className">{{log.name}}</span>
-      {{log.message}}
+      {{ 'GAME_LOGS.' + log.message | translate: log.params }}
     </li>
   </ul>
 </div>
@@ -25,9 +25,9 @@
         name="message"
         [(ngModel)]="message"
         [disabled]="isDeleted"
-        type="text" matInput placeholder="Enter message">
+        type="text" matInput [placeholder]="'MESSAGES_ENTER_MESSAGE' | translate">
       <button mat-button matSuffix mat-icon-button
-        matTooltip="Send message"
+        [matTooltip]="'MESSAGES_SEND_MESSAGE' | translate"
         matTooltipShowDelay="1000"
         [disabled]="isDeleted"
         (click)="sendMessage()">

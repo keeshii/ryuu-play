@@ -3,8 +3,9 @@ import { Stage, CardType } from "../../game/store/card/card-types";
 import { StoreLike, State, CoinFlipPrompt } from "../../game";
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
-import { CardMessage } from "../card-message";
 import { HealTargetEffect, RemoveSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
+import { GameMessage } from "../../game/game-message";
+
 
 export class Roselia extends PokemonCard {
 
@@ -47,8 +48,8 @@ export class Roselia extends PokemonCard {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
       state = store.prompt(state, [
-        new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP),
-        new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP)
+        new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP),
+        new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)
       ], results => {
         let heads: number = 0;
         results.forEach(r => { heads += r ? 1 : 0; });

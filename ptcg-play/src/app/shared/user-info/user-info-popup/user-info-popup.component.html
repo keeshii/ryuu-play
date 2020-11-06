@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>User details</h2>
+<h2 mat-dialog-title translate>USERS_USER_DETAILS</h2>
 
 <mat-dialog-content>
   <div class="ptcg-user-info-popup-pane">
@@ -10,17 +10,17 @@
   <button mat-raised-button color="primary"
     [routerLink]="['/profile', userId]"
     (click)="close()">
-    Show profile
+    {{ 'BUTTON_SHOW_PROFILE' | translate }}
   </button>
   <button mat-raised-button color="primary" *ngIf="visitor$ | async"
     [routerLink]="['/message', userId]"
     (click)="close()">
-    Send message
+    {{ 'BUTTON_SEND_MESSAGE' | translate }}
   </button>
 
   <span class="ptcg-u-spacer"></span>
 
   <button mat-raised-button (click)="close()" cdkFocusInitial>
-    Close
+    {{ 'BUTTON_CLOSE' | translate }}
   </button>
 </mat-dialog-actions>

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SkyhookDndModule } from '@angular-skyhook/core';
 import { SkyhookMultiBackendModule } from '@angular-skyhook/multi-backend';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { CardComponent } from './card/card.component';
 import { CardImagePopupComponent } from './card-image-popup/card-image-popup.component';
@@ -22,6 +23,7 @@ import { HoverHighlightComponent } from './hover-highlight/hover-highlight.compo
     MaterialModule,
     SkyhookDndModule,
     SkyhookMultiBackendModule,
+    TranslateModule
   ],
   declarations: [
     CardComponent,

@@ -1,4 +1,3 @@
-import { CardMessage } from "../card-message";
 import { TrainerCard } from "../../game/store/card/trainer-card";
 import { TrainerType, SuperType } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
@@ -28,7 +27,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   }
 
   let coinResult: boolean = false;
-  yield store.prompt(state, new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP), result => {
+  yield store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
     coinResult = result;
     next();
   });
@@ -40,7 +39,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   let targets: PokemonCardList[] = [];
   yield store.prompt(state, new ChoosePokemonPrompt(
     player.id,
-    CardMessage.CHOOSE_ONE_POKEMON,
+    GameMessage.CHOOSE_POKEMON_TO_DISCARD_CARDS,
     PlayerType.TOP_PLAYER,
     [ SlotType.ACTIVE, SlotType.BENCH ],
     { allowCancel: false, blocked }
@@ -57,7 +56,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   let cards: Card[] = [];
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    CardMessage.CHOOSE_ENERGY_CARD,
+    GameMessage.CHOOSE_CARD_TO_DISCARD,
     target,
     { superType: SuperType.ENERGY },
     { min: 1, max: 1, allowCancel: false }

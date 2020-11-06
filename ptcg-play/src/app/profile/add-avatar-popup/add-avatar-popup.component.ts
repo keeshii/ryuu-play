@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs/operators';
 
 import { AlertService } from 'src/app/shared/alert/alert.service';
@@ -8,6 +9,7 @@ import { AvatarService } from '../../api/services/avatar.service';
 import { FileInput } from '../../shared/file-input/file-input.model';
 import { SessionService } from '../../shared/session/session.service';
 import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed';
+import {ApiErrorEnum} from 'ptcg-server';
 
 @Component({
   selector: 'ptcg-add-avatar-popup',
@@ -28,7 +30,8 @@ export class AddAvatarPopupComponent implements OnInit, OnDestroy {
     private alertService: AlertService,
     private avatarService: AvatarService,
     private dialogRef: MatDialogRef<AddAvatarPopupComponent>,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private translate: TranslateService
   ) {
     this.maxFileSize = this.sessionService.session.config.avatarFileSize;
   }
@@ -51,7 +54,16 @@ export class AddAvatarPopupComponent implements OnInit, OnDestroy {
           this.dialogRef.close(response.avatar);
         },
         error: (error: ApiError) => {
-          this.alertService.toast(error.code);
+          switch (error.code) {
+            case ApiErrorEnum.NAME_DUPLICATE:
+              this.alertService.toast(this.translate.instant('ERROR_NAME_IN_USE'));
+              break;
+            default:
+              if (!error.handled) {
+                this.alertService.toast(this.translate.instant('ERROR_UNKNOWN'));
+              }
+              break;
+          }
         }
       });
   }

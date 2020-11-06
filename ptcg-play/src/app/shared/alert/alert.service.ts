@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateService } from '@ngx-translate/core';
 
 import { AlertPopupComponent } from './alert-popup/alert-popup.component';
 import { ConfirmPopupComponent } from './confirm-popup/confirm-popup.component';
@@ -13,7 +14,8 @@ export class AlertService {
 
   constructor(
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private translate: TranslateService
   ) { }
 
   public alert(message: string, title?: string): Promise<void> {
@@ -28,7 +30,7 @@ export class AlertService {
   }
 
   public error(message: string): Promise<void> {
-    return this.alert(message, 'Error');
+    return this.alert(message, this.translate.instant('ALERT_ERROR_TITLE'));
   }
 
   public toast(message: string, duration: number = 3000) {

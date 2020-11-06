@@ -20,8 +20,10 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-raised-button (click)="cancel()">Cancel</button>
+  <button mat-raised-button (click)="cancel()">
+    {{ 'BUTTON_CANCEL' | translate }}
+  </button>
   <button mat-raised-button color="primary" (click)="confirm()" [disabled]="form.invalid">
-    OK
+    {{ 'BUTTON_OK' | translate }}
   </button>
 </mat-dialog-actions>

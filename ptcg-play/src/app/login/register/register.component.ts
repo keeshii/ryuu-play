@@ -1,8 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ApiErrorEnum } from 'ptcg-server';
+import { TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs/operators';
 
 import { AlertService } from 'src/app/shared/alert/alert.service';
-import { ApiError, ApiErrorEnum } from 'src/app/api/api.error';
+import { ApiError } from 'src/app/api/api.error';
 import { LoginService } from 'src/app/api/services/login.service';
 import { Router } from '@angular/router';
 import { ServerPasswordPopupService } from '../server-password-popup/server-password-popup.service';
@@ -27,7 +29,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
     private alertService: AlertService,
     private loginService: LoginService,
     private serverPasswordPopupService: ServerPasswordPopupService,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) { }
 
   ngOnInit() { }
@@ -51,10 +54,11 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   private handleError(error: ApiError) {
     switch (error.code) {
-      case ApiErrorEnum.ERROR_REGISTER_DISABLED:
-        this.alertService.error('ERROR_REGISTER_DISABLED');
+      case ApiErrorEnum.REGISTER_DISABLED:
+        this.alertService.error(this.translate.instant('ERROR_REGISTRATION_DISABLED'));
         break;
-      case ApiErrorEnum.ERROR_REGISTER_INVALID_SERVER_PASSWORD:
+
+      case ApiErrorEnum.REGISTER_INVALID_SERVER_PASSWORD:
         this.serverPasswordPopupService.openDialog()
           .pipe(takeUntilDestroyed(this))
           .subscribe(code => {
@@ -64,19 +68,12 @@ export class RegisterComponent implements OnInit, OnDestroy {
           });
         break;
 
-      case ApiErrorEnum.ERROR_NAME_EXISTS:
+      case ApiErrorEnum.REGISTER_NAME_EXISTS:
         this.invalidName = this.name;
         break;
 
-      case ApiErrorEnum.ERROR_EMAIL_EXISTS:
+      case ApiErrorEnum.REGISTER_EMAIL_EXISTS:
         this.invalidEmail = this.email;
-        break;
-
-      case ApiErrorEnum.ERROR_REQUESTS_LIMIT_REACHED:
-        break;
-
-      default:
-        this.alertService.error('INVALID_SERVER_RESPONSE');
         break;
     }
   }

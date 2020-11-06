@@ -7,9 +7,9 @@ import { Effect } from "../../game/store/effects/effect";
 import { PowerEffect, AttackEffect, RetreatEffect, UsePowerEffect } from "../../game/store/effects/game-effects";
 import { PowerType } from "../../game/store/card/pokemon-types";
 import { StateUtils } from "../../game/store/state-utils";
-import { GameMessage, GameError } from "../../game/game-error";
+import { GameError } from "../../game/game-error";
+import { GameMessage } from "../../game/game-message";
 import { CoinFlipPrompt } from "../../game/store/prompts/coin-flip-prompt";
-import { CardMessage } from "../card-message";
 import { PlayerType } from "../../game/store/actions/play-card-action";
 
 export class Dragalge extends PokemonCard {
@@ -56,7 +56,7 @@ export class Dragalge extends PokemonCard {
       const player = effect.player;
 
       return store.prompt(state, [
-        new CoinFlipPrompt(player.id, CardMessage.COIN_FLIP)
+        new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)
       ], result => {
         if (result === true) {
           const specialConditionEffect = new AddSpecialConditionsEffect(

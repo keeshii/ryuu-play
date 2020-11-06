@@ -1,7 +1,7 @@
 import { Card } from "../../game/store/card/card";
 import { CardTarget, PlayerType, SlotType } from "../../game/store/actions/play-card-action";
-import { CardMessage } from "../card-message";
-import { GameError, GameMessage } from "../../game/game-error";
+import { GameError } from "../../game/game-error";
+import { GameMessage } from "../../game/game-message";
 import { TrainerCard } from "../../game/store/card/trainer-card";
 import { TrainerType, Stage, SuperType } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
@@ -67,7 +67,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   let targets: PokemonCardList[] = [];
   yield store.prompt(state, new ChoosePokemonPrompt(
     player.id,
-    CardMessage.CHOOSE_BASIC_POKEMON,
+    GameMessage.CHOOSE_POKEMON_TO_EVOLVE,
     PlayerType.BOTTOM_PLAYER,
     [ SlotType.ACTIVE, SlotType.BENCH ],
     { allowCancel: true, blocked }
@@ -96,7 +96,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   let cards: Card[] = [];
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    CardMessage.CHOOSE_MATCHING_STAGE_2,
+    GameMessage.CHOOSE_CARD_TO_PUT_EVOLVE,
     player.hand,
     { superType: SuperType.POKEMON, stage: Stage.STAGE_2 },
     { min: 1, max: 1, allowCancel: true, blocked: blocked2 }

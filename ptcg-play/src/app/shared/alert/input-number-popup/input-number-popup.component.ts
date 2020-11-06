@@ -1,5 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 
 export interface InputNumberPopupData {
   title?: string;
@@ -26,9 +27,10 @@ export class InputNumberPopupComponent {
 
   constructor(
     private dialogRef: MatDialogRef<InputNumberPopupComponent>,
+    translate: TranslateService,
     @Inject(MAT_DIALOG_DATA) data: InputNumberPopupData,
   ) {
-    const DEFAULT_TITLE = 'Enter a number';
+    const DEFAULT_TITLE = translate.instant('ALERT_NUMBER_TITLE');
 
     this.title = data.title || DEFAULT_TITLE;
     this.message = data.message;

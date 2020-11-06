@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, OnDestroy, ElementRef, OnChanges } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, EMPTY } from 'rxjs';
 import { MessageInfo, ConversationInfo } from 'ptcg-server';
+import { TranslateService } from '@ngx-translate/core';
 import { finalize, skip, takeUntil } from 'rxjs/operators';
 
 import { AlertService } from '../../shared/alert/alert.service';
@@ -29,7 +30,8 @@ export class ConversationComponent implements OnInit, OnDestroy, OnChanges {
     private alertService: AlertService,
     private elementRef: ElementRef<HTMLElement>,
     private messageService: MessageService,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private translate: TranslateService
   ) {
     this.lastMessage$ = EMPTY;
   }
@@ -94,7 +96,9 @@ export class ConversationComponent implements OnInit, OnDestroy, OnChanges {
         this.updateConversation({ lastMessage: response.message });
       },
       error: (error: ApiError) => {
-        this.alertService.toast(error.message);
+        if (!error.handled) {
+          this.alertService.toast(this.translate.instant('ERROR_UNKNOWN'));
+        }
       }
     });
   }
@@ -146,7 +150,9 @@ export class ConversationComponent implements OnInit, OnDestroy, OnChanges {
         this.messages$.next(messages);
       },
       error: (error: ApiError) => {
-        this.alertService.toast(error.message);
+        if (!error.handled) {
+          this.alertService.toast(this.translate.instant('ERROR_UNKNOWN'));
+        }
       }
     });
   }
@@ -163,7 +169,9 @@ export class ConversationComponent implements OnInit, OnDestroy, OnChanges {
         this.messages$.next(messages);
       },
       error: (error: ApiError) => {
-        this.alertService.toast(error.message);
+        if (!error.handled) {
+          this.alertService.toast(this.translate.instant('ERROR_UNKNOWN'));
+        }
       }
     });
   }

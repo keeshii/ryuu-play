@@ -1,4 +1,5 @@
-import { GameError, GameMessage } from "../game-error";
+import { GameError } from "../game-error";
+import { GameCoreError } from "../game-message";
 import { Serializer, SerializerContext, SerializedState, Serialized } from "./serializer.interface";
 import { State } from "../store/state/state";
 import { Card } from "../store/card/card";
@@ -59,7 +60,7 @@ export class StateSerializer {
         if (serializer !== undefined) {
           return serializer.serialize(value);
         }
-        throw new GameError(GameMessage.SERIALIZER_ERROR, `Unknown serializer for '${name}'.`);
+        throw new GameError(GameCoreError.ERROR_SERIALIZER, `Unknown serializer for '${name}'.`);
       }
       return value;
     };
@@ -84,7 +85,7 @@ export class StateSerializer {
           if (serializer !== undefined) {
             return serializer.deserialize(value, context);
           }
-          throw new GameError(GameMessage.SERIALIZER_ERROR, `Unknown deserializer for '${name}'.`);
+          throw new GameError(GameCoreError.ERROR_SERIALIZER, `Unknown deserializer for '${name}'.`);
         }
       }
       return value;
@@ -98,7 +99,7 @@ export class StateSerializer {
       if (value instanceof Object && value._type === 'Ref') {
         const reference = pathBuilder.getValue(parsed, value.path);
         if (reference === undefined) {
-          throw new GameError(GameMessage.SERIALIZER_ERROR, `Unknown reference '${value.path}'.`);
+          throw new GameError(GameCoreError.ERROR_SERIALIZER, `Unknown reference '${value.path}'.`);
         }
         holder[key] = reference;
       }
@@ -162,7 +163,7 @@ export class StateSerializer {
     names.forEach((name, index) => {
       let card: Card | undefined = StateSerializer.knownCards.find(c => c.fullName === name);
       if (card === undefined) {
-        throw new GameError(GameMessage.SERIALIZER_ERROR, `Unknown card '${name}'.`);
+        throw new GameError(GameCoreError.ERROR_SERIALIZER, `Unknown card '${name}'.`);
       }
       card = deepClone(card) as Card;
       card.id = index;

@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConversationInfo } from 'ptcg-server';
 import { Observable } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs/operators';
 
 import { AlertService } from '../shared/alert/alert.service';
@@ -28,7 +29,8 @@ export class MessagesComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private route: ActivatedRoute,
     private router: Router,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private translate: TranslateService
   ) {
     this.conversations$ = this.sessionService.get(session => session.conversations);
   }
@@ -129,7 +131,7 @@ export class MessagesComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (!await this.alertService.confirm('Delete this conversation from your profile?')) {
+    if (!await this.alertService.confirm(this.translate.instant('MESSAGES_DELETE_CONVERSATION_CONFIRM'))) {
       return;
     }
 
@@ -147,7 +149,9 @@ export class MessagesComponent implements OnInit, OnDestroy {
           }
         },
         error: (error: ApiError) => {
-          this.alertService.toast(error.message);
+          if (!error.handled) {
+            this.alertService.toast(this.translate.instant('ERROR_UNKNOWN'));
+          }
         }
       });
   }

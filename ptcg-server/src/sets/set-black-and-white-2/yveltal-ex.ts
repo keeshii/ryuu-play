@@ -4,7 +4,7 @@ import { StoreLike, State, StateUtils, AttachEnergyPrompt, PlayerType, SlotType 
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
 import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
-import { CardMessage } from "../card-message";
+import { GameMessage } from "../../game/game-message";
 
 export class YveltalEx extends PokemonCard {
 
@@ -72,7 +72,7 @@ export class YveltalEx extends PokemonCard {
 
       return store.prompt(state, new AttachEnergyPrompt(
         player.id,
-        CardMessage.ATTACH_ENERGY_TO_BENCH,
+        GameMessage.ATTACH_ENERGY_TO_BENCH,
         player.active,
         PlayerType.BOTTOM_PLAYER,
         [ SlotType.BENCH ],

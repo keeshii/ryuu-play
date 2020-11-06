@@ -4,10 +4,10 @@ import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { TrainerEffect } from "../../game/store/effects/play-card-effects";
-import { GameError, GameMessage } from "../../game/game-error";
+import { GameError } from "../../game/game-error";
+import { GameMessage } from "../../game/game-message";
 import { Card} from "../../game/store/card/card";
 import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
-import { CardMessage } from "../card-message";
 
 function* playCard(next: Function, store: StoreLike, state: State, self: VsSeeker, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -26,7 +26,7 @@ function* playCard(next: Function, store: StoreLike, state: State, self: VsSeeke
   let cards: Card[] = [];
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    CardMessage.CHOOSE_TRAINER_CARD,
+    GameMessage.CHOOSE_CARD_TO_HAND,
     player.discard,
     { superType: SuperType.TRAINER, trainerType: TrainerType.SUPPORTER },
     { min: 1, max: 1, allowCancel: true }

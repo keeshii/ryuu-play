@@ -5,7 +5,7 @@ import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { CoinFlipPrompt } from "../../game/store/prompts/coin-flip-prompt";
-import { CardMessage } from "../card-message";
+import { GameMessage } from "../../game/game-message";
 import { PlayerType } from "../../game/store/actions/play-card-action";
 import { AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
 
@@ -56,7 +56,7 @@ export class Pachirisu extends PokemonCard {
 
       return store.prompt(state, new CoinFlipPrompt(
         player.id,
-        CardMessage.COIN_FLIP
+        GameMessage.COIN_FLIP
       ), flipResult => {
         if (flipResult) {
           const specialCondition = new AddSpecialConditionsEffect(effect, [SpecialCondition.PARALYZED]);

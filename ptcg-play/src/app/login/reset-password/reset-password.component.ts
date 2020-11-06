@@ -1,9 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ApiErrorEnum } from 'ptcg-server';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs/operators';
 
 import { AlertService } from '../../shared/alert/alert.service';
-import { ApiError, ApiErrorEnum } from '../../api/api.error';
+import { ApiError } from '../../api/api.error';
 import { ResetPasswordService } from '../../api/services/reset-password.service';
 import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed';
 
@@ -21,7 +23,8 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
   constructor(
     private alertService: AlertService,
     private resetPasswordService: ResetPasswordService,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) { }
 
   ngOnInit() {
@@ -39,7 +42,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
     )
       .subscribe({
         next: async () => {
-          await this.alertService.alert('RESET_PASSWORD_EMAIL_SEND_SUCCESS');
+          await this.alertService.alert(this.translate.instant('RESET_PASSWORD_SUCCESS'));
           this.router.navigate(['/games']);
         },
         error: (error: ApiError) => {
@@ -50,16 +53,12 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
 
   private handleError(error: ApiError) {
     switch (error.code) {
-      case ApiErrorEnum.ERROR_LOGIN_INVALID:
+      case ApiErrorEnum.LOGIN_INVALID:
         this.invalidEmail = this.email;
         break;
 
-      case ApiErrorEnum.ERROR_EMAIL_EXISTS:
-        this.invalidEmail = this.email;
-        break;
-
-      default:
-        this.alertService.error(error.code || error.message);
+      case ApiErrorEnum.CANNOT_SEND_MESSAGE:
+        this.alertService.error('RESET_PASSWORD_CANNOT_SEND_EMAIL');
         break;
     }
   }

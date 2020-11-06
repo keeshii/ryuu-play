@@ -1,22 +1,22 @@
 <ptcg-content [loading]="loading">
   <mat-toolbar>
     <mat-toolbar-row>
-      <h1>Profile summary</h1>
+      <h1 translate>PROFILE_TITLE</h1>
 
       <span class="ptcg-u-spacer"></span>
 
       <div *ngIf="owner$ | async ; then ownerActions ; else visitorActions"></div>
       <ng-template #ownerActions>
         <button mat-raised-button color="primary" (click)="editAvatars(userId)">
-          Edit avatars
+          {{ 'PROFILE_EDIT_AVATARS' | translate }}
         </button>
         <button mat-raised-button color="primary" (click)="changePassword()">
-          Change password
+          {{ 'SET_PASSWORD_BUTTON' | translate }}
         </button>
       </ng-template>
       <ng-template #visitorActions>
         <button mat-raised-button color="primary" [routerLink]="['/message', userId]">
-          Send message
+          {{ 'BUTTON_SEND_MESSAGE' | translate }}
         </button>
       </ng-template>
     </mat-toolbar-row>

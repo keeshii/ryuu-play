@@ -2,7 +2,8 @@ import { CardManager } from '../cards/card-manager';
 import { Client } from '../client/client.interface';
 import { DeckAnalyser } from '../cards/deck-analyser';
 import { Game } from '../core/game';
-import { GameError, GameMessage } from '../game-error';
+import { GameError } from '../game-error';
+import { GameMessage } from "../game-message";
 import { User, Message, Deck } from '../../storage';
 import { Core } from '../core/core';
 import { State } from '../store/state/state';
@@ -44,7 +45,7 @@ export abstract class BotClient implements Client {
 
   createGame(deck: string[], gameSettings?: GameSettings, invited?: Client): Game {
     if (this.core === undefined) {
-      throw new GameError(GameMessage.BOT_NOT_INITIALIZED);
+      throw new GameError(GameMessage.ERROR_BOT_NOT_INITIALIZED);
     }
     const game = this.core.createGame(this, deck, gameSettings, invited);
     return game;
@@ -61,7 +62,7 @@ export abstract class BotClient implements Client {
       .filter((cards: string[]) => this.validateDeck(cards));
 
     if (decks.length === 0) {
-      throw new GameError(GameMessage.BOT_NO_DECK);
+      throw new GameError(GameMessage.ERROR_BOT_NO_DECK);
     }
 
     const num = Math.round(Math.random() * (decks.length - 1));

@@ -6,7 +6,7 @@ import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { TrainerEffect } from "../../game/store/effects/play-card-effects";
 import { ConfirmPrompt } from "../../game/store/prompts/confirm-prompt";
-import { CardMessage } from "../card-message";
+import { GameMessage } from "../../game/game-message";
 import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
 import { ShuffleDeckPrompt } from "../../game/store/prompts/shuffle-prompt";
 
@@ -22,7 +22,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   if (count >= 2) {
     yield store.prompt(state, new ConfirmPrompt(
       player.id,
-      CardMessage.PLAY_BOTH_CARDS_AT_ONCE
+      GameMessage.WANT_TO_PLAY_BOTH_CARDS_AT_ONCE
     ), result => {
       playTwoCards = result;
       next();
@@ -45,7 +45,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   let cards: Card[] = [];
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    CardMessage.CHOOSE_ANY_TWO_CARDS,
+    GameMessage.CHOOSE_CARD_TO_HAND,
     player.deck,
     { },
     { min: 0, max: 2, allowCancel: true }

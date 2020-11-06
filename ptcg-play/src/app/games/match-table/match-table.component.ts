@@ -1,8 +1,9 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { MatchInfo, GameWinner } from 'ptcg-server';
+import { MatchInfo, GameWinner, ApiErrorEnum } from 'ptcg-server';
 import { PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 import { finalize, switchMap, takeUntil, map } from 'rxjs/operators';
 
 import { AlertService } from '../../shared/alert/alert.service';
@@ -49,7 +50,8 @@ export class MatchTableComponent implements OnInit, OnDestroy {
     private profileService: ProfileService,
     private replayService: ReplayService,
     private router: Router,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private translate: TranslateService
   ) {
     this.initPagination();
   }
@@ -125,16 +127,18 @@ export class MatchTableComponent implements OnInit, OnDestroy {
       finalize(() => { this.loading = false; }),
       takeUntilDestroyed(this)
     ).subscribe(() => {
-      this.alertService.toast('Replay saved.');
+      this.alertService.toast(this.translate.instant('REPLAY_SAVED'));
     }, (error: ApiError) => {
-      this.alertService.toast('Error occured, try again.');
+      if (!error.handled) {
+        this.alertService.toast(this.translate.instant('ERROR_UNKNOWN'));
+      }
     });
   }
 
   private getReplayName(name: string = ''): Promise<string | undefined> {
     return this.alertService.inputName({
-      title: 'Enter replay name',
-      placeholder: 'Replay name',
+      title: this.translate.instant('REPLAY_ENTER_NAME'),
+      placeholder: this.translate.instant('REPLAY_NAME'),
       invalidValues: [],
       value: name
     });

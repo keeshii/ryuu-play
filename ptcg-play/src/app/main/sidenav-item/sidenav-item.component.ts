@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { GamePhase } from 'ptcg-server';
+import { TranslateService } from '@ngx-translate/core';
 
 import { AlertService } from '../../shared/alert/alert.service';
 import { GameService } from '../../api/services/game.service';
@@ -34,7 +35,8 @@ export class SidenavItemComponent implements OnInit {
   constructor(
     private alertService: AlertService,
     private gameService: GameService,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private translate: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -78,7 +80,7 @@ export class SidenavItemComponent implements OnInit {
     const loggedUserId = this.sessionService.session.loggedUserId;
     const loggedUser = this.sessionService.session.users[loggedUserId];
     if (loggedUser === undefined) {
-      return `#${gameState.localId} Unknown`;
+      return this.translate.instant('MAIN_TABLE_UNKNOWN', { id: gameState.localId });
     }
     const clientId = this.sessionService.session.clientId;
     const opponent = gameState.state.players.find(p => p.id !== clientId);
@@ -86,13 +88,16 @@ export class SidenavItemComponent implements OnInit {
     if (opponent !== undefined) {
       name = opponent.name;
     }
-    return `#${gameState.localId} ${name}`;
+    return this.translate.instant('MAIN_TABLE_NAME', {
+      id: gameState.localId,
+      name
+    });
   }
 
   async onClose() {
     if (this.isPlaying) {
       const result = await this.alertService.confirm(
-        'Do you really want to leave the game?'
+        this.translate.instant('MAIN_LEAVE_GAME')
       );
 
       if (!result) {

@@ -1,12 +1,10 @@
 import { Effect } from "../../game/store/effects/effect";
 import { PokemonCard } from "../../game/store/card/pokemon-card";
 import { PowerType, StoreLike, State, ChoosePokemonPrompt, PlayerType, SlotType,
-  StateUtils, 
-  GameError,
-  GameMessage} from "../../game";
+  StateUtils, GameError } from "../../game";
 import { Stage, CardType, CardTag, SpecialCondition } from "../../game/store/card/card-types";
 import { PlayPokemonEffect } from "../../game/store/effects/play-card-effects";
-import { CardMessage } from "../card-message";
+import { GameMessage } from "../../game/game-message";
 import { AttackEffect, PowerEffect, UsePowerEffect } from "../../game/store/effects/game-effects";
 import { AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
 
@@ -15,7 +13,7 @@ function* useFlashBite(next: Function, store: StoreLike, state: State, effect: P
 
   yield store.prompt(state, new ChoosePokemonPrompt(
     player.id,
-    CardMessage.CHOOSE_OPPONENTS_POKEMON,
+    GameMessage.CHOOSE_POKEMON_TO_DAMAGE,
     PlayerType.TOP_PLAYER,
     [ SlotType.ACTIVE, SlotType.BENCH ],
     { allowCancel: true },

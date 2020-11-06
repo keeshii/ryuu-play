@@ -3,6 +3,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { ReplayInfo, GameWinner } from 'ptcg-server';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 import { debounceTime, switchMap, takeUntil, map, finalize } from 'rxjs/operators';
 
 import { AlertService } from '../shared/alert/alert.service';
@@ -42,7 +43,8 @@ export class ReplaysComponent implements OnInit, OnDestroy {
     private replayExportService: ReplayExportService,
     private replayService: ReplayService,
     private router: Router,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private translate: TranslateService
   ) {
     this.initPagination();
   }
@@ -88,7 +90,9 @@ export class ReplaysComponent implements OnInit, OnDestroy {
       },
       error: (error: ApiError) => {
         this.loading = false;
-        this.alertService.toast(error.code);
+        if (!error.handled) {
+          this.alertService.toast(this.translate.instant('ERROR_UNKNOWN'));
+        }
       }
     });
 
@@ -130,7 +134,9 @@ export class ReplaysComponent implements OnInit, OnDestroy {
           }
         },
         error: (error: ApiError) => {
-          this.alertService.toast(error.message);
+          if (!error.handled) {
+            this.alertService.toast(this.translate.instant('ERROR_UNKNOWN'));
+          }
         }
       });
   }
@@ -148,7 +154,9 @@ export class ReplaysComponent implements OnInit, OnDestroy {
           this.replayExportService.downloadReplay(base64, name);
         },
         error: (error: ApiError) => {
-          this.alertService.toast(error.message);
+          if (!error.handled) {
+            this.alertService.toast(this.translate.instant('ERROR_UNKNOWN'));
+          }
         }
       });
   }
@@ -164,7 +172,9 @@ export class ReplaysComponent implements OnInit, OnDestroy {
     ).subscribe(() => {
       this.refreshList();
     }, (error: ApiError) => {
-      this.alertService.toast('Error occured, try again.');
+      if (!error.handled) {
+        this.alertService.toast(this.translate.instant('ERROR_UNKNOWN'));
+      }
     });
   }
 
@@ -181,7 +191,9 @@ export class ReplaysComponent implements OnInit, OnDestroy {
     ).subscribe(() => {
       this.refreshList();
     }, (error: ApiError) => {
-      this.alertService.toast('Error occured, try again.');
+      if (!error.handled) {
+        this.alertService.toast(this.translate.instant('ERROR_UNKNOWN'));
+      }
     });
   }
 
@@ -220,8 +232,8 @@ export class ReplaysComponent implements OnInit, OnDestroy {
 
   private getReplayName(name: string = ''): Promise<string | undefined> {
     return this.alertService.inputName({
-      title: 'Enter replay name',
-      placeholder: 'Replay name',
+      title: this.translate.instant('REPLAY_ENTER_NAME'),
+      placeholder: this.translate.instant('REPLAY_NAME'),
       invalidValues: [],
       value: name
     });

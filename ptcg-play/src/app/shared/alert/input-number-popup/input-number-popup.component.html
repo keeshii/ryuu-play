@@ -11,8 +11,8 @@
       <input matInput type="number" name="value" placeholder="{{placeholder}}"
         ptcgNumberValidator [ptcgNumberValidatorMin]="min" [ptcgNumberValidatorMax]="max"
         [(ngModel)]="value" #numberField="ngModel">
-      <mat-error *ngIf="!numberField.pristine && numberField.invalid">
-        Invalid value
+      <mat-error *ngIf="!numberField.pristine && numberField.invalid" translate>
+        VALIDATION_INVALID_NUMBER
       </mat-error>
     </mat-form-field>
 
@@ -21,8 +21,10 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-raised-button (click)="cancel()">Cancel</button>
+  <button mat-raised-button (click)="cancel()">
+    {{ 'BUTTON_CANCEL' | translate }}
+  </button>
   <button mat-raised-button color="primary" (click)="confirm()" [disabled]="form.invalid">
-    OK
+    {{ 'BUTTON_OK' | translate }}
   </button>
 </mat-dialog-actions>

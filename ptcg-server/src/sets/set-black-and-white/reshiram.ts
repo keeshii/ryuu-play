@@ -3,7 +3,7 @@ import { Stage, CardType } from "../../game/store/card/card-types";
 import { StoreLike, State, Card, ChooseEnergyPrompt} from "../../game";
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
-import { CardMessage } from "../card-message";
+import { GameMessage } from "../../game/game-message";
 import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
 
 
@@ -54,7 +54,7 @@ export class Reshiram extends PokemonCard {
 
       state = store.prompt(state, new ChooseEnergyPrompt(
         player.id,
-        CardMessage.CHOOSE_ENERGIES_TO_DISCARD,
+        GameMessage.CHOOSE_ENERGIES_TO_DISCARD,
         checkProvidedEnergy.energyMap,
         [ CardType.FIRE, CardType.FIRE ],
         { allowCancel: false }

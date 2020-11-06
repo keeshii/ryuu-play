@@ -24,6 +24,8 @@
     "@angular/platform-browser": "~9.0.6",
     "@angular/platform-browser-dynamic": "~9.0.6",
     "@angular/router": "~9.0.6",
+    "@ngx-translate/core": "^12.1.2",
+    "@ngx-translate/http-loader": "^5.0.0",
     "core-js": "^2.5.4",
     "dnd-multi-backend": "^5.0.0",
     "ptcg-server": "file:../ptcg-server",

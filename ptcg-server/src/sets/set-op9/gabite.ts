@@ -5,7 +5,7 @@ import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { CoinFlipPrompt } from "../../game/store/prompts/coin-flip-prompt";
-import { CardMessage } from "../card-message";
+import { GameMessage } from "../../game/game-message";
 import { PutDamageEffect, HealTargetEffect } from "../../game/store/effects/attack-effects";
 import { StateUtils } from "../../game/store/state-utils";
 import { PlayerType } from "../../game/store/actions/play-card-action";
@@ -59,7 +59,7 @@ export class Gabite extends PokemonCard {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
       return store.prompt(state, new CoinFlipPrompt(
-        player.id, CardMessage.COIN_FLIP
+        player.id, GameMessage.COIN_FLIP
       ), flipResult => {
         if (flipResult) {
           player.active.marker.addMarker(this.BURROW_MARKER, this);

@@ -13,17 +13,17 @@
           <button mat-menu-item
             *ngIf="loggedUserId !== client.user.userId"
             [routerLink]="['/message', client.user.userId]">
-            Send message
+            {{ 'BUTTON_SEND_MESSAGE' | translate }}
           </button>
           <button mat-menu-item
             *ngIf="clientId !== client.clientId"
             [disabled]="loading"
             (click)="createGame(client.clientId)">
-            Invite to game
+            {{ 'BUTTON_INVITE' | translate }}
           </button>
           <button mat-menu-item
             [routerLink]="['/profile', client.user.userId]">
-            Show profile
+            {{ 'BUTTON_SHOW_PROFILE' | translate }}
           </button>
         </mat-menu>
       </a>
@@ -33,14 +33,14 @@
   <ptcg-content [loading]="loading">
     <mat-toolbar>
       <mat-toolbar-row>
-        <h1>Games</h1>
+        <h1 translate>GAMES_TITLE</h1>
 
         <span class="ptcg-u-spacer"></span>
 
         <button mat-raised-button color="primary"
           [disabled]="loading"
           (click)="createGame()">
-          Create game
+          {{ 'GAMES_CREATE_GAME_BUTTON' | translate }}
         </button>
       </mat-toolbar-row>
     </mat-toolbar>

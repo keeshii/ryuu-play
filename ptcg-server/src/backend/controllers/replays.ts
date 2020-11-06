@@ -3,7 +3,7 @@ import { Like, In } from 'typeorm';
 
 import { AuthToken, Validate, check } from '../services';
 import { Controller, Get, Post } from './controller';
-import { Errors } from '../common/errors';
+import { ApiErrorEnum } from '../common/errors';
 import { Match, User, Replay } from '../../storage';
 import { Replay as GameReplay, ReplayPlayer } from '../../game';
 import { ReplayInfo, ReplayImport } from '../interfaces/replay.interface';
@@ -77,7 +77,7 @@ export class Replays extends Controller {
     const entity = await Match.findOne(matchId);
 
     if (entity === undefined) {
-      res.send({error: Errors.GAME_INVALID_ID});
+      res.send({error: ApiErrorEnum.GAME_INVALID_ID});
       return;
     }
 
@@ -94,7 +94,7 @@ export class Replays extends Controller {
     const entity = await Replay.findOne(replayId, { relations: ['user'] });
 
     if (entity === undefined || entity.user.id !== userId) {
-      res.send({error: Errors.DECK_INVALID});
+      res.send({error: ApiErrorEnum.REPLAY_INVALID});
       return;
     }
 
@@ -117,14 +117,14 @@ export class Replays extends Controller {
 
     if (user === undefined) {
       res.status(400);
-      res.send({error: Errors.PROFILE_INVALID});
+      res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
     }
 
     const match = await Match.findOne(body.id);
     if (match === undefined) {
       res.status(400);
-      res.send({error: Errors.GAME_INVALID_ID});
+      res.send({error: ApiErrorEnum.GAME_INVALID_ID});
       return;
     }
 
@@ -133,7 +133,7 @@ export class Replays extends Controller {
       gameReplay.deserialize(match.replayData);
     } catch (error) {
       res.status(400);
-      res.send({error: Errors.REPLAY_INVALID});
+      res.send({error: ApiErrorEnum.REPLAY_INVALID});
       return;
     }
 
@@ -150,7 +150,7 @@ export class Replays extends Controller {
       replay = await replay.save();
     } catch (error) {
       res.status(400);
-      res.send({error: Errors.REPLAY_INVALID});
+      res.send({error: ApiErrorEnum.REPLAY_INVALID});
       return;
     }
 
@@ -173,7 +173,7 @@ export class Replays extends Controller {
 
     if (user === undefined) {
       res.status(400);
-      res.send({error: Errors.PROFILE_INVALID});
+      res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
     }
 
@@ -181,7 +181,7 @@ export class Replays extends Controller {
 
     if (replay === undefined || replay.user.id !== user.id) {
       res.status(400);
-      res.send({error: Errors.REPLAY_INVALID});
+      res.send({error: ApiErrorEnum.REPLAY_INVALID});
       return;
     }
 
@@ -204,7 +204,7 @@ export class Replays extends Controller {
 
     if (user === undefined) {
       res.status(400);
-      res.send({error: Errors.PROFILE_INVALID});
+      res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
     }
 
@@ -212,7 +212,7 @@ export class Replays extends Controller {
 
     if (replay === undefined || replay.user.id !== user.id) {
       res.status(400);
-      res.send({error: Errors.REPLAY_INVALID});
+      res.send({error: ApiErrorEnum.REPLAY_INVALID});
       return;
     }
 
@@ -221,7 +221,7 @@ export class Replays extends Controller {
       replay = await replay.save();
     } catch (error) {
       res.status(400);
-      res.send({error: Errors.REPLAY_INVALID});
+      res.send({error: ApiErrorEnum.REPLAY_INVALID});
       return;
     }
 
@@ -245,7 +245,7 @@ export class Replays extends Controller {
 
     if (user === undefined) {
       res.status(400);
-      res.send({error: Errors.PROFILE_INVALID});
+      res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
     }
 
@@ -261,7 +261,7 @@ export class Replays extends Controller {
       gameReplay.created = Date.now();
     } catch (error) {
       res.status(400);
-      res.send({error: Errors.REPLAY_INVALID});
+      res.send({error: ApiErrorEnum.REPLAY_INVALID});
       return;
     }
 
@@ -278,7 +278,7 @@ export class Replays extends Controller {
       replay = await replay.save();
     } catch (error) {
       res.status(400);
-      res.send({error: Errors.REPLAY_INVALID});
+      res.send({error: ApiErrorEnum.REPLAY_INVALID});
       return;
     }
 

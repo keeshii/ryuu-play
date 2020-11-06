@@ -21,24 +21,24 @@ export class DeckEditToolbarComponent implements OnInit {
   @Output() save = new EventEmitter<void>();
 
   public cardTypes = [
-    {value: CardType.NONE, label: 'None' },
-    {value: CardType.COLORLESS, label: 'Colorless' },
-    {value: CardType.GRASS, label: 'Grass' },
-    {value: CardType.FIGHTING, label: 'Fighting' },
-    {value: CardType.PSYCHIC, label: 'Psychic' },
-    {value: CardType.WATER, label: 'Water' },
-    {value: CardType.LIGHTNING, label: 'Lightning' },
-    {value: CardType.METAL, label: 'Metal' },
-    {value: CardType.DARK, label: 'Dark' },
-    {value: CardType.FIRE, label: 'Fire' },
-    {value: CardType.DRAGON, label: 'Dragon' },
-    {value: CardType.FAIRY, label: 'Fairy' },
+    {value: CardType.NONE, label: 'LABEL_NONE' },
+    {value: CardType.COLORLESS, label: 'LABEL_COLORLESS' },
+    {value: CardType.GRASS, label: 'LABEL_GRASS' },
+    {value: CardType.FIGHTING, label: 'LABEL_FIGHTING' },
+    {value: CardType.PSYCHIC, label: 'LABEL_PSYCHIC' },
+    {value: CardType.WATER, label: 'LABEL_WATER' },
+    {value: CardType.LIGHTNING, label: 'LABEL_LIGHTNING' },
+    {value: CardType.METAL, label: 'LABEL_METAL' },
+    {value: CardType.DARK, label: 'LABEL_DARK' },
+    {value: CardType.FIRE, label: 'LABEL_FIRE' },
+    {value: CardType.DRAGON, label: 'LABEL_DRAGON' },
+    {value: CardType.FAIRY, label: 'LABEL_FAIRY' },
   ];
 
   public superTypes = [
-    {value: SuperType.POKEMON, label: 'Pokemon' },
-    {value: SuperType.TRAINER, label: 'Trainer' },
-    {value: SuperType.ENERGY, label: 'Energy' },
+    {value: SuperType.POKEMON, label: 'LABEL_POKEMON' },
+    {value: SuperType.TRAINER, label: 'LABEL_TRAINER' },
+    {value: SuperType.ENERGY, label: 'LABEL_ENERGY' },
   ];
 
   public filterValue: DeckEditToolbarFilter;

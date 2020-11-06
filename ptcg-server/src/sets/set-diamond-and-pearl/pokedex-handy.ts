@@ -6,8 +6,8 @@ import { Effect } from "../../game/store/effects/effect";
 import { TrainerEffect } from "../../game/store/effects/play-card-effects";
 import { CardList } from "../../game/store/state/card-list";
 import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
-import { CardMessage } from "../card-message";
-import { GameError, GameMessage } from "../../game/game-error";
+import { GameError } from "../../game/game-error";
+import { GameMessage } from "../../game/game-message";
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -21,7 +21,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    CardMessage.CHOOSE_ANY_CARD,
+    GameMessage.CHOOSE_CARD_TO_HAND,
     deckTop,
     { },
     { min: 1, max: 1, allowCancel: false }

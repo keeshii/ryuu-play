@@ -17,9 +17,9 @@
           name="message"
           [disabled]="loading"
           [(ngModel)]="text"
-          type="text" matInput placeholder="Enter message">
+          type="text" matInput [placeholder]="'MESSAGES_ENTER_MESSAGE' | translate">
         <button mat-button matSuffix mat-icon-button
-          matTooltip="Send message"
+          [matTooltip]="'MESSAGES_SEND_MESSAGE' | translate"
           matTooltipShowDelay="1000"
           [disabled]="loading"
           (click)="sendMessage(userId, text)">
