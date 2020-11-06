@@ -1,7 +1,7 @@
 <h2 class="ptcg-prompt-title" translate>PROMPT_CHOOSE_POKEMON_TITLE</h2>
 
 <div class="ptcg-prompt-content">
-  <p>{{ message }}</p>
+  <p [translate]="'GAME_MESSAGES.' + message"></p>
 
   <ptcg-choose-pokemons-pane
     [pokemonData]="pokemonData"

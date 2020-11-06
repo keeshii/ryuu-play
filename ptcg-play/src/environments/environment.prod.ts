@@ -5,5 +5,7 @@ export const environment = {
   apiVersion: 1,
   defaultPageSize: 50,
   allowServerChange: true,
-  refreshTokenInterval: 60 * 60 * 1000
+  refreshTokenInterval: 60 * 60 * 1000,
+  defaultLanguage: 'en',
+  languages: { en: 'English' }
 };

@@ -5,13 +5,12 @@ import { SkyhookDndModule } from '@angular-skyhook/core';
 import { MultiBackend, HTML5ToTouch } from '@angular-skyhook/multi-backend';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateService } from '@ngx-translate/core';
 
 import { ApiModule } from './api/api.module';
 import { AppComponent } from './app.component';
-import { CardsBaseService } from './shared/cards/cards-base.service';
 import { DeckModule } from './deck/deck.module';
 import { GamesModule } from './games/games.module';
+import { LanguageService } from './main/language-select/language.service';
 import { LoginModule } from './login/login.module';
 import { MainModule } from './main/main.module';
 import { MessagesModule } from './messages/messages.module';
@@ -51,17 +50,8 @@ import { TableModule } from './table/table.module';
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(translate: TranslateService) {
-    // this language will be used as a fallback when a translation isn't found in the current language
-    translate.setDefaultLang('en');
-
-    let browserLang = translate.getBrowserLang();
-
-    // decode borser language, strip format 'en-US' to 'en'
-    if (browserLang !== undefined && browserLang.match(/\w\w/i) !== null) {
-      browserLang = browserLang.match(/\w\w/i)[0].toLowerCase();
-      translate.use(browserLang);
-    }
+  constructor(languageService: LanguageService) {
+    languageService.chooseLanguage();
   }
 }
 

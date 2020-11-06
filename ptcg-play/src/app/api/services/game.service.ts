@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ClientInfo, GameState, State, CardTarget, StateLog, Replay,
   Base64, StateSerializer, PlayerStats } from 'ptcg-server';
 import { Observable } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs/operators';
 
 import { AlertService } from '../../shared/alert/alert.service';
@@ -24,7 +25,8 @@ export class GameService {
     private api: ApiService,
     private alertService: AlertService,
     private sessionService: SessionService,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private translate: TranslateService
   ) { }
 
   public getPlayerStats(gameId: number) {
@@ -109,68 +111,68 @@ export class GameService {
         .subscribe(() => {
           this.removeGameState(gameId);
           this.removeLocalGameState(localGameId);
-        }, (error: ApiError) => this.alertService.toast(error.message));
+        }, (error: ApiError) => this.handleError(error));
     }
   }
 
   public ability(gameId: number, ability: string, target: CardTarget) {
     this.socketService.emit('game:action:ability', { gameId, ability, target })
-      .subscribe(() => {}, (error: ApiError) => this.alertService.toast(error.message));
+      .subscribe(() => {}, (error: ApiError) => this.handleError(error));
   }
 
   public attack(gameId: number, attack: string) {
     this.socketService.emit('game:action:attack', { gameId, attack })
-      .subscribe(() => {}, (error: ApiError) => this.alertService.toast(error.message));
+      .subscribe(() => {}, (error: ApiError) => this.handleError(error));
   }
 
   public stadium(gameId: number) {
     this.socketService.emit('game:action:stadium', { gameId })
-      .subscribe(() => {}, (error: ApiError) => this.alertService.toast(error.message));
+      .subscribe(() => {}, (error: ApiError) => this.handleError(error));
   }
 
   public play(gameId: number, deck: string[]) {
     this.socketService.emit('game:action:play', { gameId, deck })
-      .subscribe(() => {}, (error: ApiError) => this.alertService.toast(error.message));
+      .subscribe(() => {}, (error: ApiError) => this.handleError(error));
   }
 
   public resolvePrompt(gameId: number, promptId: number, result: any) {
     this.socketService.emit('game:action:resolvePrompt', {gameId, id: promptId, result})
-      .subscribe(() => {}, (error: ApiError) => this.alertService.toast(error.message));
+      .subscribe(() => {}, (error: ApiError) => this.handleError(error));
   }
 
   public playCardAction(gameId: number, handIndex: number, target: CardTarget) {
     this.socketService.emit('game:action:playCard', {gameId, handIndex, target})
-      .subscribe(() => {}, (error: ApiError) => this.alertService.toast(error.message));
+      .subscribe(() => {}, (error: ApiError) => this.handleError(error));
   }
 
   public reorderBenchAction(gameId: number, from: number, to: number) {
     this.socketService.emit('game:action:reorderBench', {gameId, from, to})
-      .subscribe(() => {}, (error: ApiError) => this.alertService.toast(error.message));
+      .subscribe(() => {}, (error: ApiError) => this.handleError(error));
   }
 
   public reorderHandAction(gameId: number, order: number[]) {
     this.socketService.emit('game:action:reorderHand', {gameId, order})
-      .subscribe(() => {}, (error: ApiError) => this.alertService.toast(error.message));
+      .subscribe(() => {}, (error: ApiError) => this.handleError(error));
   }
 
   public retreatAction(gameId: number, to: number) {
     this.socketService.emit('game:action:retreat', {gameId, to})
-      .subscribe(() => {}, (error: ApiError) => this.alertService.toast(error.message));
+      .subscribe(() => {}, (error: ApiError) => this.handleError(error));
   }
 
   public passTurnAction(gameId: number) {
     this.socketService.emit('game:action:passTurn', {gameId})
-      .subscribe(() => {}, (error: ApiError) => this.alertService.toast(error.message));
+      .subscribe(() => {}, (error: ApiError) => this.handleError(error));
   }
 
   public appendLogAction(gameId: number, message: string) {
     this.socketService.emit('game:action:appendLog', {gameId, message})
-      .subscribe(() => {}, (error: ApiError) => this.alertService.toast(error.message));
+      .subscribe(() => {}, (error: ApiError) => this.handleError(error));
   }
 
   public changeAvatarAction(gameId: number, avatarName: string) {
     this.socketService.emit('game:action:changeAvatar', {gameId, avatarName})
-      .subscribe(() => {}, (error: ApiError) => this.alertService.toast(error.message));
+      .subscribe(() => {}, (error: ApiError) => this.handleError(error));
   }
 
   private startListening(id: number) {
@@ -235,6 +237,18 @@ export class GameService {
     const serializedState = base64.decode(stateData);
     const serializer = new StateSerializer();
     return serializer.deserialize(serializedState);
+  }
+
+  private handleError(error: ApiError): void {
+    const message = String(error.message);
+    const translations = this.translate.translations[this.translate.currentLang]
+      || this.translate.translations[this.translate.defaultLang];
+
+    const key = translations && translations.GAME_MESSAGES[message]
+      ? 'GAME_MESSAGES.' + message
+      : 'ERROR_UNKNOWN';
+
+    this.alertService.toast(this.translate.instant(key));
   }
 
 }

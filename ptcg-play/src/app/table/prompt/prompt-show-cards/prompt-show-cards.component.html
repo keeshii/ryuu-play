@@ -1,7 +1,7 @@
 <h2 class="ptcg-prompt-title" translate>PROMPT_SHOW_CARDS_TITLE</h2>
 
 <div class="ptcg-prompt-content">
-  <p>{{ prompt.message }}</p>
+  <p [translate]="'GAME_MESSAGES.' + prompt.message"></p>
 
   <ptcg-cards-container [keepInitialSize]="true">
     <ptcg-card *ngFor="let card of prompt.cards" [card]="card"

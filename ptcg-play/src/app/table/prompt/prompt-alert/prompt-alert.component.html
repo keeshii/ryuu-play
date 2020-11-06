@@ -1,7 +1,7 @@
 <h2 class="ptcg-prompt-title" translate>PROMPT_ALERT_TITLE</h2>
 
 <div class="ptcg-prompt-content">
-  <p>{{ prompt.message }}</p>
+  <p [translate]="'GAME_MESSAGES.' + prompt.message"></p>
 </div>
 
 <div class="ptcg-prompt-actions">

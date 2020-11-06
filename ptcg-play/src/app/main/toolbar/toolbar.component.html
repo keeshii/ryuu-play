@@ -2,6 +2,9 @@
   <button mat-button (click)="onLogoClick()">{{ 'MAIN_TITLE' | translate }}</button>
   <span class="ryuu-spacer"></span>
 
+  <!-- Language select -->
+  <ptcg-language-select *ngIf="!loggedUser"></ptcg-language-select>
+
   <div class="ptcg-toolbar-user-info">
     <button *ngIf="!loggedUser" mat-button (click)="login()">
       {{ 'BUTTON_LOGIN' | translate }}

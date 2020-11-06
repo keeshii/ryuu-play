@@ -4,7 +4,7 @@
   <mat-progress-bar *ngIf="loading" color="accent" mode="indeterminate" class="ptcg-u-top">
   </mat-progress-bar>
 
-  <p>{{ prompt.message }}</p>
+  <p [translate]="'GAME_MESSAGES.' + prompt.message"></p>
 
   <form #form="ngForm" autocomplete="off" *ngIf="!loading && decks.length > 0">
     <mat-form-field>
