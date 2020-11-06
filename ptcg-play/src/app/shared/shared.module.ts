@@ -13,6 +13,7 @@ import { CardsModule } from './cards/cards.module';
 import { ContentComponent } from './content/content.component';
 import { EnergyComponent } from './cards/energy/energy.component';
 import { FileInputComponent } from './file-input/file-input.component';
+import { ImageCacheModule } from './image-cache/image-cache.module';
 import { InfoComponent } from './info/info.component';
 import { SearchBoxComponent } from './search-box/search-box.component';
 import { SessionService } from './session/session.service';
@@ -28,6 +29,7 @@ import { ValidationModule } from './validation/validation.module';
     BrowserAnimationsModule,
     CardsModule,
     FormsModule,
+    ImageCacheModule,
     MaterialModule,
     SkyhookDndModule,
     SkyhookMultiBackendModule,
@@ -52,6 +54,7 @@ import { ValidationModule } from './validation/validation.module';
     ContentComponent,
     EnergyComponent,
     FileInputComponent,
+    ImageCacheModule,
     InfoComponent,
     FormsModule,
     MaterialModule,

@@ -13,6 +13,7 @@ import { CardListPaneComponent } from './card-list-pane/card-list-pane.component
 import { CardListPopupComponent } from './card-list-popup/card-list-popup.component';
 import { DropHighlightDirective } from './drop-highlight/drop-highlight.directive';
 import { EnergyComponent } from './energy/energy.component';
+import { ImageCacheModule } from '../image-cache/image-cache.module';
 import { MaterialModule } from '../material.module';
 import { TrainerTypeComponent } from './trainer-type/trainer-type.component';
 import { HoverHighlightComponent } from './hover-highlight/hover-highlight.component';
@@ -20,6 +21,7 @@ import { HoverHighlightComponent } from './hover-highlight/hover-highlight.compo
 @NgModule({
   imports: [
     CommonModule,
+    ImageCacheModule,
     MaterialModule,
     SkyhookDndModule,
     SkyhookMultiBackendModule,
