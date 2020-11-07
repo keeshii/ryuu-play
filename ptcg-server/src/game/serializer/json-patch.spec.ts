@@ -59,10 +59,11 @@ describe('JsonPatch', () => {
   it('Should move value in the array', () => {
     // given
     const src = [ 1, 2, 3, 4, 5 ];
-    const dest = [ 1, 2, 5, 3, 4 ];
+    const dest = [ 1, 2, 5, 4, 3 ];
     // when
     const diff = jsonPatch.diff(src, dest);
     const restored = jsonPatch.apply(src, diff);
+    console.log(restored);
     // then
     expect(diff).toEqual([{ op: 'move', path: '', val: [ 4, 2 ] }]);
     expect(restored).toEqual(dest);

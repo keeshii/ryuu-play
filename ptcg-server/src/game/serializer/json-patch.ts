@@ -62,8 +62,11 @@ export class JsonPatch {
           return index > j && this.isEqual(value, dest[i]);
         });
         if (fromIndex !== -1) {
-          src.splice(fromIndex, 1);
+          const temp = src[fromIndex];
+          src[fromIndex] = src[j];
+          src[j] = temp;
           results1.push({op: 'move', path, val: [fromIndex, i]});
+          j += 1;
           i += 1;
         } else {
           fromIndex = dest.findIndex((value, index) => {
@@ -155,8 +158,9 @@ export class JsonPatch {
         const arr: any[] = root as any[];
         const fromKey: number = delta.val[0];
         const toKey: number = delta.val[1];
-        arr.splice(toKey, 0, arr[fromKey]);
-        arr.splice(fromKey + 1, 1);
+        const temp = arr[fromKey];
+        arr[fromKey] = arr[toKey];
+        arr[toKey] = temp;
         break;
     }
     return root;
