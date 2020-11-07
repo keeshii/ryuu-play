@@ -1,6 +1,7 @@
 @import '../../../../theme/variables.scss';
 
-$ptcg-cards-container-padding: map-get($padding, small);
+$ptcg-cards-container-padding-v: map-get($padding, small);
+$ptcg-cards-container-padding-h: map-get($padding, normal); // for easier scrolling on mobile
 $ptcg-cards-container-border-radius: map-get($padding, small);
 
 $ptcg-cards-container-min-height: map-get($ptcg-size, card) * $card-aspect-ratio + 2 * map-get($padding, normal);
@@ -24,5 +25,5 @@ $ptcg-cards-container-min-width: 3 * map-get($ptcg-size, card) + 4 * map-get($pa
   min-height: $ptcg-cards-container-min-height;
   min-width: $ptcg-cards-container-min-width;
   overflow: auto;
-  padding: $ptcg-cards-container-padding;
+  padding: $ptcg-cards-container-padding-v $ptcg-cards-container-padding-h;
 }

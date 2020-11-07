@@ -2,7 +2,7 @@
     <ng-template let-type let-item="item">
         <ng-container [ngSwitch]="type">
             <div class="ptcg-card" *ngSwitchCase="'DECK_CARD'">
-              <img class="ptcg-card-preview" [src]="item.data.scanUrl">
+              <img class="ptcg-card-preview" [ptcgImageCache]="item.data.scanUrl">
             </div>
         </ng-container>
     </ng-template>

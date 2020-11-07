@@ -10,6 +10,7 @@ export const environment = {
   defaultPageSize: 50,
   allowServerChange: true,
   refreshTokenInterval: 60 * 60 * 1000,
+  enableImageCache: false,
   defaultLanguage: 'en',
   languages: { en: 'English' }
 };

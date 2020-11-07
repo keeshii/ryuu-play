@@ -28,61 +28,65 @@ export interface ImgCacheConfig {
 
 @Injectable()
 export class ImageCacheService {
-  private promise: Promise<object>;
+
+  private initialized = false;
+  private cachedFilesMap: {[url: string]: string} = {};
 
   public init(config: ImgCacheConfig = {}) {
     Object.assign(ImgCache.options, config);
 
-    this.promise = new Promise((resolve, reject) => {
-      ImgCache.init(resolve, reject);
+    ImgCache.init(() => {
+      this.initialized = true;
     });
-    return this.promise;
   }
 
-  public fetchFromCache(url: string): Promise<string> {
-    return Promise.resolve()
-      .then(() => this.checkInitialised())
-      .then(() => this.cacheIfNecessary(url))
-      .then(() => this.replaceWithCached(url))
-      .catch(err => {
-        return url;
-      });
+  public getCachedUrlFromMap(url: string): string | undefined {
+    return this.cachedFilesMap[url];
   }
 
-  public clearCache(): Promise<null> {
+  public fetchFromCache(url: string, callback: (url: string) => void): void {
+
+    if (!this.initialized) {
+      // ImgCache has not been initialised. Please call `init` before using the library.
+      callback(url);
+      return;
+    }
+
+    ImgCache.getCachedFileURL(
+      url,
+
+      // Successfully retrieved from the cache
+      (src: string, dest: string) => {
+        this.cachedFilesMap[url] = dest;
+        callback(dest);
+      },
+
+      // File not cached,
+      () => {
+        ImgCache.cacheFile(
+          url,
+          // File added to cache, return it's URL
+          (dest: string) => {
+            this.cachedFilesMap[url] = dest;
+            callback(dest);
+          },
+
+          // Unable to cache the file, return the original url
+          () => {
+            // it is unlikely we will ever success, remember the source url
+            this.cachedFilesMap[url] = url;
+            callback(url);
+          }
+        );
+      }
+    );
+  }
+
+  public clearCache(): Promise<void> {
+    this.cachedFilesMap = {};
     return new Promise((resolve, reject) => {
       ImgCache.clearCache(resolve, reject);
     });
   }
 
-  private checkInitialised() {
-    if (!this.promise) {
-      throw new Error('ImgCache has not been initialised. Please call `init` before using the library.');
-    }
-  }
-
-  private cacheIfNecessary(url: string): Promise<null> {
-    return new Promise((resolve, reject) => {
-      // Check if image is cached
-      ImgCache.isCached(url, (path: string, success: boolean) => {
-        if (success) {
-          // already cached
-          resolve();
-        } else {
-        // not there, need to cache the image
-          ImgCache.cacheFile(url, resolve, reject);
-        }
-      });
-    });
-  }
-
-  private replaceWithCached(url: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-      ImgCache.getCachedFileURL(
-        url,
-        (src: string, dest: string) => resolve(dest),
-        () => reject(new Error('Could not replace with cached file'))
-      );
-    });
-  }
 }

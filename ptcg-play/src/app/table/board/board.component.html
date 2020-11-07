@@ -2,11 +2,11 @@
     <ng-template let-type let-item="item">
         <ng-container [ngSwitch]="type">
             <div class="ptcg-card" *ngSwitchCase="'BOARD_SLOT'">
-              <img class="ptcg-card-preview" [src]="item.scanUrl"
+              <img class="ptcg-card-preview" [ptcgImageCache]="item.scanUrl"
                 ptcgDropHighlight="outside" [ptcgDropHighlightVisible]="boardHighlight$ | async">
             </div>
             <div class="ptcg-card" *ngSwitchCase="'HAND_CARD'">
-              <img class="ptcg-card-preview" [src]="item.data.scanUrl"
+              <img class="ptcg-card-preview" [ptcgImageCache]="item.data.scanUrl"
                 ptcgDropHighlight="outside" [ptcgDropHighlightVisible]="boardHighlight$ | async">
             </div>
         </ng-container>

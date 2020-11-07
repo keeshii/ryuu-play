@@ -36,4 +36,7 @@
     <engine name="android" />
     <plugin name="cordova-plugin-whitelist" />
     <plugin name="cordova-plugin-statusbar" />
+    <plugin name="cordova-plugin-file" />
+    <plugin name="cordova-plugin-file-transfer" />
+    <plugin name="cordova-plugin-device" />
 </widget>

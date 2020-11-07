@@ -8,10 +8,9 @@ var indexPatches = [{
 	find: '<meta name="viewport" content="width=device-width, initial-scale=1">',
 	replacement: '<meta name="viewport" content="width=device-width, initial-scale=0.65, maximum-scale=0.65, user-scalable=no">'
 }, {
-	find: '</script></body>',
-	replacement: `</script>
-<script src="cordova.js"></script>
-<script>
+	find: '<script src=',
+	replacement: `<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript">
       window.addEventListener = function () {
         EventTarget.prototype.addEventListener.apply(this, arguments);
       };
@@ -30,7 +29,10 @@ var indexPatches = [{
         }
       }, false);
 </script>
-</body>`
+<script src=`
+}, {
+	find: /<script src=/g,
+	replacement: '<script type="text/javascript" src='
 }];
 
 var mainPatches = [{
