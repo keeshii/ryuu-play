@@ -53,12 +53,9 @@ function* playCard(next: Function, store: StoreLike, state: State, self: JunkArm
     return state;
   }
 
-  player.hand.moveCardTo(self, player.discard);
-  player.hand.moveCardsTo(cards, player.discard);
-
   const blocked: number[] = [];
   player.discard.cards.forEach((c, index) => {
-    if (!(c instanceof TrainerCard) || cards.includes(c)) {
+    if (!(c instanceof TrainerCard)) {
       blocked.push(index);
       return;
     }
@@ -68,18 +65,26 @@ function* playCard(next: Function, store: StoreLike, state: State, self: JunkArm
     }
   });
 
+  let recovered: Card[] = [];
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
     GameMessage.CHOOSE_CARD_TO_HAND,
     player.discard,
     { },
-    { min: 1, max: 1, allowCancel: false, blocked }
+    { min: 1, max: 1, allowCancel: true, blocked }
   ), selected => {
-    cards = selected || [];
+    recovered = selected || [];
     next();
   });
 
-  player.discard.moveCardsTo(cards, player.hand);
+  // Operation canceled by the user
+  if (recovered.length === 0) {
+    return state;
+  }
+
+  player.hand.moveCardTo(self, player.discard);
+  player.hand.moveCardsTo(cards, player.discard);
+  player.discard.moveCardsTo(recovered, player.hand);
   return state;
 }
 

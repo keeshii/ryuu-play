@@ -1,5 +1,5 @@
 import { TrainerCard } from "../../game/store/card/trainer-card";
-import { TrainerType, CardTag } from "../../game/store/card/card-types";
+import { TrainerType, CardTag, SuperType } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
@@ -14,7 +14,6 @@ import { CardList } from "../../game/store/state/card-list";
 function* playCard(next: Function, store: StoreLike, state: State,
   self: DowsingMachine, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
-  const itemTypes = [TrainerType.ITEM, TrainerType.TOOL];
   let cards: Card[] = [];
   
   cards = player.hand.cards.filter(c => c !== self);
@@ -24,7 +23,7 @@ function* playCard(next: Function, store: StoreLike, state: State,
 
   let trainersInDiscard = 0;
   player.discard.cards.forEach(c => {
-    if (c instanceof TrainerCard && itemTypes.includes(c.trainerType)) {
+    if (c instanceof TrainerCard) {
       trainersInDiscard += 1;
     }
   });
@@ -39,6 +38,7 @@ function* playCard(next: Function, store: StoreLike, state: State,
   const handTemp = new CardList();
   handTemp.cards = player.hand.cards.filter(c => c !== self);
 
+  cards = [];
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
     GameMessage.CHOOSE_CARD_TO_DISCARD,
@@ -55,33 +55,26 @@ function* playCard(next: Function, store: StoreLike, state: State,
     return state;
   }
 
-  player.hand.moveCardTo(self, player.discard);
-  player.hand.moveCardsTo(cards, player.discard);
-
-  const blocked: number[] = [];
-  player.discard.cards.forEach((c, index) => {
-    if (!(c instanceof TrainerCard) || cards.includes(c)) {
-      blocked.push(index);
-      return;
-    }
-    if (!itemTypes.includes(c.trainerType) || c.name === self.name) {
-      blocked.push(index);
-      return;
-    }
-  });
-
+  let recovered: Card[] = [];
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
     GameMessage.CHOOSE_CARD_TO_HAND,
     player.discard,
-    { },
-    { min: 1, max: 1, allowCancel: false, blocked }
+    { superType: SuperType.TRAINER },
+    { min: 1, max: 1, allowCancel: true }
   ), selected => {
-    cards = selected || [];
+    recovered = selected || [];
     next();
   });
 
-  player.discard.moveCardsTo(cards, player.hand);
+  // Operation cancelled by the user
+  if (recovered.length === 0) {
+    return state;
+  }
+
+  player.hand.moveCardTo(self, player.discard);
+  player.hand.moveCardsTo(cards, player.discard);
+  player.discard.moveCardsTo(recovered, player.hand);
   return state;
 }
 
