@@ -2,7 +2,7 @@ import { Component, OnInit, OnChanges, Input, OnDestroy } from '@angular/core';
 import { DraggedItem } from '@angular-skyhook/sortable';
 import { DropTarget, SkyhookDndService } from '@angular-skyhook/core';
 import { Observable } from 'rxjs';
-import { Player, SuperType, SlotType, PlayerType, CardTarget, Card, PokemonCard, CardList, StateUtils, PokemonCardList } from 'ptcg-server';
+import { Player, SlotType, PlayerType, CardTarget, Card, CardList } from 'ptcg-server';
 import { map } from 'rxjs/operators';
 
 import { HandItem, HandCardType } from '../hand/hand-item.interface';
@@ -11,7 +11,8 @@ import { CardsBaseService } from '../../shared/cards/cards-base.service';
 import { GameService } from '../../api/services/game.service';
 import { LocalGameState } from 'src/app/shared/session/session.interface';
 
-const BENCH_SIZE = 5;
+const MAX_BENCH_SIZE = 8;
+const DEFAULT_BENCH_SIZE = 5;
 
 type DropTargetType = DropTarget<DraggedItem<HandItem> | BoardCardItem, any>;
 
@@ -27,7 +28,8 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
   @Input() topPlayer: Player;
   @Input() bottomPlayer: Player;
 
-  public topBench = new Array(BENCH_SIZE);
+  public readonly defaultBenchSize = DEFAULT_BENCH_SIZE;
+  public topBench = new Array(MAX_BENCH_SIZE);
   public bottomActive: BoardCardItem;
   public bottomBench: BoardCardItem[];
 
@@ -50,7 +52,7 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
     this.bottomBench = [];
     this.bottomBenchTarget = [];
     this.bottomBenchHighlight$ = [];
-    for (let i = 0; i < BENCH_SIZE; i++) {
+    for (let i = 0; i < MAX_BENCH_SIZE; i++) {
       const item = this.createBoardCardItem(PlayerType.BOTTOM_PLAYER, SlotType.BENCH, i);
       this.bottomBench.push(item);
       let target: DropTargetType;
@@ -161,7 +163,7 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
     this.bottomActive.source.unsubscribe();
     this.bottomActiveTarget.unsubscribe();
 
-    for (let i = 0; i < BENCH_SIZE; i++) {
+    for (let i = 0; i < MAX_BENCH_SIZE; i++) {
       this.bottomBench[i].source.unsubscribe();
       this.bottomBenchTarget[i].unsubscribe();
     }

@@ -1,6 +1,6 @@
 import { State, GamePhase, GameWinner } from "../state/state";
 import { StoreLike } from "../store-like";
-import { CheckHpEffect, CheckProvidedEnergyEffect } from "../effects/check-effects";
+import { CheckHpEffect, CheckProvidedEnergyEffect, CheckBenchSizeEffect } from "../effects/check-effects";
 import { PokemonCardList } from "../state/pokemon-card-list";
 import { ChoosePokemonPrompt } from "../prompts/choose-pokemon-prompt";
 import { GameError } from "../../game-error";
@@ -33,6 +33,54 @@ function findKoPokemons(store: StoreLike, state: State): PokemonItem[] {
   }
 
   return pokemons;
+}
+
+function handleBenchSizeChange(store: StoreLike, state: State): State {
+  const checkBenchSizeEffect = new CheckBenchSizeEffect();
+  store.reduceEffect(state, checkBenchSizeEffect);
+  const benchSize = checkBenchSizeEffect.benchSize;
+
+  for (const player of state.players) {
+    // Add empty slots if bench is smaller
+    while (player.bench.length < benchSize) {
+      const bench = new PokemonCardList()
+      bench.isPublic = true;
+      player.bench.push(bench);
+    }
+
+    // Remove empty slots, starting from the right side
+    for (let index = player.bench.length - 1; index >= 0; index--) {
+      const bench = player.bench[index];
+      if (player.bench.length > benchSize && bench.cards.length === 0) {
+        player.bench.splice(index, 1);
+      }
+    }
+
+    // Player has more Pokemons than bench size, discard some
+    if (player.bench.length > benchSize) {
+      const count = player.bench.length - benchSize;
+      store.prompt(state, new ChoosePokemonPrompt(
+        player.id,
+        GameMessage.CHOOSE_POKEMON_TO_DISCARD,
+        PlayerType.BOTTOM_PLAYER,
+        [ SlotType.BENCH ],
+        { min: count, max: count, allowCancel: false }
+      ), results => {
+        const selected = results || [];
+
+        // Discard all selected Pokemon
+        selected.forEach(cardList => {
+          cardList.moveTo(player.discard);
+          const index = player.bench.indexOf(cardList);
+          if (index !== -1) {
+            player.bench.splice(index, 1);
+          }
+        });
+      });
+    }
+  }
+
+  return state;
 }
 
 function chooseActivePokemons(state: State): ChoosePokemonPrompt[] {
@@ -196,6 +244,12 @@ function* executeCheckState(next: Function, store: StoreLike, state: State,
   onComplete?: () => void): IterableIterator<State> {
 
   const prizesToTake: [number, number] = [0, 0];
+
+  // Size of the bench has changed. This may require some Pokemons to be discarded
+  handleBenchSizeChange(store, state);
+  if (store.hasPrompts()) {
+    yield store.waitPrompt(state, () => next());
+  }
 
   const pokemonsToDiscard = findKoPokemons(store, state);
   for (const item of pokemonsToDiscard) {

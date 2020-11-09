@@ -13,7 +13,8 @@ export enum CheckEffects {
   CHECK_RETREAT_COST_EFFECT = 'CHECK_RETREAT_COST_EFFECT',
   CHECK_ATTACK_COST_EFFECT = 'CHECK_ATTACK_COST_EFFECT',
   CHECK_ENOUGH_ENERGY_EFFECT = 'CHECK_ENOUGH_ENERGY_EFFECT',
-  CHECK_POKEMON_PLAYED_TURN_EFFECT = 'CHECK_POKEMON_PLAYED_TURN_EFFECT'
+  CHECK_POKEMON_PLAYED_TURN_EFFECT = 'CHECK_POKEMON_PLAYED_TURN_EFFECT',
+  CHECK_BENCH_SIZE_EFFECT = 'CHECK_BENCH_SIZE_EFFECT'
 }
 
 export class CheckHpEffect implements Effect {
@@ -112,5 +113,15 @@ export class CheckProvidedEnergyEffect implements Effect {
   constructor(player: Player, source?: PokemonCardList) {
     this.player = player;
     this.source = source === undefined ? player.active : source;
+  }
+}
+
+export class CheckBenchSizeEffect implements Effect {
+  readonly type: string = CheckEffects.CHECK_BENCH_SIZE_EFFECT;
+  public preventDefault = false;
+  public benchSize: number;
+
+  constructor() {
+    this.benchSize = 5;
   }
 }
