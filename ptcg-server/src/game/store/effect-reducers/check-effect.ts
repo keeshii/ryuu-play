@@ -40,7 +40,7 @@ function handleBenchSizeChange(store: StoreLike, state: State): State {
   store.reduceEffect(state, checkBenchSizeEffect);
   const benchSize = checkBenchSizeEffect.benchSize;
 
-  for (const player of state.players) {
+  state.players.forEach(player => {
     // Add empty slots if bench is smaller
     while (player.bench.length < benchSize) {
       const bench = new PokemonCardList()
@@ -48,37 +48,52 @@ function handleBenchSizeChange(store: StoreLike, state: State): State {
       player.bench.push(bench);
     }
 
+    if (player.bench.length === benchSize) {
+      return;
+    }
+
     // Remove empty slots, starting from the right side
+    let empty: PokemonCardList[] = [];
     for (let index = player.bench.length - 1; index >= 0; index--) {
       const bench = player.bench[index];
-      if (player.bench.length > benchSize && bench.cards.length === 0) {
-        player.bench.splice(index, 1);
+      const isEmpty = bench.cards.length === 0;
+      if (player.bench.length - empty.length > benchSize && isEmpty) {
+        empty.push(bench);
       }
     }
 
-    // Player has more Pokemons than bench size, discard some
-    if (player.bench.length > benchSize) {
-      const count = player.bench.length - benchSize;
-      store.prompt(state, new ChoosePokemonPrompt(
-        player.id,
-        GameMessage.CHOOSE_POKEMON_TO_DISCARD,
-        PlayerType.BOTTOM_PLAYER,
-        [ SlotType.BENCH ],
-        { min: count, max: count, allowCancel: false }
-      ), results => {
-        const selected = results || [];
-
-        // Discard all selected Pokemon
-        selected.forEach(cardList => {
-          cardList.moveTo(player.discard);
-          const index = player.bench.indexOf(cardList);
-          if (index !== -1) {
-            player.bench.splice(index, 1);
-          }
-        });
-      });
+    if (player.bench.length - empty.length <= benchSize) {
+      // Discarding empty slots is enough
+      for (let i = player.bench.length - 1; i >= 0; i--) {
+        if (empty.includes(player.bench[i])) {
+          player.bench.splice(i, 1);
+        }
+      }
+      return;
     }
-  }
+
+    // Player has more Pokemons than bench size, discard some
+    const count = player.bench.length - empty.length - benchSize;
+    store.prompt(state, new ChoosePokemonPrompt(
+      player.id,
+      GameMessage.CHOOSE_POKEMON_TO_DISCARD,
+      PlayerType.BOTTOM_PLAYER,
+      [ SlotType.BENCH ],
+      { min: count, max: count, allowCancel: false }
+    ), results => {
+      results = results || [];
+      const selected = [ ...empty, ...results ];
+
+      // Discard all empty slots and selected Pokemons
+      for (let i = player.bench.length - 1; i >= 0; i--) {
+        if (selected.includes(player.bench[i])) {
+          player.bench[i].moveTo(player.discard);
+          player.bench.splice(i, 1);
+        }
+      }
+    });
+
+  });
 
   return state;
 }
