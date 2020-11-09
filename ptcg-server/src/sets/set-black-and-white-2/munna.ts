@@ -26,6 +26,7 @@ export class Munna extends PokemonCard {
 
   public powers = [{
     name: 'Long-Distance Hypnosis',
+    useWhenInPlay: true,
     powerType: PowerType.ABILITY,
     text: 'Once during your turn (before your attack), you may flip a coin. ' +
       'If heads, your opponent\'s Active Pokemon is now Asleep. ' +

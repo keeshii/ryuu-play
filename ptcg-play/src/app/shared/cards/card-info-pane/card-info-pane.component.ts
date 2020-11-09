@@ -1,16 +1,21 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Card, SuperType, Stage, PowerType, EnergyType, TrainerType } from 'ptcg-server';
+import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
+import { Card, SuperType, Stage, PowerType, EnergyType, TrainerType, PokemonCard } from 'ptcg-server';
 import { MatDialog } from '@angular/material/dialog';
 
 import { CardImagePopupComponent } from '../card-image-popup/card-image-popup.component';
 
 export interface CardInfoPaneOptions {
-  enableAbility?: boolean;
+  enableAbility?: {
+    useWhenInPlay?: boolean;
+    useFromHand?: boolean;
+    useFromDiscard?: boolean;
+  };
   enableAttack?: boolean;
   enableTrainer?: boolean;
 }
 
 export interface CardInfoPaneAction {
+  card: Card;
   attack?: string;
   ability?: string;
   trainer?: boolean;
@@ -21,13 +26,14 @@ export interface CardInfoPaneAction {
   templateUrl: './card-info-pane.component.html',
   styleUrls: ['./card-info-pane.component.scss']
 })
-export class CardInfoPaneComponent implements OnInit {
+export class CardInfoPaneComponent implements OnInit, OnChanges {
 
   @Input() card: Card;
   @Input() facedown: boolean;
   @Input() options: CardInfoPaneOptions = {};
   @Output() action = new EventEmitter<any>();
 
+  public enabledAbilities: {[name: string]: boolean} = {};
   public SuperType = SuperType;
   public Stage = Stage;
   public PowerType = PowerType;
@@ -42,7 +48,30 @@ export class CardInfoPaneComponent implements OnInit {
   }
 
   public clickAction(action: CardInfoPaneAction) {
+    action.card = this.card;
     this.action.next(action);
+  }
+
+  public ngOnChanges() {
+    // Build map of enabled powers
+    if (this.options.enableAbility) {
+      this.enabledAbilities = this.buildEnabledAbilities();
+    }
+  }
+
+  private buildEnabledAbilities(): {[name: string]: boolean} {
+    const enabledAbilities: {[name: string]: boolean} = {};
+    if (this.card && this.card.superType === SuperType.POKEMON) {
+      const pokemonCard = this.card as PokemonCard;
+      pokemonCard.powers.forEach(power => {
+        if ((this.options.enableAbility.useWhenInPlay && power.useWhenInPlay)
+          || (this.options.enableAbility.useFromDiscard && power.useFromDiscard)
+          || (this.options.enableAbility.useFromHand && power.useFromHand)) {
+          enabledAbilities[power.name] = true;
+        }
+      });
+    }
+    return enabledAbilities;
   }
 
   public showCardImage(card: Card, facedown: boolean): Promise<void> {

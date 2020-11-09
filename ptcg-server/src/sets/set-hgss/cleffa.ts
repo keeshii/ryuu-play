@@ -39,6 +39,8 @@ export class Cleffa extends PokemonCard {
   public fullName: string = 'Cleffa HGSS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+
+    // Eeeeeeek
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
 
@@ -56,6 +58,7 @@ export class Cleffa extends PokemonCard {
       });
     }
 
+    // Sweet Sleeping Face
     if (effect instanceof PutDamageEffect) {
       if (effect.target.cards.includes(this)) {
         const pokemonCard = effect.target.getPokemonCard();

@@ -25,6 +25,7 @@ export class Hypno extends PokemonCard {
 
   public powers = [{
     name: 'Sleep Pendulum',
+    useWhenInPlay: true,
     powerType: PowerType.POKEPOWER,
     text: 'Once during your turn (before your attack), you may flip a coin. ' +
       'If heads, the Defending Pokemon is now Asleep. This power can\'t be ' +

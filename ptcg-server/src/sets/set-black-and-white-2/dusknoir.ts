@@ -63,6 +63,7 @@ export class Dusknoir extends PokemonCard {
 
   public powers = [{
     name: 'Sinister Hand',
+    useWhenInPlay: true,
     powerType: PowerType.ABILITY,
     text: 'As often as you like during your turn (before your attack), ' +
       'you may move 1 damage counter from 1 of your opponent\'s Pokemon ' +

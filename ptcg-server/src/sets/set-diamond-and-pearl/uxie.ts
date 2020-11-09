@@ -1,10 +1,10 @@
-import { AttackEffect, UsePowerEffect } from "../../game/store/effects/game-effects";
+import { AttackEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
 import { PokemonCard } from "../../game/store/card/pokemon-card";
 import { Stage, CardType } from "../../game/store/card/card-types";
 import { OrderCardsPrompt } from "../../game/store/prompts/order-cards-prompt";
 import { PlayPokemonEffect } from "../../game/store/effects/play-card-effects";
-import { PowerType, StoreLike, State, ConfirmPrompt, GameError, GameMessage } from "../../game";
+import { PowerType, StoreLike, State, ConfirmPrompt, GameMessage } from "../../game";
 
 function* usePsychicRestore(next: Function, store: StoreLike, state: State, effect: AttackEffect): IterableIterator<State> {
   const player = effect.player;
@@ -101,9 +101,6 @@ export class Uxie extends PokemonCard {
   public fullName: string = 'Uxie LA';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof UsePowerEffect && effect.power === this.powers[0]) {
-      throw new GameError(GameMessage.CANNOT_USE_POWER);
-    }
 
     if (effect instanceof PlayPokemonEffect && effect.pokemonCard === this) {
       let generator: IterableIterator<State>;

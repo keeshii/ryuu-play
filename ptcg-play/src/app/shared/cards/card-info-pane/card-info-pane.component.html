@@ -29,8 +29,8 @@
     </div>
 
     <ptcg-hover-highlight *ngFor="let power of card.powers"
-      (click)="options.enableAbility && clickAction({ability: power.name})"
-      [enabled]="options.enableAbility">
+      (click)="enabledAbilities[power.name] && clickAction({ability: power.name})"
+      [enabled]="enabledAbilities[power.name]">
       <div class="power">
         <div class="power-header">
           <div class="power-type" [ngSwitch]="power.powerType">

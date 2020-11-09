@@ -3,7 +3,7 @@ import { Stage, CardType } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
-import { PowerEffect, UsePowerEffect } from "../../game/store/effects/game-effects";
+import { PowerEffect } from "../../game/store/effects/game-effects";
 import { PowerType } from "../../game/store/card/pokemon-types";
 import { StateUtils } from "../../game/store/state-utils";
 import { PlayerType } from "../../game/store/actions/play-card-action";
@@ -46,10 +46,6 @@ export class Garbodor extends PokemonCard {
   public fullName: string = 'Garbodor DGE';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
-    if (effect instanceof UsePowerEffect && effect.power === this.powers[0]) {
-      throw new GameError(GameMessage.CANNOT_USE_POWER);
-    }
 
     if (effect instanceof PowerEffect && effect.power.name !== 'Garbotoxin') {
       const player = effect.player;

@@ -21,6 +21,7 @@ export class Smeargle extends PokemonCard {
 
   public powers = [{
     name: 'Portrait',
+    useWhenInPlay: true,
     powerType: PowerType.POKEPOWER,
     text: 'Once during your turn (before your attack), if Smeargle is your ' +
       'Active Pokemon, you may look at your opponent\'s hand. If you do, ' +

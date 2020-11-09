@@ -24,6 +24,7 @@ export class Rotom extends PokemonCard {
 
   public powers = [{
     name: 'Type Shift',
+    useWhenInPlay: true,
     powerType: PowerType.POKEPOWER,
     text: 'Once during your turn (before your attack), you may use this ' +
       'power. Rotom\'s type is P until the end of your turn.'

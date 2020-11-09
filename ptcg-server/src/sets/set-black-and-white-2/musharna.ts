@@ -30,6 +30,7 @@ export class Musharna extends PokemonCard {
 
   public powers = [{
     name: 'Forewarn',
+    useWhenInPlay: true,
     powerType: PowerType.ABILITY,
     text: 'Once during your turn (before your attack), you may look at ' +
       'the top 2 cards of your deck, choose 1 of them, and put it into ' +

@@ -25,6 +25,7 @@ export class Rotom extends PokemonCard {
 
   public powers = [{
     name: 'Mischievous Trick',
+    useWhenInPlay: true,
     powerType: PowerType.POKEPOWER,
     text: 'Once during your turn (before your attack), you may switch 1 of ' +
       'your face-down Prize cards with the top card of your deck. ' +

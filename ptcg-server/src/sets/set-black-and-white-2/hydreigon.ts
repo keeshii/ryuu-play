@@ -73,6 +73,7 @@ export class Hydreigon extends PokemonCard {
 
   public powers = [{
     name: 'Dark Trance',
+    useWhenInPlay: true,
     powerType: PowerType.ABILITY,
     text: 'As often as you like during your turn (before your attack), ' +
       'you may move a D Energy attached to 1 of your Pokemon to another ' +

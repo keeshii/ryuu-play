@@ -23,6 +23,7 @@ export class Empoleon extends PokemonCard {
 
   public powers = [{
     name: 'Diving Draw',
+    useWhenInPlay: true,
     powerType: PowerType.ABILITY,
     text: 'Once during your turn (before your attack), you may discard ' +
       'a card from your hand. If you do, draw 2 cards.'

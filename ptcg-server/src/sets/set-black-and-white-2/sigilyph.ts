@@ -3,12 +3,10 @@ import { Stage, CardType, CardTag } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
-import { AttackEffect, PowerEffect, UsePowerEffect } from "../../game/store/effects/game-effects";
+import { AttackEffect, PowerEffect } from "../../game/store/effects/game-effects";
 import { AbstractAttackEffect } from "../../game/store/effects/attack-effects";
 import { PowerType } from "../../game/store/card/pokemon-types";
 import { StateUtils } from "../../game/store/state-utils";
-import { GameError } from "../../game/game-error";
-import { GameMessage } from "../../game/game-message";
 import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
 
 
@@ -46,10 +44,6 @@ export class Sigilyph extends PokemonCard {
   public fullName: string = 'Sigilyph DGE';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
-    if (effect instanceof UsePowerEffect && effect.power === this.powers[0]) {
-      throw new GameError(GameMessage.CANNOT_USE_POWER);
-    }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;

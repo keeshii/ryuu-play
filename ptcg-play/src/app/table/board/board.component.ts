@@ -229,6 +229,35 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
     this.cardsBaseService.showCardInfoList({ card, cardList, allowReveal, facedown });
   }
 
+  public onDiscardClick(card: Card, cardList: CardList) {
+    const isBottomOwner = this.bottomPlayer && this.bottomPlayer.id === this.clientId;
+    const isDeleted = this.gameState.deleted;
+
+    if (!isBottomOwner || isDeleted) {
+      return this.onCardListClick(card, cardList);
+    }
+
+    const player = PlayerType.BOTTOM_PLAYER;
+    const slot = SlotType.DISCARD;
+
+    const options = { enableAbility: { useFromDiscard: true }, enableAttack: false };
+    this.cardsBaseService.showCardInfoList({ card, cardList, options })
+      .then(result => {
+        if (!result) {
+          return;
+        }
+        const gameId = this.gameState.gameId;
+
+        const index = cardList.cards.indexOf(result.card);
+        const target: CardTarget = { player, slot, index };
+
+        // Use ability from the card
+        if (result.ability) {
+          this.gameService.ability(gameId, result.ability, target);
+        }
+      });
+  }
+
   public onActiveClick(card: Card, cardList: CardList) {
     const isBottomOwner = this.bottomPlayer && this.bottomPlayer.id === this.clientId;
     const isDeleted = this.gameState.deleted;
@@ -241,7 +270,7 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
     const slot = SlotType.ACTIVE;
     const target: CardTarget = { player, slot, index: 0 };
 
-    const options = { enableAbility: true, enableAttack: true };
+    const options = { enableAbility: { useWhenInPlay: true }, enableAttack: true };
     this.cardsBaseService.showCardInfo({ card, cardList, options })
       .then(result => {
         if (!result) {
@@ -272,7 +301,7 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
     const slot = SlotType.BENCH;
     const target: CardTarget = { player, slot, index };
 
-    const options = { enableAbility: true, enableAttack: false };
+    const options = { enableAbility: { useWhenInPlay: true }, enableAttack: false };
     this.cardsBaseService.showCardInfo({ card, cardList, options })
       .then(result => {
         if (!result) {

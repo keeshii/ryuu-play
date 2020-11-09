@@ -46,6 +46,7 @@ export class UnownR extends PokemonCard {
 
   public powers = [{
     name: 'Retire',
+    useWhenInPlay: true,
     powerType: PowerType.POKEPOWER,
     text: 'Once during your turn, if Unown R is on your Bench, you may ' +
       'discard Unown R and all cards attached to it. (This doesn\'t count ' +
@@ -74,9 +75,6 @@ export class UnownR extends PokemonCard {
       const cardList = StateUtils.findCardList(state, this);
 
       // check if UnownR is on player's Bench
-      if (cardList === undefined) {
-        throw new GameError(GameMessage.ILLEGAL_ACTION);
-      }
       const benchIndex = player.bench.indexOf(cardList as PokemonCardList);
       if (benchIndex === -1) {
         throw new GameError(GameMessage.CANNOT_USE_POWER);

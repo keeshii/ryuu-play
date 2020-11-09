@@ -1,8 +1,8 @@
 import { PokemonCard } from "../../game/store/card/pokemon-card";
 import { Stage, CardType, CardTag } from "../../game/store/card/card-types";
 import { StoreLike, State, StateUtils, PowerType, ChoosePokemonPrompt,
-  PlayerType, SlotType, GameError, GameMessage } from "../../game";
-import { AttackEffect, PowerEffect, UsePowerEffect } from "../../game/store/effects/game-effects";
+  PlayerType, SlotType, GameMessage } from "../../game";
+import { AttackEffect, PowerEffect } from "../../game/store/effects/game-effects";
 import { PutDamageEffect } from "../../game/store/effects/attack-effects";
 import { Effect } from "../../game/store/effects/effect";
 import { CheckRetreatCostEffect, CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
@@ -48,10 +48,6 @@ export class DarkraiEx extends PokemonCard {
   public fullName: string = 'Darkrai EX DEX';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
-    if (effect instanceof UsePowerEffect && effect.power === this.powers[0]) {
-      throw new GameError(GameMessage.CANNOT_USE_POWER);
-    }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;

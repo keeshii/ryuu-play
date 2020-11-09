@@ -8,6 +8,7 @@ const { StateSerializer } = require('./dist/game/serializer/state-serializer');
 const {
   setBlackAndWhite,
   setBlackAndWhite2,
+  setBlackAndWhite3,
   setDiamondAndPearl,
   setHgss,
   setOp9
@@ -21,6 +22,7 @@ cardManager.defineSet(setOp9);
 cardManager.defineSet(setHgss);
 cardManager.defineSet(setBlackAndWhite);
 cardManager.defineSet(setBlackAndWhite2);
+cardManager.defineSet(setBlackAndWhite3);
 
 StateSerializer.setKnownCards(cardManager.getAllCards());
 

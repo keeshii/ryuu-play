@@ -23,6 +23,7 @@ export class Emboar extends PokemonCard {
 
   public powers = [{
     name: 'Inferno Fandango',
+    useWhenInPlay: true,
     powerType: PowerType.ABILITY,
     text: 'As often as you like during your turn (before your attack), ' +
       'you may attach a R Energy card from your hand to 1 of your Pokemon.'

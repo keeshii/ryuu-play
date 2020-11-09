@@ -11,9 +11,6 @@ function* usePower(next: Function, store: StoreLike, state: State, self: UnownQ,
   const cardList = StateUtils.findCardList(state, self);
 
   // check if UnownQ is on player's Bench
-  if (cardList === undefined) {
-    throw new GameError(GameMessage.ILLEGAL_ACTION);
-  }
   const benchIndex = player.bench.indexOf(cardList as PokemonCardList);
   if (benchIndex === -1) {
     throw new GameError(GameMessage.CANNOT_USE_POWER);
@@ -75,6 +72,7 @@ export class UnownQ extends PokemonCard {
 
   public powers = [{
     name: 'Quick',
+    useWhenInPlay: true,
     powerType: PowerType.POKEPOWER,
     text: 'Once during your turn (before your attack), if Unown Q is on your ' +
       'Bench, you may discard all cards attached to Unown Q and attach Unown Q ' +

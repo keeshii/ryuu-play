@@ -1,9 +1,11 @@
 import { PokemonCard } from "../../game/store/card/pokemon-card";
 import { Stage, CardType, CardTag } from "../../game/store/card/card-types";
-import { StoreLike, State, PowerType, PlayerType, SlotType, PokemonCardList } from "../../game";
+import { StoreLike, State, PowerType, PlayerType, SlotType, PokemonCardList, GameError, GameMessage } from "../../game";
 import { PowerEffect, AttackEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
 import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
+import {PlayPokemonEffect} from "../../game/store/effects/play-card-effects";
+import {EndTurnEffect} from "../../game/store/effects/game-phase-effects";
 
 
 export class KeldeoEx extends PokemonCard {
@@ -22,6 +24,7 @@ export class KeldeoEx extends PokemonCard {
 
   public powers = [{
     name: 'Rush In',
+    useWhenInPlay: true,
     powerType: PowerType.ABILITY,
     text: 'Once during your turn (before your attack), if this Pokemon is ' +
       'on your Bench, you may switch this Pokemon with your Active Pokemon.'
@@ -42,7 +45,14 @@ export class KeldeoEx extends PokemonCard {
 
   public fullName: string = 'Keldeo EX BC';
 
+  public readonly RUSH_IN_MARKER = 'RUSH_IN_MARKER';
+
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+
+    if (effect instanceof PlayPokemonEffect && effect.pokemonCard === this) {
+      const player = effect.player;
+      player.marker.removeMarker(this.RUSH_IN_MARKER, this);
+    }
 
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
       const player = effect.player;
@@ -54,10 +64,16 @@ export class KeldeoEx extends PokemonCard {
         }
       });
 
-      if (bench !== undefined) {
-        player.switchPokemon(bench);
+      if (bench === undefined) {
+        throw new GameError(GameMessage.CANNOT_USE_POWER);
       }
 
+      if (player.marker.hasMarker(this.RUSH_IN_MARKER, this)) {
+        throw new GameError(GameMessage.POWER_ALREADY_USED);
+      }
+
+      player.marker.addMarker(this.RUSH_IN_MARKER, this);
+      player.switchPokemon(bench);
       return state;
     }
 
@@ -74,6 +90,10 @@ export class KeldeoEx extends PokemonCard {
         }).length;
       });
       effect.damage += energyCount * 20;
+    }
+
+    if (effect instanceof EndTurnEffect) {
+      effect.player.marker.removeMarker(this.RUSH_IN_MARKER, this);
     }
 
     return state;
