@@ -41,30 +41,6 @@ function* usePsychicRestore(next: Function, store: StoreLike, state: State, effe
   return state;
 }
 
-function* useSetUp(next: Function, store: StoreLike, state: State, effect: PlayPokemonEffect): IterableIterator<State> {
-  const player = effect.player;
-  const cardsToDraw = Math.max(0, 8 - player.hand.cards.length);
-  if (cardsToDraw === 0) {
-    return state;
-  }
-
-  let wantToUse = false;
-  yield store.prompt(state, new ConfirmPrompt(
-    effect.player.id,
-    GameMessage.WANT_TO_USE_ABILITY,
-  ), result => {
-    wantToUse = result;
-    next();
-  });
-
-  if (!wantToUse) {
-    return state;
-  }
-
-  player.deck.moveTo(player.hand, cardsToDraw);
-  return state;
-}
-
 export class Uxie extends PokemonCard {
 
   public stage: Stage = Stage.BASIC;
@@ -103,9 +79,21 @@ export class Uxie extends PokemonCard {
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
 
     if (effect instanceof PlayPokemonEffect && effect.pokemonCard === this) {
-      let generator: IterableIterator<State>;
-      generator = useSetUp(() => generator.next(), store, state, effect);
-      return generator.next().value;
+      const player = effect.player;
+      const cards = player.hand.cards.filter(c => c !== this);
+      const cardsToDraw = Math.max(0, 7 - cards.length);
+      if (cardsToDraw === 0) {
+        return state;
+      }
+
+      return store.prompt(state, new ConfirmPrompt(
+        effect.player.id,
+        GameMessage.WANT_TO_USE_ABILITY,
+      ), wantToUse => {
+        if (wantToUse) {
+          player.deck.moveTo(player.hand, cardsToDraw);
+        }
+      });
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {

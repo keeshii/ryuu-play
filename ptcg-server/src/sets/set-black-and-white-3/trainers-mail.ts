@@ -17,15 +17,22 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   const opponent = StateUtils.getOpponent(state, player);
 
   const deckTop = new CardList();
-  player.deck.moveTo(deckTop, 7);
+  player.deck.moveTo(deckTop, 4);
+
+  const blocked: number[] = [];
+  deckTop.cards.forEach((card, index) => {
+    if (card instanceof TrainerCard && card.name === 'Trainers\' Mail') {
+      blocked.push(index);
+    }
+  });
 
   let cards: Card[] = [];
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
     GameMessage.CHOOSE_CARD_TO_HAND,
     deckTop,
-    { superType: SuperType.TRAINER, trainerType: TrainerType.SUPPORTER },
-    { min: 1, max: 1, allowCancel: true }
+    { superType: SuperType.TRAINER },
+    { min: 1, max: 1, allowCancel: true, blocked }
   ), selected => {
     cards = selected || [];
     next();
@@ -47,20 +54,20 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   });
 }
 
-export class Pokegear30 extends TrainerCard {
+export class TrainersMail extends TrainerCard {
 
   public trainerType: TrainerType = TrainerType.ITEM;
 
-  public set: string = 'BW';
+  public set: string = 'BW3';
 
-  public name: string = 'Pokegear 3.0';
+  public name: string = 'Trainers\' Mail';
 
-  public fullName: string = 'Pokegear 30 UNB';
+  public fullName: string = 'Trainers\' Mail ROS';
 
   public text: string =
-    'Look at the top 7 cards of your deck. You may reveal a Supporter card ' +
-    'you find there and put it into your hand. Shuffle the other cards back ' +
-    'into your deck.';
+    'Look at the top 4 cards of your deck. You may reveal a Trainer card ' +
+    'you find there (except for Trainers\' Mail) and put it into your hand. ' +
+    'Shuffle the other cards back into your deck.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
