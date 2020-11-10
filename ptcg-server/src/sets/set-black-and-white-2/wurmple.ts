@@ -30,6 +30,7 @@ function* useFlock(next: Function, store: StoreLike, state: State,
 
   cards.forEach((card, index) => {
     player.deck.moveCardTo(card, slots[index]);
+    slots[index].pokemonPlayedTurn = state.turn;
   });
 
   return store.prompt(state, new ShuffleDeckPrompt(player.id), order => {

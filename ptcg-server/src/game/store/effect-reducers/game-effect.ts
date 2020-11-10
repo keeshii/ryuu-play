@@ -10,7 +10,7 @@ import { CheckPokemonTypeEffect, CheckPokemonStatsEffect,
 import { Weakness, Resistance } from "../card/pokemon-types";
 import { CardType, SpecialCondition, CardTag } from "../card/card-types";
 import { AttackEffect, UseAttackEffect, HealEffect, KnockOutEffect,
-  UsePowerEffect, PowerEffect, UseStadiumEffect } from "../effects/game-effects";
+  UsePowerEffect, PowerEffect, UseStadiumEffect, EvolveEffect } from "../effects/game-effects";
 import { CoinFlipPrompt } from "../prompts/coin-flip-prompt";
 import { DealDamageEffect, ApplyWeaknessEffect } from "../effects/attack-effects";
 
@@ -158,6 +158,21 @@ export function gameReducer(store: StoreLike, state: State, effect: Effect): Sta
   if (effect instanceof HealEffect) {
     effect.target.damage = Math.max(0, effect.target.damage - effect.damage);
     return state;
+  }
+
+  if (effect instanceof EvolveEffect) {
+    const pokemonCard = effect.target.getPokemonCard();
+    if (pokemonCard === undefined) {
+      throw new GameError(GameMessage.INVALID_TARGET);
+    }
+    store.log(state, GameLog.LOG_PLAYER_EVOLVES_POKEMON, {
+      name: effect.player.name,
+      pokemon: pokemonCard.name,
+      card: effect.pokemonCard.name
+    });
+    effect.player.hand.moveCardTo(effect.pokemonCard, effect.target);
+    effect.target.pokemonPlayedTurn = state.turn;
+    effect.target.clearEffects();
   }
 
   return state;

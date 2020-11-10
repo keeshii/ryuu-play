@@ -34,6 +34,7 @@ export enum PokemonType {
 
 export enum Stage {
   NONE,
+  RESTORED,
   BASIC,
   STAGE_1,
   STAGE_2,

@@ -14,6 +14,7 @@ import { CardManager } from "../../game/cards/card-manager";
 import { PokemonCardList} from "../../game/store/state/pokemon-card-list";
 import { CheckPokemonPlayedTurnEffect } from "../../game/store/effects/check-effects";
 import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
+import {EvolveEffect} from "../../game/store/effects/game-effects";
 
 function isMatchingStage2(stage1: PokemonCard[], basic: PokemonCard, stage2: PokemonCard): boolean {
   for (const card of stage1) {
@@ -94,7 +95,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   });
 
   let cards: Card[] = [];
-  yield store.prompt(state, new ChooseCardsPrompt(
+  return store.prompt(state, new ChooseCardsPrompt(
     player.id,
     GameMessage.CHOOSE_CARD_TO_PUT_EVOLVE,
     player.hand,
@@ -102,19 +103,16 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     { min: 1, max: 1, allowCancel: true, blocked: blocked2 }
   ), selected => {
     cards = selected || [];
-    next();
+
+    if (cards.length > 0) {
+      const pokemonCard = cards[0] as PokemonCard;
+      const evolveEffect = new EvolveEffect(player, targets[0], pokemonCard);
+      store.reduceEffect(state, evolveEffect);
+
+      // Discard trainer only when user selected a Pokemon
+      player.hand.moveCardTo(effect.trainerCard, player.discard);
+    }
   });
-
-  if (cards.length > 0) {
-    // Discard trainer only when user selected a Pokemon
-    player.hand.moveCardTo(effect.trainerCard, player.discard);
-
-    // Evolve Pokemon directly to Stage 2
-    player.hand.moveCardsTo(cards, targets[0]);
-    targets[0].pokemonPlayedTurn = state.turn;
-  }
-
-  return state;
 }
 
 export class RareCandy extends TrainerCard {

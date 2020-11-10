@@ -98,6 +98,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 
   // Evolve Pokemon
   player.deck.moveCardTo(evolution, targets[0]);
+  targets[0].clearEffects();
   targets[0].pokemonPlayedTurn = state.turn;
 
   return state;

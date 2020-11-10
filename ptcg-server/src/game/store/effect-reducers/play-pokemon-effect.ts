@@ -6,6 +6,7 @@ import { Stage } from "../card/card-types";
 import { State } from "../state/state";
 import { StoreLike } from "../store-like";
 import { CheckPokemonPlayedTurnEffect } from "../effects/check-effects";
+import {EvolveEffect} from "../effects/game-effects";
 
 
 export function playPokemonReducer(store: StoreLike, state: State, effect: Effect): State {
@@ -40,14 +41,8 @@ export function playPokemonReducer(store: StoreLike, state: State, effect: Effec
         throw new GameError(GameMessage.POKEMON_CANT_EVOLVE_THIS_TURN);
       }
 
-      store.log(state, GameLog.LOG_PLAYER_EVOLVES_POKEMON, {
-        name: effect.player.name,
-        pokemon: pokemonCard.name,
-        card: effect.pokemonCard.name
-      });
-      effect.player.hand.moveCardTo(effect.pokemonCard, effect.target);
-      effect.target.pokemonPlayedTurn = state.turn;
-      effect.target.clearEffects();
+      const evolveEffect = new EvolveEffect(effect.player, effect.target, effect.pokemonCard);
+      store.reduceEffect(state, evolveEffect);
       return state;
     }
 

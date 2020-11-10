@@ -15,6 +15,7 @@
     <div class="subtitle">
       <div class="subtitle-stage" [ngSwitch]="card.stage">
         <span *ngSwitchCase="Stage.BASIC" translate>CARDS_BASIC</span>
+        <span *ngSwitchCase="Stage.RESTORED" translate>CARDS_RESTORED</span>
         <span *ngSwitchCase="Stage.STAGE_1" translate>CARDS_STAGE_1</span>
         <span *ngSwitchCase="Stage.STAGE_2" translate>CARDS_STAGE_2</span>
       </div>
