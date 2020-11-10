@@ -14,7 +14,7 @@ export enum CheckEffects {
   CHECK_ATTACK_COST_EFFECT = 'CHECK_ATTACK_COST_EFFECT',
   CHECK_ENOUGH_ENERGY_EFFECT = 'CHECK_ENOUGH_ENERGY_EFFECT',
   CHECK_POKEMON_PLAYED_TURN_EFFECT = 'CHECK_POKEMON_PLAYED_TURN_EFFECT',
-  CHECK_BENCH_SIZE_EFFECT = 'CHECK_BENCH_SIZE_EFFECT'
+  CHECK_TABLE_STATE_EFFECT = 'CHECK_TABLE_STATE_EFFECT'
 }
 
 export class CheckHpEffect implements Effect {
@@ -116,8 +116,8 @@ export class CheckProvidedEnergyEffect implements Effect {
   }
 }
 
-export class CheckBenchSizeEffect implements Effect {
-  readonly type: string = CheckEffects.CHECK_BENCH_SIZE_EFFECT;
+export class CheckTableStateEffect implements Effect {
+  readonly type: string = CheckEffects.CHECK_TABLE_STATE_EFFECT;
   public preventDefault = false;
   public benchSize: number;
 

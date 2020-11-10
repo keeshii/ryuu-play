@@ -1,6 +1,6 @@
 import { State, GamePhase, GameWinner } from "../state/state";
 import { StoreLike } from "../store-like";
-import { CheckHpEffect, CheckProvidedEnergyEffect, CheckBenchSizeEffect } from "../effects/check-effects";
+import { CheckHpEffect, CheckProvidedEnergyEffect, CheckTableStateEffect } from "../effects/check-effects";
 import { PokemonCardList } from "../state/pokemon-card-list";
 import { ChoosePokemonPrompt } from "../prompts/choose-pokemon-prompt";
 import { GameError } from "../../game-error";
@@ -35,11 +35,7 @@ function findKoPokemons(store: StoreLike, state: State): PokemonItem[] {
   return pokemons;
 }
 
-function handleBenchSizeChange(store: StoreLike, state: State): State {
-  const checkBenchSizeEffect = new CheckBenchSizeEffect();
-  store.reduceEffect(state, checkBenchSizeEffect);
-  const benchSize = checkBenchSizeEffect.benchSize;
-
+function handleBenchSizeChange(store: StoreLike, state: State, benchSize: number): State {
   state.players.forEach(player => {
     // Add empty slots if bench is smaller
     while (player.bench.length < benchSize) {
@@ -260,8 +256,12 @@ function* executeCheckState(next: Function, store: StoreLike, state: State,
 
   const prizesToTake: [number, number] = [0, 0];
 
+  // This effect checks the general data from the table (bench size)
+  const checkTableStateEffect = new CheckTableStateEffect();
+  store.reduceEffect(state, checkTableStateEffect);
+
   // Size of the bench has changed. This may require some Pokemons to be discarded
-  handleBenchSizeChange(store, state);
+  handleBenchSizeChange(store, state, checkTableStateEffect.benchSize);
   if (store.hasPrompts()) {
     yield store.waitPrompt(state, () => next());
   }

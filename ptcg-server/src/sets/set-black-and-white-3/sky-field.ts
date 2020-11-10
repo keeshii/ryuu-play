@@ -7,7 +7,7 @@ import { TrainerCard } from "../../game/store/card/trainer-card";
 import { TrainerType } from "../../game/store/card/card-types";
 import { StateUtils } from "../../game/store/state-utils";
 import { UseStadiumEffect } from "../../game/store/effects/game-effects";
-import { CheckBenchSizeEffect } from "../../game/store/effects/check-effects";
+import { CheckTableStateEffect } from "../../game/store/effects/check-effects";
 
 export class SkyField extends TrainerCard {
 
@@ -25,7 +25,7 @@ export class SkyField extends TrainerCard {
     '5 Pokemon on the Bench. The owner of this card discard first.)';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof CheckBenchSizeEffect && StateUtils.getStadiumCard(state) === this) {
+    if (effect instanceof CheckTableStateEffect && StateUtils.getStadiumCard(state) === this) {
       effect.benchSize = 8;
     }
 

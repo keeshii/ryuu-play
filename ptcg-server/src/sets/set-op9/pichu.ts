@@ -3,7 +3,7 @@ import { Stage, CardType, SuperType } from "../../game/store/card/card-types";
 import { StoreLike, State, ChooseCardsPrompt, Card, ShuffleDeckPrompt,
   CoinFlipPrompt, ShowCardsPrompt, StateUtils, PowerType, GameError,
   GameMessage, PokemonCardList } from "../../game";
-import { AttackEffect, PowerEffect } from "../../game/store/effects/game-effects";
+import { AttackEffect, PowerEffect, EvolveEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
 
 function* useBabyEvolution(next: Function, store: StoreLike, state: State,
@@ -19,7 +19,7 @@ function* useBabyEvolution(next: Function, store: StoreLike, state: State,
   }
 
   let cards: Card[] = [];
-  yield store.prompt(state, new ChooseCardsPrompt(
+  return store.prompt(state, new ChooseCardsPrompt(
     player.id,
     GameMessage.CHOOSE_POKEMON_TO_EVOLVE,
     player.hand,
@@ -27,16 +27,15 @@ function* useBabyEvolution(next: Function, store: StoreLike, state: State,
     { min:1, max: 1, allowCancel: true }
   ), selected => {
     cards = selected || [];
-    next();
+
+    if (cards.length > 0) {
+      const pokemonCard = cards[0] as PokemonCard;
+      const evolveEffect = new EvolveEffect(player, cardList, pokemonCard);
+      store.reduceEffect(state, evolveEffect);
+
+      cardList.damage = 0;
+    }
   });
-
-  if (cards.length > 0) {
-    player.hand.moveCardsTo(cards, cardList);
-    cardList.pokemonPlayedTurn = state.turn;
-    cardList.damage = 0;
-  }
-
-  return state;
 }
 
 function* useFindAFriend(next: Function, store: StoreLike, state: State,
