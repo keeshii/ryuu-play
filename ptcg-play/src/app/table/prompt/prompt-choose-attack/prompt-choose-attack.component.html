@@ -1,0 +1,18 @@
+<h2 class="ptcg-prompt-title" translate>PROMPT_CHOOSE_ATTACK_TITLE</h2>
+
+<div class="ptcg-prompt-content">
+  <p [translate]="'GAME_MESSAGES.' + prompt.message"></p>
+
+  <ptcg-cards-container [keepInitialSize]="true">
+    <ptcg-card *ngFor="let card of prompt.cards" [card]="card"
+      (click)="onCardClick(card)">
+    </ptcg-card>
+  </ptcg-cards-container>
+</div>
+
+<div class="ptcg-prompt-actions">
+  <button mat-raised-button *ngIf="prompt.options.allowCancel" [disabled]="gameState.deleted"
+    (click)="cancel()">
+    {{ 'BUTTON_CANCEL' | translate }}
+  </button>
+</div>

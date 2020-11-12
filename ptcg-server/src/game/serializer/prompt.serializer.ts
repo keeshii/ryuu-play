@@ -3,6 +3,7 @@ import { GameError } from "../game-error";
 import { GameCoreError } from "../game-message";
 import { AlertPrompt } from "../store/prompts/alert-prompt";
 import { AttachEnergyPrompt } from "../store/prompts/attach-energy-prompt";
+import { ChooseAttackPrompt } from "../store/prompts/choose-attack-prompt";
 import { ChooseCardsPrompt } from "../store/prompts/choose-cards-prompt";
 import { ChooseEnergyPrompt } from "../store/prompts/choose-energy-prompt";
 import { ChoosePokemonPrompt } from "../store/prompts/choose-pokemon-prompt";
@@ -26,6 +27,7 @@ export class PromptSerializer implements Serializer<Prompt<any>> {
   private rows: { classValue: (new (...params: any[]) => Prompt<any>), type: string }[] = [
     { classValue: AlertPrompt, type: 'AlertPrompt' },
     { classValue: AttachEnergyPrompt, type: 'AttachEnergyPrompt' },
+    { classValue: ChooseAttackPrompt, type: 'ChooseAttackPrompt' },
     { classValue: ChooseCardsPrompt, type: 'ChooseCardsPrompt' },
     { classValue: ChooseEnergyPrompt, type: 'ChooseEnergyPrompt' },
     { classValue: ChoosePokemonPrompt, type: 'ChoosePokemonPrompt' },

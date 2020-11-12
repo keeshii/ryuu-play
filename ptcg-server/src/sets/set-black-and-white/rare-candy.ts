@@ -97,7 +97,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   let cards: Card[] = [];
   return store.prompt(state, new ChooseCardsPrompt(
     player.id,
-    GameMessage.CHOOSE_CARD_TO_PUT_EVOLVE,
+    GameMessage.CHOOSE_CARD_TO_EVOLVE,
     player.hand,
     { superType: SuperType.POKEMON, stage: Stage.STAGE_2 },
     { min: 1, max: 1, allowCancel: true, blocked: blocked2 }

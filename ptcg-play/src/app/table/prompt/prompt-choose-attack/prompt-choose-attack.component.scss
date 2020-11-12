@@ -1,0 +1,6 @@
+@import '../../../../theme/variables.scss';
+
+ptcg-card {
+  margin: map-get($padding, small);
+  width: map-get($ptcg-size, card);
+}

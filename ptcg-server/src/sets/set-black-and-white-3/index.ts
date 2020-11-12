@@ -18,6 +18,9 @@ import { Unown } from "./unown";
 import { VirizionEx } from "./virizion-ex";
 import { Wartortle } from "./wartortle";
 import { ZekromEx } from "./zekrom-ex";
+import { Zoroark } from "./zoroark";
+import { Zorua } from "./zorua";
+import { Zorua2 } from "./zorua2";
 
 export const setBlackAndWhite3: Card[] = [
   new AcroBike(),
@@ -38,5 +41,8 @@ export const setBlackAndWhite3: Card[] = [
   new Unown(),
   new VirizionEx(),
   new Wartortle(),
-  new ZekromEx()
+  new ZekromEx(),
+  new Zoroark(),
+  new Zorua(),
+  new Zorua2()
 ];
