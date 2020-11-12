@@ -26,7 +26,7 @@ export class Archen extends PokemonCard {
     text: ''
   }, {
     name: 'Acrobatics',
-    cost: [ CardType.GRASS, CardType.COLORLESS ],
+    cost: [ CardType.COLORLESS, CardType.COLORLESS ],
     damage: 20,
     text: 'Flip 2 coins. This attack does 20 more damage for each heads.'
   }];

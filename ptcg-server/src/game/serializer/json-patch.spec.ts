@@ -63,7 +63,6 @@ describe('JsonPatch', () => {
     // when
     const diff = jsonPatch.diff(src, dest);
     const restored = jsonPatch.apply(src, diff);
-    console.log(restored);
     // then
     expect(diff).toEqual([{ op: 'move', path: '', val: [ 4, 2 ] }]);
     expect(restored).toEqual(dest);
