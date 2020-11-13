@@ -11,9 +11,8 @@
         </ptcg-user-bar>
         <mat-menu #menu="matMenu">
           <button mat-menu-item
-            *ngIf="loggedUserId !== client.user.userId"
-            [routerLink]="['/message', client.user.userId]">
-            {{ 'BUTTON_SEND_MESSAGE' | translate }}
+            [routerLink]="['/profile', client.user.userId]">
+            {{ 'BUTTON_SHOW_PROFILE' | translate }}
           </button>
           <button mat-menu-item
             *ngIf="clientId !== client.clientId"
@@ -22,8 +21,9 @@
             {{ 'BUTTON_INVITE' | translate }}
           </button>
           <button mat-menu-item
-            [routerLink]="['/profile', client.user.userId]">
-            {{ 'BUTTON_SHOW_PROFILE' | translate }}
+            *ngIf="loggedUserId !== client.user.userId"
+            [routerLink]="['/message', client.user.userId]">
+            {{ 'BUTTON_SEND_MESSAGE' | translate }}
           </button>
         </mat-menu>
       </a>

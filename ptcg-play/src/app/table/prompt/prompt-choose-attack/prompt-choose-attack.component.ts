@@ -1,6 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ChooseAttackPrompt, PokemonCard } from 'ptcg-server';
+import { TranslateService } from '@ngx-translate/core';
 
+import { AlertService } from '../../../shared/alert/alert.service';
 import { CardsBaseService } from '../../../shared/cards/cards-base.service';
 import { GameService } from '../../../api/services/game.service';
 import { LocalGameState } from '../../../shared/session/session.interface';
@@ -16,8 +18,10 @@ export class PromptChooseAttackComponent implements OnInit {
   @Input() gameState: LocalGameState;
 
   constructor(
+    private alertService: AlertService,
     private cardsBaseService: CardsBaseService,
-    private gameService: GameService
+    private gameService: GameService,
+    private translate: TranslateService
   ) { }
 
   public cancel() {
@@ -44,6 +48,13 @@ export class PromptChooseAttackComponent implements OnInit {
         const gameId = this.gameState.gameId;
         const id = this.prompt.id;
         const attack = result.attack;
+
+        const blocked = this.prompt.options.blocked;
+        if (blocked.some(b => b.index === index && b.attack === attack)) {
+          this.alertService.toast(this.translate.instant('PROMPT_CHOOSE_ATTACK_CANNOT_SELECT'));
+          return;
+        }
+
         this.gameService.resolvePrompt(gameId, id, { index, attack });
       });
   }

@@ -112,7 +112,7 @@ export class Floatzel extends PokemonCard {
       return state;
     }
 
-    if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
+    if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
       let generator: IterableIterator<State>;
       generator = useAquaJet(() => generator.next(), store, state, effect);
       return generator.next().value;

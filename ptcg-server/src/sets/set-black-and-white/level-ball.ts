@@ -1,4 +1,5 @@
 import { Card } from "../../game/store/card/card";
+import { GameError } from "../../game/game-error";
 import { GameMessage } from "../../game/game-message";
 import { Effect } from "../../game/store/effects/effect";
 import { TrainerCard } from "../../game/store/card/trainer-card";
@@ -16,6 +17,10 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   const player = effect.player;
   const opponent = StateUtils.getOpponent(state, player);
   let cards: Card[] = [];
+
+  if (player.deck.cards.length === 0) {
+    throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
+  }
 
   const blocked: number[] = [];
   player.deck.cards.forEach((card, index) => {

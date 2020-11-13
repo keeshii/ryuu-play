@@ -9,12 +9,17 @@ import { TrainerEffect } from "../../game/store/effects/play-card-effects";
 import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
 import { ShowCardsPrompt } from "../../game/store/prompts/show-cards-prompt";
 import { ShuffleDeckPrompt } from "../../game/store/prompts/shuffle-prompt";
+import { GameError } from "../../game/game-error";
 import { GameMessage } from "../../game/game-message";
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
   const opponent = StateUtils.getOpponent(state, player);
   let cards: Card[] = [];
+
+  if (player.deck.cards.length === 0) {
+    throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
+  }
 
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,

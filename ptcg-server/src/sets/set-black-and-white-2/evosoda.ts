@@ -17,6 +17,10 @@ import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt"
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
 
+  if (player.deck.cards.length === 0) {
+    throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
+  }
+
   // Look through all known cards to find out if Pokemon can evolve
   const cm = CardManager.getInstance();
   const evolutions = cm.getAllCards().filter(c => {

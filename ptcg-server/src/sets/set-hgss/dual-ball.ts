@@ -4,13 +4,17 @@ import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { CoinFlipPrompt, ChooseCardsPrompt, Card, StateUtils, ShowCardsPrompt,
-  ShuffleDeckPrompt } from "../../game";
+  ShuffleDeckPrompt, GameError} from "../../game";
 import { GameMessage } from "../../game/game-message";
 import { TrainerEffect } from "../../game/store/effects/play-card-effects";
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
   const opponent = StateUtils.getOpponent(state, player);
+
+  if (player.deck.cards.length === 0) {
+    throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
+  }
 
   let heads: number = 0;
   yield store.prompt(state, [

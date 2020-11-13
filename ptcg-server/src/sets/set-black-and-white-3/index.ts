@@ -6,6 +6,7 @@ import { Blastoise } from "./blastoise";
 import { Card } from "../../game/store/card/card";
 import { Exeggcute } from "./exeggcute";
 import { JirachiEx } from "./jirachi-ex";
+import { MewEx } from "./mew-ex";
 import { PlumeFossil } from "./plume-fossil";
 import { RescueScarf } from "./rescue-scarf";
 import { ReshiramEx } from "./reshiram-ex";
@@ -31,6 +32,7 @@ export const setBlackAndWhite3: Card[] = [
   new Blastoise(),
   new Exeggcute(),
   new JirachiEx(),
+  new MewEx(),
   new PlumeFossil(),
   new RescueScarf(),
   new ReshiramEx(),

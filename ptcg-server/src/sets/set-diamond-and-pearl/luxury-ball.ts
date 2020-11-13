@@ -65,6 +65,10 @@ export class LuxuryBall extends TrainerCard {
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
       const player = effect.player;
+      if (player.deck.cards.length === 0) {
+        throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
+      }
+
       if (player.discard.cards.some(c => c.name === this.name)) {
         throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
       }

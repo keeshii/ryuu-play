@@ -6,6 +6,7 @@ import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
 import { TrainerEffect } from "../../game/store/effects/play-card-effects";
 import { ConfirmPrompt } from "../../game/store/prompts/confirm-prompt";
+import { GameError } from "../../game/game-error";
 import { GameMessage } from "../../game/game-message";
 import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
 import { ShuffleDeckPrompt } from "../../game/store/prompts/shuffle-prompt";
@@ -13,6 +14,10 @@ import { ShuffleDeckPrompt } from "../../game/store/prompts/shuffle-prompt";
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
   const name = effect.trainerCard.name;
+
+  if (player.deck.cards.length === 0) {
+    throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
+  }
 
   const count = player.hand.cards.reduce((sum, c) => {
     return sum + (c.name === name ? 1 : 0);

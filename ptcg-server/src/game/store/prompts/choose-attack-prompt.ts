@@ -9,6 +9,7 @@ export const ChooseAttackPromptType = 'Choose attack';
 
 export interface ChooseAttackOptions {
   allowCancel: boolean;
+  blocked: { index: number; attack: string }[];
 }
 
 export type ChooseAttackResultType = {index: number, attack: string};
@@ -30,6 +31,7 @@ export class ChooseAttackPrompt extends Prompt<Attack> {
     // Default options
     this.options = Object.assign({}, {
       allowCancel: false,
+      blocked: []
     }, options);
   }
 
@@ -53,6 +55,18 @@ export class ChooseAttackPrompt extends Prompt<Attack> {
     if (result === null) {
       return this.options.allowCancel;  // operation cancelled
     }
+
+    const blocked = this.options.blocked.map(b => {
+      const card = this.cards[b.index];
+      if (card && card.attacks) {
+        return card.attacks.find(a => a.name === b.attack);
+      }
+    });
+
+    if (blocked.includes(result)) {
+      return false;
+    }
+
     return this.cards.some(c => c.attacks.includes(result));
   }
 

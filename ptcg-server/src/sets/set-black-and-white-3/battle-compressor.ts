@@ -1,4 +1,5 @@
 import { Card } from "../../game/store/card/card";
+import { GameError } from "../../game/game-error";
 import { GameMessage } from "../../game/game-message";
 import { Effect } from "../../game/store/effects/effect";
 import { TrainerCard } from "../../game/store/card/trainer-card";
@@ -13,12 +14,16 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   const player = effect.player;
   let cards: Card[] = [];
 
+  if (player.deck.cards.length === 0) {
+    throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
+  }
+
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
     GameMessage.CHOOSE_CARD_TO_DISCARD,
     player.deck,
     { },
-    { min: 0, max: 3, allowCancel: false }
+    { min: 1, max: 3, allowCancel: false }
   ), selected => {
     cards = selected || [];
     next();

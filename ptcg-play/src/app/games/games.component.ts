@@ -43,10 +43,14 @@ export class GamesComponent implements OnDestroy, OnInit {
       session => session.users,
       session => session.clients
     ).pipe(map(([users, clients]: [UserInfoMap, ClientInfo[]]) => {
-      return clients.map(c => ({
+      const values = clients.map(c => ({
         clientId: c.clientId,
         user: users[c.userId]
       }));
+      values.sort((client1, client2) => {
+        return client2.user.ranking - client1.user.ranking;
+      });
+      return values;
     }));
 
     this.games$ = this.sessionService.get(session => session.games);
