@@ -41,6 +41,7 @@ import { Tepig } from "./tepig";
 import { Terrakion } from "./terrakion";
 import { ToolScrapper } from "./tool-scrapper";
 import { Tynamo } from "./tynamo";
+import { Tynamo2 } from "./tynamo2";
 import { UltraBall } from "./ultra-ball";
 import { Zekrom } from "./zekrom";
 
@@ -87,6 +88,7 @@ export const setBlackAndWhite: Card[] = [
   new Terrakion(),
   new ToolScrapper(),
   new Tynamo(),
+  new Tynamo2(),
   new UltraBall(),
   new Zekrom()
 ];

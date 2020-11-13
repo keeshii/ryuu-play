@@ -1,11 +1,44 @@
 import { Effect } from "../../game/store/effects/effect";
 import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { PowerType, StoreLike, State, CoinFlipPrompt, ChooseCardsPrompt } from "../../game";
+import { PowerType, StoreLike, State, CoinFlipPrompt, ChooseCardsPrompt, ShuffleDeckPrompt } from "../../game";
 import { Stage, CardType, SpecialCondition } from "../../game/store/card/card-types";
 import { PlayPokemonEffect } from "../../game/store/effects/play-card-effects";
 import { AttackEffect, PowerEffect } from "../../game/store/effects/game-effects";
 import { AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
 import { GameMessage } from "../../game/game-message";
+
+function* useLeParfum(next: Function, store: StoreLike, state: State,
+  self: Roserade, effect: PlayPokemonEffect): IterableIterator<State> {
+  const player = effect.player;
+
+  if (player.deck.cards.length === 0) {
+    return state;
+  }
+
+  // Try to reduce PowerEffect, to check if something is blocking our ability
+  try {
+    const powerEffect = new PowerEffect(player, self.powers[0], self);
+    store.reduceEffect(state, powerEffect);
+  } catch {
+    return state;
+  }
+
+  yield store.prompt(state, new ChooseCardsPrompt(
+    player.id,
+    GameMessage.CHOOSE_CARD_TO_HAND,
+    player.deck,
+    { },
+    { min: 1, max: 1, allowCancel: true }
+  ), selected => {
+    const cards = selected || [];
+    player.deck.moveCardsTo(cards, player.hand);
+    next();
+  });
+
+  return store.prompt(state, new ShuffleDeckPrompt(player.id), order => {
+    player.deck.applyOrder(order);
+  });
+}
 
 
 export class Roserade extends PokemonCard {
@@ -50,30 +83,9 @@ export class Roserade extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof PlayPokemonEffect && effect.pokemonCard === this) {
-      const player = effect.player;
-
-      if (player.deck.cards.length === 0) {
-        return state;
-      }
-
-      // Try to reduce PowerEffect, to check if something is blocking our ability
-      try {
-        const powerEffect = new PowerEffect(player, this.powers[0], this);
-        store.reduceEffect(state, powerEffect);
-      } catch {
-        return state;
-      }
-
-      return store.prompt(state, new ChooseCardsPrompt(
-        player.id,
-        GameMessage.CHOOSE_CARD_TO_HAND,
-        player.deck,
-        { },
-        { min: 1, max: 1, allowCancel: true }
-      ), selected => {
-        const cards = selected || [];
-        player.deck.moveCardsTo(cards, player.hand);
-      });
+      let generator: IterableIterator<State>;
+      generator = useLeParfum(() => generator.next(), store, state, this, effect);
+      return generator.next().value;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {

@@ -1,4 +1,4 @@
-import { AttackEffect } from "../../game/store/effects/game-effects";
+import { AttackEffect, PowerEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
 import { PokemonCard } from "../../game/store/card/pokemon-card";
 import { Stage, CardType, CardTag } from "../../game/store/card/card-types";
@@ -54,6 +54,14 @@ export class ShayminEx extends PokemonCard {
         return state;
       }
 
+      // Try to reduce PowerEffect, to check if something is blocking our ability
+      try {
+        const powerEffect = new PowerEffect(player, this.powers[0], this);
+        store.reduceEffect(state, powerEffect);
+      } catch {
+        return state;
+      }
+
       return store.prompt(state, new ConfirmPrompt(
         effect.player.id,
         GameMessage.WANT_TO_USE_ABILITY,
@@ -67,16 +75,9 @@ export class ShayminEx extends PokemonCard {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
       const target = player.active;
-
-      return store.prompt(state, new ConfirmPrompt(
-        effect.player.id,
-        GameMessage.WANT_TO_PICK_UP_POKEMON
-      ), wantToUse => {
-        if (wantToUse) {
-          target.moveTo(player.hand);
-          target.clearEffects();
-        }
-      });
+      target.moveTo(player.hand);
+      target.clearEffects();
+      return state;
     }
 
     return state;

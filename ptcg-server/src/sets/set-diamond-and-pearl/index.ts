@@ -8,6 +8,7 @@ import { ExpertBelt } from "./expert-belt";
 import { FairyEnergy } from "./fairy-energy";
 import { FightingEnergy } from "./fighting-energy";
 import { FireEnergy } from "./fire-energy";
+import { Floatzel } from "./floatzel";
 import { GrassEnergy } from "./grass-energy";
 import { LightningEnergy } from "./lightning-energy";
 import { LuxuryBall } from "./luxury-ball";
@@ -37,6 +38,7 @@ export const setDiamondAndPearl: Card[] = [
   new FairyEnergy(),
   new FightingEnergy(),
   new FireEnergy(),
+  new Floatzel(),
   new GrassEnergy(),
   new LightningEnergy(),
   new LuxuryBall(),
