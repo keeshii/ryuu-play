@@ -19,7 +19,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   // We will discard this card after prompt confirmation
   effect.preventDefault = true;
 
-  yield store.prompt(state, new ChooseCardsPrompt(
+  return store.prompt(state, new ChooseCardsPrompt(
     player.id,
     GameMessage.CHOOSE_CARD_TO_HAND,
     player.discard,
@@ -32,10 +32,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
       // Recover discarded Pokemon
       player.discard.moveCardsTo(selected, player.hand);
     }
-    next();
   });
-
-  return state;
 }
 
 export class PokemonRescue extends TrainerCard {

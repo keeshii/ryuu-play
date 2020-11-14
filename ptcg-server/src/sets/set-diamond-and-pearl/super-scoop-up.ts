@@ -21,7 +21,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     return state;
   }
 
-  yield store.prompt(state, new ChoosePokemonPrompt(
+  return store.prompt(state, new ChoosePokemonPrompt(
     player.id,
     GameMessage.CHOOSE_POKEMON_TO_PICK_UP,
     PlayerType.BOTTOM_PLAYER,
@@ -31,10 +31,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     const cardList = result[0];
     cardList.moveTo(player.hand);
     cardList.clearEffects();
-    next();
   });
-
-  return state;
 }
 
 export class SuperScoopUp extends TrainerCard {

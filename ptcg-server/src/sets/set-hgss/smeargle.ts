@@ -90,7 +90,7 @@ export class Smeargle extends PokemonCard {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
-      state = store.prompt(state, [
+      return store.prompt(state, [
         new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP),
         new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)
       ], results => {
@@ -98,7 +98,6 @@ export class Smeargle extends PokemonCard {
         results.forEach(r => { heads += r ? 1 : 0; });
         effect.damage = 20 * heads;
       });
-      return state;
     }
 
     if (effect instanceof EndTurnEffect) {
