@@ -5,6 +5,7 @@ import { ArchiesAceInTheHole } from "./archies-ace-in-the hole";
 import { AZ } from "./az";
 import { BattleCompressor } from "./battle-compressor";
 import { Blastoise } from "./blastoise";
+import { DimensionValley } from "./dimension-valley";
 import { Card } from "../../game/store/card/card";
 import { EnergySwitch } from "./energy-switch";
 import { Exeggcute } from "./exeggcute";
@@ -12,10 +13,12 @@ import { Gothita } from "./gothita";
 import { Gothitelle } from "./gothitelle";
 import { Gothorita } from "./gothorita";
 import { JirachiEx } from "./jirachi-ex";
+import { Joltik } from "./joltik";
 import { LysandresTrumpCard } from "./lysandres-trump-card";
 import { MaxiesHiddenBallTrick } from "./maxies-hidden-ball-trick";
 import { MewEx } from "./mew-ex";
 import { PlumeFossil } from "./plume-fossil";
+import { Pumpkaboo } from "./pumpkaboo";
 import { RescueScarf } from "./rescue-scarf";
 import { ReshiramEx } from "./reshiram-ex";
 import { ShadowCircle } from "./shadow-circle";
@@ -42,16 +45,19 @@ export const setBlackAndWhite3: Card[] = [
   new AZ(),
   new BattleCompressor(),
   new Blastoise(),
+  new DimensionValley(),
   new EnergySwitch(),
   new Exeggcute(),
   new Gothita(),
   new Gothitelle(),
   new Gothorita(),
   new JirachiEx(),
+  new Joltik(),
   new LysandresTrumpCard(),
   new MaxiesHiddenBallTrick(),
   new MewEx(),
   new PlumeFossil(),
+  new Pumpkaboo(),
   new RescueScarf(),
   new ReshiramEx(),
   new ShadowCircle(),
