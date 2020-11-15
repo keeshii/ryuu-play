@@ -51,7 +51,8 @@ export class PromptChooseAttackComponent implements OnInit {
 
         const blocked = this.prompt.options.blocked;
         if (blocked.some(b => b.index === index && b.attack === attack)) {
-          this.alertService.toast(this.translate.instant('PROMPT_CHOOSE_ATTACK_CANNOT_SELECT'));
+          const message = 'GAME_MESSAGES.' + this.prompt.options.blockedMessage;
+          this.alertService.toast(this.translate.instant(message));
           return;
         }
 

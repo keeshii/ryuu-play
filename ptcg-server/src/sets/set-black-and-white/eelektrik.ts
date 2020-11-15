@@ -71,7 +71,6 @@ export class Eelektrik extends PokemonCard {
       if (player.marker.hasMarker(this.DYNAMOTOR_MAREKER, this)) {
         throw new GameError(GameMessage.POWER_ALREADY_USED);
       }
-      player.marker.addMarker(this.DYNAMOTOR_MAREKER, this);
 
       state = store.prompt(state, new AttachEnergyPrompt(
         player.id,
@@ -80,9 +79,14 @@ export class Eelektrik extends PokemonCard {
         PlayerType.BOTTOM_PLAYER,
         [ SlotType.BENCH ],
         { superType: SuperType.ENERGY, energyType: EnergyType.BASIC, name: 'Lightning Energy' },
-        { allowCancel: false, min: 1, max: 1 }
+        { allowCancel: true, min: 1, max: 1 }
       ), transfers => {
         transfers = transfers || [];
+        // cancelled by user
+        if (transfers.length === 0) {
+          return;
+        }
+        player.marker.addMarker(this.DYNAMOTOR_MAREKER, this);
         for (const transfer of transfers) {
           const target = StateUtils.getTarget(state, player, transfer.to);
           player.discard.moveCardTo(transfer.card, target);

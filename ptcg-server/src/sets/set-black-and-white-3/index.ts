@@ -2,9 +2,11 @@ import { AcroBike } from "./acro-bike";
 import { Archen } from "./archen";
 import { Archeops } from "./archeops";
 import { ArchiesAceInTheHole } from "./archies-ace-in-the hole";
+import { Articuno } from "./articuno";
 import { AZ } from "./az";
 import { BattleCompressor } from "./battle-compressor";
 import { Blastoise } from "./blastoise";
+import { Chandelure } from "./chandelure";
 import { DimensionValley } from "./dimension-valley";
 import { Card } from "../../game/store/card/card";
 import { EnergySwitch } from "./energy-switch";
@@ -33,6 +35,7 @@ import { TrainersMail } from "./trainers-mail";
 import { TwistMountain } from "./twist-mountain";
 import { Unown } from "./unown";
 import { VirizionEx } from "./virizion-ex";
+import { WailordEx } from "./wailord-ex";
 import { Wartortle } from "./wartortle";
 import { ZekromEx } from "./zekrom-ex";
 import { Zoroark } from "./zoroark";
@@ -44,9 +47,11 @@ export const setBlackAndWhite3: Card[] = [
   new Archen(),
   new Archeops(),
   new ArchiesAceInTheHole(),
+  new Articuno(),
   new AZ(),
   new BattleCompressor(),
   new Blastoise(),
+  new Chandelure(),
   new DimensionValley(),
   new EnergySwitch(),
   new Exeggcute(),
@@ -74,6 +79,7 @@ export const setBlackAndWhite3: Card[] = [
   new TwistMountain(),
   new Unown(),
   new VirizionEx(),
+  new WailordEx(),
   new Wartortle(),
   new ZekromEx(),
   new Zoroark(),

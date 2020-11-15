@@ -135,15 +135,13 @@ export class MewEx extends PokemonCard {
       state = store.reduceEffect(state, checkAttackCost);
       return StateUtils.checkEnoughEnergy(energyMap, checkAttackCost.cost);
     });
-    if (attacks.length > 0) {
-      const index = pokemonCards.length;
-      pokemonCards.push(card);
-      card.attacks.forEach(attack => {
-        if (!attacks.includes(attack)) {
-          blocked.push({ index, attack: attack.name });
-        }
-      });
-    }
+    const index = pokemonCards.length;
+    pokemonCards.push(card);
+    card.attacks.forEach(attack => {
+      if (!attacks.includes(attack)) {
+        blocked.push({ index, attack: attack.name });
+      }
+    });
   }
 
 }

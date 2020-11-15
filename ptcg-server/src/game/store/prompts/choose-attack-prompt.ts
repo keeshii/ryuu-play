@@ -9,6 +9,7 @@ export const ChooseAttackPromptType = 'Choose attack';
 
 export interface ChooseAttackOptions {
   allowCancel: boolean;
+  blockedMessage: GameMessage;
   blocked: { index: number; attack: string }[];
 }
 
@@ -31,6 +32,7 @@ export class ChooseAttackPrompt extends Prompt<Attack> {
     // Default options
     this.options = Object.assign({}, {
       allowCancel: false,
+      blockedMessage: GameMessage.NOT_ENOUGH_ENERGY,
       blocked: []
     }, options);
   }

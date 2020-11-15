@@ -2,7 +2,7 @@ import { PokemonCard } from "../../game/store/card/pokemon-card";
 import { Stage, CardType } from "../../game/store/card/card-types";
 import { PowerType, StoreLike, State, StateUtils, PlayerType, CoinFlipPrompt } from "../../game";
 import { Effect } from "../../game/store/effects/effect";
-import { AttackEffect } from "../../game/store/effects/game-effects";
+import { AttackEffect, PowerEffect } from "../../game/store/effects/game-effects";
 import { GameMessage } from "../../game/game-message";
 import { AttachEnergyEffect } from "../../game/store/effects/play-card-effects";
 import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
@@ -50,11 +50,22 @@ export class Shuckle extends PokemonCard {
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
 
     if (effect instanceof AttachEnergyEffect && effect.target.cards.includes(this)) {
+      const player = effect.player;
       const pokemonCard = effect.target.getPokemonCard();
-      if (pokemonCard === this) {
-        const player = effect.player;
-        player.deck.moveTo(player.hand, 1);
+
+      if (pokemonCard !== this) {
+        return state;
       }
+
+      // Try to reduce PowerEffect, to check if something is blocking our ability
+      try {
+        const powerEffect = new PowerEffect(player, this.powers[0], this);
+        store.reduceEffect(state, powerEffect);
+      } catch {
+        return state;
+      }
+
+      player.deck.moveTo(player.hand, 1);
       return state;
     }
 
