@@ -41,6 +41,7 @@ export * from './store/prompts/move-damage-prompt';
 export * from './store/prompts/move-energy-prompt';
 export * from './store/prompts/order-cards-prompt';
 export * from './store/prompts/prompt';
+export * from './store/prompts/put-damage-prompt';
 export * from './store/prompts/select-prompt';
 export * from './store/prompts/show-cards-prompt';
 export * from './store/prompts/shuffle-prompt';

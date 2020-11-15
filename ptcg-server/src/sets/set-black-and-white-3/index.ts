@@ -14,6 +14,8 @@ import { Gothitelle } from "./gothitelle";
 import { Gothorita } from "./gothorita";
 import { JirachiEx } from "./jirachi-ex";
 import { Joltik } from "./joltik";
+import { Lampent } from "./lampent";
+import { Litwick } from "./litwick";
 import { LysandresTrumpCard } from "./lysandres-trump-card";
 import { MaxiesHiddenBallTrick } from "./maxies-hidden-ball-trick";
 import { MewEx } from "./mew-ex";
@@ -53,6 +55,8 @@ export const setBlackAndWhite3: Card[] = [
   new Gothorita(),
   new JirachiEx(),
   new Joltik(),
+  new Lampent(),
+  new Litwick(),
   new LysandresTrumpCard(),
   new MaxiesHiddenBallTrick(),
   new MewEx(),

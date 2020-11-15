@@ -1,0 +1,38 @@
+<h2 class="ptcg-prompt-title" translate>PROMPT_MOVE_DAMAGE_TITLE</h2>
+
+<div class="ptcg-prompt-content">
+  <p [translate]="'GAME_MESSAGES.' + message"></p>
+
+  <ptcg-choose-pokemons-pane
+    [pokemonData]="pokemonData"
+    (cardClick)="onCardClick($event)">
+  </ptcg-choose-pokemons-pane>
+
+  <div class="ptcg-damage-pane">
+    <button mat-mini-fab color="accent" [disabled]="isRemoveDisabled"
+      (click)="removeDamage()">
+      <mat-icon>remove</mat-icon>
+    </button>
+    <ptcg-badge color="warn" class="ptcg-damage-value">{{ damage }}</ptcg-badge>
+    <button mat-mini-fab color="accent" [disabled]="isAddDisabled"
+      (click)="addDamage()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+
+</div>
+
+<div class="ptcg-prompt-actions">
+  <button mat-raised-button (click)="reset()">
+    {{ 'PROMPT_RESET' | translate }}
+  </button>
+  <div class="ptcg-u-spacer"></div>
+  <button mat-raised-button *ngIf="allowedCancel" [disabled]="gameState.deleted"
+    (click)="cancel()">
+    {{ 'BUTTON_CANCEL' | translate }}
+  </button>
+  <button mat-raised-button color="primary" [disabled]="gameState.deleted || isInvalid"
+    (click)="confirm()">
+    {{ 'BUTTON_OK' | translate }}
+  </button>
+</div>

@@ -22,6 +22,7 @@ import { PromptMoveEnergyComponent } from './prompt-move-energy/prompt-move-ener
 import { PromptSelectComponent } from './prompt-select/prompt-select.component';
 import { PromptInvitePlayerComponent } from './prompt-invite-player/prompt-invite-player.component';
 import { PromptChooseAttackComponent } from './prompt-choose-attack/prompt-choose-attack.component';
+import { PromptPutDamageComponent } from './prompt-put-damage/prompt-put-damage.component';
 
 
 @NgModule({
@@ -44,7 +45,8 @@ import { PromptChooseAttackComponent } from './prompt-choose-attack/prompt-choos
     PromptMoveEnergyComponent,
     PromptSelectComponent,
     PromptInvitePlayerComponent,
-    PromptChooseAttackComponent
+    PromptChooseAttackComponent,
+    PromptPutDamageComponent
   ],
   imports: [
     BoardModule,

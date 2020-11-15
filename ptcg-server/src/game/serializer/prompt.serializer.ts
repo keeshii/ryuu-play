@@ -15,6 +15,7 @@ import { MoveDamagePrompt } from "../store/prompts/move-damage-prompt";
 import { MoveEnergyPrompt } from "../store/prompts/move-energy-prompt";
 import { OrderCardsPrompt } from "../store/prompts/order-cards-prompt";
 import { Prompt } from "../store/prompts/prompt";
+import { PutDamagePrompt } from "../store/prompts/put-damage-prompt";
 import { SelectPrompt } from "../store/prompts/select-prompt";
 import { ShowCardsPrompt } from "../store/prompts/show-cards-prompt";
 import { ShuffleDeckPrompt } from "../store/prompts/shuffle-prompt";
@@ -38,6 +39,7 @@ export class PromptSerializer implements Serializer<Prompt<any>> {
     { classValue: MoveDamagePrompt, type: 'MoveDamagePrompt' },
     { classValue: MoveEnergyPrompt, type: 'MoveEnergyPrompt' },
     { classValue: OrderCardsPrompt, type: 'OrderCardsPrompt' },
+    { classValue: PutDamagePrompt, type: 'PutDamagePrompt' },
     { classValue: SelectPrompt, type: 'SelectPrompt' },
     { classValue: ShowCardsPrompt, type: 'ShowCardsPrompt' },
     { classValue: ShuffleDeckPrompt, type: 'ShuffleDeckPrompt' },

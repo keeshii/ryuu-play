@@ -9,8 +9,9 @@ import { SpecialCondition } from "../card/card-types";
 export enum AttackEffects {
   APPLY_WEAKNESS_EFFECT = 'APPLY_WEAKNESS_EFFECT',
   DEAL_DAMAGE_EFFECT = 'DEAL_DAMAGE_EFFECT',
-  DEAL_DAMAGE_AFTER_WEAKNESS_EFFECT = 'DEAL_DAMAGE_AFTER_WEAKNESS_EFFECT',
-  DEAL_DAMAGE_COMPLETE_EFFECT = 'DEAL_DAMAGE_COMPLETE_EFFECT',
+  PUT_DAMAGE_EFFECT = 'PUT_DAMAGE_EFFECT',
+  AFTER_DAMAGE_EFFECT = 'AFTER_DAMAGE_EFFECT',
+  PUT_COUNTERS_EFFECT = 'PUT_COUNTERS_EFFECT',
   DISCARD_CARD_EFFECT = 'DISCARD_CARD_EFFECT',
   ADD_MARKER_EFFECT = 'ADD_MARKER_EFFECT',
   ADD_SPECIAL_CONDITIONS_EFFECT = 'ADD_SPECIAL_CONDITIONS_EFFECT'
@@ -59,7 +60,7 @@ export class DealDamageEffect extends AbstractAttackEffect implements Effect {
 }
 
 export class PutDamageEffect extends AbstractAttackEffect implements Effect {
-  readonly type: string = AttackEffects.DEAL_DAMAGE_AFTER_WEAKNESS_EFFECT;
+  readonly type: string = AttackEffects.PUT_DAMAGE_EFFECT;
   public preventDefault = false;
   public damage: number;
 
@@ -70,7 +71,18 @@ export class PutDamageEffect extends AbstractAttackEffect implements Effect {
 }
 
 export class AfterDamageEffect extends AbstractAttackEffect implements Effect {
-  readonly type: string = AttackEffects.DEAL_DAMAGE_COMPLETE_EFFECT;
+  readonly type: string = AttackEffects.AFTER_DAMAGE_EFFECT;
+  public preventDefault = false;
+  public damage: number;
+
+  constructor(base: AttackEffect, damage: number) {
+    super(base);
+    this.damage = damage;
+  }
+}
+
+export class PutCountersEffect extends AbstractAttackEffect implements Effect {
+  readonly type: string = AttackEffects.PUT_COUNTERS_EFFECT;
   public preventDefault = false;
   public damage: number;
 

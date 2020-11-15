@@ -5,7 +5,8 @@ import { State } from "../state/state";
 import { StoreLike } from "../store-like";
 import { PutDamageEffect, DealDamageEffect, DiscardCardsEffect,
   AddMarkerEffect, HealTargetEffect, AddSpecialConditionsEffect,
-  RemoveSpecialConditionsEffect, ApplyWeaknessEffect, AfterDamageEffect} from "../effects/attack-effects";
+  RemoveSpecialConditionsEffect, ApplyWeaknessEffect, AfterDamageEffect,
+  PutCountersEffect } from "../effects/attack-effects";
 import { HealEffect } from "../effects/game-effects";
 import { StateUtils } from "../state-utils";
 
@@ -42,6 +43,17 @@ export function attackReducer(store: StoreLike, state: State, effect: Effect): S
     state = store.reduceEffect(state, dealDamage);
 
     return state;
+  }
+
+  if (effect instanceof PutCountersEffect) {
+    const target = effect.target;
+    const pokemonCard = target.getPokemonCard();
+    if (pokemonCard === undefined) {
+      throw new GameError(GameMessage.ILLEGAL_ACTION);
+    }
+
+    const damage = Math.max(0, effect.damage);
+    target.damage += damage;
   }
 
   if (effect instanceof DiscardCardsEffect) {
