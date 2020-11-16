@@ -5,6 +5,7 @@ import { Cleffa } from "./cleffa";
 import { DarknessEnergySpecial } from "./darkness-energy-special";
 import { Drowzee } from "./drowzee";
 import { DualBall } from "./dual-ball";
+import { FlowerShopLady } from "./flower-shop-lady";
 import { Hypno } from "./hypno";
 import { JunkArm } from "./junk-arm";
 import { MetalEnergySpecial } from "./metal-energy-special";
@@ -23,6 +24,7 @@ export const setHgss: Card[] = [
   new DarknessEnergySpecial(),
   new Drowzee(),
   new DualBall(),
+  new FlowerShopLady(),
   new Hypno(),
   new JunkArm(),
   new MetalEnergySpecial(),
