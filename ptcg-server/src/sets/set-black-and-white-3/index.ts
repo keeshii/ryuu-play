@@ -41,6 +41,7 @@ import { Squirtle } from "./squirtle";
 import { SuperiorEnergyRetrieval } from "./superior-energy-retrieval";
 import { TownMap } from "./town-map";
 import { TrainersMail } from "./trainers-mail";
+import { TropicalBeach } from "./tropical-beach";
 import { TwistMountain } from "./twist-mountain";
 import { Unown } from "./unown";
 import { VirizionEx } from "./virizion-ex";
@@ -94,6 +95,7 @@ export const setBlackAndWhite3: Card[] = [
   new SuperiorEnergyRetrieval(),
   new TownMap(),
   new TrainersMail(),
+  new TropicalBeach(),
   new TwistMountain(),
   new Unown(),
   new VirizionEx(),
