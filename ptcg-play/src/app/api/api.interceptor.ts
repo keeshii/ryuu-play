@@ -25,9 +25,11 @@ export class ApiInterceptor implements HttpInterceptor {
 
   private async tokenAlert() {
     this.dialog.closeAll();
-    await this.alertService.alert(this.translate.instant('ERROR_SESSION_EXPIRED'));
-    this.sessionService.clear();
-    this.router.navigate(['/login']);
+    if (this.sessionService.session.loggedUserId) {
+      await this.alertService.alert(this.translate.instant('ERROR_SESSION_EXPIRED'));
+      this.sessionService.clear();
+      this.router.navigate(['/login']);
+    }
   }
 
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
