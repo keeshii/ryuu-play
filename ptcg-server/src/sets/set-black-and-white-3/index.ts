@@ -14,6 +14,7 @@ import { Exeggcute } from "./exeggcute";
 import { Gothita } from "./gothita";
 import { Gothitelle } from "./gothitelle";
 import { Gothorita } from "./gothorita";
+import { HoOhEx } from "./ho-oh-ex";
 import { JirachiEx } from "./jirachi-ex";
 import { Joltik } from "./joltik";
 import { Lampent } from "./lampent";
@@ -22,6 +23,7 @@ import { LysandresTrumpCard } from "./lysandres-trump-card";
 import { MaxiesHiddenBallTrick } from "./maxies-hidden-ball-trick";
 import { MewEx } from "./mew-ex";
 import { PlumeFossil } from "./plume-fossil";
+import { ProfessorOaksSetup } from "./professor-oaks-setup";
 import { Pumpkaboo } from "./pumpkaboo";
 import { RescueScarf } from "./rescue-scarf";
 import { ReshiramEx } from "./reshiram-ex";
@@ -58,6 +60,7 @@ export const setBlackAndWhite3: Card[] = [
   new Gothita(),
   new Gothitelle(),
   new Gothorita(),
+  new HoOhEx(),
   new JirachiEx(),
   new Joltik(),
   new Lampent(),
@@ -66,6 +69,7 @@ export const setBlackAndWhite3: Card[] = [
   new MaxiesHiddenBallTrick(),
   new MewEx(),
   new PlumeFossil(),
+  new ProfessorOaksSetup(),
   new Pumpkaboo(),
   new RescueScarf(),
   new ReshiramEx(),

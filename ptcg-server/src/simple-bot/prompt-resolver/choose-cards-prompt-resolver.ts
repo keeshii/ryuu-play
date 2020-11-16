@@ -8,6 +8,7 @@ export class ChooseCardsPromptResolver extends PromptResolver {
   public resolvePrompt(state: State, player: Player, prompt: Prompt<any>): Action | undefined {
     if (prompt instanceof ChooseCardsPrompt) {
       let result: Card[] | null = this.buildCardsToChoose(state, prompt);
+      this.removeInvalidCards(prompt, result);
       if (result.length > prompt.options.max) {
         result.length = prompt.options.max;
       }
@@ -16,6 +17,24 @@ export class ChooseCardsPromptResolver extends PromptResolver {
       }
       return new ResolvePromptAction(prompt.id, result);
     }
+  }
+
+  private removeInvalidCards(prompt: ChooseCardsPrompt, cards: Card[]): Card[] {
+    const result: Card[] = [];
+
+    // temporary remove min restriction for this prompt
+    const minCopy = prompt.options.min;
+    prompt.options.min = 0;
+
+    // Add card by card to the results and check if it is still valid
+    for (const card of cards) {
+      if (prompt.validate([...result, card])) {
+        result.push(card);
+      }
+    }
+
+    prompt.options.min = minCopy;
+    return result;
   }
 
   private buildCardsToChoose(state: State, prompt: ChooseCardsPrompt): Card[] {

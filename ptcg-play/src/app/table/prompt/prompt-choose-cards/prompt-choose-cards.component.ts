@@ -12,14 +12,13 @@ import { LocalGameState } from '../../../shared/session/session.interface';
 export class PromptChooseCardsComponent implements OnInit {
 
   @Input() set prompt(prompt: ChooseCardsPrompt) {
+    this.promptValue = prompt;
     this.cards = prompt.cards;
     this.filter = prompt.filter;
     this.allowedCancel = prompt.options.allowCancel;
     this.blocked = prompt.options.blocked;
     this.message = prompt.message;
     this.promptId = prompt.id;
-    this.min = prompt.options.min;
-    this.max = prompt.options.max;
     this.isSecret = prompt.options.isSecret;
 
     if (prompt.options.isSecret) {
@@ -41,8 +40,7 @@ export class PromptChooseCardsComponent implements OnInit {
   public isSecret: boolean;
   public revealed = false;
   public cardbackMap: {[index: number]: boolean} = {};
-  private min: number;
-  private max: number;
+  private promptValue: ChooseCardsPrompt;
   private result: number[] = [];
 
   constructor(
@@ -62,13 +60,8 @@ export class PromptChooseCardsComponent implements OnInit {
   }
 
   public onChange(result: number[]) {
-    let isInvalid = false;
-    if (this.min !== undefined && this.min > result.length) {
-      isInvalid = true;
-    }
-    if (this.max !== undefined && this.max < result.length) {
-      isInvalid = true;
-    }
+    const cards = result.map(index => this.cards.cards[index]);
+    const isInvalid = !this.promptValue.validate(cards);
     this.result = result;
     this.isInvalid = isInvalid;
   }
