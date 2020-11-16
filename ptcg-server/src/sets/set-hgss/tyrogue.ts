@@ -1,7 +1,7 @@
 import { PokemonCard } from "../../game/store/card/pokemon-card";
 import { Stage, CardType, SpecialCondition } from "../../game/store/card/card-types";
 import { PowerType, StoreLike, State } from "../../game";
-import { AttackEffect } from "../../game/store/effects/game-effects";
+import { AttackEffect, PowerEffect } from "../../game/store/effects/game-effects";
 import { PutDamageEffect, AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
 import { Effect } from "../../game/store/effects/effect";
 
@@ -56,6 +56,13 @@ export class Tyrogue extends PokemonCard {
         const pokemonCard = effect.target.getPokemonCard();
         const isAsleep = effect.target.specialConditions.includes(SpecialCondition.ASLEEP);
         if (pokemonCard === this && isAsleep) {
+          // Try to reduce PowerEffect, to check if something is blocking our ability
+          try {
+            const powerEffect = new PowerEffect(effect.player, this.powers[0], this);
+            store.reduceEffect(state, powerEffect);
+          } catch {
+            return state;
+          }
           effect.preventDefault = true;
         }
       }

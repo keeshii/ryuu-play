@@ -9,6 +9,7 @@ import { FlowerShopLady } from "./flower-shop-lady";
 import { Hypno } from "./hypno";
 import { JunkArm } from "./junk-arm";
 import { MetalEnergySpecial } from "./metal-energy-special";
+import { Pichu } from "./pichu";
 import { PokemonCollector } from "./pokemon-collector";
 import { Rotom } from "./rotom";
 import { Seeker } from "./seeker";
@@ -28,6 +29,7 @@ export const setHgss: Card[] = [
   new Hypno(),
   new JunkArm(),
   new MetalEnergySpecial(),
+  new Pichu(),
   new PokemonCollector(),
   new Rotom(),
   new Seeker(),

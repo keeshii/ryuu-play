@@ -47,7 +47,9 @@ export class Garbodor extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
 
-    if (effect instanceof PowerEffect && effect.power.name !== 'Garbotoxin') {
+    if (effect instanceof PowerEffect
+      && effect.power.powerType === PowerType.ABILITY
+      && effect.power.name !== 'Garbotoxin') {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
 

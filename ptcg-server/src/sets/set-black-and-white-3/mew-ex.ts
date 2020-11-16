@@ -23,7 +23,7 @@ export class MewEx extends PokemonCard {
   public powers = [{
     name: 'Versatile',
     useWhenInPlay: true,
-    powerType: PowerType.POKEPOWER,
+    powerType: PowerType.ABILITY,
     text: 'This Pokemon can use the attacks of any Pokemon in play ' +
       '(both yours and your opponent\'s). (You still need the necessary ' +
       'Energy to use each attack.)'

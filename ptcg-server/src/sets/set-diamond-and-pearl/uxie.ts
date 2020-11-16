@@ -1,4 +1,4 @@
-import { AttackEffect } from "../../game/store/effects/game-effects";
+import { AttackEffect, PowerEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
 import { PokemonCard } from "../../game/store/card/pokemon-card";
 import { Stage, CardType } from "../../game/store/card/card-types";
@@ -83,6 +83,14 @@ export class Uxie extends PokemonCard {
       const cards = player.hand.cards.filter(c => c !== this);
       const cardsToDraw = Math.max(0, 7 - cards.length);
       if (cardsToDraw === 0) {
+        return state;
+      }
+
+      // Try to reduce PowerEffect, to check if something is blocking our ability
+      try {
+        const powerEffect = new PowerEffect(player, this.powers[0], this);
+        store.reduceEffect(state, powerEffect);
+      } catch {
         return state;
       }
 

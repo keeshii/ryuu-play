@@ -59,7 +59,7 @@ export class Roserade extends PokemonCard {
 
   public powers = [{
     name: 'Le Parfum',
-    powerType: PowerType.POKEPOWER,
+    powerType: PowerType.ABILITY,
     text: 'When you play this Pokemon from your hand to evolve 1 of your ' +
       'Pokemon, you may search your deck for any card and put it into your ' +
       'hand. Shuffle your deck afterward.'

@@ -3,22 +3,19 @@ import { Effect } from "../../game/store/effects/effect";
 import { PokemonCard } from "../../game/store/card/pokemon-card";
 import { Stage, CardType, SuperType } from "../../game/store/card/card-types";
 import { PlayPokemonEffect } from "../../game/store/effects/play-card-effects";
-import { PowerType, StoreLike, State, ConfirmPrompt, ChoosePokemonPrompt,
-  PlayerType, SlotType, PokemonCardList } from "../../game";
+import { PowerType, StoreLike, State, ChoosePokemonPrompt, PlayerType, SlotType,
+  PokemonCardList } from "../../game";
+import {PowerEffect} from "../../game/store/effects/game-effects";
 
-function* useReturn(next: Function, store: StoreLike, state: State, effect: PlayPokemonEffect): IterableIterator<State> {
+function* useReturn(next: Function, store: StoreLike, state: State,
+  self: Unown, effect: PlayPokemonEffect): IterableIterator<State> {
   const player = effect.player;
 
-  let wantToUse = false;
-  yield store.prompt(state, new ConfirmPrompt(
-    effect.player.id,
-    GameMessage.WANT_TO_USE_ABILITY,
-  ), result => {
-    wantToUse = result;
-    next();
-  });
-
-  if (!wantToUse) {
+  // Try to reduce PowerEffect, to check if something is blocking our ability
+  try {
+    const powerEffect = new PowerEffect(player, self.powers[0], self);
+    store.reduceEffect(state, powerEffect);
+  } catch {
     return state;
   }
 
@@ -81,7 +78,7 @@ export class Unown extends PokemonCard {
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof PlayPokemonEffect && effect.pokemonCard === this) {
       let generator: IterableIterator<State>;
-      generator = useReturn(() => generator.next(), store, state, effect);
+      generator = useReturn(() => generator.next(), store, state, this, effect);
       return generator.next().value;
     }
 
