@@ -30,4 +30,8 @@ export class ProfileService {
     });
   }
 
+  public changeEmail(email: string) {
+    return this.api.post<Response>('/v1/profile/changeEmail', { email });
+  }
+
 }

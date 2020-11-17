@@ -6,11 +6,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { switchMap } from 'rxjs/operators';
 
 import { AlertService } from '../shared/alert/alert.service';
-import { ChangePasswordPopupService } from './change-password-popup/change-password-popup.service';
-import { EditAvatarsPopupService } from './edit-avatars-popup/edit-avatars-popup.service';
 import { ProfileService } from '../api/services/profile.service';
 import { SessionService } from '../shared/session/session.service';
 import { takeUntilDestroyed } from '../shared/operators/take-until-destroyed';
+import { ProfilePopupService } from './profile-popup.service';
 
 @Component({
   selector: 'ptcg-profile',
@@ -27,8 +26,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   constructor(
     private alertService: AlertService,
-    private edtiAvatarsPopupService: EditAvatarsPopupService,
-    private changePasswordPopupService: ChangePasswordPopupService,
+    private profilePopupService: ProfilePopupService,
     private profileService: ProfileService,
     private route: ActivatedRoute,
     private router: Router,
@@ -72,11 +70,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   changePassword() {
-    this.changePasswordPopupService.openDialog();
+    this.profilePopupService.openChangePasswordPopup();
   }
 
   editAvatars(userId: number) {
-    this.edtiAvatarsPopupService.openDialog(userId);
+    this.profilePopupService.openEditAvatarsPopup(userId);
+  }
+
+  changeEmail(userId: number) {
+    this.profilePopupService.openChangeEmailPopup(userId);
   }
 
   ngOnDestroy() {}

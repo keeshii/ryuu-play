@@ -1,0 +1,35 @@
+<h2 mat-dialog-title translate>PROFILE_CHANGE_EMAIL_TITLE</h2>
+
+<mat-dialog-content>
+
+  <mat-progress-bar *ngIf="loading" color="accent" mode="indeterminate" class="ptcg-u-top">
+  </mat-progress-bar>
+
+  <p translate>PROFILE_CHANGE_EMAIL_HINT</p>
+
+  <form #form="ngForm" autocomplete="off">
+
+    <!-- E-mail -->
+    <mat-form-field>
+      <mat-label translate>LABEL_EMAIL</mat-label>
+      <input matInput [placeholder]="'LABEL_EMAIL' | translate" name="email"
+        [(ngModel)]="email" [disabled]="loading" #emailField="ngModel"
+        ptcgEmailValidator [ptcgInvalidValue]="invalidEmail" required>
+      <mat-error>
+        <div *ngIf="emailField.errors?.email" translate>VALIDATION_INVALID_EMAIL_FORMAT</div>
+        <div *ngIf="emailField.errors?.invalidValue" translate>REGISTER_EMAIL_TAKEN</div>
+      </mat-error>
+    </mat-form-field>
+
+  </form>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button mat-dialog-close>
+    {{ 'BUTTON_CANCEL' | translate }}
+  </button>
+  <button mat-raised-button color="primary" (click)="changeEmail()" [disabled]="loading || form.invalid">
+    {{ 'BUTTON_SAVE' | translate }}
+  </button>
+</mat-dialog-actions>

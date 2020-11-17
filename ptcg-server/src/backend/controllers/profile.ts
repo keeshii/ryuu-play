@@ -112,4 +112,43 @@ export class Profile extends Controller {
     res.send({ ok: true });
   }
 
+  @Post('/changeEmail')
+  @AuthToken()
+  @Validate({
+    email: check().isEmail(),
+  })
+  public async onChangeEmail(req: Request, res: Response) {
+    const userId: number = req.body.userId;
+    const body: { email: string } = req.body;
+    const user = await User.findOne(userId);
+
+    if (user === undefined) {
+      res.status(400);
+      res.send({error: ApiErrorEnum.LOGIN_INVALID});
+      return;
+    }
+
+    if (user.email === body.email) {
+      res.send({ ok: true });
+      return;
+    }
+
+    if (await User.findOne({email: body.email})) {
+      res.status(400);
+      res.send({error: ApiErrorEnum.REGISTER_EMAIL_EXISTS});
+      return;
+    }
+
+    try {
+      user.email = body.email;
+      await user.save();
+    } catch (error) {
+      res.status(400);
+      res.send({error: ApiErrorEnum.LOGIN_INVALID});
+      return;
+    }
+
+    res.send({ ok: true });
+  }
+
 }

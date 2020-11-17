@@ -5,6 +5,7 @@ import { SharedModule } from '../shared/shared.module';
 import { ProfileComponent } from './profile.component';
 import { EditAvatarsPopupComponent } from './edit-avatars-popup/edit-avatars-popup.component';
 import { AddAvatarPopupComponent } from './add-avatar-popup/add-avatar-popup.component';
+import { ChangeEmailPopupComponent } from './change-email-popup/change-email-popup.component';
 import { ChangePasswordPopupComponent } from './change-password-popup/change-password-popup.component';
 
 @NgModule({
@@ -14,12 +15,14 @@ import { ChangePasswordPopupComponent } from './change-password-popup/change-pas
   ],
   declarations: [
     AddAvatarPopupComponent,
+    ChangeEmailPopupComponent,
     ChangePasswordPopupComponent,
     EditAvatarsPopupComponent,
     ProfileComponent
   ],
   entryComponents: [
     AddAvatarPopupComponent,
+    ChangeEmailPopupComponent,
     ChangePasswordPopupComponent,
     EditAvatarsPopupComponent
   ],

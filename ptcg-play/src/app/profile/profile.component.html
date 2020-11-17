@@ -7,12 +7,20 @@
 
       <div *ngIf="owner$ | async ; then ownerActions ; else visitorActions"></div>
       <ng-template #ownerActions>
-        <button mat-raised-button color="primary" (click)="editAvatars(userId)">
-          {{ 'PROFILE_EDIT_AVATARS' | translate }}
+        <button mat-raised-button color="primary" [matMenuTriggerFor]="menu">
+          {{ 'PROFILE_EDIT_PROFILE' | translate }}
         </button>
-        <button mat-raised-button color="primary" (click)="changePassword()">
-          {{ 'SET_PASSWORD_BUTTON' | translate }}
-        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="editAvatars(userId)">
+            {{ 'PROFILE_EDIT_AVATARS' | translate }}
+          </button>
+          <button mat-menu-item (click)="changeEmail(userId)">
+            {{ 'PROFILE_CHANGE_EMAIL' | translate }}
+          </button>
+          <button mat-menu-item (click)="changePassword()">
+            {{ 'SET_PASSWORD_BUTTON' | translate }}
+          </button>
+        </mat-menu>
       </ng-template>
       <ng-template #visitorActions>
         <button mat-raised-button color="primary" [routerLink]="['/message', userId]">
