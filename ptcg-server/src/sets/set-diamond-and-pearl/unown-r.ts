@@ -8,7 +8,7 @@ import { PowerEffect, AttackEffect } from "../../game/store/effects/game-effects
 function* useHiddenPower(next: Function, store: StoreLike, state: State, effect: AttackEffect): IterableIterator<State> {
   const player = effect.player;
 
-  yield store.prompt(state, new MoveEnergyPrompt(
+  return store.prompt(state, new MoveEnergyPrompt(
     effect.player.id,
     GameMessage.MOVE_ENERGY_CARDS,
     PlayerType.BOTTOM_PLAYER,
@@ -25,11 +25,7 @@ function* useHiddenPower(next: Function, store: StoreLike, state: State, effect:
       const target = StateUtils.getTarget(state, player, transfer.to);
       source.moveCardTo(transfer.card, target);
     }
-
-    next();
   });
-
-  return state;
 }
 
 export class UnownR extends PokemonCard {
