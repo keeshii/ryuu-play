@@ -71,6 +71,12 @@ export class GameLogsComponent implements OnInit {
     if (logs.length === 0 || !this.state) {
       return;
     }
+
+    // delete future logs (when user rewind state in replays)
+    let maxLogId = 0;
+    logs.forEach(log => { maxLogId = Math.max(log.id, maxLogId); });
+    this.logs = this.logs.filter(log => log.id <= maxLogId);
+
     let logsAdded = false;
 
     // Append logs, skip the existing one

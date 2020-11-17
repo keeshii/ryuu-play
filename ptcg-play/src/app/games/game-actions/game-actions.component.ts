@@ -2,8 +2,10 @@ import { Component, OnDestroy, OnInit, Input } from '@angular/core';
 import { GameInfo, GameState } from 'ptcg-server';
 import { Observable } from 'rxjs';
 
+import { AlertService } from 'src/app/shared/alert/alert.service';
 import { GameService } from 'src/app/api/services/game.service';
 import { SessionService } from '../../shared/session/session.service';
+import { TranslateService } from '@ngx-translate/core';
 import { takeUntilDestroyed } from 'src/app/shared/operators/take-until-destroyed';
 
 @Component({
@@ -18,8 +20,10 @@ export class GameActionsComponent implements OnInit, OnDestroy {
   public isJoined: boolean;
 
   constructor(
+    private alertService: AlertService,
     private gameService: GameService,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private translate: TranslateService
   ) {
     this.gameStates$ = this.sessionService.get(session => session.gameStates);
   }
@@ -48,7 +52,15 @@ export class GameActionsComponent implements OnInit, OnDestroy {
       .subscribe(() => {}, () => {});
   }
 
-  public leave() {
+  public async leave() {
+    const result = await this.alertService.confirm(
+      this.translate.instant('MAIN_LEAVE_GAME')
+    );
+
+    if (!result) {
+      return;
+    }
+
     this.gameService.leave(this.game.gameId);
   }
 

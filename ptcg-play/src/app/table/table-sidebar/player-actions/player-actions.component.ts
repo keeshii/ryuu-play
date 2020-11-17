@@ -1,22 +1,27 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, OnChanges } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { AlertService } from '../../../shared/alert/alert.service';
 import { GameService } from '../../../api/services/game.service';
 import { LocalGameState } from '../../../shared/session/session.interface';
 import { SessionService } from '../../../shared/session/session.service';
+import {GamePhase} from 'ptcg-server';
 
 @Component({
   selector: 'ptcg-player-actions',
   templateUrl: './player-actions.component.html',
   styleUrls: ['./player-actions.component.scss']
 })
-export class PlayerActionsComponent implements OnInit {
+export class PlayerActionsComponent implements OnInit, OnChanges {
 
   @Input() gameState: LocalGameState;
   @Input() clientId: number;
 
   @Output() join = new EventEmitter<void>();
+
+  public isObserver = false;
+  public isPlaying = false;
+  public isYourTurn = false;
 
   constructor(
     private alertService: AlertService,
@@ -67,6 +72,22 @@ export class PlayerActionsComponent implements OnInit {
     const switchSide = !this.gameState.switchSide;
     gameStates[index] = {...gameStates[index], switchSide };
     this.sessionService.set({ gameStates });
+  }
+
+  ngOnChanges() {
+    if (this.gameState && this.clientId) {
+      const state = this.gameState.state;
+      const activePlayer = state.players[state.activePlayer];
+
+      this.isYourTurn = activePlayer
+        && activePlayer.id === this.clientId
+        && state.phase === GamePhase.PLAYER_TURN;
+
+      this.isPlaying = state.players.some(p => p.id === this.clientId);
+      const waitingForPlayers = state.players.length < 2;
+      const isReplay = !!this.gameState.replay;
+      this.isObserver = isReplay || (!this.isPlaying && !waitingForPlayers);
+    }
   }
 
 }

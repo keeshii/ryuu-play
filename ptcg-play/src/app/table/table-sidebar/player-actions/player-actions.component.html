@@ -1,17 +1,19 @@
 <div class="ptcg-player-actions">
-  <div *ngIf="gameState?.replay ; then replayActions ; else gameActions"></div>
-  <ng-template #gameActions>
-    <button mat-stroked-button (click)="join.next()" [disabled]="gameState?.deleted">
-      {{ 'TABLE_PLAY' | translate }}
-    </button>
+  <div *ngIf="isObserver ; then observerActions ; else playerActions"></div>
+  <ng-template #playerActions>
     <button mat-stroked-button (click)="leave()">
       {{ 'BUTTON_LEAVE' | translate }}
     </button>
-    <button mat-stroked-button (click)="passTurn()" [disabled]="gameState?.deleted">
+    <button mat-stroked-button (click)="join.next()" *ngIf="!isPlaying"
+      [disabled]="gameState?.deleted">
+      {{ 'TABLE_PLAY' | translate }}
+    </button>
+    <button mat-stroked-button (click)="passTurn()" *ngIf="isPlaying"
+      [disabled]="!isYourTurn || gameState?.deleted">
       {{ 'TABLE_END_YOUR_TURN' | translate }}
     </button>
   </ng-template>
-  <ng-template #replayActions>
+  <ng-template #observerActions>
     <button mat-stroked-button (click)="switchSides()">
       {{ 'TABLE_SWITCH_SIDES' | translate }}
     </button>

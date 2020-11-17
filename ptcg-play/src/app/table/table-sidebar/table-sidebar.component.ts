@@ -58,7 +58,7 @@ export class TableSidebarComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private getPlayerStats(gameState: LocalGameState, player: Player): PlayerStats | undefined {
-    if (!player) {
+    if (!player || !gameState.playerStats) {
       return undefined;
     }
     return gameState.playerStats.find(p => p.clientId === player.id);
@@ -121,7 +121,13 @@ export class TableSidebarComponent implements OnInit, OnDestroy, OnChanges {
 
     const state = this.gameState.state;
 
-    if (!this.gameState.deleted && this.gameId !== this.gameState.gameId) {
+    const gameOrPlayerHasChanged = this.gameId !== this.gameState.gameId
+      || !this.topPlayerStats
+      || this.topPlayerStats.clientId !== this.topPlayer.id
+      || !this.bottomPlayerStats
+      || this.bottomPlayerStats.clientId !== this.bottomPlayer.id;
+
+    if (!this.gameState.deleted && gameOrPlayerHasChanged) {
       this.refreshPlayerStats(this.gameState);
     }
 

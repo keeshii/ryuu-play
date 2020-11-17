@@ -155,7 +155,7 @@
   "MAIN_TABLES": "Tables",
   "MAIN_TABLE_NAME": "#{{id}} {{name}}",
   "MAIN_TABLE_UNKNOWN": "#{{id}} Unknown",
-  "MAIN_TITLE": "Ryuu Play",
+  "MAIN_TITLE": "RyuuPlay",
   "MESSAGES_DELETE_CONVERSATION": "Delete conversation",
   "MESSAGES_DELETE_CONVERSATION_CONFIRM": "Delete this conversation from your profile?",
   "MESSAGES_ENTER_MESSAGE": "Enter message",

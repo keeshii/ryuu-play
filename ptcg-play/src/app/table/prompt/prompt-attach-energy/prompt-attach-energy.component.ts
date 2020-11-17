@@ -110,7 +110,7 @@ export class PromptAttachEnergyComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-    if (this.prompt && this.gameState) {
+    if (this.prompt && this.gameState && !this.promptId) {
       const state = this.gameState.state;
       const prompt = this.prompt;
       const playerId = prompt.playerId;
