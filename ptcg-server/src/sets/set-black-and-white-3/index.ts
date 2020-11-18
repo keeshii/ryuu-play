@@ -17,6 +17,7 @@ import { Gothita } from "./gothita";
 import { Gothitelle } from "./gothitelle";
 import { Gothorita } from "./gothorita";
 import { HoOhEx } from "./ho-oh-ex";
+import { SacredAsh } from "./sacred-ash";
 import { JirachiEx } from "./jirachi-ex";
 import { Joltik } from "./joltik";
 import { Kirlia } from "./kirlia";
@@ -71,6 +72,7 @@ export const setBlackAndWhite3: Card[] = [
   new Gothitelle(),
   new Gothorita(),
   new HoOhEx(),
+  new SacredAsh(),
   new JirachiEx(),
   new Joltik(),
   new Kirlia(),
