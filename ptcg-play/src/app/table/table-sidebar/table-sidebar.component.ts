@@ -121,11 +121,11 @@ export class TableSidebarComponent implements OnInit, OnDestroy, OnChanges {
 
     const state = this.gameState.state;
 
+    const topPlayerId = this.topPlayer && this.topPlayer.id;
+    const bottomPlayerId = this.bottomPlayer && this.bottomPlayer.id;
     const gameOrPlayerHasChanged = this.gameId !== this.gameState.gameId
-      || !this.topPlayerStats
-      || this.topPlayerStats.clientId !== this.topPlayer.id
-      || !this.bottomPlayerStats
-      || this.bottomPlayerStats.clientId !== this.bottomPlayer.id;
+      || (this.topPlayerStats && this.topPlayerStats.clientId !== topPlayerId)
+      || (this.bottomPlayerStats && this.bottomPlayerStats.clientId !== bottomPlayerId);
 
     if (!this.gameState.deleted && gameOrPlayerHasChanged) {
       this.refreshPlayerStats(this.gameState);
