@@ -18,6 +18,7 @@ import { ChooseEnergyPromptResolver } from './prompt-resolver/choose-energy-prom
 import { ChoosePokemonPromptResolver } from './prompt-resolver/choose-pokemon-prompt-resolver';
 import { ChoosePrizePromptResolver } from './prompt-resolver/choose-prize-prompt-resolver';
 import { ConfirmPromptResolver } from './prompt-resolver/confirm-prompt-resolver';
+import { MoveEnergyPromptResolver } from './prompt-resolver/move-energy-prompt-resolver';
 import { OrderCardsPromptResolver } from './prompt-resolver/order-cards-prompt-resolver';
 import { SelectPromptResolver } from './prompt-resolver/select-prompt-resolver';
 import { BotFlipMode, BotShuffleMode } from '../game/bots/bot-arbiter';
@@ -100,6 +101,7 @@ export const allPromptResolvers: PromptResolverList = [
   ChoosePokemonPromptResolver,
   ChoosePrizePromptResolver,
   ConfirmPromptResolver,
+  MoveEnergyPromptResolver,
   OrderCardsPromptResolver,
   SelectPromptResolver
 ];
