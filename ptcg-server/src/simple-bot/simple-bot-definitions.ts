@@ -20,6 +20,7 @@ import { ChoosePrizePromptResolver } from './prompt-resolver/choose-prize-prompt
 import { ConfirmPromptResolver } from './prompt-resolver/confirm-prompt-resolver';
 import { MoveEnergyPromptResolver } from './prompt-resolver/move-energy-prompt-resolver';
 import { OrderCardsPromptResolver } from './prompt-resolver/order-cards-prompt-resolver';
+import { PutDamagePromptResolver } from './prompt-resolver/put-damage-prompt-resolver';
 import { SelectPromptResolver } from './prompt-resolver/select-prompt-resolver';
 import { BotFlipMode, BotShuffleMode } from '../game/bots/bot-arbiter';
 
@@ -104,6 +105,7 @@ export const allPromptResolvers: PromptResolverList = [
   ConfirmPromptResolver,
   MoveEnergyPromptResolver,
   OrderCardsPromptResolver,
+  PutDamagePromptResolver,
   SelectPromptResolver
 ];
 
