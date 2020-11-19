@@ -54,6 +54,7 @@ export interface StateScores {
     hand: number;
     board: number;
     energy: number;
+    damage: number;
     emptyBench: number;
     noActiveEnergy: number;
   };

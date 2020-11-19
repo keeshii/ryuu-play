@@ -33,6 +33,7 @@ export class OpponentScore extends SimpleScore {
       const energies = cardList.cards.filter(c => c instanceof EnergyCard);
       score += scores.energy * energies.length;
       score += scores.board * cardList.cards.length;
+      score += scores.damage * cardList.damage;
     });
 
     return score;

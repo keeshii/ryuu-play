@@ -35,6 +35,7 @@ export class MoveEnergyPromptResolver extends PromptResolver {
     const copy = deepClone(state);
     const fromItems = this.buildFromCardItems(copy, prompt);
 
+    const max = prompt.options.max;
     const min = prompt.options.min;
     const result: TransferItem[] = [];
 
@@ -74,6 +75,10 @@ export class MoveEnergyPromptResolver extends PromptResolver {
       source.moveCardTo(card, target);
       result.push(best);
       prevScore = best.score;
+
+      if (max !== undefined && result.length >= max) {
+        break;
+      }
     }
 
     if (result.length === 0 && prompt.options.allowCancel) {
@@ -82,11 +87,6 @@ export class MoveEnergyPromptResolver extends PromptResolver {
 
     if (result.length < min && prompt.options.allowCancel) {
       return null;
-    }
-
-    const max = prompt.options.max || result.length;
-    if (result.length > max) {
-      result.length = max;
     }
 
     return this.translateItems(state, prompt, result);

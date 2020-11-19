@@ -46,7 +46,7 @@ export const defaultStateScores = {
     retreat: 0
   },
   energy: {
-    active: 50,
+    active: 30,
     bench: 20,
     missingColorless: -1,
     missingMatch: -2
@@ -78,6 +78,7 @@ export const defaultStateScores = {
     hand: -2,
     board: -2,
     energy: -3,
+    damage: 1,
     emptyBench: 50,
     noActiveEnergy: 50
   },

@@ -1,5 +1,4 @@
-import { Action, Player, State, SpecialCondition, EnergyMap, EnergyCard,
-  StateUtils, AttackAction } from "../../game";
+import { Action, Player, State, SpecialCondition, AttackAction } from "../../game";
 import { SimpleTactic } from "./simple-tactics";
 
 export class AttackTactic extends SimpleTactic {
@@ -15,20 +14,24 @@ export class AttackTactic extends SimpleTactic {
       return undefined;
     }
 
-    for (let i = active.attacks.length - 1; i >= 0; i--) {
-      const attack = active.attacks[i];
+    let bestScore = this.getStateScore(state, player.id);
+    let attackAction: AttackAction | undefined;
 
-      const energy: EnergyMap[] = [];
-      player.active.cards.forEach(card => {
-        if (card instanceof EnergyCard) {
-          energy.push({ card, provides: card.provides });
-        }
-      });
+console.log('attack base:', bestScore);
 
-      if (StateUtils.checkEnoughEnergy(energy, attack.cost)) {
-        return new AttackAction(player.id, attack.name);
+    active.attacks.forEach(attack => {
+      const action = new AttackAction(player.id, attack.name);
+      const score = this.evaluateAction(state, player.id, action);
+
+console.log('attack:', attack.name, score);
+
+      if (score !== undefined && bestScore < score) {
+        bestScore = score;
+        attackAction = action;
       }
-    }
+    });
+
+    return attackAction;
   }
 
 }
