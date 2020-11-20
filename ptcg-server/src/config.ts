@@ -27,7 +27,10 @@ export const config = {
     database: 'ptcg'
   },
   core: {
-    debug: false
+    debug: false,
+    rankingDecraseRate: 0.95,
+    rankingDecraseTime: 24 * 60 * 60 * 1000,
+    keepMatchTime: 31 * 24 * 60 * 60 * 1000
   },
   bots: {
     defaultPassword: '',

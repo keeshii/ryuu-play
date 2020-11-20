@@ -1,4 +1,4 @@
-import { Transaction, TransactionManager, EntityManager } from "typeorm";
+import { Transaction, TransactionManager, EntityManager, LessThan } from "typeorm";
 
 import { Core } from "./core";
 import { State, GamePhase, GameWinner } from "../store/state/state";
@@ -6,6 +6,7 @@ import { User, Match } from "../../storage";
 import { RankingCalculator } from "./ranking-calculator";
 import { Replay } from "./replay";
 import { ReplayPlayer } from "./replay.interface";
+import { config } from "../../config";
 
 export class MatchRecorder {
 
@@ -108,6 +109,14 @@ export class MatchRecorder {
 
   private buildReplayPlayer(player: User): ReplayPlayer {
     return { userId: player.id, name: player.name, ranking: player.ranking };
+  }
+
+  public async removeOldMatches(): Promise<void> {
+    const keepMatchTime = config.core.keepMatchTime;
+    const today = Date.now();
+    const yesterday = today - keepMatchTime;
+    await Match.delete({ created: LessThan(yesterday) });
+    return;
   }
 
 }

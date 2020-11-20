@@ -115,7 +115,9 @@ export class GamesComponent implements OnDestroy, OnInit {
       )
       .subscribe({
         next: () => {},
-        error: (error: ApiError) => this.alertService.toast(error.message)
+        error: (error: ApiError) => {
+          this.alertService.toast(this.translate.instant('ERROR_UNKNOWN'));
+        }
       });
 
   }

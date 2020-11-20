@@ -2,6 +2,7 @@ import { User, Match } from "../../storage";
 import { MoreThan, LessThan } from "typeorm";
 import { GameWinner } from "../store/state/state";
 import { Rank } from "../../backend";
+import { config } from "../../config";
 
 export class RankingCalculator {
 
@@ -80,8 +81,8 @@ export class RankingCalculator {
   }
 
   public async decreaseRanking(): Promise<User[]> {
-    const rankingDecraseRate = 0.95;
-    const oneDay = 24 * 60 * 60 * 1000;
+    const rankingDecraseRate = config.core.rankingDecraseRate;
+    const oneDay = config.core.rankingDecraseTime;
     const today = Date.now();
     const yesterday = today - oneDay;
     const users = await User.find({ where: {

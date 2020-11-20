@@ -88,7 +88,7 @@ export class MatchTableComponent implements OnInit, OnDestroy {
       error: (error: ApiError) => {
         this.loading = false;
         this.loadingFailed = true;
-        this.alertService.toast(error.message);
+        this.alertService.toast(this.translate.instant('ERROR_UNKNOWN'));
       }
     });
 
@@ -111,7 +111,7 @@ export class MatchTableComponent implements OnInit, OnDestroy {
           }
         },
         error: (error: ApiError) => {
-          this.alertService.toast(error.message);
+          this.alertService.toast(this.translate.instant('ERROR_UNKNOWN'));
         }
       });
   }

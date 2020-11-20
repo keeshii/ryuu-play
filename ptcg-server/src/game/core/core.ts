@@ -8,6 +8,7 @@ import { InvitePlayerAction } from "../store/actions/invite-player-action";
 import { Messager } from "./messager";
 import { RankingCalculator } from "./ranking-calculator";
 import { Scheduler, generateId } from "../../utils";
+import { MatchRecorder } from "./match-recorder";
 
 export class Core {
   public clients: Client[] = [];
@@ -15,8 +16,9 @@ export class Core {
   public messager: Messager;
 
   constructor() {
-    this.startRankingDecrease();
     this.messager = new Messager(this);
+    this.startRankingDecrease();
+    this.startOldMatchDelete();
   }
 
   public connect(client: Client): Client {
@@ -129,6 +131,14 @@ export class Core {
       users = users.filter(u => connectedUserIds.includes(u.id));
 
       this.emit(c => c.onUsersUpdate(users));
+    });
+  }
+
+  private startOldMatchDelete() {
+    const scheduler = Scheduler.getInstance();
+    const matchRecorder = new MatchRecorder(this);
+    scheduler.run(async () => {
+      matchRecorder.removeOldMatches();
     });
   }
 
