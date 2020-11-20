@@ -49,7 +49,7 @@ describe('PutDamagePromptResolver', () => {
       scores: defaultStateScores,
       arbiter: defaultArbiterOptions
     };
-    resolver = new PutDamagePromptResolver(simpleBotOptions);    
+    resolver = new PutDamagePromptResolver(simpleBotOptions);
 
     state = createState();
     player = state.players[0];

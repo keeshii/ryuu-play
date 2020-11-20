@@ -8,7 +8,7 @@ export class ChooseCardsPromptResolver extends PromptResolver {
   public resolvePrompt(state: State, player: Player, prompt: Prompt<any>): Action | undefined {
     if (prompt instanceof ChooseCardsPrompt) {
       let result: Card[] | null = this.buildCardsToChoose(state, prompt);
-      this.removeInvalidCards(prompt, result);
+      result = this.removeInvalidCards(prompt, result);
       if (result.length > prompt.options.max) {
         result.length = prompt.options.max;
       }
