@@ -41,7 +41,7 @@ export class RoughSeas extends TrainerCard {
 
       targets.forEach(target => {
         // Heal Pokemon
-        const healEffect = new HealEffect(player, target, 20);
+        const healEffect = new HealEffect(player, target, 30);
         store.reduceEffect(state, healEffect);
       });
     }
