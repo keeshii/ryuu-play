@@ -14,6 +14,7 @@ import { UseAbilityTactic } from './simple-tactics/use-ability-tactic';
 import { UseStadiumTactic } from './simple-tactics/use-stadium-tactic';
 import { AlertPromptResolver } from './prompt-resolver/alert-prompt-resolver';
 import { AttachEnergyPromptResolver } from './prompt-resolver/attach-energy-prompt-resolver';
+import { ChooseAttackPromptResolver } from './prompt-resolver/choose-attack-prompt-resolver';
 import { ChooseCardsPromptResolver } from './prompt-resolver/choose-cards-prompt-resolver';
 import { ChooseEnergyPromptResolver } from './prompt-resolver/choose-energy-prompt-resolver';
 import { ChoosePokemonPromptResolver } from './prompt-resolver/choose-pokemon-prompt-resolver';
@@ -37,7 +38,7 @@ export const defaultStateScores = {
     cardScore: 1
   },
   active: {
-    hp: 0.2,
+    hp: 0.3,
     damage: 0.4,
     ability: 1,
     retreat: -5
@@ -97,6 +98,7 @@ export const defaultArbiterOptions = {
 export const allPromptResolvers: PromptResolverList = [
   AlertPromptResolver,
   AttachEnergyPromptResolver,
+  ChooseAttackPromptResolver,
   ChooseCardsPromptResolver,
   ChooseEnergyPromptResolver,
   ChoosePokemonPromptResolver,

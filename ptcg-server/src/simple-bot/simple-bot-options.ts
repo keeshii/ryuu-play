@@ -54,7 +54,7 @@ export interface StateScores {
     playerBench: number,
     opponentActive: number,
     opponentBench: number
-  },
+  };
   tools: {
     active: number;
     hpLeft: number;
