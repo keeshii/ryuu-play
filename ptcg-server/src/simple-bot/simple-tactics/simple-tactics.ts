@@ -89,11 +89,12 @@ export abstract class SimpleTactic {
     return this.stateScore.getScore(state, playerId);
   }
 
-  protected evaluateAction(state: State, playerId: number, action: Action): number | undefined {
+  protected evaluateAction(state: State, playerId: number, action: Action, passTurnScore: number = 0): number | undefined {
     const newState = this.simulateAction(state, action);
     const newPlayer = newState && newState.players.find(p => p.id === playerId);
     if (newState !== undefined && newPlayer !== undefined) {
-      return this.stateScore.getScore(newState, playerId);
+      return this.stateScore.getScore(newState, playerId)
+        + (newState.turn > state.turn ? -passTurnScore : 0);
     }
   }
 

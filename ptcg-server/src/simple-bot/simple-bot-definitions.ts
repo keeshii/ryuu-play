@@ -9,6 +9,7 @@ import { PlayBasicTactic } from './simple-tactics/play-basic-tactic';
 import { PlayStadiumTactic } from './simple-tactics/play-stadium-tactic';
 import { PlaySupporterTactic } from './simple-tactics/play-supporter-tactic';
 import { PlayTrainerTactic } from './simple-tactics/play-trainer-tactic';
+import { UseDiscardAbilityTactic } from './simple-tactics/use-discard-ability-tactic';
 import { UseAbilityTactic } from './simple-tactics/use-ability-tactic';
 import { UseStadiumTactic } from './simple-tactics/use-stadium-tactic';
 import { AlertPromptResolver } from './prompt-resolver/alert-prompt-resolver';
@@ -53,16 +54,6 @@ export const defaultStateScores = {
     missingColorless: -1,
     missingMatch: -2
   },
-  board: {
-    activeAttaker: 10,
-    activeHelper: 0,
-    benchedAttacker: 0,
-    benchedSupporter: 10,
-    attackerEnergy: 25,
-    helperEnergy: 5,
-    emptyBenchBonus: 0.5,
-    damage: -10
-  },
   specialConditions: {
     burned: -10,
     poisoned: -10,
@@ -71,16 +62,23 @@ export const defaultStateScores = {
     confused: -20
   },
   player: {
+    winner: 10000,
     prize: 1000,
+    passTurn: 1000,
     deck: 1,
     deckLessThan10: -10
+  },
+  damage: {
+    playerActive: -1,
+    playerBench: -1,
+    opponentActive: 3,
+    opponentBench: 1
   },
   opponent: {
     deck: -1,
     hand: -2,
     board: -2,
     energy: -3,
-    damage: 1,
     emptyBench: 50,
     noActiveEnergy: 50
   },
@@ -116,6 +114,7 @@ export const allSimpleTactics: SimpleTacticList = [
   PlayBasicTactic,
   AttachEnergyTactic,
   AttachToolTactic,
+  UseDiscardAbilityTactic,
   PlayTrainerTactic,
   PlayStadiumTactic,
   PlaySupporterTactic,

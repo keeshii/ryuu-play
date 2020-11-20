@@ -27,16 +27,6 @@ export interface StateScores {
     missingColorless: number;
     missingMatch: number;
   };
-  board: {
-    activeAttaker: number;
-    activeHelper: number;
-    benchedAttacker: number;
-    benchedSupporter: number;
-    attackerEnergy: number;
-    helperEnergy: number;
-    emptyBenchBonus: number;
-    damage: number;
-  };
   specialConditions: {
     burned: number;
     poisoned: number;
@@ -45,7 +35,9 @@ export interface StateScores {
     confused: number;
   };
   player: {
+    winner: number;
     prize: number;
+    passTurn: number;
     deck: number;
     deckLessThan10: number;
   };
@@ -54,10 +46,15 @@ export interface StateScores {
     hand: number;
     board: number;
     energy: number;
-    damage: number;
     emptyBench: number;
     noActiveEnergy: number;
   };
+  damage: {
+    playerActive: number,
+    playerBench: number,
+    opponentActive: number,
+    opponentBench: number
+  },
   tools: {
     active: number;
     hpLeft: number;

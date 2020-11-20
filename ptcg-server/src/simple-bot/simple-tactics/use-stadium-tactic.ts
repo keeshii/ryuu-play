@@ -12,9 +12,10 @@ export class UseStadiumTactic extends SimpleTactic {
       return;
     }
 
+    const passTurnScore = this.options.scores.player.passTurn;
     const currentScore = this.getStateScore(state, player.id);
     const action = new UseStadiumAction(player.id);
-    const score = this.evaluateAction(state, player.id, action);
+    const score = this.evaluateAction(state, player.id, action, passTurnScore);
 
     if (score !== undefined && currentScore < score) {
       return action;

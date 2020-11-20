@@ -1,4 +1,4 @@
-import { State, StateUtils } from '../../game';
+import { State, StateUtils, GameWinner } from '../../game';
 import { SimpleScore } from './score';
 
 export class PlayerScore extends SimpleScore {
@@ -9,6 +9,16 @@ export class PlayerScore extends SimpleScore {
     const scores = this.options.scores.player;
 
     let score = 0;
+
+    // 10000 points if we have won the game
+    const isPlayer1 = state.players[0] === player;
+    if (state.winner === GameWinner.PLAYER_1) {
+      score += isPlayer1 ? scores.winner : -scores.winner;
+    }
+    const isPlayer2 = state.players[1] === player;
+    if (state.winner === GameWinner.PLAYER_2) {
+      score += isPlayer2 ? scores.winner : -scores.winner;
+    }
 
     // 1000 points for each prize card less than opponent
     const playerPrizes = player.prizes.filter(p => p.cards.length !== 0);
