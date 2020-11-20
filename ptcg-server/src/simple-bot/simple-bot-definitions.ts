@@ -18,6 +18,7 @@ import { ChooseEnergyPromptResolver } from './prompt-resolver/choose-energy-prom
 import { ChoosePokemonPromptResolver } from './prompt-resolver/choose-pokemon-prompt-resolver';
 import { ChoosePrizePromptResolver } from './prompt-resolver/choose-prize-prompt-resolver';
 import { ConfirmPromptResolver } from './prompt-resolver/confirm-prompt-resolver';
+import { MoveDamagePromptResolver } from './prompt-resolver/move-damage-prompt-resolver';
 import { MoveEnergyPromptResolver } from './prompt-resolver/move-energy-prompt-resolver';
 import { OrderCardsPromptResolver } from './prompt-resolver/order-cards-prompt-resolver';
 import { PutDamagePromptResolver } from './prompt-resolver/put-damage-prompt-resolver';
@@ -103,6 +104,7 @@ export const allPromptResolvers: PromptResolverList = [
   ChoosePokemonPromptResolver,
   ChoosePrizePromptResolver,
   ConfirmPromptResolver,
+  MoveDamagePromptResolver,
   MoveEnergyPromptResolver,
   OrderCardsPromptResolver,
   PutDamagePromptResolver,
