@@ -9,11 +9,15 @@ import { FilterCardsPipe } from './deck-edit-toolbar/filter-cards.pipe';
 import { DeckCardComponent } from './deck-card/deck-card.component';
 import { DeckEditPanesComponent } from './deck-edit-panes/deck-edit-panes.component';
 import { DeckEditInfoComponent } from './deck-edit-info/deck-edit-info.component';
+import { ImportDeckPopupComponent } from './import-deck-popup/import-deck-popup.component';
 
 @NgModule({
   imports: [
     ScrollingModule,
     SharedModule
+  ],
+  entryComponents: [
+    ImportDeckPopupComponent
   ],
   declarations: [
     DeckCardComponent,
@@ -23,6 +27,7 @@ import { DeckEditInfoComponent } from './deck-edit-info/deck-edit-info.component
     FilterCardsPipe,
     DeckEditPanesComponent,
     DeckEditInfoComponent,
+    ImportDeckPopupComponent
   ]
 })
 export class DeckModule { }

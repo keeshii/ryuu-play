@@ -1,16 +1,18 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { CardType, SuperType } from 'ptcg-server';
 import { MatSelectChange } from '@angular/material/select';
 
 import { Deck } from '../../api/interfaces/deck.interface';
 import { DeckEditToolbarFilter } from './deck-edit-toolbar-filter.interface';
+import { ImportDeckPopupService } from '../import-deck-popup/import-deck-popup.service';
+import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed';
 
 @Component({
   selector: 'ptcg-deck-edit-toolbar',
   templateUrl: './deck-edit-toolbar.component.html',
   styleUrls: ['./deck-edit-toolbar.component.scss']
 })
-export class DeckEditToolbarComponent implements OnInit {
+export class DeckEditToolbarComponent implements OnInit, OnDestroy {
 
   @Input() deck: Deck;
 
@@ -19,6 +21,10 @@ export class DeckEditToolbarComponent implements OnInit {
   @Output() filterChange = new EventEmitter<DeckEditToolbarFilter>();
 
   @Output() save = new EventEmitter<void>();
+
+  @Output() import = new EventEmitter<string[]>();
+
+  @Output() export = new EventEmitter<void>();
 
   public cardTypes = [
     {value: CardType.NONE, label: 'LABEL_NONE' },
@@ -43,7 +49,9 @@ export class DeckEditToolbarComponent implements OnInit {
 
   public filterValue: DeckEditToolbarFilter;
 
-  constructor() {
+  constructor(
+    private importDeckPopupService: ImportDeckPopupService
+  ) {
     this.filterValue = {
       searchValue: '',
       superTypes: [],
@@ -52,6 +60,9 @@ export class DeckEditToolbarComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  ngOnDestroy() {
   }
 
   public onSave() {
@@ -71,6 +82,22 @@ export class DeckEditToolbarComponent implements OnInit {
   public onCardTypeChange(change: MatSelectChange) {
     this.filterValue.cardTypes = change.value;
     this.filterChange.next({...this.filterValue});
+  }
+
+  public importFromFile() {
+    const dialogRef = this.importDeckPopupService.openDialog();
+    dialogRef.afterClosed()
+      .pipe(takeUntilDestroyed(this))
+      .subscribe({
+        next: cardNames => {
+          if (cardNames) {
+            this.import.next(cardNames);
+          }
+      }});
+  }
+
+  public exportToFile() {
+    this.export.next();
   }
 
 }

@@ -8,8 +8,8 @@ import { debounceTime, switchMap, takeUntil, map, finalize } from 'rxjs/operator
 
 import { AlertService } from '../shared/alert/alert.service';
 import { ApiError } from '../api/api.error';
+import { FileDownloadService } from '../shared/file-download/file-download.service';
 import { ImportReplayPopupService } from './import-replay-popup/import-replay-popup.service';
-import { ReplayExportService } from './replay-export.service';
 import { ReplayService } from '../api/services/replay.service';
 import { ReplayListResponse, ReplaySearch } from '../api/interfaces/replay.interface';
 import { SessionService } from '../shared/session/session.service';
@@ -40,7 +40,7 @@ export class ReplaysComponent implements OnInit, OnDestroy {
   constructor(
     private alertService: AlertService,
     private importReplayPopupService: ImportReplayPopupService,
-    private replayExportService: ReplayExportService,
+    private fileDownloadService: FileDownloadService,
     private replayService: ReplayService,
     private router: Router,
     private sessionService: SessionService,
@@ -149,9 +149,15 @@ export class ReplaysComponent implements OnInit, OnDestroy {
         takeUntilDestroyed(this)
       )
       .subscribe({
-        next: response => {
+        next: async response => {
           const base64 = response.replayData;
-          this.replayExportService.downloadReplay(base64, name);
+          const fileName = name + '.rep';
+          try {
+            await this.fileDownloadService.downloadFile(base64, fileName);
+            this.alertService.toast(this.translate.instant('REPLAY_EXPORTED'));
+          } catch (error) {
+            this.alertService.toast(this.translate.instant('ERROR_UNKNOWN'));
+          }
         },
         error: (error: ApiError) => {
           if (!error.handled) {

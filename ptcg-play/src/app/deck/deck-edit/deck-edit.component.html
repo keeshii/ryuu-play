@@ -5,7 +5,9 @@
       [deck]="deck"
       (filterChange)="toolbarFilter = $event"
       (save)="saveDeck()"
-    ></ptcg-deck-edit-toolbar>
+      (import)="importDeck($event)"
+      (export)="exportDeck()">
+    </ptcg-deck-edit-toolbar>
 
     <ptcg-deck-edit-panes 
       [toolbarFilter]="toolbarFilter"

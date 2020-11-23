@@ -1,5 +1,4 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { ApiErrorEnum } from 'ptcg-server';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { switchMap, finalize } from 'rxjs/operators';
@@ -12,6 +11,7 @@ import { DeckItem } from '../deck-card/deck-card.interface';
 import { DeckEditPane } from '../deck-edit-panes/deck-edit-pane.interface';
 import { DeckEditToolbarFilter } from '../deck-edit-toolbar/deck-edit-toolbar-filter.interface';
 import { DeckService } from '../../api/services/deck.service';
+import { FileDownloadService } from '../../shared/file-download/file-download.service';
 import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed';
 
 @Component({
@@ -31,6 +31,7 @@ export class DeckEditComponent implements OnInit, OnDestroy {
     private alertService: AlertService,
     private cardsBaseService: CardsBaseService,
     private deckService: DeckService,
+    private fileDownloadService: FileDownloadService,
     private route: ActivatedRoute,
     private router: Router,
     private translate: TranslateService
@@ -79,6 +80,27 @@ export class DeckEditComponent implements OnInit, OnDestroy {
     }
 
     return deckItems;
+  }
+
+  public importDeck(cardNames: string[]) {
+    this.deckItems = this.loadDeckItems(cardNames);
+  }
+
+  public async exportDeck() {
+    const cardNames = [];
+    for (const item of this.deckItems) {
+      for (let i = 0; i < item.count; i++) {
+        cardNames.push(item.card.fullName);
+      }
+    }
+    const data = cardNames.join('\n') + '\n';
+    const fileName = this.deck.name + '.txt';
+    try {
+      await this.fileDownloadService.downloadFile(data, fileName);
+      this.alertService.toast(this.translate.instant('DECK_EXPORTED'));
+    } catch (error) {
+      this.alertService.toast(this.translate.instant('ERROR_UNKNOWN'));
+    }
   }
 
   public saveDeck() {

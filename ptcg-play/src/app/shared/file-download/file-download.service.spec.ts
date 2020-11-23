@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ReplayExportService } from './replay-export.service';
+import { FileDownloadService } from './file-download.service';
 
-describe('ReplayExportService', () => {
-  let service: ReplayExportService;
+describe('FileDownloadService', () => {
+  let service: FileDownloadService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(ReplayExportService);
+    service = TestBed.inject(FileDownloadService);
   });
 
   it('should be created', () => {

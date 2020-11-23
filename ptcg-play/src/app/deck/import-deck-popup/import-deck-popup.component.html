@@ -1,0 +1,45 @@
+<h2 mat-dialog-title translate>DECK_IMPORT_TITLE</h2>
+
+<mat-dialog-content>
+
+  <mat-progress-bar *ngIf="loading" color="accent" mode="indeterminate" class="ptcg-u-top">
+  </mat-progress-bar>
+
+  <form #form="ngForm" autocomplete="off">
+
+    <!-- Avatar image -->
+    <mat-form-field>
+      <mat-label translate>DECK_FILE</mat-label>
+      <ptcg-file-input #deckFileInput required
+        ptcgErrorValidator [ptcgErrorValue]="deckError"
+        ptcgFileSizeValidator [maxFileSize]="maxFileSize"
+        name="deck" accept="txt"
+        [disabled]="loading"
+        [(ngModel)]="deckFile" #deckField="ngModel"
+        (ngModelChange)="updatePreview($event)">
+      </ptcg-file-input>
+      <button mat-icon-button matSuffix
+        *ngIf="!deckFileInput.empty"
+        [disabled]="loading"
+        (click)="deckFileInput.clear($event)">
+        <mat-icon>clear</mat-icon>
+      </button>
+      <mat-error>
+        <div *ngIf="deckField.errors?.ptcgError" translate>VALIDATION_INVALID_DECK_FILE</div>
+        <div *ngIf="deckField.errors?.maxFileSize" translate>VALIDATION_MAX_FILE_SIZE</div>
+        <div *ngIf="deckField.errors?.required" translate>VALIDATION_FIELD_REQUIRED</div>
+      </mat-error>
+    </mat-form-field>
+
+  </form>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button mat-dialog-close>
+    {{ 'BUTTON_CANCEL' | translate }}
+  </button>
+  <button mat-raised-button color="primary" (click)="importDeck()" [disabled]="form.invalid">
+    {{ 'BUTTON_IMPORT' | translate }}
+  </button>
+</mat-dialog-actions>

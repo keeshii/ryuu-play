@@ -11,8 +11,16 @@
       <span translate>DECK_EDIT_BACK</span>
     </button>
 
+    <button mat-raised-button [disabled]="disabled" (click)="exportToFile()">
+      {{ 'BUTTON_EXPORT' | translate }}
+    </button>
+
+    <button mat-raised-button [disabled]="disabled" (click)="importFromFile()">
+      {{ 'BUTTON_IMPORT_FROM_FILE' | translate }}
+    </button>
+
     <button mat-raised-button color="primary" [disabled]="disabled" (click)="onSave()">
-      <span translate>DECK_EDIT_SAVE</span>
+      {{ 'BUTTON_SAVE' | translate }}
     </button>
   </mat-toolbar-row>
 
