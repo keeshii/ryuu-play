@@ -17,8 +17,9 @@ export class PlaySupporterTactic extends SimpleTactic {
       return;
     }
 
+    const supporterBonus = this.options.scores.tactics.supporterBonus;
     const target = { player: PlayerType.ANY, slot: SlotType.BOARD, index: 0 };
-    let bestScore = this.getStateScore(state, player.id);
+    let bestScore = this.getStateScore(state, player.id) - supporterBonus;
     let playCardAction: PlayCardAction | undefined;
 
     supporters.forEach(card => {

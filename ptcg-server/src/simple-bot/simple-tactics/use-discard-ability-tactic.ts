@@ -7,7 +7,7 @@ export class UseDiscardAbilityTactic extends SimpleTactic {
   public useTactic(state: State, player: Player): Action | undefined {
     let bestScore = this.getStateScore(state, player.id);
     let useAbilityAction: UseAbilityAction | undefined;
-    const passTurnScore = this.options.scores.player.passTurn;
+    const passTurnScore = this.options.scores.tactics.passTurn;
 
     player.discard.cards.forEach((card, index) => {
       if (!(card instanceof PokemonCard)) {

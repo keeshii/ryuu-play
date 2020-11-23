@@ -14,7 +14,8 @@ export class AttackTactic extends SimpleTactic {
       return undefined;
     }
 
-    let bestScore = this.getStateScore(state, player.id);
+    const attackBonus = this.options.scores.tactics.attackBonus;
+    let bestScore = this.getStateScore(state, player.id) - attackBonus;
     let attackAction: AttackAction | undefined;
 
     active.attacks.forEach(attack => {

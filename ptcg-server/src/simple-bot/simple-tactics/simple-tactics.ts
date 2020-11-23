@@ -94,7 +94,7 @@ export abstract class SimpleTactic {
     const newPlayer = newState && newState.players.find(p => p.id === playerId);
     if (newState !== undefined && newPlayer !== undefined) {
       return this.stateScore.getScore(newState, playerId)
-        + (newState.turn > state.turn ? -passTurnScore : 0);
+        + (newState.turn > state.turn ? passTurnScore : 0);
     }
   }
 

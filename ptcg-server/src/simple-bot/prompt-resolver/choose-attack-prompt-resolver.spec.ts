@@ -30,6 +30,7 @@ describe('ChooseAttackPromptResolver', () => {
     };
     resolver = new ChooseAttackPromptResolver(simpleBotOptions);
     player = new Player();
+    state = new State();
     prompt = new ChooseAttackPrompt(
       1,
       GameMessage.CHOOSE_ATTACK_TO_COPY,

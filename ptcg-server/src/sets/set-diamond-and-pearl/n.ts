@@ -26,8 +26,9 @@ export class N extends TrainerCard {
 
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
+      const cards = player.hand.cards.filter(c => c !== this);
 
-      player.hand.moveTo(player.deck);
+      player.hand.moveCardsTo(cards, player.deck);
       opponent.hand.moveTo(opponent.deck);
 
       store.prompt(state, [

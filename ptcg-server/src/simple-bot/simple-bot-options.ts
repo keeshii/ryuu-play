@@ -37,7 +37,6 @@ export interface StateScores {
   player: {
     winner: number;
     prize: number;
-    passTurn: number;
     deck: number;
     deckLessThan10: number;
   };
@@ -59,6 +58,11 @@ export interface StateScores {
     active: number;
     hpLeft: number;
     minScore: number;
+  };
+  tactics: {
+    passTurn: number;
+    attackBonus: number;
+    supporterBonus: number;
   };
 }
 

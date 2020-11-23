@@ -65,7 +65,6 @@ export const defaultStateScores = {
   player: {
     winner: 10000,
     prize: 1000,
-    passTurn: 1000,
     deck: 1,
     deckLessThan10: -10
   },
@@ -87,6 +86,11 @@ export const defaultStateScores = {
     active: 50,
     hpLeft: 1,
     minScore: 70
+  },
+  tactics: {
+    passTurn: -1000,
+    attackBonus: 100,
+    supporterBonus: 25
   }
 };
 

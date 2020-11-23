@@ -6,7 +6,7 @@ export class UseAbilityTactic extends SimpleTactic {
   public useTactic(state: State, player: Player): Action | undefined {
     let bestScore = this.getStateScore(state, player.id);
     let useAbilityAction: UseAbilityAction | undefined;
-    const passTurnScore = this.options.scores.player.passTurn;
+    const passTurnScore = this.options.scores.tactics.passTurn;
 
     player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card, target) => {
       for (const power of card.powers) {
