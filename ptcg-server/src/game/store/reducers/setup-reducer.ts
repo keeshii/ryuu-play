@@ -4,12 +4,12 @@ import { AlertPrompt } from "../prompts/alert-prompt";
 import { Card } from "../card/card";
 import { CardList } from "../state/card-list";
 import { CoinFlipPrompt } from "../prompts/coin-flip-prompt";
-import { ConfirmPrompt } from "../prompts/confirm-prompt";
 import { ChooseCardsPrompt } from "../prompts/choose-cards-prompt";
 import { DeckAnalyser } from "../../cards/deck-analyser";
 import { InvitePlayerAction } from "../actions/invite-player-action";
 import { InvitePlayerPrompt } from "../prompts/invite-player-prompt";
 import { Player } from "../state/player";
+import { ShowCardsPrompt } from "../prompts/show-cards-prompt";
 import { ShuffleDeckPrompt } from "../prompts/shuffle-prompt";
 import { State, GamePhase, GameWinner } from "../state/state";
 import { GameError } from "../../game-error";
@@ -69,7 +69,8 @@ function* setupGame(next: Function, store: StoreLike, state: State): IterableIte
     if (playerHasBasic && !opponentHasBasic) {
       store.log(state, GameLog.LOG_SETUP_NO_BASIC_POKEMON, { name: opponent.name });
       yield store.prompt(state, [
-        new ConfirmPrompt(player.id, GameMessage.SETUP_OPPONENT_NO_BASIC),
+        new ShowCardsPrompt(player.id, GameMessage.SETUP_OPPONENT_NO_BASIC,
+          opponent.hand.cards, { allowCancel: true }),
         new AlertPrompt(opponent.id, GameMessage.SETUP_PLAYER_NO_BASIC)
       ], results => {
         if (results[0]) {
@@ -82,7 +83,8 @@ function* setupGame(next: Function, store: StoreLike, state: State): IterableIte
     if (!playerHasBasic && opponentHasBasic) {
       store.log(state, GameLog.LOG_SETUP_NO_BASIC_POKEMON, { name: player.name });
       yield store.prompt(state, [
-        new ConfirmPrompt(opponent.id, GameMessage.SETUP_OPPONENT_NO_BASIC),
+        new ShowCardsPrompt(opponent.id, GameMessage.SETUP_OPPONENT_NO_BASIC,
+          player.hand.cards, { allowCancel: true }),
         new AlertPrompt(player.id, GameMessage.SETUP_PLAYER_NO_BASIC)
       ], results => {
         if (results[0]) {

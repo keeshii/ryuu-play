@@ -26,6 +26,12 @@ export class PromptShowCardsComponent implements OnInit {
     this.gameService.resolvePrompt(gameId, id, true);
   }
 
+  public cancel() {
+    const gameId = this.gameState.gameId;
+    const id = this.prompt.id;
+    this.gameService.resolvePrompt(gameId, id, null);
+  }
+
   public onCardClick(card: Card) {
     this.cardsBaseService.showCardInfo({ card });
   }

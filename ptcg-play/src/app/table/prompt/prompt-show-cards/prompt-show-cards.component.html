@@ -11,6 +11,10 @@
 </div>
 
 <div class="ptcg-prompt-actions">
+  <button mat-raised-button *ngIf="prompt.options.allowCancel"
+    [disabled]="gameState.deleted" (click)="cancel()">
+    {{ 'BUTTON_CANCEL' | translate }}
+  </button>
   <button mat-raised-button color="primary" [disabled]="gameState.deleted"
     (click)="confirm()">
     {{ 'BUTTON_OK' | translate }}

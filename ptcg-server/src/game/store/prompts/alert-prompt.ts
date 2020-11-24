@@ -1,7 +1,7 @@
 import { Prompt } from "./prompt";
 import { GameMessage } from "../../game-message";
 
-export class AlertPrompt extends Prompt<void> {
+export class AlertPrompt extends Prompt<true> {
 
   readonly type: string = 'Alert'
 

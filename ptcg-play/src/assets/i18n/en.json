@@ -347,7 +347,7 @@
     "PROMPT_ALREADY_RESOLVED": "Prompt is already resolved.",
     "RETREAT_ALREADY_USED": "Pokémon already retreated this turn.",
     "SAME_STADIUM_ALREADY_IN_PLAY": "Stadium card with the same name already in play.",
-    "SETUP_OPPONENT_NO_BASIC": "Your opponent has no Basic Pokémon in the hand.",
+    "SETUP_OPPONENT_NO_BASIC": "Your opponent has no Basic Pokémon in the hand. Do you want to draw a card?",
     "SETUP_PLAYER_NO_BASIC": "You have no Basic Pokémon in the hand.",
     "SETUP_WHO_BEGINS_FLIP": "Flip the coin to decide who goes first.",
     "SPECIAL_CONDITION_ASLEEP": "Asleep",
