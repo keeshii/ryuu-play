@@ -102,8 +102,8 @@ export class MoveDamagePrompt extends Prompt<DamageTransfer[]> {
       }
     }
 
-    if (!result.some(r => this.slots.includes(r.from.slot))
-      || !result.some(r => this.slots.includes(r.to.slot))) {
+    if (result.some(r => !this.slots.includes(r.from.slot))
+      || result.some(r => !this.slots.includes(r.to.slot))) {
       return false;
     }
 

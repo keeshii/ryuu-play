@@ -71,7 +71,7 @@ export class PutDamagePrompt extends Prompt<DamageMap[]> {
       }
     }
 
-    if (!result.some(r => this.slots.includes(r.target.slot))) {
+    if (result.some(r => !this.slots.includes(r.target.slot))) {
       return false;
     }
 
