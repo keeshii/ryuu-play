@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
+import { Observable, Subject, of } from 'rxjs';
 import * as ImgCache from 'imgcache.js';
 
 export interface ImgCacheConfig {
@@ -31,6 +32,11 @@ export class ImageCacheService {
 
   private initialized = false;
   private cachedFilesMap: {[url: string]: string} = {};
+  private inProgressMap: {[url: string]: Subject<string>} = {};
+
+  constructor(
+    private ngZone: NgZone
+  ) {}
 
   public init(config: ImgCacheConfig = {}) {
     Object.assign(ImgCache.options, config);
@@ -44,21 +50,25 @@ export class ImageCacheService {
     return this.cachedFilesMap[url];
   }
 
-  public fetchFromCache(url: string, callback: (url: string) => void): void {
+  public fetchFromCache(url: string): Observable<string> {
 
     if (!this.initialized) {
       // ImgCache has not been initialised. Please call `init` before using the library.
-      callback(url);
-      return;
+      return of(url);
     }
+
+    if (this.inProgressMap[url]) {
+      return this.inProgressMap[url].asObservable();
+    }
+
+    this.inProgressMap[url] = new Subject();
 
     ImgCache.getCachedFileURL(
       url,
 
       // Successfully retrieved from the cache
       (src: string, dest: string) => {
-        this.cachedFilesMap[url] = dest;
-        callback(dest);
+        this.setImageLoaded(url, dest);
       },
 
       // File not cached,
@@ -67,19 +77,28 @@ export class ImageCacheService {
           url,
           // File added to cache, return it's URL
           (dest: string) => {
-            this.cachedFilesMap[url] = dest;
-            callback(dest);
+            this.setImageLoaded(url, dest);
           },
 
           // Unable to cache the file, return the original url
           () => {
             // it is unlikely we will ever success, remember the source url
-            this.cachedFilesMap[url] = url;
-            callback(url);
+            this.setImageLoaded(url, url);
           }
         );
       }
     );
+
+    return this.inProgressMap[url].asObservable();
+  }
+
+  private setImageLoaded(url: string, cached: string) {
+    this.cachedFilesMap[url] = cached;
+    this.ngZone.run(() => {
+      this.inProgressMap[url].next(cached);
+    });
+    this.inProgressMap[url].complete();
+    delete this.inProgressMap[url];
   }
 
   public clearCache(): Promise<void> {

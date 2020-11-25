@@ -1,40 +1,57 @@
-import { Directive, ElementRef, Input, Renderer2 } from '@angular/core';
+import { Directive, Input, OnDestroy, HostBinding } from '@angular/core';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 import { ImageCacheService } from './image-cache.service';
 import { environment } from '../../../environments/environment';
+import { takeUntilDestroyed } from '../operators/take-until-destroyed';
+import { take, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 
 @Directive({
   selector: '[ptcgImageCache]'
 })
-export class ImageCacheDirective {
+export class ImageCacheDirective implements OnDestroy {
+
+  private nextRequest = new Subject<string>();
+
+  @HostBinding('attr.src') url: SafeUrl;
+  @HostBinding('style.visibility') visiblity: 'hidden' | 'visible' = 'hidden';
+
   constructor(
     private imageCacheService: ImageCacheService,
-    private el: ElementRef,
-    private renderer: Renderer2
+    private sanitizer: DomSanitizer
   ) {}
+
+  ngOnDestroy() {
+  }
 
   @Input('ptcgImageCache')
   set src(value: string) {
+    this.nextRequest.next(value);
+
     const url = String(value);
-    if (url !== '') {
-
-      if (!environment.enableImageCache) {
-        this.renderer.setAttribute(this.el.nativeElement, 'src', url);
-        return;
-      }
-
-      const memory = this.imageCacheService.getCachedUrlFromMap(url);
-      if (memory) {
-        this.renderer.setAttribute(this.el.nativeElement, 'src', memory);
-        return;
-      }
-
-      this.renderer.setStyle(this.el.nativeElement, 'visibility', 'hidden');
-      this.imageCacheService.fetchFromCache(url, cached => {
-        this.renderer.setAttribute(this.el.nativeElement, 'src', cached);
-        this.renderer.setStyle(this.el.nativeElement, 'visibility', 'visible');
-      });
+    if (url === '' || !environment.enableImageCache) {
+      this.url = this.sanitizer.bypassSecurityTrustUrl(url);
+      this.visiblity = 'visible';
+      return;
     }
+
+    const memory = this.imageCacheService.getCachedUrlFromMap(url);
+    if (memory) {
+      this.url = this.sanitizer.bypassSecurityTrustUrl(memory);
+      this.visiblity = 'visible';
+      return;
+    }
+
+    this.visiblity = 'hidden';
+    this.imageCacheService.fetchFromCache(url)
+      .pipe(take(1), takeUntilDestroyed(this), takeUntil(this.nextRequest))
+      .subscribe({
+        next: cached => {
+          this.url = this.sanitizer.bypassSecurityTrustUrl(cached);
+          this.visiblity = 'visible';
+        }
+      });
   }
 }
