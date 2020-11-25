@@ -5,13 +5,8 @@ $board-min-width: calc((4 + #{$ptcg-bench-slots}) * (var(--card-size) + #{map-ge
 $board-min-height: calc(6 * var(--card-size) * #{$card-aspect-ratio} + 2 * #{map-get($padding, normal)});
 
 :host {
-  display: block;
+  display: flex;
   overflow: auto;
-}
-
-.ptcg-board-container {
-  height: 100%;
-  width: calc(var(--card-size) * #{$ptcg-bench-slots} + #{($ptcg-bench-slots + 1) * map-get($padding, small)});
 }
 
 .ptcg-board-container {
@@ -20,6 +15,7 @@ $board-min-height: calc(6 * var(--card-size) * #{$card-aspect-ratio} + 2 * #{map
   margin: 0 auto;
   min-height: $board-min-height;
   min-width: $board-min-width;
+  width: calc(var(--card-size) * #{$ptcg-bench-slots} + #{($ptcg-bench-slots + 1) * map-get($padding, small)});
 }
 
 .ptcg-board-player {

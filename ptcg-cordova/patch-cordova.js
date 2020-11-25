@@ -6,7 +6,7 @@
 
 var indexPatches = [{
 	find: '<meta name="viewport" content="width=device-width, initial-scale=1">',
-	replacement: '<meta name="viewport" content="width=device-width, initial-scale=0.65, maximum-scale=0.65, user-scalable=no">'
+	replacement: '<meta id="vp" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">'
 }, {
 	find: '<script src=',
 	replacement: `<script type="text/javascript" src="cordova.js"></script>
@@ -28,6 +28,12 @@ var indexPatches = [{
           StatusBar.hide();
         }
       }, false);
+      window.onload = function() {
+        if (screen.width < 1280) {
+            var mvp = document.getElementById('vp');
+            mvp.setAttribute('content','user-scalable=no,width=1280');
+        }
+      }
 </script>
 <script src=`
 }, {
