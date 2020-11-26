@@ -1,4 +1,4 @@
-import { Directive, Input, OnDestroy, HostBinding } from '@angular/core';
+import { Directive, Input, OnDestroy, HostBinding, HostListener } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 import { ImageCacheService } from './image-cache.service';
@@ -14,9 +14,15 @@ import { Subject } from 'rxjs';
 export class ImageCacheDirective implements OnDestroy {
 
   private nextRequest = new Subject<string>();
+  private imageLoaded = new Subject<void>();
 
   @HostBinding('attr.src') url: SafeUrl;
   @HostBinding('style.visibility') visiblity: 'hidden' | 'visible' = 'hidden';
+
+  @HostListener('load', ['$event'])
+  public onLoad() {
+    this.imageLoaded.next();
+  }
 
   constructor(
     private imageCacheService: ImageCacheService,
@@ -50,7 +56,9 @@ export class ImageCacheDirective implements OnDestroy {
       .subscribe({
         next: cached => {
           this.url = this.sanitizer.bypassSecurityTrustUrl(cached);
-          this.visiblity = 'visible';
+          this.imageLoaded
+            .pipe(take(1), takeUntilDestroyed(this), takeUntil(this.nextRequest))
+            .subscribe({ next: () => this.visiblity = 'visible' });
         }
       });
   }

@@ -19,6 +19,8 @@ export class ImageCacheModule {
       // increase allocated space on Chrome to 50MB, default was 10MB
       options.chromeQuota = 50 * 1024 * 1024;
 
+      options.timeout = environment.timeout;
+
       const hasCordova = !!(window as any).cordova;
 
       if (hasCordova) {

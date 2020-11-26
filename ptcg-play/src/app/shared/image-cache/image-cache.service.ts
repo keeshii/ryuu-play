@@ -68,7 +68,8 @@ export class ImageCacheService {
 
       // Successfully retrieved from the cache
       (src: string, dest: string) => {
-        this.setImageLoaded(url, dest);
+        this.cachedFilesMap[url] = dest;
+        this.ngZone.run(() => { this.setImageLoaded(url, dest); });
       },
 
       // File not cached,
@@ -77,13 +78,14 @@ export class ImageCacheService {
           url,
           // File added to cache, return it's URL
           (dest: string) => {
-            this.setImageLoaded(url, dest);
+            this.cachedFilesMap[url] = dest;
+            this.ngZone.run(() => { this.setImageLoaded(url, dest); });
           },
 
           // Unable to cache the file, return the original url
           () => {
-            // it is unlikely we will ever success, remember the source url
-            this.setImageLoaded(url, url);
+            // return the original url path
+            this.ngZone.run(() => { this.setImageLoaded(url, url); });
           }
         );
       }
@@ -93,10 +95,7 @@ export class ImageCacheService {
   }
 
   private setImageLoaded(url: string, cached: string) {
-    this.cachedFilesMap[url] = cached;
-    this.ngZone.run(() => {
-      this.inProgressMap[url].next(cached);
-    });
+    this.inProgressMap[url].next(cached);
     this.inProgressMap[url].complete();
     delete this.inProgressMap[url];
   }
