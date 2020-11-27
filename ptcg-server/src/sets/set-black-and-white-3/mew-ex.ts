@@ -1,5 +1,5 @@
 import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType, SuperType, EnergyType, CardTag } from "../../game/store/card/card-types";
+import { Stage, CardType, SuperType, CardTag } from "../../game/store/card/card-types";
 import { PowerType, StoreLike, State, StateUtils, GameError, GameMessage,
   MoveEnergyPrompt, PlayerType, SlotType, ChooseAttackPrompt, Player, EnergyMap } from "../../game";
 import { Effect } from "../../game/store/effects/effect";
@@ -83,7 +83,7 @@ export class MewEx extends PokemonCard {
         GameMessage.MOVE_ENERGY_CARDS,
         PlayerType.BOTTOM_PLAYER,
         [ SlotType.ACTIVE, SlotType.BENCH ],
-        { superType: SuperType.ENERGY, energyType: EnergyType.BASIC },
+        { superType: SuperType.ENERGY },
         { allowCancel: true }
       ), transfers => {
         if (transfers === null) {
