@@ -52,14 +52,12 @@ export class CheckPokemonStatsEffect implements Effect {
   public target: PokemonCardList;
   public weakness: Weakness[];
   public resistance: Resistance[];
-  public retreat: CardType[]; 
 
   constructor(target: PokemonCardList) {
     this.target = target;
     const pokemonCard = target.getPokemonCard();
-    this.weakness = pokemonCard ? pokemonCard.weakness : [];
-    this.resistance = pokemonCard ? pokemonCard.resistance : [];
-    this.retreat = pokemonCard ? pokemonCard.retreat : [];
+    this.weakness = pokemonCard ? [ ...pokemonCard.weakness ] : [];
+    this.resistance = pokemonCard ? [ ...pokemonCard.resistance ] : [];
   }
 }
 
@@ -85,7 +83,7 @@ export class CheckRetreatCostEffect implements Effect {
   constructor(player: Player) {
     this.player = player;
     const pokemonCard = player.active.getPokemonCard();
-    this.cost = pokemonCard !== undefined ? pokemonCard.retreat : [];
+    this.cost = pokemonCard !== undefined ? [ ...pokemonCard.retreat ] : [];
   }
 }
 
@@ -99,7 +97,7 @@ export class CheckAttackCostEffect implements Effect {
   constructor(player: Player, attack: Attack) {
     this.player = player;
     this.attack = attack;
-    this.cost = attack.cost;
+    this.cost = [ ...attack.cost ];
   }
 }
 

@@ -6,8 +6,7 @@ import { Effect } from "../../game/store/effects/effect";
 import { AttackEffect, PowerEffect } from "../../game/store/effects/game-effects";
 import { StateUtils } from "../../game/store/state-utils";
 import { PowerType } from "../../game/store/card/pokemon-types";
-import { CheckPokemonStatsEffect, CheckHpEffect } from "../../game/store/effects/check-effects";
-import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
+import { CheckHpEffect } from "../../game/store/effects/check-effects";
 import { PlayerType, SlotType } from "../../game/store/actions/play-card-action";
 import { MoveDamagePrompt, DamageMap } from "../../game/store/prompts/move-damage-prompt";
 import { GameMessage } from "../../game/game-message";
@@ -83,8 +82,6 @@ export class Dusknoir extends PokemonCard {
 
   public fullName: string = 'Dusknoir BC';
 
-  public readonly SHADOW_PUNCH_MARKER = 'SHADOW_PUNCH_MARKER';
-
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
 
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
@@ -94,21 +91,7 @@ export class Dusknoir extends PokemonCard {
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      const player = effect.player;
-      const opponent = StateUtils.getOpponent(state, player);
-      opponent.active.marker.addMarker(this.SHADOW_PUNCH_MARKER, this);
-      return state;
-    }
-
-    if (effect instanceof CheckPokemonStatsEffect && effect.target.marker.hasMarker(this.SHADOW_PUNCH_MARKER)) {
-      effect.resistance = [];
-      return state;
-    }
-
-    if (effect instanceof EndTurnEffect) {
-      const player = effect.player;
-      const opponent = StateUtils.getOpponent(state, player);
-      opponent.marker.removeMarker(this.SHADOW_PUNCH_MARKER, this);
+      effect.ignoreResistance = true;
       return state;
     }
 
