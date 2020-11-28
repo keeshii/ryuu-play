@@ -7,6 +7,7 @@ import { GameError } from "../game-error";
 import { GameCoreError } from "../game-message";
 import { ResolvePromptAction } from "../store/actions/resolve-prompt-action";
 import { deepClone } from "../../utils";
+import { Card } from "../store/card/card";
 
 
 export class Simulator implements StoreHandler {
@@ -19,7 +20,7 @@ export class Simulator implements StoreHandler {
     }
     this.botArbiter = new BotArbiter(botArbiterOptions);
     this.store = new Store(this);
-    this.store.state = deepClone(state);
+    this.store.state = deepClone(state, [ Card ]);
   }
 
   public clone(): Simulator {

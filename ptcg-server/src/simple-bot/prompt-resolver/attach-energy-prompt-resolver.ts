@@ -19,7 +19,7 @@ export class AttachEnergyPromptResolver extends PromptResolver {
   }
 
   private getPromptResult(state: State, prompt: AttachEnergyPrompt): CardAssign[] | null {
-    const copy = deepClone(state);
+    const copy = deepClone(state, [ Card ]);
 
     const results: ResultItem[] = [];
     const baseScore = this.getStateScore(state, prompt.playerId);

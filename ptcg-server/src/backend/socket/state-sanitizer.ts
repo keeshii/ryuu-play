@@ -20,7 +20,7 @@ export class StateSanitizer {
    * Clear sensitive data, resolved prompts and old logs.
    */
   public sanitize(state: State, gameId: number): State {
-    state = deepClone(state);
+    state = deepClone(state, [ Card ]);
     state = this.filterPrompts(state);
     state = this.removeLogs(state, gameId);
     state = this.hideSecretCards(state);
@@ -99,7 +99,10 @@ export class StateSanitizer {
       return prompt;
     });
 
-    state.prompts = deepClone(state.prompts);
+    // Cards in the prompt are known, in the game cards are secret,
+    // For example, serching for the cards from deck.
+    // The method hideSecretCards would hide cards from prompt as well.
+    state.prompts = deepClone(state.prompts, [ Card ]);
     return state;
   }
 

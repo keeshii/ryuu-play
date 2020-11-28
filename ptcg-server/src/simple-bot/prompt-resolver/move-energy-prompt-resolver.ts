@@ -32,7 +32,7 @@ export class MoveEnergyPromptResolver extends PromptResolver {
   }
 
   private getPromptResult(state: State, prompt: MoveEnergyPrompt): CardTransfer[] | null {
-    const copy = deepClone(state);
+    const copy = deepClone(state, [ Card ]);
     const fromItems = this.buildFromCardItems(copy, prompt);
 
     const max = prompt.options.max;

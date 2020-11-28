@@ -188,7 +188,7 @@ export class Store implements StoreLike {
   }
 
   private reduce(state: State, action: Action): State {
-    let stateBackup = deepClone(state);
+    let stateBackup = deepClone(state, [ Card ]);
     this.promptItems.length = 0;
 
     try {
