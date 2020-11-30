@@ -17,28 +17,16 @@ export class BotGamesTask {
   }
 
   public startBotGames() {
-    // bot games disabled in the config file
-    if (config.bots.botGamesInterval === 0) {
-      return;
-    }
-
-    let counter = 0;
-
     const scheduler = Scheduler.getInstance();
     scheduler.run(async () => {
-      counter += 1;
-      if (counter === config.bots.botGamesInterval) {
-        counter = 0;
+      const botsForGame = await this.getRandomBotsForGame();
 
-        const botsForGame = await this.getRandomBotsForGame();
-
-        // Create the game if successfuly selected two bots
-        if (botsForGame !== undefined) {
-          const { bot1, bot2, deck } = botsForGame;
-          bot1.createGame(deck, undefined, bot2);
-        }
+      // Create the game if successfuly selected two bots
+      if (botsForGame !== undefined) {
+        const { bot1, bot2, deck } = botsForGame;
+        bot1.createGame(deck, undefined, bot2);
       }
-    });
+    }, config.bots.botGamesIntervalCount);
   }
 
   private async getRandomBotsForGame(): Promise<BotsForGame | undefined> {

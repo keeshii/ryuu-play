@@ -9,6 +9,7 @@ import { Messager } from "./messager";
 import { RankingCalculator } from "./ranking-calculator";
 import { Scheduler, generateId } from "../../utils";
 import { MatchRecorder } from "./match-recorder";
+import { config } from "../../config";
 
 export class Core {
   public clients: Client[] = [];
@@ -132,7 +133,7 @@ export class Core {
       users = users.filter(u => connectedUserIds.includes(u.id));
 
       this.emit(c => c.onUsersUpdate(users));
-    });
+    }, config.core.rankingDecreaseIntervalCount);
   }
 
   private startOldMatchDelete() {
@@ -140,7 +141,7 @@ export class Core {
     const matchRecorder = new MatchRecorder(this);
     scheduler.run(async () => {
       matchRecorder.removeOldMatches();
-    });
+    }, config.core.keepMatchIntervalCount);
   }
 
 }

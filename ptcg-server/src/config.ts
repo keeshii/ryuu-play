@@ -30,12 +30,15 @@ export const config = {
     debug: false,
     rankingDecraseRate: 0.95,
     rankingDecraseTime: 24 * 60 * 60 * 1000,
-    keepMatchTime: 31 * 24 * 60 * 60 * 1000
+    keepMatchTime: 31 * 24 * 60 * 60 * 1000,
+    schedulerInterval: 15 * 60 * 1000, // 15 minutes
+    rankingDecreaseIntervalCount: 4,
+    keepMatchIntervalCount: 4
   },
   bots: {
     defaultPassword: '',
     actionDelay: 250,
-    botGamesInterval: 0
+    botGamesIntervalCount: 0
   },
   sets: {
     scansDir: '',
