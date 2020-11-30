@@ -10,7 +10,7 @@ import { bigint } from '../transformers/bigint';
 export class User extends BaseEntity {
 
   @PrimaryGeneratedColumn()
-  public id: number = 0;
+  public id!: number;
 
   @Column()
   public name: string = '';

@@ -9,7 +9,7 @@ import { blob } from '../transformers/blob';
 export class Match extends BaseEntity {
 
   @PrimaryGeneratedColumn()
-  public id: number = 0;
+  public id!: number;
 
   @ManyToOne(type => User)
   player1: User = new User();

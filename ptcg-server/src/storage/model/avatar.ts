@@ -7,7 +7,7 @@ import { User } from './user';
 export class Avatar extends BaseEntity {
 
   @PrimaryGeneratedColumn()
-  public id: number = 0;
+  public id!: number;
 
   @ManyToOne(type => User, user => user.avatars)
   user: User = new User();

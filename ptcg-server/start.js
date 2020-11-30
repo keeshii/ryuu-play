@@ -27,7 +27,7 @@ cardManager.defineSet(setBlackAndWhite3);
 StateSerializer.setKnownCards(cardManager.getAllCards());
 
 const botManager = BotManager.getInstance();
-botManager.registerBot(new SimpleBot('computer'));
+botManager.registerBot(new SimpleBot('bot'));
 
 const app = new App();
 

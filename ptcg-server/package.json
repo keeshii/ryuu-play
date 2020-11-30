@@ -24,6 +24,7 @@
     "reflect-metadata": "^0.1.13",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0",
+    "sqlite3": "^5.0.0",
     "typeorm": "^0.2.25"
   },
   "devDependencies": {

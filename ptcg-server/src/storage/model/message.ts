@@ -9,7 +9,7 @@ import { bigint } from '../transformers/bigint';
 export class Message extends BaseEntity {
 
   @PrimaryGeneratedColumn()
-  public id: number = 0;
+  public id!: number;
 
   @ManyToOne(type => Conversation, conversation => conversation.messages, { onDelete: 'CASCADE' })
   conversation: Conversation = new Conversation();
@@ -40,7 +40,7 @@ export class Message extends BaseEntity {
 
     const conversation = await Conversation.findByUsers(this.sender, receiver);
 
-    if (conversation.id === 0) {
+    if (conversation.id === undefined) {
       await manager.save(conversation);
     }
 

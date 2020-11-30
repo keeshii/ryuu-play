@@ -310,7 +310,7 @@ export class Replays extends Controller {
     const userIds: number[] = [];
     replays.forEach(replay => {
       for (const id of [replay.player1.userId, replay.player2.userId]) {
-        if (id !== 0 && !userIds.includes(id)) {
+        if (id !== undefined && !userIds.includes(id)) {
           userIds.push(id);
         }
       }

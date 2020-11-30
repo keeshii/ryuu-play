@@ -9,7 +9,7 @@ import { blob } from '../transformers/blob';
 export class Replay extends BaseEntity {
 
   @PrimaryGeneratedColumn()
-  public id: number = 0;
+  public id!: number;
 
   @ManyToOne(type => User)
   user: User = new User();

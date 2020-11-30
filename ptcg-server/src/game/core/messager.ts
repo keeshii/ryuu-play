@@ -31,7 +31,7 @@ export class Messager {
 
   public async readMessages(client: Client, conversationUser: User): Promise<void> {
     const conversation = await Conversation.findByUsers(client.user, conversationUser);
-    if (conversation.id === 0) {
+    if (conversation.id === undefined) {
       return;
     }
 

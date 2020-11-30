@@ -8,7 +8,7 @@ import { User } from './user';
 export class Conversation extends BaseEntity {
 
   @PrimaryGeneratedColumn()
-  public id: number = 0;
+  public id!: number;
 
   @ManyToOne(type => User)
   user1: User = new User();

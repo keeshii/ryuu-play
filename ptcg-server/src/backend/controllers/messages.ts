@@ -76,7 +76,7 @@ export class Messages extends Controller {
       this.buildUserInfo(conversation.user2)
     ];
 
-    if (conversation.id === 0) {
+    if (conversation.id === undefined) {
       res.send({ok: true, messages: [], users, total: 0});
       return;
     }
@@ -125,7 +125,7 @@ export class Messages extends Controller {
     }
 
     const conversation = await Conversation.findByUsers(user1, user2);
-    if (conversation.id === 0) {
+    if (conversation.id === undefined) {
       res.send({ok: true});
       return;
     }
