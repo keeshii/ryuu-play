@@ -86,6 +86,7 @@ export class Core {
       const index = client.games.indexOf(game);
       if (index !== -1) {
         client.games.splice(index, 1);
+        this.emit(c => c.onGameLeave(game, client));
       }
     });
     const index = this.games.indexOf(game);

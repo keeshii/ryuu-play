@@ -97,12 +97,13 @@ export class RankingCalculator {
     });
 
     // execute update query in the database
+    // sqlite doesn't support FLOOR, so we use ROUND(x - 0.5)
     await User.update({
       lastRankingChange: LessThan(yesterday),
       ranking: MoreThan(0)
     }, {
       lastRankingChange: today,
-      ranking: () => `FLOOR(${rankingDecraseRate} * ranking)`
+      ranking: () => `ROUND(${rankingDecraseRate} * ranking - 0.5)`
     });
 
     // is it wise to emit all users to all connected clients by websockets?

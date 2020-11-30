@@ -1,9 +1,10 @@
 import { GameMessage } from './game-message';
 
-export class GameError extends Error {
+export class GameError {
+  public message: string;
 
   constructor(code: GameMessage, message?: string) {
-    super(message || code);
+    this.message = message || code;
   }
 
 }
