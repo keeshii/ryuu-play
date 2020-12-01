@@ -2,10 +2,26 @@ import { config } from '../config';
 
 export class Scheduler {
 
-  private readonly runInterval: number = config.core.schedulerInterval; // 15 minutes
   private static instance: Scheduler = new Scheduler();
+  private initialized: boolean;
   private jobs: { callback: Function, counter: number, value: number }[] = [];
   private timeoutRef: NodeJS.Timeout | undefined;
+
+  constructor() {
+    if (!config.core.schedulerStartNextHour) {
+      this.initialized = true;
+      return;
+    }
+    this.initialized = false;
+
+    // wait with the initialization till next hour
+    const msInHour = 60 * 60 * 1000;
+    const msToNextHour = msInHour - new Date().getTime() % msInHour;
+    setTimeout(() => {
+      this.initialized = true;
+      this.startTimer();
+    }, msToNextHour);
+  }
 
   public static getInstance(): Scheduler {
     return Scheduler.instance;
@@ -19,17 +35,24 @@ export class Scheduler {
 
     this.jobs.push({ counter, callback, value: 0 });
 
-    if (this.timeoutRef === undefined) {
-      this.timeoutRef = setInterval(() => {
-        this.jobs.forEach(job => {
-          job.value += 1;
-          if (job.value >= job.counter) {
-            job.value = 0;
-            job.callback();
-          }
-        });
-      }, this.runInterval);
+    if (this.initialized) {
+      this.startTimer();
     }
+  }
+
+  private startTimer(): void {
+    if (this.jobs.length === 0 || this.timeoutRef !== undefined) {
+      return;
+    }
+    this.timeoutRef = setInterval(() => {
+      this.jobs.forEach(job => {
+        job.value += 1;
+        if (job.value >= job.counter) {
+          job.value = 0;
+          job.callback();
+        }
+      });
+    }, config.core.schedulerInterval);
   }
 
   public stop(callback: Function): void {

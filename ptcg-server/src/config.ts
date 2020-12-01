@@ -32,6 +32,7 @@ export const config = {
     rankingDecraseTime: 24 * 60 * 60 * 1000,
     keepMatchTime: 31 * 24 * 60 * 60 * 1000,
     schedulerInterval: 15 * 60 * 1000, // 15 minutes
+    schedulerStartNextHour: true,
     rankingDecreaseIntervalCount: 4,
     keepMatchIntervalCount: 4
   },
