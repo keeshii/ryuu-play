@@ -3,25 +3,9 @@ import { config } from '../config';
 export class Scheduler {
 
   private static instance: Scheduler = new Scheduler();
-  private initialized: boolean;
   private jobs: { callback: Function, counter: number, value: number }[] = [];
   private timeoutRef: NodeJS.Timeout | undefined;
-
-  constructor() {
-    if (!config.core.schedulerStartNextHour) {
-      this.initialized = true;
-      return;
-    }
-    this.initialized = false;
-
-    // wait with the initialization till next hour
-    const msInHour = 60 * 60 * 1000;
-    const msToNextHour = msInHour - new Date().getTime() % msInHour;
-    setTimeout(() => {
-      this.initialized = true;
-      this.startTimer();
-    }, msToNextHour);
-  }
+  private intervalRef: NodeJS.Timeout | undefined;
 
   public static getInstance(): Scheduler {
     return Scheduler.instance;
@@ -35,16 +19,29 @@ export class Scheduler {
 
     this.jobs.push({ counter, callback, value: 0 });
 
-    if (this.initialized) {
-      this.startTimer();
-    }
-  }
-
-  private startTimer(): void {
-    if (this.jobs.length === 0 || this.timeoutRef !== undefined) {
+    if (this.intervalRef !== undefined || this.timeoutRef !== undefined) {
       return;
     }
-    this.timeoutRef = setInterval(() => {
+
+    if (!config.core.schedulerStartNextHour) {
+      this.startInterval();
+      return;
+    }
+
+    // wait with the initialization till next hour
+    const msInHour = 60 * 60 * 1000;
+    const msToNextHour = msInHour - new Date().getTime() % msInHour;
+    this.timeoutRef = setTimeout(() => {
+      this.timeoutRef = undefined;
+      this.startInterval();
+    }, msToNextHour);
+  }
+
+  private startInterval(): void {
+    if (this.jobs.length === 0 || this.intervalRef !== undefined) {
+      return;
+    }
+    this.intervalRef = setInterval(() => {
       this.jobs.forEach(job => {
         job.value += 1;
         if (job.value >= job.counter) {
@@ -59,9 +56,15 @@ export class Scheduler {
     const index = this.jobs.findIndex(job => job.callback === callback);
     if (index !== -1) {
       this.jobs.splice(index, 1);
-      if (this.jobs.length === 0 && this.timeoutRef !== undefined) {
-        clearInterval(this.timeoutRef);
-        this.timeoutRef = undefined;
+      if (this.jobs.length === 0) {
+        if (this.timeoutRef !== undefined) {
+          clearTimeout(this.timeoutRef);
+          this.timeoutRef = undefined;
+        }
+        if (this.intervalRef !== undefined) {
+          clearInterval(this.intervalRef);
+          this.intervalRef = undefined;
+        }
       }
     }
   }
