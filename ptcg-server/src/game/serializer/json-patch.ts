@@ -144,7 +144,7 @@ export class JsonPatch {
       case 'del':
         const toDelete: any[] = delta.val.slice();
         if (root instanceof Array) {
-          toDelete.sort().reverse();
+          toDelete.sort((a, b) => b - a);
           toDelete.forEach(idx => {
             (root as any[]).splice(idx, 1);
           });
