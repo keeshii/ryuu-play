@@ -6,6 +6,7 @@ import { Effect } from "../../game/store/effects/effect";
 import { GameMessage } from "../../game/game-message";
 import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
 import { SelectPrompt } from "../../game/store/prompts/select-prompt";
+import { DiscardCardsEffect } from "../../game/store/effects/attack-effects";
 
 
 export class RayquazaEx extends PokemonCard {
@@ -81,7 +82,9 @@ export class RayquazaEx extends PokemonCard {
           }
         }
 
-        player.active.moveCardsTo(cards, player.discard);
+        const discardEnergy = new DiscardCardsEffect(effect, cards);
+        discardEnergy.target = player.active;
+        store.reduceEffect(state, discardEnergy);
         effect.damage = damage;
       });
     }

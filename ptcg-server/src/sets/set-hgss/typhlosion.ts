@@ -27,7 +27,9 @@ function* useFlareDestroy(next: Function, store: StoreLike, state: State,
       { min: 1, max: 1, allowCancel: false }
     ), selected => {
       const cards = selected || [];
-      effect.player.active.moveCardsTo(cards, player.discard);
+      const discardEnergy = new DiscardCardsEffect(effect, cards);
+      discardEnergy.target = player.active;
+      store.reduceEffect(state, discardEnergy);
       next();
     });
   }

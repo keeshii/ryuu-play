@@ -5,6 +5,7 @@ import { StoreLike, State, CoinFlipPrompt, ChooseEnergyPrompt, Card } from "../.
 import { AttackEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
 import { GameMessage } from "../../game/game-message";
+import { DiscardCardsEffect } from "../../game/store/effects/attack-effects";
 
 export class ZekromEx extends PokemonCard {
 
@@ -68,7 +69,9 @@ export class ZekromEx extends PokemonCard {
         { allowCancel: false }
       ), energy => {
         const cards: Card[] = (energy || []).map(e => e.card);
-        effect.player.active.moveCardsTo(cards, player.discard);
+        const discardEnergy = new DiscardCardsEffect(effect, cards);
+        discardEnergy.target = player.active;
+        store.reduceEffect(state, discardEnergy);
       });
     }
 

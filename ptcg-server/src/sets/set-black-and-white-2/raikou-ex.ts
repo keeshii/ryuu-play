@@ -69,7 +69,7 @@ export class RaikouEx extends PokemonCard {
 
       const cards: Card[] = [];
       checkProvidedEnergy.energyMap.forEach(em => {
-        if (em.provides.includes(CardType.WATER) || em.provides.includes(CardType.ANY)) {
+        if (em.provides.includes(CardType.LIGHTNING) || em.provides.includes(CardType.ANY)) {
           cards.push(em.card);
         }
       });
@@ -78,24 +78,23 @@ export class RaikouEx extends PokemonCard {
       discardEnergy.target = player.active;
       store.reduceEffect(state, discardEnergy);
 
-      const hasBenched = opponent.bench.some(b => b.cards.length > 0);
-      if (!hasBenched) {
-        return state;
-      }
-
       return store.prompt(state, new ChoosePokemonPrompt(
         player.id,
         GameMessage.CHOOSE_POKEMON_TO_DAMAGE,
         PlayerType.TOP_PLAYER,
-        [ SlotType.BENCH ],
+        [ SlotType.ACTIVE, SlotType.BENCH ],
         { allowCancel: false }
-      ), targets => {
-        if (!targets || targets.length === 0) {
+      ), selected => {
+        const targets = selected || [];
+        if (targets.includes(opponent.active)) {
+          effect.damage = 100;
           return;
         }
-        const damageEffect = new PutDamageEffect(effect, 100);
-        damageEffect.target = targets[0];
-        store.reduceEffect(state, damageEffect);
+        targets.forEach(target => {
+          const damageEffect = new PutDamageEffect(effect, 100);
+          damageEffect.target = target;
+          store.reduceEffect(state, damageEffect);
+        });
       });
     }
 

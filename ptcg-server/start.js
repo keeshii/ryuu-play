@@ -9,6 +9,7 @@ const {
   setBlackAndWhite,
   setBlackAndWhite2,
   setBlackAndWhite3,
+  setBlackAndWhite4,
   setDiamondAndPearl,
   setHgss,
   setOp9
@@ -23,6 +24,7 @@ cardManager.defineSet(setHgss);
 cardManager.defineSet(setBlackAndWhite);
 cardManager.defineSet(setBlackAndWhite2);
 cardManager.defineSet(setBlackAndWhite3);
+cardManager.defineSet(setBlackAndWhite4);
 
 StateSerializer.setKnownCards(cardManager.getAllCards());
 

@@ -362,6 +362,7 @@
     "UNKNOWN_CARD": "Unknown card",
     "UNKNOWN_POWER": "Unknown power",
     "WANT_TO_DISCARD_ENERGY": "Do you want to discard enegy cards?",
+    "WANT_TO_DRAW_CARDS": "Do you want to draw cards from your deck?",
     "WANT_TO_PICK_UP_POKEMON": "Do you want to pick up Pokémon to your hand?",
     "WANT_TO_PLAY_BOTH_CARDS_AT_ONCE": "Do you want to play both cards at once?",
     "WANT_TO_SHUFFLE_POKEMON_INTO_DECK": "Do you want to shuffle the Pokémon into the deck?",
