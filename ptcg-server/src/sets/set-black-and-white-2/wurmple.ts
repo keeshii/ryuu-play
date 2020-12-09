@@ -53,7 +53,7 @@ export class Wurmple extends PokemonCard {
   public attacks = [
     {
       name: 'Flock',
-      cost: [ CardType.COLORLESS ],
+      cost: [ CardType.GRASS ],
       damage: 0,
       text: 'Search your deck for Wurmple and put it onto your Bench. ' +
         'Shuffle your deck afterward.'

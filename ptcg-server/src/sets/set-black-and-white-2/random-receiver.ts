@@ -32,11 +32,10 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     }
   }
 
-  yield store.prompt(state, new ShowCardsPrompt(
-    opponent.id,
-    GameMessage.CARDS_SHOWED_BY_THE_OPPONENT,
-    cards
-  ), () => next());
+  yield store.prompt(state, [
+    new ShowCardsPrompt(player.id, GameMessage.CARDS_SHOWED_BY_EFFECT, cards),
+    new ShowCardsPrompt(opponent.id, GameMessage.CARDS_SHOWED_BY_THE_OPPONENT, cards)
+  ], () => next());
 
   if (supporter !== undefined) {
     player.deck.moveCardTo(supporter, player.hand)

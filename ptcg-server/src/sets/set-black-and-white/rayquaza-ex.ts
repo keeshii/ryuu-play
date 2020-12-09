@@ -21,7 +21,7 @@ export class RayquazaEx extends PokemonCard {
 
   public weakness = [{ type: CardType.DRAGON }];
 
-  public retreat = [ CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS ];
+  public retreat = [ CardType.COLORLESS ];
 
   public attacks = [
     {

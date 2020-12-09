@@ -2,6 +2,7 @@ import { PokemonCard } from "../../game/store/card/pokemon-card";
 import { Stage, CardType } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
+import { PowerType } from "../../game/store/card/pokemon-types";
 import { PowerEffect } from "../../game/store/effects/game-effects";
 import { Effect } from "../../game/store/effects/effect";
 import { CheckRetreatCostEffect, CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
@@ -19,6 +20,13 @@ export class Zubat extends PokemonCard {
   public resistance = [{ type: CardType.FIGHTING, value: -20 }];
 
   public retreat = [ CardType.COLORLESS ];
+
+  public powers = [{
+    name: 'Free Flight',
+    powerType: PowerType.ABILITY,
+    text: 'If this Pokemon has no Energy attached to it, this Pokemon has ' +
+      'no Retreat Cost.'
+  }];
 
   public attacks = [{
     name: 'Wing Attack',

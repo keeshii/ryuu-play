@@ -20,7 +20,7 @@ export class Sigilyph extends PokemonCard {
 
   public weakness = [{ type: CardType.PSYCHIC }];
 
-  public retreat = [ ];
+  public retreat = [ CardType.COLORLESS ];
 
   public powers = [{
     name: 'Safeguard',
