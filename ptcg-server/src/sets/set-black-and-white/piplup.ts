@@ -21,7 +21,7 @@ export class Piplup extends PokemonCard {
     {
       name: 'Fury Attack',
       cost: [ CardType.WATER ],
-      damage: 20,
+      damage: 10,
       text: 'Flip 3 coins. This attack does 10 damage times the number of heads.'
     }
   ];

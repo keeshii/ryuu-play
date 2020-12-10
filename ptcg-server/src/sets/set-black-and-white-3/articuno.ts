@@ -34,7 +34,7 @@ export class Articuno extends PokemonCard {
   public attacks = [{
     name: 'Chilling Sigh',
     cost: [ CardType.WATER ],
-    damage: 20,
+    damage: 0,
     text: 'Your opponent\'s Active Pokemon is now Asleep.'
   }, {
     name: 'Tri Edge',

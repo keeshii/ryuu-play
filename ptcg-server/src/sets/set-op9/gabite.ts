@@ -16,7 +16,7 @@ export class Gabite extends PokemonCard {
 
   public stage: Stage = Stage.STAGE_1;
 
-  public evolvesFrom: string = 'Gible'
+  public evolvesFrom: string = 'Gible';
 
   public cardType: CardType = CardType.COLORLESS;
 

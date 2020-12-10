@@ -32,7 +32,7 @@ export class MewtwoEx extends PokemonCard {
     }, {
       name: 'Psydrive',
       cost: [ CardType.PSYCHIC, CardType.PSYCHIC, CardType.COLORLESS ],
-      damage: 80,
+      damage: 120,
       text: 'Discard an Energy attached to this Pokemon.'
     },
   ];

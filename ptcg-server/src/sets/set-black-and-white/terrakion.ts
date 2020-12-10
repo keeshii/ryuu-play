@@ -26,7 +26,7 @@ export class Terrakion extends PokemonCard {
     cost: [ CardType.FIGHTING, CardType.COLORLESS ],
     damage: 30,
     text:
-      'If any of your Pokemon were Knocked Out by damage from an opponent\'s' +
+      'If any of your Pokemon were Knocked Out by damage from an opponent\'s ' +
       'attack during his or her last turn, this attack does 60 more damage.'
   }, {
     name: 'Land Crush',

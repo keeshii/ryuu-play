@@ -72,7 +72,7 @@ export class TornadusEx extends PokemonCard {
     }, {
       name: 'Power Blast',
       cost: [ CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 80,
+      damage: 100,
       text: 'Flip a coin. If tails, discard an Energy attached to this Pokemon.'
     },
   ];

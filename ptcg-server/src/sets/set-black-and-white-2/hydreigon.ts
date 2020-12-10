@@ -61,7 +61,7 @@ export class Hydreigon extends PokemonCard {
 
   public stage: Stage = Stage.STAGE_2;
 
-  public evolvesFrom = 'Zweilous'
+  public evolvesFrom = 'Zweilous';
 
   public cardType: CardType = CardType.DRAGON;
 
@@ -83,7 +83,7 @@ export class Hydreigon extends PokemonCard {
   public attacks = [{
       name: 'Dragonblast',
       cost: [ CardType.PSYCHIC, CardType.DARK, CardType.DARK, CardType.COLORLESS ],
-      damage: 120,
+      damage: 140,
       text: 'Discard 2 D Energy attached to this Pokemon.'
   }];
 
