@@ -8,6 +8,8 @@
 .ptcg-info {
   border-radius: 4px;
   bottom: map-get($padding, normal);
+  left: 50%;
   padding: map-get($padding, small);
   position: absolute;
+  transform: translateX(-50%);
 }
