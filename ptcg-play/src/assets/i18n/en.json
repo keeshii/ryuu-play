@@ -258,7 +258,7 @@
   "TABLE_REPLAY_POSITION": "State {{position}} of {{count}}",
   "TABLE_REPLAY_STATES_PER_SECOND": "States per second",
   "TABLE_SWITCH_SIDES": "Switch sides",
-  "TABLE_TABLE_NAME": "Table {{id}}",
+  "TABLE_TABLE_NAME": "Table #{{id}}",
   "TABLE_TIME_LEFT": "Time left:",
   "TABLE_TURN_NUMBER": "Turn {{turn}}",
   "USERS_AVATAR_TITLE": "Avatar preview",

@@ -123,7 +123,7 @@ export class TableSidebarComponent implements OnInit, OnDestroy, OnChanges {
 
     const topPlayerId = this.topPlayer && this.topPlayer.id;
     const bottomPlayerId = this.bottomPlayer && this.bottomPlayer.id;
-    const gameOrPlayerHasChanged = this.gameId !== this.gameState.gameId
+    const gameOrPlayerHasChanged = this.gameId !== this.gameState.localId
       || (this.topPlayerStats && this.topPlayerStats.clientId !== topPlayerId)
       || (this.bottomPlayerStats && this.bottomPlayerStats.clientId !== bottomPlayerId);
 
@@ -131,12 +131,14 @@ export class TableSidebarComponent implements OnInit, OnDestroy, OnChanges {
       this.refreshPlayerStats(this.gameState);
     }
 
-    this.gameId = this.gameState.gameId;
+    this.gameId = this.gameState.localId;
     this.turn = state.turn;
     this.isTopPlayerActive = this.isPlayerActive(state, this.topPlayer);
     this.isBottomPlayerActive = this.isPlayerActive(state, this.bottomPlayer);
     this.topPlayerStats = this.getPlayerStats(this.gameState, this.topPlayer);
     this.bottomPlayerStats = this.getPlayerStats(this.gameState, this.bottomPlayer);
+    this.bottomReplayPlayer = undefined;
+    this.topReplayPlayer = undefined;
 
     if (this.gameState.deleted) {
       this.stopTimer();

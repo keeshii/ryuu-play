@@ -92,6 +92,9 @@ export class PlayerBarComponent implements OnInit, OnDestroy, OnChanges {
 
     // Not fully initialized
     if (!this.clientId || !this.gameState || !this.player) {
+      this.isEmpty = true;
+      this.avatarName = undefined;
+      this.allowAvatarClick = false;
       return;
     }
 
