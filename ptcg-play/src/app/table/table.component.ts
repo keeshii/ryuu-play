@@ -147,11 +147,15 @@ export class TableComponent implements OnInit, OnDestroy {
       }
 
       const prompts = state.prompts.filter(p => p.result === undefined);
+
+      const isPlaying = state.players.some(p => p.id === this.clientId);
+      const isReplay = !!this.gameState.replay;
+      const isObserver = isReplay || !isPlaying;
       const waitingForOthers = prompts.some(p => p.playerId !== clientId);
       const waitingForMe = prompts.some(p => p.playerId === clientId);
       const notMyTurn = state.players[state.activePlayer].id !== clientId
         && state.phase === GamePhase.PLAYER_TURN;
-      this.waiting = (notMyTurn || waitingForOthers) && !waitingForMe;
+      this.waiting = (notMyTurn || waitingForOthers) && !waitingForMe && !isObserver;
     }
   }
 
