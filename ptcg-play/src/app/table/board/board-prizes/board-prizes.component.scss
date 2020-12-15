@@ -7,10 +7,13 @@
   justify-content: center;
 }
 
-.ptcg-board-prizes-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto;
-  max-width: #{2 * map-get($ptcg-size, card)};
-  width: calc(100% - #{2 * map-get($padding, small)});
+.ptcg-board-prizes-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+ptcg-board-card {
+  width: calc(50% - #{map-get($padding, small)});
+  max-width: map-get($ptcg-size, card);
 }
