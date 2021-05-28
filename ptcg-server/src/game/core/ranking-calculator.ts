@@ -73,9 +73,9 @@ export class RankingCalculator {
       case Rank.JUNIOR:
         return 2.0;
       case Rank.SENIOR:
-        return 1.5;
+        return 1.0;
       case Rank.MASTER:
-        return 1.1;
+        return 0.8;
     }
     return 1;
   }

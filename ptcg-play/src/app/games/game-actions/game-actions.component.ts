@@ -1,12 +1,13 @@
 import { Component, OnDestroy, OnInit, Input } from '@angular/core';
 import { GameInfo, GameState } from 'ptcg-server';
 import { Observable } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 import { AlertService } from 'src/app/shared/alert/alert.service';
 import { GameService } from 'src/app/api/services/game.service';
+import { LocalGameState } from '../../shared/session/session.interface';
 import { SessionService } from '../../shared/session/session.service';
-import { TranslateService } from '@ngx-translate/core';
-import { takeUntilDestroyed } from 'src/app/shared/operators/take-until-destroyed';
+import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed';
 
 @Component({
   selector: 'ptcg-game-actions',
@@ -36,12 +37,12 @@ export class GameActionsComponent implements OnInit, OnDestroy {
       });
   }
 
-  private hasGameState(gameStates: GameState[]): boolean {
+  private hasGameState(gameStates: LocalGameState[]): boolean {
     if (!this.game) {
       return false;
     }
     const gameId = this.game.gameId;
-    const index = gameStates.findIndex(g => g.gameId === gameId);
+    const index = gameStates.findIndex(g => g.gameId === gameId && g.deleted === false);
     return index !== -1;
   }
 

@@ -23,7 +23,9 @@
       <ng-container matColumnDef="cardTypes">
         <th mat-header-cell *matHeaderCellDef translate>DECK_TYPE</th>
         <td mat-cell *matCellDef="let deck">
-          <ptcg-energy *ngFor="let type of deck.cardTypes" [type]="type"></ptcg-energy>
+          <div class="ptcg-energy-container">
+            <ptcg-energy *ngFor="let type of deck.cardTypes" [type]="type"></ptcg-energy>
+          </div>
         </td>
       </ng-container>
 
