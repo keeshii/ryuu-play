@@ -3,8 +3,8 @@ export const config = {
   backend: {
     address: 'localhost',
     port: 12021,
-    serverPassword: '',
-    registrationEnabled: true,
+    serverPassword: '', // Password required to create an account
+    registrationEnabled: true,  // Completly disables/enables registration
     allowCors: true,
     secret: '!secret!',
     tokenExpire: 86400,
@@ -15,8 +15,8 @@ export const config = {
     avatarMinSize: 64,
     avatarMaxSize: 512,
     replayFileSize: 512 * 1024,
-    rateLimitCount: 10,
-    rateLimitTime: 60 * 60 * 1000
+    rateLimitCount: 10, // Ban IP after that many wrong password errors
+    rateLimitTime: 60 * 60 * 1000 // How long the user should be banned
   },
   storage: {
     type: 'mysql',
@@ -28,17 +28,38 @@ export const config = {
   },
   core: {
     debug: false,
+
+    // How often should we execute the background tasks
+    schedulerInterval: 15 * 60 * 1000, // 15 minutes
+
+    // Wait till next hour before running tasks
+    schedulerStartNextHour: true,
+
+    // Decrease players' ranking every day by 0.95
+    // If you wish to disable this feature set IntervalCount to 0
     rankingDecraseRate: 0.95,
     rankingDecraseTime: 24 * 60 * 60 * 1000,
+    rankingDecreaseIntervalCount: 4,  // run every X scheduler ticks
+
+    // Deletes matches older than `keepMatchTike` from the database, to keep it small.
+    // If you wish to disable this feature set IntervalCount to 0
     keepMatchTime: 31 * 24 * 60 * 60 * 1000,
-    schedulerInterval: 15 * 60 * 1000, // 15 minutes
-    schedulerStartNextHour: true,
-    rankingDecreaseIntervalCount: 4,
-    keepMatchIntervalCount: 4
+    keepMatchIntervalCount: 4,  // run every X scheduler ticks
+
+    // Deletes users that doesn't log in in the `keepUserTime` and their ranking is 0
+    // If you wish to disable this feature set IntervalCount to 0
+    keepUserTime: 7 * 24 * 60 * 60 * 1000,
+    keepUserIntervalCount: 4  // run every X scheduler ticks
   },
   bots: {
+    // Default password for bot user
     defaultPassword: '',
+
+    // Delay between every action that bot is making
     actionDelay: 250,
+
+    // Simulate matches every X ticks of the scheduler
+    // If set to 0, the bot matches are disabled
     botGamesIntervalCount: 0
   },
   sets: {
@@ -51,8 +72,8 @@ export const config = {
       newline: 'unix',
       path: '/usr/sbin/sendmail'
     },
-    sender: 'no-reply@ryuu.eu',
+    sender: 'example@example.com',
     appName: 'RyuuPlay',
-    publicAddress: 'https://ptcg.ryuu.eu'
+    publicAddress: 'http://localhost' // Address inside the e-mail messages
   }
 };

@@ -1,4 +1,5 @@
 import { AddPlayerAction } from "../store/actions/add-player-action";
+import { CleanerTask } from "../tasks/cleaner-task";
 import { Client } from "../client/client.interface";
 import { GameError } from "../game-error";
 import { GameMessage } from "../game-message";
@@ -8,7 +9,6 @@ import { InvitePlayerAction } from "../store/actions/invite-player-action";
 import { Messager } from "./messager";
 import { RankingCalculator } from "./ranking-calculator";
 import { Scheduler, generateId } from "../../utils";
-import { MatchRecorder } from "./match-recorder";
 import { config } from "../../config";
 
 export class Core {
@@ -18,8 +18,9 @@ export class Core {
 
   constructor() {
     this.messager = new Messager(this);
+    const cleanerTask = new CleanerTask(this);
+    cleanerTask.startTasks();
     this.startRankingDecrease();
-    this.startOldMatchDelete();
   }
 
   public connect(client: Client): Client {
@@ -134,14 +135,6 @@ export class Core {
 
       this.emit(c => c.onUsersUpdate(users));
     }, config.core.rankingDecreaseIntervalCount);
-  }
-
-  private startOldMatchDelete() {
-    const scheduler = Scheduler.getInstance();
-    const matchRecorder = new MatchRecorder(this);
-    scheduler.run(async () => {
-      matchRecorder.removeOldMatches();
-    }, config.core.keepMatchIntervalCount);
   }
 
 }

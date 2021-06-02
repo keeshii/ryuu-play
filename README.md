@@ -1,0 +1,144 @@
+# RyuuPlay
+
+RyuuPlay is a simulator for the Pokémon Trading Card Game written in TypeScript. The source code is entirely open source and published under MIT licence.
+
+The project is created for the educational purpose only. There are no plans to adding new features or cards, but feel free to fork it and experiment on your own.
+
+### Demo
+
+An example server instance with some AI bots included. To create an account you need to provide the password `letsplaypokemontcg`.
+
+Web page:
+https://ptcg.ryuu.eu/
+
+Android application:
+https://ptcg.ryuu.eu/RyuuPlay-0.0.1.apk
+
+### Project overview
+
+The project consists of three packages:
+
+* **ptcg-server** is a game server. It is responsible for calculating the game state and propagating it to the connected clients by websockets.
+
+* **ptcg-play** is a web application written in Angular. It displays the game state and allow interaction with the server.
+
+* **ptcg-cordova** is a cordova wrapper for the ptcg-play package, so it can be running as an android application. This has some advantages like caching card images.
+
+### Server launch
+
+Server is a simple node.js application written in TypeScript. It uses express with websockets and [typeorm](https://typeorm.io/#/) for database access.
+
+Prerequisites:
+* Node.js 8 LTS or higher
+* mysql-5 or sqlite-3
+
+After clonning the repository, go to the directory `ptcg-server` and edit the `config.js` file. All available options and its default values are defined in the `src/config.ts`.
+
+1. Firstly install all required dependencies.
+
+```
+npm install
+```
+
+2. Then, build the project and start it.
+
+```
+npm build
+npm start
+```
+
+The service should now listen on the specified address and port. It will be http://localhost:12021, when no changes has been made to the config files.
+
+### Storage
+
+By default the server is using the sqlite-3 database. If you want to run it with mysql, some changes in the `config.js` are required. An example configuration is presented below. You may check [typeorm](https://typeorm.io/#/) web site to investigate more connection capabilities.
+
+```
+config.storage.type = 'mysql';
+config.storage.host = 'localhost';
+config.storage.port = 3306;
+config.storage.username = 'root';
+config.storage.password = '';
+config.storage.database = 'name';
+```
+
+### Client launch
+
+The client is an Angular application. For more detailed setup information, you may visit the page https://angular.io/. To build the client, you must go to the `ptcg-play` directory, install the dependencies.
+
+1. Install the node packages.
+
+```
+npm install
+```
+
+2. Start the aplication
+
+```
+npm start
+```
+
+The command above will start the application in the debug mode at http://localhost:4200.
+
+### Building android application (cordova)
+
+Building an android wrapper is a little more complicated than the web client. The android-sdk or android studio must be installed on the computer first.
+
+1. Edit the file `ptcg-play/src/environments/environments.prod.ts` and set following variables to `true`:
+
+```
+  allowServerChange: true,
+  enableImageCache: true,
+```
+
+* **allowServerChange** displays an additional option on the login window, that allows user to change the server url.
+* **enableImageCache** enables cache, so the card images are stored in the phone memory and not downloaded from server every time.
+
+
+2. Go to the `ptcg-cordova` directory and install dependencies.
+
+```
+npm install
+```
+
+3. Build the web client.
+
+```
+npm run build
+```
+
+4. Use cordova to build the android application.
+
+```
+cordova platform add android
+cordova build android --release
+```
+
+You may find more detailed instruction on the https://cordova.apache.org/
+
+
+### Managing cards
+
+The cards are implemented on the server side. It is not required to rebuild the client after adding/chaning the cards, because all the simulation is handled by the server and list of available cards are downloaded by clients after successful login. This guarantees consistency between clients.
+
+Currently there are about 250 cards added to the project. You may find them in the the directory `ptcg-server/sets`. It may work as good example for adding new cards to the project.
+
+The best way to enable/disable a set is by editing the file `ptcg-server/start.js` and commenting calls to the `defineSet` function:
+```
+cardManager.defineSet(setDiamondAndPearl);
+cardManager.defineSet(setHgss);
+cardManager.defineSet(setBlackAndWhite);
+```
+
+### Adding bots
+
+You can create autonomous AI players on your private server. They work as regular players, but you have to create decks for them. Initially there is one bot loaded, called `bot`, but you can always add more. They are defined in the file `ptcg-server/start.js`.
+
+```
+botManager.registerBot(new SimpleBot('bot'));
+```
+
+SimpleBot is the universal AI implementation that should be capable of playing with any deck. It creates list of possible actions, simulates the outcome and compares the score of the game state. Then chooses the best possible action and repeats the process until its turn is over. For more details check the source code at `ptcg-server/src/simple-bot`.
+
+Server is automatically creating an account for bot user with password provided in the `config.js` file. You can login as this user and create a deck for it. If you define more than one deck, then each time bot will randomly choose one.
+
