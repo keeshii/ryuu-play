@@ -1,16 +1,19 @@
-import { LessThan, Not, In } from "typeorm";
+import { LessThan } from 'typeorm';
 
-import { Scheduler } from "../../utils";
-import { config } from "../../config";
-import { Match, User } from "../../storage";
-import { Core } from "../core/core";
+import { Core } from '../core/core';
+import { DeleteUserTask } from './delete-user-task';
+import { Match, User } from '../../storage';
+import { Scheduler } from '../../utils';
+import { config } from '../../config';
 
 export class CleanerTask {
 
   private core: Core;
+  private deleteUserTask: DeleteUserTask;
 
   constructor(core: Core) {
     this.core = core;
+    this.deleteUserTask = new DeleteUserTask();
   }
 
   public startTasks() {
@@ -36,12 +39,17 @@ export class CleanerTask {
       const today = Date.now();
       const yesterday = today - keepMatchTime;
       const onlineUserIds = this.core.clients.map(c => c.user.id);
-      await User.delete({
-        id: Not(In(onlineUserIds)),
+      const usersToDelete = await User.find({
         lastSeen: LessThan(yesterday),
         registered: LessThan(yesterday),
         ranking: 0
       });
+      for (let i = 0; i < usersToDelete.length; i++) {
+        const userId = usersToDelete[i].id;
+        if (!onlineUserIds.includes(userId)) {
+          await this.deleteUserTask.deleteUser(userId);
+        }
+      }
     }, config.core.keepUserIntervalCount);
   }
 
