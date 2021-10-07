@@ -6,7 +6,7 @@ describe('CanActivateService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: CanActivateService = TestBed.get(CanActivateService);
+    const service: CanActivateService = TestBed.inject(CanActivateService);
     expect(service).toBeTruthy();
   });
 });

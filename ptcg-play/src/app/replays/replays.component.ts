@@ -1,9 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { ReplayInfo, GameWinner } from 'ptcg-server';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { debounceTime, switchMap, takeUntil, map, finalize } from 'rxjs/operators';
 
 import { AlertService } from '../shared/alert/alert.service';
@@ -13,15 +14,15 @@ import { ImportReplayPopupService } from './import-replay-popup/import-replay-po
 import { ReplayService } from '../api/services/replay.service';
 import { ReplayListResponse, ReplaySearch } from '../api/interfaces/replay.interface';
 import { SessionService } from '../shared/session/session.service';
-import { takeUntilDestroyed } from '../shared/operators/take-until-destroyed';
 import { environment } from '../../environments/environment';
 
+@UntilDestroy()
 @Component({
   selector: 'ptcg-ranking',
   templateUrl: './replays.component.html',
   styleUrls: ['./replays.component.scss']
 })
-export class ReplaysComponent implements OnInit, OnDestroy {
+export class ReplaysComponent implements OnInit {
 
   public GameWinner = GameWinner;
   public displayedColumns: string[] = ['name', 'player1', 'player2', 'created', 'actions'];
@@ -52,7 +53,7 @@ export class ReplaysComponent implements OnInit, OnDestroy {
   public ngOnInit() {
 
     this.sessionService.get(session => session.users)
-      .pipe(takeUntilDestroyed(this))
+      .pipe(untilDestroyed(this))
       .subscribe({
         next: users => {
           this.replays.forEach(replay => {
@@ -63,7 +64,7 @@ export class ReplaysComponent implements OnInit, OnDestroy {
       });
 
     this.sessionService.get(session => session.loggedUserId).pipe(
-      takeUntilDestroyed(this)
+      untilDestroyed(this)
     ).subscribe({
       next: loggedUserId => {
         this.loggedUserId = loggedUserId;
@@ -71,12 +72,12 @@ export class ReplaysComponent implements OnInit, OnDestroy {
     });
 
     this.replaysSearch$.pipe(
-      takeUntilDestroyed(this),
+      untilDestroyed(this),
       switchMap(search => {
         this.loading = true;
         return this.replayService.getList(search.page, search.query).pipe(
           takeUntil(this.replaysSearch$),
-          takeUntilDestroyed(this),
+          untilDestroyed(this),
           map(response => [search, response] as [ReplaySearch, ReplayListResponse])
         );
       }),
@@ -97,7 +98,7 @@ export class ReplaysComponent implements OnInit, OnDestroy {
     });
 
     this.searchValue$.pipe(
-      takeUntilDestroyed(this),
+      untilDestroyed(this),
       debounceTime(300)
     ).subscribe({
       next: query => {
@@ -106,9 +107,6 @@ export class ReplaysComponent implements OnInit, OnDestroy {
     });
 
     this.refreshList();
-  }
-
-  public ngOnDestroy() {
   }
 
   private initPagination() {
@@ -125,7 +123,7 @@ export class ReplaysComponent implements OnInit, OnDestroy {
     this.replayService.getReplay(replayId)
       .pipe(
         finalize(() => { this.loading = false; }),
-        takeUntilDestroyed(this)
+        untilDestroyed(this)
       )
       .subscribe({
         next: gameState => {
@@ -146,7 +144,7 @@ export class ReplaysComponent implements OnInit, OnDestroy {
     this.replayService.getReplayData(replayId)
       .pipe(
         finalize(() => { this.loading = false; }),
-        takeUntilDestroyed(this)
+        untilDestroyed(this)
       )
       .subscribe({
         next: async response => {
@@ -174,7 +172,7 @@ export class ReplaysComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.replayService.deleteReplay(replayId).pipe(
       finalize(() => { this.loading = false; }),
-      takeUntilDestroyed(this)
+      untilDestroyed(this)
     ).subscribe(() => {
       this.refreshList();
     }, (error: ApiError) => {
@@ -193,7 +191,7 @@ export class ReplaysComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.replayService.rename(replayId, name).pipe(
       finalize(() => { this.loading = false; }),
-      takeUntilDestroyed(this)
+      untilDestroyed(this)
     ).subscribe(() => {
       this.refreshList();
     }, (error: ApiError) => {
@@ -220,7 +218,7 @@ export class ReplaysComponent implements OnInit, OnDestroy {
   public importFromFile() {
     const dialogRef = this.importReplayPopupService.openDialog();
     dialogRef.afterClosed()
-      .pipe(takeUntilDestroyed(this))
+      .pipe(untilDestroyed(this))
       .subscribe({
         next: avatar => {
           if (avatar) {

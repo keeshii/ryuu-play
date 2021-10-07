@@ -1,6 +1,7 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ApiErrorEnum } from 'ptcg-server';
 import { TranslateService } from '@ngx-translate/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { finalize } from 'rxjs/operators';
 
 import { AlertService } from 'src/app/shared/alert/alert.service';
@@ -8,14 +9,14 @@ import { ApiError } from 'src/app/api/api.error';
 import { LoginService } from 'src/app/api/services/login.service';
 import { Router } from '@angular/router';
 import { ServerPasswordPopupService } from '../server-password-popup/server-password-popup.service';
-import { takeUntilDestroyed } from 'src/app/shared/operators/take-until-destroyed';
 
+@UntilDestroy()
 @Component({
   selector: 'ptcg-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
-export class RegisterComponent implements OnInit, OnDestroy {
+export class RegisterComponent implements OnInit {
 
   public loading = false;
   public name: string;
@@ -35,14 +36,12 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   ngOnInit() { }
 
-  ngOnDestroy() { }
-
   public register(code?: string): void {
     this.loading = true;
 
     this.loginService.register(this.name, this.password, this.email, code).pipe(
       finalize(() => { this.loading = false; }),
-      takeUntilDestroyed(this)
+      untilDestroyed(this)
     )
       .subscribe(() => {
         this.router.navigate(['/games']);
@@ -60,7 +59,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
       case ApiErrorEnum.REGISTER_INVALID_SERVER_PASSWORD:
         this.serverPasswordPopupService.openDialog()
-          .pipe(takeUntilDestroyed(this))
+          .pipe(untilDestroyed(this))
           .subscribe(code => {
             if (code !== undefined) {
               this.register(code);

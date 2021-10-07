@@ -1,17 +1,18 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { UserInfo } from 'ptcg-server';
 import { Subject } from 'rxjs';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { takeUntil } from 'rxjs/operators';
 
 import { AvatarService } from '../../../api/services/avatar.service';
-import { takeUntilDestroyed } from '../../../shared/operators/take-until-destroyed';
 
+@UntilDestroy()
 @Component({
   selector: 'ptcg-player-avatar',
   templateUrl: './player-avatar.component.html',
   styleUrls: ['./player-avatar.component.scss']
 })
-export class PlayerAvatarComponent implements OnInit, OnDestroy {
+export class PlayerAvatarComponent implements OnInit {
 
   @Input() set user(user: UserInfo | undefined) {
     this.userValue = user;
@@ -36,9 +37,6 @@ export class PlayerAvatarComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
   }
 
-  ngOnDestroy(): void {
-  }
-
   private updateAvatar() {
     const user = this.userValue;
     if (user === undefined || this.name === undefined) {
@@ -55,7 +53,7 @@ export class PlayerAvatarComponent implements OnInit, OnDestroy {
 
     this.avatarService.find(user.userId, this.name).pipe(
       takeUntil(this.nextRequest),
-      takeUntilDestroyed(this)
+      untilDestroyed(this)
     ).subscribe({
       next: response => {
         this.avatarFile = response.avatar.fileName;

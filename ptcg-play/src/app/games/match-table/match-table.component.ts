@@ -1,9 +1,10 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { MatchInfo, GameWinner, ApiErrorEnum } from 'ptcg-server';
+import { MatchInfo, GameWinner } from 'ptcg-server';
 import { PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { finalize, switchMap, takeUntil, map } from 'rxjs/operators';
 
 import { AlertService } from '../../shared/alert/alert.service';
@@ -13,9 +14,9 @@ import { ProfileService } from '../../api/services/profile.service';
 import { ReplayService } from '../../api/services/replay.service';
 import { SessionService } from '../../shared/session/session.service';
 import { UserInfoMap } from '../../shared/session/session.interface';
-import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed';
 import { environment } from '../../../environments/environment';
 
+@UntilDestroy()
 @Component({
   selector: 'ptcg-match-table',
   templateUrl: './match-table.component.html',
@@ -58,7 +59,7 @@ export class MatchTableComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.sessionService.get(session => session.users)
-      .pipe(takeUntilDestroyed(this))
+      .pipe(untilDestroyed(this))
       .subscribe({
         next: users => {
           this.users = users;
@@ -66,12 +67,12 @@ export class MatchTableComponent implements OnInit, OnDestroy {
       });
 
     this.matchesPageRequst$.pipe(
-      takeUntilDestroyed(this),
+      untilDestroyed(this),
       switchMap(page => {
         this.loading = true;
         return this.profileService.getMatchHistory(this.id, page).pipe(
           takeUntil(this.matchesPageRequst$),
-          takeUntilDestroyed(this),
+          untilDestroyed(this),
           map(response => [page, response] as [number, MatchHistoryResponse])
         );
       }),
@@ -102,7 +103,7 @@ export class MatchTableComponent implements OnInit, OnDestroy {
     this.replayService.getMatchReplay(matchId)
       .pipe(
         finalize(() => { this.loading = false; }),
-        takeUntilDestroyed(this)
+        untilDestroyed(this)
       )
       .subscribe({
         next: gameState => {
@@ -125,7 +126,7 @@ export class MatchTableComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.replayService.saveMatch(matchId, name).pipe(
       finalize(() => { this.loading = false; }),
-      takeUntilDestroyed(this)
+      untilDestroyed(this)
     ).subscribe(() => {
       this.alertService.toast(this.translate.instant('REPLAY_SAVED'));
     }, (error: ApiError) => {

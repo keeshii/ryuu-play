@@ -1,8 +1,9 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Player, GamePhase } from 'ptcg-server';
 import { Observable, from, EMPTY } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { withLatestFrom, switchMap, finalize } from 'rxjs/operators';
 
 import { ApiError } from '../api/api.error';
@@ -11,14 +12,14 @@ import { DeckService } from '../api/services/deck.service';
 import { GameService } from '../api/services/game.service';
 import { LocalGameState } from '../shared/session/session.interface';
 import { SessionService } from '../shared/session/session.service';
-import { takeUntilDestroyed } from '../shared/operators/take-until-destroyed';
 
+@UntilDestroy()
 @Component({
   selector: 'ptcg-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss']
 })
-export class TableComponent implements OnInit, OnDestroy {
+export class TableComponent implements OnInit {
 
   public gameState: LocalGameState;
   public gameStates$: Observable<LocalGameState[]>;
@@ -47,7 +48,7 @@ export class TableComponent implements OnInit, OnDestroy {
     this.route.paramMap
       .pipe(
         withLatestFrom(this.gameStates$, this.clientId$),
-        takeUntilDestroyed(this)
+        untilDestroyed(this)
       )
       .subscribe(([paramMap, gameStates, clientId]) => {
         this.gameId = parseInt(paramMap.get('gameId'), 10);
@@ -57,7 +58,7 @@ export class TableComponent implements OnInit, OnDestroy {
 
     this.gameStates$
       .pipe(
-        takeUntilDestroyed(this),
+        untilDestroyed(this),
         withLatestFrom(this.clientId$)
       )
       .subscribe(([gameStates, clientId]) => {
@@ -66,14 +67,12 @@ export class TableComponent implements OnInit, OnDestroy {
       });
   }
 
-  ngOnDestroy() { }
-
   public play() {
     this.loading = true;
     this.deckService.getList()
       .pipe(
         finalize(() => { this.loading = false; }),
-        takeUntilDestroyed(this),
+        untilDestroyed(this),
         switchMap(decks => {
           const options = decks.decks
             .filter(deckEntry => deckEntry.isValid)

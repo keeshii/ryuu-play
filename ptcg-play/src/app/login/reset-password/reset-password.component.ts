@@ -1,20 +1,21 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ApiErrorEnum } from 'ptcg-server';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { finalize } from 'rxjs/operators';
 
 import { AlertService } from '../../shared/alert/alert.service';
 import { ApiError } from '../../api/api.error';
 import { ResetPasswordService } from '../../api/services/reset-password.service';
-import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed';
 
+@UntilDestroy()
 @Component({
   selector: 'ptcg-reset-password',
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.scss']
 })
-export class ResetPasswordComponent implements OnInit, OnDestroy {
+export class ResetPasswordComponent implements OnInit {
 
   public loading = false;
   public email: string;
@@ -30,15 +31,12 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
   ngOnInit() {
   }
 
-  ngOnDestroy() {
-  }
-
   public sendMail(): void {
     this.loading = true;
 
     this.resetPasswordService.sendMail(this.email).pipe(
       finalize(() => { this.loading = false; }),
-      takeUntilDestroyed(this)
+      untilDestroyed(this)
     )
       .subscribe({
         next: async () => {

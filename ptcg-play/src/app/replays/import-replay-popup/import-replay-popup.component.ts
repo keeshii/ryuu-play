@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Replay, GameWinner, Base64 } from 'ptcg-server';
 import { MatDialogRef } from '@angular/material/dialog';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { finalize } from 'rxjs/operators';
 
 import { AlertService } from '../../shared/alert/alert.service';
@@ -8,8 +9,8 @@ import { ApiError } from '../../api/api.error';
 import { FileInput } from '../../shared/file-input/file-input.model';
 import { ReplayService } from '../../api/services/replay.service';
 import { SessionService } from '../../shared/session/session.service';
-import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed';
 
+@UntilDestroy()
 @Component({
   selector: 'ptcg-import-replay-popup',
   templateUrl: './import-replay-popup.component.html',
@@ -96,7 +97,7 @@ export class ImportReplayPopupComponent implements OnInit, OnDestroy {
     this.replayService.import(this.replayData, this.name)
       .pipe(
         finalize(() => { this.loading = false; }),
-        takeUntilDestroyed(this)
+        untilDestroyed(this)
       )
       .subscribe({
         next: response => {

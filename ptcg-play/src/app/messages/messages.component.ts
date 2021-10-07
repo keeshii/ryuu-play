@@ -1,22 +1,23 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConversationInfo } from 'ptcg-server';
 import { Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { finalize } from 'rxjs/operators';
 
 import { AlertService } from '../shared/alert/alert.service';
 import { ApiError } from '../api/api.error';
 import { MessageService } from '../api/services/message.service';
 import { SessionService } from '../shared/session/session.service';
-import { takeUntilDestroyed } from '../shared/operators/take-until-destroyed';
 
+@UntilDestroy()
 @Component({
   selector: 'ptcg-messages',
   templateUrl: './messages.component.html',
   styleUrls: ['./messages.component.scss']
 })
-export class MessagesComponent implements OnInit, OnDestroy {
+export class MessagesComponent implements OnInit {
 
   public loading = false;
 
@@ -37,13 +38,13 @@ export class MessagesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.sessionService.get(session => session.loggedUserId).pipe(
-      takeUntilDestroyed(this)
+      untilDestroyed(this)
     ).subscribe({
       next: loggedUserId => this.loggedUserId = loggedUserId
     });
 
     this.route.paramMap.pipe(
-      takeUntilDestroyed(this)
+      untilDestroyed(this)
     )
     .subscribe({
       next: paramMap => {
@@ -55,7 +56,7 @@ export class MessagesComponent implements OnInit, OnDestroy {
     });
 
     this.conversations$.pipe(
-      takeUntilDestroyed(this)
+      untilDestroyed(this)
     ).subscribe({
       next: conversations => {
         const exists = this.sessionService.session.users[this.userId] !== undefined;
@@ -73,9 +74,6 @@ export class MessagesComponent implements OnInit, OnDestroy {
       }
     });
 
-  }
-
-  ngOnDestroy(): void {
   }
 
   private createOrUpdateConversation(user1Id: number, user2Id: number) {
@@ -137,7 +135,7 @@ export class MessagesComponent implements OnInit, OnDestroy {
 
     this.loading = true;
     this.messageService.deleteMessages(userId).pipe(
-      takeUntilDestroyed(this),
+      untilDestroyed(this),
       finalize(() => { this.loading = false; })
     ).subscribe({
         next: () => {

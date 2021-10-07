@@ -1,11 +1,12 @@
 import { Component, OnInit, Input, EventEmitter, Output, OnChanges, OnDestroy } from '@angular/core';
 import { Player, State, ReplayPlayer, PlayerStats } from 'ptcg-server';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { LocalGameState } from '../../shared/session/session.interface';
 import { GameService } from '../../api/services/game.service';
 import { SessionService } from 'src/app/shared/session/session.service';
-import { takeUntilDestroyed } from 'src/app/shared/operators/take-until-destroyed';
 
+@UntilDestroy()
 @Component({
   selector: 'ptcg-table-sidebar',
   templateUrl: './table-sidebar.component.html',
@@ -66,7 +67,7 @@ export class TableSidebarComponent implements OnInit, OnDestroy, OnChanges {
 
   private refreshPlayerStats(gameState: LocalGameState) {
     this.gameService.getPlayerStats(gameState.gameId).pipe(
-      takeUntilDestroyed(this)
+      untilDestroyed(this)
     ).subscribe({
       next: response => {
         const gameStates = this.sessionService.session.gameStates.slice();

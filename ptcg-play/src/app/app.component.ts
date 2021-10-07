@@ -1,8 +1,9 @@
-import { Component, OnDestroy, OnInit, HostListener, ElementRef } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { UserInfo } from 'ptcg-server';
 import { Observable, interval } from 'rxjs';
 import { Router } from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { switchMap, filter } from 'rxjs/operators';
 
 import { AlertService } from './shared/alert/alert.service';
@@ -11,15 +12,15 @@ import { LoginService } from './api/services/login.service';
 import { SessionService } from './shared/session/session.service';
 import { SocketService } from './api/socket.service';
 import { TranslateService } from '@ngx-translate/core';
-import { takeUntilDestroyed } from './shared/operators/take-until-destroyed';
 import { environment } from '../environments/environment';
 
+@UntilDestroy()
 @Component({
   selector: 'ptcg-app',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit {
 
   public isLoggedIn = false;
   public loggedUser: UserInfo | undefined;
@@ -43,7 +44,7 @@ export class AppComponent implements OnInit, OnDestroy {
   public ngOnInit() {
     // Connect to websockets after when logged in
     this.authToken$
-      .pipe(takeUntilDestroyed(this))
+      .pipe(untilDestroyed(this))
       .subscribe(authToken => {
         this.isLoggedIn = !!authToken;
 
@@ -57,7 +58,7 @@ export class AppComponent implements OnInit, OnDestroy {
       });
 
     this.socketService.connection.pipe(
-      takeUntilDestroyed(this)
+      untilDestroyed(this)
     ).subscribe({
       next: async connected => {
         if (!connected && this.isLoggedIn) {
@@ -72,7 +73,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
     // Refresh token with given interval
     interval(environment.refreshTokenInterval).pipe(
-      takeUntilDestroyed(this),
+      untilDestroyed(this),
       filter(() => !!this.sessionService.session.authToken),
       switchMap(() => this.loginService.refreshToken())
     ).subscribe({
@@ -84,8 +85,6 @@ export class AppComponent implements OnInit, OnDestroy {
       }
     });
   }
-
-  public ngOnDestroy() { }
 
   @HostListener('window:resize', ['$event'])
   onResize(event?: Event) {

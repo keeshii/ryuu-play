@@ -3,14 +3,15 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserInfo } from 'ptcg-server';
 import { Observable, EMPTY } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { switchMap } from 'rxjs/operators';
 
 import { AlertService } from '../shared/alert/alert.service';
 import { ProfileService } from '../api/services/profile.service';
 import { SessionService } from '../shared/session/session.service';
-import { takeUntilDestroyed } from '../shared/operators/take-until-destroyed';
 import { ProfilePopupService } from './profile-popup.service';
 
+@UntilDestroy()
 @Component({
   selector: 'ptcg-profile',
   templateUrl: './profile.component.html',
@@ -52,7 +53,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.loading = true;
         return this.profileService.getUser(userId);
       }),
-      takeUntilDestroyed(this)
+      untilDestroyed(this)
     )
       .subscribe({
         next: response => {

@@ -1,14 +1,15 @@
 import { Component, OnInit, Input, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { Player, UserInfo, ReplayPlayer, PlayerStats, State, GamePhase } from 'ptcg-server';
 import { Observable, EMPTY } from 'rxjs';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { ChooseAvatarPopupService } from '../choose-avatar-popup/choose-avatar-popup.service';
 import { GameService } from '../../../api/services/game.service';
 import { LocalGameState, Session } from '../../../shared/session/session.interface';
 import { SessionService } from '../../../shared/session/session.service';
-import { takeUntilDestroyed } from '../../../shared/operators/take-until-destroyed';
 import { UserInfoPopupService } from '../../../shared/user-info/user-info-popup/user-info-popup.service';
 
+@UntilDestroy()
 @Component({
   selector: 'ptcg-player-bar',
   templateUrl: './player-bar.component.html',
@@ -59,7 +60,7 @@ export class PlayerBarComponent implements OnInit, OnDestroy, OnChanges {
 
     const dialogRef = this.chooseAvatarPopupService.openDialog(userId, selected);
     dialogRef.afterClosed().pipe(
-      takeUntilDestroyed(this)
+      untilDestroyed(this)
     ).subscribe({
       next: avatarName => {
         if (avatarName !== undefined) {

@@ -1,8 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { GameInfo, ClientInfo } from 'ptcg-server';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable, EMPTY, from } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { finalize, switchMap, map } from 'rxjs/operators';
 
 import { AlertService } from '../shared/alert/alert.service';
@@ -14,14 +15,14 @@ import { MainService } from '../api/services/main.service';
 import { SelectPopupOption } from '../shared/alert/select-popup/select-popup.component';
 import { SessionService } from '../shared/session/session.service';
 import { UserInfoMap } from '../shared/session/session.interface';
-import { takeUntilDestroyed } from '../shared/operators/take-until-destroyed';
 
+@UntilDestroy()
 @Component({
   selector: 'ptcg-games',
   templateUrl: './games.component.html',
   styleUrls: ['./games.component.scss']
 })
-export class GamesComponent implements OnDestroy, OnInit {
+export class GamesComponent implements OnInit {
   title = 'ptcg-play';
 
   displayedColumns: string[] = ['id', 'turn', 'player1', 'player2', 'actions'];
@@ -58,16 +59,14 @@ export class GamesComponent implements OnDestroy, OnInit {
 
   ngOnInit() {
     this.sessionService.get(session => session.clientId)
-      .pipe(takeUntilDestroyed(this))
+      .pipe(untilDestroyed(this))
       .subscribe(clientId => { this.clientId = clientId; });
 
     this.sessionService.get(session => session.loggedUserId)
-      .pipe(takeUntilDestroyed(this))
+      .pipe(untilDestroyed(this))
       .subscribe(loggedUserId => { this.loggedUserId = loggedUserId; });
 
   }
-
-  ngOnDestroy() { }
 
   private showCreateGamePopup(decks: SelectPopupOption<number>[]): Promise<CreateGamePopupResult> {
     const dialog = this.dialog.open(CreateGamePopupComponent, {
@@ -83,7 +82,7 @@ export class GamesComponent implements OnDestroy, OnInit {
     this.deckService.getList()
       .pipe(
         finalize(() => { this.loading = false; }),
-        takeUntilDestroyed(this),
+        untilDestroyed(this),
         switchMap(decks => {
           const options = decks.decks
             .filter(deckEntry => deckEntry.isValid)

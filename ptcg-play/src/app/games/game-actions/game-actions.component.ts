@@ -1,20 +1,21 @@
-import { Component, OnDestroy, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { GameInfo, GameState } from 'ptcg-server';
 import { Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { AlertService } from 'src/app/shared/alert/alert.service';
 import { GameService } from 'src/app/api/services/game.service';
 import { LocalGameState } from '../../shared/session/session.interface';
 import { SessionService } from '../../shared/session/session.service';
-import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed';
 
+@UntilDestroy()
 @Component({
   selector: 'ptcg-game-actions',
   templateUrl: './game-actions.component.html',
   styleUrls: ['./game-actions.component.scss']
 })
-export class GameActionsComponent implements OnInit, OnDestroy {
+export class GameActionsComponent implements OnInit {
 
   @Input() game: GameInfo;
   public gameStates$: Observable<GameState[]>;
@@ -31,7 +32,7 @@ export class GameActionsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.sessionService.get(session => session.gameStates)
-      .pipe(takeUntilDestroyed(this))
+      .pipe(untilDestroyed(this))
       .subscribe(gameStates => {
         this.isJoined = this.hasGameState(gameStates);
       });
@@ -45,8 +46,6 @@ export class GameActionsComponent implements OnInit, OnDestroy {
     const index = gameStates.findIndex(g => g.gameId === gameId && g.deleted === false);
     return index !== -1;
   }
-
-  ngOnDestroy() { }
 
   public join() {
     this.gameService.join(this.game.gameId)

@@ -3,6 +3,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { RankingInfo } from 'ptcg-server';
 import { Subject } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { debounceTime, switchMap, takeUntil, map } from 'rxjs/operators';
 
 import { AlertService } from '../shared/alert/alert.service';
@@ -10,9 +11,9 @@ import { ApiError } from '../api/api.error';
 import { RankingService } from '../api/services/ranking.service';
 import { RankingResponse, RankingSearch } from '../api/interfaces/ranking.interface';
 import { SessionService } from '../shared/session/session.service';
-import { takeUntilDestroyed } from '../shared/operators/take-until-destroyed';
 import { environment } from '../../environments/environment';
 
+@UntilDestroy()
 @Component({
   selector: 'ptcg-ranking',
   templateUrl: './ranking.component.html',
@@ -45,7 +46,7 @@ export class RankingComponent implements OnInit, OnDestroy {
   public ngOnInit() {
 
     this.sessionService.get(session => session.loggedUserId).pipe(
-      takeUntilDestroyed(this)
+      untilDestroyed(this)
     ).subscribe({
       next: loggedUserId => {
         this.loggedUserId = loggedUserId;
@@ -53,12 +54,12 @@ export class RankingComponent implements OnInit, OnDestroy {
     });
 
     this.rankingSearch$.pipe(
-      takeUntilDestroyed(this),
+      untilDestroyed(this),
       switchMap(search => {
         this.loading = true;
         return this.rankingService.getList(search.page, search.query).pipe(
           takeUntil(this.rankingSearch$),
-          takeUntilDestroyed(this),
+          untilDestroyed(this),
           map(response => [search, response] as [RankingSearch, RankingResponse])
         );
       }),
@@ -80,7 +81,7 @@ export class RankingComponent implements OnInit, OnDestroy {
     });
 
     this.searchValue$.pipe(
-      takeUntilDestroyed(this),
+      untilDestroyed(this),
       debounceTime(300)
     ).subscribe({
       next: query => {

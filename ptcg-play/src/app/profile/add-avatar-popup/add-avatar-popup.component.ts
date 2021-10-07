@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { finalize } from 'rxjs/operators';
 
 import { AlertService } from 'src/app/shared/alert/alert.service';
@@ -8,9 +9,9 @@ import { ApiError } from '../../api/api.error';
 import { AvatarService } from '../../api/services/avatar.service';
 import { FileInput } from '../../shared/file-input/file-input.model';
 import { SessionService } from '../../shared/session/session.service';
-import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed';
-import {ApiErrorEnum} from 'ptcg-server';
+import { ApiErrorEnum } from 'ptcg-server';
 
+@UntilDestroy()
 @Component({
   selector: 'ptcg-add-avatar-popup',
   templateUrl: './add-avatar-popup.component.html',
@@ -47,7 +48,7 @@ export class AddAvatarPopupComponent implements OnInit, OnDestroy {
     this.avatarService.addAvatar(this.name, this.imageBase64)
       .pipe(
         finalize(() => { this.loading = false; }),
-        takeUntilDestroyed(this)
+        untilDestroyed(this)
       )
       .subscribe({
         next: response => {

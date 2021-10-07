@@ -1,21 +1,22 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { ApiErrorEnum } from 'ptcg-server';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { finalize } from 'rxjs/operators';
 
 import { AlertService } from '../../shared/alert/alert.service';
 import { ApiError } from '../../api/api.error';
 import { ProfileService } from '../../api/services/profile.service';
 import { SessionService } from '../../shared/session/session.service';
-import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed';
 
+@UntilDestroy()
 @Component({
   selector: 'ptcg-change-email-popup',
   templateUrl: './change-email-popup.component.html',
   styleUrls: ['./change-email-popup.component.scss']
 })
-export class ChangeEmailPopupComponent implements OnInit, OnDestroy {
+export class ChangeEmailPopupComponent implements OnInit {
 
   public loading = false;
   public invalidEmail: string;
@@ -39,14 +40,11 @@ export class ChangeEmailPopupComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
   }
 
-  ngOnDestroy(): void {
-  }
-
   public changeEmail(): void {
     this.loading = true;
     this.profileService.changeEmail(this.email).pipe(
       finalize(() => { this.loading = false; }),
-      takeUntilDestroyed(this)
+      untilDestroyed(this)
     ).subscribe({
       next: () => {
         this.dialogRef.close();

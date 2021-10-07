@@ -24,6 +24,7 @@
     "@ng-dnd/core": "^1.0.0",
     "@ng-dnd/multi-backend": "^1.0.0",
     "@ng-dnd/sortable": "^1.0.0",
+    "@ngneat/until-destroy": "^8.1.4",
     "@ngx-translate/core": "^12.1.2",
     "@ngx-translate/http-loader": "^5.0.0",
     "core-js": "^2.5.4",

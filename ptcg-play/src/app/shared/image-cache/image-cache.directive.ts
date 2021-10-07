@@ -1,13 +1,13 @@
 import { Directive, Input, OnDestroy, HostBinding, HostListener } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { ImageCacheService } from './image-cache.service';
 import { environment } from '../../../environments/environment';
-import { takeUntilDestroyed } from '../operators/take-until-destroyed';
 import { take, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
-
+@UntilDestroy()
 @Directive({
   selector: '[ptcgImageCache]'
 })
@@ -52,12 +52,12 @@ export class ImageCacheDirective implements OnDestroy {
 
     this.visiblity = 'hidden';
     this.imageCacheService.fetchFromCache(url)
-      .pipe(take(1), takeUntilDestroyed(this), takeUntil(this.nextRequest))
+      .pipe(take(1), untilDestroyed(this), takeUntil(this.nextRequest))
       .subscribe({
         next: cached => {
           this.url = this.sanitizer.bypassSecurityTrustUrl(cached);
           this.imageLoaded
-            .pipe(take(1), takeUntilDestroyed(this), takeUntil(this.nextRequest))
+            .pipe(take(1), untilDestroyed(this), takeUntil(this.nextRequest))
             .subscribe({ next: () => this.visiblity = 'visible' });
         }
       });

@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { finalize } from 'rxjs/operators';
 
 import { ApiService } from '../../api/api.service';
@@ -8,8 +9,8 @@ import { LoginPopupService } from '../login-popup/login-popup.service';
 import { LoginRememberService } from '../login-remember.service';
 import { LoginService } from 'src/app/api/services/login.service';
 import { SocketService } from '../../api/socket.service';
-import { takeUntilDestroyed } from 'src/app/shared/operators/take-until-destroyed';
 
+@UntilDestroy()
 @Component({
   selector: 'ptcg-login',
   templateUrl: './login.component.html',
@@ -44,7 +45,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     this.loading = true;
     this.loginService.tokenLogin(token, this.loginAborted$).pipe(
-      takeUntilDestroyed(this),
+      untilDestroyed(this),
       finalize(() => { this.loading = false; })
     ).subscribe({
       next: response => {

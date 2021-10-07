@@ -1,18 +1,19 @@
-import { Component, OnInit, Input, EventEmitter, Output, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { CardType, SuperType } from 'ptcg-server';
 import { MatSelectChange } from '@angular/material/select';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { Deck } from '../../api/interfaces/deck.interface';
 import { DeckEditToolbarFilter } from './deck-edit-toolbar-filter.interface';
 import { ImportDeckPopupService } from '../import-deck-popup/import-deck-popup.service';
-import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed';
 
+@UntilDestroy()
 @Component({
   selector: 'ptcg-deck-edit-toolbar',
   templateUrl: './deck-edit-toolbar.component.html',
   styleUrls: ['./deck-edit-toolbar.component.scss']
 })
-export class DeckEditToolbarComponent implements OnInit, OnDestroy {
+export class DeckEditToolbarComponent implements OnInit {
 
   @Input() deck: Deck;
 
@@ -62,9 +63,6 @@ export class DeckEditToolbarComponent implements OnInit, OnDestroy {
   ngOnInit() {
   }
 
-  ngOnDestroy() {
-  }
-
   public onSave() {
     this.save.next();
   }
@@ -87,7 +85,7 @@ export class DeckEditToolbarComponent implements OnInit, OnDestroy {
   public importFromFile() {
     const dialogRef = this.importDeckPopupService.openDialog();
     dialogRef.afterClosed()
-      .pipe(takeUntilDestroyed(this))
+      .pipe(untilDestroyed(this))
       .subscribe({
         next: cardNames => {
           if (cardNames) {

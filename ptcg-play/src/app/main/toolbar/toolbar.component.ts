@@ -1,14 +1,15 @@
 import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { UserInfo } from 'ptcg-server';
 import { map } from 'rxjs/internal/operators/map';
 
 import { LoginPopupService } from '../../login/login-popup/login-popup.service';
 import { LoginRememberService } from '../../login/login-remember.service';
 import { SessionService } from '../../shared/session/session.service';
-import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed';
 
+@UntilDestroy()
 @Component({
   selector: 'ptcg-toolbar',
   templateUrl: './toolbar.component.html',
@@ -37,7 +38,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.loggedUser$
-      .pipe(takeUntilDestroyed(this))
+      .pipe(untilDestroyed(this))
       .subscribe(user => this.loggedUser = user);
   }
 

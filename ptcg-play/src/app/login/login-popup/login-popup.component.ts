@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dial
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { finalize } from 'rxjs/operators';
 
 import { AlertService } from '../../shared/alert/alert.service';
@@ -11,9 +12,9 @@ import { ApiError } from '../../api/api.error';
 import { ChangeServerPopupComponent } from '../change-server-popup/change-server-popup.component';
 import { LoginService } from '../../api/services/login.service';
 import { LoginRememberService } from '../login-remember.service';
-import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed';
 import { environment } from '../../../environments/environment';
 
+@UntilDestroy()
 @Component({
   selector: 'ptcg-login-popup',
   templateUrl: './login-popup.component.html',
@@ -43,7 +44,7 @@ export class LoginPopupComponent implements OnDestroy {
     this.loading = true;
     this.loginService.login(this.name, this.password, this.loginAborted$).pipe(
       finalize(() => { this.loading = false; }),
-      takeUntilDestroyed(this)
+      untilDestroyed(this)
     )
       .subscribe({
         next: response => {

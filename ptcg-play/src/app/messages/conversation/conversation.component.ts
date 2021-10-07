@@ -1,21 +1,22 @@
-import { Component, OnInit, Input, OnDestroy, ElementRef, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, OnChanges } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, EMPTY } from 'rxjs';
 import { MessageInfo, ConversationInfo } from 'ptcg-server';
 import { TranslateService } from '@ngx-translate/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { finalize, skip, takeUntil } from 'rxjs/operators';
 
 import { AlertService } from '../../shared/alert/alert.service';
 import { ApiError } from '../../api/api.error';
 import { MessageService } from '../../api/services/message.service';
 import { SessionService } from '../../shared/session/session.service';
-import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed';
 
+@UntilDestroy()
 @Component({
   selector: 'ptcg-conversation',
   templateUrl: './conversation.component.html',
   styleUrls: ['./conversation.component.scss']
 })
-export class ConversationComponent implements OnInit, OnDestroy, OnChanges {
+export class ConversationComponent implements OnInit, OnChanges {
 
   @Input() userId: number;
   @Input() loggedUserId: number;
@@ -38,14 +39,14 @@ export class ConversationComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnInit(): void {
     this.userChanged$
-      .pipe(takeUntilDestroyed(this))
+      .pipe(untilDestroyed(this))
       .subscribe(() => {
         this.loadMessages(this.userId);
         this.observeLastMessage();
       });
 
     this.messages$
-      .pipe(skip(1), takeUntilDestroyed(this))
+      .pipe(skip(1), untilDestroyed(this))
       .subscribe({
         next: messages => {
           this.scrollToBottom();
@@ -59,9 +60,6 @@ export class ConversationComponent implements OnInit, OnDestroy, OnChanges {
 
     this.loadMessages(this.userId);
     this.observeLastMessage();
-  }
-
-  ngOnDestroy(): void {
   }
 
   ngOnChanges(): void {
@@ -87,7 +85,7 @@ export class ConversationComponent implements OnInit, OnDestroy, OnChanges {
     }
     this.loading = true;
     this.messageService.sendMessage(userId, text).pipe(
-      takeUntilDestroyed(this),
+      untilDestroyed(this),
       takeUntil(this.userChanged$),
       finalize(() => { this.loading = false; })
     ).subscribe({
@@ -105,7 +103,7 @@ export class ConversationComponent implements OnInit, OnDestroy, OnChanges {
 
   private observeLastMessage() {
     this.lastMessage$.pipe(
-      takeUntilDestroyed(this),
+      untilDestroyed(this),
       takeUntil(this.userChanged$)
     ).subscribe({
       next: message => {
@@ -139,7 +137,7 @@ export class ConversationComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     this.messageService.readMessages(senderId).pipe(
-      takeUntilDestroyed(this),
+      untilDestroyed(this),
       takeUntil(this.userChanged$)
     ).subscribe({
       next: () => {
@@ -160,7 +158,7 @@ export class ConversationComponent implements OnInit, OnDestroy, OnChanges {
   private loadMessages(userId: number): void {
     this.loading = true;
     this.messageService.getConversation(userId).pipe(
-      takeUntilDestroyed(this),
+      untilDestroyed(this),
       takeUntil(this.userChanged$),
       finalize(() => { this.loading = false; })
     ).subscribe({

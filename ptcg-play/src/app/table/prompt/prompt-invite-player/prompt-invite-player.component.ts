@@ -1,5 +1,6 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { InvitePlayerPrompt } from 'ptcg-server';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { finalize } from 'rxjs/operators';
 
 import { ApiError } from '../../../api/api.error';
@@ -7,15 +8,15 @@ import { AlertService } from '../../../shared/alert/alert.service';
 import { DeckService } from 'src/app/api/services/deck.service';
 import { GameService } from '../../../api/services/game.service';
 import { SelectPopupOption } from '../../../shared/alert/select-popup/select-popup.component';
-import { takeUntilDestroyed} from '../../../shared/operators/take-until-destroyed';
 import { LocalGameState } from '../../../shared/session/session.interface';
 
+@UntilDestroy()
 @Component({
   selector: 'ptcg-prompt-invite-player',
   templateUrl: './prompt-invite-player.component.html',
   styleUrls: ['./prompt-invite-player.component.scss']
 })
-export class PromptInvitePlayerComponent implements OnInit, OnDestroy {
+export class PromptInvitePlayerComponent implements OnInit {
 
   @Input() prompt: InvitePlayerPrompt;
   @Input() gameState: LocalGameState;
@@ -59,7 +60,7 @@ export class PromptInvitePlayerComponent implements OnInit, OnDestroy {
     this.deckService.getList()
       .pipe(
         finalize(() => { this.loading = false; }),
-        takeUntilDestroyed(this),
+        untilDestroyed(this),
       ).
       subscribe({
         next: decks => {
@@ -80,7 +81,5 @@ export class PromptInvitePlayerComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loadDecks();
   }
-
-  ngOnDestroy() { }
 
 }

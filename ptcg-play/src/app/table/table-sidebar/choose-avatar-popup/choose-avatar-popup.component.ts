@@ -1,20 +1,21 @@
-import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AvatarInfo } from 'ptcg-server';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { finalize } from 'rxjs/operators';
 
 import { AlertService } from '../../../shared/alert/alert.service';
 import { AvatarService } from '../../../api/services/avatar.service';
 import { ApiError } from '../../../api/api.error';
 import { SessionService } from '../../../shared/session/session.service';
-import { takeUntilDestroyed } from '../../../shared/operators/take-until-destroyed';
 
+@UntilDestroy()
 @Component({
   selector: 'ptcg-choose-avatar-popup',
   templateUrl: './choose-avatar-popup.component.html',
   styleUrls: ['./choose-avatar-popup.component.scss']
 })
-export class ChooseAvatarPopupComponent implements OnInit, OnDestroy {
+export class ChooseAvatarPopupComponent implements OnInit {
 
   public loading = false;
   public avatars: AvatarInfo[] = [];
@@ -43,7 +44,7 @@ export class ChooseAvatarPopupComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.avatarService.getList(this.userId).pipe(
       finalize(() => { this.loading = false; }),
-      takeUntilDestroyed(this),
+      untilDestroyed(this),
     ).subscribe({
       next: response => {
         this.avatars = response.avatars;
@@ -60,9 +61,6 @@ export class ChooseAvatarPopupComponent implements OnInit, OnDestroy {
         this.alertService.toast(error.message);
       }
     });
-  }
-
-  ngOnDestroy(): void {
   }
 
   public close() {

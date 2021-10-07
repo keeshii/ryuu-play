@@ -1,6 +1,7 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { switchMap, finalize } from 'rxjs/operators';
 
 import { ApiError } from '../../api/api.error';
@@ -12,14 +13,14 @@ import { DeckEditPane } from '../deck-edit-panes/deck-edit-pane.interface';
 import { DeckEditToolbarFilter } from '../deck-edit-toolbar/deck-edit-toolbar-filter.interface';
 import { DeckService } from '../../api/services/deck.service';
 import { FileDownloadService } from '../../shared/file-download/file-download.service';
-import { takeUntilDestroyed } from '../../shared/operators/take-until-destroyed';
 
+@UntilDestroy()
 @Component({
   selector: 'ptcg-deck-edit',
   templateUrl: './deck-edit.component.html',
   styleUrls: ['./deck-edit.component.scss']
 })
-export class DeckEditComponent implements OnInit, OnDestroy {
+export class DeckEditComponent implements OnInit {
 
   public loading = false;
   public deck: Deck;
@@ -44,7 +45,7 @@ export class DeckEditComponent implements OnInit, OnDestroy {
         const deckId = parseInt(paramMap.get('deckId'), 10);
         return this.deckService.getDeck(deckId);
       }),
-      takeUntilDestroyed(this)
+      untilDestroyed(this)
     )
       .subscribe(response => {
         this.loading = false;
@@ -55,8 +56,6 @@ export class DeckEditComponent implements OnInit, OnDestroy {
         this.router.navigate(['/decks']);
       });
   }
-
-  ngOnDestroy() { }
 
   private loadDeckItems(cardNames: string[]): DeckItem[] {
     const itemMap: { [name: string]: DeckItem } = {};
@@ -118,7 +117,7 @@ export class DeckEditComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.deckService.saveDeck(this.deck.id, this.deck.name, items).pipe(
       finalize(() => { this.loading = false; }),
-      takeUntilDestroyed(this)
+      untilDestroyed(this)
     ).subscribe(() => {
       this.alertService.toast(this.translate.instant('DECK_EDIT_SAVED'));
     }, (error: ApiError) => {
