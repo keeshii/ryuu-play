@@ -1,4 +1,4 @@
-@import '~@angular/material/theming';
+@use '~@angular/material' as mat;
 
 
 @mixin ptcg-table-theme($theme) {
@@ -8,20 +8,20 @@
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);
 
-  $table-border: solid 1px mat-color($foreground, divider);
-  $active-player-background-color: mat-color($background, focused-button);
-  $hand-background-color: mat-color($background, app-bar);
-  $table-sidebar-header-background-color: mat-color($background, background);
-  $table-sidebar-logs-background-color: mat-color($background, focused-button);
-  $table-sidebar-time-empty-progress: mat-color($foreground, divider);
-  $table-sidebar-time-disabled-progress: mat-color($foreground, disabled-button);
-  $table-sidebar-time-running-progress: mat-color($accent);
-  $choose-avatar-background-color: mat-color($background, hover);
+  $table-border: solid 1px mat.get-color-from-palette($foreground, divider);
+  $active-player-background-color: mat.get-color-from-palette($background, focused-button);
+  $hand-background-color: mat.get-color-from-palette($background, app-bar);
+  $table-sidebar-header-background-color: mat.get-color-from-palette($background, background);
+  $table-sidebar-logs-background-color: mat.get-color-from-palette($background, focused-button);
+  $table-sidebar-time-empty-progress: mat.get-color-from-palette($foreground, divider);
+  $table-sidebar-time-disabled-progress: mat.get-color-from-palette($foreground, disabled-button);
+  $table-sidebar-time-running-progress: mat.get-color-from-palette($accent);
+  $choose-avatar-background-color: mat.get-color-from-palette($background, hover);
 
   ptcg-hand {
     background-color: $hand-background-color;
     border-top: $table-border;
-    color: mat-color($foreground, text);
+    color: mat.get-color-from-palette($foreground, text);
   }
 
   ptcg-board-card,
@@ -41,23 +41,23 @@
     .ptcg-player-bar.active {
       background-color: $active-player-background-color;
       &:before {
-        background-color: mat-color($primary);
+        background-color: mat.get-color-from-palette($primary);
       }
     }
   }
 
   ptcg-game-logs {
     .ptcg-system {
-      color: mat-color($accent);
+      color: mat.get-color-from-palette($accent);
     }
     .ptcg-player1 {
-      color: mat-color($primary);
+      color: mat.get-color-from-palette($primary);
     }
     .ptcg-player2 {
-      color: mat-color($warn);
+      color: mat.get-color-from-palette($warn);
     }
     .ptcg-spectator {
-      color: mat-color($foreground, hint-text);
+      color: mat.get-color-from-palette($foreground, hint-text);
     }
     .ptcg-game-logs-header {
       background-color: $table-sidebar-header-background-color;
@@ -103,34 +103,34 @@
 
   ptcg-board-card {
     .ptcg-board-card-label {
-      @include mat-typography-level-to-styles($config, caption);
+      @include mat.typography-level($config, caption);
     }
   }
 
   ptcg-board-card-list {
     .ptcg-card-damage {
-      @include mat-typography-level-to-styles($config, headline);
+      @include mat.typography-level($config, headline);
     }
   }
 
   ptcg-game-logs {
     .ptcg-game-logs-header mat-icon {
-      font-size: mat-font-size($config, input);
+      font-size: mat.font-size($config, input);
     }
     .ptcg-game-logs-content {
-      @include mat-typography-level-to-styles($config, caption);
+      @include mat.typography-level($config, caption);
     }
   }
 
   ptcg-player-time {
     .ptcg-player-time {
-      @include mat-typography-level-to-styles($config, caption);
+      @include mat.typography-level($config, caption);
     }
   }
 
   ptcg-replay-controls {
     .ptcg-replay-controls-header mat-icon {
-      font-size: mat-font-size($config, input);
+      font-size: mat.font-size($config, input);
     }
   }
 }

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ChangeServerPopupComponent } from './change-server-popup.component';
 
@@ -6,7 +6,7 @@ describe('ChangeServerPopupComponent', () => {
   let component: ChangeServerPopupComponent;
   let fixture: ComponentFixture<ChangeServerPopupComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ChangeServerPopupComponent ]
     })

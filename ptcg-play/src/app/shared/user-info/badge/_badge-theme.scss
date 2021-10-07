@@ -1,4 +1,4 @@
-@import '~@angular/material/theming';
+@use '~@angular/material' as mat;
 @import '../../../../theme/variables.scss';
 
 @mixin ptcg-badge-color($foreground, $background) {
@@ -7,7 +7,7 @@
 }
 
 @mixin ptcg-badge-theme-color($palette) {
-  @include ptcg-badge-color(mat-color($palette, default-contrast), mat-color($palette));
+  @include ptcg-badge-color(mat.get-color-from-palette($palette, default-contrast), mat.get-color-from-palette($palette));
 }
 
 @mixin ptcg-badge-theme($theme) {
@@ -18,8 +18,8 @@
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
 
-  $unselected-background: mat-color($background, disabled-button);
-  $unselected-foreground: mat-color($foreground, text);
+  $unselected-background: mat.get-color-from-palette($background, disabled-button);
+  $unselected-foreground: mat.get-color-from-palette($foreground, text);
 
   .ptcg-badge {
     @include ptcg-badge-color($unselected-foreground, $unselected-background);

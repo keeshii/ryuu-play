@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ImportReplayPopupComponent } from './import-replay-popup.component';
 
@@ -6,7 +6,7 @@ describe('ImportReplayPopupComponent', () => {
   let component: ImportReplayPopupComponent;
   let fixture: ComponentFixture<ImportReplayPopupComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ImportReplayPopupComponent ]
     })

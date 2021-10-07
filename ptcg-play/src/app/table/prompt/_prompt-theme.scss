@@ -1,21 +1,24 @@
-@import '~@angular/material/theming';
+@use '~@angular/material' as mat;
+@use '~@angular/cdk' as cdk;
 
 @mixin ptcg-prompt-theme($theme) {
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
 
-  $ptcg-cards-container-background: mat-color($background, app-bar);
+  $ptcg-cards-container-background: mat.get-color-from-palette($background, app-bar);
+  $swift-ease-out-duration: 400ms !default;
+  $swift-ease-out-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
 
   ptcg-prompt {
     .ptcg-prompt-overlay {
-      background: $cdk-overlay-dark-backdrop-background;
-      transition: opacity $backdrop-animation-duration $backdrop-animation-timing-function;
+      background: cdk.$overlay-backdrop-color;
+      transition: opacity $swift-ease-out-duration $swift-ease-out-timing-function;
     }
 
     .ptcg-prompt-container {
-      @include _mat-theme-elevation(24, $theme);
-      background-color: mat-color($background, dialog);
-      color: mat-color($foreground, text);
+      @include mat.elevation(24);
+      background-color: mat.get-color-from-palette($background, dialog);
+      color: mat.get-color-from-palette($foreground, text);
     }
   }
 
@@ -31,7 +34,7 @@
 
   ptcg-prompt-move-damage {
     .ptcg-damage-value {
-      @include mat-typography-level-to-styles($config, button);
+      @include mat.typography-level($config, button);
       font-size: 1.5em;
     }
   }

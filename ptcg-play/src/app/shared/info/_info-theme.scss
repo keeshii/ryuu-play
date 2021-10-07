@@ -1,15 +1,15 @@
-@import '~@angular/material/theming';
+@use '~@angular/material' as mat;
 
 
 @mixin ptcg-info-theme($theme) {
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
 
-  $info-background-color: mat-color($background, dialog);
+  $info-background-color: mat.get-color-from-palette($background, dialog);
 
   .ptcg-info {
     background-color: $info-background-color;
-    color: mat-color($foreground, text);
+    color: mat.get-color-from-palette($foreground, text);
   }
 
 }
@@ -17,7 +17,7 @@
 @mixin ptcg-info-typography($config) {
 
   .ptcg-info {
-    @include mat-typography-level-to-styles($config, caption);
+    @include mat.typography-level($config, caption);
   }
 
 }

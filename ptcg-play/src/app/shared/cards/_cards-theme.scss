@@ -1,4 +1,4 @@
-@import '~@angular/material/theming';
+@use '~@angular/material' as mat;
 @import '../../../theme/variables.scss';
 
 @mixin ptcg-cards-theme($theme) {
@@ -7,13 +7,13 @@
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
 
-  $ptcg-card-placeholder-background: mat-color($background, dialog);
-  $ptcg-card-placeholder-border-color: mat-color($foreground, divider);
-  $cards-drop-highlight-shadow: 0 0 map-get($padding, normal) mat-color($primary, text);
+  $ptcg-card-placeholder-background: mat.get-color-from-palette($background, dialog);
+  $ptcg-card-placeholder-border-color: mat.get-color-from-palette($foreground, divider);
+  $cards-drop-highlight-shadow: 0 0 map-get($padding, normal) mat.get-color-from-palette($primary, text);
 
-  $ptcg-card-info-title-background: mat-color($background, app-bar);
-  $ptcg-card-info-subtitle-background: mat-color($background, focused-button);
-  $ptcg-card-list-pane-background: mat-color($background, app-bar);
+  $ptcg-card-info-title-background: mat.get-color-from-palette($background, app-bar);
+  $ptcg-card-info-subtitle-background: mat.get-color-from-palette($background, focused-button);
+  $ptcg-card-list-pane-background: mat.get-color-from-palette($background, app-bar);
 
   .ptcg-drop-highlight-visible {
     box-shadow: inset $cards-drop-highlight-shadow;
@@ -38,10 +38,10 @@
       background-color: $ptcg-card-info-subtitle-background;
     }
     .power-type .ability {
-      color: mat-color($ptcg, ability);
+      color: mat.get-color-from-palette($ptcg, ability);
     }
     .power-type .poke-body {
-      color: mat-color($ptcg, poke-body);
+      color: mat.get-color-from-palette($ptcg, poke-body);
     }
   }
 
@@ -56,15 +56,15 @@
 @mixin ptcg-cards-typography($config) {
   ptcg-card-info-pane {
     .title, .subtitle-hp-value {
-      @include mat-typography-level-to-styles($config, title);
+      @include mat.typography-level($config, title);
     }
 
     .subtitle-stage, .stats-item-header, .attack-name, .power-name {
-      @include mat-typography-level-to-styles($config, body-2);
+      @include mat.typography-level($config, body-2);
     }
 
     .subtitle-hp-unit, .stats-item-value-modifier, .subtitle-evolves-from {
-      @include mat-typography-level-to-styles($config, caption);
+      @include mat.typography-level($config, caption);
     }
 
   }

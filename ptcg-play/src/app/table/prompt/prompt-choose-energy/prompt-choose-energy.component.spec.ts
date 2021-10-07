@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { PromptChooseEnergyComponent } from './prompt-choose-energy.component';
 
@@ -6,7 +6,7 @@ describe('PromptChooseEnergyComponent', () => {
   let component: PromptChooseEnergyComponent;
   let fixture: ComponentFixture<PromptChooseEnergyComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ PromptChooseEnergyComponent ]
     })

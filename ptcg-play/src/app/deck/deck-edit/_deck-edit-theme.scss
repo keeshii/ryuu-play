@@ -1,4 +1,4 @@
-@import '~@angular/material/theming';
+@use '~@angular/material' as mat;
 
 
 @mixin ptcg-deck-edit-theme($theme) {
@@ -6,15 +6,15 @@
   $foreground: map-get($theme, foreground);
   $primary: map-get($theme, primary);
 
-  $deck-edit-border: solid 1px mat-color($foreground, divider);
-  $deck-edit-background-color: mat-color($background, app-bar);
-  $deck-edit-toolbar-background-color: mat-color($background, dialog);
+  $deck-edit-border: solid 1px mat.get-color-from-palette($foreground, divider);
+  $deck-edit-background-color: mat.get-color-from-palette($background, app-bar);
+  $deck-edit-toolbar-background-color: mat.get-color-from-palette($background, dialog);
 
   ptcg-deck-edit-panes {
     .ptcg-deck-edit-pane.secondary {
       background-color: $deck-edit-background-color;
       border-top: $deck-edit-border;
-      color: mat-color($foreground, text);
+      color: mat.get-color-from-palette($foreground, text);
     }
   }
 
@@ -25,18 +25,18 @@
       border-bottom: $deck-edit-border;
 
       & .mat-form-field-underline {
-        color: mat-color($primary, text);
+        color: mat.get-color-from-palette($primary, text);
       }
 
       & .mat-select {
-        color: mat-color($foreground, text);
+        color: mat.get-color-from-palette($foreground, text);
       }
     }
   }
 
   ptcg-deck-card {
     .ptcg-deck-card-label {
-      color: mat-color($foreground, text);
+      color: mat.get-color-from-palette($foreground, text);
     }
   }
 }
@@ -45,7 +45,7 @@
 
   ptcg-deck-card {
     .ptcg-deck-card-label {
-      @include mat-typography-level-to-styles($config, caption);
+      @include mat.typography-level($config, caption);
     }
   }
 

@@ -1,10 +1,10 @@
-@import '~@angular/material/theming';
+@use '~@angular/material' as mat;
 @import '../../../theme/variables.scss';
 
 @mixin ptcg-toolbar-height() {
   height: $ptcg-toolbar-height-desktop;
 
-  @media ($mat-xsmall) {
+  @media (max-width: 599px) {
     height: $ptcg-toolbar-height-mobile;
   }
 }
@@ -14,7 +14,7 @@
 }
 
 mat-toolbar {
-  @include mat-elevation(5);
+  @include mat.elevation(5);
   @include ptcg-toolbar-height();
   flex: 0 0 auto;
 

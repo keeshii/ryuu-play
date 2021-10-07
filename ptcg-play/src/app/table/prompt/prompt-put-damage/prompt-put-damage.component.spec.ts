@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { PromptPutDamageComponent } from './prompt-put-damage.component';
 
@@ -6,7 +6,7 @@ describe('PromptPutDamageComponent', () => {
   let component: PromptPutDamageComponent;
   let fixture: ComponentFixture<PromptPutDamageComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ PromptPutDamageComponent ]
     })

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { PromptSelectComponent } from './prompt-select.component';
 
@@ -6,7 +6,7 @@ describe('PromptSelectComponent', () => {
   let component: PromptSelectComponent;
   let fixture: ComponentFixture<PromptSelectComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ PromptSelectComponent ]
     })

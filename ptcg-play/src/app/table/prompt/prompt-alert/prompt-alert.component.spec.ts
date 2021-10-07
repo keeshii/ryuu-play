@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { PromptAlertComponent } from './prompt-alert.component';
 
@@ -6,7 +6,7 @@ describe('PromptAlertComponent', () => {
   let component: PromptAlertComponent;
   let fixture: ComponentFixture<PromptAlertComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ PromptAlertComponent ]
     })

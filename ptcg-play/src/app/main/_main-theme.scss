@@ -1,15 +1,15 @@
-@import '~@angular/material/theming';
+@use '~@angular/material' as mat;
 
 
 @mixin ptcg-main-theme($theme) {
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
   $primary: map-get($theme, primary);
-  $avatar-background-color: mat-color($background, app-bar);
-  $logged-user-background-color: mat-color($primary, 200); //mat-color($background, focused-button);
-  $logged-user-text-color: mat-contrast($primary, 200);
-  $sidenav-table-header-background-color: mat-color($background, background);
-  $sidenav-deleted-text-color: mat-color($foreground, secondary-text);
+  $avatar-background-color: mat.get-color-from-palette($background, app-bar);
+  $logged-user-background-color: mat.get-color-from-palette($primary, 200); //mat-color($background, focused-button);
+  $logged-user-text-color: mat.get-contrast-color-from-palette($primary, 200);
+  $sidenav-table-header-background-color: mat.get-color-from-palette($background, background);
+  $sidenav-deleted-text-color: mat.get-color-from-palette($foreground, secondary-text);
 
   ptcg-toolbar {
     .ptcg-logged-user {
@@ -32,7 +32,7 @@
 @mixin ptcg-main-typography($config) {
   ptcg-sidenav-item {
     .close-button-icon {
-      font-size: mat-font-size($config, body-1);
+      font-size: mat.font-size($config, body-1);
     }
   }
 }

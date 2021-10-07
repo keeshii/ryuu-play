@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs/internal/operators/map';
+import { map } from 'rxjs/operators';
 import { Base64, Replay, GameState, StateSerializer } from 'ptcg-server';
 
 import { ApiService } from '../api.service';

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { PromptGameOverComponent } from './prompt-game-over.component';
 
@@ -6,7 +6,7 @@ describe('PromptGameOverComponent', () => {
   let component: PromptGameOverComponent;
   let fixture: ComponentFixture<PromptGameOverComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ PromptGameOverComponent ]
     })

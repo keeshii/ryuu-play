@@ -1,11 +1,11 @@
-@import '~@angular/material/theming';
+@use '~@angular/material' as mat;
 
 
 @mixin ptcg-login-popup-theme($theme) {
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
 
-  $deck-login-popup-background-color: mat-color($background, dialog);
+  $deck-login-popup-background-color: mat.get-color-from-palette($background, dialog);
 
   ptcg-login-popup {
 
@@ -14,12 +14,12 @@
       &:-webkit-autofill,
       &:-internal-autofill-selected {
         -webkit-box-shadow: 0 0 0 50px $deck-login-popup-background-color inset;
-        -webkit-text-fill-color: mat-color($foreground, text);
+        -webkit-text-fill-color: mat.get-color-from-palette($foreground, text);
       }
     }
 
     .ptcg-login-popup-link.disabled {
-      color: mat-color($foreground, disabled-text);
+      color: mat.get-color-from-palette($foreground, disabled-text);
     }
 
   }

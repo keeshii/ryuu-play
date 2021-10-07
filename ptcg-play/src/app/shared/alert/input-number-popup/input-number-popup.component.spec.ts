@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { InputNumberPopupComponent } from './input-number-popup.component';
 
@@ -6,7 +6,7 @@ describe('InputNumberPopupComponent', () => {
   let component: InputNumberPopupComponent;
   let fixture: ComponentFixture<InputNumberPopupComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ InputNumberPopupComponent ]
     })

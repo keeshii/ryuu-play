@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { EditAvatarsPopupComponent } from './edit-avatars-popup.component';
 
@@ -6,7 +6,7 @@ describe('EditAvatarsPopupComponent', () => {
   let component: EditAvatarsPopupComponent;
   let fixture: ComponentFixture<EditAvatarsPopupComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ EditAvatarsPopupComponent ]
     })

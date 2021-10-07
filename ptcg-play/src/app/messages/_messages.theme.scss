@@ -1,23 +1,23 @@
-@import '~@angular/material/theming';
+@use '~@angular/material' as mat;
 
 
 @mixin ptcg-messages-theme($theme) {
   $background: map-get($theme, background);
   $primary: map-get($theme, primary);
 
-  $input-message-background-color: mat-color($background, app-bar);
-  $active-contact-background-color: mat-color($background, focused-button);
+  $input-message-background-color: mat.get-color-from-palette($background, app-bar);
+  $active-contact-background-color: mat.get-color-from-palette($background, focused-button);
 
   ptcg-contact-bar {
     .ptcg-contact-bar.active {
       background-color: $active-contact-background-color;
       &:after {
-        background-color: mat-color($primary);
+        background-color: mat.get-color-from-palette($primary);
       }
     }
 
     .ptcg-contact-bar.marked .ptcg-contact-name {
-      color: mat-color($primary);
+      color: mat.get-color-from-palette($primary);
     }
   }
 
@@ -29,7 +29,7 @@
 
   ptcg-message-entry {
     .myself mat-card {
-      background-color: mat-color($background, tooltip);
+      background-color: mat.get-color-from-palette($background, tooltip);
     }
   }
 
@@ -37,16 +37,16 @@
 
 @mixin ptcg-messages-typography($config) {
   ptcg-contact-bar {
-    @include mat-typography-level-to-styles($config, caption);
+    @include mat.typography-level($config, caption);
 
     .ptcg-contact-name {
-      @include mat-typography-level-to-styles($config, body-2);
+      @include mat.typography-level($config, body-2);
     }
   }
 
   ptcg-message-entry {
     .ptcg-message-footer {
-      @include mat-typography-level-to-styles($config, caption);
+      @include mat.typography-level($config, caption);
     }
   }
 }

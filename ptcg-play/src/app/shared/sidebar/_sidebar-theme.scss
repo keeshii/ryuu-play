@@ -1,4 +1,4 @@
-@import '~@angular/material/theming';
+@use '~@angular/material' as mat;
 
 
 @mixin ptcg-sidebar-theme($theme) {
@@ -6,13 +6,13 @@
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
 
-  $sidebar-side-border: solid 1px mat-color($foreground, divider);
-  $sidebar-background-color: mat-color($background, dialog);
+  $sidebar-side-border: solid 1px mat.get-color-from-palette($foreground, divider);
+  $sidebar-background-color: mat.get-color-from-palette($background, dialog);
 
   ptcg-sidebar {
     background-color: $sidebar-background-color;
     border-left: $sidebar-side-border;
-    color: mat-color($foreground, text);
+    color: mat.get-color-from-palette($foreground, text);
   }
 }
 

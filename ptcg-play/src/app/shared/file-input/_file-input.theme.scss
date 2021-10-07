@@ -1,4 +1,4 @@
-@import '~@angular/material/theming';
+@use '~@angular/material' as mat;
 
 @mixin ptcg-file-input-theme($theme) {
   .mat-form-field-type-file-input {
@@ -11,7 +11,7 @@
 @mixin ptcg-file-input-typography($config) {
   ptcg-file-input {
     .ptcg-file-label {
-      @include mat-typography-level-to-styles($config, input);
+      @include mat.typography-level($config, input);
     }
   }
 }
