@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { UserInfo } from 'ptcg-server';
-import { map } from 'rxjs/internal/operators/map';
+import { map } from 'rxjs/operators';
 
 import { LoginPopupService } from '../../login/login-popup/login-popup.service';
 import { LoginRememberService } from '../../login/login-remember.service';

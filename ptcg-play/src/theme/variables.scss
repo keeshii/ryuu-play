@@ -1,3 +1,5 @@
+@use 'sass:math';
+
 $ptcg-size: (
   nav-menu: 200px,
   sidebar: 200px,
@@ -24,8 +26,8 @@ $ptcg-toolbar-height-mobile: map-get($ptcg-size, avatar) !default;
 $ptcg-bench-slots: 8;
 $ptcg-disabled-opacity: .5;
 
-$ptcg-sidebar-tiny-padding: map-get($padding, small) / 2;
-$ptcg-board-tiny-padding: map-get($padding, small) / 4;
+$ptcg-sidebar-tiny-padding: math.div(map-get($padding, small), 2);
+$ptcg-board-tiny-padding: math.div(map-get($padding, small), 4);
 
 $ptcg-prompt-padding: 24px !default;
 $ptcg-prompt-border-radius: 4px !default;

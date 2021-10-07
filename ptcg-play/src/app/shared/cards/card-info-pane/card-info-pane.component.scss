@@ -1,3 +1,4 @@
+@use 'sass:math';
 @import '../../../../theme/variables.scss';
 
 .ptcg-card-info-pane {
@@ -30,7 +31,7 @@
 }
 
 .subtitle-hp {
-  margin: 0 map-get($padding, small) / 2;
+  margin: 0 math.div(map-get($padding, small), 2);
 }
 
 .subtitle-hp-value {
@@ -38,7 +39,7 @@
 }
 
 .subtitle-hp-unit {
-  margin-right: map-get($padding, small) / 2;
+  margin-right: math.div(map-get($padding, small), 2);
 }
 
 .attack, .power {
@@ -75,7 +76,7 @@
 }
 
 .stats-item-header {
-  padding-bottom: map-get($padding, small) / 2;
+  padding-bottom: math.div(map-get($padding, small), 2);
 }
 
 .stats-item-value {

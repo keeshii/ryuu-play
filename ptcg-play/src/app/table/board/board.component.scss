@@ -1,3 +1,4 @@
+@use 'sass:math';
 @import '../../../theme/variables.scss';
 
 $board-min-width: calc((4 + #{$ptcg-bench-slots}) * (var(--card-size) + #{map-get($padding, small)}));
@@ -22,9 +23,9 @@ $board-min-height: calc(6 * var(--card-size) * #{$card-aspect-ratio} + 2 * #{map
 
   grid-template-columns:
       2fr
-      #{$ptcg-bench-slots / 3}fr
-      #{$ptcg-bench-slots / 3}fr
-      #{$ptcg-bench-slots / 3}fr
+      #{math.div($ptcg-bench-slots, 3)}fr
+      #{math.div($ptcg-bench-slots, 3)}fr
+      #{math.div($ptcg-bench-slots, 3)}fr
       2fr;
   grid-template-rows: auto;
 
@@ -47,7 +48,7 @@ $board-min-height: calc(6 * var(--card-size) * #{$card-aspect-ratio} + 2 * #{map
   > ptcg-board-card,
   > .ptcg-board-drop-target {
     max-width: var(--card-size);
-    width: calc(#{100 / $ptcg-bench-slots}% - #{map-get($padding, small)});
+    width: calc(#{math.div(100, $ptcg-bench-slots)}% - #{map-get($padding, small)});
   }
 }
 
@@ -56,7 +57,7 @@ $board-min-height: calc(6 * var(--card-size) * #{$card-aspect-ratio} + 2 * #{map
   > ptcg-board-card,
   > .ptcg-board-drop-target {
     max-width: var(--card-size);
-    width: calc(#{100 / $ptcg-bench-slots * 3}% - #{map-get($padding, small)});
+    width: calc(#{math.div(100, $ptcg-bench-slots) * 3}% - #{map-get($padding, small)});
   }
 }
 
