@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CardList, OrderCardsPrompt } from 'ptcg-server';
 
 import { GameService } from '../../../api/services/game.service';
@@ -9,7 +9,7 @@ import { LocalGameState } from '../../../shared/session/session.interface';
   templateUrl: './prompt-order-cards.component.html',
   styleUrls: ['./prompt-order-cards.component.scss']
 })
-export class PromptOrderCardsComponent implements OnInit {
+export class PromptOrderCardsComponent {
 
   @Input() set prompt(prompt: OrderCardsPrompt) {
     this.cards = prompt.cards;
@@ -44,9 +44,6 @@ export class PromptOrderCardsComponent implements OnInit {
 
   public onChange(result: number[]) {
     this.result = result;
-  }
-
-  ngOnInit() {
   }
 
 }

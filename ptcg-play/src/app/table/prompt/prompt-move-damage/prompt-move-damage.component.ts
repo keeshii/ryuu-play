@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { DamageTransfer, MoveDamagePrompt, CardTarget, DamageMap, PokemonCardList } from 'ptcg-server';
 
 import { GameService } from '../../../api/services/game.service';
@@ -11,7 +11,7 @@ import { PokemonData, PokemonItem } from '../choose-pokemons-pane/pokemon-data';
   templateUrl: './prompt-move-damage.component.html',
   styleUrls: ['./prompt-move-damage.component.scss']
 })
-export class PromptMoveDamageComponent implements OnInit, OnChanges {
+export class PromptMoveDamageComponent implements OnChanges {
 
   @Input() prompt: MoveDamagePrompt;
   @Input() gameState: LocalGameState;
@@ -49,9 +49,6 @@ export class PromptMoveDamageComponent implements OnInit, OnChanges {
     const id = this.promptId;
     const results = this.buildDamageTransfers(this.pokemonData);
     this.gameService.resolvePrompt(gameId, id, results);
-  }
-
-  ngOnInit() {
   }
 
   public onCardClick(item: PokemonItem) {

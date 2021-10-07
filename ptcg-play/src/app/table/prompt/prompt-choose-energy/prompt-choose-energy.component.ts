@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ChooseEnergyPrompt, CardList, Card, SuperType, CardType, StateUtils,
   EnergyMap } from 'ptcg-server';
 
@@ -10,7 +10,7 @@ import { LocalGameState } from '../../../shared/session/session.interface';
   templateUrl: './prompt-choose-energy.component.html',
   styleUrls: ['./prompt-choose-energy.component.scss']
 })
-export class PromptChooseEnergyComponent implements OnInit {
+export class PromptChooseEnergyComponent {
 
   @Input() set prompt(prompt: ChooseEnergyPrompt) {
     const cardList = new CardList();
@@ -61,9 +61,6 @@ export class PromptChooseEnergyComponent implements OnInit {
     const enough = StateUtils.checkExactEnergy(energy, this.cost);
     this.result = result;
     this.isInvalid = !enough;
-  }
-
-  ngOnInit() {
   }
 
 }

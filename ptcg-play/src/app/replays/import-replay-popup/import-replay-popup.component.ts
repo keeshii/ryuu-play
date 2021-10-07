@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { Replay, GameWinner, Base64 } from 'ptcg-server';
 import { MatDialogRef } from '@angular/material/dialog';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -16,7 +16,7 @@ import { SessionService } from '../../shared/session/session.service';
   templateUrl: './import-replay-popup.component.html',
   styleUrls: ['./import-replay-popup.component.scss']
 })
-export class ImportReplayPopupComponent implements OnInit, OnDestroy {
+export class ImportReplayPopupComponent {
 
   public GameWinner = GameWinner;
   public loading = false;
@@ -38,12 +38,6 @@ export class ImportReplayPopupComponent implements OnInit, OnDestroy {
     private sessionService: SessionService
   ) {
     this.maxFileSize = this.sessionService.session.config.avatarFileSize;
-  }
-
-  ngOnInit(): void {
-  }
-
-  ngOnDestroy(): void {
   }
 
   public updatePreview(value: FileInput) {

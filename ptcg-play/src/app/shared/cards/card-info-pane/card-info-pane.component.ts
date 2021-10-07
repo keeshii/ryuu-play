@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnChanges, Input, Output, EventEmitter } from '@angular/core';
 import { Card, SuperType, Stage, PowerType, EnergyType, TrainerType, PokemonCard } from 'ptcg-server';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -26,7 +26,7 @@ export interface CardInfoPaneAction {
   templateUrl: './card-info-pane.component.html',
   styleUrls: ['./card-info-pane.component.scss']
 })
-export class CardInfoPaneComponent implements OnInit, OnChanges {
+export class CardInfoPaneComponent implements OnChanges {
 
   @Input() card: Card;
   @Input() facedown: boolean;
@@ -43,9 +43,6 @@ export class CardInfoPaneComponent implements OnInit, OnChanges {
   constructor(
     private dialog: MatDialog
   ) { }
-
-  ngOnInit(): void {
-  }
 
   public clickAction(action: CardInfoPaneAction) {
     action.card = this.card;

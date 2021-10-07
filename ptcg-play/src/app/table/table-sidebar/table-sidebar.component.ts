@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output, OnChanges, OnDestroy } from '@angular/core';
+import { Component, Input, EventEmitter, Output, OnChanges, OnDestroy } from '@angular/core';
 import { Player, State, ReplayPlayer, PlayerStats } from 'ptcg-server';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
@@ -12,7 +12,7 @@ import { SessionService } from 'src/app/shared/session/session.service';
   templateUrl: './table-sidebar.component.html',
   styleUrls: ['./table-sidebar.component.scss']
 })
-export class TableSidebarComponent implements OnInit, OnDestroy, OnChanges {
+export class TableSidebarComponent implements OnDestroy, OnChanges {
 
   @Output() join = new EventEmitter<void>();
 
@@ -36,9 +36,6 @@ export class TableSidebarComponent implements OnInit, OnDestroy, OnChanges {
     private gameService: GameService,
     private sessionService: SessionService
   ) { }
-
-  ngOnInit() {
-  }
 
   ngOnDestroy() {
     this.stopTimer();

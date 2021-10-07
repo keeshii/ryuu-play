@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { DeckItem } from '../deck-card/deck-card.interface';
 
 @Component({
@@ -6,7 +6,7 @@ import { DeckItem } from '../deck-card/deck-card.interface';
   templateUrl: './deck-edit-info.component.html',
   styleUrls: ['./deck-edit-info.component.scss']
 })
-export class DeckEditInfoComponent implements OnInit {
+export class DeckEditInfoComponent {
 
   public cardsCount = 0;
 
@@ -15,8 +15,5 @@ export class DeckEditInfoComponent implements OnInit {
   }
 
   constructor() { }
-
-  ngOnInit() {
-  }
 
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { GameInfo, UserInfo } from 'ptcg-server';
 import { Observable } from 'rxjs';
 
@@ -9,7 +9,7 @@ import { SessionService } from '../../shared/session/session.service';
   templateUrl: './games-table.component.html',
   styleUrls: ['./games-table.component.scss']
 })
-export class GamesTableComponent implements OnInit, OnDestroy {
+export class GamesTableComponent {
 
   public displayedColumns: string[] = ['id', 'player1', 'player2', 'prizes', 'turn', 'actions'];
   public games$: Observable<{ game: GameInfo, users: UserInfo[] }[]>;
@@ -27,9 +27,5 @@ export class GamesTableComponent implements OnInit, OnDestroy {
       });
     });
   }
-
-  ngOnInit(): void { }
-
-  ngOnDestroy(): void { }
 
 }

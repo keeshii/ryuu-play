@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { GameState } from 'ptcg-server';
 import { Observable } from 'rxjs';
 
@@ -10,7 +10,7 @@ import { SessionService } from '../../shared/session/session.service';
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.scss']
 })
-export class SidenavComponent implements OnInit, OnDestroy {
+export class SidenavComponent {
 
   public gameStates$: Observable<GameState[]>;
   public unreadMessages$: Observable<number>;
@@ -31,12 +31,6 @@ export class SidenavComponent implements OnInit, OnDestroy {
       return unread;
     });
 
-  }
-
-  ngOnInit(): void {
-  }
-
-  ngOnDestroy(): void {
   }
 
 }

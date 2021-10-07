@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { Card, MoveEnergyPrompt, CardTarget, FilterType, PokemonCardList } from 'ptcg-server';
 
 import { GameService } from '../../../api/services/game.service';
@@ -16,7 +16,7 @@ interface MoveEnergyResult {
   templateUrl: './prompt-move-energy.component.html',
   styleUrls: ['./prompt-move-energy.component.scss']
 })
-export class PromptMoveEnergyComponent implements OnInit, OnChanges {
+export class PromptMoveEnergyComponent implements OnChanges {
 
   @Input() prompt: MoveEnergyPrompt;
   @Input() gameState: LocalGameState;
@@ -57,9 +57,6 @@ export class PromptMoveEnergyComponent implements OnInit, OnChanges {
       index: this.pokemonData.getCardIndex(r.card)
     }));
     this.gameService.resolvePrompt(gameId, id, results);
-  }
-
-  ngOnInit() {
   }
 
   public onCardClick(item: PokemonItem) {

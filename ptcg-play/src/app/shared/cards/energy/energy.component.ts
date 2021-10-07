@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CardType } from 'ptcg-server';
 
 @Component({
@@ -6,7 +6,7 @@ import { CardType } from 'ptcg-server';
   templateUrl: './energy.component.html',
   styleUrls: ['./energy.component.scss']
 })
-export class EnergyComponent implements OnInit {
+export class EnergyComponent {
 
   public typeClass = 'energyless';
 
@@ -51,7 +51,5 @@ export class EnergyComponent implements OnInit {
   }
 
   constructor() { }
-
-  ngOnInit() { }
 
 }

@@ -1,5 +1,5 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UserInfo } from 'ptcg-server';
 import { Observable, EMPTY } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
@@ -17,7 +17,7 @@ import { ProfilePopupService } from './profile-popup.service';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit, OnDestroy {
+export class ProfileComponent implements OnInit {
 
   public user$: Observable<UserInfo | undefined>;
   public loggedUserId: number;
@@ -81,7 +81,5 @@ export class ProfileComponent implements OnInit, OnDestroy {
   changeEmail(userId: number) {
     this.profilePopupService.openChangeEmailPopup(userId);
   }
-
-  ngOnDestroy() {}
 
 }

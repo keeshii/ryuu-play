@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input, OnChanges } from '@angular/core';
+import { Component, Output, EventEmitter, Input, OnChanges } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { AlertService } from '../../../shared/alert/alert.service';
@@ -12,7 +12,7 @@ import {GamePhase} from 'ptcg-server';
   templateUrl: './player-actions.component.html',
   styleUrls: ['./player-actions.component.scss']
 })
-export class PlayerActionsComponent implements OnInit, OnChanges {
+export class PlayerActionsComponent implements OnChanges {
 
   @Input() gameState: LocalGameState;
   @Input() clientId: number;
@@ -29,9 +29,6 @@ export class PlayerActionsComponent implements OnInit, OnChanges {
     private sessionService: SessionService,
     private translate: TranslateService
   ) { }
-
-  ngOnInit() {
-  }
 
   public async leave() {
     if (!this.gameState || !this.gameState.gameId) {

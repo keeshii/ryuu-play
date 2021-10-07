@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Rank } from 'ptcg-server';
 
 @Component({
@@ -6,7 +6,7 @@ import { Rank } from 'ptcg-server';
   templateUrl: './rank.component.html',
   styleUrls: ['./rank.component.scss']
 })
-export class RankComponent implements OnInit {
+export class RankComponent {
 
   @Input() set rank(rank: Rank) {
     switch (rank) {
@@ -33,8 +33,5 @@ export class RankComponent implements OnInit {
   public rankColor: string;
 
   constructor() { }
-
-  ngOnInit(): void {
-  }
 
 }

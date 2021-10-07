@@ -1,17 +1,16 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { ApiService } from '../../../api/api.service';
 import { AvatarPopupComponent } from '../avatar-popup/avatar-popup.component';
 import { SessionService } from '../../session/session.service';
-import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'ptcg-avatar',
   templateUrl: './avatar.component.html',
   styleUrls: ['./avatar.component.scss']
 })
-export class AvatarComponent implements OnInit {
+export class AvatarComponent {
 
   @Input() set avatarFile(fileName: string) {
     this.avatarFileValue = fileName;
@@ -47,9 +46,6 @@ export class AvatarComponent implements OnInit {
     private dialog: MatDialog,
     private sessionService: SessionService
   ) { }
-
-  ngOnInit(): void {
-  }
 
   showAvatarPopup() {
     const avatarFile = this.avatarFileValue;

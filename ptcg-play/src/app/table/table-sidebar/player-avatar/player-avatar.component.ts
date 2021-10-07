@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { UserInfo } from 'ptcg-server';
 import { Subject } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -12,7 +12,7 @@ import { AvatarService } from '../../../api/services/avatar.service';
   templateUrl: './player-avatar.component.html',
   styleUrls: ['./player-avatar.component.scss']
 })
-export class PlayerAvatarComponent implements OnInit {
+export class PlayerAvatarComponent {
 
   @Input() set user(user: UserInfo | undefined) {
     this.userValue = user;
@@ -33,9 +33,6 @@ export class PlayerAvatarComponent implements OnInit {
   constructor(
     private avatarService: AvatarService
   ) { }
-
-  ngOnInit(): void {
-  }
 
   private updateAvatar() {
     const user = this.userValue;

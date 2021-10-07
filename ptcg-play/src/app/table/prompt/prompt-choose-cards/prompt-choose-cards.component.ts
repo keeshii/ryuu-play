@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ChooseCardsPrompt, CardList, Card } from 'ptcg-server';
 
 import { GameService } from '../../../api/services/game.service';
@@ -9,7 +9,7 @@ import { LocalGameState } from '../../../shared/session/session.interface';
   templateUrl: './prompt-choose-cards.component.html',
   styleUrls: ['./prompt-choose-cards.component.scss']
 })
-export class PromptChooseCardsComponent implements OnInit {
+export class PromptChooseCardsComponent {
 
   @Input() set prompt(prompt: ChooseCardsPrompt) {
     this.promptValue = prompt;
@@ -64,9 +64,6 @@ export class PromptChooseCardsComponent implements OnInit {
     const isInvalid = !this.promptValue.validate(cards);
     this.result = result;
     this.isInvalid = isInvalid;
-  }
-
-  ngOnInit() {
   }
 
 }

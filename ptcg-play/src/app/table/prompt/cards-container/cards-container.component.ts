@@ -1,18 +1,15 @@
-import { Component, OnInit, AfterViewInit, ElementRef, Input } from '@angular/core';
+import { Component, AfterViewInit, ElementRef, Input } from '@angular/core';
 
 @Component({
   selector: 'ptcg-cards-container',
   templateUrl: './cards-container.component.html',
   styleUrls: ['./cards-container.component.scss']
 })
-export class CardsContainerComponent implements OnInit, AfterViewInit {
+export class CardsContainerComponent implements AfterViewInit {
 
   @Input() keepInitialSize: boolean;
 
   constructor(private elementRef: ElementRef<HTMLElement>) { }
-
-  ngOnInit() {
-  }
 
   ngAfterViewInit() {
     // Remember the height of the component,

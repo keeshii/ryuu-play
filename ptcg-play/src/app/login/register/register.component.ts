@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ApiErrorEnum } from 'ptcg-server';
 import { TranslateService } from '@ngx-translate/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -16,7 +16,7 @@ import { ServerPasswordPopupService } from '../server-password-popup/server-pass
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent {
 
   public loading = false;
   public name: string;
@@ -33,8 +33,6 @@ export class RegisterComponent implements OnInit {
     private router: Router,
     private translate: TranslateService
   ) { }
-
-  ngOnInit() { }
 
   public register(code?: string): void {
     this.loading = true;

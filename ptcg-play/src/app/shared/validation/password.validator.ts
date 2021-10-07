@@ -9,6 +9,7 @@ export class PasswordValidatorDirective implements Validator {
 
   private length = 5;
 
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('password-min-length')
   set setLength(value: string) {
     this.length = parseInt(value, 10);

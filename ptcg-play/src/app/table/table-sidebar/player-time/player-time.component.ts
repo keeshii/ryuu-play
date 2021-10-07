@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { PlayerStats } from 'ptcg-server';
 
 @Component({
@@ -6,7 +6,7 @@ import { PlayerStats } from 'ptcg-server';
   templateUrl: './player-time.component.html',
   styleUrls: ['./player-time.component.scss']
 })
-export class PlayerTimeComponent implements OnInit, OnChanges {
+export class PlayerTimeComponent implements OnChanges {
 
   @Input() timeLimit: number;
   @Input() playerStats: PlayerStats;
@@ -16,9 +16,6 @@ export class PlayerTimeComponent implements OnInit, OnChanges {
   public timeString: string;
 
   constructor() { }
-
-  ngOnInit(): void {
-  }
 
   ngOnChanges(): void {
     if (!this.timeLimit || !this.playerStats) {

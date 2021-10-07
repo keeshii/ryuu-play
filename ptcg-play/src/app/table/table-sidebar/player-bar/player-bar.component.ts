@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Player, UserInfo, ReplayPlayer, PlayerStats, State, GamePhase } from 'ptcg-server';
 import { Observable, EMPTY } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -15,7 +15,7 @@ import { UserInfoPopupService } from '../../../shared/user-info/user-info-popup/
   templateUrl: './player-bar.component.html',
   styleUrls: ['./player-bar.component.scss']
 })
-export class PlayerBarComponent implements OnInit, OnDestroy, OnChanges {
+export class PlayerBarComponent implements OnChanges {
 
   @Input() clientId: number;
   @Input() gameState: LocalGameState;
@@ -41,10 +41,6 @@ export class PlayerBarComponent implements OnInit, OnDestroy, OnChanges {
     private sessionService: SessionService,
     private userInfoPopupService: UserInfoPopupService
   ) { }
-
-  ngOnInit() { }
-
-  ngOnDestroy() { }
 
   public onAvatarClick() {
     // Find user of the current player

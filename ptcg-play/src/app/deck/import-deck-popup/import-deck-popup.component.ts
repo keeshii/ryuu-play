@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 
 import { CardsBaseService } from '../../shared/cards/cards-base.service';
@@ -10,7 +10,7 @@ import { SessionService } from '../../shared/session/session.service';
   templateUrl: './import-deck-popup.component.html',
   styleUrls: ['./import-deck-popup.component.scss']
 })
-export class ImportDeckPopupComponent implements OnInit, OnDestroy {
+export class ImportDeckPopupComponent {
 
   public loading = false;
   public deckFile: FileInput;
@@ -25,12 +25,6 @@ export class ImportDeckPopupComponent implements OnInit, OnDestroy {
     private sessionService: SessionService
   ) {
     this.maxFileSize = this.sessionService.session.config.avatarFileSize;
-  }
-
-  ngOnInit(): void {
-  }
-
-  ngOnDestroy(): void {
   }
 
   public updatePreview(value: FileInput) {

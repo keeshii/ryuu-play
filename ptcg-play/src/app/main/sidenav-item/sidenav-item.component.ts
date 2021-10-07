@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { GamePhase } from 'ptcg-server';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -12,7 +12,7 @@ import { SessionService } from '../../shared/session/session.service';
   templateUrl: './sidenav-item.component.html',
   styleUrls: ['./sidenav-item.component.scss']
 })
-export class SidenavItemComponent implements OnInit {
+export class SidenavItemComponent {
 
   @Input() set gameState(gameState: LocalGameState) {
     const clientId = this.sessionService.session.clientId;
@@ -38,9 +38,6 @@ export class SidenavItemComponent implements OnInit {
     private sessionService: SessionService,
     private translate: TranslateService
   ) { }
-
-  ngOnInit(): void {
-  }
 
   private checkPlaying(gameState: LocalGameState, clientId: number): boolean {
     if (gameState.replay || gameState.deleted) {

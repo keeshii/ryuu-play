@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { UserInfo } from 'ptcg-server';
 
 import { UserInfoPopupService } from '../user-info-popup/user-info-popup.service';
@@ -8,7 +8,7 @@ import { UserInfoPopupService } from '../user-info-popup/user-info-popup.service
   templateUrl: './user-bar.component.html',
   styleUrls: ['./user-bar.component.scss']
 })
-export class UserBarComponent implements OnInit {
+export class UserBarComponent {
 
   @Input() user: UserInfo;
   @Input() marked = false;
@@ -17,9 +17,6 @@ export class UserBarComponent implements OnInit {
   constructor(
     private userInfoPopupService: UserInfoPopupService
   ) { }
-
-  ngOnInit(): void {
-  }
 
   public showUserInfoPopup(user: UserInfo) {
     if (!this.openUserPopup || !user.userId) {

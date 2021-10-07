@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { MatchInfo, GameWinner } from 'ptcg-server';
 import { PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
@@ -22,7 +22,7 @@ import { environment } from '../../../environments/environment';
   templateUrl: './match-table.component.html',
   styleUrls: ['./match-table.component.scss']
 })
-export class MatchTableComponent implements OnInit, OnDestroy {
+export class MatchTableComponent implements OnInit {
 
   public GameWinner = GameWinner;
   public displayedColumns: string[] = ['id', 'player1', 'player2', 'date', 'actions'];
@@ -95,8 +95,6 @@ export class MatchTableComponent implements OnInit, OnDestroy {
 
     this.refresh();
   }
-
-  ngOnDestroy(): void { }
 
   public showReplay(matchId: number): void {
     this.loading = true;

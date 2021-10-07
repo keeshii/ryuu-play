@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { MessageInfo, UserInfo } from 'ptcg-server';
 import { Observable, EMPTY } from 'rxjs';
 
@@ -9,7 +9,7 @@ import { SessionService } from '../../shared/session/session.service';
   templateUrl: './message-entry.component.html',
   styleUrls: ['./message-entry.component.scss']
 })
-export class MessageEntryComponent implements OnInit, OnChanges {
+export class MessageEntryComponent implements OnChanges {
 
   @Input() message: MessageInfo;
   @Input() loggedUserId: number;
@@ -17,9 +17,6 @@ export class MessageEntryComponent implements OnInit, OnChanges {
   public writtenByMe: boolean;
 
   constructor(private sessionService: SessionService) { }
-
-  ngOnInit(): void {
-  }
 
   ngOnChanges(): void {
     if (this.message && this.loggedUserId) {

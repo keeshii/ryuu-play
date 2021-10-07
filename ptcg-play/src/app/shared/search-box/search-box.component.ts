@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, EventEmitter, Output } from '@angular/core';
+import { Component, ViewChild, EventEmitter, Output } from '@angular/core';
 import { MatInput } from '@angular/material/input';
 
 @Component({
@@ -6,7 +6,7 @@ import { MatInput } from '@angular/material/input';
   templateUrl: './search-box.component.html',
   styleUrls: ['./search-box.component.scss']
 })
-export class SearchBoxComponent implements OnInit {
+export class SearchBoxComponent {
 
   @ViewChild(MatInput, {static: true}) searchInput: MatInput;
   @Output() search = new EventEmitter<string>();
@@ -15,9 +15,6 @@ export class SearchBoxComponent implements OnInit {
   public searchValue = '';
 
   constructor() { }
-
-  ngOnInit() {
-  }
 
   public activateSearch() {
     this.isActivated = true;

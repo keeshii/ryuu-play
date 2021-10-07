@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { GameWinner } from 'ptcg-server';
 
 import { GameOverPrompt } from './game-over.prompt';
@@ -10,7 +10,7 @@ import { SessionService } from '../../../shared/session/session.service';
   templateUrl: './prompt-game-over.component.html',
   styleUrls: ['./prompt-game-over.component.scss']
 })
-export class PromptGameOverComponent implements OnInit {
+export class PromptGameOverComponent {
 
   @Input() prompt: GameOverPrompt;
   @Input() gameState: LocalGameState;
@@ -29,9 +29,6 @@ export class PromptGameOverComponent implements OnInit {
       gameStates[index] = { ...gameStates[index], gameOver: true };
       this.sessionService.set({ gameStates });
     }
-  }
-
-  ngOnInit() {
   }
 
 }

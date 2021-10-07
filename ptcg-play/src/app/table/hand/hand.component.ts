@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { Player, Card, CardList } from 'ptcg-server';
 import { SortableSpec, DraggedItem } from '@ng-dnd/sortable';
 
@@ -12,7 +12,7 @@ import { GameService } from '../../api/services/game.service';
   templateUrl: './hand.component.html',
   styleUrls: ['./hand.component.scss']
 })
-export class HandComponent implements OnInit, OnChanges {
+export class HandComponent implements OnChanges {
 
   public readonly handListId = 'HAND_LIST';
 
@@ -50,8 +50,6 @@ export class HandComponent implements OnInit, OnChanges {
       }
     };
   }
-
-  ngOnInit() { }
 
   ngOnChanges() {
     if (this.gameState) {

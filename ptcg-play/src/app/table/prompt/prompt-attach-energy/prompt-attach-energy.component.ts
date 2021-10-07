@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { Card, AttachEnergyPrompt, FilterType, CardList, AttachEnergyOptions,
   PokemonCardList } from 'ptcg-server';
 
@@ -16,7 +16,7 @@ interface AttachEnergyResult {
   templateUrl: './prompt-attach-energy.component.html',
   styleUrls: ['./prompt-attach-energy.component.scss']
 })
-export class PromptAttachEnergyComponent implements OnInit, OnChanges {
+export class PromptAttachEnergyComponent implements OnChanges {
 
   @Input() prompt: AttachEnergyPrompt;
   @Input() gameState: LocalGameState;
@@ -51,9 +51,6 @@ export class PromptAttachEnergyComponent implements OnInit, OnChanges {
       index: this.initialCards.indexOf(r.card)
     }));
     this.gameService.resolvePrompt(gameId, id, results);
-  }
-
-  ngOnInit() {
   }
 
   public onCardDrop([item, card]: [PokemonItem, Card]) {

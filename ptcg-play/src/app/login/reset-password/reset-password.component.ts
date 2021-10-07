@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ApiErrorEnum } from 'ptcg-server';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -15,7 +15,7 @@ import { ResetPasswordService } from '../../api/services/reset-password.service'
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.scss']
 })
-export class ResetPasswordComponent implements OnInit {
+export class ResetPasswordComponent {
 
   public loading = false;
   public email: string;
@@ -27,9 +27,6 @@ export class ResetPasswordComponent implements OnInit {
     private router: Router,
     private translate: TranslateService
   ) { }
-
-  ngOnInit() {
-  }
 
   public sendMail(): void {
     this.loading = true;

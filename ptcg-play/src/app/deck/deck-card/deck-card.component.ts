@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { DragSource } from '@ng-dnd/core';
 
 import { DeckItem } from './deck-card.interface';
@@ -10,7 +10,7 @@ export const DeckCardType = 'DECK_CARD';
   templateUrl: './deck-card.component.html',
   styleUrls: ['./deck-card.component.scss']
 })
-export class DeckCardComponent implements OnInit, OnDestroy {
+export class DeckCardComponent {
 
   @Input() source: DragSource<DeckItem, any>;
   @Input() card: DeckItem;
@@ -20,10 +20,6 @@ export class DeckCardComponent implements OnInit, OnDestroy {
   @Output() countClick = new EventEmitter<void>();
 
   constructor() {}
-
-  ngOnInit() {}
-
-  ngOnDestroy() {}
 
   onCountClick(event: MouseEvent) {
     event.stopPropagation();

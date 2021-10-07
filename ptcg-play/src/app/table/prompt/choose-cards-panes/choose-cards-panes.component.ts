@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 import { Card } from 'ptcg-server';
 import { DraggedItem } from '@ng-dnd/sortable';
 
@@ -12,7 +12,7 @@ import { ChooseCardsSortable } from './choose-cards-panes.interface';
   templateUrl: './choose-cards-panes.component.html',
   styleUrls: ['./choose-cards-panes.component.scss']
 })
-export class ChooseCardsPanesComponent implements OnInit, OnChanges {
+export class ChooseCardsPanesComponent implements OnChanges {
 
   public readonly topListId = 'CHOOSE_CARDS_TOP_LIST';
   public readonly bottomListId = 'CHOOSE_CARDS_BOTTOM_LIST';
@@ -22,7 +22,7 @@ export class ChooseCardsPanesComponent implements OnInit, OnChanges {
   @Input() blocked: number[] = [];
   @Input() cardbackMap: {[index: number]: boolean} = {};
   @Input() singlePaneMode = false;
-  @Output() change = new EventEmitter<number[]>();
+  @Output() changeCards = new EventEmitter<number[]>();
 
   public allowedCancel: boolean;
   public promptId: number;
@@ -144,15 +144,12 @@ export class ChooseCardsPanesComponent implements OnInit, OnChanges {
       ? this.topSortable.list.map(i => i.index)
       : this.bottomSortable.list.map(i => i.index);
 
-    this.change.next(result);
+    this.changeCards.next(result);
   }
 
   private revertTempLists() {
     this.topSortable.tempList = this.topSortable.list.slice();
     this.bottomSortable.tempList = this.bottomSortable.list.slice();
-  }
-
-  ngOnInit() {
   }
 
   ngOnChanges() {

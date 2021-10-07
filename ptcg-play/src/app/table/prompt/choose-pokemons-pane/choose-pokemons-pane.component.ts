@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output, OnDestroy } from '@angular/core';
+import { Component, Input, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { PlayerType, Card } from 'ptcg-server';
 import { DraggedItem } from '@ng-dnd/sortable';
 import { DropTarget, DndService } from '@ng-dnd/core';
@@ -27,7 +27,7 @@ interface PokemonDropRow {
   templateUrl: './choose-pokemons-pane.component.html',
   styleUrls: ['./choose-pokemons-pane.component.scss']
 })
-export class ChoosePokemonsPaneComponent implements OnInit, OnDestroy {
+export class ChoosePokemonsPaneComponent implements OnDestroy {
 
   public PlayerType = PlayerType;
 
@@ -100,9 +100,6 @@ export class ChoosePokemonsPaneComponent implements OnInit, OnDestroy {
     const cardList = item.cardList;
     const card = cardList.getPokemonCard();
     this.cardsBaseService.showCardInfo({ card, cardList });
-  }
-
-  ngOnInit() {
   }
 
   ngOnDestroy() {

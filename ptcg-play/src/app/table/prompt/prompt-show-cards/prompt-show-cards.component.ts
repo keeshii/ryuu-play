@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ShowCardsPrompt, Card } from 'ptcg-server';
 
 import { CardsBaseService } from '../../../shared/cards/cards-base.service';
@@ -10,7 +10,7 @@ import { LocalGameState } from '../../../shared/session/session.interface';
   templateUrl: './prompt-show-cards.component.html',
   styleUrls: ['./prompt-show-cards.component.scss']
 })
-export class PromptShowCardsComponent implements OnInit {
+export class PromptShowCardsComponent {
 
   @Input() prompt: ShowCardsPrompt;
   @Input() gameState: LocalGameState;
@@ -34,9 +34,6 @@ export class PromptShowCardsComponent implements OnInit {
 
   public onCardClick(card: Card) {
     this.cardsBaseService.showCardInfo({ card });
-  }
-
-  ngOnInit() {
   }
 
 }

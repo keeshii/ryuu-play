@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { ConversationInfo, UserInfo } from 'ptcg-server';
 import { Observable, EMPTY } from 'rxjs';
 
@@ -9,7 +9,7 @@ import { SessionService } from '../../shared/session/session.service';
   templateUrl: './contact-bar.component.html',
   styleUrls: ['./contact-bar.component.scss']
 })
-export class ContactBarComponent implements OnInit, OnChanges {
+export class ContactBarComponent implements OnChanges {
 
   @Input() conversation: ConversationInfo;
 
@@ -22,9 +22,6 @@ export class ContactBarComponent implements OnInit, OnChanges {
   public marked: boolean;
 
   constructor(private sessionService: SessionService) { }
-
-  ngOnInit(): void {
-  }
 
   ngOnChanges(): void {
     if (this.conversation && this.loggedUserId) {

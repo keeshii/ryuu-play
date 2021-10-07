@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { SelectPrompt } from 'ptcg-server';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -10,7 +10,7 @@ import { LocalGameState } from '../../../shared/session/session.interface';
   templateUrl: './prompt-select.component.html',
   styleUrls: ['./prompt-select.component.scss']
 })
-export class PromptSelectComponent implements OnInit {
+export class PromptSelectComponent {
 
   @Input() set prompt(prompt: SelectPrompt) {
     this.promptId = prompt.id;
@@ -45,9 +45,6 @@ export class PromptSelectComponent implements OnInit {
     const gameId = this.gameState.gameId;
     const id = this.promptId;
     this.gameService.resolvePrompt(gameId, id, null);
-  }
-
-  ngOnInit() {
   }
 
 }

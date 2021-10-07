@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ElementRef } from '@angular/core';
+import { Component, Input, ElementRef } from '@angular/core';
 import { StateLog, StateLogParam } from 'ptcg-server';
 
 import { GameService } from '../../../api/services/game.service';
@@ -18,7 +18,7 @@ interface GameLog {
   templateUrl: './game-logs.component.html',
   styleUrls: ['./game-logs.component.scss']
 })
-export class GameLogsComponent implements OnInit {
+export class GameLogsComponent {
 
   private readonly LOG_COUNT_LIMIT = 50;
 
@@ -46,9 +46,6 @@ export class GameLogsComponent implements OnInit {
     private gameService: GameService,
     private sessionService: SessionService
   ) { }
-
-  ngOnInit() {
-  }
 
   public clearLogs() {
     this.state.logs = [];

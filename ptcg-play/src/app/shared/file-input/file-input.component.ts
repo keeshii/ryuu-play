@@ -25,9 +25,7 @@ export class FileInputComponent extends FileInputMixinBase
 
   @Input() autofilled = false;
 
-  // tslint:disable-next-line:variable-name
   private _placeholder: string;
-  // tslint:disable-next-line:variable-name
   private _required = false;
 
   @Input() valuePlaceholder: string;
@@ -107,18 +105,18 @@ export class FileInputComponent extends FileInputMixinBase
    */
   constructor(
     private fm: FocusMonitor,
-    // tslint:disable-next-line:variable-name
+    // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-denylist,id-match
     private _elementRef: ElementRef,
-    // tslint:disable-next-line:variable-name
+    // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-denylist,id-match
     private _renderer: Renderer2,
-    // tslint:disable-next-line:variable-name
+    // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-denylist,id-match
     public _defaultErrorStateMatcher: ErrorStateMatcher,
     @Optional()
     @Self()
     public ngControl: NgControl,
-    // tslint:disable-next-line:variable-name
+    // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-denylist,id-match
     @Optional() public _parentForm: NgForm,
-    // tslint:disable-next-line:variable-name
+    // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-denylist,id-match
     @Optional() public _parentFormGroup: FormGroupDirective,
   ) {
     super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
@@ -132,9 +130,9 @@ export class FileInputComponent extends FileInputMixinBase
     });
   }
 
-  // tslint:disable-next-line:variable-name
+  // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-denylist,id-match
   private _onChange = (_: any) => {};
-  // tslint:disable-next-line:variable-name
+  // eslint-disable-next-line @typescript-eslint/naming-convention, no-underscore-dangle, id-denylist, id-match
   private _onTouched = () => {};
 
   get fileNames() {

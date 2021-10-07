@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { Card, CardList } from 'ptcg-server';
 import { CardInfoPaneOptions, CardInfoPaneAction } from '../card-info-pane/card-info-pane.component';
@@ -17,7 +17,7 @@ export interface CardInfoPopupData {
   templateUrl: './card-info-popup.component.html',
   styleUrls: ['./card-info-popup.component.scss']
 })
-export class CardInfoPopupComponent implements OnInit {
+export class CardInfoPopupComponent {
 
   public card: Card;
   public cardList: CardList;
@@ -37,9 +37,6 @@ export class CardInfoPopupComponent implements OnInit {
     this.facedown = data.facedown;
     this.allowReveal = data.allowReveal;
     this.options = data.options || {};
-  }
-
-  ngOnInit() {
   }
 
   public async showCardList(): Promise<void> {

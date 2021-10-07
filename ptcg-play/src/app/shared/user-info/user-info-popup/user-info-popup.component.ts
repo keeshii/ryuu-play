@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UserInfo } from 'ptcg-server';
 import { Observable } from 'rxjs';
@@ -11,7 +11,7 @@ import { SessionService } from '../../session/session.service';
   templateUrl: './user-info-popup.component.html',
   styleUrls: ['./user-info-popup.component.scss']
 })
-export class UserInfoPopupComponent implements OnInit {
+export class UserInfoPopupComponent {
 
   public user: UserInfo;
   public userId: number;
@@ -28,9 +28,6 @@ export class UserInfoPopupComponent implements OnInit {
     this.visitor$ = this.sessionService.get(session => {
       return session.loggedUserId !== this.userId;
     });
-  }
-
-  ngOnInit() {
   }
 
   public close() {

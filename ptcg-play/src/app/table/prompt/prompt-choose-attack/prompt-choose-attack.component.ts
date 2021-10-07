@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ChooseAttackPrompt, PokemonCard } from 'ptcg-server';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -12,7 +12,7 @@ import { LocalGameState } from '../../../shared/session/session.interface';
   templateUrl: './prompt-choose-attack.component.html',
   styleUrls: ['./prompt-choose-attack.component.scss']
 })
-export class PromptChooseAttackComponent implements OnInit {
+export class PromptChooseAttackComponent {
 
   @Input() prompt: ChooseAttackPrompt;
   @Input() gameState: LocalGameState;
@@ -59,9 +59,5 @@ export class PromptChooseAttackComponent implements OnInit {
         this.gameService.resolvePrompt(gameId, id, { index, attack });
       });
   }
-
-  ngOnInit() {
-  }
-
 
 }

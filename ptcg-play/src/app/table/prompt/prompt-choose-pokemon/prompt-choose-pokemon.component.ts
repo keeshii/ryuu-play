@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { ChoosePokemonPrompt, CardTarget } from 'ptcg-server';
 
 import { GameService } from 'src/app/api/services/game.service';
@@ -10,7 +10,7 @@ import { PokemonData, PokemonItem } from '../choose-pokemons-pane/pokemon-data';
   templateUrl: './prompt-choose-pokemon.component.html',
   styleUrls: ['./prompt-choose-pokemon.component.scss']
 })
-export class PromptChoosePokemonComponent implements OnInit, OnChanges {
+export class PromptChoosePokemonComponent implements OnChanges {
 
   @Input() prompt: ChoosePokemonPrompt;
   @Input() gameState: LocalGameState;
@@ -28,9 +28,6 @@ export class PromptChoosePokemonComponent implements OnInit, OnChanges {
   constructor(
     private gameService: GameService
   ) { }
-
-  ngOnInit() {
-  }
 
   public cancel() {
     const gameId = this.gameState.gameId;

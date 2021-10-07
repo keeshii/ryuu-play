@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import {TrainerType} from 'ptcg-server';
 
 @Component({
@@ -6,7 +6,7 @@ import {TrainerType} from 'ptcg-server';
   templateUrl: './trainer-type.component.html',
   styleUrls: ['./trainer-type.component.scss']
 })
-export class TrainerTypeComponent implements OnInit {
+export class TrainerTypeComponent {
 
   public typeClass = 'energy';
 
@@ -28,7 +28,5 @@ export class TrainerTypeComponent implements OnInit {
   }
 
   constructor() { }
-
-  ngOnInit() { }
 
 }

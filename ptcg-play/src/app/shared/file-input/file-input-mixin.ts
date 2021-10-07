@@ -5,11 +5,8 @@ import { CanUpdateErrorStateCtor, ErrorStateMatcher, mixinErrorState } from '@an
 /** @docs-private */
 export class FileInputBase {
   constructor(
-    // tslint:disable-next-line:variable-name
     public _defaultErrorStateMatcher: ErrorStateMatcher,
-    // tslint:disable-next-line:variable-name
     public _parentForm: NgForm,
-    // tslint:disable-next-line:variable-name
     public _parentFormGroup: FormGroupDirective,
     public ngControl: NgControl
   ) { }

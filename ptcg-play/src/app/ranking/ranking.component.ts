@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { RankingInfo } from 'ptcg-server';
 import { Subject } from 'rxjs';
@@ -19,7 +19,7 @@ import { environment } from '../../environments/environment';
   templateUrl: './ranking.component.html',
   styleUrls: ['./ranking.component.scss']
 })
-export class RankingComponent implements OnInit, OnDestroy {
+export class RankingComponent implements OnInit {
 
   public displayedColumns: string[] = ['position', 'ranking', 'user', 'actions'];
   public ranking: RankingInfo[] = [];
@@ -90,9 +90,6 @@ export class RankingComponent implements OnInit, OnDestroy {
     });
 
     this.refresh();
-  }
-
-  public ngOnDestroy() {
   }
 
   private initPagination() {

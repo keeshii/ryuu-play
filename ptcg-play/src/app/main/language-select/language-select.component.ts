@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { LanguageService, LanguageItem } from './language.service';
 
@@ -7,7 +7,7 @@ import { LanguageService, LanguageItem } from './language.service';
   templateUrl: './language-select.component.html',
   styleUrls: ['./language-select.component.scss']
 })
-export class LanguageSelectComponent implements OnInit {
+export class LanguageSelectComponent {
 
   public languages: LanguageItem[];
   public name: string;
@@ -18,9 +18,6 @@ export class LanguageSelectComponent implements OnInit {
     const value = languageService.getLanguage();
     const language = this.languages.find(l => l.value === value);
     this.name = language.name;
-  }
-
-  ngOnInit(): void {
   }
 
   public onLanguageChange(language: LanguageItem): void {

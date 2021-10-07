@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -17,7 +17,7 @@ import { environment } from '../../../environments/environment';
   templateUrl: './change-server-popup.component.html',
   styleUrls: ['./change-server-popup.component.scss']
 })
-export class ChangeServerPopupComponent implements OnInit, OnDestroy {
+export class ChangeServerPopupComponent {
 
   public value: string;
   public invalidValue: string;
@@ -32,12 +32,6 @@ export class ChangeServerPopupComponent implements OnInit, OnDestroy {
     private translate: TranslateService
   ) {
     this.value = this.apiService.getApiUrl();
-  }
-
-  ngOnInit(): void {
-  }
-
-  ngOnDestroy(): void {
   }
 
   public confirm(): void {

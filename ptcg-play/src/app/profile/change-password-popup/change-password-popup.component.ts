@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { ApiErrorEnum } from 'ptcg-server';
 import { MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
@@ -15,7 +15,7 @@ import { ProfileService } from '../../api/services/profile.service';
   templateUrl: './change-password-popup.component.html',
   styleUrls: ['./change-password-popup.component.scss']
 })
-export class ChangePasswordPopupComponent implements OnInit, OnDestroy {
+export class ChangePasswordPopupComponent {
 
   public currentPassword: string;
   public newPassword: string;
@@ -28,12 +28,6 @@ export class ChangePasswordPopupComponent implements OnInit, OnDestroy {
     private profileService: ProfileService,
     private translate: TranslateService
   ) { }
-
-  ngOnInit(): void {
-  }
-
-  ngOnDestroy(): void {
-  }
 
   public changePassword() {
     this.loading = true;

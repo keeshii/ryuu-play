@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { AnimationEvent } from '@angular/animations';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
@@ -10,7 +10,7 @@ import { ptcgInfoAnimations } from './info.animations';
   styleUrls: ['./info.component.scss'],
   animations: [ptcgInfoAnimations.ptcgAnimationState],
 })
-export class InfoComponent implements OnInit {
+export class InfoComponent {
 
   public animationState = 'hidden';
   public isVisible = false;
@@ -27,8 +27,6 @@ export class InfoComponent implements OnInit {
   }
 
   constructor() { }
-
-  ngOnInit() { }
 
   public onAnimationEnd(event: AnimationEvent) {
     const { toState } = event;

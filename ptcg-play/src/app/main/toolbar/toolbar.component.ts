@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -15,7 +15,7 @@ import { SessionService } from '../../shared/session/session.service';
   templateUrl: './toolbar.component.html',
   styleUrls: ['./toolbar.component.scss']
 })
-export class ToolbarComponent implements OnInit, OnDestroy {
+export class ToolbarComponent implements OnInit {
 
   @Output() logoClick = new EventEmitter<void>();
 
@@ -41,8 +41,6 @@ export class ToolbarComponent implements OnInit, OnDestroy {
       .pipe(untilDestroyed(this))
       .subscribe(user => this.loggedUser = user);
   }
-
-  public ngOnDestroy() { }
 
   public login() {
     this.loginPopupService.openDialog();

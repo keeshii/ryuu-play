@@ -1,5 +1,5 @@
 import { AnimationEvent } from '@angular/animations';
-import { Component, OnInit, Input, OnChanges, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Prompt, GamePhase } from 'ptcg-server';
 
@@ -14,7 +14,7 @@ import { ptcgPromptAnimations } from './prompt.animations';
   animations: [ptcgPromptAnimations.promptContent],
   encapsulation: ViewEncapsulation.None
 })
-export class PromptComponent implements OnInit, OnChanges {
+export class PromptComponent implements OnChanges {
 
   @Input() gameState: LocalGameState;
   @Input() clientId: number;
@@ -32,8 +32,6 @@ export class PromptComponent implements OnInit, OnChanges {
   prompt: Prompt<any>;
 
   constructor() { }
-
-  ngOnInit() { }
 
   ngOnChanges(changes: SimpleChanges) {
     if (!this.gameState || !this.clientId) {

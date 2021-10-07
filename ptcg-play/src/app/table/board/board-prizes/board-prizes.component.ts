@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnChanges, Output, EventEmitter } from '@angular/core';
 import { Player, CardList } from 'ptcg-server';
 
 @Component({
@@ -6,7 +6,7 @@ import { Player, CardList } from 'ptcg-server';
   templateUrl: './board-prizes.component.html',
   styleUrls: ['./board-prizes.component.scss']
 })
-export class BoardPrizesComponent implements OnInit, OnChanges {
+export class BoardPrizesComponent implements OnChanges {
 
   @Input() player: Player;
   @Input() clientId: number;
@@ -16,8 +16,6 @@ export class BoardPrizesComponent implements OnInit, OnChanges {
   public isOwner: boolean;
 
   constructor() { }
-
-  ngOnInit() { }
 
   ngOnChanges() {
     if (this.player) {

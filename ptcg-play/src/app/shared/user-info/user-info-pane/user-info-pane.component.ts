@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { UserInfo } from 'ptcg-server';
 
 @Component({
@@ -6,13 +6,10 @@ import { UserInfo } from 'ptcg-server';
   templateUrl: './user-info-pane.component.html',
   styleUrls: ['./user-info-pane.component.scss']
 })
-export class UserInfoPaneComponent implements OnInit {
+export class UserInfoPaneComponent {
 
   @Input() user: UserInfo;
 
   constructor() { }
-
-  ngOnInit(): void {
-  }
 
 }

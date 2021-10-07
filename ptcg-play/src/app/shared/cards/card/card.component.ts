@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Card } from 'ptcg-server';
 
 import { CardsBaseService } from '../cards-base.service';
@@ -9,7 +9,7 @@ import { CardsBaseService } from '../cards-base.service';
   styleUrls: ['./card.component.scss'],
   exportAs: 'ptcgCard'
 })
-export class CardComponent implements OnInit {
+export class CardComponent {
 
   public scanUrl: string;
   public data: Card;
@@ -26,7 +26,5 @@ export class CardComponent implements OnInit {
   constructor(
     private cardsBaseService: CardsBaseService,
   ) { }
-
-  ngOnInit() { }
 
 }

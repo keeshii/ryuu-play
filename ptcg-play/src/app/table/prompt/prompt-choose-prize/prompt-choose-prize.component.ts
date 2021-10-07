@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { Card, ChoosePrizePrompt } from 'ptcg-server';
 
 import { GameService } from '../../../api/services/game.service';
@@ -9,7 +9,7 @@ import { LocalGameState } from '../../../shared/session/session.interface';
   templateUrl: './prompt-choose-prize.component.html',
   styleUrls: ['./prompt-choose-prize.component.scss']
 })
-export class PromptChoosePrizeComponent implements OnInit, OnChanges {
+export class PromptChoosePrizeComponent implements OnChanges {
 
   @Input() prompt: ChoosePrizePrompt;
   @Input() gameState: LocalGameState;
@@ -44,9 +44,6 @@ export class PromptChoosePrizeComponent implements OnInit, OnChanges {
     const count = this.prompt.options.count;
     this.result = result;
     this.isInvalid = result.length !== count;
-  }
-
-  ngOnInit() {
   }
 
   ngOnChanges() {

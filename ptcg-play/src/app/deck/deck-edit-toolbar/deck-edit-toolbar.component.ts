@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { CardType, SuperType } from 'ptcg-server';
 import { MatSelectChange } from '@angular/material/select';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -13,7 +13,7 @@ import { ImportDeckPopupService } from '../import-deck-popup/import-deck-popup.s
   templateUrl: './deck-edit-toolbar.component.html',
   styleUrls: ['./deck-edit-toolbar.component.scss']
 })
-export class DeckEditToolbarComponent implements OnInit {
+export class DeckEditToolbarComponent {
 
   @Input() deck: Deck;
 
@@ -58,9 +58,6 @@ export class DeckEditToolbarComponent implements OnInit {
       superTypes: [],
       cardTypes: [],
     };
-  }
-
-  ngOnInit() {
   }
 
   public onSave() {

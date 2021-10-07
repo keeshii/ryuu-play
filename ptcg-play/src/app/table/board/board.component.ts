@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, Input, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { DraggedItem } from '@ng-dnd/sortable';
 import { DropTarget, DndService } from '@ng-dnd/core';
 import { Observable } from 'rxjs';
@@ -21,7 +21,7 @@ type DropTargetType = DropTarget<DraggedItem<HandItem> | BoardCardItem, any>;
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.scss']
 })
-export class BoardComponent implements OnInit, OnDestroy, OnChanges {
+export class BoardComponent implements OnDestroy {
 
   @Input() clientId: number;
   @Input() gameState: LocalGameState;
@@ -156,8 +156,6 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
       return;
     }
   }
-
-  ngOnInit() { }
 
   ngOnDestroy() {
     this.bottomActive.source.unsubscribe();
@@ -338,7 +336,5 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
         }
       });
   }
-
-  ngOnChanges() { }
 
 }

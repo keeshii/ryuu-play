@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { CardList, Card } from 'ptcg-server';
 
 @Component({
@@ -6,7 +6,7 @@ import { CardList, Card } from 'ptcg-server';
   templateUrl: './card-list-pane.component.html',
   styleUrls: ['./card-list-pane.component.scss']
 })
-export class CardListPaneComponent implements OnInit {
+export class CardListPaneComponent {
 
   @Input() cardList: CardList;
   @Input() selected: Card | undefined;
@@ -14,9 +14,6 @@ export class CardListPaneComponent implements OnInit {
   @Output() cardClick = new EventEmitter<Card>();
 
   constructor() { }
-
-  ngOnInit(): void {
-  }
 
   selectCard(card: Card) {
     this.cardClick.next(card);

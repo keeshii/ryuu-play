@@ -1,4 +1,4 @@
-import { Directive, Input, OnDestroy, HostBinding, HostListener } from '@angular/core';
+import { Directive, Input, HostBinding, HostListener } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
@@ -11,7 +11,7 @@ import { Subject } from 'rxjs';
 @Directive({
   selector: '[ptcgImageCache]'
 })
-export class ImageCacheDirective implements OnDestroy {
+export class ImageCacheDirective {
 
   private nextRequest = new Subject<string>();
   private imageLoaded = new Subject<void>();
@@ -28,9 +28,6 @@ export class ImageCacheDirective implements OnDestroy {
     private imageCacheService: ImageCacheService,
     private sanitizer: DomSanitizer
   ) {}
-
-  ngOnDestroy() {
-  }
 
   @Input('ptcgImageCache')
   set src(value: string) {

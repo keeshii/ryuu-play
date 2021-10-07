@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { ApiErrorEnum } from 'ptcg-server';
@@ -16,7 +16,7 @@ import { SessionService } from '../../shared/session/session.service';
   templateUrl: './change-email-popup.component.html',
   styleUrls: ['./change-email-popup.component.scss']
 })
-export class ChangeEmailPopupComponent implements OnInit {
+export class ChangeEmailPopupComponent {
 
   public loading = false;
   public invalidEmail: string;
@@ -35,9 +35,6 @@ export class ChangeEmailPopupComponent implements OnInit {
     this.userId = data.userId;
     const user = this.sessionService.session.users[data.userId];
     this.email = user ? user.email : '';
-  }
-
-  ngOnInit(): void {
   }
 
   public changeEmail(): void {
