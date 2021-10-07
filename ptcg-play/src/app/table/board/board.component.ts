@@ -1,6 +1,6 @@
 import { Component, OnInit, OnChanges, Input, OnDestroy } from '@angular/core';
-import { DraggedItem } from '@angular-skyhook/sortable';
-import { DropTarget, SkyhookDndService } from '@angular-skyhook/core';
+import { DraggedItem } from '@ng-dnd/sortable';
+import { DropTarget, DndService } from '@ng-dnd/core';
 import { Observable } from 'rxjs';
 import { Player, SlotType, PlayerType, CardTarget, Card, CardList } from 'ptcg-server';
 import { map } from 'rxjs/operators';
@@ -42,7 +42,7 @@ export class BoardComponent implements OnInit, OnDestroy, OnChanges {
 
   constructor(
     private cardsBaseService: CardsBaseService,
-    private dnd: SkyhookDndService,
+    private dnd: DndService,
     private gameService: GameService
   ) {
     // Bottom Player

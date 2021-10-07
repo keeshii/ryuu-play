@@ -1,4 +1,4 @@
-import { DragSource } from '@angular-skyhook/core';
+import { DragSource } from '@ng-dnd/core';
 import { CardTarget, PlayerType, SlotType } from 'ptcg-server';
 
 import { HandItem } from '../hand/hand-item.interface';

@@ -1,4 +1,4 @@
-<skyhook-preview [allBackends]="true">
+<dnd-preview [allBackends]="true">
     <ng-template let-type let-item="item">
         <ng-container [ngSwitch]="type">
             <div class="ptcg-card" *ngSwitchCase="'BOARD_SLOT'">
@@ -11,7 +11,7 @@
             </div>
         </ng-container>
     </ng-template>
-</skyhook-preview>
+</dnd-preview>
 
 <div class="ptcg-board-container" [dropTarget]="boardTarget">
 

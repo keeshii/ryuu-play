@@ -1,44 +1,44 @@
 <ptcg-cards-container [keepInitialSize]="true">
-  <skyhook-sortable-list
-    [ssSortableSpec]="topSortable.spec"
-    ssSortableTrigger="fixed"
-    [ssSortableChildren]="topSortable.tempList"
-    [ssSortableListId]="topListId">
+  <dnd-sortable-list
+    [spec]="topSortable.spec"
+    hoverTrigger="fixed"
+    [children]="topSortable.tempList"
+    [listId]="topListId">
 
-    <ng-template ssTemplate let-context>
+    <ng-template dndSortableTemplate let-context>
       <ptcg-card
         [ngClass]="{unavailable: !filterMap[context.data.card.fullName],
           cardback: cardbackMap[context.data.index]}"
-        [ssRender]="context"
-        #render="ssRender"
+        [dndSortableRender]="context"
+        #render="dndSortableRender"
         [dragSource]="render.source" [noHTML5Preview]="true"
-        [class.placeholder]="render.isDragging$ | async"
+        [ptcgCardPlaceholder]="render.isDragging$"
         [card]="context.data.card"
         (click)="showCardPopup(context)">
       </ptcg-card>
     </ng-template>
 
-  </skyhook-sortable-list>
+  </dnd-sortable-list>
 </ptcg-cards-container>
 
 <ptcg-cards-container [keepInitialSize]="true" *ngIf="singlePaneMode === false">
-  <skyhook-sortable-list
-    [ssSortableSpec]="bottomSortable.spec"
-    ssSortableTrigger="fixed"
-    [ssSortableChildren]="bottomSortable.tempList"
-    [ssSortableListId]="bottomListId">
+  <dnd-sortable-list
+    [spec]="bottomSortable.spec"
+    hoverTrigger="fixed"
+    [children]="bottomSortable.tempList"
+    [listId]="bottomListId">
 
-    <ng-template ssTemplate let-context>
+    <ng-template dndSortableTemplate let-context>
       <ptcg-card
         [ngClass]="{cardback: cardbackMap[context.data.index]}"
-        [ssRender]="context"
-        #render="ssRender"
+        [dndSortableRender]="context"
+        #render="dndSortableRender"
         [dragSource]="render.source" [noHTML5Preview]="true"
-        [class.placeholder]="render.isDragging$ | async"
+        [ptcgCardPlaceholder]="render.isDragging$"
         [card]="context.data.card"
         (click)="showCardPopup(context)">
       </ptcg-card>
     </ng-template>
 
-  </skyhook-sortable-list>
+  </dnd-sortable-list>
 </ptcg-cards-container>

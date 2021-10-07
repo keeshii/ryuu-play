@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { Player, Card, CardList } from 'ptcg-server';
-import { SortableSpec, DraggedItem } from '@angular-skyhook/sortable';
+import { SortableSpec, DraggedItem } from '@ng-dnd/sortable';
 
 import { CardsBaseService } from '../../shared/cards/cards-base.service';
 import { HandItem, HandCardType } from './hand-item.interface';

@@ -1,4 +1,4 @@
-import { SortableSpec } from '@angular-skyhook/sortable';
+import { SortableSpec } from '@ng-dnd/sortable';
 import { Card } from 'ptcg-server';
 
 export const PromptCardType = 'PROMPT_CARD';

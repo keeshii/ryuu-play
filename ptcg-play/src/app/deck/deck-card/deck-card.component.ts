@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { DragSource } from '@angular-skyhook/core';
+import { DragSource } from '@ng-dnd/core';
 
 import { DeckItem } from './deck-card.interface';
 

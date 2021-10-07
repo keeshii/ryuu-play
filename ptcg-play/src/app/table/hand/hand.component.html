@@ -2,24 +2,24 @@
 
   <div class="ptcg-hand-container">
 
-    <skyhook-sortable-list
-      [ssSortableSpec]="handSpec"
-      ssSortableTrigger="fixed"
-      [ssSortableChildren]="tempList"
-      [ssSortableListId]="handListId">
-      <ng-template ssTemplate let-context>
+    <dnd-sortable-list
+      [spec]="handSpec"
+      hoverTrigger="fixed"
+      [children]="tempList"
+      [listId]="handListId">
+      <ng-template dndSortableTemplate let-context>
         <ptcg-card
-          [ssRender]="context"
-          #render="ssRender"
+          [dndSortableRender]="context"
+          #render="dndSortableRender"
           [dragSource]="render.source" [noHTML5Preview]="true"
           [card]="context.data.card"
           (click)="showCardInfo(context.data.card)"
           [class.draggable]="!gameState.deleted && player?.id === clientId"
-          [class.placeholder]="render.isDragging$ | async"
+          [ptcgCardPlaceholder]="render.isDragging$"
           [class.cardback]="isFaceDown">
         </ptcg-card>
       </ng-template>
-    </skyhook-sortable-list>
+    </dnd-sortable-list>
 
   </div>
 

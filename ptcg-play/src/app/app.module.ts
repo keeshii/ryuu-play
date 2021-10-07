@@ -1,8 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { SkyhookDndModule } from '@angular-skyhook/core';
-import { MultiBackend, HTML5ToTouch } from '@angular-skyhook/multi-backend';
+import { DndModule } from '@ng-dnd/core';
+import { DndMultiBackendModule, MultiBackend, HTML5ToTouch } from '@ng-dnd/multi-backend';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 
@@ -36,7 +36,8 @@ import { TableModule } from './table/table.module';
     RankingModule,
     ReplaysModule,
     SharedModule,
-    SkyhookDndModule.forRoot({ backend: MultiBackend, options: HTML5ToTouch }),
+    DndMultiBackendModule,
+    DndModule.forRoot({ backend: MultiBackend, options: HTML5ToTouch }),
     TableModule,
     TranslateModule.forRoot({
       loader: {

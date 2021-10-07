@@ -1,4 +1,4 @@
-<skyhook-preview [allBackends]="true">
+<dnd-preview [allBackends]="true">
     <ng-template let-type let-item="item">
         <ng-container [ngSwitch]="type">
             <div class="ptcg-card" *ngSwitchCase="'DECK_CARD'">
@@ -6,14 +6,14 @@
             </div>
         </ng-container>
     </ng-template>
-</skyhook-preview>
+</dnd-preview>
 
 <cdk-virtual-scroll-viewport class="ptcg-deck-edit-pane"
   [dropTarget]="libraryTarget"
   ptcgDropHighlight [ptcgDropHighlightVisible]="libraryHighlight$ | async">
   <ptcg-deck-card
     *cdkVirtualFor="let card of (cards | filterCards: toolbarFilter)"
-    [ssExternal]="card.spec" #ext="ssExternal" [source]="ext.source"
+    [dndSortableExternal]="card.spec" #ext="dndSortableExternal" [source]="ext.source"
     (cardClick)="showCardInfo(card)"
     [card]="card">
   </ptcg-deck-card>
@@ -23,17 +23,17 @@
   [dropTarget]="deckTarget"
   ptcgDropHighlight [ptcgDropHighlightVisible]="deckHighlight$ | async">
 
-  <skyhook-sortable-list
-    ssSortableListId="CARD_LIBRARY_LIST"
-    ssSortableTrigger="fixed"
-    [ssSortableChildren]="tempList"
-    [ssSortableSpec]="deckSpec">
-    <ng-template ssTemplate let-context>
-      <!-- ssRender configures a DragSource for you, but you have to attach it. -->
+  <dnd-sortable-list
+    listId="CARD_LIBRARY_LIST"
+    hoverTrigger="fixed"
+    [children]="tempList"
+    [spec]="deckSpec">
+    <ng-template dndSortableTemplate let-context>
+      <!-- dndSortableRender configures a DragSource for you, but you have to attach it. -->
       <ptcg-deck-card
-        [ssRender]="context"
-        #render="ssRender"
-        [class.placeholder]="render.isDragging$ | async"
+        [dndSortableRender]="context"
+        #render="dndSortableRender"
+        [ptcgCardPlaceholder]="render.isDragging$"
         [source]="render.source"
         showCardCount="true"
         (cardClick)="showCardInfo(render.data)"
@@ -41,6 +41,6 @@
         [card]="render.data">
       </ptcg-deck-card>
     </ng-template>
-  </skyhook-sortable-list>
+  </dnd-sortable-list>
 
 </div>

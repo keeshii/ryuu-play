@@ -16,7 +16,7 @@ $ptcg-hand-height: calc(var(--card-size) * #{$card-aspect-ratio} + #{2 * $ptcg-h
   margin: 0 auto;
 }
 
-skyhook-sortable-list {
+dnd-sortable-list {
   display: flex;
 }
 

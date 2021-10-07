@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 import { Card } from 'ptcg-server';
-import { DraggedItem } from '@angular-skyhook/sortable';
+import { DraggedItem } from '@ng-dnd/sortable';
 
 import { CardsBaseService } from '../../../shared/cards/cards-base.service';
 import { PromptCardType, PromptItem } from '../prompt-card-item.interface';

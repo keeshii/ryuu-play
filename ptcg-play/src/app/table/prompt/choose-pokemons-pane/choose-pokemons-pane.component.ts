@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { PlayerType, Card } from 'ptcg-server';
-import { DraggedItem } from '@angular-skyhook/sortable';
-import { DropTarget, SkyhookDndService } from '@angular-skyhook/core';
+import { DraggedItem } from '@ng-dnd/sortable';
+import { DropTarget, DndService } from '@ng-dnd/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -43,7 +43,7 @@ export class ChoosePokemonsPaneComponent implements OnInit, OnDestroy {
 
   constructor(
     private cardsBaseService: CardsBaseService,
-    private dnd: SkyhookDndService
+    private dnd: DndService
   ) { }
 
   private buildDropTargets(pokemonRows: PokemonRow[]): PokemonDropRow[] {

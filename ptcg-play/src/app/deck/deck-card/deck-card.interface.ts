@@ -1,5 +1,5 @@
 import { Card } from 'ptcg-server';
-import { SortableSpec } from '@angular-skyhook/sortable';
+import { SortableSpec } from '@ng-dnd/sortable';
 
 import { DeckEditPane } from '../deck-edit-panes/deck-edit-pane.interface';
 

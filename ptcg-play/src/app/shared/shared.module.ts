@@ -2,9 +2,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { MaterialModule } from './material.module';
 import { NgModule } from '@angular/core';
-import { SkyhookDndModule } from '@angular-skyhook/core';
-import { SkyhookMultiBackendModule } from '@angular-skyhook/multi-backend';
-import { SkyhookSortableModule } from '@angular-skyhook/sortable';
+import { DndModule } from '@ng-dnd/core';
+import { DndMultiBackendModule } from '@ng-dnd/multi-backend';
+import { DndSortableModule } from '@ng-dnd/sortable';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { AlertModule } from './alert/alert.module';
@@ -31,9 +31,9 @@ import { ValidationModule } from './validation/validation.module';
     FormsModule,
     ImageCacheModule,
     MaterialModule,
-    SkyhookDndModule,
-    SkyhookMultiBackendModule,
-    SkyhookSortableModule,
+    DndMultiBackendModule,
+    DndSortableModule,
+    DndModule,
     TranslateModule,
     UserInfoModule,
     ValidationModule
@@ -61,9 +61,9 @@ import { ValidationModule } from './validation/validation.module';
     SearchBoxComponent,
     SidebarComponent,
     SidebarContainerComponent,
-    SkyhookDndModule,
-    SkyhookMultiBackendModule,
-    SkyhookSortableModule,
+    DndModule,
+    DndMultiBackendModule,
+    DndSortableModule,
     TranslateModule,
     UserInfoModule,
     ValidationModule

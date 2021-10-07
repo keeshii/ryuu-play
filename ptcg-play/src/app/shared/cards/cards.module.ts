@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SkyhookDndModule } from '@angular-skyhook/core';
-import { SkyhookMultiBackendModule } from '@angular-skyhook/multi-backend';
+import { DndModule } from '@ng-dnd/core';
+import { DndMultiBackendModule } from '@ng-dnd/multi-backend';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { CardComponent } from './card/card.component';
@@ -11,6 +11,7 @@ import { CardInfoPaneComponent } from './card-info-pane/card-info-pane.component
 import { CardInfoPopupComponent } from './card-info-popup/card-info-popup.component';
 import { CardListPaneComponent } from './card-list-pane/card-list-pane.component';
 import { CardListPopupComponent } from './card-list-popup/card-list-popup.component';
+import { CardPlaceholderDirective } from './card-placeholder/card-placeholder.directive';
 import { DropHighlightDirective } from './drop-highlight/drop-highlight.directive';
 import { EnergyComponent } from './energy/energy.component';
 import { ImageCacheModule } from '../image-cache/image-cache.module';
@@ -23,8 +24,8 @@ import { HoverHighlightComponent } from './hover-highlight/hover-highlight.compo
     CommonModule,
     ImageCacheModule,
     MaterialModule,
-    SkyhookDndModule,
-    SkyhookMultiBackendModule,
+    DndMultiBackendModule,
+    DndModule,
     TranslateModule
   ],
   declarations: [
@@ -34,6 +35,7 @@ import { HoverHighlightComponent } from './hover-highlight/hover-highlight.compo
     CardInfoPopupComponent,
     CardListPaneComponent,
     CardListPopupComponent,
+    CardPlaceholderDirective,
     EnergyComponent,
     DropHighlightDirective,
     TrainerTypeComponent,
@@ -48,6 +50,7 @@ import { HoverHighlightComponent } from './hover-highlight/hover-highlight.compo
   ],
   exports: [
     CardComponent,
+    CardPlaceholderDirective,
     EnergyComponent,
     DropHighlightDirective
   ]

@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, NgZone } from '@angular/core';
-import { SkyhookDndService, DropTarget } from '@angular-skyhook/core';
-import { DraggedItem, SortableSpec } from '@angular-skyhook/sortable';
+import { DndService, DropTarget } from '@ng-dnd/core';
+import { DraggedItem, SortableSpec } from '@ng-dnd/sortable';
 import { Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { VIRTUAL_SCROLL_STRATEGY } from '@angular/cdk/scrolling';
@@ -51,7 +51,7 @@ export class DeckEditPanesComponent implements OnInit, OnDestroy {
     private alertService: AlertService,
     private cardsBaseService: CardsBaseService,
     private ngZone: NgZone,
-    private dnd: SkyhookDndService,
+    private dnd: DndService,
     private translate: TranslateService
   ) {
     [this.deckTarget, this.deckHighlight$] = this.initDropTarget(DeckEditPane.DECK);
