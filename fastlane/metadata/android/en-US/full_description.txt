@@ -1,0 +1,10 @@
+RyuuPlay is a simulator for the Pokémon Trading Card Game written in
+TypeScript. The source code is entirely open source and published
+under MIT licence.
+
+The project is created for the educational purpose only. There are no
+plans to adding new features or cards, but feel free to fork it and
+experiment on your own.
+
+More information is available on the github page
+[https://github.com/keeshii/ryuu-play]

@@ -12,7 +12,11 @@ Web page:
 https://ptcg.ryuu.eu/
 
 Android application:
-https://ptcg.ryuu.eu/RyuuPlay-0.0.1.apk
+[RyuuPlay-latest.apk](https://ptcg.ryuu.eu/RyuuPlay-latest.apk)
+
+Screenshots:
+[00.png](https://github.com/keeshii/ryuu-play/raw/master/fastlane/metadata/android/en-US/images/phoneScreenshots/00.png)
+[01.png](https://github.com/keeshii/ryuu-play/raw/master/fastlane/metadata/android/en-US/images/phoneScreenshots/01.png)
 
 ### Project overview
 
@@ -20,9 +24,9 @@ The project consists of three packages:
 
 * **ptcg-server** is a game server. It is responsible for calculating the game state and propagating it to the connected clients by websockets.
 
-* **ptcg-play** is a web application written in Angular. It displays the game state and allow interaction with the server.
+* **ptcg-play** is a web application written in Angular. It displays the game state and allows interaction with the server.
 
-* **ptcg-cordova** is a cordova wrapper for the ptcg-play package, so it can be running as an android application. This has some advantages like caching card images.
+* **ptcg-cordova** is a cordova wrapper for the ptcg-play package, so it can be running as an android application. This has some advantages like storing card images in the cache or avoiding CORS issues.
 
 ### Server launch
 
@@ -43,7 +47,7 @@ npm install
 2. Then, build the project and start it.
 
 ```
-npm build
+npm run build
 npm start
 ```
 
@@ -101,17 +105,22 @@ Building an android wrapper is a little more complicated than the web client. Th
 npm install
 ```
 
-3. Build the web client.
+2. Create android project with cordova.
+
+```
+npx cordova platform add android
+```
+
+3. Build the web client. It will also apply some patches to the cordova sources to correct the scale for the phones/tablets.
 
 ```
 npm run build
 ```
 
-4. Use cordova to build the android application.
+5. Use cordova to build the android application.
 
 ```
-cordova platform add android
-cordova build android --release
+npx cordova build android --release
 ```
 
 You may find more detailed instruction on the https://cordova.apache.org/
@@ -121,7 +130,7 @@ You may find more detailed instruction on the https://cordova.apache.org/
 
 The cards are implemented on the server side. It is not required to rebuild the client after adding/chaning the cards, because all the simulation is handled by the server and list of available cards are downloaded by clients after successful login. This guarantees consistency between clients.
 
-Currently there are about 250 cards added to the project. You may find them in the the directory `ptcg-server/sets`. It may work as good example for adding new cards to the project.
+Currently there are about 250 cards added to the project. You may find them in the the directory `ptcg-server/sets`. If you wish to add some more cards, it is the good place to look into.
 
 The best way to enable/disable a set is by editing the file `ptcg-server/start.js` and commenting calls to the `defineSet` function:
 ```
