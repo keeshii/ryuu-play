@@ -14,13 +14,13 @@ export class GenericSerializer<T extends Object> implements Serializer<T> {
     const constructorName = this.constructorName;
     return {
       _type: constructorName,
-      ...state
+      ...(state as Object)
     };
   }
 
   public deserialize(data: Serialized, context: SerializerContext): T {
     const instance = new this.creatorClass();
-    delete data._type;
+    delete (data as any)._type;
     return Object.assign(instance, data);
   }
 

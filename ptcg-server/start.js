@@ -1,30 +1,22 @@
 require('./config');
 
-const { App } = require('./dist/backend/app');
-const { BotManager } = require('./dist/game/bots/bot-manager');
-const { SimpleBot } = require('./dist/simple-bot/simple-bot');
-const { CardManager } = require('./dist/game/cards/card-manager');
-const { StateSerializer } = require('./dist/game/serializer/state-serializer');
-const {
-  setBlackAndWhite,
-  setBlackAndWhite2,
-  setBlackAndWhite3,
-  setBlackAndWhite4,
-  setDiamondAndPearl,
-  setHgss,
-  setOp9
-} = require('./dist/sets');
-const { config } = require('./dist/config');
+const { App } = require('./output/backend/app');
+const { BotManager } = require('./output/game/bots/bot-manager');
+const { SimpleBot } = require('./output/simple-bot/simple-bot');
+const { CardManager } = require('./output/game/cards/card-manager');
+const { StateSerializer } = require('./output/game/serializer/state-serializer');
+const { config } = require('./output/config');
+const sets = require('./output/sets');
 const process = require('process');
 
 const cardManager = CardManager.getInstance();
-cardManager.defineSet(setDiamondAndPearl);
-cardManager.defineSet(setOp9);
-cardManager.defineSet(setHgss);
-cardManager.defineSet(setBlackAndWhite);
-cardManager.defineSet(setBlackAndWhite2);
-cardManager.defineSet(setBlackAndWhite3);
-cardManager.defineSet(setBlackAndWhite4);
+cardManager.defineSet(sets.setDiamondAndPearl);
+cardManager.defineSet(sets.setOp9);
+cardManager.defineSet(sets.setHgss);
+cardManager.defineSet(sets.setBlackAndWhite);
+cardManager.defineSet(sets.setBlackAndWhite2);
+cardManager.defineSet(sets.setBlackAndWhite3);
+cardManager.defineSet(sets.setBlackAndWhite4);
 
 StateSerializer.setKnownCards(cardManager.getAllCards());
 

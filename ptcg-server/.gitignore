@@ -1,6 +1,7 @@
 .nyc_output
 coverage
 dist
+output
 node_modules
 avatars
 

@@ -1,4 +1,4 @@
-const { config } = require('./dist/config');
+const { config } = require('./output/config');
 
 config.backend.address = 'localhost';
 config.backend.port = 12021;

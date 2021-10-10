@@ -16,7 +16,7 @@ export class StateLogSerializer implements Serializer<StateLog> {
   }
 
   public deserialize(data: Serialized, context: SerializerContext): StateLog {
-    delete data._type;
+    delete (data as any)._type;
     const instance = new StateLog(data.message, data.params, data.client);
     return Object.assign(instance, data);
   }

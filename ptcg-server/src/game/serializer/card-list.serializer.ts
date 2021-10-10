@@ -35,7 +35,7 @@ export class CardListSerializer implements Serializer<CardList> {
       ? new PokemonCardList()
       : new CardList();
 
-    delete data._type;
+    delete (data as any)._type;
 
     if (data.tool !== undefined) {
       data.tool = this.fromIndex(data.tool, context);

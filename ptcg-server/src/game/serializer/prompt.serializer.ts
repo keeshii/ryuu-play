@@ -69,7 +69,7 @@ export class PromptSerializer implements Serializer<Prompt<any>> {
       throw new GameError(GameCoreError.ERROR_SERIALIZER, `Unknown prompt type '${data._type}'.`);
     }
     const prompt = Object.create(row.classValue.prototype);
-    delete data._type;
+    delete (data as any)._type;
     return Object.assign(prompt, data);
   }
 

@@ -1,4 +1,4 @@
-import { gzip, ungzip } from 'pako';
+import { gzip, ungzip } from '@progress/pako-esm';
 
 import { State, GameWinner } from "../store/state/state";
 import { ReplayPlayer, ReplayOptions } from "./replay.interface";

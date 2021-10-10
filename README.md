@@ -68,15 +68,22 @@ config.storage.database = 'name';
 
 ### Client launch
 
-The client is an Angular application. For more detailed setup information, you may visit the page https://angular.io/. To build the client, you must go to the `ptcg-play` directory, install the dependencies.
+The client is an Angular application. For more detailed setup information, you may visit the page https://angular.io/. The source code of the client is located in the `ptcg-play` directory.
 
-1. Install the node packages.
+1. The server package is a dependency required by the client. First you must build the server, it was described in the previous section. From the `ptcg-server` invoke following commands.
+
+```
+npm install
+npm run build
+```
+
+1. With server compiled, you can go now to the `ptcg-play` directory and install dependencies.
 
 ```
 npm install
 ```
 
-2. Start the aplication
+2. Start the aplication.
 
 ```
 npm start
@@ -128,7 +135,7 @@ You may find more detailed instruction on the https://cordova.apache.org/
 
 ### Managing cards
 
-The cards are implemented on the server side. It is not required to rebuild the client after adding/chaning the cards, because all the simulation is handled by the server and list of available cards are downloaded by clients after successful login. This guarantees consistency between clients.
+The cards are implemented on the server side. It is not required to rebuild the client after adding/modyfing the cards, because all the simulation is handled by the server and list of available cards are downloaded by clients after successful login. This guarantees consistency between clients.
 
 Currently there are about 250 cards added to the project. You may find them in the the directory `ptcg-server/sets`. If you wish to add some more cards, it is the good place to look into.
 
@@ -141,7 +148,7 @@ cardManager.defineSet(setBlackAndWhite);
 
 ### Adding bots
 
-You can create autonomous AI players on your private server. They work as regular players, but you have to create decks for them. Initially there is one bot loaded, called `bot`, but you can always add more. They are defined in the file `ptcg-server/start.js`.
+You can create autonomous AI players on your private server. They work as regular player that always has time to play with you. Initially there is one bot loaded, called `bot`, of course you can always add more. They are defined in the file `ptcg-server/start.js`.
 
 ```
 botManager.registerBot(new SimpleBot('bot'));
@@ -149,5 +156,8 @@ botManager.registerBot(new SimpleBot('bot'));
 
 SimpleBot is the universal AI implementation that should be capable of playing with any deck. It creates list of possible actions, simulates the outcome and compares the score of the game state. Then chooses the best possible action and repeats the process until its turn is over. For more details check the source code at `ptcg-server/src/simple-bot`.
 
-Server is automatically creating an account for bot user with password provided in the `config.js` file. You can login as this user and create a deck for it. If you define more than one deck, then each time bot will randomly choose one.
+Server is automatically creating an account for bot user with password provided in the `config.js` file. You can login as this user and create a deck for it. Actually it is required to create a deck for the bot player, otherwise it won't accept any game invitation. If you define more than one deck, then each time bot will randomly choose one.
 
+### License
+
+MIT
