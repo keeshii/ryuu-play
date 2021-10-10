@@ -1,13 +1,13 @@
-import * as io from 'socket.io';
+import { Socket } from 'socket.io';
 
 import { ApiErrorEnum } from '../common/errors';
 import { User } from '../../storage';
 import { RateLimit } from '../common/rate-limit';
 import { validateToken } from '../services/auth-token';
 
-export async function authMiddleware(socket: io.Socket, next: (err?: any) => void): Promise<void> {
+export async function authMiddleware(socket: Socket, next: (err?: any) => void): Promise<void> {
   const rateLimit = RateLimit.getInstance();
-  const token: string = socket.handshake.query && socket.handshake.query.token;
+  const token: string = socket.handshake.query && socket.handshake.query.token as string;
   const userId = validateToken(token);
   const ipAddress: string = socket.request.connection.remoteAddress || '0.0.0.0';
 

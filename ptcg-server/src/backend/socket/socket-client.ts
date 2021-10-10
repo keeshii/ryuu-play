@@ -1,4 +1,4 @@
-import * as io from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { Client } from '../../game/client/client.interface';
 import { Game } from '../../game/core/game';
 import { State } from '../../game/store/state/state';
@@ -23,7 +23,7 @@ export class SocketClient implements Client {
   private gameSocket: GameSocket;
   private messageSocket: MessageSocket;
 
-  constructor(user: User, core: Core, io: io.Server, socket: io.Socket) {
+  constructor(user: User, core: Core, io: Server, socket: Socket) {
     this.user = user;
     this.name = user.name;
     this.socket = new SocketWrapper(io, socket);

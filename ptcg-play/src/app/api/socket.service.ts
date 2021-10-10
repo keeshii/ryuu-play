@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ApiErrorEnum } from 'ptcg-server';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { Socket, io } from 'socket.io-client';
 import { timeout, catchError } from 'rxjs/operators';
-import * as io from 'socket.io-client';
 
 import { ApiError } from './api.error';
 import { environment } from '../../environments/environment';
@@ -15,7 +15,7 @@ interface SocketResponse<T> {
 @Injectable()
 export class SocketService {
 
-  public socket: SocketIOClient.Socket;
+  public socket: Socket;
   private callbacks: {event: string, fn: any}[] = [];
   private enabled = false;
   private connectionSubject = new BehaviorSubject<boolean>(false);
@@ -34,7 +34,7 @@ export class SocketService {
       this.socket.off('disconnect');
     }
 
-    this.socket = io.connect(apiUrl, {
+    this.socket = io(apiUrl, {
       autoConnect: false,
       reconnection: false,
       query: {}

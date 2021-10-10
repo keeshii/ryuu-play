@@ -1,4 +1,4 @@
-import * as io from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { ApiErrorEnum } from '../common/errors';
 
 export type Response<R = void> = (message: string, data?: R | ApiErrorEnum) => void;
@@ -12,11 +12,11 @@ interface Listener<T, R> {
 
 export class SocketWrapper {
 
-  public io: io.Server;
-  public socket: io.Socket;
+  public io: Server;
+  public socket: Socket;
   private listeners: Listener<any, any>[] = [];
 
-  constructor(io: io.Server, socket: io.Socket) {
+  constructor(io: Server, socket: Socket) {
     this.io = io;
     this.socket = socket;
   }

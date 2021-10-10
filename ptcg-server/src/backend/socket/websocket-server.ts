@@ -1,25 +1,32 @@
 import * as http from 'http';
-import * as io from 'socket.io';
+import { Server, Socket, ServerOptions } from 'socket.io';
 
 import { Core } from '../../game/core/core';
 import { SocketClient } from './socket-client';
 import { User } from '../../storage';
 import { authMiddleware } from './auth-middleware';
+import {config} from '../../config';
 
-export type Middleware = (socket: io.Socket, next: (err?: any) => void) => void;
+export type Middleware = (socket: Socket, next: (err?: any) => void) => void;
 
 export class WebSocketServer {
-  public server: io.Server | undefined;
+  public server: Server | undefined;
 
   constructor(private core: Core) { }
 
   public async listen(httpServer: http.Server): Promise<void> {
-    const server = io.listen(httpServer);
+    const opts: Partial<ServerOptions> = {};
+
+    if (config.backend.allowCors) {
+      opts.cors = { origin: '*' };
+    }
+
+    const server = new Server(httpServer, opts);
 
     this.server = server;
     server.use(authMiddleware);
 
-    server.on('connection', (socket: io.Socket) => {
+    server.on('connection', (socket: Socket) => {
       const user: User = (socket as any).user;
 
       const socketClient = new SocketClient(user, this.core, server, socket);
