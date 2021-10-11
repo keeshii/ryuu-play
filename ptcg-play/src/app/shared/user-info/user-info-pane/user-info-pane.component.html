@@ -16,14 +16,14 @@
       <tr>
         <th translate>USERS_REGISTERED</th>
         <td>
-          {{ user.registered | date }}
+          {{ user.registered | date: ('DATE_FORMAT' | translate) }}
         </td>
       </tr>
       <tr>
         <th translate>USERS_LAST_SEEN</th>
         <td>
           <span *ngIf="!user.connected; else connected">
-            {{ user.lastSeen | date }}
+            {{ user.lastSeen | date: ('DATE_FORMAT' | translate) }}
           </span>
       <ng-template #connected>
         <ptcg-badge>

@@ -90,7 +90,7 @@
 
     <div class="ptcg-u-padding ptcg-table-loading-failed" *ngIf="loadingFailed">
       <p translate>TABLE_ERROR_LOADING</p>
-      <button mat-raised-button color="primary" (click)="loadMatches(id)">
+      <button mat-raised-button color="primary" (click)="refresh(id)">
         {{ 'BUTTON_TRY_AGAIN' | translate }}
       </button>
     </div>

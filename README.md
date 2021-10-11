@@ -70,20 +70,15 @@ config.storage.database = 'name';
 
 The client is an Angular application. For more detailed setup information, you may visit the page https://angular.io/. The source code of the client is located in the `ptcg-play` directory.
 
-1. The server package is a dependency required by the client. First you must build the server, it was described in the previous section. From the `ptcg-server` invoke following commands.
+1. The server package is a dependency required by the client. First you must build the server, it was described in the previous section.
 
-```
-npm install
-npm run build
-```
-
-1. With server compiled, you can go now to the `ptcg-play` directory and install dependencies.
+2. With server compiled, you can go now to the `ptcg-play` directory and install dependencies.
 
 ```
 npm install
 ```
 
-2. Start the aplication.
+3. Start the aplication.
 
 ```
 npm start
@@ -112,13 +107,13 @@ Building an android wrapper is a little more complicated than the web client. Th
 npm install
 ```
 
-2. Create android project with cordova.
+3. Create android project with cordova.
 
 ```
 npx cordova platform add android
 ```
 
-3. Build the web client. It will also apply some patches to the cordova sources to correct the scale for the phones/tablets.
+4. Build the web client. It will also apply some patches to the cordova sources to correct the scale for the phones/tablets.
 
 ```
 npm run build
@@ -156,7 +151,7 @@ botManager.registerBot(new SimpleBot('bot'));
 
 SimpleBot is the universal AI implementation that should be capable of playing with any deck. It creates list of possible actions, simulates the outcome and compares the score of the game state. Then chooses the best possible action and repeats the process until its turn is over. For more details check the source code at `ptcg-server/src/simple-bot`.
 
-Server is automatically creating an account for bot user with password provided in the `config.js` file. You can login as this user and create a deck for it. Actually it is required to create a deck for the bot player, otherwise it won't accept any game invitation. If you define more than one deck, then each time bot will randomly choose one.
+Server is automatically creating an account for bot user with password provided in the `config.js` file. You can login as that user, define its deck and set an avatar. AI player won't be able to accept the game invitation until you provide him a valid deck. If you define more than one deck, then each time bot will randomly choose one.
 
 ### License
 

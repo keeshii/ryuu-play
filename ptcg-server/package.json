@@ -44,6 +44,7 @@
     "ignore": [
       "coverage/*",
       "dist/*",
+      "output/*",
       ".nyc_output/*"
     ],
     "delay": "2500",

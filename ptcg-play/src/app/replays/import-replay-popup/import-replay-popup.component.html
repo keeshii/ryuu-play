@@ -14,7 +14,7 @@
         </tr>
         <tr>
           <th translate>LABEL_DATE</th>
-          <td>{{ replay.created | date:'yyyy-MM-dd HH:mm' }}</td>
+          <td>{{ replay.created | date: ('DATE_FORMAT' | translate) }}</td>
         </tr>
         <tr>
           <th translate>LABEL_PLAYER_1</th>
