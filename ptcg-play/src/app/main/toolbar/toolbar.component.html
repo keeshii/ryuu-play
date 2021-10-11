@@ -11,6 +11,7 @@
     </button>
     <ptcg-user-bar *ngIf="loggedUser"
       class="ptcg-logged-user"
+      [openUserPopup]="false"
       [user]="loggedUser"
       [matMenuTriggerFor]="menu">
     </ptcg-user-bar>
