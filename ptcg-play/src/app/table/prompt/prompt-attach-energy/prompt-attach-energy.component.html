@@ -9,10 +9,11 @@
   </ptcg-choose-pokemons-pane>
 
   <ptcg-choose-cards-panes
-    [cards]="cardList.cards"
+    [cards]="cardListCards"
     [filter]="filter"
     [blocked]="blocked"
-    [singlePaneMode]="true">
+    [singlePaneMode]="true"
+    (changeCards)="onChange($event)">
   </ptcg-choose-cards-panes>
 </div>
 

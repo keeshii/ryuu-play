@@ -1,5 +1,5 @@
 import { AnimationEvent } from '@angular/animations';
-import { Component, Input, OnChanges, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { Component, Input, NgZone, OnChanges, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Prompt, GamePhase } from 'ptcg-server';
 
@@ -31,7 +31,7 @@ export class PromptComponent implements OnChanges {
 
   prompt: Prompt<any>;
 
-  constructor() { }
+  constructor(private ngZone: NgZone) { }
 
   ngOnChanges(changes: SimpleChanges) {
     if (!this.gameState || !this.clientId) {
@@ -62,9 +62,13 @@ export class PromptComponent implements OnChanges {
 
   /** Callback, invoked whenever an animation on the host completes. */
   onAnimationEnd(event: AnimationEvent) {
-    if (event.toState === 'exit') {
-      this.isPromptActive = false;
-    }
+    // Animation callbacks should be running inside ngZone.
+    // See https://github.com/angular/angular/issues/11881
+    this.ngZone.run(() => {
+      if (event.toState === 'exit') {
+        this.isPromptActive = false;
+      }
+    });
   }
 
   /** Starts the dialog enter animation. */

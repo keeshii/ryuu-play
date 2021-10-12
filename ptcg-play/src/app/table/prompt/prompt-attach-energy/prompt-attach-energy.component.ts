@@ -25,7 +25,7 @@ export class PromptAttachEnergyComponent implements OnChanges {
   public allowedCancel: boolean;
   public promptId: number;
   public message: string;
-  public cardList: CardList;
+  public cardListCards: Card[];
   public filter: FilterType;
   public blocked: number[];
   public isInvalid = false;
@@ -63,7 +63,7 @@ export class PromptAttachEnergyComponent implements OnChanges {
     if (this.options.differentTargets && this.results.some(r => r.to === item)) {
       return;
     }
-    const index = this.cardList.cards.indexOf(card);
+    const index = this.cardListCards.indexOf(card);
     if (index === -1) {
       return;
     }
@@ -76,25 +76,34 @@ export class PromptAttachEnergyComponent implements OnChanges {
     this.updateIsInvalid(this.results);
   }
 
+  public onChange(result: number[]) {
+    // Don't update when card dropped on the same spot and order didn't change
+    if (result.every((item, index) => item === index)) {
+      return;
+    }
+    const cards = this.cardListCards;
+    this.cardListCards = result.map(index => cards[index]);
+  }
+
   public reset() {
     this.results.forEach(r => {
       const item = r.to;
       item.cardList = Object.assign(new PokemonCardList(), item.cardList);
       item.cardList.cards = item.cardList.cards.filter(c => c !== r.card);
     });
-    this.cardList.cards = [ ...this.initialCards ];
+    this.cardListCards = [ ...this.initialCards ];
     this.results = [];
     this.updateIsInvalid(this.results);
   }
 
   private moveCard(to: PokemonItem, card: Card) {
-    this.cardList.cards = [...this.cardList.cards];
+    this.cardListCards = [...this.cardListCards];
 
     to.cardList = Object.assign(new PokemonCardList(), to.cardList);
     to.cardList.cards = [...to.cardList.cards];
 
-    const index = this.cardList.cards.indexOf(card);
-    this.cardList.cards.splice(index, 1);
+    const index = this.cardListCards.indexOf(card);
+    this.cardListCards.splice(index, 1);
     to.cardList.cards.push(card);
   }
 
@@ -116,7 +125,7 @@ export class PromptAttachEnergyComponent implements OnChanges {
 
       this.pokemonData = new PokemonData(state, playerId, playerType, slots);
       this.allowedCancel = prompt.options.allowCancel;
-      this.cardList = prompt.cardList;
+      this.cardListCards = prompt.cardList.cards;
       this.initialCards = prompt.cardList.cards;
       this.filter = prompt.filter;
       this.message = prompt.message;
