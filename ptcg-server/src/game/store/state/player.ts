@@ -18,6 +18,8 @@ export class Player {
 
   stadium: CardList = new CardList();
 
+  supporter: CardList = new CardList();
+
   active: PokemonCardList = new PokemonCardList();
 
   bench: PokemonCardList[] = [];
@@ -27,8 +29,6 @@ export class Player {
   retreatedTurn: number = 0;
 
   energyPlayedTurn: number = 0;
-
-  supporterPlayedTurn: number = 0;
   
   stadiumPlayedTurn: number = 0;
 

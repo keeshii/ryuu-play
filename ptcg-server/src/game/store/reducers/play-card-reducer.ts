@@ -76,10 +76,9 @@ export function playCardReducer(store: StoreLike, state: State, action: Action):
             if (state.turn === 1 && !state.rules.firstTurnUseSupporter) {
               throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
             }
-            if (player.supporterPlayedTurn === state.turn) {
+            if (player.supporter.cards.length > 0) {
               throw new GameError(GameMessage.SUPPORTER_ALREADY_PLAYED);
             }
-            player.supporterPlayedTurn = state.turn;
             effect = new PlaySupporterEffect(player, handCard, target);
             break;
           case TrainerType.STADIUM:

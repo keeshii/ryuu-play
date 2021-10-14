@@ -28,7 +28,8 @@ export class ProfessorJuniper extends TrainerCard {
         throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
       }
 
-      player.hand.moveTo(player.discard);
+      const cards = player.hand.cards.filter(c => c !== this);
+      player.hand.moveCardsTo(cards, player.discard);
       player.deck.moveTo(player.hand, 7);
     }
 

@@ -30,7 +30,7 @@ $board-min-height: calc(6 * var(--card-size) * #{$card-aspect-ratio} + 2 * #{map
   grid-template-rows: auto;
 
   grid-template-areas:
-    "prizes none active stadium deck"
+    "prizes stadium active supporter deck"
     "prizes bench bench bench deck";
 
   &.upside-down {
@@ -53,6 +53,7 @@ $board-min-height: calc(6 * var(--card-size) * #{$card-aspect-ratio} + 2 * #{map
 }
 
 .ptcg-board-active,
+.ptcg-board-supporter,
 .ptcg-board-stadium {
   > ptcg-board-card,
   > .ptcg-board-drop-target {
@@ -87,11 +88,19 @@ ptcg-board-deck {
 }
 
 .ptcg-board-stadium {
-  align-items: flex-start;
   grid-area: stadium;
+}
 
-  > ptcg-board-card {
-    transform: translateY(-50%);
+.ptcg-board-supporter {
+  grid-area: supporter;
+}
+
+.stadium-card {
+  align-self: flex-start;
+  transform: rotate(-90deg);
+
+  .upside-down & {
+    transform: rotate(90deg);
   }
 }
 

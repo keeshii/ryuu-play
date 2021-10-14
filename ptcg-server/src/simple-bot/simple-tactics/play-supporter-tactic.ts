@@ -5,7 +5,7 @@ import { SimpleTactic } from "./simple-tactics";
 export class PlaySupporterTactic extends SimpleTactic {
 
   public useTactic(state: State, player: Player): Action | undefined {
-    if (player.supporterPlayedTurn >= state.turn) {
+    if (player.supporter.cards.length > 0) {
       return;
     }
 

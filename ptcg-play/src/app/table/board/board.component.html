@@ -34,10 +34,18 @@
     </div>
 
     <!-- Top Stadium -->
-    <div class="ptcg-board-row ptcg-board-stadium">
-      <ptcg-board-card
+    <div class="ptcg-board-row ptcg-board-supporter">
+      <ptcg-board-card class="stadium-card"
         [cardList]="topPlayer?.stadium" [owner]="topPlayer?.id === clientId"
         (cardClick)="onStadiumClick($event)">
+      </ptcg-board-card>
+    </div>
+
+    <!-- Top Supporter -->
+    <div class="ptcg-board-row ptcg-board-stadium">
+      <ptcg-board-card
+        [cardList]="topPlayer?.supporter" [owner]="topPlayer?.id === clientId"
+        (cardClick)="onCardClick($event, null)">
       </ptcg-board-card>
     </div>
 
@@ -88,9 +96,17 @@
 
     <!-- Bottom Stadium -->
     <div class="ptcg-board-row ptcg-board-stadium">
-      <ptcg-board-card
+      <ptcg-board-card class="stadium-card"
         [cardList]="bottomPlayer?.stadium" [owner]="bottomPlayer?.id === clientId"
         (cardClick)="onStadiumClick($event)">
+      </ptcg-board-card>
+    </div>
+
+    <!-- Bottom Supporter -->
+    <div class="ptcg-board-row ptcg-board-supporter">
+      <ptcg-board-card
+        [cardList]="bottomPlayer?.supporter" [owner]="bottomPlayer?.id === clientId"
+        (cardClick)="onCardClick($event, null)">
       </ptcg-board-card>
     </div>
 

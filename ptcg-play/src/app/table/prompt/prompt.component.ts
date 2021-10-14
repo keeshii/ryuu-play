@@ -62,13 +62,11 @@ export class PromptComponent implements OnChanges {
 
   /** Callback, invoked whenever an animation on the host completes. */
   onAnimationEnd(event: AnimationEvent) {
-    // Animation callbacks should be running inside ngZone.
+    // Animation callbacks may cause ExpressionChangedAfterItHasBeenCheckedError.
     // See https://github.com/angular/angular/issues/11881
-    this.ngZone.run(() => {
-      if (event.toState === 'exit') {
-        this.isPromptActive = false;
-      }
-    });
+    if (event.toState === 'exit') {
+      setTimeout(() => { this.isPromptActive = false; });
+    }
   }
 
   /** Starts the dialog enter animation. */

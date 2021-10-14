@@ -76,6 +76,9 @@ function startNextTurn(store: StoreLike, state: State): State {
   // Remove Paralyzed at the end of the turn
   player.active.removeSpecialCondition(SpecialCondition.PARALYZED);
 
+  // Move supporter cards to discard
+  player.supporter.moveTo(player.discard);
+
   return betweenTurns(store, state, () => {
     if (state.phase !== GamePhase.FINISHED) {
       return initNextTurn(store, state);
