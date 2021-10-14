@@ -50,7 +50,7 @@ function* playCard(next: Function, store: StoreLike, state: State,
     next();
   });
 
-  player.hand.moveCardTo(self, player.discard);
+  player.hand.moveCardTo(self, player.supporter);
   player.deck.moveCardsTo(cards, player.hand);
 
   if (cards.length > 0) {

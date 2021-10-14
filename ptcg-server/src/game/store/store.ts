@@ -215,6 +215,7 @@ export class Store implements StoreLike {
     const cards: Card[] = [];
     for (let player of state.players) {
       player.stadium.cards.forEach(c => cards.push(c));
+      player.supporter.cards.forEach(c => cards.push(c));
       player.active.cards.forEach(c => cards.push(c));
       for (let bench of player.bench) {
         bench.cards.forEach(c => cards.push(c));
