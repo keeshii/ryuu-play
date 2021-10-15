@@ -41,7 +41,6 @@ function* useFindAFriend(next: Function, store: StoreLike, state: State,
 
   return store.prompt(state, new ShuffleDeckPrompt(player.id), order => {
     player.deck.applyOrder(order);
-    next();
   });
 }
 

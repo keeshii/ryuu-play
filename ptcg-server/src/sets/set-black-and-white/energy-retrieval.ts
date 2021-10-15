@@ -27,7 +27,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   effect.preventDefault = true;
 
   const min = Math.min(basicEnergyCards, 2);
-  yield store.prompt(state, new ChooseCardsPrompt(
+  return store.prompt(state, new ChooseCardsPrompt(
     player.id,
     GameMessage.CHOOSE_CARD_TO_HAND,
     player.discard,
@@ -41,10 +41,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
       // Recover discarded Pokemon
       player.discard.moveCardsTo(cards, player.hand);
     }
-    next();
   });
-
-  return state;
 }
 
 export class EnergyRetrieval extends TrainerCard {

@@ -43,7 +43,6 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
       // Recover discarded energies
       player.discard.moveCardsTo(selected, player.hand);
     }
-    next();
   });
 }
 

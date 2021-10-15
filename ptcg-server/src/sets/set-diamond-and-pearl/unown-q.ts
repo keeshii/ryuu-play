@@ -36,7 +36,7 @@ function* usePower(next: Function, store: StoreLike, state: State, self: UnownQ,
   }
 
   // everything checked, we are ready to attach UnownQ as a tool.
-  yield store.prompt(state, new ChoosePokemonPrompt(
+  return store.prompt(state, new ChoosePokemonPrompt(
     player.id,
     GameMessage.CHOOSE_POKEMON_TO_ATTACH_CARDS,
     PlayerType.BOTTOM_PLAYER,
@@ -52,10 +52,7 @@ function* usePower(next: Function, store: StoreLike, state: State, self: UnownQ,
       player.bench[benchIndex].moveTo(player.discard);
       player.bench[benchIndex].clearEffects();
     }
-    next();
   });
-
-  return state;
 }
 
 export class UnownQ extends PokemonCard {

@@ -35,7 +35,6 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   ), result => {
     const cardList = result[0];
     opponent.switchPokemon(cardList);
-    next();
   });
 }
 

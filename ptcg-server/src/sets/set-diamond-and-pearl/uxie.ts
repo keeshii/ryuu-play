@@ -23,7 +23,7 @@ function* usePsychicRestore(next: Function, store: StoreLike, state: State, effe
     return state;
   }
 
-  yield store.prompt(state, new OrderCardsPrompt(
+  return store.prompt(state, new OrderCardsPrompt(
     player.id,
     GameMessage.CHOOSE_CARDS_ORDER,
     target,
@@ -35,10 +35,7 @@ function* usePsychicRestore(next: Function, store: StoreLike, state: State, effe
 
     target.applyOrder(order);
     target.moveTo(player.deck);
-    next();
   });
-
-  return state;
 }
 
 export class Uxie extends PokemonCard {

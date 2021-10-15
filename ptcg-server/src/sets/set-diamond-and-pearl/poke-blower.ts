@@ -76,7 +76,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     player.hand.moveCardTo(second, player.discard);
   }
 
-  yield store.prompt(state, new ChoosePokemonPrompt(
+  return store.prompt(state, new ChoosePokemonPrompt(
     player.id,
     GameMessage.CHOOSE_POKEMON_TO_SWITCH,
     PlayerType.TOP_PLAYER,
@@ -87,10 +87,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
       return;
     }
     opponent.switchPokemon(targets[0]);
-    next();
   });
-
-  return state;
 }
 
 export class PokeBlower extends TrainerCard {

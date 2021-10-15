@@ -63,7 +63,6 @@ function* useStadium(next: Function, store: StoreLike, state: State, effect: Use
 
   return store.prompt(state, new ShuffleDeckPrompt(player.id), order => {
     player.deck.applyOrder(order);
-    next();
   });
 }
 

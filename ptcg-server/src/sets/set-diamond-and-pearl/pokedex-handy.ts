@@ -19,7 +19,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   const deckTop = new CardList();
   player.deck.moveTo(deckTop, 2);
 
-  yield store.prompt(state, new ChooseCardsPrompt(
+  return store.prompt(state, new ChooseCardsPrompt(
     player.id,
     GameMessage.CHOOSE_CARD_TO_HAND,
     deckTop,
@@ -28,10 +28,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   ), selected => {
     deckTop.moveCardsTo(selected, player.hand);
     deckTop.moveTo(player.deck);
-    next();
   });
-
-  return state;
 }
 
 export class PokedexHandy extends TrainerCard {

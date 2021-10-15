@@ -31,7 +31,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   // We will discard this card after prompt confirmation
   effect.preventDefault = true;
 
-  yield store.prompt(state, new ChoosePokemonPrompt(
+  return store.prompt(state, new ChoosePokemonPrompt(
     player.id,
     GameMessage.CHOOSE_POKEMON_TO_PICK_UP,
     PlayerType.BOTTOM_PLAYER,
@@ -46,10 +46,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
       targets[0].damage = 0;
       targets[0].clearEffects();
     }
-    next();
   });
-
-  return state;
 }
 
 export class PokeTurn extends TrainerCard {

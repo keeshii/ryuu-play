@@ -39,12 +39,9 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   player.deck.moveCardsTo(cards, player.hand);
 
   // Shuffle the deck
-  yield store.prompt(state, new ShuffleDeckPrompt(player.id), order => {
+  return store.prompt(state, new ShuffleDeckPrompt(player.id), order => {
     player.deck.applyOrder(order);
-    next();
   });
-
-  return state;
 }
 
 export class Twins extends TrainerCard {
