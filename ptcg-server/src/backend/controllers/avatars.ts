@@ -61,7 +61,7 @@ export class Avatars extends Controller {
     const body: { id: number, name: string } = req.body;
 
     const avatars = await Avatar.find({
-      where: { user: { id: body.id }, name: body.name }
+      where: { user: { id: body.id }, name: body.name.trim() }
     });
 
     if (avatars.length !== 1) {
@@ -97,7 +97,7 @@ export class Avatars extends Controller {
     }
 
     let avatar = new Avatar();
-    avatar.name = body.name;
+    avatar.name = body.name.trim();
     avatar.user = user;
 
     try {
@@ -201,7 +201,7 @@ export class Avatars extends Controller {
     }
 
     try {
-      avatar.name = body.name;
+      avatar.name = body.name.trim();
       avatar = await avatar.save();
     } catch (error) {
       res.status(400);

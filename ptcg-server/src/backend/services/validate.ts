@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { ApiErrorEnum } from '../common/errors';
 
 const EMAIL_PATTERN = /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/;
-const NAME_PATTERN = /^[a-zA-Z0-9]{3,255}$/;
+const NAME_PATTERN = /^[a-zA-Z0-9]{3,32}$/;
 const NUMBER_PATTERN = /^\d+$/;
 
 export type ValidationFn = (value: any) => boolean;
@@ -78,7 +78,7 @@ export class Validator {
   public minLength(len: number): Validator {
     this.isString();
     this.validators.push((value: string) => {
-      return value.length >= len;
+      return value.trim().length >= len;
     });
     return this;
   }
@@ -86,9 +86,13 @@ export class Validator {
   public maxLength(len: number): Validator {
     this.isString();
     this.validators.push((value: string) => {
-      return value.length <= len;
+      return value.trim().length <= len;
     });
     return this;
+  }
+
+  public noSpaces(): Validator {
+    return this.pattern(/^[^ ]*$/);
   }
 
   public pattern(pattern: RegExp): Validator {

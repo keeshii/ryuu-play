@@ -41,9 +41,9 @@ export class RegisterComponent {
       finalize(() => { this.loading = false; }),
       untilDestroyed(this)
     )
-      .subscribe(() => {
+      .subscribe(async () => {
+        await this.alertService.alert(this.translate.instant('REGISTER_SUCCESS'));
         this.router.navigate(['/games']);
-
       }, (error: ApiError) => {
         this.handleError(error);
       });

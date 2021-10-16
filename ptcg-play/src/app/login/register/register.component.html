@@ -15,7 +15,7 @@
             <mat-label translate>REGISTER_NAME</mat-label>
             <input matInput [placeholder]="'REGISTER_NAME' | translate" name="name"
               [(ngModel)]="name" [disabled]="loading" #nameField="ngModel"
-              ptcgNameValidator [ptcgInvalidValue]="invalidName" required>
+              ptcgPlayerNameValidator [ptcgInvalidValue]="invalidName" required>
             <mat-hint translate>
               REGISTER_NAME_HINT
             </mat-hint>

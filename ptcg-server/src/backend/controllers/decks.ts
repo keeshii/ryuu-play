@@ -96,7 +96,7 @@ export class Decks extends Controller {
     }
 
     const deckUtils = new DeckAnalyser(body.cards);
-    deck.name = body.name;
+    deck.name = body.name.trim();
     deck.cards = JSON.stringify(body.cards);
     deck.isValid = deckUtils.isValid();
     deck.cardTypes = JSON.stringify(deckUtils.getDeckType());
@@ -173,7 +173,7 @@ export class Decks extends Controller {
     }
 
     try {
-      deck.name = body.name;
+      deck.name = body.name.trim();
       deck = await deck.save();
     } catch (error) {
       res.status(400);

@@ -34,6 +34,12 @@ export class MessageSocket {
     let messageInfo: MessageInfo;
     let userInfo: UserInfo;
 
+    const text = (params.text || '').trim();
+    if (text.length === 0 || text.length > 2048) {
+      response('error', ApiErrorEnum.CANNOT_SEND_MESSAGE);
+      return;
+    }
+
     // Do not send message to yourself
     if (this.client.user.id === params.userId) {
       response('error', ApiErrorEnum.CANNOT_SEND_MESSAGE);
@@ -45,7 +51,7 @@ export class MessageSocket {
       if (user === undefined) {
         throw new Error(ApiErrorEnum.PROFILE_INVALID);
       }
-      const message = await this.core.messager.sendMessage(this.client, user, params.text);
+      const message = await this.core.messager.sendMessage(this.client, user, text);
       messageInfo = this.buildMessageInfo(message);
       userInfo = CoreSocket.buildUserInfo(user);
 

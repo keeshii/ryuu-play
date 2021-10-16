@@ -10,7 +10,7 @@ export class PasswordMatchDirective implements Validator {
   @Input() ptcgPasswordMatchValidator: string;
 
   validate(control: AbstractControl): ValidationErrors {
-    const value = String(control.value || '').trim();
+    const value = String(control.value || '');
 
     if (value !== this.ptcgPasswordMatchValidator) {
       return {passwordMatch: true};

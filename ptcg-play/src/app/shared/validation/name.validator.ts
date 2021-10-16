@@ -10,7 +10,7 @@ export class NameValidatorDirective implements Validator {
   validate(control: AbstractControl): ValidationErrors {
     const value = String(control.value || '').trim();
 
-    if (value.length < 3 || value.length > 255) {
+    if (value.length < 3 || value.length > 32) {
       return {name: true};
     }
 

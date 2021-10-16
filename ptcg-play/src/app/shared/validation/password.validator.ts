@@ -16,7 +16,12 @@ export class PasswordValidatorDirective implements Validator {
   }
 
   validate(control: AbstractControl): ValidationErrors {
-    const value = String(control.value || '').trim();
+    const value = String(control.value || '');
+
+    // Password must not contains white space characters
+    if (value.match(/\s/) !== null) {
+      return {password: true};
+    }
 
     if (value.length < this.length || value.length > 32) {
       return {password: true};

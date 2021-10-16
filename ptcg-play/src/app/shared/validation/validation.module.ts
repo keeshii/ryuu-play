@@ -9,6 +9,7 @@ import { NameValidatorDirective } from './name.validator';
 import { NumberValidatorDirective } from './number.validator';
 import { PasswordMatchDirective } from './password-match.validator';
 import { PasswordValidatorDirective } from './password.validator';
+import { PlayerNameValidatorDirective } from './player-name.validator';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { PasswordValidatorDirective } from './password.validator';
     NameValidatorDirective,
     NumberValidatorDirective,
     PasswordMatchDirective,
-    PasswordValidatorDirective
+    PasswordValidatorDirective,
+    PlayerNameValidatorDirective
   ],
   exports: [
     AddressValidatorDirective,
@@ -31,7 +33,8 @@ import { PasswordValidatorDirective } from './password.validator';
     NameValidatorDirective,
     NumberValidatorDirective,
     PasswordMatchDirective,
-    PasswordValidatorDirective
+    PasswordValidatorDirective,
+    PlayerNameValidatorDirective
   ]
 })
 export class ValidationModule {}

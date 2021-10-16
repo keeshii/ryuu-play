@@ -80,6 +80,7 @@ export class ConversationComponent implements OnInit, OnChanges {
   }
 
   public sendMessage(userId: number, text: string) {
+    text = (text || '').trim();
     if (text.length === 0 || this.loading) {
       return;
     }

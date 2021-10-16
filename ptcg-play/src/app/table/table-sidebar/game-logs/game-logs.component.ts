@@ -53,10 +53,11 @@ export class GameLogsComponent {
   }
 
   public sendMessage() {
-    if (!this.state) {
+    const message = (this.message || '').trim();
+    if (!this.state || message.length === 0) {
       return;
     }
-    this.gameService.appendLogAction(this.state.gameId, this.message);
+    this.gameService.appendLogAction(this.state.gameId, message);
     this.message = '';
   }
 

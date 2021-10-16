@@ -139,7 +139,7 @@ export class Replays extends Controller {
 
     let replay = new Replay();
     replay.user = user;
-    replay.name = body.name;
+    replay.name = body.name.trim();
     replay.player1 = gameReplay.player1;
     replay.player2 = gameReplay.player2;
     replay.winner = gameReplay.winner;
@@ -217,7 +217,7 @@ export class Replays extends Controller {
     }
 
     try {
-      replay.name = body.name;
+      replay.name = body.name.trim();
       replay = await replay.save();
     } catch (error) {
       res.status(400);
@@ -267,7 +267,7 @@ export class Replays extends Controller {
 
     let replay = new Replay();
     replay.user = user;
-    replay.name = body.name;
+    replay.name = body.name.trim();
     replay.player1 = gameReplay.player1;
     replay.player2 = gameReplay.player2;
     replay.winner = gameReplay.winner;
