@@ -1,6 +1,5 @@
 import { AnimationEvent } from '@angular/animations';
-import { Component, Input, NgZone, OnChanges, SimpleChanges, ViewEncapsulation } from '@angular/core';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { Component, Input, OnChanges, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { Prompt, GamePhase } from 'ptcg-server';
 
 import { GameOverPrompt } from './prompt-game-over/game-over.prompt';
@@ -19,19 +18,14 @@ export class PromptComponent implements OnChanges {
   @Input() gameState: LocalGameState;
   @Input() clientId: number;
 
-  @Input() set active(value: boolean) {
-    value = coerceBooleanProperty(value);
-    this.toggle(value);
-  }
-
-  isPromptActive = false;
+  public isPromptVisible = false;
 
   /** State of the dialog animation. */
-  animationState: 'void' | 'enter' | 'exit' = 'void';
+  public animationState: 'void' | 'enter' | 'exit' = 'void';
 
-  prompt: Prompt<any>;
+  public prompt: Prompt<any>;
 
-  constructor(private ngZone: NgZone) { }
+  constructor() { }
 
   ngOnChanges(changes: SimpleChanges) {
     if (!this.gameState || !this.clientId) {
@@ -61,19 +55,16 @@ export class PromptComponent implements OnChanges {
   }
 
   /** Callback, invoked whenever an animation on the host completes. */
-  onAnimationEnd(event: AnimationEvent) {
-    // Animation callbacks may cause ExpressionChangedAfterItHasBeenCheckedError.
-    // See https://github.com/angular/angular/issues/11881
-    if (event.toState === 'exit') {
-      setTimeout(() => { this.isPromptActive = false; });
+  public onAnimationEnd(event: AnimationEvent) {
+    if (event.toState === 'exit' && this.prompt === undefined) {
+      this.isPromptVisible = false;
     }
   }
 
   /** Starts the dialog enter animation. */
-  toggle(value: boolean): void {
-
+  private toggle(value: boolean): void {
     if (this.animationState !== 'enter' && value === true) {
-      this.isPromptActive = true;
+      this.isPromptVisible = true;
       this.animationState = 'enter';
     } else if (this.animationState !== 'exit' && value === false) {
       this.animationState = 'exit';
