@@ -40,7 +40,7 @@
       <mat-label translate>PROFILE_AVATAR_NAME</mat-label>
       <input matInput [placeholder]="'PROFILE_AVATAR_NAME' | translate" name="name"
         [(ngModel)]="name" [disabled]="loading" #nameField="ngModel"
-        ptcgNameValidator [ptcgInvalidValue]="invalidName" required>
+        ptcgNameValidator [ptcgInvalidValue]="invalidName" required maxlength="32">
       <mat-error>
         <div *ngIf="nameField.errors?.name" translate>VALIDATION_INVALID_NAME_FORMAT</div>
         <div *ngIf="nameField.errors?.invalidValue" translate>VALIDATION_NAME_ALREADY_IN_USE</div>

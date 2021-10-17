@@ -15,6 +15,7 @@
       <mat-form-field floatLabel="never" appearance="legacy">
         <input
           name="message"
+          maxlength="2048"
           [disabled]="loading"
           [(ngModel)]="text"
           type="text" matInput [placeholder]="'MESSAGES_ENTER_MESSAGE' | translate">

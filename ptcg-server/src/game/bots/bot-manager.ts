@@ -27,9 +27,10 @@ export class BotManager {
   }
 
   public async initBots(core: Core) {
+    const registered = Date.now();
     for (let i = 0; i < this.bots.length; i++) {
       let bot = this.bots[i];
-      let user = await this.findOrCreateUser(bot.name);
+      let user = await this.findOrCreateUser(bot.name, registered);
       bot.user = user;
       core.connect(bot);
     }
@@ -45,11 +46,12 @@ export class BotManager {
     return bot;
   }
 
-  private async findOrCreateUser(name: string): Promise<User> {
+  private async findOrCreateUser(name: string, registered: number): Promise<User> {
     let user = await User.findOne({name});
     if (user === undefined) {
       user = new User();
       user.name = name;
+      user.registered = registered;
 
       if (config.bots.defaultPassword) {
         user.password = Md5.init(config.bots.defaultPassword);

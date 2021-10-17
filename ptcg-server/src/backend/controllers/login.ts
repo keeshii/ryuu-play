@@ -17,7 +17,7 @@ export class Login extends Controller {
   @Validate({
     name: check().isName(),
     email: check().isEmail(),
-    password: check().minLength(3).maxLength(32).noSpaces()
+    password: check().isPassword()
   })
   public async onRegister(req: Request, res: Response, next: NextFunction) {
     const body: RegisterRequest = req.body;

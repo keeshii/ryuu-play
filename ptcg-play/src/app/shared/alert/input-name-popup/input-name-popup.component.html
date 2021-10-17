@@ -9,7 +9,7 @@
     <mat-form-field>
       <mat-label>{{placeholder}}</mat-label>
       <input matInput type="text" name="value" [placeholder]="placeholder"
-        ptcgNameValidator [ptcgInvalidValue]="invalidValue" required
+        ptcgNameValidator [ptcgInvalidValue]="invalidValue" required maxlength="32"
         [(ngModel)]="value" #nameField="ngModel">
       <mat-error *ngIf="!nameField.pristine && nameField.invalid">
         <div *ngIf="nameField.errors?.name" translate>VALIDATION_INVALID_NAME_FORMAT</div>

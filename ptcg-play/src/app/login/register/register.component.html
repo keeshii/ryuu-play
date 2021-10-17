@@ -15,7 +15,7 @@
             <mat-label translate>REGISTER_NAME</mat-label>
             <input matInput [placeholder]="'REGISTER_NAME' | translate" name="name"
               [(ngModel)]="name" [disabled]="loading" #nameField="ngModel"
-              ptcgPlayerNameValidator [ptcgInvalidValue]="invalidName" required>
+              ptcgPlayerNameValidator [ptcgInvalidValue]="invalidName" required maxlength="32">
             <mat-hint translate>
               REGISTER_NAME_HINT
             </mat-hint>
@@ -45,7 +45,7 @@
             <mat-label translate>REGISTER_PASSWORD</mat-label>
             <input type="password" matInput [placeholder]="'REGISTER_PASSWORD' | translate" name="password"
               [(ngModel)]="password" [disabled]="loading" #passwordField="ngModel"
-              ptcgPasswordValidator required>
+              ptcgPasswordValidator required maxlength="32">
             <mat-hint translate>
               REGISTER_PASSWORD_HINT
             </mat-hint>
@@ -59,7 +59,7 @@
             <mat-label translate>REGISTER_PASSWORD_CONFIRM</mat-label>
             <input type="password" matInput [placeholder]="'REGISTER_PASSWORD_CONFIRM' | translate" name="confirmPassword"
               [(ngModel)]="confirmPassword" [disabled]="loading" #confirmPasswordField="ngModel"
-              [ptcgPasswordMatchValidator]="password" required>
+              [ptcgPasswordMatchValidator]="password" required maxlength="32">
             <mat-hint translate>
               REGISTER_PASSWORD_CONFIRM_HINT
             </mat-hint>

@@ -3,6 +3,7 @@ import { ApiErrorEnum } from '../common/errors';
 
 const EMAIL_PATTERN = /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/;
 const NAME_PATTERN = /^[a-zA-Z0-9]{3,32}$/;
+const PASSWORD_PATTERN = /^[^\s]{5,32}$/;
 const NUMBER_PATTERN = /^\d+$/;
 
 export type ValidationFn = (value: any) => boolean;
@@ -91,10 +92,6 @@ export class Validator {
     return this;
   }
 
-  public noSpaces(): Validator {
-    return this.pattern(/^[^ ]*$/);
-  }
-
   public pattern(pattern: RegExp): Validator {
     this.isString();
     this.validators.push((value: string) => {
@@ -109,6 +106,10 @@ export class Validator {
 
   public isName(): Validator {
     return this.pattern(NAME_PATTERN);
+  }
+
+  public isPassword(): Validator {
+    return this.pattern(PASSWORD_PATTERN);
   }
 
   public isInt(): Validator {

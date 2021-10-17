@@ -1,8 +1,7 @@
 import { AddPlayerAction, AppendLogAction, Action, PassTurnAction,
   ReorderHandAction, ReorderBenchAction, PlayCardAction, CardTarget,
   RetreatAction, AttackAction, UseAbilityAction, StateSerializer,
-  UseStadiumAction, 
-  GameLog} from '../../game';
+  UseStadiumAction, GameLog} from '../../game';
 import { Base64 } from '../../utils';
 import { ChangeAvatarAction } from '../../game/store/actions/change-avatar-action';
 import { Client } from '../../game/client/client.interface';
@@ -189,7 +188,11 @@ export class GameSocket {
   }
 
   private appendLog(params: {gameId: number, message: string}, response: Response<void>) {
-    const action = new AppendLogAction(this.client.id, GameLog.LOG_TEXT, { text: params.message });
+    const message = (params.message || '').trim();
+    if (message.length === 0 || message.length > 256) {
+      response('error', ApiErrorEnum.CANNOT_SEND_MESSAGE);
+    }
+    const action = new AppendLogAction(this.client.id, GameLog.LOG_TEXT, { text: message });
     this.dispatch(params.gameId, action, response);
   }
 

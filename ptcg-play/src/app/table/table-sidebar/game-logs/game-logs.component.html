@@ -23,6 +23,7 @@
       <input
         #searchInput="matInput"
         name="message"
+        maxlength="256"
         [(ngModel)]="message"
         [disabled]="isDeleted"
         type="text" matInput [placeholder]="'MESSAGES_ENTER_MESSAGE' | translate">

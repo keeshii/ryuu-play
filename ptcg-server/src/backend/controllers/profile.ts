@@ -86,8 +86,8 @@ export class Profile extends Controller {
   @Post('/changePassword')
   @AuthToken()
   @Validate({
-    currentPassword: check().minLength(3).maxLength(32).noSpaces(),
-    newPassword: check().minLength(3).maxLength(32).noSpaces()
+    currentPassword: check().isPassword(),
+    newPassword: check().isPassword()
   })
   public async onChangePassword(req: Request, res: Response) {
     const userId: number = req.body.userId;
