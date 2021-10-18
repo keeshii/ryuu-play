@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
+import { DropHighlightDirective } from '../drop-highlight/drop-highlight.directive';
 import { HoverHighlightComponent } from './hover-highlight.component';
 
 describe('HoverHighlightComponent', () => {
@@ -8,7 +10,8 @@ describe('HoverHighlightComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ HoverHighlightComponent ]
+      declarations: [ DropHighlightDirective, HoverHighlightComponent ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     })
     .compileComponents();
   }));

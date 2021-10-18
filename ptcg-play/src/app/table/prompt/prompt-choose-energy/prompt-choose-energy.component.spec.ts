@@ -1,5 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ChooseEnergyPrompt, GameMessage } from 'ptcg-server';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
+import { ApiModule } from '../../../api/api.module';
 import { PromptChooseEnergyComponent } from './prompt-choose-energy.component';
 
 describe('PromptChooseEnergyComponent', () => {
@@ -8,7 +12,12 @@ describe('PromptChooseEnergyComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ PromptChooseEnergyComponent ]
+            imports: [
+        ApiModule,
+        TranslateModule.forRoot()
+      ],
+      declarations: [ PromptChooseEnergyComponent ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     })
     .compileComponents();
   }));
@@ -16,6 +25,8 @@ describe('PromptChooseEnergyComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(PromptChooseEnergyComponent);
     component = fixture.componentInstance;
+    component.prompt = new ChooseEnergyPrompt(1, GameMessage.COIN_FLIP, [], []);
+    component.gameState = {} as any;
     fixture.detectChanges();
   });
 

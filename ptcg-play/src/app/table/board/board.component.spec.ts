@@ -1,5 +1,11 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { DndModule } from '@ng-dnd/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { TestBackend } from 'react-dnd-test-backend';
 
+import { ApiModule } from '../../api/api.module';
+import { CardsModule } from '../../shared/cards/cards.module';
 import { BoardComponent } from './board.component';
 
 describe('BoardComponent', () => {
@@ -8,7 +14,14 @@ describe('BoardComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ BoardComponent ]
+      imports: [
+        ApiModule,
+        CardsModule,
+        DndModule.forRoot({ backend: TestBackend }),
+        TranslateModule.forRoot()
+      ],
+      declarations: [ BoardComponent ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     })
     .compileComponents();
   }));
@@ -16,6 +29,7 @@ describe('BoardComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(BoardComponent);
     component = fixture.componentInstance;
+    component.gameState = {} as any;
     fixture.detectChanges();
   });
 

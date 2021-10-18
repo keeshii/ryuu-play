@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { InfoComponent } from './info.component';
 
@@ -8,6 +9,7 @@ describe('InfoComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
+      imports: [ NoopAnimationsModule ],
       declarations: [ InfoComponent ]
     })
     .compileComponents();

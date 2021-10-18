@@ -1,5 +1,11 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslateModule } from '@ngx-translate/core';
 
+import { ApiModule } from '../../../api/api.module';
 import { GameLogsComponent } from './game-logs.component';
 
 describe('GameLogsComponent', () => {
@@ -8,7 +14,15 @@ describe('GameLogsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ GameLogsComponent ]
+      imports: [
+        ApiModule,
+        FormsModule,
+        MatInputModule,
+        MatTooltipModule,
+        TranslateModule.forRoot()
+      ],
+      declarations: [ GameLogsComponent ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     })
     .compileComponents();
   }));

@@ -1,6 +1,11 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { InputNamePopupComponent } from './input-name-popup.component';
+import { ValidationModule } from '../../validation/validation.module';
 
 describe('InputNamePopupComponent', () => {
   let component: InputNamePopupComponent;
@@ -8,7 +13,17 @@ describe('InputNamePopupComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ InputNamePopupComponent ]
+      imports: [
+        FormsModule,
+        TranslateModule.forRoot(),
+        ValidationModule
+      ],
+      declarations: [ InputNamePopupComponent ],
+      providers: [
+        { provide: MatDialogRef, useValue: {} },
+        { provide: MAT_DIALOG_DATA, useValue: { } }
+      ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     })
     .compileComponents();
   }));

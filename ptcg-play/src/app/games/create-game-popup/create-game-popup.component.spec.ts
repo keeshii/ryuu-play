@@ -1,14 +1,32 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { TranslateModule } from '@ngx-translate/core';
 
-import { CreateGamePopupComponent } from './create-game-popup.component';
+import { CreateGamePopupComponent, CreateGamePopupData } from './create-game-popup.component';
 
 describe('CreateGamePopupComponent', () => {
   let component: CreateGamePopupComponent;
   let fixture: ComponentFixture<CreateGamePopupComponent>;
+  let data: CreateGamePopupData;
 
   beforeEach(waitForAsync(() => {
+    data = { decks: [ { value: 1, viewValue: 'name' } ] };
+
     TestBed.configureTestingModule({
-      declarations: [ CreateGamePopupComponent ]
+      imports: [
+        FormsModule,
+        MatCheckboxModule,
+        TranslateModule.forRoot()
+      ],
+      declarations: [ CreateGamePopupComponent ],
+      providers: [
+        { provide: MatDialogRef, useValue: {} },
+        { provide: MAT_DIALOG_DATA, useValue: data }
+      ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     })
     .compileComponents();
   }));

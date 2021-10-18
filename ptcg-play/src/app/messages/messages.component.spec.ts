@@ -1,5 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
+import { ApiModule } from '../api/api.module';
+import { AlertModule } from '../shared/alert/alert.module';
 import { MessagesComponent } from './messages.component';
 
 describe('MessageComponent', () => {
@@ -8,7 +12,13 @@ describe('MessageComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ MessagesComponent ]
+      imports: [
+        ApiModule,
+        AlertModule,
+        TranslateModule.forRoot()
+      ],
+      declarations: [ MessagesComponent ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     })
     .compileComponents();
   }));

@@ -1,4 +1,8 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { MatDialogModule } from '@angular/material/dialog';
+import { RouterTestingModule } from '@angular/router/testing';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { DeckEditToolbarComponent } from './deck-edit-toolbar.component';
 
@@ -8,7 +12,13 @@ describe('DeckEditToolbarComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ DeckEditToolbarComponent ]
+      imports: [
+        MatDialogModule,
+        RouterTestingModule,
+        TranslateModule.forRoot()
+      ],
+      declarations: [ DeckEditToolbarComponent ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     })
     .compileComponents();
   }));

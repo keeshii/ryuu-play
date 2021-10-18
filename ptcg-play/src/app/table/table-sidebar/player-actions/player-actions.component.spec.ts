@@ -1,5 +1,8 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
+import { ApiModule } from '../../../api/api.module';
 import { PlayerActionsComponent } from './player-actions.component';
 
 describe('PlayerActionsComponent', () => {
@@ -8,7 +11,12 @@ describe('PlayerActionsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ PlayerActionsComponent ]
+      imports: [
+        ApiModule,
+        TranslateModule.forRoot()
+      ],
+      declarations: [ PlayerActionsComponent ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     })
     .compileComponents();
   }));

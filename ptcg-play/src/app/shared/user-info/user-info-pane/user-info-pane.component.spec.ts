@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { UserInfoPaneComponent } from './user-info-pane.component';
 
@@ -8,7 +10,11 @@ describe('UserInfoPaneComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ UserInfoPaneComponent ]
+      imports: [
+        TranslateModule.forRoot()
+      ],
+      declarations: [ UserInfoPaneComponent ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     })
     .compileComponents();
   }));
@@ -16,6 +22,7 @@ describe('UserInfoPaneComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(UserInfoPaneComponent);
     component = fixture.componentInstance;
+    component.user = {} as any;
     fixture.detectChanges();
   });
 

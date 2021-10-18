@@ -1,5 +1,10 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { MatTableModule } from '@angular/material/table';
+import { TranslateModule } from '@ngx-translate/core';
 
+import { ApiModule } from '../../api/api.module';
+import { AlertModule } from '../../shared/alert/alert.module';
 import { MatchTableComponent } from './match-table.component';
 
 describe('MatchTableComponent', () => {
@@ -8,7 +13,14 @@ describe('MatchTableComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ MatchTableComponent ]
+      imports: [
+        ApiModule,
+        AlertModule,
+        MatTableModule,
+        TranslateModule.forRoot()
+      ],
+      declarations: [ MatchTableComponent ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     })
     .compileComponents();
   }));

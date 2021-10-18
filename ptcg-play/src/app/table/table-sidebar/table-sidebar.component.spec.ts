@@ -1,5 +1,8 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
+import { ApiModule } from '../../api/api.module';
 import { TableSidebarComponent } from './table-sidebar.component';
 
 describe('TableSidebarComponent', () => {
@@ -8,7 +11,12 @@ describe('TableSidebarComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ TableSidebarComponent ]
+      imports: [
+        ApiModule,
+        TranslateModule.forRoot()
+      ],
+      declarations: [ TableSidebarComponent ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     })
     .compileComponents();
   }));

@@ -1,5 +1,8 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
+import { ApiModule } from '../../../api/api.module';
 import { PromptAttachEnergyComponent } from './prompt-attach-energy.component';
 
 describe('PromptAttachEnergyComponent', () => {
@@ -8,7 +11,12 @@ describe('PromptAttachEnergyComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ PromptAttachEnergyComponent ]
+      imports: [
+        ApiModule,
+        TranslateModule.forRoot()
+      ],
+      declarations: [ PromptAttachEnergyComponent ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     })
     .compileComponents();
   }));
@@ -16,6 +24,7 @@ describe('PromptAttachEnergyComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(PromptAttachEnergyComponent);
     component = fixture.componentInstance;
+    component.gameState = {} as any;
     fixture.detectChanges();
   });
 

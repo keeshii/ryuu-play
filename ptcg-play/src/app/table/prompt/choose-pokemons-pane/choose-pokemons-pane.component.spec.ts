@@ -1,5 +1,10 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { DndModule } from '@ng-dnd/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { TestBackend } from 'react-dnd-test-backend';
 
+import { ApiModule } from '../../../api/api.module';
 import { ChoosePokemonsPaneComponent } from './choose-pokemons-pane.component';
 
 describe('ChoosePokemonsPaneComponent', () => {
@@ -8,7 +13,13 @@ describe('ChoosePokemonsPaneComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ChoosePokemonsPaneComponent ]
+      imports: [
+        ApiModule,
+        DndModule.forRoot({ backend: TestBackend }),
+        TranslateModule.forRoot()
+      ],
+      declarations: [ ChoosePokemonsPaneComponent ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     })
     .compileComponents();
   }));

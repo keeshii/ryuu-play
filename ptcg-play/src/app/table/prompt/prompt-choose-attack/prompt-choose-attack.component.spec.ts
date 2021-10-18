@@ -1,5 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ChooseAttackPrompt, GameMessage } from 'ptcg-server';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
+import { ApiModule } from '../../../api/api.module';
 import { PromptChooseAttackComponent } from './prompt-choose-attack.component';
 
 describe('PromptChooseAttackComponent', () => {
@@ -8,7 +12,12 @@ describe('PromptChooseAttackComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ PromptChooseAttackComponent ]
+      imports: [
+        ApiModule,
+        TranslateModule.forRoot()
+      ],
+      declarations: [ PromptChooseAttackComponent ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     })
     .compileComponents();
   }));
@@ -16,6 +25,8 @@ describe('PromptChooseAttackComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(PromptChooseAttackComponent);
     component = fixture.componentInstance;
+    component.prompt = new ChooseAttackPrompt(1, GameMessage.COIN_FLIP, []);
+    component.gameState = {} as any;
     fixture.detectChanges();
   });
 

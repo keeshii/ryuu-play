@@ -3,7 +3,9 @@ import { Observable, BehaviorSubject, of } from 'rxjs';
 import { map, distinctUntilChanged } from 'rxjs/operators';
 import { SessionGetters, Session } from './session.interface';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SessionService implements SessionGetters {
 
   private subject: BehaviorSubject<Session>;

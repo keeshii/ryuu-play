@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { DeckEditInfoComponent } from './deck-edit-info.component';
 
@@ -8,7 +10,11 @@ describe('DeckEditInfoComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ DeckEditInfoComponent ]
+      imports: [
+        TranslateModule.forRoot()
+      ],
+      declarations: [ DeckEditInfoComponent ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     })
     .compileComponents();
   }));
