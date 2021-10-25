@@ -1,8 +1,12 @@
 # RyuuPlay
 
+[![Strider](https://strider.kuro.ryuu.eu/keeshii/ryuu-play/badge?branch=master)](https://strider.kuro.ryuu.eu/keeshii/ryuu-play/badge?branch=master)
+
 RyuuPlay is a simulator for the Pokémon Trading Card Game written in TypeScript. The source code is entirely open source and published under MIT licence.
 
-The project is created for the educational purpose only. There are no plans to adding new features or cards, but feel free to fork it and experiment on your own.
+The project is created for the educational purpose only. There is no plans to port all possible cards or provide new features.
+Think of it as a platform for testing various approaches for AI bots implementaion. RyuuPlay is triggering random bot vs bot
+matches at regular basis and updates ranking. Of course it is also possible to just play with the bot and have some fun.
 
 ### Demo
 

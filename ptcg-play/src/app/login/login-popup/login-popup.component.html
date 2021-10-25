@@ -5,7 +5,7 @@
   <mat-progress-bar *ngIf="loading" color="accent" mode="indeterminate" class="ptcg-u-top">
   </mat-progress-bar>
 
-  <form #form="ngForm">
+  <form #form="ngForm" (ngSubmit)="login()">
 
     <!-- Username -->
     <mat-form-field>
@@ -35,14 +35,14 @@
       </mat-checkbox>
     </section>
 
-  </form>
+    <p>
+      <button mat-raised-button color="primary" type="submit"
+        [disabled]="loading || form.invalid" translate>
+        {{ 'LOGIN_SIGN_IN' | translate }}
+      </button>
+    </p>
 
-  <p>
-    <button mat-raised-button color="primary" (click)="login()"
-      [disabled]="loading || form.invalid" translate>
-      {{ 'LOGIN_SIGN_IN' | translate }}
-    </button>
-  </p>
+  </form>
 
 </mat-dialog-content>
 
