@@ -105,6 +105,7 @@ export class StateUtils {
       cardLists.push(player.discard);
       cardLists.push(player.hand);
       cardLists.push(player.stadium);
+      cardLists.push(player.supporter);
       player.bench.forEach(item => cardLists.push(item));
       player.prizes.forEach(item => cardLists.push(item));
     }
@@ -123,6 +124,7 @@ export class StateUtils {
       cardLists.push(player.discard);
       cardLists.push(player.hand);
       cardLists.push(player.stadium);
+      cardLists.push(player.supporter);
       player.bench.forEach(item => cardLists.push(item));
       player.prizes.forEach(item => cardLists.push(item));
       if (cardLists.includes(cardList)) {
