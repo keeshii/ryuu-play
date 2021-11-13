@@ -11,6 +11,11 @@ export class RankingCalculator {
   public calculateMatch(match: Match): User[] {
     const player1 = match.player1;
     const player2 = match.player2;
+
+    if (player1.id === player2.id) {
+      return [ player1, player2 ];
+    }
+
     const rank1 = player1.getRank();
     const rank2 = player2.getRank();
 
@@ -73,7 +78,7 @@ export class RankingCalculator {
       case Rank.JUNIOR:
         return 2.0;
       case Rank.SENIOR:
-        return 1.0;
+        return 0.9;
       case Rank.MASTER:
         return 0.8;
     }
