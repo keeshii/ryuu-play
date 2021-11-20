@@ -1,5 +1,6 @@
 import { Transaction, TransactionManager, EntityManager } from "typeorm";
 
+import { Client } from "../client/client.interface";
 import { Core } from "./core";
 import { State, GamePhase, GameWinner } from "../store/state/state";
 import { User, Match } from "../../storage";
@@ -10,8 +11,8 @@ import { ReplayPlayer } from "./replay.interface";
 export class MatchRecorder {
 
   private finished: boolean = false;
-  private player1: User | undefined;
-  private player2: User | undefined;
+  private client1: Client | undefined;
+  private client2: Client | undefined;
   private ranking: RankingCalculator;
   private replay: Replay;
 
@@ -26,7 +27,7 @@ export class MatchRecorder {
     }
 
     if (state.players.length >= 2) {
-      this.updatePlayers(state);
+      this.updateClients(state);
     }
 
     if (state.phase !== GamePhase.WAITING_FOR_PLAYERS) {
@@ -43,17 +44,17 @@ export class MatchRecorder {
 
   @Transaction()
   private async saveMatch(state: State, @TransactionManager() manager?: EntityManager) {
-    if (!this.player1 || !this.player2 || manager === undefined) {
+    if (!this.client1 || !this.client2 || manager === undefined) {
       return;
     }
 
     const match = new Match();
-    match.player1 = this.player1;
-    match.player2 = this.player2;
+    match.player1 = this.client1.user;
+    match.player2 = this.client2.user;
     match.winner = state.winner;
     match.created = Date.now();
-    match.ranking1 = this.player1.ranking;
-    match.ranking2 = this.player2.ranking;
+    match.ranking1 = match.player1.ranking;
+    match.ranking2 = match.player2.ranking;
     match.rankingStake1 = 0;
     match.rankingStake2 = 0;
 
@@ -78,7 +79,10 @@ export class MatchRecorder {
       await manager.save(match);
 
       if (users.length >= 2) {
-        await manager.save(users);
+        for (const user of users) {
+          const update = { ranking: user.ranking, lastRankingChange: user.lastRankingChange };
+          await manager.update(User, user.id, update);
+        }
         this.core.emit(c => c.onUsersUpdate(users));
       }
 
@@ -88,22 +92,19 @@ export class MatchRecorder {
     }
   }
 
-  private updatePlayers(state: State) {
+  private updateClients(state: State) {
     const player1Id = state.players[0].id;
     const player2Id = state.players[1].id;
-    if (this.player1 === undefined) {
-      this.player1 = this.findUser(player1Id);
+    if (this.client1 === undefined) {
+      this.client1 = this.findClient(player1Id);
     }
-    if (this.player2 === undefined) {
-      this.player2 = this.findUser(player2Id);
+    if (this.client2 === undefined) {
+      this.client2 = this.findClient(player2Id);
     }
   }
 
-  private findUser(clientId: number): User | undefined {
-    const client = this.core.clients.find(c => c.id === clientId);
-    if (client !== undefined) {
-      return client.user;
-    }
+  private findClient(clientId: number): Client | undefined {
+    return this.core.clients.find(c => c.id === clientId);
   }
 
   private buildReplayPlayer(player: User): ReplayPlayer {

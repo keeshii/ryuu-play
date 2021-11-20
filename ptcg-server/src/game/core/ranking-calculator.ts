@@ -13,7 +13,7 @@ export class RankingCalculator {
     const player2 = match.player2;
 
     if (player1.id === player2.id) {
-      return [ player1, player2 ];
+      return [];
     }
 
     const rank1 = player1.getRank();
