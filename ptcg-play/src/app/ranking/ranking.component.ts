@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { RankingInfo } from 'ptcg-server';
-import { Subject } from 'rxjs';
+import { Subject, of } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { debounceTime, switchMap, takeUntil, map } from 'rxjs/operators';
+import { delay, switchMap, takeUntil, map } from 'rxjs/operators';
 
 import { AlertService } from '../shared/alert/alert.service';
 import { ApiError } from '../api/api.error';
@@ -82,7 +82,10 @@ export class RankingComponent implements OnInit {
 
     this.searchValue$.pipe(
       untilDestroyed(this),
-      debounceTime(300)
+      switchMap(query => of(query).pipe(
+        delay(300),
+        takeUntil(this.rankingSearch$)
+      ))
     ).subscribe({
       next: query => {
         this.rankingSearch$.next({ page: 0, query });
