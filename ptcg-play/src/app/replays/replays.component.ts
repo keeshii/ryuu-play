@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { ReplayInfo, GameWinner } from 'ptcg-server';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Subject, of } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { debounceTime, switchMap, takeUntil, map, finalize } from 'rxjs/operators';
+import { delay, switchMap, takeUntil, map, finalize } from 'rxjs/operators';
 
 import { AlertService } from '../shared/alert/alert.service';
 import { ApiError } from '../api/api.error';
@@ -99,7 +99,10 @@ export class ReplaysComponent implements OnInit {
 
     this.searchValue$.pipe(
       untilDestroyed(this),
-      debounceTime(300)
+      switchMap(query => of(query).pipe(
+        delay(300),
+        takeUntil(this.replaysSearch$)
+      ))
     ).subscribe({
       next: query => {
         this.replaysSearch$.next({ page: 0, query });

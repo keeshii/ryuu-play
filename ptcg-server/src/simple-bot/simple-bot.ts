@@ -16,12 +16,12 @@ export class SimpleBot extends BotClient {
 
   constructor(name: string, options: Partial<SimpleBotOptions> = {}) {
     super(name);
-    this.options = Object.assign(options, {
+    this.options = Object.assign({
       tactics: allSimpleTactics,
       promptResolvers: allPromptResolvers,
       scores: defaultStateScores,
       arbiter: defaultArbiterOptions
-    });
+    }, options);
   }
 
   public onConnect(client: Client): void { }
