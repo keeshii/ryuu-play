@@ -51,6 +51,17 @@ function* useAttack(next: Function, store: StoreLike, state: State, effect: UseA
     throw new GameError(GameMessage.BLOCKED_BY_SPECIAL_CONDITION);
   }
 
+  const attack = effect.attack;
+  const checkAttackCost = new CheckAttackCostEffect(player, attack);
+  state = store.reduceEffect(state, checkAttackCost);
+
+  const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);
+  state = store.reduceEffect(state, checkProvidedEnergy);
+
+  if (StateUtils.checkEnoughEnergy(checkProvidedEnergy.energyMap, checkAttackCost.cost) === false) {
+    throw new GameError(GameMessage.NOT_ENOUGH_ENERGY);
+  }
+
   if (sp.includes(SpecialCondition.CONFUSED)) {
     let flip = false;
 
@@ -69,17 +80,6 @@ function* useAttack(next: Function, store: StoreLike, state: State, effect: UseA
       state = store.reduceEffect(state, new EndTurnEffect(player));
       return state;
     }
-  }
-
-  const attack = effect.attack;
-  const checkAttackCost = new CheckAttackCostEffect(player, attack);
-  state = store.reduceEffect(state, checkAttackCost);
-
-  const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);
-  state = store.reduceEffect(state, checkProvidedEnergy);
-
-  if (StateUtils.checkEnoughEnergy(checkProvidedEnergy.energyMap, checkAttackCost.cost) === false) {
-    throw new GameError(GameMessage.NOT_ENOUGH_ENERGY);
   }
 
   store.log(state, GameLog.LOG_PLAYER_USES_ATTACK, { name: player.name, attack: attack.name });
