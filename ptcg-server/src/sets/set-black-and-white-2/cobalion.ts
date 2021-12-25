@@ -3,7 +3,7 @@ import { Stage, CardType } from "../../game/store/card/card-types";
 import { StoreLike } from "../../game/store/store-like";
 import { State } from "../../game/store/state/state";
 import { Effect } from "../../game/store/effects/effect";
-import { AttackEffect } from "../../game/store/effects/game-effects";
+import { AttackEffect, UseAttackEffect } from "../../game/store/effects/game-effects";
 import { StateUtils } from "../../game/store/state-utils";
 import { GameError } from "../../game/game-error";
 import { GameMessage } from "../../game/game-message";
@@ -66,7 +66,7 @@ export class Cobalion extends PokemonCard {
       opponent.active.marker.addMarker(this.METAL_LINKS_MAREKER, this);
     }
 
-    if (effect instanceof AttackEffect && effect.player.active.marker.hasMarker(this.METAL_LINKS_MAREKER, this)) {
+    if (effect instanceof UseAttackEffect && effect.player.active.marker.hasMarker(this.METAL_LINKS_MAREKER, this)) {
       throw new GameError(GameMessage.BLOCKED_BY_EFFECT);
     }
 
