@@ -71,7 +71,9 @@ export class HandComponent implements OnChanges {
   }
 
   public showCardInfo(card: Card) {
-    this.cardsBaseService.showCardInfo({ card });
+    const facedown = this.isFaceDown;
+    const allowReveal = facedown && !!this.gameState.replay;
+    this.cardsBaseService.showCardInfo({ card, allowReveal, facedown });
   }
 
   private dispatchAction(list: HandItem[]) {
