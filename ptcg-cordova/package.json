@@ -1,7 +1,7 @@
 {
   "name": "eu.ryuu.ptcg",
   "displayName": "RyuuPlay",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Android client for the ptcg server.",
   "main": "index.js",
   "scripts": {
