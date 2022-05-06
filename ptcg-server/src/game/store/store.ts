@@ -1,32 +1,32 @@
-import { Action } from "./actions/action";
-import { AbortGameAction } from "./actions/abort-game-action";
-import { AppendLogAction } from "./actions/append-log-action";
-import { Card } from "./card/card";
-import { ChangeAvatarAction } from "./actions/change-avatar-action";
-import { Effect } from "./effects/effect";
-import { GameError } from "../game-error";
-import { GameMessage, GameLog } from "../game-message";
-import { Prompt } from "./prompts/prompt";
-import { ReorderHandAction, ReorderBenchAction } from "./actions/reorder-actions";
-import { ResolvePromptAction } from "./actions/resolve-prompt-action";
-import { State } from "./state/state";
-import { StateLog, StateLogParam } from "./state/state-log";
-import { StoreHandler } from "./store-handler";
-import { StoreLike } from "./store-like";
-import { generateId, deepClone } from "../../utils/utils";
-import { attackReducer } from "./effect-reducers/attack-effect";
-import { playCardReducer } from "./reducers/play-card-reducer";
-import { playEnergyReducer } from "./effect-reducers/play-energy-effect";
-import { playPokemonReducer } from "./effect-reducers/play-pokemon-effect";
-import { playTrainerReducer } from "./effect-reducers/play-trainer-effect";
-import { playerTurnReducer } from "./reducers/player-turn-reducer";
-import { gamePhaseReducer } from "./effect-reducers/game-phase-effect";
-import { gameReducer } from "./effect-reducers/game-effect";
-import { checkState, checkStateReducer } from "./effect-reducers/check-effect";
-import { playerStateReducer} from "./reducers/player-state-reducer";
-import { retreatReducer } from "./effect-reducers/retreat-effect";
+import { Action } from './actions/action';
+import { AbortGameAction } from './actions/abort-game-action';
+import { AppendLogAction } from './actions/append-log-action';
+import { Card } from './card/card';
+import { ChangeAvatarAction } from './actions/change-avatar-action';
+import { Effect } from './effects/effect';
+import { GameError } from '../game-error';
+import { GameMessage, GameLog } from '../game-message';
+import { Prompt } from './prompts/prompt';
+import { ReorderHandAction, ReorderBenchAction } from './actions/reorder-actions';
+import { ResolvePromptAction } from './actions/resolve-prompt-action';
+import { State } from './state/state';
+import { StateLog, StateLogParam } from './state/state-log';
+import { StoreHandler } from './store-handler';
+import { StoreLike } from './store-like';
+import { generateId, deepClone } from '../../utils/utils';
+import { attackReducer } from './effect-reducers/attack-effect';
+import { playCardReducer } from './reducers/play-card-reducer';
+import { playEnergyReducer } from './effect-reducers/play-energy-effect';
+import { playPokemonReducer } from './effect-reducers/play-pokemon-effect';
+import { playTrainerReducer } from './effect-reducers/play-trainer-effect';
+import { playerTurnReducer } from './reducers/player-turn-reducer';
+import { gamePhaseReducer } from './effect-reducers/game-phase-effect';
+import { gameReducer } from './effect-reducers/game-effect';
+import { checkState, checkStateReducer } from './effect-reducers/check-effect';
+import { playerStateReducer} from './reducers/player-state-reducer';
+import { retreatReducer } from './effect-reducers/retreat-effect';
 import { setupPhaseReducer } from './reducers/setup-reducer';
-import { abortGameReducer } from "./reducers/abort-game-reducer";
+import { abortGameReducer } from './reducers/abort-game-reducer';
 
 interface PromptItem {
   ids: number[],
@@ -40,7 +40,7 @@ export class Store implements StoreLike {
   private waitItems: (() => void)[] = [];
   private logId: number = 0;
 
-  constructor(private handler: StoreHandler) { };
+  constructor(private handler: StoreHandler) { }
 
   public dispatch(action: Action): State {
     let state = this.state;
@@ -188,7 +188,7 @@ export class Store implements StoreLike {
   }
 
   private reduce(state: State, action: Action): State {
-    let stateBackup = deepClone(state, [ Card ]);
+    const stateBackup = deepClone(state, [ Card ]);
     this.promptItems.length = 0;
 
     try {
@@ -213,14 +213,14 @@ export class Store implements StoreLike {
 
   private propagateEffect(state: State, effect: Effect): State {
     const cards: Card[] = [];
-    for (let player of state.players) {
+    for (const player of state.players) {
       player.stadium.cards.forEach(c => cards.push(c));
       player.supporter.cards.forEach(c => cards.push(c));
       player.active.cards.forEach(c => cards.push(c));
-      for (let bench of player.bench) {
+      for (const bench of player.bench) {
         bench.cards.forEach(c => cards.push(c));
       }
-      for (let prize of player.prizes) {
+      for (const prize of player.prizes) {
         prize.cards.forEach(c => cards.push(c));
       }
       player.hand.cards.forEach(c => cards.push(c));

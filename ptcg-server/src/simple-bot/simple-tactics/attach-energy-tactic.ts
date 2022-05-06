@@ -1,7 +1,7 @@
 import { Action, Player, State, EnergyCard, PlayCardAction, CardTarget,
-  PlayerType, Card} from "../../game";
-import { SimpleTactic } from "./simple-tactics";
-import { EnergyScore } from "../state-score/energy-score";
+  PlayerType, Card} from '../../game';
+import { SimpleTactic } from './simple-tactics';
+import { EnergyScore } from '../state-score/energy-score';
 
 export class AttachEnergyTactic extends SimpleTactic {
 

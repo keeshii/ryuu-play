@@ -1,11 +1,11 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType, CardTag, SuperType } from "../../game/store/card/card-types";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType, CardTag, SuperType } from '../../game/store/card/card-types';
 import { StoreLike, State, StateUtils, Card, EnergyCard, CoinFlipPrompt,
-  ChooseCardsPrompt } from "../../game";
-import { AttackEffect } from "../../game/store/effects/game-effects";
-import { DiscardCardsEffect } from "../../game/store/effects/attack-effects";
-import { Effect } from "../../game/store/effects/effect";
-import { GameMessage } from "../../game/game-message";
+  ChooseCardsPrompt } from '../../game';
+import { AttackEffect } from '../../game/store/effects/game-effects';
+import { DiscardCardsEffect } from '../../game/store/effects/attack-effects';
+import { Effect } from '../../game/store/effects/effect';
+import { GameMessage } from '../../game/game-message';
 
 function* usePowerBlast(next: Function, store: StoreLike, state: State,
   effect: AttackEffect): IterableIterator<State> {
@@ -93,8 +93,7 @@ export class TornadusEx extends PokemonCard {
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      let generator: IterableIterator<State>;
-      generator = usePowerBlast(() => generator.next(), store, state, effect);
+      const generator = usePowerBlast(() => generator.next(), store, state, effect);
       return generator.next().value;
     }
 

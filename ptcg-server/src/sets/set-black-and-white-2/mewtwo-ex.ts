@@ -1,11 +1,11 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType, CardTag } from "../../game/store/card/card-types";
-import { StoreLike, State, StateUtils, Card, ChooseEnergyPrompt } from "../../game";
-import { AttackEffect } from "../../game/store/effects/game-effects";
-import { Effect } from "../../game/store/effects/effect";
-import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
-import { DiscardCardsEffect } from "../../game/store/effects/attack-effects";
-import { GameMessage } from "../../game/game-message";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType, CardTag } from '../../game/store/card/card-types';
+import { StoreLike, State, StateUtils, Card, ChooseEnergyPrompt } from '../../game';
+import { AttackEffect } from '../../game/store/effects/game-effects';
+import { Effect } from '../../game/store/effects/effect';
+import { CheckProvidedEnergyEffect } from '../../game/store/effects/check-effects';
+import { DiscardCardsEffect } from '../../game/store/effects/attack-effects';
+import { GameMessage } from '../../game/game-message';
 
 
 export class MewtwoEx extends PokemonCard {

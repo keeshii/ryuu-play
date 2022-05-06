@@ -12,7 +12,7 @@ export class ChooseEnergyPromptResolver extends PromptResolver {
       const costs: CardType[] = prompt.cost.filter(c => c !== CardType.COLORLESS);
 
       while (costs.length > 0 && provides.length > 0) {
-        let cost = costs[0];
+        const cost = costs[0];
         let index = provides.findIndex(p => p.provides.includes(cost));
 
         if (index === -1) {

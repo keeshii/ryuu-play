@@ -1,8 +1,8 @@
-import { CardList } from "../state/card-list";
-import { Prompt } from "./prompt";
-import { State } from "../state/state";
-import { GameError } from "../../game-error";
-import { GameMessage } from "../../game-message";
+import { CardList } from '../state/card-list';
+import { Prompt } from './prompt';
+import { State } from '../state/state';
+import { GameError } from '../../game-error';
+import { GameMessage } from '../../game-message';
 
 export const ChoosePrizePromptType = 'Choose prize';
 

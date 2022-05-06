@@ -60,7 +60,7 @@ export function AuthToken() {
 
       Object.assign(req.body, {userId});
       return handler.apply(this, arguments);
-    }
-  }
+    };
+  };
 
 }

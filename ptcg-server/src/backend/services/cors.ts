@@ -19,5 +19,5 @@ export function cors(): RequestHandler {
     res.header('Access-Control-Allow-Headers', allowedHeaders.join(','));
 
     next();
-  }
+  };
 }

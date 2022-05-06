@@ -1,19 +1,19 @@
-import { Action } from "../actions/action";
+import { Action } from '../actions/action';
 import { AttachEnergyEffect, PlayPokemonEffect, PlayStadiumEffect,
-  PlaySupporterEffect, AttachPokemonToolEffect, PlayItemEffect } from "../effects/play-card-effects";
-import { CardList } from "../state/card-list";
-import { EnergyCard } from "../card/energy-card";
-import { GameError } from "../../game-error";
-import { GameMessage } from "../../game-message";
-import { PlayCardAction, PlayerType, SlotType, CardTarget } from "../actions/play-card-action";
-import { PokemonCard } from "../card/pokemon-card";
-import { PokemonCardList } from "../state/pokemon-card-list";
-import { State, GamePhase } from "../state/state";
-import { StoreLike } from "../store-like";
-import { TrainerCard } from "../card/trainer-card";
-import { TrainerType } from "../card/card-types";
-import { Effect } from "../effects/effect";
-import { StateUtils } from "../state-utils";
+  PlaySupporterEffect, AttachPokemonToolEffect, PlayItemEffect } from '../effects/play-card-effects';
+import { CardList } from '../state/card-list';
+import { EnergyCard } from '../card/energy-card';
+import { GameError } from '../../game-error';
+import { GameMessage } from '../../game-message';
+import { PlayCardAction, PlayerType, SlotType, CardTarget } from '../actions/play-card-action';
+import { PokemonCard } from '../card/pokemon-card';
+import { PokemonCardList } from '../state/pokemon-card-list';
+import { State, GamePhase } from '../state/state';
+import { StoreLike } from '../store-like';
+import { TrainerCard } from '../card/trainer-card';
+import { TrainerType } from '../card/card-types';
+import { Effect } from '../effects/effect';
+import { StateUtils } from '../state-utils';
 
 function findCardList(state: State, target: CardTarget): CardList | undefined {
   const player = target.player === PlayerType.BOTTOM_PLAYER
@@ -81,7 +81,7 @@ export function playCardReducer(store: StoreLike, state: State, action: Action):
             }
             effect = new PlaySupporterEffect(player, handCard, target);
             break;
-          case TrainerType.STADIUM:
+          case TrainerType.STADIUM: {
             if (player.stadiumPlayedTurn === state.turn) {
               throw new GameError(GameMessage.STADIUM_ALREADY_PLAYED);
             }
@@ -92,6 +92,7 @@ export function playCardReducer(store: StoreLike, state: State, action: Action):
             player.stadiumPlayedTurn = state.turn;
             effect = new PlayStadiumEffect(player, handCard);
             break;
+          }
           case TrainerType.TOOL:
             if (!(target instanceof PokemonCardList)) {
               throw new GameError(GameMessage.INVALID_TARGET);

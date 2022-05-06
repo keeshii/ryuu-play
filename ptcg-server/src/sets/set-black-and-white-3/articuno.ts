@@ -1,14 +1,14 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType, SpecialCondition } from "../../game/store/card/card-types";
-import { StoreLike } from "../../game/store/store-like";
-import { State, GamePhase } from "../../game/store/state/state";
-import { Effect } from "../../game/store/effects/effect";
-import { AttackEffect, KnockOutEffect } from "../../game/store/effects/game-effects";
-import { GameMessage } from "../../game/game-message";
-import { CoinFlipPrompt } from "../../game/store/prompts/coin-flip-prompt";
-import { PowerType } from "../../game/store/card/pokemon-types";
-import { AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
-import { StateUtils } from "../../game/store/state-utils";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType, SpecialCondition } from '../../game/store/card/card-types';
+import { StoreLike } from '../../game/store/store-like';
+import { State, GamePhase } from '../../game/store/state/state';
+import { Effect } from '../../game/store/effects/effect';
+import { AttackEffect, KnockOutEffect } from '../../game/store/effects/game-effects';
+import { GameMessage } from '../../game/game-message';
+import { CoinFlipPrompt } from '../../game/store/prompts/coin-flip-prompt';
+import { PowerType } from '../../game/store/card/pokemon-types';
+import { AddSpecialConditionsEffect } from '../../game/store/effects/attack-effects';
+import { StateUtils } from '../../game/store/state-utils';
 
 export class Articuno extends PokemonCard {
 

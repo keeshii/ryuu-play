@@ -1,5 +1,5 @@
-import { CardType, EnergyType } from "../../game/store/card/card-types";
-import { EnergyCard } from "../../game/store/card/energy-card";
+import { CardType, EnergyType } from '../../game/store/card/card-types';
+import { EnergyCard } from '../../game/store/card/energy-card';
 
 export class DoubleColorlessEnergy extends EnergyCard {
 

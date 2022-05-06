@@ -1,10 +1,10 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType, SuperType } from "../../game/store/card/card-types";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType, SuperType } from '../../game/store/card/card-types';
 import { StoreLike, State, ChooseCardsPrompt, Card, ShuffleDeckPrompt,
   CoinFlipPrompt, ShowCardsPrompt, StateUtils, PowerType, GameError,
-  GameMessage, PokemonCardList } from "../../game";
-import { AttackEffect, PowerEffect, EvolveEffect } from "../../game/store/effects/game-effects";
-import { Effect } from "../../game/store/effects/effect";
+  GameMessage, PokemonCardList } from '../../game';
+import { AttackEffect, PowerEffect, EvolveEffect } from '../../game/store/effects/game-effects';
+import { Effect } from '../../game/store/effects/effect';
 
 function* useBabyEvolution(next: Function, store: StoreLike, state: State,
   self: Pichu, effect: PowerEffect): IterableIterator<State> {
@@ -130,14 +130,12 @@ export class Pichu extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
-      let generator: IterableIterator<State>;
-      generator = useBabyEvolution(() => generator.next(), store, state, this, effect);
+      const generator = useBabyEvolution(() => generator.next(), store, state, this, effect);
       return generator.next().value;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      let generator: IterableIterator<State>;
-      generator = useFindAFriend(() => generator.next(), store, state, effect);
+      const generator = useFindAFriend(() => generator.next(), store, state, effect);
       return generator.next().value;
     }
 

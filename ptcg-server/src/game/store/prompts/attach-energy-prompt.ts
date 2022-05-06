@@ -1,11 +1,11 @@
-import { Card } from "../card/card";
-import { GameError } from "../../game-error";
-import { GameMessage } from "../../game-message";
-import { Prompt } from "./prompt";
-import { PlayerType, SlotType, CardTarget } from "../actions/play-card-action";
-import { State } from "../state/state";
-import { CardList } from "../state/card-list";
-import { FilterType } from "./choose-cards-prompt";
+import { Card } from '../card/card';
+import { GameError } from '../../game-error';
+import { GameMessage } from '../../game-message';
+import { Prompt } from './prompt';
+import { PlayerType, SlotType, CardTarget } from '../actions/play-card-action';
+import { State } from '../state/state';
+import { CardList } from '../state/card-list';
+import { FilterType } from './choose-cards-prompt';
 
 export const AttachEnergyPromptType = 'Attach energy';
 
@@ -86,7 +86,7 @@ export class AttachEnergyPrompt extends Prompt<CardAssign[]> {
       const different = result.some(r => {
         return r.to.player !== t.player
           || r.to.slot !== t.slot
-          || r.to.index !== t.index
+          || r.to.index !== t.index;
       });
       if (different) {
         return false;
@@ -100,7 +100,7 @@ export class AttachEnergyPrompt extends Prompt<CardAssign[]> {
         const index = result.findIndex(r => {
           return r.to.player === t.player
             && r.to.slot === t.slot
-            && r.to.index === t.index
+            && r.to.index === t.index;
         });
         if (index !== i) {
           return false;

@@ -1,13 +1,13 @@
-import { Effect } from "../../game/store/effects/effect";
-import { GameError } from "../../game/game-error";
-import { GameMessage } from "../../game/game-message";
-import { TrainerEffect } from "../../game/store/effects/play-card-effects";
-import { State } from "../../game/store/state/state";
-import { StoreLike } from "../../game/store/store-like";
-import { TrainerCard } from "../../game/store/card/trainer-card";
-import { TrainerType, CardType, SuperType } from "../../game/store/card/card-types";
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
+import { Effect } from '../../game/store/effects/effect';
+import { GameError } from '../../game/game-error';
+import { GameMessage } from '../../game/game-message';
+import { TrainerEffect } from '../../game/store/effects/play-card-effects';
+import { State } from '../../game/store/state/state';
+import { StoreLike } from '../../game/store/store-like';
+import { TrainerCard } from '../../game/store/card/trainer-card';
+import { TrainerType, CardType, SuperType } from '../../game/store/card/card-types';
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { ChooseCardsPrompt } from '../../game/store/prompts/choose-cards-prompt';
 
 export class MaxiesHiddenBallTrick extends TrainerCard {
 

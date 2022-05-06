@@ -1,10 +1,10 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType, SpecialCondition } from "../../game/store/card/card-types";
-import { StoreLike, State, CoinFlipPrompt, ChooseEnergyPrompt, Card, GameMessage } from "../../game";
-import { AttackEffect } from "../../game/store/effects/game-effects";
-import { Effect } from "../../game/store/effects/effect";
-import { DiscardCardsEffect, AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
-import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType, SpecialCondition } from '../../game/store/card/card-types';
+import { StoreLike, State, CoinFlipPrompt, ChooseEnergyPrompt, Card, GameMessage } from '../../game';
+import { AttackEffect } from '../../game/store/effects/game-effects';
+import { Effect } from '../../game/store/effects/effect';
+import { DiscardCardsEffect, AddSpecialConditionsEffect } from '../../game/store/effects/attack-effects';
+import { CheckProvidedEnergyEffect } from '../../game/store/effects/check-effects';
 
 export class Deino extends PokemonCard {
 

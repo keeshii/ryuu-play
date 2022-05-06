@@ -1,9 +1,9 @@
-import { Attack, Power } from "../card/pokemon-types";
-import { Effect } from "./effect";
-import { Player } from "../state/player";
-import { PokemonCard } from "../card/pokemon-card";
-import { PokemonCardList } from "../state/pokemon-card-list";
-import { Card } from "../card/card";
+import { Attack, Power } from '../card/pokemon-types';
+import { Effect } from './effect';
+import { Player } from '../state/player';
+import { PokemonCard } from '../card/pokemon-card';
+import { PokemonCardList } from '../state/pokemon-card-list';
+import { Card } from '../card/card';
 
 export enum GameEffects {
   RETREAT_EFFECT = 'RETREAT_EFFECT',

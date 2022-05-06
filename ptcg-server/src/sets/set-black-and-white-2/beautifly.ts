@@ -1,16 +1,16 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType, CardTag } from "../../game/store/card/card-types";
-import { StoreLike } from "../../game/store/store-like";
-import { State, GamePhase } from "../../game/store/state/state";
-import { Effect } from "../../game/store/effects/effect";
-import { AttackEffect, PowerEffect } from "../../game/store/effects/game-effects";
-import { PutDamageEffect } from "../../game/store/effects/attack-effects";
-import { PowerType } from "../../game/store/card/pokemon-types";
-import { StateUtils } from "../../game/store/state-utils";
-import { ConfirmPrompt } from "../../game/store/prompts/confirm-prompt";
-import { ChoosePokemonPrompt } from "../../game/store/prompts/choose-pokemon-prompt";
-import { PlayerType, SlotType } from "../../game/store/actions/play-card-action";
-import { GameMessage } from "../../game/game-message";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType, CardTag } from '../../game/store/card/card-types';
+import { StoreLike } from '../../game/store/store-like';
+import { State, GamePhase } from '../../game/store/state/state';
+import { Effect } from '../../game/store/effects/effect';
+import { AttackEffect, PowerEffect } from '../../game/store/effects/game-effects';
+import { PutDamageEffect } from '../../game/store/effects/attack-effects';
+import { PowerType } from '../../game/store/card/pokemon-types';
+import { StateUtils } from '../../game/store/state-utils';
+import { ConfirmPrompt } from '../../game/store/prompts/confirm-prompt';
+import { ChoosePokemonPrompt } from '../../game/store/prompts/choose-pokemon-prompt';
+import { PlayerType, SlotType } from '../../game/store/actions/play-card-action';
+import { GameMessage } from '../../game/game-message';
 
 function* useWhirlwind(next: Function, store: StoreLike, state: State, effect: AttackEffect): IterableIterator<State> {
   const player = effect.player;
@@ -91,8 +91,7 @@ export class Beautifly extends PokemonCard {
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      let generator: IterableIterator<State>;
-      generator = useWhirlwind(() => generator.next(), store, state, effect);
+      const generator = useWhirlwind(() => generator.next(), store, state, effect);
       return generator.next().value;
     }
 

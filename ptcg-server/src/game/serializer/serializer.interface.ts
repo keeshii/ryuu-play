@@ -1,4 +1,4 @@
-import { Card } from "../store/card/card";
+import { Card } from '../store/card/card';
 
 export type SerializedState = string;
 

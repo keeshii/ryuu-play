@@ -1,4 +1,4 @@
-import {CardType} from "./card-types";
+import {CardType} from './card-types';
 
 export interface Weakness {
   type: CardType;

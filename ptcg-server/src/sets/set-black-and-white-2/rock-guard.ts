@@ -1,10 +1,10 @@
-import { TrainerCard } from "../../game/store/card/trainer-card";
-import { TrainerType, CardTag } from "../../game/store/card/card-types";
-import { StoreLike } from "../../game/store/store-like";
-import { State, GamePhase } from "../../game/store/state/state";
-import { Effect } from "../../game/store/effects/effect";
-import { AfterDamageEffect } from "../../game/store/effects/attack-effects";
-import { StateUtils } from "../../game/store/state-utils";
+import { TrainerCard } from '../../game/store/card/trainer-card';
+import { TrainerType, CardTag } from '../../game/store/card/card-types';
+import { StoreLike } from '../../game/store/store-like';
+import { State, GamePhase } from '../../game/store/state/state';
+import { Effect } from '../../game/store/effects/effect';
+import { AfterDamageEffect } from '../../game/store/effects/attack-effects';
+import { StateUtils } from '../../game/store/state-utils';
 
 export class RockGuard extends TrainerCard {
 

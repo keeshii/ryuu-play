@@ -1,12 +1,12 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType, SpecialCondition, CardTag } from "../../game/store/card/card-types";
-import { StoreLike, State, Card, CoinFlipPrompt, ChoosePokemonPrompt, PlayerType, SlotType } from "../../game";
-import { AttackEffect } from "../../game/store/effects/game-effects";
-import { Effect } from "../../game/store/effects/effect";
-import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType, SpecialCondition, CardTag } from '../../game/store/card/card-types';
+import { StoreLike, State, Card, CoinFlipPrompt, ChoosePokemonPrompt, PlayerType, SlotType } from '../../game';
+import { AttackEffect } from '../../game/store/effects/game-effects';
+import { Effect } from '../../game/store/effects/effect';
+import { CheckProvidedEnergyEffect } from '../../game/store/effects/check-effects';
 import { DiscardCardsEffect, AddSpecialConditionsEffect,
-  PutDamageEffect } from "../../game/store/effects/attack-effects";
-import { GameMessage } from "../../game/game-message";
+  PutDamageEffect } from '../../game/store/effects/attack-effects';
+import { GameMessage } from '../../game/game-message';
 
 
 export class RaikouEx extends PokemonCard {

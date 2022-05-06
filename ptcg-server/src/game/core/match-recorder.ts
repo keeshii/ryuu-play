@@ -1,12 +1,12 @@
-import { Transaction, TransactionManager, EntityManager } from "typeorm";
+import { Transaction, TransactionManager, EntityManager } from 'typeorm';
 
-import { Client } from "../client/client.interface";
-import { Core } from "./core";
-import { State, GamePhase, GameWinner } from "../store/state/state";
-import { User, Match } from "../../storage";
-import { RankingCalculator } from "./ranking-calculator";
-import { Replay } from "./replay";
-import { ReplayPlayer } from "./replay.interface";
+import { Client } from '../client/client.interface';
+import { Core } from './core';
+import { State, GamePhase, GameWinner } from '../store/state/state';
+import { User, Match } from '../../storage';
+import { RankingCalculator } from './ranking-calculator';
+import { Replay } from './replay';
+import { ReplayPlayer } from './replay.interface';
 
 export class MatchRecorder {
 

@@ -1,4 +1,4 @@
-import { GameLog } from "../../game-message";
+import { GameLog } from '../../game-message';
 
 export type StateLogParam = { [key: string]: string | number };
 

@@ -3,7 +3,7 @@ import { Client } from '../client/client.interface';
 import { DeckAnalyser } from '../cards/deck-analyser';
 import { Game } from '../core/game';
 import { GameError } from '../game-error';
-import { GameMessage } from "../game-message";
+import { GameMessage } from '../game-message';
 import { User, Message, Deck } from '../../storage';
 import { Core } from '../core/core';
 import { State } from '../store/state/state';

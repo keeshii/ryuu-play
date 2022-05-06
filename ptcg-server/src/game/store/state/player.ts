@@ -1,8 +1,8 @@
-import { CardList } from "./card-list";
-import { CardTarget, PlayerType, SlotType } from "../actions/play-card-action";
-import { PokemonCard } from "../card/pokemon-card";
-import { PokemonCardList } from "./pokemon-card-list";
-import { Marker } from "./card-marker";
+import { CardList } from './card-list';
+import { CardTarget, PlayerType, SlotType } from '../actions/play-card-action';
+import { PokemonCard } from '../card/pokemon-card';
+import { PokemonCardList } from './pokemon-card-list';
+import { Marker } from './card-marker';
 
 export class Player {
 

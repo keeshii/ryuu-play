@@ -1,13 +1,13 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType, SuperType } from "../../game/store/card/card-types";
-import { StoreLike } from "../../game/store/store-like";
-import { State } from "../../game/store/state/state";
-import { Effect } from "../../game/store/effects/effect";
-import { AttackEffect } from "../../game/store/effects/game-effects";
-import { GameMessage } from "../../game/game-message";
-import { Card } from "../../game/store/card/card";
-import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
-import { ShuffleDeckPrompt } from "../../game/store/prompts/shuffle-prompt";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType, SuperType } from '../../game/store/card/card-types';
+import { StoreLike } from '../../game/store/store-like';
+import { State } from '../../game/store/state/state';
+import { Effect } from '../../game/store/effects/effect';
+import { AttackEffect } from '../../game/store/effects/game-effects';
+import { GameMessage } from '../../game/game-message';
+import { Card } from '../../game/store/card/card';
+import { ChooseCardsPrompt } from '../../game/store/prompts/choose-cards-prompt';
+import { ShuffleDeckPrompt } from '../../game/store/prompts/shuffle-prompt';
 
 function* useAscension(next: Function, store: StoreLike, state: State,
   effect: AttackEffect): IterableIterator<State> {
@@ -78,8 +78,7 @@ export class Zorua2 extends PokemonCard {
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      let generator: IterableIterator<State>;
-      generator = useAscension(() => generator.next(), store, state, effect);
+      const generator = useAscension(() => generator.next(), store, state, effect);
       return generator.next().value;
     }
 

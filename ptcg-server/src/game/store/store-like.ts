@@ -1,9 +1,9 @@
-import { Action } from "./actions/action";
-import { Effect } from "./effects/effect";
-import { Prompt } from "./prompts/prompt";
-import { State } from "./state/state";
-import { StateLogParam } from "./state/state-log";
-import { GameLog } from "../game-message";
+import { Action } from './actions/action';
+import { Effect } from './effects/effect';
+import { Prompt } from './prompts/prompt';
+import { State } from './state/state';
+import { StateLogParam } from './state/state-log';
+import { GameLog } from '../game-message';
 
 export interface StoreLike {
   dispatch(action: Action): void;

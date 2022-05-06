@@ -1,15 +1,15 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType } from "../../game/store/card/card-types";
-import { StoreLike } from "../../game/store/store-like";
-import { State } from "../../game/store/state/state";
-import { Effect } from "../../game/store/effects/effect";
-import { AttackEffect } from "../../game/store/effects/game-effects";
-import { CoinFlipPrompt } from "../../game/store/prompts/coin-flip-prompt";
-import { GameMessage } from "../../game/game-message";
-import { PutDamageEffect, HealTargetEffect } from "../../game/store/effects/attack-effects";
-import { StateUtils } from "../../game/store/state-utils";
-import { PlayerType } from "../../game/store/actions/play-card-action";
-import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType } from '../../game/store/card/card-types';
+import { StoreLike } from '../../game/store/store-like';
+import { State } from '../../game/store/state/state';
+import { Effect } from '../../game/store/effects/effect';
+import { AttackEffect } from '../../game/store/effects/game-effects';
+import { CoinFlipPrompt } from '../../game/store/prompts/coin-flip-prompt';
+import { GameMessage } from '../../game/game-message';
+import { PutDamageEffect, HealTargetEffect } from '../../game/store/effects/attack-effects';
+import { StateUtils } from '../../game/store/state-utils';
+import { PlayerType } from '../../game/store/actions/play-card-action';
+import { EndTurnEffect } from '../../game/store/effects/game-phase-effects';
 
 
 export class Gabite extends PokemonCard {

@@ -1,12 +1,12 @@
 import { AttachPokemonToolEffect, TrainerEffect, PlaySupporterEffect,
-  PlayItemEffect, PlayStadiumEffect } from "../effects/play-card-effects";
-import { GameError } from "../../game-error";
-import { GameMessage, GameLog } from "../../game-message";
-import { Effect } from "../effects/effect";
-import { State } from "../state/state";
-import { StoreLike } from "../store-like";
-import { StateUtils } from "../state-utils";
-import { TrainerType } from "../card/card-types";
+  PlayItemEffect, PlayStadiumEffect } from '../effects/play-card-effects';
+import { GameError } from '../../game-error';
+import { GameMessage, GameLog } from '../../game-message';
+import { Effect } from '../effects/effect';
+import { State } from '../state/state';
+import { StoreLike } from '../store-like';
+import { StateUtils } from '../state-utils';
+import { TrainerType } from '../card/card-types';
 
 
 export function playTrainerReducer(store: StoreLike, state: State, effect: Effect): State {

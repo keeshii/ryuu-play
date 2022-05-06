@@ -1,15 +1,15 @@
-import { Action } from "../store/actions/action";
-import { Arbiter } from "./arbiter";
-import { Client } from "../client/client.interface";
-import { Core } from "./core";
-import { GameSettings } from "./game-settings";
-import { MatchRecorder } from "./match-recorder";
-import { PlayerStats } from "./player-stats";
-import { ResolvePromptAction } from "../store/actions/resolve-prompt-action";
-import { State, GamePhase } from "../store/state/state";
-import { Store } from "../store/store";
-import { StoreHandler } from "../store/store-handler";
-import { AbortGameAction, AbortGameReason } from "../store/actions/abort-game-action";
+import { Action } from '../store/actions/action';
+import { Arbiter } from './arbiter';
+import { Client } from '../client/client.interface';
+import { Core } from './core';
+import { GameSettings } from './game-settings';
+import { MatchRecorder } from './match-recorder';
+import { PlayerStats } from './player-stats';
+import { ResolvePromptAction } from '../store/actions/resolve-prompt-action';
+import { State, GamePhase } from '../store/state/state';
+import { Store } from '../store/store';
+import { StoreHandler } from '../store/store-handler';
+import { AbortGameAction, AbortGameReason } from '../store/actions/abort-game-action';
 
 export class Game implements StoreHandler {
 
@@ -62,7 +62,7 @@ export class Game implements StoreHandler {
     const unresolved = state.prompts.filter(item => item.result === undefined);
 
     for (let i = 0; i < unresolved.length; i++) {
-      let action = this.arbiter.resolvePrompt(state, unresolved[i]);
+      const action = this.arbiter.resolvePrompt(state, unresolved[i]);
       if (action !== undefined) {
         resolved = { id: unresolved[i].id, action };
         break;

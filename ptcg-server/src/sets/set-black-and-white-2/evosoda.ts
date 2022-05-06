@@ -1,18 +1,18 @@
-import { Card } from "../../game/store/card/card";
-import { CardTarget, PlayerType, SlotType } from "../../game/store/actions/play-card-action";
-import { GameError } from "../../game/game-error";
-import { GameMessage } from "../../game/game-message";
-import { TrainerCard } from "../../game/store/card/trainer-card";
-import { TrainerType, Stage, SuperType } from "../../game/store/card/card-types";
-import { StoreLike } from "../../game/store/store-like";
-import { State } from "../../game/store/state/state";
-import { Effect } from "../../game/store/effects/effect";
-import { TrainerEffect } from "../../game/store/effects/play-card-effects";
-import { ChoosePokemonPrompt } from "../../game/store/prompts/choose-pokemon-prompt";
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { CardManager } from "../../game/cards/card-manager";
-import { PokemonCardList} from "../../game/store/state/pokemon-card-list";
-import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
+import { Card } from '../../game/store/card/card';
+import { CardTarget, PlayerType, SlotType } from '../../game/store/actions/play-card-action';
+import { GameError } from '../../game/game-error';
+import { GameMessage } from '../../game/game-message';
+import { TrainerCard } from '../../game/store/card/trainer-card';
+import { TrainerType, Stage, SuperType } from '../../game/store/card/card-types';
+import { StoreLike } from '../../game/store/store-like';
+import { State } from '../../game/store/state/state';
+import { Effect } from '../../game/store/effects/effect';
+import { TrainerEffect } from '../../game/store/effects/play-card-effects';
+import { ChoosePokemonPrompt } from '../../game/store/prompts/choose-pokemon-prompt';
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { CardManager } from '../../game/cards/card-manager';
+import { PokemonCardList} from '../../game/store/state/pokemon-card-list';
+import { ChooseCardsPrompt } from '../../game/store/prompts/choose-cards-prompt';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -28,7 +28,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   }) as PokemonCard[];
 
   // Build possible evolution card names
-  let evolutionNames: string[] = [];
+  const evolutionNames: string[] = [];
   player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (list, card, target) => {
     if (list.pokemonPlayedTurn >= state.turn) {
       return;
@@ -47,7 +47,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   }
 
   // Blocking pokemon cards, that cannot be valid evolutions
-  let blocked: number[] = [];
+  const blocked: number[] = [];
   player.deck.cards.forEach((card, index) => {
     if (card instanceof PokemonCard && !evolutionNames.includes(card.name)) {
       blocked.push(index);
@@ -73,7 +73,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 
   const evolution = cards[0] as PokemonCard;
 
-  let blocked2: CardTarget[] = [];
+  const blocked2: CardTarget[] = [];
   player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (list, card, target) => {
     if (card.name !== evolution.evolvesFrom) {
       blocked2.push(target);
@@ -126,8 +126,7 @@ export class Evosoda extends TrainerCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
-      let generator: IterableIterator<State>;
-      generator = playCard(() => generator.next(), store, state, effect);
+      const generator = playCard(() => generator.next(), store, state, effect);
       return generator.next().value;
     }
 

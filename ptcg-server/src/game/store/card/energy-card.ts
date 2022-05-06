@@ -1,5 +1,5 @@
-import { Card } from "./card";
-import { SuperType, CardType, EnergyType } from "./card-types";
+import { Card } from './card';
+import { SuperType, CardType, EnergyType } from './card-types';
 
 
 export abstract class EnergyCard extends Card {

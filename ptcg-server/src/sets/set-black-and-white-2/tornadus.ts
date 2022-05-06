@@ -1,10 +1,10 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType, SuperType, EnergyType } from "../../game/store/card/card-types";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType, SuperType, EnergyType } from '../../game/store/card/card-types';
 import { StoreLike, State, StateUtils, AttachEnergyPrompt, PlayerType, SlotType,
-  EnergyCard, MoveEnergyPrompt, CardTarget } from "../../game";
-import { AttackEffect } from "../../game/store/effects/game-effects";
-import { Effect } from "../../game/store/effects/effect";
-import { GameMessage } from "../../game/game-message";
+  EnergyCard, MoveEnergyPrompt, CardTarget } from '../../game';
+import { AttackEffect } from '../../game/store/effects/game-effects';
+import { Effect } from '../../game/store/effects/effect';
+import { GameMessage } from '../../game/game-message';
 
 export class Tornadus extends PokemonCard {
 
@@ -85,7 +85,7 @@ export class Tornadus extends PokemonCard {
       const player = effect.player;
       const hasBench = player.bench.some(b => b.cards.length > 0);
       const hasBasicEnergy = player.active.cards.some(c => {
-        return c instanceof EnergyCard && c.energyType === EnergyType.BASIC
+        return c instanceof EnergyCard && c.energyType === EnergyType.BASIC;
       });
 
       if (hasBench === false || hasBasicEnergy === false) {

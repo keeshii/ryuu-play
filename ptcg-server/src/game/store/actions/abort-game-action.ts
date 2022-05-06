@@ -1,10 +1,10 @@
-import { Action } from "./action";
+import { Action } from './action';
 
 export enum AbortGameReason {
   TIME_ELAPSED,
   ILLEGAL_MOVES,
   DISCONNECTED
-};
+}
 
 export class AbortGameAction implements Action {
 

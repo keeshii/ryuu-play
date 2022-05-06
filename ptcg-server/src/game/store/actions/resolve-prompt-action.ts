@@ -1,5 +1,5 @@
-import { Action } from "./action";
-import { StateLog } from "../state/state-log";
+import { Action } from './action';
+import { StateLog } from '../state/state-log';
 
 export class ResolvePromptAction implements Action {
 

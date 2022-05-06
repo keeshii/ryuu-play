@@ -1,14 +1,14 @@
-import { Action } from "../actions/action";
-import { PassTurnAction, RetreatAction, AttackAction, UseAbilityAction, UseStadiumAction } from "../actions/game-actions";
-import { State, GamePhase } from "../state/state";
-import { StoreLike } from "../store-like";
-import { GameError } from "../../game-error";
-import { GameMessage } from "../../game-message";
-import { RetreatEffect, UseAttackEffect, UsePowerEffect, UseStadiumEffect } from "../effects/game-effects";
-import { EndTurnEffect } from "../effects/game-phase-effects";
-import { StateUtils } from "../state-utils";
-import {SlotType} from "../actions/play-card-action";
-import {PokemonCard} from "../card/pokemon-card";
+import { Action } from '../actions/action';
+import { PassTurnAction, RetreatAction, AttackAction, UseAbilityAction, UseStadiumAction } from '../actions/game-actions';
+import { State, GamePhase } from '../state/state';
+import { StoreLike } from '../store-like';
+import { GameError } from '../../game-error';
+import { GameMessage } from '../../game-message';
+import { RetreatEffect, UseAttackEffect, UsePowerEffect, UseStadiumEffect } from '../effects/game-effects';
+import { EndTurnEffect } from '../effects/game-phase-effects';
+import { StateUtils } from '../state-utils';
+import {SlotType} from '../actions/play-card-action';
+import {PokemonCard} from '../card/pokemon-card';
 
 export function playerTurnReducer(store: StoreLike, state: State, action: Action): State {
 
@@ -72,22 +72,25 @@ export function playerTurnReducer(store: StoreLike, state: State, action: Action
 
       switch (action.target.slot) {
         case SlotType.ACTIVE:
-        case SlotType.BENCH:
+        case SlotType.BENCH: {
           const target = StateUtils.getTarget(state, player, action.target);
           pokemonCard = target.getPokemonCard();
           break;
-        case SlotType.DISCARD:
+        }
+        case SlotType.DISCARD: {
           const discardCard = player.discard.cards[action.target.index];
           if (discardCard instanceof PokemonCard) {
             pokemonCard = discardCard;
           }
           break;
-        case SlotType.HAND:
+        }
+        case SlotType.HAND: {
           const handCard = player.hand.cards[action.target.index];
           if (handCard instanceof PokemonCard) {
             pokemonCard = handCard;
           }
           break;
+        }
       }
 
       if (pokemonCard === undefined) {

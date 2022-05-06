@@ -1,11 +1,11 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType } from "../../game/store/card/card-types";
-import { StoreLike } from "../../game/store/store-like";
-import { State, GamePhase } from "../../game/store/state/state";
-import { Effect } from "../../game/store/effects/effect";
-import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
-import { AttackEffect, KnockOutEffect } from "../../game/store/effects/game-effects";
-import { StateUtils } from "../../game/store/state-utils";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType } from '../../game/store/card/card-types';
+import { StoreLike } from '../../game/store/store-like';
+import { State, GamePhase } from '../../game/store/state/state';
+import { Effect } from '../../game/store/effects/effect';
+import { EndTurnEffect } from '../../game/store/effects/game-phase-effects';
+import { AttackEffect, KnockOutEffect } from '../../game/store/effects/game-effects';
+import { StateUtils } from '../../game/store/state-utils';
 
 export class Terrakion extends PokemonCard {
 

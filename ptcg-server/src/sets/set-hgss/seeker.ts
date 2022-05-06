@@ -1,15 +1,15 @@
-import { Effect } from "../../game/store/effects/effect";
-import { TrainerCard } from "../../game/store/card/trainer-card";
-import { TrainerType } from "../../game/store/card/card-types";
-import { StoreLike } from "../../game/store/store-like";
-import { State } from "../../game/store/state/state";
-import { TrainerEffect } from "../../game/store/effects/play-card-effects";
-import { ChoosePokemonPrompt } from "../../game/store/prompts/choose-pokemon-prompt";
-import { PlayerType, SlotType } from "../../game/store/actions/play-card-action";
-import { GameError } from "../../game/game-error";
-import { GameMessage } from "../../game/game-message";
-import { Player } from "../../game/store/state/player";
-import { StateUtils } from "../../game/store/state-utils";
+import { Effect } from '../../game/store/effects/effect';
+import { TrainerCard } from '../../game/store/card/trainer-card';
+import { TrainerType } from '../../game/store/card/card-types';
+import { StoreLike } from '../../game/store/store-like';
+import { State } from '../../game/store/state/state';
+import { TrainerEffect } from '../../game/store/effects/play-card-effects';
+import { ChoosePokemonPrompt } from '../../game/store/prompts/choose-pokemon-prompt';
+import { PlayerType, SlotType } from '../../game/store/actions/play-card-action';
+import { GameError } from '../../game/game-error';
+import { GameMessage } from '../../game/game-message';
+import { Player } from '../../game/store/state/player';
+import { StateUtils } from '../../game/store/state-utils';
 
 function pickUpBenchedPokemon(next: Function, store: StoreLike, state: State, player: Player): State {
   return store.prompt(state, new ChoosePokemonPrompt(
@@ -63,8 +63,7 @@ export class Seeker extends TrainerCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
-      let generator: IterableIterator<State>;
-      generator = playCard(() => generator.next(), store, state, effect);
+      const generator = playCard(() => generator.next(), store, state, effect);
       return generator.next().value;
     }
     return state;

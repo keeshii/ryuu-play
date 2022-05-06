@@ -1,5 +1,5 @@
-import { GameWinner } from "../../game";
-import { UserInfo } from "./core.interface";
+import { GameWinner } from '../../game';
+import { UserInfo } from './core.interface';
 
 export interface ReplayInfo {
   replayId: number;

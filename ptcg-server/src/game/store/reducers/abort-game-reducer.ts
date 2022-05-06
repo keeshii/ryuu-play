@@ -1,11 +1,11 @@
-import { Action } from "../actions/action";
-import { State, GamePhase, GameWinner } from "../state/state";
-import { GameError } from "../../game-error";
-import { GameMessage, GameLog } from "../../game-message";
-import { StoreLike } from "../store-like";
-import { AbortGameAction, AbortGameReason} from "../actions/abort-game-action";
-import { endGame } from "../effect-reducers/check-effect";
-import {StateUtils} from "../state-utils";
+import { Action } from '../actions/action';
+import { State, GamePhase, GameWinner } from '../state/state';
+import { GameError } from '../../game-error';
+import { GameMessage, GameLog } from '../../game-message';
+import { StoreLike } from '../store-like';
+import { AbortGameAction, AbortGameReason} from '../actions/abort-game-action';
+import { endGame } from '../effect-reducers/check-effect';
+import {StateUtils} from '../state-utils';
 
 
 export function abortGameReducer(store: StoreLike, state: State, action: Action): State {

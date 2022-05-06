@@ -1,12 +1,12 @@
-import { Effect } from "../../game/store/effects/effect";
-import { PokemonCard } from "../../game/store/card/pokemon-card";
+import { Effect } from '../../game/store/effects/effect';
+import { PokemonCard } from '../../game/store/card/pokemon-card';
 import { PowerType, StoreLike, State, ChoosePokemonPrompt, PlayerType, SlotType,
-  StateUtils } from "../../game";
-import { Stage, CardType } from "../../game/store/card/card-types";
-import { PlayPokemonEffect } from "../../game/store/effects/play-card-effects";
-import { GameMessage } from "../../game/game-message";
-import { AttackEffect, PowerEffect } from "../../game/store/effects/game-effects";
-import { PutDamageEffect } from "../../game/store/effects/attack-effects";
+  StateUtils } from '../../game';
+import { Stage, CardType } from '../../game/store/card/card-types';
+import { PlayPokemonEffect } from '../../game/store/effects/play-card-effects';
+import { GameMessage } from '../../game/game-message';
+import { AttackEffect, PowerEffect } from '../../game/store/effects/game-effects';
+import { PutDamageEffect } from '../../game/store/effects/attack-effects';
 
 
 export class Golbat extends PokemonCard {

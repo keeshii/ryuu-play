@@ -1,11 +1,11 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType } from "../../game/store/card/card-types";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType } from '../../game/store/card/card-types';
 import { PowerType, StoreLike, State, StateUtils, GameError, GameMessage,
-  PlayerType, ChooseCardsPrompt } from "../../game";
-import { Effect } from "../../game/store/effects/effect";
-import { PowerEffect, AttackEffect } from "../../game/store/effects/game-effects";
-import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
-import { PlayPokemonEffect } from "../../game/store/effects/play-card-effects";
+  PlayerType, ChooseCardsPrompt } from '../../game';
+import { Effect } from '../../game/store/effects/effect';
+import { PowerEffect, AttackEffect } from '../../game/store/effects/game-effects';
+import { EndTurnEffect } from '../../game/store/effects/game-phase-effects';
+import { PlayPokemonEffect } from '../../game/store/effects/play-card-effects';
 
 export class Empoleon extends PokemonCard {
 

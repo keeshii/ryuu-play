@@ -1,8 +1,8 @@
-import { Card } from "../card/card";
-import { CardType } from "../card/card-types";
-import { GameMessage } from "../../game-message";
-import { Prompt } from "./prompt";
-import { StateUtils } from "../state-utils";
+import { Card } from '../card/card';
+import { CardType } from '../card/card-types';
+import { GameMessage } from '../../game-message';
+import { Prompt } from './prompt';
+import { StateUtils } from '../state-utils';
 
 export const ChooseEnergyPromptType = 'Choose energy';
 
@@ -62,7 +62,7 @@ export class ChooseEnergyPrompt extends Prompt<EnergyMap[]> {
     const colorlessCount = result.length - costs.length;
 
     while (costs.length > 0 && provides.length > 0) {
-      let cost = costs[0];
+      const cost = costs[0];
       let index = provides.findIndex(p => p.provides.includes(cost));
 
       if (index === -1) {

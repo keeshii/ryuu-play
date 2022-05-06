@@ -1,14 +1,14 @@
-import { Effect } from "../../game/store/effects/effect";
-import { GameError } from "../../game/game-error";
-import { GameMessage } from "../../game/game-message";
-import { State } from "../../game/store/state/state";
-import { StoreLike } from "../../game/store/store-like";
-import { TrainerCard } from "../../game/store/card/trainer-card";
-import { TrainerType } from "../../game/store/card/card-types";
-import { StateUtils } from "../../game/store/state-utils";
-import { UseStadiumEffect, HealEffect } from "../../game/store/effects/game-effects";
-import { CardTarget, PlayerType, SlotType } from "../../game/store/actions/play-card-action";
-import { ChoosePokemonPrompt } from "../../game/store/prompts/choose-pokemon-prompt";
+import { Effect } from '../../game/store/effects/effect';
+import { GameError } from '../../game/game-error';
+import { GameMessage } from '../../game/game-message';
+import { State } from '../../game/store/state/state';
+import { StoreLike } from '../../game/store/store-like';
+import { TrainerCard } from '../../game/store/card/trainer-card';
+import { TrainerType } from '../../game/store/card/card-types';
+import { StateUtils } from '../../game/store/state-utils';
+import { UseStadiumEffect, HealEffect } from '../../game/store/effects/game-effects';
+import { CardTarget, PlayerType, SlotType } from '../../game/store/actions/play-card-action';
+import { ChoosePokemonPrompt } from '../../game/store/prompts/choose-pokemon-prompt';
 
 export class PokemonCenter extends TrainerCard {
 

@@ -1,5 +1,5 @@
-import { Action, Player, State, SpecialCondition, AttackAction } from "../../game";
-import { SimpleTactic } from "./simple-tactics";
+import { Action, Player, State, SpecialCondition, AttackAction } from '../../game';
+import { SimpleTactic } from './simple-tactics';
 
 export class AttackTactic extends SimpleTactic {
 

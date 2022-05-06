@@ -1,13 +1,13 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType, SpecialCondition } from "../../game/store/card/card-types";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType, SpecialCondition } from '../../game/store/card/card-types';
 import { PowerType, StoreLike, State, StateUtils, ChoosePokemonPrompt, PlayerType,
-  SlotType, PokemonCardList, GameError, CoinFlipPrompt } from "../../game";
-import { Effect } from "../../game/store/effects/effect";
-import { PowerEffect, AttackEffect } from "../../game/store/effects/game-effects";
-import { PutDamageEffect } from "../../game/store/effects/attack-effects";
-import { GameMessage } from "../../game/game-message";
-import { PlayPokemonEffect } from "../../game/store/effects/play-card-effects";
-import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
+  SlotType, PokemonCardList, GameError, CoinFlipPrompt } from '../../game';
+import { Effect } from '../../game/store/effects/effect';
+import { PowerEffect, AttackEffect } from '../../game/store/effects/game-effects';
+import { PutDamageEffect } from '../../game/store/effects/attack-effects';
+import { GameMessage } from '../../game/game-message';
+import { PlayPokemonEffect } from '../../game/store/effects/play-card-effects';
+import { EndTurnEffect } from '../../game/store/effects/game-phase-effects';
 
 export class Hypno extends PokemonCard {
 

@@ -1,9 +1,9 @@
-import { GameMessage } from "../../game-message";
-import { Prompt } from "./prompt";
-import { PlayerType, SlotType, CardTarget } from "../actions/play-card-action";
-import { State } from "../state/state";
-import { StateUtils } from "../state-utils";
-import { DamageMap } from "./move-damage-prompt";
+import { GameMessage } from '../../game-message';
+import { Prompt } from './prompt';
+import { PlayerType, SlotType, CardTarget } from '../actions/play-card-action';
+import { State } from '../state/state';
+import { StateUtils } from '../state-utils';
+import { DamageMap } from './move-damage-prompt';
 
 export const PutDamagePromptType = 'Put damage';
 

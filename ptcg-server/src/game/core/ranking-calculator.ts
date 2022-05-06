@@ -1,8 +1,8 @@
-import { User, Match } from "../../storage";
-import { MoreThan, LessThan } from "typeorm";
-import { GameWinner } from "../store/state/state";
-import { Rank } from "../../backend";
-import { config } from "../../config";
+import { User, Match } from '../../storage';
+import { MoreThan, LessThan } from 'typeorm';
+import { GameWinner } from '../store/state/state';
+import { Rank } from '../../backend';
+import { config } from '../../config';
 
 export class RankingCalculator {
 

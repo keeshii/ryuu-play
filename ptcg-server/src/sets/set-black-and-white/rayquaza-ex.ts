@@ -1,12 +1,12 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType, CardTag } from "../../game/store/card/card-types";
-import { StoreLike, State, CardList, EnergyCard, Card } from "../../game";
-import { AttackEffect } from "../../game/store/effects/game-effects";
-import { Effect } from "../../game/store/effects/effect";
-import { GameMessage } from "../../game/game-message";
-import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
-import { SelectPrompt } from "../../game/store/prompts/select-prompt";
-import { DiscardCardsEffect } from "../../game/store/effects/attack-effects";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType, CardTag } from '../../game/store/card/card-types';
+import { StoreLike, State, CardList, EnergyCard, Card } from '../../game';
+import { AttackEffect } from '../../game/store/effects/game-effects';
+import { Effect } from '../../game/store/effects/effect';
+import { GameMessage } from '../../game/game-message';
+import { CheckProvidedEnergyEffect } from '../../game/store/effects/check-effects';
+import { SelectPrompt } from '../../game/store/prompts/select-prompt';
+import { DiscardCardsEffect } from '../../game/store/effects/attack-effects';
 
 
 export class RayquazaEx extends PokemonCard {

@@ -1,20 +1,20 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType, SpecialCondition } from "../../game/store/card/card-types";
-import { StoreLike } from "../../game/store/store-like";
-import { State } from "../../game/store/state/state";
-import { Effect } from "../../game/store/effects/effect";
-import { PowerEffect, AttackEffect } from "../../game/store/effects/game-effects";
-import { PowerType } from "../../game/store/card/pokemon-types";
-import { StateUtils } from "../../game/store/state-utils";
-import { PlayerType, SlotType } from "../../game/store/actions/play-card-action";
-import { GameMessage } from "../../game/game-message";
-import { DamageMap } from "../../game/store/prompts/move-damage-prompt";
-import { CheckHpEffect } from "../../game/store/effects/check-effects";
-import { PutDamagePrompt } from "../../game/store/prompts/put-damage-prompt";
-import { AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
-import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
-import { PlayPokemonEffect } from "../../game/store/effects/play-card-effects";
-import {GameError} from "../../game/game-error";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType, SpecialCondition } from '../../game/store/card/card-types';
+import { StoreLike } from '../../game/store/store-like';
+import { State } from '../../game/store/state/state';
+import { Effect } from '../../game/store/effects/effect';
+import { PowerEffect, AttackEffect } from '../../game/store/effects/game-effects';
+import { PowerType } from '../../game/store/card/pokemon-types';
+import { StateUtils } from '../../game/store/state-utils';
+import { PlayerType, SlotType } from '../../game/store/actions/play-card-action';
+import { GameMessage } from '../../game/game-message';
+import { DamageMap } from '../../game/store/prompts/move-damage-prompt';
+import { CheckHpEffect } from '../../game/store/effects/check-effects';
+import { PutDamagePrompt } from '../../game/store/prompts/put-damage-prompt';
+import { AddSpecialConditionsEffect } from '../../game/store/effects/attack-effects';
+import { EndTurnEffect } from '../../game/store/effects/game-phase-effects';
+import { PlayPokemonEffect } from '../../game/store/effects/play-card-effects';
+import {GameError} from '../../game/game-error';
 
 
 export class Chandelure extends PokemonCard {

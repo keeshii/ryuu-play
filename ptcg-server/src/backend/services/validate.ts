@@ -22,8 +22,8 @@ export function Validate(validationMap: ValidationMap) {
 
     descriptor.value = function (req: Request, res: Response): any {
       req.body = req.body || {};
-      for (let param in validationMap) {
-        if (validationMap.hasOwnProperty(param)) {
+      for (const param in validationMap) {
+        if (Object.prototype.hasOwnProperty.call(validationMap, param)) {
           const value = req.body[param];
           if (!validationMap[param].validate(value)) {
             res.statusCode = 400;
@@ -33,8 +33,8 @@ export function Validate(validationMap: ValidationMap) {
         }
       }
       return handler.apply(this, arguments);
-    }
-  }
+    };
+  };
 }
 
 export class Validator {
@@ -57,21 +57,21 @@ export class Validator {
 
   public isString(): Validator {
     this.validators.push((value: any) => {
-      return (typeof value === 'string')
+      return (typeof value === 'string');
     });
     return this;
   }
 
   public isBoolean(): Validator {
     this.validators.push((value: any) => {
-      return (typeof value === 'boolean')
+      return (typeof value === 'boolean');
     });
     return this;
   }
 
   public isNumber(): Validator {
     this.validators.push((value: any) => {
-      return (typeof value === 'number')
+      return (typeof value === 'number');
     });
     return this;
   }

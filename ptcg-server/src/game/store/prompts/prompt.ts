@@ -1,4 +1,4 @@
-import { State } from "../state/state";
+import { State } from '../state/state';
 
 export abstract class Prompt<T> {
 

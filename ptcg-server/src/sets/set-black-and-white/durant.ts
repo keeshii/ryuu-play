@@ -1,8 +1,8 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType } from "../../game/store/card/card-types";
-import { StoreLike, State, StateUtils, PlayerType } from "../../game";
-import { AttackEffect } from "../../game/store/effects/game-effects";
-import { Effect } from "../../game/store/effects/effect";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType } from '../../game/store/card/card-types';
+import { StoreLike, State, StateUtils, PlayerType } from '../../game';
+import { AttackEffect } from '../../game/store/effects/game-effects';
+import { Effect } from '../../game/store/effects/effect';
 
 export class Durant extends PokemonCard {
 
@@ -14,7 +14,7 @@ export class Durant extends PokemonCard {
 
   public weakness = [{ type: CardType.FIRE }];
 
-  public resistance = [{ type: CardType.PSYCHIC, value: -20 }]
+  public resistance = [{ type: CardType.PSYCHIC, value: -20 }];
 
   public retreat = [ CardType.COLORLESS ];
 

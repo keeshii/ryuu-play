@@ -87,7 +87,7 @@ export class Decks extends Controller {
 
     let deck = body.id !== undefined
       ? await Deck.findOne(body.id, { relations: ['user'] })
-      : (() => { let d = new Deck(); d.user = user; return d; })();
+      : (() => { const d = new Deck(); d.user = user; return d; })();
 
     if (deck === undefined || deck.user.id !== user.id) {
       res.status(400);
@@ -205,7 +205,7 @@ export class Decks extends Controller {
       return;
     }
 
-    let deck = await Deck.findOne(body.id, { relations: ['user'] });
+    const deck = await Deck.findOne(body.id, { relations: ['user'] });
 
     if (deck === undefined || deck.user.id !== user.id) {
       res.status(400);

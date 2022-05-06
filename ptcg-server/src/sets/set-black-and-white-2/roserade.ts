@@ -1,11 +1,11 @@
-import { Effect } from "../../game/store/effects/effect";
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { PowerType, StoreLike, State, CoinFlipPrompt, ChooseCardsPrompt, ShuffleDeckPrompt } from "../../game";
-import { Stage, CardType, SpecialCondition } from "../../game/store/card/card-types";
-import { PlayPokemonEffect } from "../../game/store/effects/play-card-effects";
-import { AttackEffect, PowerEffect } from "../../game/store/effects/game-effects";
-import { AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
-import { GameMessage } from "../../game/game-message";
+import { Effect } from '../../game/store/effects/effect';
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { PowerType, StoreLike, State, CoinFlipPrompt, ChooseCardsPrompt, ShuffleDeckPrompt } from '../../game';
+import { Stage, CardType, SpecialCondition } from '../../game/store/card/card-types';
+import { PlayPokemonEffect } from '../../game/store/effects/play-card-effects';
+import { AttackEffect, PowerEffect } from '../../game/store/effects/game-effects';
+import { AddSpecialConditionsEffect } from '../../game/store/effects/attack-effects';
+import { GameMessage } from '../../game/game-message';
 
 function* useLeParfum(next: Function, store: StoreLike, state: State,
   self: Roserade, effect: PlayPokemonEffect): IterableIterator<State> {
@@ -83,8 +83,7 @@ export class Roserade extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof PlayPokemonEffect && effect.pokemonCard === this) {
-      let generator: IterableIterator<State>;
-      generator = useLeParfum(() => generator.next(), store, state, this, effect);
+      const generator = useLeParfum(() => generator.next(), store, state, this, effect);
       return generator.next().value;
     }
 

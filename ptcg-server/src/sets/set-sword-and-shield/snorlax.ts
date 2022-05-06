@@ -1,10 +1,10 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType, SpecialCondition } from "../../game/store/card/card-types";
-import { PowerType, StoreLike, State, GameError, GameMessage, CoinFlipPrompt } from "../../game";
-import { AttackEffect, PowerEffect } from "../../game/store/effects/game-effects";
-import { Effect } from "../../game/store/effects/effect";
-import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
-import {AddSpecialConditionsEffect} from "../../game/store/effects/attack-effects";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType, SpecialCondition } from '../../game/store/card/card-types';
+import { PowerType, StoreLike, State, GameError, GameMessage, CoinFlipPrompt } from '../../game';
+import { AttackEffect, PowerEffect } from '../../game/store/effects/game-effects';
+import { Effect } from '../../game/store/effects/effect';
+import { EndTurnEffect } from '../../game/store/effects/game-phase-effects';
+import {AddSpecialConditionsEffect} from '../../game/store/effects/attack-effects';
 
 
 export class Snorlax extends PokemonCard {

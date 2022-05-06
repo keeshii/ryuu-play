@@ -1,13 +1,13 @@
-import { Effect } from "../../game/store/effects/effect";
-import { GameError } from "../../game/game-error";
-import { GameMessage } from "../../game/game-message";
-import { State } from "../../game/store/state/state";
-import { StoreLike } from "../../game/store/store-like";
-import { TrainerCard } from "../../game/store/card/trainer-card";
-import { TrainerType, Stage } from "../../game/store/card/card-types";
-import { StateUtils } from "../../game/store/state-utils";
-import { UseStadiumEffect, PowerEffect } from "../../game/store/effects/game-effects";
-import { PokemonCardList } from "../../game/store/state/pokemon-card-list";
+import { Effect } from '../../game/store/effects/effect';
+import { GameError } from '../../game/game-error';
+import { GameMessage } from '../../game/game-message';
+import { State } from '../../game/store/state/state';
+import { StoreLike } from '../../game/store/store-like';
+import { TrainerCard } from '../../game/store/card/trainer-card';
+import { TrainerType, Stage } from '../../game/store/card/card-types';
+import { StateUtils } from '../../game/store/state-utils';
+import { UseStadiumEffect, PowerEffect } from '../../game/store/effects/game-effects';
+import { PokemonCardList } from '../../game/store/state/pokemon-card-list';
 
 export class SilentLab extends TrainerCard {
 

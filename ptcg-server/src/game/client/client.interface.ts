@@ -1,7 +1,7 @@
-import { User } from "../../storage";
-import { CoreClient } from "./core-client.interface";
-import { GameClient } from "./game-client.interface";
-import { MessageClient } from "./message-client.interface";
+import { User } from '../../storage';
+import { CoreClient } from './core-client.interface';
+import { GameClient } from './game-client.interface';
+import { MessageClient } from './message-client.interface';
 
 export interface Client extends CoreClient, GameClient, MessageClient {
 

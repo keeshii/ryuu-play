@@ -1,16 +1,16 @@
-import { Effect } from "../../game/store/effects/effect";
-import { GameError } from "../../game/game-error";
-import { GameMessage } from "../../game/game-message";
-import { State } from "../../game/store/state/state";
-import { StoreLike } from "../../game/store/store-like";
-import { TrainerCard } from "../../game/store/card/trainer-card";
-import { TrainerType, SuperType, EnergyType } from "../../game/store/card/card-types";
-import { StateUtils } from "../../game/store/state-utils";
-import { UseStadiumEffect } from "../../game/store/effects/game-effects";
-import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
-import { Card } from "../../game/store/card/card";
-import { ShowCardsPrompt } from "../../game/store/prompts/show-cards-prompt";
-import { ShuffleDeckPrompt } from "../../game/store/prompts/shuffle-prompt";
+import { Effect } from '../../game/store/effects/effect';
+import { GameError } from '../../game/game-error';
+import { GameMessage } from '../../game/game-message';
+import { State } from '../../game/store/state/state';
+import { StoreLike } from '../../game/store/store-like';
+import { TrainerCard } from '../../game/store/card/trainer-card';
+import { TrainerType, SuperType, EnergyType } from '../../game/store/card/card-types';
+import { StateUtils } from '../../game/store/state-utils';
+import { UseStadiumEffect } from '../../game/store/effects/game-effects';
+import { ChooseCardsPrompt } from '../../game/store/prompts/choose-cards-prompt';
+import { Card } from '../../game/store/card/card';
+import { ShowCardsPrompt } from '../../game/store/prompts/show-cards-prompt';
+import { ShuffleDeckPrompt } from '../../game/store/prompts/shuffle-prompt';
 
 function* useStadium(next: Function, store: StoreLike, state: State, effect: UseStadiumEffect): IterableIterator<State> {
   const player = effect.player;
@@ -84,8 +84,7 @@ export class ViridianForest extends TrainerCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof UseStadiumEffect && StateUtils.getStadiumCard(state) === this) {
-      let generator: IterableIterator<State>;
-      generator = useStadium(() => generator.next(), store, state, effect);
+      const generator = useStadium(() => generator.next(), store, state, effect);
       return generator.next().value;
     }
 

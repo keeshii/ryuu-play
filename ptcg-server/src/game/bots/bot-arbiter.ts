@@ -88,7 +88,7 @@ export class BotArbiter {
 
     for (let i = 0; i < len; i++) {
       const position = Math.min(len - 1, Math.round(Math.random() * len));
-      let tmp = order[i];
+      const tmp = order[i];
       order[i] = order[position];
       order[position] = tmp;
     }

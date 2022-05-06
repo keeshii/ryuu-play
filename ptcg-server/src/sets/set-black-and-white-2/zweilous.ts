@@ -1,11 +1,11 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType, SuperType } from "../../game/store/card/card-types";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType, SuperType } from '../../game/store/card/card-types';
 import { StoreLike, State, StateUtils, CoinFlipPrompt, Card, ChooseCardsPrompt,
-  EnergyCard } from "../../game";
-import { AttackEffect } from "../../game/store/effects/game-effects";
-import { Effect } from "../../game/store/effects/effect";
-import { GameMessage } from "../../game/game-message";
-import { DiscardCardsEffect } from "../../game/store/effects/attack-effects";
+  EnergyCard } from '../../game';
+import { AttackEffect } from '../../game/store/effects/game-effects';
+import { Effect } from '../../game/store/effects/effect';
+import { GameMessage } from '../../game/game-message';
+import { DiscardCardsEffect } from '../../game/store/effects/attack-effects';
 
 function* useWhirlpool(next: Function, store: StoreLike, state: State,
   effect: AttackEffect): IterableIterator<State> {
@@ -85,8 +85,7 @@ export class Zweilous extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      let generator: IterableIterator<State>;
-      generator = useWhirlpool(() => generator.next(), store, state, effect);
+      const generator = useWhirlpool(() => generator.next(), store, state, effect);
       return generator.next().value;
     }
 

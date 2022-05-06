@@ -1,14 +1,14 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType, EnergyType, SuperType } from "../../game/store/card/card-types";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType, EnergyType, SuperType } from '../../game/store/card/card-types';
 import { PowerType, StoreLike, State, StateUtils, GameError, GameMessage,
-  EnergyCard, PlayerType, SlotType, PokemonCardList, ChooseCardsPrompt } from "../../game";
-import { Effect } from "../../game/store/effects/effect";
-import { PowerEffect, AttackEffect } from "../../game/store/effects/game-effects";
-import { PlayPokemonEffect } from "../../game/store/effects/play-card-effects";
-import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
-import {AttachEnergyPrompt} from "../../game/store/prompts/attach-energy-prompt";
-import {CheckProvidedEnergyEffect} from "../../game/store/effects/check-effects";
-import {DiscardCardsEffect} from "../../game/store/effects/attack-effects";
+  EnergyCard, PlayerType, SlotType, PokemonCardList, ChooseCardsPrompt } from '../../game';
+import { Effect } from '../../game/store/effects/effect';
+import { PowerEffect, AttackEffect } from '../../game/store/effects/game-effects';
+import { PlayPokemonEffect } from '../../game/store/effects/play-card-effects';
+import { EndTurnEffect } from '../../game/store/effects/game-phase-effects';
+import {AttachEnergyPrompt} from '../../game/store/prompts/attach-energy-prompt';
+import {CheckProvidedEnergyEffect} from '../../game/store/effects/check-effects';
+import {DiscardCardsEffect} from '../../game/store/effects/attack-effects';
 
 function* useFlareDestroy(next: Function, store: StoreLike, state: State,
   effect: AttackEffect): IterableIterator<State> {
@@ -103,8 +103,7 @@ export class Typhlosion extends PokemonCard {
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      let generator: IterableIterator<State>;
-      generator = useFlareDestroy(() => generator.next(), store, state, effect);
+      const generator = useFlareDestroy(() => generator.next(), store, state, effect);
       return generator.next().value;
     }
 

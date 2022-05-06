@@ -1,7 +1,7 @@
 import { BotClient } from './bot-client';
 import { Core } from '../core/core';
 import { GameError } from '../game-error';
-import { GameMessage } from "../game-message";
+import { GameMessage } from '../game-message';
 import { User } from '../../storage';
 import { config } from '../../config';
 import { Md5 } from '../../utils/md5';
@@ -29,8 +29,8 @@ export class BotManager {
   public async initBots(core: Core) {
     const registered = Date.now();
     for (let i = 0; i < this.bots.length; i++) {
-      let bot = this.bots[i];
-      let user = await this.findOrCreateUser(bot.name, registered);
+      const bot = this.bots[i];
+      const user = await this.findOrCreateUser(bot.name, registered);
       bot.user = user;
       core.connect(bot);
     }

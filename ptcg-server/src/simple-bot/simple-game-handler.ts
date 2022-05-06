@@ -47,6 +47,7 @@ export class SimpleGameHandler {
     try {
       deck = await deckPromise;
     } catch (error) {
+      // continue regardless of error
     }
 
     this.ai = new SimpleTacticsAi(this.client, this.options, deck);
@@ -63,6 +64,7 @@ export class SimpleGameHandler {
         try {
           this.game.dispatch(this.client, action);
         } catch (error) {
+          // continue regardless of error
         }
         resolve();
       }, config.bots.actionDelay);

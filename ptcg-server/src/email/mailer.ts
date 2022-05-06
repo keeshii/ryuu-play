@@ -18,7 +18,7 @@ export class Mailer {
     let text = template.body;
 
     for (const key in params) {
-      if (params.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(params, key)) {
         subject = subject.replace('{' + key + '}', params[key]);
         text = text.replace('{' + key + '}', params[key]);
       }

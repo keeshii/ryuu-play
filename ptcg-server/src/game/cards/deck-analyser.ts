@@ -1,8 +1,8 @@
-import { Card } from "../store/card/card";
-import { CardManager } from "./card-manager";
-import { EnergyCard } from "../store/card/energy-card";
-import { EnergyType, Stage, CardType, CardTag } from "../store/card/card-types";
-import { PokemonCard } from "../store/card/pokemon-card";
+import { Card } from '../store/card/card';
+import { CardManager } from './card-manager';
+import { EnergyCard } from '../store/card/energy-card';
+import { EnergyType, Stage, CardType, CardTag } from '../store/card/card-types';
+import { PokemonCard } from '../store/card/pokemon-card';
 
 export class DeckAnalyser {
 
@@ -57,7 +57,7 @@ export class DeckAnalyser {
   }
 
   public getDeckType(): CardType[] {
-    let cardTypes: CardType[] = [];
+    const cardTypes: CardType[] = [];
 
     for (let i = 0; i < this.cards.length; i++) {
       const card = this.cards[i];

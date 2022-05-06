@@ -1,11 +1,11 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType } from "../../game/store/card/card-types";
-import { StoreLike, State, CoinFlipPrompt, ChooseEnergyPrompt, Card, StateUtils } from "../../game";
-import { AttackEffect } from "../../game/store/effects/game-effects";
-import { PutDamageEffect, DiscardCardsEffect } from "../../game/store/effects/attack-effects";
-import { Effect } from "../../game/store/effects/effect";
-import { GameMessage } from "../../game/game-message";
-import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType } from '../../game/store/card/card-types';
+import { StoreLike, State, CoinFlipPrompt, ChooseEnergyPrompt, Card, StateUtils } from '../../game';
+import { AttackEffect } from '../../game/store/effects/game-effects';
+import { PutDamageEffect, DiscardCardsEffect } from '../../game/store/effects/attack-effects';
+import { Effect } from '../../game/store/effects/effect';
+import { GameMessage } from '../../game/game-message';
+import { CheckProvidedEnergyEffect } from '../../game/store/effects/check-effects';
 
 
 export class Garchomp extends PokemonCard {

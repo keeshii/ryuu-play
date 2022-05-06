@@ -1,11 +1,11 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType, CardTag } from "../../game/store/card/card-types";
-import { StoreLike, State, PowerType, PlayerType, SlotType, PokemonCardList, GameError, GameMessage } from "../../game";
-import { PowerEffect, AttackEffect } from "../../game/store/effects/game-effects";
-import { Effect } from "../../game/store/effects/effect";
-import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
-import {PlayPokemonEffect} from "../../game/store/effects/play-card-effects";
-import {EndTurnEffect} from "../../game/store/effects/game-phase-effects";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType, CardTag } from '../../game/store/card/card-types';
+import { StoreLike, State, PowerType, PlayerType, SlotType, PokemonCardList, GameError, GameMessage } from '../../game';
+import { PowerEffect, AttackEffect } from '../../game/store/effects/game-effects';
+import { Effect } from '../../game/store/effects/effect';
+import { CheckProvidedEnergyEffect } from '../../game/store/effects/check-effects';
+import {PlayPokemonEffect} from '../../game/store/effects/play-card-effects';
+import {EndTurnEffect} from '../../game/store/effects/game-phase-effects';
 
 
 export class KeldeoEx extends PokemonCard {
@@ -86,7 +86,7 @@ export class KeldeoEx extends PokemonCard {
       let energyCount = 0;
       checkProvidedEnergyEffect.energyMap.forEach(em => {
         energyCount += em.provides.filter(cardType => {
-          return cardType === CardType.WATER || cardType === CardType.ANY
+          return cardType === CardType.WATER || cardType === CardType.ANY;
         }).length;
       });
       effect.damage += energyCount * 20;

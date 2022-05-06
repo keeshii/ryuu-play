@@ -12,10 +12,10 @@ export class Match extends BaseEntity {
   public id!: number;
 
   @ManyToOne(type => User)
-  player1: User = new User();
+    player1: User = new User();
 
   @ManyToOne(type => User)
-  player2: User = new User();
+    player2: User = new User();
 
   @Column()
   public ranking1: number = 0;

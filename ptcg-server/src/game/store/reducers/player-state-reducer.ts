@@ -1,10 +1,10 @@
-import { Action } from "../actions/action";
-import { ChangeAvatarAction } from "../actions/change-avatar-action";
-import { GameError } from "../../game-error";
-import { GameMessage } from "../../game-message";
-import { ReorderBenchAction, ReorderHandAction } from "../actions/reorder-actions";
-import { State } from "../state/state";
-import { StoreLike } from "../store-like";
+import { Action } from '../actions/action';
+import { ChangeAvatarAction } from '../actions/change-avatar-action';
+import { GameError } from '../../game-error';
+import { GameMessage } from '../../game-message';
+import { ReorderBenchAction, ReorderHandAction } from '../actions/reorder-actions';
+import { State } from '../state/state';
+import { StoreLike } from '../store-like';
 
 
 export function playerStateReducer(store: StoreLike, state: State, action: Action): State {

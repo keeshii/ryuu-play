@@ -1,4 +1,4 @@
-import { GameWinner } from "../../game";
+import { GameWinner } from '../../game';
 
 export interface MatchInfo {
   matchId: number;

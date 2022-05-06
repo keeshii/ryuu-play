@@ -12,7 +12,7 @@ export class PathBuilder {
   }
 
   public getPath(): string {
-    let parts: string[] = this.parents
+    const parts: string[] = this.parents
       .map(p => p.key)
       .filter(key => !!key);
     return parts.join('.');

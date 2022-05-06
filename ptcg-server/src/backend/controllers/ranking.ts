@@ -17,7 +17,7 @@ export class Ranking extends Controller {
     const pageSize: number = parseInt(req.params.pageSize, 10) || defaultPageSize;
 
     const [users, total] = await User.findAndCount({
-      order: { ranking: "DESC", lastRankingChange: "DESC", registered: "ASC" },
+      order: { ranking: 'DESC', lastRankingChange: 'DESC', registered: 'ASC' },
       skip: page * pageSize,
       take: pageSize
     });
@@ -28,7 +28,7 @@ export class Ranking extends Controller {
       return {
         position,
         user: this.buildUserInfo(user)
-      }
+      };
     });
 
     res.send({ok: true, ranking, total});
@@ -54,7 +54,7 @@ export class Ranking extends Controller {
 
     const [users, total] = await User.findAndCount({
       where: { name: Like(`%${escapedQuery}%`) },
-      order: { ranking: "DESC", lastRankingChange: "DESC", registered: "ASC" },
+      order: { ranking: 'DESC', lastRankingChange: 'DESC', registered: 'ASC' },
       skip: page * pageSize,
       take: pageSize
     });
@@ -65,7 +65,7 @@ export class Ranking extends Controller {
       return {
         position,
         user: this.buildUserInfo(user)
-      }
+      };
     });
 
     res.send({ok: true, ranking, total});

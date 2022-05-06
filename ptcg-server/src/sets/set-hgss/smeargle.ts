@@ -1,11 +1,11 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType, SuperType, TrainerType } from "../../game/store/card/card-types";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType, SuperType, TrainerType } from '../../game/store/card/card-types';
 import { PowerType, StoreLike, State, StateUtils, PokemonCardList, GameError,
-  GameMessage, CoinFlipPrompt, ChooseCardsPrompt, TrainerCard} from "../../game";
-import { Effect } from "../../game/store/effects/effect";
-import { PlayPokemonEffect, TrainerEffect } from "../../game/store/effects/play-card-effects";
-import { PowerEffect, AttackEffect } from "../../game/store/effects/game-effects";
-import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
+  GameMessage, CoinFlipPrompt, ChooseCardsPrompt, TrainerCard} from '../../game';
+import { Effect } from '../../game/store/effects/effect';
+import { PlayPokemonEffect, TrainerEffect } from '../../game/store/effects/play-card-effects';
+import { PowerEffect, AttackEffect } from '../../game/store/effects/game-effects';
+import { EndTurnEffect } from '../../game/store/effects/game-phase-effects';
 
 export class Smeargle extends PokemonCard {
 

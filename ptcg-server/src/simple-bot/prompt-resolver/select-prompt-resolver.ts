@@ -1,7 +1,7 @@
 import { Player, State, Action, ResolvePromptAction, Prompt, EnergyCard, CardType } from '../../game';
 import { PromptResolver } from './prompt-resolver';
 import { SelectPrompt } from '../../game/store/prompts/select-prompt';
-import { GameMessage } from "../../game/game-message";
+import { GameMessage } from '../../game/game-message';
 
 
 export class SelectPromptResolver extends PromptResolver {

@@ -1,12 +1,12 @@
-import { TrainerCard } from "../../game/store/card/trainer-card";
-import { TrainerType, SuperType, Stage } from "../../game/store/card/card-types";
-import { StoreLike } from "../../game/store/store-like";
-import { State } from "../../game/store/state/state";
-import { Effect } from "../../game/store/effects/effect";
+import { TrainerCard } from '../../game/store/card/trainer-card';
+import { TrainerType, SuperType, Stage } from '../../game/store/card/card-types';
+import { StoreLike } from '../../game/store/store-like';
+import { State } from '../../game/store/state/state';
+import { Effect } from '../../game/store/effects/effect';
 import { CoinFlipPrompt, ChooseCardsPrompt, Card, StateUtils, ShowCardsPrompt,
-  ShuffleDeckPrompt, GameError} from "../../game";
-import { GameMessage } from "../../game/game-message";
-import { TrainerEffect } from "../../game/store/effects/play-card-effects";
+  ShuffleDeckPrompt, GameError} from '../../game';
+import { GameMessage } from '../../game/game-message';
+import { TrainerEffect } from '../../game/store/effects/play-card-effects';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -73,8 +73,7 @@ export class DualBall extends TrainerCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
-      let generator: IterableIterator<State>;
-      generator = playCard(() => generator.next(), store, state, effect);
+      const generator = playCard(() => generator.next(), store, state, effect);
       return generator.next().value;
     }
     return state;

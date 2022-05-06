@@ -1,5 +1,5 @@
-import { Effect } from "./effect";
-import { Player } from "../state/player";
+import { Effect } from './effect';
+import { Player } from '../state/player';
 
 export enum GamePhaseEffects {
   END_TURN_EFFECT = 'END_TURN_EFFECT',

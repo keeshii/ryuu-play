@@ -1,11 +1,11 @@
-import { TrainerCard } from "../../game/store/card/trainer-card";
-import { TrainerType } from "../../game/store/card/card-types";
-import { StoreLike } from "../../game/store/store-like";
-import { State, GamePhase } from "../../game/store/state/state";
-import { Effect } from "../../game/store/effects/effect";
-import { KnockOutEffect } from "../../game/store/effects/game-effects";
-import { BetweenTurnsEffect } from "../../game/store/effects/game-phase-effects";
-import { Card } from "../../game/store/card/card";
+import { TrainerCard } from '../../game/store/card/trainer-card';
+import { TrainerType } from '../../game/store/card/card-types';
+import { StoreLike } from '../../game/store/store-like';
+import { State, GamePhase } from '../../game/store/state/state';
+import { Effect } from '../../game/store/effects/effect';
+import { KnockOutEffect } from '../../game/store/effects/game-effects';
+import { BetweenTurnsEffect } from '../../game/store/effects/game-phase-effects';
+import { Card } from '../../game/store/card/card';
 
 export class RescueScarf extends TrainerCard {
 

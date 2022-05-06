@@ -1,13 +1,13 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType } from "../../game/store/card/card-types";
-import { StoreLike } from "../../game/store/store-like";
-import { State } from "../../game/store/state/state";
-import { Effect } from "../../game/store/effects/effect";
-import { PowerEffect } from "../../game/store/effects/game-effects";
-import { PowerType } from "../../game/store/card/pokemon-types";
-import { GameMessage } from "../../game/game-message";
-import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
-import { GameError } from "../../game/game-error";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType } from '../../game/store/card/card-types';
+import { StoreLike } from '../../game/store/store-like';
+import { State } from '../../game/store/state/state';
+import { Effect } from '../../game/store/effects/effect';
+import { PowerEffect } from '../../game/store/effects/game-effects';
+import { PowerType } from '../../game/store/card/pokemon-types';
+import { GameMessage } from '../../game/game-message';
+import { EndTurnEffect } from '../../game/store/effects/game-phase-effects';
+import { GameError } from '../../game/game-error';
 
 export class Exeggcute extends PokemonCard {
 

@@ -4,7 +4,7 @@ import { SimpleScore } from './score';
 export class PlayerScore extends SimpleScore {
 
   public getScore(state: State, playerId: number): number {
-    const player = this.getPlayer(state, playerId)
+    const player = this.getPlayer(state, playerId);
     const opponent = StateUtils.getOpponent(state, player);
     const scores = this.options.scores.player;
 

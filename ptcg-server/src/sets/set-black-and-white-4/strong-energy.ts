@@ -1,16 +1,16 @@
-import { CardType, EnergyType } from "../../game/store/card/card-types";
-import { EnergyCard } from "../../game/store/card/energy-card";
-import { StoreLike } from "../../game/store/store-like";
-import { State } from "../../game/store/state/state";
-import { Effect } from "../../game/store/effects/effect";
-import { DealDamageEffect } from "../../game/store/effects/attack-effects";
+import { CardType, EnergyType } from '../../game/store/card/card-types';
+import { EnergyCard } from '../../game/store/card/energy-card';
+import { StoreLike } from '../../game/store/store-like';
+import { State } from '../../game/store/state/state';
+import { Effect } from '../../game/store/effects/effect';
+import { DealDamageEffect } from '../../game/store/effects/attack-effects';
 import { CheckProvidedEnergyEffect, CheckPokemonTypeEffect,
-  CheckTableStateEffect } from "../../game/store/effects/check-effects";
-import { PlayerType } from "../../game/store/actions/play-card-action";
-import { AttachEnergyEffect } from "../../game/store/effects/play-card-effects";
-import { GameError } from "../../game/game-error";
-import { GameMessage } from "../../game/game-message";
-import {StateUtils} from "../../game/store/state-utils";
+  CheckTableStateEffect } from '../../game/store/effects/check-effects';
+import { PlayerType } from '../../game/store/actions/play-card-action';
+import { AttachEnergyEffect } from '../../game/store/effects/play-card-effects';
+import { GameError } from '../../game/game-error';
+import { GameMessage } from '../../game/game-message';
+import {StateUtils} from '../../game/store/state-utils';
 
 export class StrongEnergy extends EnergyCard {
 

@@ -1,5 +1,5 @@
-import { JsonPatch } from "./json-patch";
-import {JsonDiff} from "./json-patch.interface";
+import { JsonPatch } from './json-patch';
+import {JsonDiff} from './json-patch.interface';
 
 describe('JsonPatch', () => {
   let jsonPatch: JsonPatch;

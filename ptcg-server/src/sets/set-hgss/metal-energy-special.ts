@@ -1,10 +1,10 @@
-import { CardType, EnergyType } from "../../game/store/card/card-types";
-import { EnergyCard } from "../../game/store/card/energy-card";
-import { StoreLike } from "../../game/store/store-like";
-import { State } from "../../game/store/state/state";
-import { Effect } from "../../game/store/effects/effect";
-import { PutDamageEffect } from "../../game/store/effects/attack-effects";
-import { CheckPokemonTypeEffect } from "../../game/store/effects/check-effects";
+import { CardType, EnergyType } from '../../game/store/card/card-types';
+import { EnergyCard } from '../../game/store/card/energy-card';
+import { StoreLike } from '../../game/store/store-like';
+import { State } from '../../game/store/state/state';
+import { Effect } from '../../game/store/effects/effect';
+import { PutDamageEffect } from '../../game/store/effects/attack-effects';
+import { CheckPokemonTypeEffect } from '../../game/store/effects/check-effects';
 
 export class MetalEnergySpecial extends EnergyCard {
 

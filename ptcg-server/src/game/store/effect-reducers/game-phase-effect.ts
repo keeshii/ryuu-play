@@ -1,13 +1,13 @@
-import { Effect } from "../effects/effect";
-import { EndTurnEffect, BetweenTurnsEffect } from "../effects/game-phase-effects";
-import { GameError } from "../../game-error";
-import { GameMessage, GameLog } from "../../game-message";
-import { Player } from "../state/player";
-import { SpecialCondition } from "../card/card-types";
-import { State, GamePhase, GameWinner } from "../state/state";
-import { StoreLike } from "../store-like";
-import { checkState, endGame } from "./check-effect";
-import { CoinFlipPrompt } from "../prompts/coin-flip-prompt";
+import { Effect } from '../effects/effect';
+import { EndTurnEffect, BetweenTurnsEffect } from '../effects/game-phase-effects';
+import { GameError } from '../../game-error';
+import { GameMessage, GameLog } from '../../game-message';
+import { Player } from '../state/player';
+import { SpecialCondition } from '../card/card-types';
+import { State, GamePhase, GameWinner } from '../state/state';
+import { StoreLike } from '../store-like';
+import { checkState, endGame } from './check-effect';
+import { CoinFlipPrompt } from '../prompts/coin-flip-prompt';
 
 function getActivePlayer(state: State): Player {
   return state.players[state.activePlayer];

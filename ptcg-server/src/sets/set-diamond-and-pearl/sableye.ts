@@ -1,16 +1,16 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType, SuperType, TrainerType } from "../../game/store/card/card-types";
-import { StoreLike } from "../../game/store/store-like";
-import { State } from "../../game/store/state/state";
-import { Effect } from "../../game/store/effects/effect";
-import { PowerType } from "../../game/store/card/pokemon-types";
-import { AttackEffect } from "../../game/store/effects/game-effects";
-import { ChooseCardsPrompt, TrainerCard, StateUtils } from "../../game";
-import { GameMessage, GameLog } from "../../game/game-message";
-import { TrainerEffect } from "../../game/store/effects/play-card-effects";
-import { CheckHpEffect } from "../../game/store/effects/check-effects";
-import { WhoBeginsEffect } from "../../game/store/effects/game-phase-effects";
-import { DealDamageEffect } from "../../game/store/effects/attack-effects";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType, SuperType, TrainerType } from '../../game/store/card/card-types';
+import { StoreLike } from '../../game/store/store-like';
+import { State } from '../../game/store/state/state';
+import { Effect } from '../../game/store/effects/effect';
+import { PowerType } from '../../game/store/card/pokemon-types';
+import { AttackEffect } from '../../game/store/effects/game-effects';
+import { ChooseCardsPrompt, TrainerCard, StateUtils } from '../../game';
+import { GameMessage, GameLog } from '../../game/game-message';
+import { TrainerEffect } from '../../game/store/effects/play-card-effects';
+import { CheckHpEffect } from '../../game/store/effects/check-effects';
+import { WhoBeginsEffect } from '../../game/store/effects/game-phase-effects';
+import { DealDamageEffect } from '../../game/store/effects/attack-effects';
 
 export class Sableye extends PokemonCard {
 

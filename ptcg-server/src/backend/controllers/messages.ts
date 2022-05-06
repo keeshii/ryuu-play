@@ -92,7 +92,7 @@ export class Messages extends Controller {
     const [messageRows, total] = await Message.findAndCount({
       relations: ['sender'],
       where,
-      order: { created: "DESC" },
+      order: { created: 'DESC' },
       skip: page * pageSize,
       take: pageSize
     });

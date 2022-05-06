@@ -1,6 +1,6 @@
-import { ChooseEnergyPrompt, EnergyMap } from "./choose-energy-prompt";
-import { GameMessage } from "../../game-message";
-import { CardType, SuperType } from "../card/card-types";
+import { ChooseEnergyPrompt, EnergyMap } from './choose-energy-prompt';
+import { GameMessage } from '../../game-message';
+import { CardType, SuperType } from '../card/card-types';
 
 describe('ChooseEnergyPrompt', () => {
 

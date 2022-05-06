@@ -1,5 +1,5 @@
-import { Action } from "./action";
-import { CardTarget } from "./play-card-action";
+import { Action } from './action';
+import { CardTarget } from './play-card-action';
 
 export class AttackAction implements Action {
 

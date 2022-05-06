@@ -1,11 +1,11 @@
-import { GameMessage } from "../../game/game-message";
-import { Effect } from "../../game/store/effects/effect";
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType, SuperType } from "../../game/store/card/card-types";
-import { PlayPokemonEffect } from "../../game/store/effects/play-card-effects";
+import { GameMessage } from '../../game/game-message';
+import { Effect } from '../../game/store/effects/effect';
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType, SuperType } from '../../game/store/card/card-types';
+import { PlayPokemonEffect } from '../../game/store/effects/play-card-effects';
 import { PowerType, StoreLike, State, ChoosePokemonPrompt, PlayerType, SlotType,
-  PokemonCardList } from "../../game";
-import {PowerEffect} from "../../game/store/effects/game-effects";
+  PokemonCardList } from '../../game';
+import {PowerEffect} from '../../game/store/effects/game-effects';
 
 function* useReturn(next: Function, store: StoreLike, state: State,
   self: Unown, effect: PlayPokemonEffect): IterableIterator<State> {
@@ -77,8 +77,7 @@ export class Unown extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof PlayPokemonEffect && effect.pokemonCard === this) {
-      let generator: IterableIterator<State>;
-      generator = useReturn(() => generator.next(), store, state, this, effect);
+      const generator = useReturn(() => generator.next(), store, state, this, effect);
       return generator.next().value;
     }
 

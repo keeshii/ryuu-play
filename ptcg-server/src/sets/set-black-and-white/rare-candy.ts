@@ -1,20 +1,20 @@
-import { Card } from "../../game/store/card/card";
-import { CardTarget, PlayerType, SlotType } from "../../game/store/actions/play-card-action";
-import { GameError } from "../../game/game-error";
-import { GameMessage } from "../../game/game-message";
-import { TrainerCard } from "../../game/store/card/trainer-card";
-import { TrainerType, Stage, SuperType } from "../../game/store/card/card-types";
-import { StoreLike } from "../../game/store/store-like";
-import { State } from "../../game/store/state/state";
-import { Effect } from "../../game/store/effects/effect";
-import { TrainerEffect } from "../../game/store/effects/play-card-effects";
-import { ChoosePokemonPrompt } from "../../game/store/prompts/choose-pokemon-prompt";
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { CardManager } from "../../game/cards/card-manager";
-import { PokemonCardList} from "../../game/store/state/pokemon-card-list";
-import { CheckPokemonPlayedTurnEffect } from "../../game/store/effects/check-effects";
-import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
-import {EvolveEffect} from "../../game/store/effects/game-effects";
+import { Card } from '../../game/store/card/card';
+import { CardTarget, PlayerType, SlotType } from '../../game/store/actions/play-card-action';
+import { GameError } from '../../game/game-error';
+import { GameMessage } from '../../game/game-message';
+import { TrainerCard } from '../../game/store/card/trainer-card';
+import { TrainerType, Stage, SuperType } from '../../game/store/card/card-types';
+import { StoreLike } from '../../game/store/store-like';
+import { State } from '../../game/store/state/state';
+import { Effect } from '../../game/store/effects/effect';
+import { TrainerEffect } from '../../game/store/effects/play-card-effects';
+import { ChoosePokemonPrompt } from '../../game/store/prompts/choose-pokemon-prompt';
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { CardManager } from '../../game/cards/card-manager';
+import { PokemonCardList} from '../../game/store/state/pokemon-card-list';
+import { CheckPokemonPlayedTurnEffect } from '../../game/store/effects/check-effects';
+import { ChooseCardsPrompt } from '../../game/store/prompts/choose-cards-prompt';
+import {EvolveEffect} from '../../game/store/effects/game-effects';
 
 function isMatchingStage2(stage1: PokemonCard[], basic: PokemonCard, stage2: PokemonCard): boolean {
   for (const card of stage1) {
@@ -133,8 +133,7 @@ export class RareCandy extends TrainerCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
-      let generator: IterableIterator<State>;
-      generator = playCard(() => generator.next(), store, state, effect);
+      const generator = playCard(() => generator.next(), store, state, effect);
       return generator.next().value;
     }
 

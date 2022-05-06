@@ -7,7 +7,7 @@ export class ChooseAttackPromptResolver extends PromptResolver {
 
   public resolvePrompt(state: State, player: Player, prompt: Prompt<any>): Action | undefined {
     if (prompt instanceof ChooseAttackPrompt) {
-      let result: Attack | null = this.buildAttackToChoose(state, prompt);
+      const result: Attack | null = this.buildAttackToChoose(state, prompt);
       return new ResolvePromptAction(prompt.id, result);
     }
   }
@@ -26,7 +26,7 @@ export class ChooseAttackPromptResolver extends PromptResolver {
           return b.index === index && b.attack === attack.name;
         });
         if (!isBlocked && !banned.includes(attack.name)) {
-          attacks.push(attack)
+          attacks.push(attack);
         }
       });
     });

@@ -1,13 +1,13 @@
-import { Card } from "./card/card";
-import { CardList } from "./state/card-list";
-import { CardTarget, PlayerType, SlotType } from "./actions/play-card-action";
-import { CardType } from "./card/card-types";
-import { GameError } from "../game-error";
-import { GameMessage } from "../game-message";
-import { State } from "./state/state";
-import { Player } from "./state/player";
-import { PokemonCardList } from "./state/pokemon-card-list";
-import { EnergyMap } from "./prompts/choose-energy-prompt";
+import { Card } from './card/card';
+import { CardList } from './state/card-list';
+import { CardTarget, PlayerType, SlotType } from './actions/play-card-action';
+import { CardType } from './card/card-types';
+import { GameError } from '../game-error';
+import { GameMessage } from '../game-message';
+import { State } from './state/state';
+import { Player } from './state/player';
+import { PokemonCardList } from './state/pokemon-card-list';
+import { EnergyMap } from './prompts/choose-energy-prompt';
 
 export class StateUtils {
   public static checkEnoughEnergy(energy: EnergyMap[], cost: CardType[]): boolean {
@@ -32,13 +32,14 @@ export class StateUtils {
         case CardType.COLORLESS:
           colorless += 1;
           break;
-        default:
+        default: {
           const index = provides.findIndex(energy => energy === costType);
           if (index !== -1) {
             provides.splice(index, 1);
           } else {
             rainbow += 1;
           }
+        }
       }
     });
 

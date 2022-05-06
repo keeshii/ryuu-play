@@ -6,7 +6,7 @@ interface BotsForGame {
   deck: string[]
   bot1: BotClient,
   bot2: BotClient,
-};
+}
 
 export class BotGamesTask {
 
@@ -32,7 +32,7 @@ export class BotGamesTask {
   private async getRandomBotsForGame(): Promise<BotsForGame | undefined> {
     const allBots = this.bots.slice();
     const bots: BotClient[] = [];
-    const decks: Array<string[]> = []
+    const decks: Array<string[]> = [];
 
     // Try to select two random bots for the game
     while (bots.length < 2 && allBots.length > 0) {
@@ -44,6 +44,7 @@ export class BotGamesTask {
         bots.push(bot);
         decks.push(deck);
       } catch {
+        // continue regardless of error
       }
     }
 

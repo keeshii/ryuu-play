@@ -1,9 +1,9 @@
-import { GameError } from "../../game-error";
-import { GameMessage } from "../../game-message";
-import { Prompt } from "./prompt";
-import { State } from "../state/state";
-import { PokemonCard } from "../card/pokemon-card";
-import { Attack } from "../card/pokemon-types";
+import { GameError } from '../../game-error';
+import { GameMessage } from '../../game-message';
+import { Prompt } from './prompt';
+import { State } from '../state/state';
+import { PokemonCard } from '../card/pokemon-card';
+import { Attack } from '../card/pokemon-types';
 
 export const ChooseAttackPromptType = 'Choose attack';
 

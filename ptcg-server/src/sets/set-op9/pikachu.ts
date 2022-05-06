@@ -1,10 +1,10 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType, SpecialCondition } from "../../game/store/card/card-types";
-import { StoreLike, State, StateUtils, PokemonCardList } from "../../game";
-import { AttackEffect } from "../../game/store/effects/game-effects";
-import { Effect } from "../../game/store/effects/effect";
-import { DealDamageEffect, AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
-import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType, SpecialCondition } from '../../game/store/card/card-types';
+import { StoreLike, State, StateUtils, PokemonCardList } from '../../game';
+import { AttackEffect } from '../../game/store/effects/game-effects';
+import { Effect } from '../../game/store/effects/effect';
+import { DealDamageEffect, AddSpecialConditionsEffect } from '../../game/store/effects/attack-effects';
+import { EndTurnEffect } from '../../game/store/effects/game-phase-effects';
 
 
 export class Pikachu extends PokemonCard {
@@ -68,7 +68,7 @@ export class Pikachu extends PokemonCard {
     }
 
     if (effect instanceof DealDamageEffect && effect.source.marker.hasMarker(this.GROWL_MARKER, this)) {
-      const reducedDamage = Math.max(0, effect.damage - 20)
+      const reducedDamage = Math.max(0, effect.damage - 20);
       effect.damage = reducedDamage;
       return state;
     }

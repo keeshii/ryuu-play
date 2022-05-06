@@ -1,5 +1,5 @@
-import { Action, Player, State, PokemonCard, Stage, PlayCardAction } from "../../game";
-import { SimpleTactic } from "./simple-tactics";
+import { Action, Player, State, PokemonCard, Stage, PlayCardAction } from '../../game';
+import { SimpleTactic } from './simple-tactics';
 
 export class PlayBasicTactic extends SimpleTactic {
 

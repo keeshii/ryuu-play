@@ -1,11 +1,11 @@
-import { Card } from "../card/card";
-import { GameError } from "../../game-error";
-import { GameMessage } from "../../game-message";
-import { Prompt } from "./prompt";
-import { PlayerType, SlotType, CardTarget } from "../actions/play-card-action";
-import { State } from "../state/state";
-import { StateUtils } from "../state-utils";
-import { FilterType } from "./choose-cards-prompt";
+import { Card } from '../card/card';
+import { GameError } from '../../game-error';
+import { GameMessage } from '../../game-message';
+import { Prompt } from './prompt';
+import { PlayerType, SlotType, CardTarget } from '../actions/play-card-action';
+import { State } from '../state/state';
+import { StateUtils } from '../state-utils';
+import { FilterType } from './choose-cards-prompt';
 
 export const MoveEnergyPromptType = 'Move energy';
 

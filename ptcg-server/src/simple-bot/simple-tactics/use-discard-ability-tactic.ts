@@ -1,6 +1,6 @@
 import { Action, Player, State, UseAbilityAction, PlayerType, PokemonCard,
-  SlotType, CardTarget } from "../../game";
-import { SimpleTactic } from "./simple-tactics";
+  SlotType, CardTarget } from '../../game';
+import { SimpleTactic } from './simple-tactics';
 
 export class UseDiscardAbilityTactic extends SimpleTactic {
 

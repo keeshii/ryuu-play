@@ -1,11 +1,11 @@
-import { Card } from "../card/card";
-import { CardList } from "../state/card-list";
-import { EnergyCard } from "../card/energy-card";
-import { GameMessage } from "../../game-message";
-import { Prompt } from "./prompt";
-import { PokemonCard } from "../card/pokemon-card";
-import { TrainerCard } from "../card/trainer-card";
-import { CardType, SuperType } from "../card/card-types";
+import { Card } from '../card/card';
+import { CardList } from '../state/card-list';
+import { EnergyCard } from '../card/energy-card';
+import { GameMessage } from '../../game-message';
+import { Prompt } from './prompt';
+import { PokemonCard } from '../card/pokemon-card';
+import { TrainerCard } from '../card/trainer-card';
+import { CardType, SuperType } from '../card/card-types';
 
 export const ChooseCardsPromptType = 'Choose cards';
 
@@ -82,7 +82,7 @@ export class ChooseCardsPrompt extends Prompt<Card[]> {
     }
 
     // Check if 'max' restrictions are valid
-    let countMap: {[key: number]: number} = {};
+    const countMap: {[key: number]: number} = {};
     for (const card of result) {
       const count = countMap[card.superType] || 0;
       countMap[card.superType] = count + 1;
@@ -115,7 +115,7 @@ export class ChooseCardsPrompt extends Prompt<Card[]> {
 
   private matchesFilter(card: Card): boolean {
     for (const key in this.filter) {
-      if (this.filter.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(this.filter, key)) {
         if ((this.filter as any)[key] !== (card as any)[key]) {
           return false;
         }

@@ -1,4 +1,4 @@
-import { Rules } from "../store/state/rules";
+import { Rules } from '../store/state/rules';
 
 export class GameSettings {
 

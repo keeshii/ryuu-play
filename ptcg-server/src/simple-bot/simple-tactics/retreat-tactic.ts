@@ -1,5 +1,5 @@
-import { Action, Player, State, RetreatAction } from "../../game";
-import { SimpleTactic } from "./simple-tactics";
+import { Action, Player, State, RetreatAction } from '../../game';
+import { SimpleTactic } from './simple-tactics';
 
 export class RetreatTactic extends SimpleTactic {
 

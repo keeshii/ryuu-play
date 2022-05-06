@@ -1,5 +1,5 @@
-import { Card } from "../store/card/card";
-import { deepClone } from "../../utils/utils";
+import { Card } from '../store/card/card';
+import { deepClone } from '../../utils/utils';
 
 export class CardManager {
 

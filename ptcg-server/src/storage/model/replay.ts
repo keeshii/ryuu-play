@@ -12,16 +12,16 @@ export class Replay extends BaseEntity {
   public id!: number;
 
   @ManyToOne(type => User)
-  user: User = new User();
+    user: User = new User();
 
   @Column()
   public name: string = '';
 
   @Column({ type: 'simple-json' })
-  player1: ReplayPlayer = { userId: 0, name: '', ranking: 0 };
+    player1: ReplayPlayer = { userId: 0, name: '', ranking: 0 };
 
   @Column({ type: 'simple-json' })
-  player2: ReplayPlayer = { userId: 0, name: '', ranking: 0 };
+    player2: ReplayPlayer = { userId: 0, name: '', ranking: 0 };
 
   @Column()
   public winner: GameWinner = GameWinner.NONE;

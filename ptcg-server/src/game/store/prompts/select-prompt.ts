@@ -1,5 +1,5 @@
-import { GameMessage } from "../../game-message";
-import { Prompt } from "./prompt";
+import { GameMessage } from '../../game-message';
+import { Prompt } from './prompt';
 
 export interface SelectOptions {
   allowCancel: boolean;

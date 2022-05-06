@@ -1,5 +1,5 @@
-import { Action, Player, State, PokemonCard, PlayerType, CardTarget, PlayCardAction } from "../../game";
-import { SimpleTactic } from "./simple-tactics";
+import { Action, Player, State, PokemonCard, PlayerType, CardTarget, PlayCardAction } from '../../game';
+import { SimpleTactic } from './simple-tactics';
 
 export class EvolveTactic extends SimpleTactic {
 
@@ -14,7 +14,7 @@ export class EvolveTactic extends SimpleTactic {
 
     for (let i = 0; i < pokemons.length; i++) {
       const evolution = player.hand.cards.find(c => {
-        return c instanceof PokemonCard && c.evolvesFrom === pokemons[i].card.name
+        return c instanceof PokemonCard && c.evolvesFrom === pokemons[i].card.name;
       });
       if (evolution) {
         return new PlayCardAction(

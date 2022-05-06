@@ -1,12 +1,12 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType, CardTag } from "../../game/store/card/card-types";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType, CardTag } from '../../game/store/card/card-types';
 import { StoreLike, State, PlayerType, SlotType, StateUtils,
-  ChoosePokemonPrompt, GameError, GameMessage } from "../../game";
-import { AttackEffect } from "../../game/store/effects/game-effects";
-import { PutDamageEffect } from "../../game/store/effects/attack-effects";
-import { Effect } from "../../game/store/effects/effect";
-import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
-import { PlayItemEffect } from "../../game/store/effects/play-card-effects";
+  ChoosePokemonPrompt, GameError, GameMessage } from '../../game';
+import { AttackEffect } from '../../game/store/effects/game-effects';
+import { PutDamageEffect } from '../../game/store/effects/attack-effects';
+import { Effect } from '../../game/store/effects/effect';
+import { EndTurnEffect } from '../../game/store/effects/game-phase-effects';
+import { PlayItemEffect } from '../../game/store/effects/play-card-effects';
 
 
 export class SeismitoadEx extends PokemonCard {

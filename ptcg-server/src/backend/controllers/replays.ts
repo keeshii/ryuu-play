@@ -23,7 +23,7 @@ export class Replays extends Controller {
       where: [
         { user: { id: userId } }
       ],
-      order: { created: "DESC", name: "ASC" },
+      order: { created: 'DESC', name: 'ASC' },
       skip: page * pageSize,
       take: pageSize
     });
@@ -57,7 +57,7 @@ export class Replays extends Controller {
 
     const [replayRows, total] = await Replay.findAndCount({
       where: { name: Like(`%${escapedQuery}%`), user: { id: userId } },
-      order: { created: "DESC", name: "ASC" },
+      order: { created: 'DESC', name: 'ASC' },
       skip: page * pageSize,
       take: pageSize
     });

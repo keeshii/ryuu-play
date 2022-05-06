@@ -1,7 +1,7 @@
 export class Md5 {
 
   private static _string: string;
-  private static x: Array<number> = <Array<number>> Array();
+  private static x: Array<number> = <Array<number>> [];
   private static k: number;
   private static AA: number;
   private static BB: number;
@@ -28,28 +28,22 @@ export class Md5 {
   private static S43: number = 15;
   private static S44: number = 21;
 
-  private static rotateLeft: Function =
-    (lValue: number, iShiftBits: number): number => (lValue << iShiftBits) | (lValue >>> (32 - iShiftBits))
+  private static rotateLeft =
+    (lValue: number, iShiftBits: number): number => (lValue << iShiftBits) | (lValue >>> (32 - iShiftBits));
 
   private static AddUnsigned(lX: number, lY: number): number {
-    let lX4: number,
-      lY4: number,
-      lX8: number,
-      lY8: number,
-      lResult: number;
+    const lX8 = (lX & 0x80000000);
+    const lY8 = (lY & 0x80000000);
+    const lX4 = (lX & 0x40000000);
+    const lY4 = (lY & 0x40000000);
+    const lResult = (lX & 0x3FFFFFFF) + (lY & 0x3FFFFFFF);
 
-    lX8 = (lX & 0x80000000);
-    lY8 = (lY & 0x80000000);
-    lX4 = (lX & 0x40000000);
-    lY4 = (lY & 0x40000000);
-    lResult = (lX & 0x3FFFFFFF) + (lY & 0x3FFFFFFF);
-
-    if (!!(lX4 & lY4)) {
+    if (lX4 & lY4) {
       return (lResult ^ 0x80000000 ^ lX8 ^ lY8);
     }
 
-    if (!!(lX4 | lY4)) {
-      if (!!(lResult & 0x40000000)) {
+    if (lX4 | lY4) {
+      if (lResult & 0x40000000) {
         return (lResult ^ 0xC0000000 ^ lX8 ^ lY8);
       }
       else {
@@ -61,13 +55,13 @@ export class Md5 {
     }
   }
 
-  private static F: Function = (x: number, y: number, z: number): number => (x & y) | ((~x) & z);
+  private static F = (x: number, y: number, z: number): number => (x & y) | ((~x) & z);
 
-  private static G: Function = (x: number, y: number, z: number): number => (x & z) | (y & (~z));
+  private static G = (x: number, y: number, z: number): number => (x & z) | (y & (~z));
 
-  private static H: Function = (x: number, y: number, z: number): number => (x ^ y ^ z);
+  private static H = (x: number, y: number, z: number): number => (x ^ y ^ z);
 
-  private static I: Function = (x: number, y: number, z: number): number => (y ^ (x | (~z)));
+  private static I = (x: number, y: number, z: number): number => (y ^ (x | (~z)));
 
   private static FF(a: number, b: number, c: number, d: number, x: number, s: number, ac: number): number {
     a = this.AddUnsigned(a, this.AddUnsigned(this.AddUnsigned(this.F(b, c, d), x), ac));
@@ -90,12 +84,12 @@ export class Md5 {
   }
 
   private static ConvertToWordArray(str: string): Array<number> {
-    let lWordCount: number,
-      lMessageLength: number = str.length,
+    const lMessageLength: number = str.length,
       lNumberOfWordsTemp1: number = lMessageLength + 8,
       lNumberOfWordsTemp2: number = (lNumberOfWordsTemp1 - (lNumberOfWordsTemp1 % 64)) / 64,
       lNumberOfWords: number = (lNumberOfWordsTemp2 + 1) * 16,
-      lWordArray: Array<number> = Array(lNumberOfWords - 1),
+      lWordArray: Array<number> = Array(lNumberOfWords - 1);
+    let lWordCount: number,
       lBytePosition: number = 0,
       lByteCount: number = 0;
 
@@ -158,8 +152,6 @@ export class Md5 {
   }
 
   public static init(str: any): string {
-    let temp: string;
-
     if (typeof str !== 'string') {
       str = JSON.stringify(str);
     }
@@ -248,7 +240,7 @@ export class Md5 {
       this.d = this.AddUnsigned(this.d, this.DD);
     }
 
-    temp = this.WordToHex(this.a) + this.WordToHex(this.b) + this.WordToHex(this.c) + this.WordToHex(this.d);
+    const temp = this.WordToHex(this.a) + this.WordToHex(this.b) + this.WordToHex(this.c) + this.WordToHex(this.d);
     return temp.toLowerCase();
   }
 }

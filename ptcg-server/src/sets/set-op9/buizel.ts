@@ -1,18 +1,18 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType, SuperType } from "../../game/store/card/card-types";
-import { StoreLike } from "../../game/store/store-like";
-import { State } from "../../game/store/state/state";
-import { Effect } from "../../game/store/effects/effect";
-import { AttackEffect } from "../../game/store/effects/game-effects";
-import { CoinFlipPrompt } from "../../game/store/prompts/coin-flip-prompt";
-import { GameMessage } from "../../game/game-message";
-import { DiscardCardsEffect, AbstractAttackEffect } from "../../game/store/effects/attack-effects";
-import { StateUtils } from "../../game/store/state-utils";
-import { Card } from "../../game/store/card/card";
-import { EnergyCard } from "../../game/store/card/energy-card";
-import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
-import { PlayerType } from "../../game/store/actions/play-card-action";
-import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType, SuperType } from '../../game/store/card/card-types';
+import { StoreLike } from '../../game/store/store-like';
+import { State } from '../../game/store/state/state';
+import { Effect } from '../../game/store/effects/effect';
+import { AttackEffect } from '../../game/store/effects/game-effects';
+import { CoinFlipPrompt } from '../../game/store/prompts/coin-flip-prompt';
+import { GameMessage } from '../../game/game-message';
+import { DiscardCardsEffect, AbstractAttackEffect } from '../../game/store/effects/attack-effects';
+import { StateUtils } from '../../game/store/state-utils';
+import { Card } from '../../game/store/card/card';
+import { EnergyCard } from '../../game/store/card/energy-card';
+import { ChooseCardsPrompt } from '../../game/store/prompts/choose-cards-prompt';
+import { PlayerType } from '../../game/store/actions/play-card-action';
+import { EndTurnEffect } from '../../game/store/effects/game-phase-effects';
 
 function* useWhirlpool(next: Function, store: StoreLike, state: State,
   effect: AttackEffect): IterableIterator<State> {
@@ -97,8 +97,7 @@ export class Buizel extends PokemonCard {
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      let generator: IterableIterator<State>;
-      generator = useWhirlpool(() => generator.next(), store, state, effect);
+      const generator = useWhirlpool(() => generator.next(), store, state, effect);
       return generator.next().value;
     }
 

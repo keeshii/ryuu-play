@@ -1,5 +1,5 @@
-import { deepCompare } from "../../utils";
-import { JsonDiff, JsonPathDiff } from "./json-patch.interface";
+import { deepCompare } from '../../utils';
+import { JsonDiff, JsonPathDiff } from './json-patch.interface';
 
 export class JsonPatch {
 
@@ -133,15 +133,16 @@ export class JsonPatch {
 
   private applyToObject(root: any, delta: JsonDiff): any {
     switch (delta.op) {
-      case 'add':
+      case 'add': {
         const index = delta.val[0];
         const value = delta.val[1];
         (root as any[]).splice(index, 0, value);
         break;
+      }
       case 'set':
         root = delta.val;
         break;
-      case 'del':
+      case 'del': {
         const toDelete: any[] = delta.val.slice();
         if (root instanceof Array) {
           toDelete.sort((a, b) => b - a);
@@ -154,7 +155,8 @@ export class JsonPatch {
           });
         }
         break;
-      case 'move':
+      }
+      case 'move': {
         const arr: any[] = root as any[];
         const fromKey: number = delta.val[0];
         const toKey: number = delta.val[1];
@@ -162,13 +164,14 @@ export class JsonPatch {
         arr[fromKey] = arr[toKey];
         arr[toKey] = temp;
         break;
+      }
     }
     return root;
   }
 
   private fromPath(root: any, path: string): { holder: any, key: string, value: any } | undefined {
     const parts = path.split('.');
-    let result = { holder: root, key: '', value: root };
+    const result = { holder: root, key: '', value: root };
     try {
       for (const part of parts) {
         result.holder = result.value;

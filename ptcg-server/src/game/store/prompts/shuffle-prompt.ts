@@ -1,9 +1,9 @@
-import { Prompt } from "./prompt";
-import { State } from "../state/state";
+import { Prompt } from './prompt';
+import { State } from '../state/state';
 
 export class ShuffleDeckPrompt extends Prompt<number[]> {
 
-  readonly type: string = 'Shuffle deck'
+  readonly type: string = 'Shuffle deck';
 
   constructor(playerId: number) {
     super(playerId);

@@ -18,7 +18,7 @@ export class RateLimit {
   public isLimitExceeded(ip: string): boolean {
     this.deleteExpired();
 
-    const rateLimit = this.items.find(i => i.ip === ip)
+    const rateLimit = this.items.find(i => i.ip === ip);
     if (rateLimit === undefined) {
       return false;
     }
@@ -31,7 +31,7 @@ export class RateLimit {
   }
 
   public increment(ip: string) {
-    let rateLimit = this.items.find(i => i.ip === ip)
+    let rateLimit = this.items.find(i => i.ip === ip);
 
     if (rateLimit === undefined) {
       rateLimit = { ip, lastRequest: 0, count: 0 };

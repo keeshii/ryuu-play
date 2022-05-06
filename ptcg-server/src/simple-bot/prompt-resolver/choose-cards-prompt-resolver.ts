@@ -41,7 +41,7 @@ export class ChooseCardsPromptResolver extends PromptResolver {
     const cardList = new CardList();
 
     cardList.cards = prompt.cards.cards.filter((card, index) => {
-      return !prompt.options.blocked.includes(index)
+      return !prompt.options.blocked.includes(index);
     });
 
     const cards = cardList.filter(prompt.filter).map(card => {

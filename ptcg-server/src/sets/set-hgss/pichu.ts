@@ -1,10 +1,10 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType, SpecialCondition, SuperType } from "../../game/store/card/card-types";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType, SpecialCondition, SuperType } from '../../game/store/card/card-types';
 import { PowerType, StoreLike, State, ShuffleDeckPrompt, StateUtils,
-  PokemonCardList, Card, ChooseCardsPrompt, GameMessage } from "../../game";
-import { AttackEffect, PowerEffect } from "../../game/store/effects/game-effects";
-import { Effect } from "../../game/store/effects/effect";
-import { PutDamageEffect, AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
+  PokemonCardList, Card, ChooseCardsPrompt, GameMessage } from '../../game';
+import { AttackEffect, PowerEffect } from '../../game/store/effects/game-effects';
+import { Effect } from '../../game/store/effects/effect';
+import { PutDamageEffect, AddSpecialConditionsEffect } from '../../game/store/effects/attack-effects';
 
 function* usePlayground(next: Function, store: StoreLike, state: State,
   effect: AttackEffect): IterableIterator<State> {
@@ -115,8 +115,7 @@ export class Pichu extends PokemonCard {
 
     // Playground
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      let generator: IterableIterator<State>;
-      generator = usePlayground(() => generator.next(), store, state, effect);
+      const generator = usePlayground(() => generator.next(), store, state, effect);
       return generator.next().value;
     }
 

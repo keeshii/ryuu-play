@@ -1,15 +1,15 @@
-import { AddPlayerAction } from "../store/actions/add-player-action";
-import { CleanerTask } from "../tasks/cleaner-task";
-import { Client } from "../client/client.interface";
-import { GameError } from "../game-error";
-import { GameMessage } from "../game-message";
-import { Game } from "./game";
-import { GameSettings } from "./game-settings";
-import { InvitePlayerAction } from "../store/actions/invite-player-action";
-import { Messager } from "./messager";
-import { RankingCalculator } from "./ranking-calculator";
-import { Scheduler, generateId } from "../../utils";
-import { config } from "../../config";
+import { AddPlayerAction } from '../store/actions/add-player-action';
+import { CleanerTask } from '../tasks/cleaner-task';
+import { Client } from '../client/client.interface';
+import { GameError } from '../game-error';
+import { GameMessage } from '../game-message';
+import { Game } from './game';
+import { GameSettings } from './game-settings';
+import { InvitePlayerAction } from '../store/actions/invite-player-action';
+import { Messager } from './messager';
+import { RankingCalculator } from './ranking-calculator';
+import { Scheduler, generateId } from '../../utils';
+import { config } from '../../config';
 
 export class Core {
   public clients: Client[] = [];

@@ -1,16 +1,16 @@
-import { Card } from "../../game/store/card/card";
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType } from "../../game/store/card/card-types";
-import { StoreLike } from "../../game/store/store-like";
-import { State } from "../../game/store/state/state";
-import { Effect } from "../../game/store/effects/effect";
-import { AttackEffect } from "../../game/store/effects/game-effects";
-import { CoinFlipPrompt } from "../../game/store/prompts/coin-flip-prompt";
-import { GameMessage } from "../../game/game-message";
-import { StateUtils } from "../../game/store/state-utils";
-import { PlayerType } from "../../game/store/actions/play-card-action";
-import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
-import { AfterDamageEffect, HealTargetEffect } from "../../game/store/effects/attack-effects";
+import { Card } from '../../game/store/card/card';
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType } from '../../game/store/card/card-types';
+import { StoreLike } from '../../game/store/store-like';
+import { State } from '../../game/store/state/state';
+import { Effect } from '../../game/store/effects/effect';
+import { AttackEffect } from '../../game/store/effects/game-effects';
+import { CoinFlipPrompt } from '../../game/store/prompts/coin-flip-prompt';
+import { GameMessage } from '../../game/game-message';
+import { StateUtils } from '../../game/store/state-utils';
+import { PlayerType } from '../../game/store/actions/play-card-action';
+import { ChooseCardsPrompt } from '../../game/store/prompts/choose-cards-prompt';
+import { AfterDamageEffect, HealTargetEffect } from '../../game/store/effects/attack-effects';
 
 function* useKnockOff(next: Function, store: StoreLike, state: State,
   effect: AttackEffect): IterableIterator<State> {
@@ -89,8 +89,7 @@ export class Croagunk extends PokemonCard {
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      let generator: IterableIterator<State>;
-      generator = useKnockOff(() => generator.next(), store, state, effect);
+      const generator = useKnockOff(() => generator.next(), store, state, effect);
       return generator.next().value;
     }
 

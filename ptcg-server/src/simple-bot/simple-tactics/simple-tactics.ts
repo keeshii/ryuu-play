@@ -1,8 +1,8 @@
 import { Action, Player, State, PokemonCardList, CardTarget, PlayerType,
-  SlotType, GameError, GameMessage, Prompt, ResolvePromptAction } from "../../game";
-import { Simulator } from "../../game/bots/simulator";
-import { SimpleBotOptions } from "../simple-bot-options";
-import { StateScore } from "../state-score/state-score";
+  SlotType, GameError, GameMessage, Prompt, ResolvePromptAction } from '../../game';
+import { Simulator } from '../../game/bots/simulator';
+import { SimpleBotOptions } from '../simple-bot-options';
+import { StateScore } from '../state-score/state-score';
 
 export type SimpleTacticList = (new (options: SimpleBotOptions) => SimpleTactic)[];
 

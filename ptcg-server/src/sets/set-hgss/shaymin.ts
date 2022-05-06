@@ -1,12 +1,12 @@
-import { GameMessage } from "../../game/game-message";
-import { Effect } from "../../game/store/effects/effect";
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType, SuperType } from "../../game/store/card/card-types";
-import { PlayPokemonEffect } from "../../game/store/effects/play-card-effects";
+import { GameMessage } from '../../game/game-message';
+import { Effect } from '../../game/store/effects/effect';
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType, SuperType } from '../../game/store/card/card-types';
+import { PlayPokemonEffect } from '../../game/store/effects/play-card-effects';
 import { PowerType, StoreLike, State, PlayerType, SlotType,
-  MoveEnergyPrompt, StateUtils, PokemonCardList, EnergyCard } from "../../game";
-import { PowerEffect, AttackEffect } from "../../game/store/effects/game-effects";
-import {HealTargetEffect} from "../../game/store/effects/attack-effects";
+  MoveEnergyPrompt, StateUtils, PokemonCardList, EnergyCard } from '../../game';
+import { PowerEffect, AttackEffect } from '../../game/store/effects/game-effects';
+import {HealTargetEffect} from '../../game/store/effects/attack-effects';
 
 
 export class Shaymin extends PokemonCard {

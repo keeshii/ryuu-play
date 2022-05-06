@@ -1,10 +1,10 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType, SpecialCondition } from "../../game/store/card/card-types";
-import { StoreLike, State, CoinFlipPrompt } from "../../game";
-import { AttackEffect } from "../../game/store/effects/game-effects";
-import { Effect } from "../../game/store/effects/effect";
-import { AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
-import { GameMessage } from "../../game/game-message";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType, SpecialCondition } from '../../game/store/card/card-types';
+import { StoreLike, State, CoinFlipPrompt } from '../../game';
+import { AttackEffect } from '../../game/store/effects/game-effects';
+import { Effect } from '../../game/store/effects/effect';
+import { AddSpecialConditionsEffect } from '../../game/store/effects/attack-effects';
+import { GameMessage } from '../../game/game-message';
 
 export class Pikachu extends PokemonCard {
 

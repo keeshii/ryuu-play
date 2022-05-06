@@ -1,13 +1,13 @@
-import { Store } from "../store/store";
-import { Action } from "../store/actions/action";
-import { BotArbiter, BotArbiterOptions } from "./bot-arbiter";
-import { State } from "../store/state/state";
-import { StoreHandler } from "../store/store-handler";
-import { GameError } from "../game-error";
-import { GameCoreError } from "../game-message";
-import { ResolvePromptAction } from "../store/actions/resolve-prompt-action";
-import { deepClone } from "../../utils";
-import { Card } from "../store/card/card";
+import { Store } from '../store/store';
+import { Action } from '../store/actions/action';
+import { BotArbiter, BotArbiterOptions } from './bot-arbiter';
+import { State } from '../store/state/state';
+import { StoreHandler } from '../store/store-handler';
+import { GameError } from '../game-error';
+import { GameCoreError } from '../game-message';
+import { ResolvePromptAction } from '../store/actions/resolve-prompt-action';
+import { deepClone } from '../../utils';
+import { Card } from '../store/card/card';
 
 
 export class Simulator implements StoreHandler {
@@ -34,7 +34,7 @@ export class Simulator implements StoreHandler {
     const unresolved = state.prompts.filter(item => item.result === undefined);
 
     for (let i = 0; i < unresolved.length; i++) {
-      let action = this.botArbiter.resolvePrompt(state, unresolved[i]);
+      const action = this.botArbiter.resolvePrompt(state, unresolved[i]);
       if (action !== undefined) {
         resolved = { id: unresolved[i].id, action };
         break;

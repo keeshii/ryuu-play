@@ -1,11 +1,11 @@
-import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType, CardTag } from "../../game/store/card/card-types";
-import { StoreLike, State, CoinFlipPrompt, ChooseEnergyPrompt, Card } from "../../game";
-import { AttackEffect } from "../../game/store/effects/game-effects";
-import { Effect } from "../../game/store/effects/effect";
-import { GameMessage } from "../../game/game-message";
-import { DiscardCardsEffect } from "../../game/store/effects/attack-effects";
+import { CheckProvidedEnergyEffect } from '../../game/store/effects/check-effects';
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType, CardTag } from '../../game/store/card/card-types';
+import { StoreLike, State, CoinFlipPrompt, ChooseEnergyPrompt, Card } from '../../game';
+import { AttackEffect } from '../../game/store/effects/game-effects';
+import { Effect } from '../../game/store/effects/effect';
+import { GameMessage } from '../../game/game-message';
+import { DiscardCardsEffect } from '../../game/store/effects/attack-effects';
 
 export class ZekromEx extends PokemonCard {
 

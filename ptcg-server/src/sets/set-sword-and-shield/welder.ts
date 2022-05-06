@@ -1,15 +1,15 @@
-import { Effect } from "../../game/store/effects/effect";
-import { TrainerCard } from "../../game/store/card/trainer-card";
-import { CardType, EnergyType, SuperType, TrainerType } from "../../game/store/card/card-types";
-import { EnergyCard } from "../../game/store/card/energy-card";
-import { StoreLike } from "../../game/store/store-like";
-import { State } from "../../game/store/state/state";
-import { AttachEnergyEffect, TrainerEffect } from "../../game/store/effects/play-card-effects";
-import { GameError } from "../../game/game-error";
-import { GameMessage } from "../../game/game-message";
-import { AttachEnergyPrompt } from "../../game/store/prompts/attach-energy-prompt";
-import { PlayerType, SlotType } from "../../game/store/actions/play-card-action";
-import { StateUtils } from "../../game/store/state-utils";
+import { Effect } from '../../game/store/effects/effect';
+import { TrainerCard } from '../../game/store/card/trainer-card';
+import { CardType, EnergyType, SuperType, TrainerType } from '../../game/store/card/card-types';
+import { EnergyCard } from '../../game/store/card/energy-card';
+import { StoreLike } from '../../game/store/store-like';
+import { State } from '../../game/store/state/state';
+import { AttachEnergyEffect, TrainerEffect } from '../../game/store/effects/play-card-effects';
+import { GameError } from '../../game/game-error';
+import { GameMessage } from '../../game/game-message';
+import { AttachEnergyPrompt } from '../../game/store/prompts/attach-energy-prompt';
+import { PlayerType, SlotType } from '../../game/store/actions/play-card-action';
+import { StateUtils } from '../../game/store/state-utils';
 
 export class Welder extends TrainerCard {
 

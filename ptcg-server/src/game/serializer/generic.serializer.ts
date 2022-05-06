@@ -1,4 +1,4 @@
-import { SerializerContext, Serialized, Serializer } from "./serializer.interface";
+import { SerializerContext, Serialized, Serializer } from './serializer.interface';
 
 export class GenericSerializer<T extends Object> implements Serializer<T> {
 

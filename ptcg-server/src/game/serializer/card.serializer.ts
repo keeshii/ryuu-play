@@ -1,7 +1,7 @@
-import { SerializerContext, Serialized, Serializer } from "./serializer.interface";
-import { Card } from "../store/card/card";
-import { GameError } from "../game-error";
-import { GameCoreError } from "../game-message";
+import { SerializerContext, Serialized, Serializer } from './serializer.interface';
+import { Card } from '../store/card/card';
+import { GameError } from '../game-error';
+import { GameCoreError } from '../game-message';
 
 export class CardSerializer implements Serializer<Card> {
 

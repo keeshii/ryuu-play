@@ -53,7 +53,7 @@ export class AttachEnergyPromptResolver extends PromptResolver {
     const cardList = new CardList();
 
     cardList.cards = prompt.cardList.cards.filter((card, index) => {
-      return !prompt.options.blocked.includes(index)
+      return !prompt.options.blocked.includes(index);
     });
 
     cardList.cards = cardList.filter(prompt.filter);

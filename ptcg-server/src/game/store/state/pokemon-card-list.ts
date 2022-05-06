@@ -1,8 +1,8 @@
-import { CardList } from "./card-list";
-import { Marker } from "./card-marker";
-import { SpecialCondition, Stage, SuperType } from "../card/card-types";
-import { PokemonCard } from "../card/pokemon-card";
-import { Card } from "../card/card";
+import { CardList } from './card-list';
+import { Marker } from './card-marker';
+import { SpecialCondition, Stage, SuperType } from '../card/card-types';
+import { PokemonCard } from '../card/pokemon-card';
+import { Card } from '../card/card';
 
 export class PokemonCardList extends CardList {
 
@@ -24,7 +24,7 @@ export class PokemonCardList extends CardList {
 
   public getPokemons(): PokemonCard[] {
     const result: PokemonCard[] = [];
-    for (let card of this.cards) {
+    for (const card of this.cards) {
       if (card.superType === SuperType.POKEMON && card !== this.tool) {
         result.push(card as PokemonCard);
       }

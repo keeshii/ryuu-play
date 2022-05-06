@@ -10,7 +10,7 @@ export class Avatar extends BaseEntity {
   public id!: number;
 
   @ManyToOne(type => User, user => user.avatars)
-  user: User = new User();
+    user: User = new User();
 
   @Column()
   public name: string = '';

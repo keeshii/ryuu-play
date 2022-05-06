@@ -1,10 +1,10 @@
-import { Effect } from "./effect";
-import { EnergyCard } from "../card/energy-card";
-import { Player } from "../state/player";
-import { PokemonCard } from "../card/pokemon-card";
-import { PokemonCardList } from "../state/pokemon-card-list";
-import { TrainerCard } from "../card/trainer-card";
-import {CardList} from "../state/card-list";
+import { Effect } from './effect';
+import { EnergyCard } from '../card/energy-card';
+import { Player } from '../state/player';
+import { PokemonCard } from '../card/pokemon-card';
+import { PokemonCardList } from '../state/pokemon-card-list';
+import { TrainerCard } from '../card/trainer-card';
+import {CardList} from '../state/card-list';
 
 export enum PlayCardEffects {
   ATTACH_ENERGY_EFFECT = 'ATTACH_ENERGY_EFFECT',

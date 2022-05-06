@@ -53,7 +53,7 @@ export class Profile extends Controller {
     const [matchRows, total] = await Match.findAndCount({
       relations: ['player1', 'player2'],
       where,
-      order: { created: "DESC" },
+      order: { created: 'DESC' },
       skip: page * pageSize,
       take: pageSize
     });

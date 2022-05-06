@@ -21,7 +21,7 @@ export abstract class Controller {
     protected core: Core
   ) { }
 
-  public init(): void {};
+  public init(): void {}
 
   protected buildUserInfo(user: User): UserInfo {
     const connected = this.core.clients
@@ -52,8 +52,8 @@ export function Get(path: string) {
     target.init = function() {
       init.call(this);
       this.app.get(`${this.path}${path}`, descriptor.value.bind(this));
-    }
-  }
+    };
+  };
 }
 
 export function Post(path: string) {
@@ -62,6 +62,6 @@ export function Post(path: string) {
     target.init = function() {
       init.call(this);
       this.app.post(`${this.path}${path}`, descriptor.value.bind(this));
-    }
-  }
+    };
+  };
 }

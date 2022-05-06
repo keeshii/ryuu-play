@@ -4,7 +4,7 @@ import { SimpleScore } from './score';
 export class DamageScore extends SimpleScore {
 
   public getScore(state: State, playerId: number): number {
-    const player = this.getPlayer(state, playerId)
+    const player = this.getPlayer(state, playerId);
     const opponent = StateUtils.getOpponent(state, player);
 
     let pokemonScoreSum = 0;
@@ -13,7 +13,7 @@ export class DamageScore extends SimpleScore {
     player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card, target) => {
       const [ pokemonScores, multipier ] = target.slot === SlotType.ACTIVE
         ? [ this.options.scores.active, this.options.scores.damage.playerActive ]
-        : [ this.options.scores.bench, this.options.scores.damage.playerBench ]
+        : [ this.options.scores.bench, this.options.scores.damage.playerBench ];
 
       const pokemonScore = this.getPokemonScoreBy(pokemonScores, cardList);
       pokemonScoreSum += pokemonScore;
@@ -23,7 +23,7 @@ export class DamageScore extends SimpleScore {
     opponent.forEachPokemon(PlayerType.TOP_PLAYER, (cardList, card, target) => {
       const [ pokemonScores, multipier ] = target.slot === SlotType.ACTIVE
         ? [ this.options.scores.active, this.options.scores.damage.opponentActive ]
-        : [ this.options.scores.bench, this.options.scores.damage.opponentBench ]
+        : [ this.options.scores.bench, this.options.scores.damage.opponentBench ];
 
       const pokemonScore = this.getPokemonScoreBy(pokemonScores, cardList);
       pokemonScoreSum += pokemonScore;

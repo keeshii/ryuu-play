@@ -11,20 +11,20 @@ export class Conversation extends BaseEntity {
   public id!: number;
 
   @ManyToOne(type => User)
-  user1: User = new User();
+    user1: User = new User();
 
   @ManyToOne(type => User)
-  user2: User = new User();
+    user2: User = new User();
 
   @OneToMany(type => Message, message => message.conversation)
-  messages!: Message[];
+    messages!: Message[];
 
   @OneToOne(type => Message, { onDelete: 'CASCADE' })
   @JoinColumn()
-  lastMessage!: Message;
+    lastMessage!: Message;
 
   public static async findByUsers(user1: User, user2: User): Promise<Conversation> {
-    let conversations = await Conversation.find({
+    const conversations = await Conversation.find({
       relations: ['user1', 'user2'],
       where: [
         { user1: { id: user1.id }, user2: { id: user2.id }},

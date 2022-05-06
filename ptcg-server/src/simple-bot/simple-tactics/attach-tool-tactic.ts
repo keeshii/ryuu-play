@@ -1,6 +1,6 @@
 import { Action, Player, State, PlayCardAction, TrainerCard, TrainerType,
-  CardTarget, PlayerType} from "../../game";
-import { SimpleTactic } from "./simple-tactics";
+  CardTarget, PlayerType} from '../../game';
+import { SimpleTactic } from './simple-tactics';
 
 export class AttachToolTactic extends SimpleTactic {
 

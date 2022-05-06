@@ -1,11 +1,11 @@
 import { gzip, ungzip } from '@progress/pako-esm';
 
-import { State, GameWinner } from "../store/state/state";
-import { ReplayPlayer, ReplayOptions } from "./replay.interface";
-import { GameError } from "../game-error";
-import { GameCoreError } from "../game-message";
-import { SerializedState } from "../serializer/serializer.interface";
-import { StateSerializer } from "../serializer/state-serializer";
+import { State, GameWinner } from '../store/state/state';
+import { ReplayPlayer, ReplayOptions } from './replay.interface';
+import { GameError } from '../game-error';
+import { GameCoreError } from '../game-message';
+import { SerializedState } from '../serializer/serializer.interface';
+import { StateSerializer } from '../serializer/state-serializer';
 
 export class Replay {
 
@@ -43,7 +43,7 @@ export class Replay {
     }
 
     let stateData = this.diffs[0];
-    let jumps = this.indexJumps(position);
+    const jumps = this.indexJumps(position);
     let i = 0;
     while (i !== position) {
       if (this.options.indexEnabled && jumps.length > 0) {
@@ -77,7 +77,7 @@ export class Replay {
 
   public appendState(state: State): void {
     const full = this.serializer.serialize(state);
-    let diff = this.serializer.serializeDiff(this.prevState, state);
+    const diff = this.serializer.serializeDiff(this.prevState, state);
 
     // Ignore the actions, which does not modified the state, like
     // shuffling an empty deck, or changing the hand order in the same matter
@@ -174,28 +174,28 @@ export class Replay {
   }
 
   private indexJumps(position: number): number[] {
-      if (position < this.indexJumpSize) {
-          return [];
-      }
-      const jumps = [ this.indexJumpSize ];
+    if (position < this.indexJumpSize) {
+      return [];
+    }
+    const jumps = [ this.indexJumpSize ];
 
-      if (position < this.indexJumpSize * 2) {
-          return jumps;
-      }
-
-      let n = Math.floor(Math.log2(position));
-      let jumpSize = Math.pow(2, n);
-      let pos = 0;
-
-      while (jumpSize >= this.indexJumpSize) {
-          if (pos + jumpSize <= position) {
-              jumps.push(pos + jumpSize);
-              pos += jumpSize;
-          }
-          jumpSize = jumpSize / 2;
-      }
-
+    if (position < this.indexJumpSize * 2) {
       return jumps;
+    }
+
+    const n = Math.floor(Math.log2(position));
+    let jumpSize = Math.pow(2, n);
+    let pos = 0;
+
+    while (jumpSize >= this.indexJumpSize) {
+      if (pos + jumpSize <= position) {
+        jumps.push(pos + jumpSize);
+        pos += jumpSize;
+      }
+      jumpSize = jumpSize / 2;
+    }
+
+    return jumps;
   }
 
 }

@@ -1,20 +1,20 @@
-import { GameError } from "../game-error";
-import { GameCoreError } from "../game-message";
-import { Serializer, SerializerContext, SerializedState, Serialized } from "./serializer.interface";
-import { State } from "../store/state/state";
-import { Card } from "../store/card/card";
-import { GenericSerializer } from "./generic.serializer";
-import { Rules } from "../store/state/rules";
-import { Player } from "../store/state/player";
-import { CardSerializer } from "./card.serializer";
-import { CardListSerializer } from "./card-list.serializer";
-import { Marker } from "../store/state/card-marker";
-import { StateLogSerializer } from "./state-log.serializer";
-import { PromptSerializer } from "./prompt.serializer";
-import { PathBuilder } from "./path-builder";
-import { deepIterate, deepClone } from "../../utils";
-import { JsonPatch } from "./json-patch";
-import { JsonDiff } from "./json-patch.interface";
+import { GameError } from '../game-error';
+import { GameCoreError } from '../game-message';
+import { Serializer, SerializerContext, SerializedState, Serialized } from './serializer.interface';
+import { State } from '../store/state/state';
+import { Card } from '../store/card/card';
+import { GenericSerializer } from './generic.serializer';
+import { Rules } from '../store/state/rules';
+import { Player } from '../store/state/player';
+import { CardSerializer } from './card.serializer';
+import { CardListSerializer } from './card-list.serializer';
+import { Marker } from '../store/state/card-marker';
+import { StateLogSerializer } from './state-log.serializer';
+import { PromptSerializer } from './prompt.serializer';
+import { PathBuilder } from './path-builder';
+import { deepIterate, deepClone } from '../../utils';
+import { JsonPatch } from './json-patch';
+import { JsonDiff } from './json-patch.interface';
 
 export class StateSerializer {
 
@@ -47,7 +47,7 @@ export class StateSerializer {
         return value;
       }
       if (value instanceof Object && value._type !== 'Ref') {
-        let ref = refs.find(r => r.node === value);
+        const ref = refs.find(r => r.node === value);
         if (ref !== undefined) {
           return { _type: 'Ref', path: ref.path };
         }
@@ -56,7 +56,7 @@ export class StateSerializer {
         if (name === 'Object') {
           return value;
         }
-        let serializer = serializers.find(s => s.classes.some(c => value instanceof c));
+        const serializer = serializers.find(s => s.classes.some(c => value instanceof c));
         if (serializer !== undefined) {
           return serializer.serialize(value);
         }

@@ -1,7 +1,7 @@
-import { SuperType } from "./card-types";
-import { Effect } from "../effects/effect";
-import { State } from "../state/state";
-import { StoreLike } from "../store-like";
+import { SuperType } from './card-types';
+import { Effect } from '../effects/effect';
+import { State } from '../state/state';
+import { StoreLike } from '../store-like';
 
 export abstract class Card {
 

@@ -1,14 +1,14 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType } from "../../game/store/card/card-types";
-import { StoreLike } from "../../game/store/store-like";
-import { State } from "../../game/store/state/state";
-import { Effect } from "../../game/store/effects/effect";
-import { AttackEffect, UseAttackEffect } from "../../game/store/effects/game-effects";
-import { StateUtils } from "../../game/store/state-utils";
-import { GameError } from "../../game/game-error";
-import { GameMessage } from "../../game/game-message";
-import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
-import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType } from '../../game/store/card/card-types';
+import { StoreLike } from '../../game/store/store-like';
+import { State } from '../../game/store/state/state';
+import { Effect } from '../../game/store/effects/effect';
+import { AttackEffect, UseAttackEffect } from '../../game/store/effects/game-effects';
+import { StateUtils } from '../../game/store/state-utils';
+import { GameError } from '../../game/game-error';
+import { GameMessage } from '../../game/game-message';
+import { CheckProvidedEnergyEffect } from '../../game/store/effects/check-effects';
+import { EndTurnEffect } from '../../game/store/effects/game-phase-effects';
 
 export class Cobalion extends PokemonCard {
 

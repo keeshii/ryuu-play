@@ -1,4 +1,4 @@
-import { UserInfo } from "./core.interface";
+import { UserInfo } from './core.interface';
 
 export interface RankingInfo {
   position: number;

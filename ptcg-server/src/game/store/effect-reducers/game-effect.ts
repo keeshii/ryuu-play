@@ -1,18 +1,18 @@
-import { GameError } from "../../game-error";
-import { GameMessage, GameLog } from "../../game-message";
-import { EndTurnEffect } from "../effects/game-phase-effects";
-import { Effect } from "../effects/effect";
-import { State, GamePhase } from "../state/state";
-import { StoreLike } from "../store-like";
-import { StateUtils } from "../state-utils";
+import { GameError } from '../../game-error';
+import { GameMessage, GameLog } from '../../game-message';
+import { EndTurnEffect } from '../effects/game-phase-effects';
+import { Effect } from '../effects/effect';
+import { State, GamePhase } from '../state/state';
+import { StoreLike } from '../store-like';
+import { StateUtils } from '../state-utils';
 import { CheckPokemonTypeEffect, CheckPokemonStatsEffect,
-  CheckProvidedEnergyEffect, CheckAttackCostEffect } from "../effects/check-effects";
-import { Weakness, Resistance } from "../card/pokemon-types";
-import { CardType, SpecialCondition, CardTag } from "../card/card-types";
+  CheckProvidedEnergyEffect, CheckAttackCostEffect } from '../effects/check-effects';
+import { Weakness, Resistance } from '../card/pokemon-types';
+import { CardType, SpecialCondition, CardTag } from '../card/card-types';
 import { AttackEffect, UseAttackEffect, HealEffect, KnockOutEffect,
-  UsePowerEffect, PowerEffect, UseStadiumEffect, EvolveEffect } from "../effects/game-effects";
-import { CoinFlipPrompt } from "../prompts/coin-flip-prompt";
-import { DealDamageEffect, ApplyWeaknessEffect } from "../effects/attack-effects";
+  UsePowerEffect, PowerEffect, UseStadiumEffect, EvolveEffect } from '../effects/game-effects';
+import { CoinFlipPrompt } from '../prompts/coin-flip-prompt';
+import { DealDamageEffect, ApplyWeaknessEffect } from '../effects/attack-effects';
 
 function applyWeaknessAndResistance(
   damage: number,
@@ -69,10 +69,10 @@ function* useAttack(next: Function, store: StoreLike, state: State, effect: UseA
     yield store.prompt(state, new CoinFlipPrompt(
       player.id,
       GameMessage.FLIP_CONFUSION),
-      result => {
-        flip = result;
-        next();
-      });
+    result => {
+      flip = result;
+      next();
+    });
 
     if (flip === false) {
       store.log(state, GameLog.LOG_HURTS_ITSELF);
@@ -134,8 +134,7 @@ export function gameReducer(store: StoreLike, state: State, effect: Effect): Sta
   }
 
   if (effect instanceof UseAttackEffect) {
-    let generator: IterableIterator<State>;
-    generator = useAttack(() => generator.next(), store, state, effect);
+    const generator = useAttack(() => generator.next(), store, state, effect);
     return generator.next().value;
   }
 

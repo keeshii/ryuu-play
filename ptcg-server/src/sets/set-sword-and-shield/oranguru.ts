@@ -1,10 +1,10 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType } from "../../game/store/card/card-types";
-import { PowerType, StoreLike, State, GameError, GameMessage, ChooseCardsPrompt } from "../../game";
-import { Effect } from "../../game/store/effects/effect";
-import { PlayPokemonEffect } from "../../game/store/effects/play-card-effects";
-import { PowerEffect } from "../../game/store/effects/game-effects";
-import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType } from '../../game/store/card/card-types';
+import { PowerType, StoreLike, State, GameError, GameMessage, ChooseCardsPrompt } from '../../game';
+import { Effect } from '../../game/store/effects/effect';
+import { PlayPokemonEffect } from '../../game/store/effects/play-card-effects';
+import { PowerEffect } from '../../game/store/effects/game-effects';
+import { EndTurnEffect } from '../../game/store/effects/game-phase-effects';
 
 export class Oranguru extends PokemonCard {
 
@@ -67,7 +67,7 @@ export class Oranguru extends PokemonCard {
         { },
         { min: 1, max: 1, allowCancel: true }
       ), selected => {
-        let cards = selected || [];
+        const cards = selected || [];
         if (cards.length > 0) {
           player.deck.moveTo(player.hand, 1);
           const index = player.hand.cards.indexOf(cards[0]);

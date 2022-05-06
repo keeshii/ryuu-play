@@ -1,17 +1,17 @@
-import { TrainerCard } from "../../game/store/card/trainer-card";
-import { TrainerType, SuperType } from "../../game/store/card/card-types";
-import { StoreLike } from "../../game/store/store-like";
-import { State } from "../../game/store/state/state";
-import { Effect } from "../../game/store/effects/effect";
-import { TrainerEffect } from "../../game/store/effects/play-card-effects";
-import { GameError } from "../../game/game-error";
-import { GameMessage } from "../../game/game-message";
-import { Card} from "../../game/store/card/card";
-import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
-import { CardList } from "../../game/store/state/card-list";
-import { ShowCardsPrompt } from "../../game/store/prompts/show-cards-prompt";
-import { StateUtils } from "../../game/store/state-utils";
-import { ShuffleDeckPrompt } from "../../game/store/prompts/shuffle-prompt";
+import { TrainerCard } from '../../game/store/card/trainer-card';
+import { TrainerType, SuperType } from '../../game/store/card/card-types';
+import { StoreLike } from '../../game/store/store-like';
+import { State } from '../../game/store/state/state';
+import { Effect } from '../../game/store/effects/effect';
+import { TrainerEffect } from '../../game/store/effects/play-card-effects';
+import { GameError } from '../../game/game-error';
+import { GameMessage } from '../../game/game-message';
+import { Card} from '../../game/store/card/card';
+import { ChooseCardsPrompt } from '../../game/store/prompts/choose-cards-prompt';
+import { CardList } from '../../game/store/state/card-list';
+import { ShowCardsPrompt } from '../../game/store/prompts/show-cards-prompt';
+import { StateUtils } from '../../game/store/state-utils';
+import { ShuffleDeckPrompt } from '../../game/store/prompts/shuffle-prompt';
 
 
 function* playCard(next: Function, store: StoreLike, state: State,
@@ -98,8 +98,7 @@ export class UltraBall extends TrainerCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
-      let generator: IterableIterator<State>;
-      generator = playCard(() => generator.next(), store, state, this, effect);
+      const generator = playCard(() => generator.next(), store, state, this, effect);
       return generator.next().value;
     }
     return state;

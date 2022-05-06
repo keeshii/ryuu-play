@@ -1,7 +1,7 @@
-import { Card } from "../card/card";
-import { CardManager } from "../../cards/card-manager";
-import { GameError } from "../../game-error";
-import { GameMessage } from "../../game-message";
+import { Card } from '../card/card';
+import { CardManager } from '../../cards/card-manager';
+import { GameError } from '../../game-error';
+import { GameMessage } from '../../game-message';
 
 export class CardList {
 
@@ -75,8 +75,8 @@ export class CardList {
 
   public filter(query: Partial<Card>): Card[] {
     return this.cards.filter(c => {
-      for (let key in query) {
-        if (query.hasOwnProperty(key)) {
+      for (const key in query) {
+        if (Object.prototype.hasOwnProperty.call(query, key)) {
           const value: any = (c as any)[key];
           const expected: any = (query as any)[key];
           if (value !== expected) {

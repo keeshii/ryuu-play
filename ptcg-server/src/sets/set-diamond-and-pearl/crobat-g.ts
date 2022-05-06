@@ -1,12 +1,12 @@
-import { Effect } from "../../game/store/effects/effect";
-import { PokemonCard } from "../../game/store/card/pokemon-card";
+import { Effect } from '../../game/store/effects/effect';
+import { PokemonCard } from '../../game/store/card/pokemon-card';
 import { PowerType, StoreLike, State, ChoosePokemonPrompt, PlayerType, SlotType,
-  StateUtils } from "../../game";
-import { Stage, CardType, CardTag, SpecialCondition } from "../../game/store/card/card-types";
-import { PlayPokemonEffect } from "../../game/store/effects/play-card-effects";
-import { GameMessage } from "../../game/game-message";
-import { AttackEffect, PowerEffect } from "../../game/store/effects/game-effects";
-import { AddSpecialConditionsEffect } from "../../game/store/effects/attack-effects";
+  StateUtils } from '../../game';
+import { Stage, CardType, CardTag, SpecialCondition } from '../../game/store/card/card-types';
+import { PlayPokemonEffect } from '../../game/store/effects/play-card-effects';
+import { GameMessage } from '../../game/game-message';
+import { AttackEffect, PowerEffect } from '../../game/store/effects/game-effects';
+import { AddSpecialConditionsEffect } from '../../game/store/effects/attack-effects';
 
 function* useFlashBite(next: Function, store: StoreLike, state: State, effect: PlayPokemonEffect): IterableIterator<State> {
   const player = effect.player;
@@ -83,8 +83,7 @@ export class CrobatG extends PokemonCard {
         return state;
       }
 
-      let generator: IterableIterator<State>;
-      generator = useFlashBite(() => generator.next(), store, state, effect);
+      const generator = useFlashBite(() => generator.next(), store, state, effect);
       return generator.next().value;
     }
 

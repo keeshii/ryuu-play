@@ -1,9 +1,9 @@
-import { AlertPrompt } from "../store/prompts/alert-prompt";
-import { Prompt } from "../store/prompts/prompt";
-import { PromptSerializer } from "./prompt.serializer";
-import { SerializerContext } from "./serializer.interface";
-import { GameError } from "../game-error";
-import { GameMessage, GameCoreError } from "../game-message";
+import { AlertPrompt } from '../store/prompts/alert-prompt';
+import { Prompt } from '../store/prompts/prompt';
+import { PromptSerializer } from './prompt.serializer';
+import { SerializerContext } from './serializer.interface';
+import { GameError } from '../game-error';
+import { GameMessage, GameCoreError } from '../game-message';
 
 class UnknownPrompt extends Prompt<any> {
   public readonly type = 'Unknown';
@@ -34,10 +34,10 @@ describe('PromptSerializer', () => {
   it('Should throw exception when unknown prompt type', () => {
     // given
     const prompt = new UnknownPrompt(1);
-    const message = 'Unknown prompt type \'Unknown\'.'
+    const message = 'Unknown prompt type \'Unknown\'.';
     // then
     expect(function() {
-      promptSerializer.serialize(prompt)
+      promptSerializer.serialize(prompt);
     }).toThrow(new GameError(GameCoreError.ERROR_SERIALIZER, message));
   });
 
@@ -47,7 +47,7 @@ describe('PromptSerializer', () => {
     const message = 'Unknown prompt type \'Unknown\'.';
     // then
     expect(function() {
-      promptSerializer.deserialize(serialized, context)
+      promptSerializer.deserialize(serialized, context);
     }).toThrow(new GameError(GameCoreError.ERROR_SERIALIZER, message));
   });
 

@@ -1,9 +1,9 @@
-import { CardType } from "../card/card-types";
-import { Effect } from "./effect";
-import { Player } from "../state/player";
-import { PokemonCardList } from "../state/pokemon-card-list";
-import { Resistance, Weakness, Attack } from "../card/pokemon-types";
-import { EnergyMap } from "../prompts/choose-energy-prompt";
+import { CardType } from '../card/card-types';
+import { Effect } from './effect';
+import { Player } from '../state/player';
+import { PokemonCardList } from '../state/pokemon-card-list';
+import { Resistance, Weakness, Attack } from '../card/pokemon-types';
+import { EnergyMap } from '../prompts/choose-energy-prompt';
 
 export enum CheckEffects {
   CHECK_HP_EFFECT = 'CHECK_HP_EFFECT',

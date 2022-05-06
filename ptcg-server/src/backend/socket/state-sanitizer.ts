@@ -1,13 +1,13 @@
-import { AlertPrompt } from "../../game/store/prompts/alert-prompt";
-import { Card } from "../../game/store/card/card";
-import { CardList } from "../../game/store/state/card-list";
-import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
-import { Client } from "../../game/client/client.interface";
-import { GameMessage } from "../../game/game-message";
-import { SocketCache } from "./socket-cache";
-import { State } from "../../game/store/state/state";
-import { SuperType } from "../../game/store/card/card-types";
-import { deepClone } from "../../utils";
+import { AlertPrompt } from '../../game/store/prompts/alert-prompt';
+import { Card } from '../../game/store/card/card';
+import { CardList } from '../../game/store/state/card-list';
+import { ChooseCardsPrompt } from '../../game/store/prompts/choose-cards-prompt';
+import { Client } from '../../game/client/client.interface';
+import { GameMessage } from '../../game/game-message';
+import { SocketCache } from './socket-cache';
+import { State } from '../../game/store/state/state';
+import { SuperType } from '../../game/store/card/card-types';
+import { deepClone } from '../../utils';
 
 export class StateSanitizer {
 
@@ -88,7 +88,7 @@ export class StateSanitizer {
     // Filter resolved prompts, not needed anymore
 
     state.prompts = state.prompts.filter(prompt => {
-      return prompt.result === undefined
+      return prompt.result === undefined;
     });
 
     // Hide opponent's prompts. They may contain sensitive data.

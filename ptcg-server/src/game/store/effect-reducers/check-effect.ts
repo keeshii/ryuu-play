@@ -1,16 +1,16 @@
-import { State, GamePhase, GameWinner } from "../state/state";
-import { StoreLike } from "../store-like";
-import { CheckHpEffect, CheckProvidedEnergyEffect, CheckTableStateEffect } from "../effects/check-effects";
-import { PokemonCardList } from "../state/pokemon-card-list";
-import { ChoosePokemonPrompt } from "../prompts/choose-pokemon-prompt";
-import { GameError } from "../../game-error";
-import { GameMessage, GameLog } from "../../game-message";
-import { ChoosePrizePrompt } from "../prompts/choose-prize-prompt";
-import { CardList } from "../state/card-list";
-import { PlayerType, SlotType } from "../actions/play-card-action";
-import { KnockOutEffect } from "../effects/game-effects";
-import { Effect } from "../effects/effect";
-import { EnergyCard } from "../card/energy-card";
+import { State, GamePhase, GameWinner } from '../state/state';
+import { StoreLike } from '../store-like';
+import { CheckHpEffect, CheckProvidedEnergyEffect, CheckTableStateEffect } from '../effects/check-effects';
+import { PokemonCardList } from '../state/pokemon-card-list';
+import { ChoosePokemonPrompt } from '../prompts/choose-pokemon-prompt';
+import { GameError } from '../../game-error';
+import { GameMessage, GameLog } from '../../game-message';
+import { ChoosePrizePrompt } from '../prompts/choose-prize-prompt';
+import { CardList } from '../state/card-list';
+import { PlayerType, SlotType } from '../actions/play-card-action';
+import { KnockOutEffect } from '../effects/game-effects';
+import { Effect } from '../effects/effect';
+import { EnergyCard } from '../card/energy-card';
 
 interface PokemonItem {
   playerNum: number;
@@ -39,7 +39,7 @@ function handleBenchSizeChange(store: StoreLike, state: State, benchSize: number
   state.players.forEach(player => {
     // Add empty slots if bench is smaller
     while (player.bench.length < benchSize) {
-      const bench = new PokemonCardList()
+      const bench = new PokemonCardList();
       bench.isPublic = true;
       player.bench.push(bench);
     }
@@ -49,7 +49,7 @@ function handleBenchSizeChange(store: StoreLike, state: State, benchSize: number
     }
 
     // Remove empty slots, starting from the right side
-    let empty: PokemonCardList[] = [];
+    const empty: PokemonCardList[] = [];
     for (let index = player.bench.length - 1; index >= 0; index--) {
       const bench = player.bench[index];
       const isEmpty = bench.cards.length === 0;
@@ -142,10 +142,10 @@ export function endGame(store: StoreLike, state: State, winner: GameWinner): Sta
   }
 
   if ([
-      GamePhase.WAITING_FOR_PLAYERS,
-      GamePhase.PLAYER_TURN,
-      GamePhase.ATTACK,
-      GamePhase.BETWEEN_TURNS
+    GamePhase.WAITING_FOR_PLAYERS,
+    GamePhase.PLAYER_TURN,
+    GamePhase.ATTACK,
+    GamePhase.BETWEEN_TURNS
   ].includes(state.phase) === false) {
     throw new GameError(GameMessage.ILLEGAL_ACTION);
   }
@@ -158,12 +158,13 @@ export function endGame(store: StoreLike, state: State, winner: GameWinner): Sta
       store.log(state, GameLog.LOG_GAME_FINISHED_DRAW);
       break;
     case GameWinner.PLAYER_1:
-    case GameWinner.PLAYER_2:
+    case GameWinner.PLAYER_2: {
       const winnerName = winner === GameWinner.PLAYER_1
         ? state.players[0].name
         : state.players[1].name;
       store.log(state, GameLog.LOG_GAME_FINISHED_WINNER, { name: winnerName });
       break;
+    }
   }
 
   state.winner = winner;
@@ -277,7 +278,7 @@ function* executeCheckState(next: Function, store: StoreLike, state: State,
     }
 
     if (knockOutEffect.preventDefault === false) {
-      const opponentNum = item.playerNum === 0 ? 1 : 0
+      const opponentNum = item.playerNum === 0 ? 1 : 0;
       prizesToTake[opponentNum] += knockOutEffect.prizeCount;
     }
   }
@@ -310,8 +311,7 @@ export function checkState(store: StoreLike, state: State, onComplete?: () => vo
     return state;
   }
 
-  let generator: IterableIterator<State>;
-  generator = executeCheckState(() => generator.next(), store, state, onComplete);
+  const generator = executeCheckState(() => generator.next(), store, state, onComplete);
   return generator.next().value;
 }
 

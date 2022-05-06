@@ -1,9 +1,9 @@
-import { AttachEnergyEffect } from "../effects/play-card-effects";
-import { GameError } from "../../game-error";
-import { GameMessage, GameLog } from "../../game-message";
-import { Effect } from "../effects/effect";
-import { State } from "../state/state";
-import { StoreLike } from "../store-like";
+import { AttachEnergyEffect } from '../effects/play-card-effects';
+import { GameError } from '../../game-error';
+import { GameMessage, GameLog } from '../../game-message';
+import { Effect } from '../effects/effect';
+import { State } from '../state/state';
+import { StoreLike } from '../store-like';
 
 
 export function playEnergyReducer(store: StoreLike, state: State, effect: Effect): State {

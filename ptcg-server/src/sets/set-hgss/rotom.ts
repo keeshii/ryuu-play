@@ -1,13 +1,13 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType } from "../../game/store/card/card-types";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType } from '../../game/store/card/card-types';
 import { PowerType, StoreLike, State, StateUtils, PokemonCardList, GameError,
   GameMessage, ChoosePrizePrompt, ChoosePokemonPrompt, PlayerType, SlotType,
-  EnergyCard } from "../../game";
-import { Effect } from "../../game/store/effects/effect";
-import { PlayPokemonEffect } from "../../game/store/effects/play-card-effects";
-import { PowerEffect, AttackEffect } from "../../game/store/effects/game-effects";
-import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
-import { PutDamageEffect } from "../../game/store/effects/attack-effects";
+  EnergyCard } from '../../game';
+import { Effect } from '../../game/store/effects/effect';
+import { PlayPokemonEffect } from '../../game/store/effects/play-card-effects';
+import { PowerEffect, AttackEffect } from '../../game/store/effects/game-effects';
+import { EndTurnEffect } from '../../game/store/effects/game-phase-effects';
+import { PutDamageEffect } from '../../game/store/effects/attack-effects';
 
 export class Rotom extends PokemonCard {
 

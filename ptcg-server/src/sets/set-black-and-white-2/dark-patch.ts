@@ -1,16 +1,16 @@
-import { TrainerCard } from "../../game/store/card/trainer-card";
-import { TrainerType, CardType, EnergyType, SuperType } from "../../game/store/card/card-types";
-import { StoreLike } from "../../game/store/store-like";
-import { State } from "../../game/store/state/state";
-import { Effect } from "../../game/store/effects/effect";
-import { StateUtils } from "../../game/store/state-utils";
-import { CheckPokemonTypeEffect } from "../../game/store/effects/check-effects";
-import { TrainerEffect } from "../../game/store/effects/play-card-effects";
-import { GameError } from "../../game/game-error";
-import { GameMessage } from "../../game/game-message";
-import { EnergyCard } from "../../game/store/card/energy-card";
-import { AttachEnergyPrompt } from "../../game/store/prompts/attach-energy-prompt";
-import { PlayerType, SlotType, CardTarget } from "../../game/store/actions/play-card-action";
+import { TrainerCard } from '../../game/store/card/trainer-card';
+import { TrainerType, CardType, EnergyType, SuperType } from '../../game/store/card/card-types';
+import { StoreLike } from '../../game/store/store-like';
+import { State } from '../../game/store/state/state';
+import { Effect } from '../../game/store/effects/effect';
+import { StateUtils } from '../../game/store/state-utils';
+import { CheckPokemonTypeEffect } from '../../game/store/effects/check-effects';
+import { TrainerEffect } from '../../game/store/effects/play-card-effects';
+import { GameError } from '../../game/game-error';
+import { GameMessage } from '../../game/game-message';
+import { EnergyCard } from '../../game/store/card/energy-card';
+import { AttachEnergyPrompt } from '../../game/store/prompts/attach-energy-prompt';
+import { PlayerType, SlotType, CardTarget } from '../../game/store/actions/play-card-action';
 
 export class DarkPatch extends TrainerCard {
 

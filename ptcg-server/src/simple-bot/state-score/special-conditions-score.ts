@@ -9,7 +9,7 @@ export class SpecialConditionsScore extends SimpleScore {
     const player = this.getPlayer(state, playerId);
     const opponent = StateUtils.getOpponent(state, player);
 
-    let score = 0
+    let score = 0;
     score += this.getScoreForPlayer(player);
     score -= this.getScoreForPlayer(opponent);
 

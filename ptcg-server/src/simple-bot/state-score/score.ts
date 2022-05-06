@@ -1,5 +1,5 @@
-import { State, GameError, GameMessage, Player, PokemonCardList } from "../../game";
-import { SimpleBotOptions, PokemonScores } from "../simple-bot-options";
+import { State, GameError, GameMessage, Player, PokemonCardList } from '../../game';
+import { SimpleBotOptions, PokemonScores } from '../simple-bot-options';
 
 export abstract class SimpleScore {
 

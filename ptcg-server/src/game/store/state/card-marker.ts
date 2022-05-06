@@ -1,4 +1,4 @@
-import { Card } from "../card/card";
+import { Card } from '../card/card';
 
 interface MarkerItem {
   source: Card;

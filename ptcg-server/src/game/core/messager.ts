@@ -1,6 +1,6 @@
-import { Client } from "../client/client.interface";
-import { Core } from "./core";
-import { User, Message, Conversation } from "../../storage";
+import { Client } from '../client/client.interface';
+import { Core } from './core';
+import { User, Message, Conversation } from '../../storage';
 
 export class Messager {
 

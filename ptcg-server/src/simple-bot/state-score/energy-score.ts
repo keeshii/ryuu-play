@@ -82,13 +82,14 @@ export class EnergyScore extends SimpleScore {
         case CardType.COLORLESS:
           colorless += 1;
           break;
-        default:
+        default: {
           const index = provided.findIndex(energy => energy === costType);
           if (index !== -1) {
             provided.splice(index, 1);
           } else {
             missing.push(costType);
           }
+        }
       }
     });
 

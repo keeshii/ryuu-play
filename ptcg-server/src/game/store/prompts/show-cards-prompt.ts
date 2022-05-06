@@ -1,6 +1,6 @@
-import { Card } from "../card/card";
-import { GameMessage } from "../../game-message";
-import { Prompt } from "./prompt";
+import { Card } from '../card/card';
+import { GameMessage } from '../../game-message';
+import { Prompt } from './prompt';
 
 export interface ShowCardsOptions {
   allowCancel: boolean;
@@ -8,7 +8,7 @@ export interface ShowCardsOptions {
 
 export class ShowCardsPrompt extends Prompt<true> {
 
-  readonly type: string = 'Show cards'
+  readonly type: string = 'Show cards';
 
   public options: ShowCardsOptions;
 

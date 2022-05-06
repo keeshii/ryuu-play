@@ -12,10 +12,10 @@ export class Message extends BaseEntity {
   public id!: number;
 
   @ManyToOne(type => Conversation, conversation => conversation.messages, { onDelete: 'CASCADE' })
-  conversation: Conversation = new Conversation();
+    conversation: Conversation = new Conversation();
 
   @ManyToOne(type => User)
-  sender: User = new User();
+    sender: User = new User();
 
   @Column({ type: 'bigint', transformer: [ bigint ] })
   public created: number = Date.now();

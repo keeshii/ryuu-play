@@ -1,10 +1,10 @@
-import { Prompt } from "./prompt";
-import { PlayerType, SlotType, CardTarget } from "../actions/play-card-action";
-import { PokemonCardList } from "../state/pokemon-card-list";
-import { State } from "../state/state";
-import { GameError } from "../../game-error";
-import { GameMessage } from "../../game-message";
-import { StateUtils } from "../state-utils";
+import { Prompt } from './prompt';
+import { PlayerType, SlotType, CardTarget } from '../actions/play-card-action';
+import { PokemonCardList } from '../state/pokemon-card-list';
+import { State } from '../state/state';
+import { GameError } from '../../game-error';
+import { GameMessage } from '../../game-message';
+import { StateUtils } from '../state-utils';
 
 export const ChoosePokemonPromptType = 'Choose pokemon';
 
@@ -49,7 +49,7 @@ export class ChoosePokemonPrompt extends Prompt<PokemonCardList[]> {
       throw new GameError(GameMessage.INVALID_PROMPT_RESULT);
     }
     return result.map(target => {
-      let p = target.player === PlayerType.BOTTOM_PLAYER ? player : opponent;
+      const p = target.player === PlayerType.BOTTOM_PLAYER ? player : opponent;
       return target.slot === SlotType.ACTIVE ? p.active : p.bench[target.index];
     });
   }

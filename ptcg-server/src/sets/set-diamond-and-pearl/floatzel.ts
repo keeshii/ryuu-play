@@ -1,16 +1,16 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType } from "../../game/store/card/card-types";
-import { StoreLike } from "../../game/store/store-like";
-import { State } from "../../game/store/state/state";
-import { Effect } from "../../game/store/effects/effect";
-import { AttackEffect } from "../../game/store/effects/game-effects";
-import { CoinFlipPrompt } from "../../game/store/prompts/coin-flip-prompt";
-import { GameMessage } from "../../game/game-message";
-import { AbstractAttackEffect, PutDamageEffect } from "../../game/store/effects/attack-effects";
-import { StateUtils } from "../../game/store/state-utils";
-import { PlayerType, SlotType } from "../../game/store/actions/play-card-action";
-import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
-import { ChoosePokemonPrompt } from "../../game/store/prompts/choose-pokemon-prompt";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType } from '../../game/store/card/card-types';
+import { StoreLike } from '../../game/store/store-like';
+import { State } from '../../game/store/state/state';
+import { Effect } from '../../game/store/effects/effect';
+import { AttackEffect } from '../../game/store/effects/game-effects';
+import { CoinFlipPrompt } from '../../game/store/prompts/coin-flip-prompt';
+import { GameMessage } from '../../game/game-message';
+import { AbstractAttackEffect, PutDamageEffect } from '../../game/store/effects/attack-effects';
+import { StateUtils } from '../../game/store/state-utils';
+import { PlayerType, SlotType } from '../../game/store/actions/play-card-action';
+import { EndTurnEffect } from '../../game/store/effects/game-phase-effects';
+import { ChoosePokemonPrompt } from '../../game/store/prompts/choose-pokemon-prompt';
 
 function* useAquaJet(next: Function, store: StoreLike, state: State,
   effect: AttackEffect): IterableIterator<State> {
@@ -113,8 +113,7 @@ export class Floatzel extends PokemonCard {
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      let generator: IterableIterator<State>;
-      generator = useAquaJet(() => generator.next(), store, state, effect);
+      const generator = useAquaJet(() => generator.next(), store, state, effect);
       return generator.next().value;
     }
 

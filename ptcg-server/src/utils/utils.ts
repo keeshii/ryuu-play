@@ -11,11 +11,11 @@ export function deepCompare(x: any, y: any): boolean {
   // they must have the exact same prototype chain, the closest we can do is
   // test there constructor.
 
-  for (let p in x) {
-    if (!x.hasOwnProperty(p)) { continue; }
+  for (const p in x) {
+    if (!Object.prototype.hasOwnProperty.call(x, p)) { continue; }
     // other properties were tested using x.constructor === y.constructor
 
-    if (!y.hasOwnProperty(p)) { return false; }
+    if (!Object.prototype.hasOwnProperty.call(y, p)) { return false; }
     // allows to compare x[ p ] and y[ p ] when set to undefined
 
     if (x[p] === y[p]) { continue; }
@@ -28,8 +28,8 @@ export function deepCompare(x: any, y: any): boolean {
     // Objects and Arrays must be tested recursively
   }
 
-  for (let p in y) {
-    if (y.hasOwnProperty(p) && !x.hasOwnProperty(p)) { return false; }
+  for (const p in y) {
+    if (Object.prototype.hasOwnProperty.call(y, p) && !Object.prototype.hasOwnProperty.call(x, p)) { return false; }
     // allows x[ p ] to be set to undefined
   }
   return true;
@@ -43,8 +43,8 @@ export function deepIterate(source: any, callback: (holder: any, key: string, va
   }
 
   if (source instanceof Object) {
-    for (let key in source) {
-      if (source.hasOwnProperty(key)) {
+    for (const key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
         deepIterate(source[key], callback);
         callback(source, key, source[key]);
       }
@@ -69,8 +69,8 @@ export function deepClone(source: any, ignores: Function[] = [], refMap: {s: Obj
     }
     const dest = Object.create(source);
     refMap.push({s: source, d: dest});
-    for (let key in source) {
-      if (source.hasOwnProperty(key)) {
+    for (const key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
         dest[key] = deepClone(source[key], ignores, refMap);
       }
     }

@@ -1,11 +1,11 @@
-import { PokemonCard } from "../../game/store/card/pokemon-card";
-import { Stage, CardType, CardTag } from "../../game/store/card/card-types";
-import { StoreLike, State, PlayerType, SlotType, StateUtils, ChoosePokemonPrompt, ConfirmPrompt, Card } from "../../game";
-import { AttackEffect } from "../../game/store/effects/game-effects";
-import { PutDamageEffect, DiscardCardsEffect } from "../../game/store/effects/attack-effects";
-import { Effect } from "../../game/store/effects/effect";
-import { CheckProvidedEnergyEffect } from "../../game/store/effects/check-effects";
-import { GameMessage } from "../../game/game-message";
+import { PokemonCard } from '../../game/store/card/pokemon-card';
+import { Stage, CardType, CardTag } from '../../game/store/card/card-types';
+import { StoreLike, State, PlayerType, SlotType, StateUtils, ChoosePokemonPrompt, ConfirmPrompt, Card } from '../../game';
+import { AttackEffect } from '../../game/store/effects/game-effects';
+import { PutDamageEffect, DiscardCardsEffect } from '../../game/store/effects/attack-effects';
+import { Effect } from '../../game/store/effects/effect';
+import { CheckProvidedEnergyEffect } from '../../game/store/effects/check-effects';
+import { GameMessage } from '../../game/game-message';
 
 
 export class LandorusEx extends PokemonCard {
@@ -84,7 +84,7 @@ export class LandorusEx extends PokemonCard {
           const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);
           store.reduceEffect(state, checkProvidedEnergy);
 
-          let cards: Card[] = [];
+          const cards: Card[] = [];
           checkProvidedEnergy.energyMap.forEach(em => {
             if (em.provides.includes(CardType.FIGHTING) || em.provides.includes(CardType.ANY)) {
               cards.push(em.card);

@@ -1,18 +1,18 @@
-import { Card } from "../../game/store/card/card";
-import { GameError } from "../../game/game-error";
-import { GameMessage } from "../../game/game-message";
-import { Effect } from "../../game/store/effects/effect";
-import { TrainerCard } from "../../game/store/card/trainer-card";
-import { TrainerType, EnergyType } from "../../game/store/card/card-types";
-import { StoreLike } from "../../game/store/store-like";
-import { State } from "../../game/store/state/state";
-import { StateUtils } from "../../game/store/state-utils";
-import { TrainerEffect } from "../../game/store/effects/play-card-effects";
-import { ChooseCardsPrompt } from "../../game/store/prompts/choose-cards-prompt";
-import { ShowCardsPrompt } from "../../game/store/prompts/show-cards-prompt";
-import { ShuffleDeckPrompt } from "../../game/store/prompts/shuffle-prompt";
-import {PokemonCard} from "../../game/store/card/pokemon-card";
-import {EnergyCard} from "../../game/store/card/energy-card";
+import { Card } from '../../game/store/card/card';
+import { GameError } from '../../game/game-error';
+import { GameMessage } from '../../game/game-message';
+import { Effect } from '../../game/store/effects/effect';
+import { TrainerCard } from '../../game/store/card/trainer-card';
+import { TrainerType, EnergyType } from '../../game/store/card/card-types';
+import { StoreLike } from '../../game/store/store-like';
+import { State } from '../../game/store/state/state';
+import { StateUtils } from '../../game/store/state-utils';
+import { TrainerEffect } from '../../game/store/effects/play-card-effects';
+import { ChooseCardsPrompt } from '../../game/store/prompts/choose-cards-prompt';
+import { ShowCardsPrompt } from '../../game/store/prompts/show-cards-prompt';
+import { ShuffleDeckPrompt } from '../../game/store/prompts/shuffle-prompt';
+import {PokemonCard} from '../../game/store/card/pokemon-card';
+import {EnergyCard} from '../../game/store/card/energy-card';
 
 function* playCard(next: Function, store: StoreLike, state: State,
   self: FlowerShopLady, effect: TrainerEffect): IterableIterator<State> {
@@ -90,8 +90,7 @@ export class FlowerShopLady extends TrainerCard {
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
 
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
-      let generator: IterableIterator<State>;
-      generator = playCard(() => generator.next(), store, state, this, effect);
+      const generator = playCard(() => generator.next(), store, state, this, effect);
       return generator.next().value;
     }
 

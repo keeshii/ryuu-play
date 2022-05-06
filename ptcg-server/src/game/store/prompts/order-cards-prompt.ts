@@ -1,6 +1,6 @@
-import { CardList } from "../state/card-list";
-import { GameMessage } from "../../game-message";
-import { Prompt } from "./prompt";
+import { CardList } from '../state/card-list';
+import { GameMessage } from '../../game-message';
+import { Prompt } from './prompt';
 
 export const OrderCardsPromptType = 'Order cards';
 

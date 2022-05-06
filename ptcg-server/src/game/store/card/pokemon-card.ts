@@ -1,6 +1,6 @@
-import { Card } from "./card";
-import { SuperType, Stage, PokemonType, CardType } from "./card-types";
-import { Attack, Weakness, Resistance, Power } from "./pokemon-types";
+import { Card } from './card';
+import { SuperType, Stage, PokemonType, CardType } from './card-types';
+import { Attack, Weakness, Resistance, Power } from './pokemon-types';
 
 
 export abstract class PokemonCard extends Card {

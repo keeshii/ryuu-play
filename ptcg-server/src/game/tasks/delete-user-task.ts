@@ -48,7 +48,9 @@ export class DeleteUserTask {
         const path = join(config.backend.avatarsDir, avatars[i].fileName);
         await unlinkAsync(path);
       }
-    } catch (error) { }
+    } catch (error) {
+      // continue regardless of error
+    }
   }
 
 }

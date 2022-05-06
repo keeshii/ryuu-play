@@ -1,14 +1,14 @@
-import { Effect } from "../../game/store/effects/effect";
-import { TrainerCard } from "../../game/store/card/trainer-card";
-import { TrainerType } from "../../game/store/card/card-types";
-import { StoreLike } from "../../game/store/store-like";
-import { State } from "../../game/store/state/state";
-import { TrainerEffect } from "../../game/store/effects/play-card-effects";
-import { StateUtils } from "../../game/store/state-utils";
-import { GameError } from "../../game/game-error";
-import { GameMessage } from "../../game/game-message";
-import { DealDamageEffect } from "../../game/store/effects/attack-effects";
-import { EndTurnEffect } from "../../game/store/effects/game-phase-effects";
+import { Effect } from '../../game/store/effects/effect';
+import { TrainerCard } from '../../game/store/card/trainer-card';
+import { TrainerType } from '../../game/store/card/card-types';
+import { StoreLike } from '../../game/store/store-like';
+import { State } from '../../game/store/state/state';
+import { TrainerEffect } from '../../game/store/effects/play-card-effects';
+import { StateUtils } from '../../game/store/state-utils';
+import { GameError } from '../../game/game-error';
+import { GameMessage } from '../../game/game-message';
+import { DealDamageEffect } from '../../game/store/effects/attack-effects';
+import { EndTurnEffect } from '../../game/store/effects/game-phase-effects';
 
 export class BlackBelt extends TrainerCard {
 
