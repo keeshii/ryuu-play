@@ -60,6 +60,7 @@ export class GameService {
         gameOver: replay ? true : false,
         deleted: replay ? true : false,
         switchSide: false,
+        promptMinimized: false,
         state: this.decodeStateData(gameState.stateData),
         logs,
         replayPosition: 1,
@@ -79,6 +80,16 @@ export class GameService {
       const gameStates = this.sessionService.session.gameStates.slice();
       gameStates[index] = { ...gameStates[index], deleted: true };
       this.stopListening(gameId);
+      this.sessionService.set({ gameStates });
+    }
+  }
+
+  public setPromptMinimized(gameId: number, minimized: boolean) {
+    const games = this.sessionService.session.gameStates;
+    const index = games.findIndex(g => g.localId === gameId);
+    if (index !== -1) {
+      const gameStates = this.sessionService.session.gameStates.slice();
+      gameStates[index] = { ...gameStates[index], promptMinimized: minimized };
       this.sessionService.set({ gameStates });
     }
   }

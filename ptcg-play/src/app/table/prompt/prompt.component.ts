@@ -2,6 +2,7 @@ import { AnimationEvent } from '@angular/animations';
 import { Component, Input, OnChanges, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { Prompt, GamePhase } from 'ptcg-server';
 
+import { GameService } from '../../api/services/game.service';
 import { GameOverPrompt } from './prompt-game-over/game-over.prompt';
 import { LocalGameState } from '../../shared/session/session.interface';
 import { ptcgPromptAnimations } from './prompt.animations';
@@ -25,7 +26,9 @@ export class PromptComponent implements OnChanges {
 
   public prompt: Prompt<any>;
 
-  constructor() { }
+  public minimized = false;
+
+  constructor(private gameService: GameService) { }
 
   ngOnChanges(changes: SimpleChanges) {
     if (!this.gameState || !this.clientId) {
@@ -43,20 +46,35 @@ export class PromptComponent implements OnChanges {
     });
 
     prompt = prompt || this.checkGameOver(this.gameState);
+    const promptId = prompt ? prompt.id : -1;
+    const currentId = this.prompt ? this.prompt.id : -1;
 
-    if (!this.prompt || !prompt || this.prompt.id !== prompt.id || differentGame) {
+    if (currentId !== promptId || differentGame) {
       this.prompt = undefined;
       // setTimeout, because we would like the new prompt animate before displaying
       window.setTimeout(() => {
         this.prompt = prompt;
+        this.minimized = false;
+        this.maximize();
         this.toggle(prompt !== undefined);
       });
+    } else if (this.minimized !== this.gameState.promptMinimized) {
+      this.minimized = this.gameState.promptMinimized;
+      this.toggle(prompt !== undefined && !this.minimized);
+    }
+  }
+
+  public maximize() {
+    if (this.gameState.promptMinimized) {
+      this.gameService.setPromptMinimized(this.gameState.localId, false);
     }
   }
 
   /** Callback, invoked whenever an animation on the host completes. */
   public onAnimationEnd(event: AnimationEvent) {
-    if (event.toState === 'exit' && this.prompt === undefined) {
+    const toExitState = event.toState === 'exit' || event.toState === 'void';
+    const isNotVisible = this.prompt === undefined || this.minimized;
+    if (toExitState && isNotVisible) {
       this.isPromptVisible = false;
     }
   }

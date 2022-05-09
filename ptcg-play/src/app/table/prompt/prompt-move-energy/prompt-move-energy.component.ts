@@ -42,6 +42,10 @@ export class PromptMoveEnergyComponent implements OnChanges {
     private gameService: GameService
   ) { }
 
+  public minimize() {
+    this.gameService.setPromptMinimized(this.gameState.localId, true);
+  }
+
   public cancel() {
     const gameId = this.gameState.gameId;
     const id = this.promptId;

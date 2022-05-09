@@ -13,7 +13,7 @@ describe('PromptGameOverComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-            imports: [
+      imports: [
         ApiModule,
         TranslateModule.forRoot()
       ],

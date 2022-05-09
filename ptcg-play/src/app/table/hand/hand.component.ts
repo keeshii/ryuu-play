@@ -44,7 +44,10 @@ export class HandComponent implements OnChanges {
         this.list = this.tempList;
         this.dispatchAction(this.list);
       },
-      canDrag: () => this.isOwner && !this.isDeleted,
+      canDrag: () => {
+        const isMinimized = this.gameState && this.gameState.promptMinimized;
+        return this.isOwner && !this.isDeleted && !isMinimized;
+      },
       endDrag: () => {
         this.tempList = this.list;
       }

@@ -31,6 +31,10 @@ export class PromptInvitePlayerComponent implements OnInit {
     private gameService: GameService
   ) { }
 
+  public minimize() {
+    this.gameService.setPromptMinimized(this.gameState.localId, true);
+  }
+
   public confirm() {
     const gameId = this.gameState.gameId;
     const id = this.prompt.id;

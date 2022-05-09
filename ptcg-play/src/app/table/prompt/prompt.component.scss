@@ -29,13 +29,14 @@
 
 .ptcg-prompt-container {
   display: block;
-  margin: map-get($padding, normal);
+  margin: 0 auto;
+  max-width: calc(100% - 2 * #{map-get($padding, normal)});
   padding: $ptcg-prompt-padding;
   border-radius: $ptcg-prompt-border-radius;
   box-sizing: border-box;
   overflow: hidden;
   outline: 0;
-  position: relative;
+  position: absolute;
 }
 
 .ptcg-prompt-card-preview {
@@ -44,8 +45,12 @@
 }
 
 .ptcg-prompt-title {
-  margin: 0 0 20px;
-  display: block;
+  margin: 0 0 map-get($padding, normal);
+  display: flex;
+}
+
+.ptcg-prompt-title > h2 {
+  align-self: center;
 }
 
 .ptcg-prompt-content {
@@ -72,4 +77,10 @@
   .mat-mdc-button-base + .mat-mdc-button-base {
     margin-left: $ptcg-prompt-button-margin;
   }
+}
+
+.ptcg-minimized-prompt {
+  bottom: map-get($padding, large);
+  left: map-get($padding, large);
+  position: absolute;
 }

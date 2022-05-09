@@ -1,4 +1,10 @@
-<h2 class="ptcg-prompt-title" translate>PROMPT_SELECT_TITLE</h2>
+<div class="ptcg-prompt-title">
+  <h2 translate>PROMPT_SELECT_TITLE</h2>
+  <div class="ptcg-u-spacer"></div>
+  <button mat-button mat-icon-button (click)="minimize()">
+    <mat-icon>keyboard_arrow_down</mat-icon>
+  </button>
+</div>
 
 <div class="ptcg-prompt-content">
   <p [translate]="'GAME_MESSAGES.' + message"></p>

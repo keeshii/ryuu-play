@@ -1,7 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { TranslateModule } from '@ngx-translate/core';
 
+import { ApiModule } from '../../api/api.module';
 import { PromptComponent } from './prompt.component';
 
 describe('PromptComponent', () => {
@@ -10,7 +12,11 @@ describe('PromptComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [ NoopAnimationsModule ],
+      imports: [
+        ApiModule,
+        NoopAnimationsModule,
+        TranslateModule.forRoot()
+      ],
       declarations: [ PromptComponent ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     })

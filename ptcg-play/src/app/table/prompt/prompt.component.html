@@ -17,10 +17,10 @@
   </div>
 
   <div class="ptcg-prompt-container-wrapper" [hidden]="!isPromptVisible">
-    <div class="ptcg-prompt-container"
+    <div class="ptcg-prompt-container" *ngIf="prompt"
       [@state]="animationState"
       (@state.done)="onAnimationEnd($event)">
-      <div [ngSwitch]="prompt.type" *ngIf="prompt">
+      <div [ngSwitch]="prompt.type">
         <ptcg-prompt-confirm *ngSwitchCase="'Confirm'" [gameState]="gameState" [prompt]="prompt"></ptcg-prompt-confirm>
         <ptcg-prompt-alert *ngSwitchCase="'Alert'" [gameState]="gameState" [prompt]="prompt"></ptcg-prompt-alert>
         <ptcg-prompt-attach-energy *ngSwitchCase="'Attach energy'" [gameState]="gameState" [prompt]="prompt"></ptcg-prompt-attach-energy>
@@ -40,6 +40,12 @@
         <div *ngSwitchDefault translate [translateParams]="{type: prompt?.type}">PROMPT_UNKNOWN_TYPE</div>
       </div>
     </div>
+  </div>
+
+  <div class="ptcg-minimized-prompt" *ngIf="minimized">
+    <button mat-fab color="primary" (click)="maximize()">
+      <mat-icon>keyboard_arrow_up</mat-icon>
+    </button>
   </div>
 
 </div>

@@ -14,7 +14,13 @@ export class PromptAlertComponent {
   @Input() prompt: AlertPrompt;
   @Input() gameState: LocalGameState;
 
-  constructor(private gameService: GameService) { }
+  constructor(
+    private gameService: GameService
+  ) { }
+
+  public minimize() {
+    this.gameService.setPromptMinimized(this.gameState.localId, true);
+  }
 
   public confirm() {
     const gameId = this.gameState.gameId;

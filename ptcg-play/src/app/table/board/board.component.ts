@@ -192,7 +192,8 @@ export class BoardComponent implements OnDestroy {
         const isTopOwner = this.topPlayer && this.topPlayer.id === this.clientId;
         const isOwner = isBottomOwner || isTopOwner;
         const isDeleted = this.gameState.deleted;
-        return !isDeleted && isOwner && this.getScanUrl(boardCardItem) !== undefined;
+        const isMinimized = this.gameState.promptMinimized;
+        return !isDeleted && isOwner && !isMinimized && this.getScanUrl(boardCardItem) !== undefined;
       },
       beginDrag: () => {
         return { ...boardCardItem, scanUrl: this.getScanUrl(boardCardItem) };

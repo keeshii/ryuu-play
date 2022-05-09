@@ -24,6 +24,10 @@ export class PromptChooseAttackComponent {
     private translate: TranslateService
   ) { }
 
+  public minimize() {
+    this.gameService.setPromptMinimized(this.gameState.localId, true);
+  }
+
   public cancel() {
     const gameId = this.gameState.gameId;
     const id = this.prompt.id;

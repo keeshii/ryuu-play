@@ -20,6 +20,7 @@ export interface LocalGameState extends GameState {
   deleted: boolean;
   gameOver: boolean;
   switchSide: boolean;
+  promptMinimized: boolean;
   state: State;
   logs: StateLog[];
   replayPosition: number;

@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { ChoosePokemonPrompt, CardTarget } from 'ptcg-server';
 
-import { GameService } from 'src/app/api/services/game.service';
+import { GameService } from '../../../api/services/game.service';
 import { LocalGameState } from '../../../shared/session/session.interface';
 import { PokemonData, PokemonItem } from '../choose-pokemons-pane/pokemon-data';
 
@@ -28,6 +28,10 @@ export class PromptChoosePokemonComponent implements OnChanges {
   constructor(
     private gameService: GameService
   ) { }
+
+  public minimize() {
+    this.gameService.setPromptMinimized(this.gameState.localId, true);
+  }
 
   public cancel() {
     const gameId = this.gameState.gameId;
