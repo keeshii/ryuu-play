@@ -1,6 +1,7 @@
 # RyuuPlay
 
 [![Strider](https://strider.kuro.ryuu.eu/keeshii/ryuu-play/badge?branch=master)](https://strider.kuro.ryuu.eu/keeshii/ryuu-play/)
+[![Matrix](https://matrix.to/img/matrix-badge.svg)](https://matrix.to/#/#ryuu-play:matrix.org)
 
 RyuuPlay is a simulator for the Pokémon Trading Card Game written in TypeScript. The source code is entirely open source and published under MIT licence.
 

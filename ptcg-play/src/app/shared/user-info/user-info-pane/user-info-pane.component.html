@@ -22,15 +22,16 @@
       <tr>
         <th translate>USERS_LAST_SEEN</th>
         <td>
-          <span *ngIf="!user.connected; else connected">
+          <span *ngIf="!user.connected && user.lastSeen > 0">
             {{ user.lastSeen | date: ('DATE_FORMAT' | translate) }}
           </span>
-      <ng-template #connected>
-        <ptcg-badge>
-          {{ 'USERS_ONLINE' | translate }}
-        </ptcg-badge>
-      </ng-template>
-      </td>
+          <ptcg-badge *ngIf="!user.connected && user.lastSeen === 0">
+            {{ 'USERS_NEVER' | translate }}
+          </ptcg-badge>
+          <ptcg-badge *ngIf="user.connected">
+            {{ 'USERS_ONLINE' | translate }}
+          </ptcg-badge>
+        </td>
       </tr>
     </table>
   </div>
