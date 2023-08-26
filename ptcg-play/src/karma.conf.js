@@ -25,8 +25,14 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome'],
+    browsers: ['Chrome', 'ChromeDocker'],
     singleRun: false,
-    restartOnFileChange: true
+    restartOnFileChange: true,
+    customLaunchers: {
+      ChromeDocker: {
+        base: 'ChromeHeadless',
+        flags: ['--disable-gpu', '--no-sandbox']
+      }
+    }
   });
 };
