@@ -57,8 +57,7 @@ export class SeismitoadEx extends PokemonCard {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
       const player = effect.player;
-      const opponent = StateUtils.getOpponent(state, player);
-      const benched = opponent.bench.reduce((left, b) => left + (b.cards.length ? 1 : 0), 0);
+      const benched = player.bench.reduce((left, b) => left + (b.cards.length ? 1 : 0), 0);
 
       if (benched === 0) {
         return state;
@@ -69,7 +68,7 @@ export class SeismitoadEx extends PokemonCard {
       return store.prompt(state, new ChoosePokemonPrompt(
         player.id,
         GameMessage.CHOOSE_POKEMON_TO_DAMAGE,
-        PlayerType.TOP_PLAYER,
+        PlayerType.BOTTOM_PLAYER,
         [ SlotType.BENCH ],
         { min: max, max, allowCancel: false }
       ), selected => {

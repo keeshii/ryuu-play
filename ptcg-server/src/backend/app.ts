@@ -77,6 +77,11 @@ export class App {
     botManager.initBots(this.core);
   }
 
+  public configureWebUi(absolutePath: string): void {
+    this.app.use(express.static(absolutePath));
+    this.app.use('*', (req, res) => res.sendFile(absolutePath + '/index.html'));
+  }
+
   public start(): void {
     const address = config.backend.address;
     const port = config.backend.port;

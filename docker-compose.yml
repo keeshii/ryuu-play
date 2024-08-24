@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+  ryuu_play:
+    container_name: ryuu_play
+    build:
+      context: docker
+      dockerfile: ./Dockerfile
+      args:
+        EXTERNAL_URL: "http://localhost:12021"
+
+    restart: unless-stopped
+    user: node:node
+    ports:
+      - "12021:12021"
+
+    # Keep config, database, avatars in external volume
+    # start.js and config.js will be also placed there
+    volumes:
+      - ryuu_play_data:/home/node/ryuu-play/data
+
+volumes:
+  ryuu_play_data:
