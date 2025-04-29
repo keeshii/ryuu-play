@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PageEvent } from '@angular/material/paginator';
+import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { ReplayInfo, GameWinner } from 'ptcg-server';
 import { Router } from '@angular/router';
 import { Subject, of } from 'rxjs';

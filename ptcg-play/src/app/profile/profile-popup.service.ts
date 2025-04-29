@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 
 import { ChangeEmailPopupComponent } from './change-email-popup/change-email-popup.component';
 import { ChangePasswordPopupComponent } from './change-password-popup/change-password-popup.component';

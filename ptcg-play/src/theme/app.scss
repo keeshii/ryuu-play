@@ -1,13 +1,20 @@
-@use '~@angular/material' as mat;
+@use '@angular/material' as mat;
 
 @import './_theme.scss';
 @import "variables.scss";
 @import "global.scss";
 @import "utils.scss";
 
-// NOTE: Theming is currently experimental and not yet publically released!
-
-@include mat.core();
+// TODO(v15): As of v15 mat.legacy-core no longer includes default typography styles.
+//  The following line adds:
+//    1. Default typography styles for all components
+//    2. Styles for typography hierarchy classes (e.g. .mat-headline-1)
+//  If you specify typography styles for the components you use elsewhere, you should delete this line.
+//  If you don't need the default component typographies but still want the hierarchy styles,
+//  you can delete this line and instead use:
+//    `@include mat.legacy-typography-hierarchy(mat.define-legacy-typography-config());`
+@include mat.all-legacy-component-typographies();
+@include mat.legacy-core();
 
 $ptcg-primary: mat.define-palette(mat.$pink-palette);
 $ptcg-accent:  mat.define-palette(mat.$blue-palette, A200, A100, A400);
@@ -15,28 +22,33 @@ $ptcg-accent:  mat.define-palette(mat.$blue-palette, A200, A100, A400);
 // The warn palette is optional (defaults to red).
 $ptcg-warn:    mat.define-palette(mat.$deep-orange-palette);
 
-// Create the theme object (a Sass map containing all of the palettes).
-$ptcg-theme: mat.define-dark-theme($ptcg-primary, $ptcg-accent, $ptcg-warn);
-
 $ptcg-colors: (
   ability: #e3350d,
   poke-body: #4dad5b
 );
 
-$ptcg-theme: map-merge($ptcg-theme, (ptcg: $ptcg-colors));
+// Create a config with the default typography levels.
+$config: mat.define-legacy-typography-config(
+  $body-2:        mat.define-typography-level(14px, 24px, 700)
+);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$ptcg-theme: mat.define-dark-theme((
+  color: (
+    primary: $ptcg-primary,
+    accent: $ptcg-warn,
+    warn: $ptcg-warn
+  ),
+  typography: $config,
+  density: 0,
+  ptcg: $ptcg-colors
+));
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-@include mat.all-component-themes($ptcg-theme);
+@include mat.all-legacy-component-themes($ptcg-theme);
 
 
 @include ptcg-theme($ptcg-theme);
-
-
-// Create a config with the default typography levels.
-$config: mat.define-typography-config(
-  $body-2:        mat.define-typography-level(14px, 24px, 700)
-);
-
 @include ptcg-typography($config);

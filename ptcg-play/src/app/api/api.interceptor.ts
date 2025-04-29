@@ -1,7 +1,7 @@
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
 import { ApiErrorEnum } from 'ptcg-server';
 import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { Observable, throwError } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { catchError, timeout } from 'rxjs/operators';

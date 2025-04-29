@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PageEvent } from '@angular/material/paginator';
+import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { RankingInfo } from 'ptcg-server';
 import { Subject, of } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';

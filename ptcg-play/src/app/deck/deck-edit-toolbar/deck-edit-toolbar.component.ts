@@ -1,6 +1,6 @@
 import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { CardType, SuperType } from 'ptcg-server';
-import { MatSelectChange } from '@angular/material/select';
+import { MatLegacySelectChange as MatSelectChange } from '@angular/material/legacy-select';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { Deck } from '../../api/interfaces/deck.interface';

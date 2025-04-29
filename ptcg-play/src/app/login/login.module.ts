@@ -12,30 +12,25 @@ import { ChangeServerPopupComponent } from './change-server-popup/change-server-
 import { SetNewPasswordComponent } from './set-new-password/set-new-password.component';
 
 @NgModule({
-  imports: [
-    SharedModule
-  ],
-  declarations: [
-    ChangeServerPopupComponent,
-    LoginPopupComponent,
-    RegisterComponent,
-    ResetPasswordComponent,
-    ServerPasswordPopupComponent,
-    SetNewPasswordComponent,
-    LoginComponent
-  ],
-  entryComponents: [
-    ChangeServerPopupComponent,
-    LoginPopupComponent,
-    ServerPasswordPopupComponent
-  ],
-  providers: [
-    LoginPopupService,
-    ServerPasswordPopupService
-  ],
-  exports: [
-    RegisterComponent,
-    ResetPasswordComponent
-  ]
+    imports: [
+        SharedModule
+    ],
+    declarations: [
+        ChangeServerPopupComponent,
+        LoginPopupComponent,
+        RegisterComponent,
+        ResetPasswordComponent,
+        ServerPasswordPopupComponent,
+        SetNewPasswordComponent,
+        LoginComponent
+    ],
+    providers: [
+        LoginPopupService,
+        ServerPasswordPopupService
+    ],
+    exports: [
+        RegisterComponent,
+        ResetPasswordComponent
+    ]
 })
 export class LoginModule {}

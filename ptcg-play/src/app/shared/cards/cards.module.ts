@@ -20,39 +20,33 @@ import { TrainerTypeComponent } from './trainer-type/trainer-type.component';
 import { HoverHighlightComponent } from './hover-highlight/hover-highlight.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    ImageCacheModule,
-    MaterialModule,
-    DndMultiBackendModule,
-    DndModule,
-    TranslateModule
-  ],
-  declarations: [
-    CardComponent,
-    CardImagePopupComponent,
-    CardInfoPaneComponent,
-    CardInfoPopupComponent,
-    CardListPaneComponent,
-    CardListPopupComponent,
-    CardPlaceholderDirective,
-    EnergyComponent,
-    DropHighlightDirective,
-    TrainerTypeComponent,
-    HoverHighlightComponent,
-    CardInfoListPopupComponent,
-  ],
-  entryComponents: [
-    CardImagePopupComponent,
-    CardInfoPopupComponent,
-    CardInfoListPopupComponent,
-    CardListPopupComponent
-  ],
-  exports: [
-    CardComponent,
-    CardPlaceholderDirective,
-    EnergyComponent,
-    DropHighlightDirective
-  ]
+    imports: [
+        CommonModule,
+        ImageCacheModule,
+        MaterialModule,
+        DndMultiBackendModule,
+        DndModule,
+        TranslateModule
+    ],
+    declarations: [
+        CardComponent,
+        CardImagePopupComponent,
+        CardInfoPaneComponent,
+        CardInfoPopupComponent,
+        CardListPaneComponent,
+        CardListPopupComponent,
+        CardPlaceholderDirective,
+        EnergyComponent,
+        DropHighlightDirective,
+        TrainerTypeComponent,
+        HoverHighlightComponent,
+        CardInfoListPopupComponent,
+    ],
+    exports: [
+        CardComponent,
+        CardPlaceholderDirective,
+        EnergyComponent,
+        DropHighlightDirective
+    ]
 })
 export class CardsModule { }

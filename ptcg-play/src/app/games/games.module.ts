@@ -8,22 +8,19 @@ import { CreateGamePopupComponent } from './create-game-popup/create-game-popup.
 import { GamesTableComponent } from './games-table/games-table.component';
 
 @NgModule({
-  declarations: [
-    GamesComponent,
-    GameActionsComponent,
-    MatchTableComponent,
-    CreateGamePopupComponent,
-    GamesTableComponent
-  ],
-  entryComponents: [
-    CreateGamePopupComponent
-  ],
-  imports: [
-    SharedModule
-  ],
-  exports: [
-    MatchTableComponent
-  ],
-  providers: []
+    declarations: [
+        GamesComponent,
+        GameActionsComponent,
+        MatchTableComponent,
+        CreateGamePopupComponent,
+        GamesTableComponent
+    ],
+    imports: [
+        SharedModule
+    ],
+    exports: [
+        MatchTableComponent
+    ],
+    providers: []
 })
 export class GamesModule { }

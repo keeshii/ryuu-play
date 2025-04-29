@@ -13,26 +13,23 @@ import { PlayerAvatarComponent } from './player-avatar/player-avatar.component';
 import { PlayerTimeComponent } from './player-time/player-time.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    ProfileModule,
-    SharedModule
-  ],
-  declarations: [
-    ChooseAvatarPopupComponent,
-    GameLogsComponent,
-    PlayerActionsComponent,
-    PlayerAvatarComponent,
-    PlayerBarComponent,
-    ReplayControlsComponent,
-    TableSidebarComponent,
-    PlayerTimeComponent
-  ],
-  entryComponents: [
-    ChooseAvatarPopupComponent
-  ],
-  exports: [
-    TableSidebarComponent
-  ]
+    imports: [
+        CommonModule,
+        ProfileModule,
+        SharedModule
+    ],
+    declarations: [
+        ChooseAvatarPopupComponent,
+        GameLogsComponent,
+        PlayerActionsComponent,
+        PlayerAvatarComponent,
+        PlayerBarComponent,
+        ReplayControlsComponent,
+        TableSidebarComponent,
+        PlayerTimeComponent
+    ],
+    exports: [
+        TableSidebarComponent
+    ]
 })
 export class TableSidebarModule { }

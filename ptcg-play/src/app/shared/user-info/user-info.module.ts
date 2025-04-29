@@ -13,31 +13,27 @@ import { UserInfoPaneComponent } from './user-info-pane/user-info-pane.component
 import { UserInfoPopupComponent } from './user-info-popup/user-info-popup.component';
 
 @NgModule({
-  declarations: [
-    AvatarComponent,
-    AvatarPopupComponent,
-    BadgeComponent,
-    RankComponent,
-    UserBarComponent,
-    UserInfoPaneComponent,
-    UserInfoPopupComponent
-  ],
-  entryComponents: [
-    AvatarPopupComponent,
-    UserInfoPopupComponent
-  ],
-  imports: [
-    CommonModule,
-    MaterialModule,
-    RouterModule,
-    TranslateModule
-  ],
-  exports: [
-    AvatarComponent,
-    BadgeComponent,
-    RankComponent,
-    UserBarComponent,
-    UserInfoPaneComponent
-  ]
+    declarations: [
+        AvatarComponent,
+        AvatarPopupComponent,
+        BadgeComponent,
+        RankComponent,
+        UserBarComponent,
+        UserInfoPaneComponent,
+        UserInfoPopupComponent
+    ],
+    imports: [
+        CommonModule,
+        MaterialModule,
+        RouterModule,
+        TranslateModule
+    ],
+    exports: [
+        AvatarComponent,
+        BadgeComponent,
+        RankComponent,
+        UserBarComponent,
+        UserInfoPaneComponent
+    ]
 })
 export class UserInfoModule { }

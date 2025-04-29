@@ -1,4 +1,4 @@
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -8,7 +8,7 @@ import { SessionService } from './shared/session/session.service';
 @Injectable({
   providedIn: 'root'
 })
-export class CanActivateService implements CanActivate  {
+export class CanActivateService   {
 
   constructor(
     private loginPopupService: LoginPopupService,

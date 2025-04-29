@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { MatSelectChange } from '@angular/material/select';
-import { MatSliderChange } from '@angular/material/slider';
+import { MatLegacySelectChange as MatSelectChange } from '@angular/material/legacy-select';
+import { MatLegacySliderChange as MatSliderChange } from '@angular/material/legacy-slider';
 import { Replay } from 'ptcg-server';
 import { Subject } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';

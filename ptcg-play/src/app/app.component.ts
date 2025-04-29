@@ -1,5 +1,5 @@
 import { Component, OnInit, HostListener, ElementRef } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { UserInfo } from 'ptcg-server';
 import { Observable, interval } from 'rxjs';
 import { Router } from '@angular/router';

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 
 import { ApiService } from '../../../api/api.service';
 import { AvatarPopupComponent } from '../avatar-popup/avatar-popup.component';

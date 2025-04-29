@@ -5,15 +5,12 @@ import { SharedModule } from '../shared/shared.module';
 import { ImportReplayPopupComponent } from './import-replay-popup/import-replay-popup.component';
 
 @NgModule({
-  declarations: [
-    ReplaysComponent,
-    ImportReplayPopupComponent
-  ],
-  entryComponents: [
-    ImportReplayPopupComponent
-  ],
-  imports: [
-    SharedModule
-  ]
+    declarations: [
+        ReplaysComponent,
+        ImportReplayPopupComponent
+    ],
+    imports: [
+        SharedModule
+    ]
 })
 export class ReplaysModule { }

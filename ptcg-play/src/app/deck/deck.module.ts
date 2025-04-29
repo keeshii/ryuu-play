@@ -12,22 +12,19 @@ import { DeckEditInfoComponent } from './deck-edit-info/deck-edit-info.component
 import { ImportDeckPopupComponent } from './import-deck-popup/import-deck-popup.component';
 
 @NgModule({
-  imports: [
-    ScrollingModule,
-    SharedModule
-  ],
-  entryComponents: [
-    ImportDeckPopupComponent
-  ],
-  declarations: [
-    DeckCardComponent,
-    DeckComponent,
-    DeckEditComponent,
-    DeckEditToolbarComponent,
-    FilterCardsPipe,
-    DeckEditPanesComponent,
-    DeckEditInfoComponent,
-    ImportDeckPopupComponent
-  ]
+    imports: [
+        ScrollingModule,
+        SharedModule
+    ],
+    declarations: [
+        DeckCardComponent,
+        DeckComponent,
+        DeckEditComponent,
+        DeckEditToolbarComponent,
+        FilterCardsPipe,
+        DeckEditPanesComponent,
+        DeckEditInfoComponent,
+        ImportDeckPopupComponent
+    ]
 })
 export class DeckModule { }

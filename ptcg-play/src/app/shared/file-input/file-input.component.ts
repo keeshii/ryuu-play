@@ -2,7 +2,7 @@ import { Component, OnInit, Input, ElementRef, OnDestroy, HostBinding,
   Renderer2, HostListener, Optional, Self, DoCheck } from '@angular/core';
 import { ControlValueAccessor, NgControl, NgForm, FormGroupDirective } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { MatFormFieldControl } from '@angular/material/form-field';
+import { MatLegacyFormFieldControl as MatFormFieldControl } from '@angular/material/legacy-form-field';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
@@ -105,18 +105,18 @@ export class FileInputComponent extends FileInputMixinBase
    */
   constructor(
     private fm: FocusMonitor,
-    // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-denylist,id-match
+    // eslint-disable-next-line no-underscore-dangle,id-denylist,id-match
     private _elementRef: ElementRef,
-    // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-denylist,id-match
+    // eslint-disable-next-line no-underscore-dangle,id-denylist,id-match
     private _renderer: Renderer2,
-    // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-denylist,id-match
+    // eslint-disable-next-line no-underscore-dangle,id-denylist,id-match
     public _defaultErrorStateMatcher: ErrorStateMatcher,
     @Optional()
     @Self()
     public ngControl: NgControl,
-    // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-denylist,id-match
+    // eslint-disable-next-line no-underscore-dangle,id-denylist,id-match
     @Optional() public _parentForm: NgForm,
-    // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-denylist,id-match
+    // eslint-disable-next-line no-underscore-dangle,id-denylist,id-match
     @Optional() public _parentFormGroup: FormGroupDirective,
   ) {
     super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
@@ -130,9 +130,9 @@ export class FileInputComponent extends FileInputMixinBase
     });
   }
 
-  // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-denylist,id-match
+  // eslint-disable-next-line no-underscore-dangle,id-denylist,id-match
   private _onChange = (_: any) => {};
-  // eslint-disable-next-line @typescript-eslint/naming-convention, no-underscore-dangle, id-denylist, id-match
+  // eslint-disable-next-line  no-underscore-dangle, id-denylist, id-match
   private _onTouched = () => {};
 
   get fileNames() {

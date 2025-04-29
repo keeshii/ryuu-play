@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ApiErrorEnum } from 'ptcg-server';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { finalize } from 'rxjs/operators';

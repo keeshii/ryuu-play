@@ -1,6 +1,6 @@
 import { Component, OnChanges, Input, Output, EventEmitter } from '@angular/core';
 import { Card, SuperType, Stage, PowerType, EnergyType, TrainerType, PokemonCard } from 'ptcg-server';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 
 import { CardImagePopupComponent } from '../card-image-popup/card-image-popup.component';
 

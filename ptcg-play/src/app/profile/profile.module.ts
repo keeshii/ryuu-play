@@ -9,24 +9,17 @@ import { ChangeEmailPopupComponent } from './change-email-popup/change-email-pop
 import { ChangePasswordPopupComponent } from './change-password-popup/change-password-popup.component';
 
 @NgModule({
-  imports: [
-    SharedModule,
-    GamesModule,
-  ],
-  declarations: [
-    AddAvatarPopupComponent,
-    ChangeEmailPopupComponent,
-    ChangePasswordPopupComponent,
-    EditAvatarsPopupComponent,
-    ProfileComponent
-  ],
-  entryComponents: [
-    AddAvatarPopupComponent,
-    ChangeEmailPopupComponent,
-    ChangePasswordPopupComponent,
-    EditAvatarsPopupComponent
-  ],
-  exports: [
-  ]
+    imports: [
+        SharedModule,
+        GamesModule,
+    ],
+    declarations: [
+        AddAvatarPopupComponent,
+        ChangeEmailPopupComponent,
+        ChangePasswordPopupComponent,
+        EditAvatarsPopupComponent,
+        ProfileComponent
+    ],
+    exports: []
 })
 export class ProfileModule {}

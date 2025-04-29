@@ -1,5 +1,5 @@
 import { Component, ViewChild, EventEmitter, Output } from '@angular/core';
-import { MatInput } from '@angular/material/input';
+import { MatLegacyInput as MatInput } from '@angular/material/legacy-input';
 
 @Component({
   selector: 'ptcg-search-box',

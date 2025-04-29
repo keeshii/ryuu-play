@@ -13,29 +13,22 @@ import { SelectPopupComponent } from './select-popup/select-popup.component';
 import { ValidationModule } from '../validation/validation.module';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    MaterialModule,
-    TranslateModule,
-    ValidationModule
-  ],
-  declarations: [
-    AlertPopupComponent,
-    ConfirmPopupComponent,
-    InputNumberPopupComponent,
-    InputNamePopupComponent,
-    SelectPopupComponent
-  ],
-  entryComponents: [
-    AlertPopupComponent,
-    ConfirmPopupComponent,
-    InputNumberPopupComponent,
-    InputNamePopupComponent,
-    SelectPopupComponent
-  ],
-  providers: [
-    AlertService
-  ]
+    imports: [
+        CommonModule,
+        FormsModule,
+        MaterialModule,
+        TranslateModule,
+        ValidationModule
+    ],
+    declarations: [
+        AlertPopupComponent,
+        ConfirmPopupComponent,
+        InputNumberPopupComponent,
+        InputNamePopupComponent,
+        SelectPopupComponent
+    ],
+    providers: [
+        AlertService
+    ]
 })
 export class AlertModule { }

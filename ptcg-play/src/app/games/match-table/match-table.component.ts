@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MatchInfo, GameWinner } from 'ptcg-server';
-import { PageEvent } from '@angular/material/paginator';
+import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
