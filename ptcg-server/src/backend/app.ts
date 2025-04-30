@@ -27,10 +27,11 @@ export class App {
   private app: express.Application;
   private ws: WebSocketServer;
   private storage: Storage;
-  private core: Core = new Core();
+  private core: Core;
 
   constructor() {
     this.storage = new Storage();
+    this.core = new Core(this.storage);
     this.app = this.configureExpress();
     this.ws = this.configureWebSocket();
   }

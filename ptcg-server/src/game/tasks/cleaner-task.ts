@@ -13,7 +13,7 @@ export class CleanerTask {
 
   constructor(core: Core) {
     this.core = core;
-    this.deleteUserTask = new DeleteUserTask();
+    this.deleteUserTask = new DeleteUserTask(core);
   }
 
   public startTasks() {
@@ -40,9 +40,11 @@ export class CleanerTask {
       const yesterday = today - keepMatchTime;
       const onlineUserIds = this.core.clients.map(c => c.user.id);
       const usersToDelete = await User.find({
-        lastSeen: LessThan(yesterday),
-        registered: LessThan(yesterday),
-        ranking: 0
+        where: {
+          lastSeen: LessThan(yesterday),
+          registered: LessThan(yesterday),
+          ranking: 0
+        }
       });
       for (let i = 0; i < usersToDelete.length; i++) {
         const userId = usersToDelete[i].id;

@@ -36,7 +36,7 @@ $config: mat.define-legacy-typography-config(
 $ptcg-theme: mat.define-dark-theme((
   color: (
     primary: $ptcg-primary,
-    accent: $ptcg-warn,
+    accent: $ptcg-accent,
     warn: $ptcg-warn
   ),
   typography: $config,

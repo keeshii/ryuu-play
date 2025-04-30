@@ -10,7 +10,6 @@ import { AvatarInfo, AvatarAddRequest } from '../interfaces/avatar.interface';
 import { Controller, Get, Post } from './controller';
 import { ApiErrorEnum } from '../common/errors';
 import { config } from '../../config';
-import {Transaction, TransactionManager, EntityManager} from 'typeorm';
 
 export class Avatars extends Controller {
 
@@ -18,9 +17,9 @@ export class Avatars extends Controller {
   @AuthToken()
   public async onList(req: Request, res: Response) {
     const userId: number = parseInt(req.params.id, 10) || req.body.userId;
-    const user = await User.findOne(userId, { relations: ['avatars'] });
+    const user = await User.findOne({ where: { id: userId }, relations: ['avatars'] });
 
-    if (user === undefined) {
+    if (user === null) {
       res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
     }
@@ -38,8 +37,8 @@ export class Avatars extends Controller {
   @AuthToken()
   public async onGet(req: Request, res: Response) {
     const avatarId: number = parseInt(req.params.id, 10);
-    const avatar = await Avatar.findOne(avatarId);
-    if (avatar === undefined) {
+    const avatar = await Avatar.findOneById(avatarId);
+    if (avatar === null) {
       res.send({error: ApiErrorEnum.AVATAR_INVALID});
       return;
     }
@@ -83,14 +82,13 @@ export class Avatars extends Controller {
     name: check().minLength(3).maxLength(32),
     imageBase64: check().required()
   })
-  @Transaction()
-  public async onAdd(req: Request, res: Response, @TransactionManager() manager: EntityManager) {
+  public async onAdd(req: Request, res: Response) {
     const body: AvatarAddRequest = req.body;
 
     const userId: number = req.body.userId;
-    const user = await User.findOne(userId);
+    const user = await User.findOneById(userId);
 
-    if (user === undefined) {
+    if (user === null) {
       res.status(400);
       res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
@@ -113,13 +111,15 @@ export class Avatars extends Controller {
     }
 
     try {
-      avatar = await manager.save(avatar);
-      // Set default avatar, if previously not set
-      if (!user.avatarFile) {
-        await manager.update(User, user.id, { avatarFile: avatar.fileName });
-        user.avatarFile = avatar.fileName;
-        this.core.emit(c => c.onUsersUpdate([ user ]));
-      }
+      await this.db.manager.transaction(async manager => {
+        avatar = await manager.save(avatar);
+        // Set default avatar, if previously not set
+        if (!user.avatarFile) {
+          await manager.update(User, user.id, { avatarFile: avatar.fileName });
+          user.avatarFile = avatar.fileName;
+          this.core.emit(c => c.onUsersUpdate([ user ]));
+        }
+      });
     } catch (error) {
       res.status(400);
       res.send({error: ApiErrorEnum.NAME_DUPLICATE});
@@ -138,38 +138,39 @@ export class Avatars extends Controller {
   @Validate({
     id: check().isNumber()
   })
-  @Transaction()
-  public async onDelete(req: Request, res: Response, @TransactionManager() manager: EntityManager) {
+  public async onDelete(req: Request, res: Response) {
     const body: { id: number } = req.body;
 
     const userId: number = req.body.userId;
-    const user = await User.findOne(userId, { relations: ['avatars'] });
+    const user = await User.findOne({ where: { id: userId }, relations: ['avatars'] });
 
-    if (user === undefined) {
+    if (user === null) {
       res.status(400);
       res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
     }
 
-    const avatar = await Avatar.findOne(body.id, { relations: ['user'] });
+    const avatar = await Avatar.findOne({ where: { id: body.id }, relations: ['user'] });
 
-    if (avatar === undefined || avatar.user.id !== user.id) {
+    if (avatar === null || avatar.user.id !== user.id) {
       res.status(400);
       res.send({error: ApiErrorEnum.AVATAR_INVALID});
       return;
     }
 
-    await this.removeAvatarFile(avatar.fileName);
-    await manager.remove(avatar);
+    await this.db.manager.transaction(async manager => {
+      await this.removeAvatarFile(avatar.fileName);
+      await manager.remove(avatar);
 
-    // Set new avatar if deleted the default one
-    if (user.avatarFile === avatar.fileName) {
-      const newAvatar = user.avatars.find(a => a.fileName !== avatar.fileName);
-      const avatarFile = newAvatar ? newAvatar.fileName : '';
-      await manager.update(User, user.id, { avatarFile });
-      user.avatarFile = avatarFile;
-      this.core.emit(c => c.onUsersUpdate([ user ]));
-    }
+      // Set new avatar if deleted the default one
+      if (user.avatarFile === avatar.fileName) {
+        const newAvatar = user.avatars.find(a => a.fileName !== avatar.fileName);
+        const avatarFile = newAvatar ? newAvatar.fileName : '';
+        await manager.update(User, user.id, { avatarFile });
+        user.avatarFile = avatarFile;
+        this.core.emit(c => c.onUsersUpdate([ user ]));
+      }
+    });
 
     res.send({ok: true});
   }
@@ -184,17 +185,17 @@ export class Avatars extends Controller {
     const body: { id: number, name: string } = req.body;
 
     const userId: number = req.body.userId;
-    const user = await User.findOne(userId);
+    const user = await User.findOneById(userId);
 
-    if (user === undefined) {
+    if (user === null) {
       res.status(400);
       res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
     }
 
-    let avatar = await Avatar.findOne(body.id, { relations: ['user'] });
+    let avatar = await Avatar.findOne({ where: { id: body.id }, relations: ['user'] });
 
-    if (avatar === undefined || avatar.user.id !== user.id) {
+    if (avatar === null || avatar.user.id !== user.id) {
       res.status(400);
       res.send({error: ApiErrorEnum.AVATAR_INVALID});
       return;
@@ -225,17 +226,17 @@ export class Avatars extends Controller {
     const body: { id: number, name: string } = req.body;
 
     const userId: number = req.body.userId;
-    let user = await User.findOne(userId);
+    let user = await User.findOneById(userId);
 
-    if (user === undefined) {
+    if (user === null) {
       res.status(400);
       res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
     }
 
-    const avatar = await Avatar.findOne(body.id, { relations: ['user'] });
+    const avatar = await Avatar.findOne({ where: { id: body.id }, relations: ['user'] });
 
-    if (avatar === undefined || avatar.user.id !== user.id) {
+    if (avatar === null || avatar.user.id !== user.id) {
       res.status(400);
       res.send({error: ApiErrorEnum.AVATAR_INVALID});
       return;

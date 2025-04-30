@@ -18,7 +18,7 @@ export class Messager {
     message.created = time;
     message.text = text;
 
-    await message.send(receiver);
+    await this.saveMessage(message, receiver);
 
     this.core.clients.forEach(c => {
       if (c.user.id === receiver.id) {
@@ -47,6 +47,21 @@ export class Messager {
       if (c.user.id === conversationUser.id) {
         c.onMessageRead(client.user);
       }
+    });
+  }
+
+  private async saveMessage(message: Message, receiver: User): Promise<void> {
+    return this.core.db.manager.transaction(async manager => {
+      const conversation = await Conversation.findByUsers(message.sender, receiver);
+
+      if (conversation.id === undefined) {
+        await manager.save(conversation);
+      }
+
+      message.conversation = conversation;
+      await manager.save(message);
+      conversation.lastMessage = message;
+      await manager.save(conversation);
     });
   }
 

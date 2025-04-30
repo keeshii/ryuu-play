@@ -74,9 +74,9 @@ export class Replays extends Controller {
   @AuthToken()
   public async onMatchGet(req: Request, res: Response) {
     const matchId: number = parseInt(req.params.id, 10);
-    const entity = await Match.findOne(matchId);
+    const entity = await Match.findOneById(matchId);
 
-    if (entity === undefined) {
+    if (entity === null) {
       res.send({error: ApiErrorEnum.GAME_INVALID_ID});
       return;
     }
@@ -91,9 +91,9 @@ export class Replays extends Controller {
   public async onGet(req: Request, res: Response) {
     const userId: number = req.body.userId;
     const replayId: number = parseInt(req.params.id, 10);
-    const entity = await Replay.findOne(replayId, { relations: ['user'] });
+    const entity = await Replay.findOne({ where: { id: replayId }, relations: ['user'] });
 
-    if (entity === undefined || entity.user.id !== userId) {
+    if (entity === null || entity.user.id !== userId) {
       res.send({error: ApiErrorEnum.REPLAY_INVALID});
       return;
     }
@@ -113,16 +113,16 @@ export class Replays extends Controller {
     const body: { id: number, name: string } = req.body;
 
     const userId: number = req.body.userId;
-    const user = await User.findOne(userId);
+    const user = await User.findOneById(userId);
 
-    if (user === undefined) {
+    if (user === null) {
       res.status(400);
       res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
     }
 
-    const match = await Match.findOne(body.id);
-    if (match === undefined) {
+    const match = await Match.findOneById(body.id);
+    if (match === null) {
       res.status(400);
       res.send({error: ApiErrorEnum.GAME_INVALID_ID});
       return;
@@ -169,17 +169,17 @@ export class Replays extends Controller {
     const body: { id: number } = req.body;
 
     const userId: number = req.body.userId;
-    const user = await User.findOne(userId);
+    const user = await User.findOneById(userId);
 
-    if (user === undefined) {
+    if (user === null) {
       res.status(400);
       res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
     }
 
-    const replay = await Replay.findOne(body.id, { relations: ['user'] });
+    const replay = await Replay.findOne({ where: { id: body.id }, relations: ['user'] });
 
-    if (replay === undefined || replay.user.id !== user.id) {
+    if (replay === null || replay.user.id !== user.id) {
       res.status(400);
       res.send({error: ApiErrorEnum.REPLAY_INVALID});
       return;
@@ -200,17 +200,17 @@ export class Replays extends Controller {
     const body: { id: number, name: string } = req.body;
 
     const userId: number = req.body.userId;
-    const user = await User.findOne(userId);
+    const user = await User.findOneById(userId);
 
-    if (user === undefined) {
+    if (user === null) {
       res.status(400);
       res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
     }
 
-    let replay = await Replay.findOne(body.id, { relations: ['user'] });
+    let replay = await Replay.findOne({ where: { id: body.id }, relations: ['user'] });
 
-    if (replay === undefined || replay.user.id !== user.id) {
+    if (replay === null || replay.user.id !== user.id) {
       res.status(400);
       res.send({error: ApiErrorEnum.REPLAY_INVALID});
       return;
@@ -241,9 +241,9 @@ export class Replays extends Controller {
     const body: ReplayImport = req.body;
 
     const userId: number = req.body.userId;
-    const user = await User.findOne(userId);
+    const user = await User.findOneById(userId);
 
-    if (user === undefined) {
+    if (user === null) {
       res.status(400);
       res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;

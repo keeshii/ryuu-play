@@ -43,13 +43,13 @@ export class Login extends Controller {
       return;
     }
 
-    if (await User.findOne({name: body.name})) {
+    if (await User.findOne({ where: {name: body.name} })) {
       res.status(400);
       res.send({error: ApiErrorEnum.REGISTER_NAME_EXISTS});
       return;
     }
 
-    if (await User.findOne({email: body.email})) {
+    if (await User.findOne({ where: {email: body.email} })) {
       res.status(400);
       res.send({error: ApiErrorEnum.REGISTER_EMAIL_EXISTS});
       return;
@@ -75,7 +75,7 @@ export class Login extends Controller {
   })
   public async onLogin(req: Request, res: Response) {
     const body: LoginRequest = req.body;
-    const user = await User.findOne({name: body.name});
+    const user = await User.findOne({ where: {name: body.name} });
 
     if (this.rateLimit.isLimitExceeded(req.ip)) {
       res.status(400);
@@ -83,7 +83,7 @@ export class Login extends Controller {
       return;
     }
 
-    if (user === undefined || user.password !== Md5.init(body.password)) {
+    if (user === null || user.password !== Md5.init(body.password)) {
       this.rateLimit.increment(req.ip);
       res.status(400);
       res.send({error: ApiErrorEnum.LOGIN_INVALID});

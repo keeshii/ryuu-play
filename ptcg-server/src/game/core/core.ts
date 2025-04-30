@@ -9,14 +9,17 @@ import { InvitePlayerAction } from '../store/actions/invite-player-action';
 import { Messager } from './messager';
 import { RankingCalculator } from './ranking-calculator';
 import { Scheduler, generateId } from '../../utils';
+import { Storage } from '../../storage';
 import { config } from '../../config';
 
 export class Core {
   public clients: Client[] = [];
   public games: Game[] = [];
   public messager: Messager;
+  public db: Storage;
 
-  constructor() {
+  constructor(storage: Storage) {
+    this.db = storage;
     this.messager = new Messager(this);
     const cleanerTask = new CleanerTask(this);
     cleanerTask.startTasks();

@@ -30,7 +30,7 @@ export class SocketWrapper {
           (message: string, data?: R | ApiErrorEnum) => fn && fn({message, data});
         try {
           await listener.handler(data, response);
-        } catch(error) {
+        } catch(error: any) {
           response('error', error.message);
         }
       });

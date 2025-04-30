@@ -53,8 +53,10 @@ export abstract class BotClient implements Client {
 
   public async loadDeck(): Promise<string[]> {
     const deckRows = await Deck.find({
-      user: { id: this.user.id },
-      isValid: true
+      where: {
+        user: { id: this.user.id },
+        isValid: true
+      }
     });
 
     const decks = deckRows

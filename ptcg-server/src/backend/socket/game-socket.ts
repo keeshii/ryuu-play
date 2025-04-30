@@ -109,7 +109,7 @@ export class GameSocket {
     }
     try {
       game.dispatch(this.client, action);
-    } catch (error) {
+    } catch (error: any) {
       response('error', error.message);
     }
     response('ok');
@@ -158,7 +158,7 @@ export class GameSocket {
         response('error', ApiErrorEnum.PROMPT_INVALID_RESULT);
         return;
       }
-    } catch (error) {
+    } catch (error: any) {
       response('error', error);
       return;
     }

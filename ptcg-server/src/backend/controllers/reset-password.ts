@@ -36,9 +36,9 @@ export class ResetPassword extends Controller {
     // Don't allow to create to many reset-password requests
     this.rateLimit.increment(req.ip);
 
-    const user = await User.findOne({email: body.email});
+    const user = await User.findOne({ where: {email: body.email} });
 
-    if (user === undefined) {
+    if (user === null) {
       res.status(400);
       res.send({error: ApiErrorEnum.LOGIN_INVALID});
       return;
@@ -80,9 +80,9 @@ export class ResetPassword extends Controller {
     }
 
     const userId = token.userId;
-    const user = await User.findOne(userId);
+    const user = await User.findOneById(userId);
 
-    if (user === undefined) {
+    if (user === null) {
       res.status(400);
       res.send({error: ApiErrorEnum.LOGIN_INVALID});
       return;

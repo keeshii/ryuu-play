@@ -47,8 +47,8 @@ export class BotManager {
   }
 
   private async findOrCreateUser(name: string, registered: number): Promise<User> {
-    let user = await User.findOne({name});
-    if (user === undefined) {
+    let user = await User.findOne({ where: { name } });
+    if (user === null) {
       user = new User();
       user.name = name;
       user.registered = registered;

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { FindConditions } from 'typeorm';
+import { FindOptionsWhere } from 'typeorm';
 
 import { AuthToken, Validate, check } from '../services';
 import { Controller, Get, Post } from './controller';
@@ -17,8 +17,8 @@ export class Profile extends Controller {
   @AuthToken()
   public async onMe(req: Request, res: Response) {
     const userId: number = req.body.userId;
-    const user = await User.findOne(userId);
-    if (user === undefined) {
+    const user = await User.findOneById(userId);
+    if (user === null) {
       res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
     }
@@ -30,8 +30,8 @@ export class Profile extends Controller {
   @AuthToken()
   public async onGet(req: Request, res: Response) {
     const userId: number = parseInt(req.params.id, 10);
-    const user = await User.findOne(userId);
-    if (user === undefined) {
+    const user = await User.findOneById(userId);
+    if (user === null) {
       res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
     }
@@ -47,7 +47,7 @@ export class Profile extends Controller {
     const page: number = parseInt(req.params.page, 10) || 0;
     const pageSize: number = parseInt(req.params.pageSize, 10) || defaultPageSize;
 
-    const where: FindConditions<Match>[] = userId === 0 ? []
+    const where: FindOptionsWhere<Match>[] = userId === 0 ? []
       : [ { player1: { id: userId } }, { player2: { id: userId } } ];
 
     const [matchRows, total] = await Match.findAndCount({
@@ -92,9 +92,9 @@ export class Profile extends Controller {
   public async onChangePassword(req: Request, res: Response) {
     const userId: number = req.body.userId;
     const body: { currentPassword: string, newPassword: string } = req.body;
-    const user = await User.findOne(userId);
+    const user = await User.findOneById(userId);
 
-    if (user === undefined || user.password !== Md5.init(body.currentPassword)) {
+    if (user === null || user.password !== Md5.init(body.currentPassword)) {
       res.status(400);
       res.send({error: ApiErrorEnum.LOGIN_INVALID});
       return;
@@ -120,9 +120,9 @@ export class Profile extends Controller {
   public async onChangeEmail(req: Request, res: Response) {
     const userId: number = req.body.userId;
     const body: { email: string } = req.body;
-    const user = await User.findOne(userId);
+    const user = await User.findOneById(userId);
 
-    if (user === undefined) {
+    if (user === null) {
       res.status(400);
       res.send({error: ApiErrorEnum.LOGIN_INVALID});
       return;
@@ -133,7 +133,7 @@ export class Profile extends Controller {
       return;
     }
 
-    if (await User.findOne({email: body.email})) {
+    if (await User.findOne({ where: {email: body.email} })) {
       res.status(400);
       res.send({error: ApiErrorEnum.REGISTER_EMAIL_EXISTS});
       return;

@@ -47,8 +47,8 @@ export class MessageSocket {
     }
 
     try {
-      const user = await User.findOne(params.userId);
-      if (user === undefined) {
+      const user = await User.findOneById(params.userId);
+      if (user === null) {
         throw new Error(ApiErrorEnum.PROFILE_INVALID);
       }
       const message = await this.core.messager.sendMessage(this.client, user, text);
@@ -67,8 +67,8 @@ export class MessageSocket {
     response: Response<void>): Promise<void> {
 
     try {
-      const user = await User.findOne(params.userId);
-      if (user === undefined) {
+      const user = await User.findOneById(params.userId);
+      if (user === null) {
         throw new Error(ApiErrorEnum.PROFILE_INVALID);
       }
       await this.core.messager.readMessages(this.client, user);

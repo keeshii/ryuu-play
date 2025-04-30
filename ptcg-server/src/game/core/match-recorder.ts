@@ -1,5 +1,3 @@
-import { Transaction, TransactionManager, EntityManager } from 'typeorm';
-
 import { Client } from '../client/client.interface';
 import { Core } from './core';
 import { State, GamePhase, GameWinner } from '../store/state/state';
@@ -42,9 +40,8 @@ export class MatchRecorder {
     }
   }
 
-  @Transaction()
-  private async saveMatch(state: State, @TransactionManager() manager?: EntityManager) {
-    if (!this.client1 || !this.client2 || manager === undefined) {
+  private async saveMatch(state: State) {
+    if (!this.client1 || !this.client2) {
       return;
     }
 
@@ -76,15 +73,17 @@ export class MatchRecorder {
         match.ranking2 = users[1].ranking;
       }
 
-      await manager.save(match);
+      await this.core.db.manager.transaction(async manager => {
+        await manager.save(match);
 
-      if (users.length >= 2) {
-        for (const user of users) {
-          const update = { ranking: user.ranking, lastRankingChange: user.lastRankingChange };
-          await manager.update(User, user.id, update);
+        if (users.length >= 2) {
+          for (const user of users) {
+            const update = { ranking: user.ranking, lastRankingChange: user.lastRankingChange };
+            await manager.update(User, user.id, update);
+          }
+          this.core.emit(c => c.onUsersUpdate(users));
         }
-        this.core.emit(c => c.onUsersUpdate(users));
-      }
+      });
 
     } catch (error) {
       console.error(error);

@@ -20,8 +20,8 @@ export async function authMiddleware(socket: Socket, next: (err?: any) => void):
     return next(new Error(ApiErrorEnum.AUTH_TOKEN_INVALID));
   }
 
-  const user = await User.findOne(userId);
-  if (user === undefined) {
+  const user = await User.findOneById(userId);
+  if (user === null) {
     rateLimit.increment(ipAddress);
     return next(new Error(ApiErrorEnum.AUTH_TOKEN_INVALID));
   }

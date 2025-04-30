@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { FindConditions } from 'typeorm';
+import { FindOptionsWhere } from 'typeorm';
 
 import { AuthToken, Validate, check } from '../services';
 import { Controller, Get, Post } from './controller';
@@ -61,9 +61,9 @@ export class Messages extends Controller {
     const page: number = parseInt(req.params.page, 10) || 0;
     const pageSize: number = parseInt(req.params.pageSize, 10) || defaultPageSize;
 
-    const user1 = await User.findOne(userId);
-    const user2 = await User.findOne(parseInt(req.params.id, 10));
-    if (user1 === undefined || user2 === undefined) {
+    const user1 = await User.findOneById(userId);
+    const user2 = await User.findOneById(parseInt(req.params.id, 10));
+    if (user1 === null || user2 === null) {
       res.status(400);
       res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
@@ -81,7 +81,7 @@ export class Messages extends Controller {
       return;
     }
 
-    const where: FindConditions<Message> = { conversation: { id: conversation.id } };
+    const where: FindOptionsWhere<Message> = { conversation: { id: conversation.id } };
     if (conversation.user1.id === userId) {
       where.isDeletedByUser1 = false;
     }
@@ -116,9 +116,9 @@ export class Messages extends Controller {
   public async onDeleteMessages(req: Request, res: Response) {
     const userId: number = req.body.userId;
 
-    const user1 = await User.findOne(userId);
-    const user2 = await User.findOne(parseInt(req.body.id, 10));
-    if (user1 === undefined || user2 === undefined) {
+    const user1 = await User.findOneById(userId);
+    const user2 = await User.findOneById(parseInt(req.body.id, 10));
+    if (user1 === null || user2 === null) {
       res.status(400);
       res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;

@@ -13,9 +13,9 @@ export class Decks extends Controller {
   @AuthToken()
   public async onList(req: Request, res: Response) {
     const userId: number = req.body.userId;
-    const user = await User.findOne(userId, { relations: ['decks'] });
+    const user = await User.findOne({ where: { id: userId }, relations: ['decks'] });
 
-    if (user === undefined) {
+    if (user === null) {
       res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
     }
@@ -35,9 +35,9 @@ export class Decks extends Controller {
   public async onGet(req: Request, res: Response) {
     const userId: number = req.body.userId;
     const deckId: number = parseInt(req.params.id, 10);
-    const entity = await Deck.findOne(deckId, { relations: ['user'] });
+    const entity = await Deck.findOne({ where: { id: deckId }, relations: ['user'] });
 
-    if (entity === undefined || entity.user.id !== userId) {
+    if (entity === null || entity.user.id !== userId) {
       res.send({error: ApiErrorEnum.DECK_INVALID});
       return;
     }
@@ -77,19 +77,19 @@ export class Decks extends Controller {
     }
 
     const userId: number = req.body.userId;
-    const user = await User.findOne(userId);
+    const user = await User.findOneById(userId);
 
-    if (user === undefined) {
+    if (user === null) {
       res.status(400);
       res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
     }
 
     let deck = body.id !== undefined
-      ? await Deck.findOne(body.id, { relations: ['user'] })
+      ? await Deck.findOne({ where: { id: body.id }, relations: ['user'] })
       : (() => { const d = new Deck(); d.user = user; return d; })();
 
-    if (deck === undefined || deck.user.id !== user.id) {
+    if (deck === null || deck.user.id !== user.id) {
       res.status(400);
       res.send({error: ApiErrorEnum.DECK_INVALID});
       return;
@@ -125,17 +125,17 @@ export class Decks extends Controller {
     const body: { id: number } = req.body;
 
     const userId: number = req.body.userId;
-    const user = await User.findOne(userId);
+    const user = await User.findOneById(userId);
 
-    if (user === undefined) {
+    if (user === null) {
       res.status(400);
       res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
     }
 
-    const deck = await Deck.findOne(body.id, { relations: ['user'] });
+    const deck = await Deck.findOne({ where: { id: body.id }, relations: ['user'] });
 
-    if (deck === undefined || deck.user.id !== user.id) {
+    if (deck === null || deck.user.id !== user.id) {
       res.status(400);
       res.send({error: ApiErrorEnum.DECK_INVALID});
       return;
@@ -156,17 +156,17 @@ export class Decks extends Controller {
     const body: { id: number, name: string } = req.body;
 
     const userId: number = req.body.userId;
-    const user = await User.findOne(userId);
+    const user = await User.findOneById(userId);
 
-    if (user === undefined) {
+    if (user === null) {
       res.status(400);
       res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
     }
 
-    let deck = await Deck.findOne(body.id, { relations: ['user'] });
+    let deck = await Deck.findOne({ where: { id: body.id }, relations: ['user'] });
 
-    if (deck === undefined || deck.user.id !== user.id) {
+    if (deck === null || deck.user.id !== user.id) {
       res.status(400);
       res.send({error: ApiErrorEnum.DECK_INVALID});
       return;
@@ -197,17 +197,17 @@ export class Decks extends Controller {
     const body: any = req.body;
 
     const userId: number = req.body.userId;
-    const user = await User.findOne(userId);
+    const user = await User.findOneById(userId);
 
-    if (user === undefined) {
+    if (user === null) {
       res.status(400);
       res.send({error: ApiErrorEnum.PROFILE_INVALID});
       return;
     }
 
-    const deck = await Deck.findOne(body.id, { relations: ['user'] });
+    const deck = await Deck.findOne({ where: { id: body.id }, relations: ['user'] });
 
-    if (deck === undefined || deck.user.id !== user.id) {
+    if (deck === null || deck.user.id !== user.id) {
       res.status(400);
       res.send({error: ApiErrorEnum.DECK_INVALID});
       return;
