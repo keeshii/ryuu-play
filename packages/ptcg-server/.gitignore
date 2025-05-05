@@ -2,7 +2,7 @@
 coverage
 dist
 node_modules
-avatars
+/avatars
 
-!avatars/.keep
+!/avatars/.keep
 database.sq3
