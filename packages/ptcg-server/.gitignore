@@ -1,8 +1,0 @@
-.nyc_output
-coverage
-dist
-node_modules
-./avatars
-
-!./avatars/.keep
-database.sq3

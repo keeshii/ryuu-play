@@ -12,13 +12,13 @@ fi
 
 if [ ! -f "${DATADIR}/config.js" ]; then
     cp -r "${APPDIR}/config.js" "$DATADIR"
-    sed -i 's/\.\/output/..\/output/g' "$DATADIR/config.js"
+    sed -i 's/\.\/dist/..\/dist/g' "$DATADIR/config.js"
     sed -i 's/localhost/0.0.0.0/g' "$DATADIR/config.js"
 fi
 
 if [ ! -f "${DATADIR}/start.js" ]; then
     cp -r "${APPDIR}/start.js" "${DATADIR}"
-    sed -i 's/\.\/output/..\/output/g' "${DATADIR}/start.js"
+    sed -i 's/\.\/dist/..\/dist/g' "${DATADIR}/start.js"
     sed -i "/.then(() => app.start())/i\ \ .then(() => app.configureWebUi('${WEBUIDIR}'))" "${DATADIR}/start.js"
 fi
 
