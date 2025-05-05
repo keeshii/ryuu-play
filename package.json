@@ -1,0 +1,13 @@
+{
+  "name": "@ryuu-play",
+  "version": "0.1.0",
+  "description": "Pokemon TCG game simulator",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "author": "",
+  "license": "MIT"
+}
