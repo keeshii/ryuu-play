@@ -3,11 +3,21 @@
   "version": "0.1.0",
   "description": "Pokemon TCG game simulator",
   "scripts": {
+    "start": "node start.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/common",
+    "packages/sets",
+    "packages/server",
+    "packages/play",
+    "packages/cordova"
   ],
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@ptcg/server": "*",
+    "@ptcg/sets": "*"
+  }
 }

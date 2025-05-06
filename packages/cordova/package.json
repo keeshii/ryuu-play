@@ -5,11 +5,9 @@
   "description": "Android client for the ptcg server.",
   "main": "index.js",
   "scripts": {
-    "build-server": "cd ../ptcg-server && npm run build",
-    "build-www": "cd ../ptcg-play && npm run build -- --configuration production --base-href ./ --output-path ../ptcg-cordova/www/",
+    "build": "cd ../play && npm run build -- --configuration=cordova --base-href ./ --output-path ../cordova/www/",
     "patch-cordova": "node ./patch-cordova",
-    "build": "npm run build-www && npm run patch-cordova",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Info: no test specified\""
   },
   "keywords": [
     "ecosystem:cordova"

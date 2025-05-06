@@ -24,7 +24,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@ptcg/common": "0.1.0"
+    "@ptcg/common": "*"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.31.1",

@@ -3,6 +3,7 @@ import { json } from 'body-parser';
 
 import { Core } from '../game/core/core';
 import { BotManager } from '../game/bots/bot-manager';
+import { ScansDownloader } from './common/scans-downloader';
 import { Storage } from '../storage';
 import { WebSocketServer } from './socket/websocket-server';
 import { config } from '../config';
@@ -58,9 +59,7 @@ export class App {
     define('/v1/replays', Replays);
     define('/v1/resetPassword', ResetPassword);
 
-    if (config.sets.scansDir) {
-      app.use('/scans', express.static(config.sets.scansDir));
-    }
+    app.use('/scans', express.static(config.sets.scansDir));
     app.use('/avatars', express.static(config.backend.avatarsDir));
 
     return app;
@@ -79,8 +78,15 @@ export class App {
   }
 
   public configureWebUi(absolutePath: string): void {
-    this.app.use(express.static(absolutePath));
-    this.app.use('*', (req, res) => res.sendFile(absolutePath + '/index.html'));
+    if (absolutePath) {
+      this.app.use(express.static(absolutePath));
+      this.app.use('*', (req, res) => res.sendFile(absolutePath + '/index.html'));
+    }
+  }
+
+  public downloadMissingScans(): Promise<void> {
+    const scansDownloader = new ScansDownloader();
+    return scansDownloader.downloadAllMissingCards();
   }
 
   public start(): void {

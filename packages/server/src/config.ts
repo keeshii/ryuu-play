@@ -16,7 +16,8 @@ export const config = {
     avatarMaxSize: 512,
     replayFileSize: 512 * 1024,
     rateLimitCount: 10, // Ban IP after that many wrong password errors
-    rateLimitTime: 60 * 60 * 1000 // How long the user should be banned
+    rateLimitTime: 60 * 60 * 1000, // How long the user should be banned
+    webUiDir: ''  // Directory to ptcg-play static files (empty = UI disabled)
   },
   storage: {
     type: 'mysql',
@@ -64,6 +65,7 @@ export const config = {
   },
   sets: {
     scansDir: '',
+    scansDownloadUrl: 'http://localhost/scans', // Server downloads missing scans from there
     scansUrl: '/scans/{set}/{name}.jpg'
   },
   email: {
