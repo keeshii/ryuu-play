@@ -1,0 +1,35 @@
+{
+  "name": "@ptcg/sets",
+  "version": "0.1.0",
+  "description": "Package with cards implementation.",
+  "main": "./dist/cjs/index.js",
+  "types": "./dist/cjs/index.d.ts",
+  "exports": {
+    "require": {
+      "types": "./dist/cjs/index.d.ts",
+      "default": "./dist/cjs/index.js"
+    },
+    "import": {
+      "types": "./dist/esm/index.d.ts",
+      "default": "./dist/esm/index.js"
+    }
+  },
+  "scripts": {
+    "lint": "eslint -c .eslintrc.js --ext .ts src",
+    "compile": "tsc && tsc -p tsconfig.esm.json",
+    "build": "npm run lint && npm run test && npm run compile",
+    "test": "echo \"Info: no tests specified for this package\"",
+    "coverage": "npm test"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@ptcg/common": "0.1.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.31.1",
+    "@typescript-eslint/parser": "^8.31.1",
+    "eslint": "^8.31.1",
+    "typescript": "~4.9.5"
+  }
+}

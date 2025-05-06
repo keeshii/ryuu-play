@@ -1,0 +1,9 @@
+{
+  "extends": "../common/tsconfig.esm",
+  "compilerOptions": {
+    "outDir": "dist/esm"
+  },
+  "include": [
+    "src/index.ts"
+  ]
+}

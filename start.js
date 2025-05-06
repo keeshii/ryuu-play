@@ -1,11 +1,12 @@
 require('./config');
 
+const { App } = require('@ptcg/server');
 const { BotManager } = require('@ptcg/server');
 const { SimpleBot } = require('@ptcg/server');
 const { CardManager } = require('@ptcg/common');
 const { StateSerializer } = require('@ptcg/common');
 const { config } = require('@ptcg/server');
-const { sets } = require('@ptcg/server');
+const sets = require('@ptcg/sets');
 const process = require('process');
 
 const cardManager = CardManager.getInstance();
