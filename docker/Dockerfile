@@ -12,31 +12,34 @@ RUN git clone "$REPO" /repo \
 # Install dependencies, build ptcg-server
 RUN cd /repo \
   && npm install \
-  && npm run build -w packages/ptcg-server
+  && npm run build -w packages/common \
+  && npm run build -w packages/sets \
+  && npm run build -w packages/server
 
-# Build ptcg-play
-RUN cd /repo/packages/ptcg-play \
-  && sed -i 's/allowServerChange: true/allowServerChange: false/g' src/environments/environment.prod.ts \
-  && sed -i 's/enableImageCache: s/enableImageCache: false/g' src/environments/environment.prod.ts \
-  && sed -i "s|apiUrl: 'https://ptcg.ryuu.eu'|apiUrl: '${EXTERNAL_URL}'|g" src/environments/environment.prod.ts \
-  && npm run build -- --configuration production
+# Build ptcg-play in production
+RUN cd /repo \
+  && sed -i "s|apiUrl: 'https://ptcg.ryuu.eu'|apiUrl: '${EXTERNAL_URL}'|g" packages/play/src/environments/environment.prod.ts \
+  && npm run build -w packages/play -- --configuration=production
 
 # Include only porduction dependencies only
 RUN cd /repo \
   && rm -rf node_modules \
-  && NODE_ENV=production npm ci --production --workspace=packages/ptcg-server
+  && NODE_ENV=production npm ci --omit=dev -w=packages/server -w=packages/sets
+
+# Listen to all interfaces, update path to web-ui
+RUN cd /repo \
+  && sed -i 's/localhost/0.0.0.0/g' init.js \
+  && sed -i '/webUiDir/d' init.js \
+  && sed -i 's/config.backend.webUiDir/__dirname + "\/ptcg-play"/' start.js
 
 # Create install directory
 RUN mkdir /ryuu-play \
-  && mv /repo/node_modules /ryuu-play \
-  && mv /repo/packages/ptcg-server/dist /ryuu-play \
-  && mv /repo/packages/ptcg-server/scans /ryuu-play \
-  && mv /repo/packages/ptcg-play/dist/ptcg-play /ryuu-play \
-  && mv /repo/packages/ptcg-server/*.js /ryuu-play \
-  && mkdir /ryuu-play/data
+   && cp -RL /repo/node_modules /ryuu-play \
+   && mv /repo/packages/play/dist/ptcg-play /ryuu-play \
+   && mv /repo/*.js /ryuu-play \
+   && mkdir /ryuu-play/data
 
-
-FROM node:18.20.8-alpine
+FROM node:18.20.8-slim
 ENV NODE_ENV production
 
 USER node:node

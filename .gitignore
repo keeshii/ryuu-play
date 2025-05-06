@@ -4,10 +4,10 @@ coverage
 dist
 node_modules
 
-./avatars
-!./avatars/.keep
+/avatars
+!/avatars/.keep
 
-./scans
-!./scans/.keep
+/scans/*
+!/scans/.keep
 
-database.sq3
+/database.sq3
