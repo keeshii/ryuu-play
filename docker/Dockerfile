@@ -1,7 +1,7 @@
 FROM node:18.20.8 as base
 
 ARG REPO=https://github.com/keeshii/ryuu-play.git
-ARG TAG=0.1.0
+ARG TAG=master
 ARG EXTERNAL_URL=http://localhost:12021
 
 # Download repository

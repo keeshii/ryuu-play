@@ -1,0 +1,6 @@
+• Update to Angular 16
+• Update to Typeorm 0.3
+• Updated project structure for npm workspaces
+• Server package split into three: "common", "sets" and "server"
+• Card images removed from repository
+• Downloading missing card images from external source
