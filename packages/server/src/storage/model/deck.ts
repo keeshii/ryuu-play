@@ -22,6 +22,9 @@ export class Deck extends BaseEntity {
   public isValid: boolean = false;
 
   @Column()
+  public formatNames: string = '[]';
+
+  @Column()
   public cardTypes: string = '[]';
 
 }

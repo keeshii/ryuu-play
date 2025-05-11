@@ -78,7 +78,7 @@ export class LoginService {
         );
 
         // Fetch cards data
-        this.cardsBaseService.setCards(cards.cards);
+        this.cardsBaseService.loadCardsInfo(cards.cardsInfo);
 
         // Store data in the session
         this.sessionService.set({

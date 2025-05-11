@@ -14,6 +14,7 @@ export interface GameInfo {
   phase: GamePhase;
   turn: number;
   activePlayer: number;
+  formatName: string;
   players: PlayerInfo[];
 }
 

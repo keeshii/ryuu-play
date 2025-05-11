@@ -1,3 +1,5 @@
+@import '../../theme/variables.scss';
+
 .spacer {
   flex: 1 1 auto;
 }
@@ -5,4 +7,8 @@
 ptcg-energy,
 .ptcg-energy-container {
   display: flex;
+}
+
+ptcg-badge + ptcg-badge {
+  margin-left: map-get($padding, small);
 }

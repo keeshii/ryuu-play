@@ -15,6 +15,7 @@ import { MainService } from '../api/services/main.service';
 import { SelectPopupOption } from '../shared/alert/select-popup/select-popup.component';
 import { SessionService } from '../shared/session/session.service';
 import { UserInfoMap } from '../shared/session/session.interface';
+import { DeckListEntry } from '../api/interfaces/deck.interface';
 
 @UntilDestroy()
 @Component({
@@ -68,7 +69,7 @@ export class GamesComponent implements OnInit {
 
   }
 
-  private showCreateGamePopup(decks: SelectPopupOption<number>[]): Promise<CreateGamePopupResult> {
+  private showCreateGamePopup(decks: DeckListEntry[]): Promise<CreateGamePopupResult> {
     const dialog = this.dialog.open(CreateGamePopupComponent, {
       maxWidth: '100%',
       width: '350px',
@@ -85,8 +86,7 @@ export class GamesComponent implements OnInit {
         untilDestroyed(this),
         switchMap(decks => {
           const options = decks.decks
-            .filter(deckEntry => deckEntry.isValid)
-            .map(deckEntry => ({value: deckEntry.id, viewValue: deckEntry.name}));
+            .filter(deckEntry => deckEntry.isValid);
 
           if (options.length === 0) {
             this.alertService.alert(

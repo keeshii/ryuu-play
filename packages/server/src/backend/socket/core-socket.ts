@@ -128,6 +128,7 @@ export class CoreSocket {
       phase: state.phase,
       turn: state.turn,
       activePlayer: state.activePlayer,
+      formatName: state.rules.formatName,
       players: players
     };
   }

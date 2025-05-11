@@ -32,6 +32,9 @@ export class Match extends BaseEntity {
   @Column()
   public winner: GameWinner = GameWinner.NONE;
 
+  @Column()
+  public formatName: string = '';
+
   @Column({ type: 'bigint', transformer: [ bigint ] })
   public created: number = Date.now();
 

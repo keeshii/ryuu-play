@@ -25,7 +25,7 @@ import { environment } from '../../../environments/environment';
 export class MatchTableComponent implements OnInit {
 
   public GameWinner = GameWinner;
-  public displayedColumns: string[] = ['id', 'player1', 'player2', 'date', 'actions'];
+  public displayedColumns: string[] = ['id', 'player1', 'player2', 'formatTag', 'date', 'actions'];
   public matches: MatchInfo[] = [];
   public id = 0;
   public loading = false;
@@ -40,8 +40,8 @@ export class MatchTableComponent implements OnInit {
   @Input() set userId(userId: number) {
     this.id = userId;
     this.displayedColumns = userId !== 0
-      ? ['id', 'player1', 'player2', 'date', 'ranking', 'actions']
-      : ['id', 'player1', 'player2', 'date', 'actions'];
+      ? ['id', 'player1', 'player2', 'formatTag', 'date', 'ranking', 'actions']
+      : ['id', 'player1', 'player2', 'formatTag', 'date', 'actions'];
 
     this.refresh();
   }

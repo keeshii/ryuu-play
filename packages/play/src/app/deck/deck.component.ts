@@ -16,7 +16,7 @@ import { DeckService } from '../api/services/deck.service';
 })
 export class DeckComponent implements OnInit {
 
-  public displayedColumns: string[] = ['name', 'cardTypes', 'isValid', 'actions'];
+  public displayedColumns: string[] = ['name', 'cardTypes', 'formatTags', 'isValid', 'actions'];
   public decks: DeckListEntry[] = [];
   public loading = false;
 

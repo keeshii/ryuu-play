@@ -10,4 +10,5 @@ export interface MatchInfo {
   rankingStake2: number;
   winner: GameWinner;
   created: number;
+  formatName: string;
 }

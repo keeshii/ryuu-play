@@ -6,6 +6,7 @@ import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/
 import { TranslateModule } from '@ngx-translate/core';
 
 import { CreateGamePopupComponent, CreateGamePopupData } from './create-game-popup.component';
+import { CardsBaseService } from '../../shared/cards/cards-base.service';
 
 describe('CreateGamePopupComponent', () => {
   let component: CreateGamePopupComponent;
@@ -13,7 +14,7 @@ describe('CreateGamePopupComponent', () => {
   let data: CreateGamePopupData;
 
   beforeEach(waitForAsync(() => {
-    data = { decks: [ { value: 1, viewValue: 'name' } ] };
+    data = { decks: [ { id: 0, name: 'name', formatNames: [], cardType: [], isValid: true } ] };
 
     TestBed.configureTestingModule({
       imports: [
@@ -23,6 +24,7 @@ describe('CreateGamePopupComponent', () => {
       ],
       declarations: [ CreateGamePopupComponent ],
       providers: [
+        { provide: CardsBaseService, useValue: { getAllFormats: () => [] } },
         { provide: MatDialogRef, useValue: {} },
         { provide: MAT_DIALOG_DATA, useValue: data }
       ],

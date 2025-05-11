@@ -77,7 +77,8 @@ export class Profile extends Controller {
         ranking2: match.ranking2,
         rankingStake2: match.rankingStake2,
         winner: match.winner,
-        created: match.created
+        created: match.created,
+        formatName: match.formatName
       }));
 
     res.send({ok: true, matches, users, total});

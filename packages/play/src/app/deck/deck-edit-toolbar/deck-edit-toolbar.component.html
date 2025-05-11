@@ -26,6 +26,15 @@
 
   <mat-toolbar-row class="search-toolbar">
     <mat-form-field floatLabel="never" appearance="legacy">
+      <mat-select [placeholder]="'DECK_EDIT_ALL_FORMATS' | translate" (selectionChange)="onFormatChange($event)">
+        <mat-option value="">{{ 'DECK_EDIT_ALL_FORMATS' | translate }}</mat-option>
+        <mat-option *ngFor="let formatName of formatNames" [value]="formatName">
+          {{ formatName }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field floatLabel="never" appearance="legacy">
       <mat-select multiple [placeholder]="'DECK_EDIT_ALL_CARDS' | translate" (selectionChange)="onSuperTypeChange($event)">
         <mat-option *ngFor="let superType of superTypes" [value]="superType.value">
           {{ superType.label | translate }}

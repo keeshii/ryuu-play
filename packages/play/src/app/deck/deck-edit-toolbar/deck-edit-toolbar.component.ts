@@ -3,6 +3,7 @@ import { CardType, SuperType } from '@ptcg/common';
 import { MatLegacySelectChange as MatSelectChange } from '@angular/material/legacy-select';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+import { CardsBaseService } from '../../shared/cards/cards-base.service';
 import { Deck } from '../../api/interfaces/deck.interface';
 import { DeckEditToolbarFilter } from './deck-edit-toolbar-filter.interface';
 import { ImportDeckPopupService } from '../import-deck-popup/import-deck-popup.service';
@@ -26,6 +27,8 @@ export class DeckEditToolbarComponent {
   @Output() import = new EventEmitter<string[]>();
 
   @Output() export = new EventEmitter<void>();
+
+  public formatNames: string[];
 
   public cardTypes = [
     {value: CardType.NONE, label: 'LABEL_NONE' },
@@ -51,9 +54,13 @@ export class DeckEditToolbarComponent {
   public filterValue: DeckEditToolbarFilter;
 
   constructor(
-    private importDeckPopupService: ImportDeckPopupService
+    private importDeckPopupService: ImportDeckPopupService,
+    private cardBaseService: CardsBaseService
   ) {
+    this.formatNames = cardBaseService.getAllFormats().map(f => f.name);
+
     this.filterValue = {
+      formatName: '',
       searchValue: '',
       superTypes: [],
       cardTypes: [],
@@ -66,6 +73,11 @@ export class DeckEditToolbarComponent {
 
   public onSearch(value: string) {
     this.filterValue.searchValue = value;
+    this.filterChange.next({...this.filterValue});
+  }
+
+  public onFormatChange(change: MatSelectChange) {
+    this.filterValue.formatName = change.value;
     this.filterChange.next({...this.filterValue});
   }
 

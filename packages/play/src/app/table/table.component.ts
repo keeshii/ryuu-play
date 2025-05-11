@@ -74,8 +74,11 @@ export class TableComponent implements OnInit {
         finalize(() => { this.loading = false; }),
         untilDestroyed(this),
         switchMap(decks => {
+          const formatName = this.gameState.state.rules.formatName;
+
           const options = decks.decks
             .filter(deckEntry => deckEntry.isValid)
+            .filter(deckEntry => !formatName || deckEntry.formatNames.includes(formatName))
             .map(deckEntry => ({value: deckEntry.id, viewValue: deckEntry.name}));
 
           if (options.length === 0) {

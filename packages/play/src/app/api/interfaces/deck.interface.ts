@@ -4,6 +4,7 @@ import { CardType } from '@ptcg/common';
 export interface DeckListEntry {
   id: number;
   name: string;
+  formatNames: string[];
   cardType: CardType[];
   isValid: boolean;
 }
@@ -16,6 +17,7 @@ export interface Deck {
   id: number;
   name: string;
   cardType: CardType[];
+  formatNames: string[];
   isValid: boolean;
   cards: string[];
 }

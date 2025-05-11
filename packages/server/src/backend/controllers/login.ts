@@ -115,7 +115,7 @@ export class Login extends Controller {
 
   private getServerConfig(): ServerConfig {
     return {
-      apiVersion: 2,
+      apiVersion: 3,
       defaultPageSize: config.backend.defaultPageSize,
       scansUrl: config.sets.scansUrl,
       avatarsUrl: config.backend.avatarsUrl,

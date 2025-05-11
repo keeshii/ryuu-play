@@ -1,5 +1,6 @@
 export * from './cards/card-manager';
 export * from './cards/deck-analyser';
+export * from './cards/format.interface';
 
 export * from './bot-arbiter';
 export * from './game-settings';

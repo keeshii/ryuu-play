@@ -35,6 +35,14 @@
         </td>
       </ng-container>
 
+      <!-- Format tag -->
+      <ng-container matColumnDef="formatTag">
+        <th mat-header-cell *matHeaderCellDef translate>LABEL_FORMAT</th>
+        <td mat-cell *matCellDef="let match">
+          <ptcg-badge>{{ match.formatName || ('GAMES_FORMAT_UNLIMITED' | translate) }}</ptcg-badge>
+        </td>
+      </ng-container>
+
       <!-- Date -->
       <ng-container matColumnDef="date">
         <th mat-header-cell *matHeaderCellDef translate>LABEL_DATE</th>

@@ -54,6 +54,7 @@ export class MatchRecorder {
     match.ranking2 = match.player2.ranking;
     match.rankingStake1 = 0;
     match.rankingStake2 = 0;
+    match.formatName = state.rules.formatName;
 
     this.replay.setCreated(match.created);
     this.replay.player1 = this.buildReplayPlayer(match.player1);

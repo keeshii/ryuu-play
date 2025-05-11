@@ -11,7 +11,7 @@ import { SessionService } from '../../shared/session/session.service';
 })
 export class GamesTableComponent {
 
-  public displayedColumns: string[] = ['id', 'player1', 'player2', 'prizes', 'turn', 'actions'];
+  public displayedColumns: string[] = ['id', 'player1', 'player2', 'prizes', 'turn', 'formatTag', 'actions'];
   public games$: Observable<{ game: GameInfo, users: UserInfo[] }[]>;
 
   constructor(

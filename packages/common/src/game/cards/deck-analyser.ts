@@ -3,6 +3,7 @@ import { CardManager } from './card-manager';
 import { EnergyCard } from '../../store/card/energy-card';
 import { EnergyType, Stage, CardType, CardTag } from '../../store/card/card-types';
 import { PokemonCard } from '../../store/card/pokemon-card';
+import { Format } from './format.interface';
 
 export class DeckAnalyser {
 
@@ -79,6 +80,18 @@ export class DeckAnalyser {
     }
 
     return cardTypes;
+  }
+
+  public getDeckFormats(): Format[] {
+    const cardManager = CardManager.getInstance();
+    let formats = cardManager.getAllFormats().slice();
+
+    for (let i = 0; i < this.cardNames.length; i++) {
+      const cardFormats = cardManager.getCardFormats(this.cardNames[i]);
+      formats = formats.filter(f => cardFormats.includes(f));
+    }
+
+    return formats;
   }
 
 }

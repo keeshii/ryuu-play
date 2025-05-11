@@ -139,6 +139,31 @@ cardManager.defineSet(sets.setOp9);
 cardManager.defineSet(sets.setHgss);
 ```
 
+The app also supports game formats. The game format defines which cards are allowed to play and the default set of rules.
+
+```
+const { CardManager, Rules } = require('@ptcg/common');
+const sets = require('@ptcg/sets');
+
+const cardManager = CardManager.getInstance();
+cardManager.defineFormat('Standard', [
+  sets.setDiamondAndPearl,
+  sets.setBlackAndWhite
+]);
+
+cardManager.defineFormat('Extended', [
+  sets.setDiamondAndPearl,
+  sets.setBlackAndWhite,
+  sets.setOp9,
+  sets.setHgss
+], new Rules({ // rules (optional)
+  firstTurnDrawCard: true,
+  firstTurnUseSupporter: false
+}));
+```
+
+It's fine to reuse same sets in multiple formats. The game engine will handle this situation and it will not result in multiple clones of the same card being stored in memory.
+
 #### Adding bots
 
 You can create autonomous AI players on your private server. They work as regular player that always has time to play with you. Initially there is one bot loaded, called `bot`, of course you can always add more. They are defined in the file `ptcg-server/start.js`.

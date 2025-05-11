@@ -29,6 +29,14 @@
         </td>
       </ng-container>
 
+      <!-- Format tags -->
+      <ng-container matColumnDef="formatTags">
+        <th mat-header-cell *matHeaderCellDef translate>LABEL_FORMAT</th>
+        <td mat-cell *matCellDef="let deck">
+          <ptcg-badge *ngFor="let name of deck.formatNames">{{ name }}</ptcg-badge>
+        </td>
+      </ng-container>
+
       <!-- Is valid -->
       <ng-container matColumnDef="isValid">
         <th mat-header-cell *matHeaderCellDef translate>DECK_VALID</th>

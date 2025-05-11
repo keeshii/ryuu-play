@@ -1,5 +1,7 @@
 export class Rules {
 
+  public formatName = '';
+
   public firstTurnDrawCard = true;
 
   public firstTurnUseSupporter = true;

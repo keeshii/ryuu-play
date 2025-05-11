@@ -6,10 +6,20 @@
 
     <!-- Deck -->
     <mat-form-field>
+      <mat-label translate>LABEL_FORMAT</mat-label>
+      <mat-select [(value)]="format" (selectionChange)="onFormatChange($event.value)">
+        <mat-option *ngFor="let option of formats" [value]="option">
+          {{ option.name || ('GAMES_ALL_CARDS_ALLOWED' | translate) }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Deck -->
+    <mat-form-field>
       <mat-label translate>GAMES_YOUR_DECK</mat-label>
-      <mat-select [(value)]="deckId">
-        <mat-option *ngFor="let option of decks" [value]="option.value">
-          {{option.viewValue}}
+      <mat-select [(value)]="deck">
+        <mat-option *ngFor="let option of decks" [value]="option">
+          {{ option.name }}
         </mat-option>
       </mat-select>
     </mat-form-field>
@@ -19,7 +29,7 @@
       <mat-label translate>GAMES_TIME_LIMIT</mat-label>
       <mat-select [(value)]="settings.timeLimit">
         <mat-option *ngFor="let option of timeLimits" [value]="option.value">
-          {{option.viewValue | translate }}
+          {{ option.viewValue | translate }}
         </mat-option>
       </mat-select>
     </mat-form-field>

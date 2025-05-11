@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Card, StateSerializer, SuperType, PokemonCard, EnergyCard, CardType, TrainerCard } from '@ptcg/common';
+import { Card, StateSerializer, SuperType, PokemonCard, EnergyCard, CardType,
+  TrainerCard, CardsInfo, CardManager, Format } from '@ptcg/common';
 
 import { ApiService } from '../../api/api.service';
 import { CardInfoPopupData, CardInfoPopupComponent } from './card-info-popup/card-info-popup.component';
@@ -15,15 +16,19 @@ export class CardsBaseService {
 
   private cards: Card[] = [];
   private names: string[] = [];
+  private cardManager: CardManager;
 
   constructor(
     private apiService: ApiService,
     private dialog: MatDialog,
     private sessionService: SessionService
-  ) { }
+  ) {
+    this.cardManager = CardManager.getInstance();
+  }
 
-  public setCards(cards: Card[]) {
-    this.cards = cards;
+  public loadCardsInfo(cardsInfo: CardsInfo) {
+    this.cardManager.loadCardsInfo(cardsInfo);
+    this.cards = this.cardManager.getAllCards().slice();
     this.names = this.cards.map(c => c.fullName);
     this.cards.sort(this.compareCards);
     StateSerializer.setKnownCards(this.cards);
@@ -63,12 +68,20 @@ export class CardsBaseService {
     return c1.fullName < c2.fullName ? -1 : 1;
   }
 
+  public getAllFormats() {
+    return this.cardManager.getAllFormats();
+  }
+
   public getCards(): Card[] {
     return this.cards;
   }
 
   public getCardNames(): string[] {
     return this.names;
+  }
+
+  public isCardFromFormat(cardName: string, name: string): boolean {
+    return this.cardManager.getCardFormats(cardName).some(f => f.name === name);
   }
 
   public getScanUrl(card: Card): string {
@@ -81,7 +94,7 @@ export class CardsBaseService {
   }
 
   public getCardByName(cardName: string): Card | undefined {
-    return this.cards.find(c => c.fullName === cardName);
+    return this.cardManager.getCardByName(cardName);
   }
 
   public showCardInfo(data: CardInfoPopupData = {}): Promise<CardInfoPaneAction> {

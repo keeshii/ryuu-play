@@ -4,6 +4,7 @@ import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/lega
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { CardsBaseService } from '../../shared/cards/cards-base.service';
 import { DeckEditToolbarComponent } from './deck-edit-toolbar.component';
 
 describe('DeckEditToolbarComponent', () => {
@@ -16,6 +17,9 @@ describe('DeckEditToolbarComponent', () => {
         MatDialogModule,
         RouterTestingModule,
         TranslateModule.forRoot()
+      ],
+      providers: [
+        { provide: CardsBaseService, useValue: { getAllFormats: () => [] } }
       ],
       declarations: [ DeckEditToolbarComponent ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ]

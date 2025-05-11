@@ -68,8 +68,11 @@ export class PromptInvitePlayerComponent implements OnInit {
       ).
       subscribe({
         next: decks => {
+          const formatName = this.gameState.state.rules.formatName;
+
           this.decks = decks.decks
             .filter(deckEntry => deckEntry.isValid)
+            .filter(deckEntry => !formatName || deckEntry.formatNames.includes(formatName))
             .map(deckEntry => ({value: deckEntry.id, viewValue: deckEntry.name}));
           if (this.decks.length > 0) {
             this.deckId = this.decks[0].value;

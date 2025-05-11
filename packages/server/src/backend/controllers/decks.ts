@@ -24,6 +24,7 @@ export class Decks extends Controller {
       id: deck.id,
       name: deck.name,
       isValid: deck.isValid,
+      formatNames: JSON.parse(deck.formatNames),
       cardTypes: JSON.parse(deck.cardTypes)
     }));
 
@@ -46,6 +47,7 @@ export class Decks extends Controller {
       id: entity.id,
       name: entity.name,
       isValid: entity.isValid,
+      formatNames: JSON.parse(entity.formatNames),
       cardTypes: JSON.parse(entity.cardTypes),
       cards: JSON.parse(entity.cards)
     };
@@ -99,6 +101,7 @@ export class Decks extends Controller {
     deck.name = body.name.trim();
     deck.cards = JSON.stringify(body.cards);
     deck.isValid = deckUtils.isValid();
+    deck.formatNames = JSON.stringify(deckUtils.getDeckFormats().map(f => f.name));
     deck.cardTypes = JSON.stringify(deckUtils.getDeckType());
 
     try {
