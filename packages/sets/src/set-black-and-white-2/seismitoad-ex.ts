@@ -27,13 +27,13 @@ export class SeismitoadEx extends PokemonCard {
     {
       name: 'Quaking Punch',
       cost: [ CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 30,
+      damage: '30',
       text: 'Your opponent can\'t play any Item cards from his or her hand ' +
         'during his or her next turn.'
     }, {
       name: 'Grenade Hammer',
       cost: [ CardType.WATER, CardType.WATER, CardType.COLORLESS ],
-      damage: 130,
+      damage: '130',
       text: 'This attack does 30 damage to 2 of your Benched Pokemon. ' +
         '(Don\'t apply Weakness and Resistance for Benched Pokemon.)'
     },

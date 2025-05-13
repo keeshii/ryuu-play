@@ -24,7 +24,7 @@ export class Shelmet extends PokemonCard {
   public attacks = [{
     name: 'Body Slam',
     cost: [ CardType.GRASS, CardType.GRASS ],
-    damage: 20,
+    damage: '20',
     text: 'Flip a coin. If heads, the Defending Pokemon is now Paralyzed.'
   }];
 

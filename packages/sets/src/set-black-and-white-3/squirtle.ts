@@ -32,7 +32,7 @@ export class Squirtle extends PokemonCard {
   public attacks = [{
     name: 'Water Splash',
     cost: [ CardType.WATER, CardType.COLORLESS ],
-    damage: 10,
+    damage: '10+',
     text: 'Flip a coin. If heads, this attack does 20 more damage.'
   }];
 

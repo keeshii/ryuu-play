@@ -72,7 +72,7 @@ export class Dusknoir extends PokemonCard {
   public attacks = [{
     name: 'Shadow Punch',
     cost: [ CardType.PSYCHIC, CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS ],
-    damage: 60,
+    damage: '60',
     text: 'This attack\'s damage isn\'t affected by Resistance.'
   }];
 

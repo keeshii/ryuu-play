@@ -97,7 +97,7 @@ export class Pichu extends PokemonCard {
     {
       name: 'Playground',
       cost: [ ],
-      damage: 0,
+      damage: '',
       text: 'Each player may search his or her deck for as many Basic ' +
         'Pokemon as he or she likes, put them onto his or her Bench, and ' +
         'shuffle his or her deck afterward. (You put your Pokemon on the ' +

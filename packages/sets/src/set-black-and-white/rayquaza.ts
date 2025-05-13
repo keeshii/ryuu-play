@@ -22,13 +22,13 @@ export class Rayquaza extends PokemonCard {
     {
       name: 'Dragon Pulse',
       cost: [ CardType.LIGHTNING ],
-      damage: 40,
+      damage: '40',
       text: 'Discard the top 2 cards of your deck.'
     },
     {
       name: 'Shred',
       cost: [CardType.FIRE, CardType.LIGHTNING, CardType.COLORLESS ],
-      damage: 90,
+      damage: '90',
       text: 'This attack\'s damage isn\'t affected by any effects on ' +
         'the Defending Pokemon.'
     }

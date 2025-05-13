@@ -54,14 +54,14 @@ export class Wurmple extends PokemonCard {
     {
       name: 'Flock',
       cost: [ CardType.GRASS ],
-      damage: 0,
+      damage: '',
       text: 'Search your deck for Wurmple and put it onto your Bench. ' +
         'Shuffle your deck afterward.'
     },
     {
       name: 'Tackle',
       cost: [ CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 20,
+      damage: '20',
       text: ''
     }
   ];

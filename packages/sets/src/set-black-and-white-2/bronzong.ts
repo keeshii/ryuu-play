@@ -41,7 +41,7 @@ export class Bronzong extends PokemonCard {
   public attacks = [{
     name: 'Hammer In',
     cost: [ CardType.METAL, CardType.METAL, CardType.COLORLESS ],
-    damage: 60,
+    damage: '60',
     text: ''
   }];
 

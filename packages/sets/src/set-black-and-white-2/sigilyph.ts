@@ -32,7 +32,7 @@ export class Sigilyph extends PokemonCard {
   public attacks = [{
     name: 'Psychic',
     cost: [ CardType.PSYCHIC, CardType.COLORLESS, CardType.COLORLESS ],
-    damage: 50,
+    damage: '50+',
     text: 'Does 10 more damage for each Energy attached to ' +
       'the Defending Pokemon.'
   }];

@@ -33,7 +33,7 @@ export class Empoleon extends PokemonCard {
     {
       name: 'Attack Command',
       cost: [ CardType.WATER ],
-      damage: 10,
+      damage: '10×',
       text: 'Does 10 damage times the number of Pokemon in play (both yours ' +
         'and your opponent\'s).'
     }

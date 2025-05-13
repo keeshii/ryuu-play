@@ -29,13 +29,13 @@ export class Wartortle extends PokemonCard {
   public attacks = [{
     name: 'Withdraw',
     cost: [ CardType.COLORLESS ],
-    damage: 0,
+    damage: '',
     text: 'Flip a coin. If heads, prevent all damage done to this Pokemon ' +
       'by attacks during your opponent\'s next turn.'
   }, {
     name: 'Waterfall',
     cost: [ CardType.WATER, CardType.WATER, CardType.COLORLESS ],
-    damage: 60,
+    damage: '60',
     text: ''
 
   }];

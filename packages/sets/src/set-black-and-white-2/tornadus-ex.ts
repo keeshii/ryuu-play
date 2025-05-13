@@ -66,13 +66,13 @@ export class TornadusEx extends PokemonCard {
     {
       name: 'Blow Through',
       cost: [ CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 30,
+      damage: '30+',
       text: 'If there is any Stadium card in play, this attack does 30 ' +
         'more damage.'
     }, {
       name: 'Power Blast',
       cost: [ CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 100,
+      damage: '100',
       text: 'Flip a coin. If tails, discard an Energy attached to this Pokemon.'
     },
   ];

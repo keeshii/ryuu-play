@@ -34,7 +34,7 @@ export class Blastoise extends PokemonCard {
     {
       name: 'Hydro Pump',
       cost: [ CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 60,
+      damage: '60+',
       text: 'Does 10 more damage for each W Energy attached to this Pokemon.'
     }
   ];

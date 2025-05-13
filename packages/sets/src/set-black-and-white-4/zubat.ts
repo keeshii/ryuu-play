@@ -31,7 +31,7 @@ export class Zubat extends PokemonCard {
   public attacks = [{
     name: 'Wing Attack',
     cost: [ CardType.PSYCHIC, CardType.COLORLESS ],
-    damage: 20,
+    damage: '20',
     text: ''
   }];
 

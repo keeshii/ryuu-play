@@ -33,7 +33,7 @@ export class Emboar extends PokemonCard {
     {
       name: 'Heat Crash',
       cost: [ CardType.FIRE, CardType.FIRE, CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 80,
+      damage: '80',
       text: ''
     }
   ];

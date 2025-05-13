@@ -34,7 +34,7 @@ export class Rotom extends PokemonCard {
     {
       name: 'Poltergeist',
       cost: [ CardType.PSYCHIC, CardType.COLORLESS ],
-      damage: 30,
+      damage: '30+',
       text: 'Look at your opponent\'s hand. This attack does 30 damage plus ' +
         '10 more damage for each Trainer, Supporter, and Stadium card in ' +
         'your opponent\'s hand.'

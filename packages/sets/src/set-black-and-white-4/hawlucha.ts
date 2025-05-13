@@ -31,7 +31,7 @@ export class Hawlucha extends PokemonCard {
   public attacks = [{
     name: 'Flying Press',
     cost: [ CardType.FIGHTING ],
-    damage: 60,
+    damage: '60',
     text: 'If your opponent\'s Active Pokemon isn\'t a Pokemon-EX, ' +
       'this attack does nothing.'
   }];

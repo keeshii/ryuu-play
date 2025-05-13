@@ -84,7 +84,7 @@ export class VirizionEx extends PokemonCard {
     {
       name: 'Emerald Slash',
       cost: [ CardType.GRASS, CardType.COLORLESS ],
-      damage: 50,
+      damage: '50',
       text: 'You may search your deck for 2 G Energy cards and attach them ' +
         'to 1 of your Benched Pokemon. Shuffle your deck afterward.'
     }

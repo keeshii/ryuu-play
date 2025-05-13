@@ -30,12 +30,12 @@ export class Buneary extends PokemonCard {
   public attacks = [{
     name: 'Dizzy Punch',
     cost: [ CardType.COLORLESS ],
-    damage: 10,
+    damage: '10×',
     text: 'Flip 2 coins. This attack does 10 damage times the number of heads.'
   }, {
     name: 'Defense Curl',
     cost: [ CardType.COLORLESS, CardType.COLORLESS ],
-    damage: 0,
+    damage: '',
     text: 'Flip a coin. If heads, prevent all damage done to Buneary by ' +
       'attacks during your opponent\'s next turn.'
   }];

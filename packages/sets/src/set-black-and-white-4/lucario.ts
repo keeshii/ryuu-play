@@ -25,12 +25,12 @@ export class Lucario extends PokemonCard {
     {
       name: 'Vacuum Wave',
       cost: [ CardType.METAL ],
-      damage: 50,
+      damage: '50',
       text: 'This attack\'s damage isn\'t affected by Weakness or Resistance.'
     }, {
       name: 'Fight Alone',
       cost: [ CardType.METAL, CardType.COLORLESS ],
-      damage: 30,
+      damage: '30+',
       text: 'If you have fewer Pokemon in play than your opponent, this ' +
         'attack does 60 more damage for each Pokemon fewer you have in play.'
     },

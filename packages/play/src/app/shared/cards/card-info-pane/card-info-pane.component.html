@@ -61,7 +61,7 @@
             {{ attack.name }}
           </div>
           <div class="ptcg-u-spacer"></div>
-          <div class="attack-damage" *ngIf="attack.damage > 0">
+          <div class="attack-damage" *ngIf="attack.damage !== ''">
             {{ attack.damage }}
           </div>
         </div>

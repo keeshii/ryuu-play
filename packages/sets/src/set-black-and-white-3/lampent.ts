@@ -60,14 +60,14 @@ export class Lampent extends PokemonCard {
     {
       name: 'Cursed Drop',
       cost: [ CardType.PSYCHIC ],
-      damage: 0,
+      damage: '',
       text: 'Put 3 damage counters on your opponent\'s Pokemon ' +
         'in any way you like.'
     },
     {
       name: 'Night March',
       cost: [ CardType.PSYCHIC, CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 20,
+      damage: '20×',
       text: 'This attack does 20 damage times the number of Pokemon ' +
         'in your discard pile that have the Night March attack.'
     }

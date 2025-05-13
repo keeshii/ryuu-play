@@ -22,7 +22,7 @@ export class Riolu extends PokemonCard {
   public attacks = [{
     name: 'Double Smash',
     cost: [ CardType.COLORLESS ],
-    damage: 10,
+    damage: '10×',
     text: 'Flip 2 coins. This attack does 10 damage times the number of heads.'
   }];
 

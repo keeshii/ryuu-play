@@ -35,7 +35,7 @@ export class DarkraiEx extends PokemonCard {
     {
       name: 'Night Spear',
       cost: [ CardType.DARK, CardType.DARK, CardType.COLORLESS ],
-      damage: 90,
+      damage: '90',
       text: 'Does 30 damage to 1 of your opponent\'s Benched Pokemon. ' +
         '(Don\'t apply Weakness and Resistance for Benched Pokemon.)'
     }

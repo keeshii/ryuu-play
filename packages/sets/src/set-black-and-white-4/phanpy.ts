@@ -18,12 +18,12 @@ export class Phanpy extends PokemonCard {
   public attacks = [{
     name: 'Tackle',
     cost: [ CardType.FIGHTING ],
-    damage: 10,
+    damage: '10',
     text: ''
   }, {
     name: 'Rollout',
     cost: [ CardType.FIGHTING, CardType.FIGHTING, CardType.COLORLESS ],
-    damage: 50,
+    damage: '50',
     text: ''
   }];
 

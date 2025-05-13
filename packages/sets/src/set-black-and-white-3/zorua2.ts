@@ -58,14 +58,14 @@ export class Zorua2 extends PokemonCard {
   public attacks = [{
     name: 'Ascension',
     cost: [ CardType.DARK ],
-    damage: 0,
+    damage: '',
     text: 'Search your deck for a card that evolves from this Pokemon ' +
       'and put it onto this Pokemon. (This counts as evolving this Pokemon.) ' +
       'Shuffle your deck afterward.'
   }, {
     name: 'Scratch',
     cost: [ CardType.COLORLESS, CardType.COLORLESS ],
-    damage: 20,
+    damage: '20',
     text: ''
   }];
 

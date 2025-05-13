@@ -83,7 +83,7 @@ export class Hydreigon extends PokemonCard {
   public attacks = [{
     name: 'Dragonblast',
     cost: [ CardType.PSYCHIC, CardType.DARK, CardType.DARK, CardType.COLORLESS ],
-    damage: 140,
+    damage: '140',
     text: 'Discard 2 D Energy attached to this Pokemon.'
   }];
 

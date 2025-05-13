@@ -36,7 +36,7 @@ export class Golbat extends PokemonCard {
     {
       name: 'Swoop Across',
       cost: [ CardType.COLORLESS ],
-      damage: 0,
+      damage: '',
       text: 'This attack does 10 damage to each of your opponent\'s Pokemon. ' +
         '(Don\'t apply Weakness and Resistance for Benched Pokemon.)'
     }

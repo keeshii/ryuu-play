@@ -31,13 +31,13 @@ export class Lopunny extends PokemonCard {
   public attacks = [{
     name: 'Jump Kick',
     cost: [ CardType.COLORLESS, CardType.COLORLESS ],
-    damage: 20,
+    damage: '20',
     text: 'Does 20 damage to 1 of your opponent\'s Benched Pokemon. (Don\'t ' +
       'apply Weakness and Resistance for Benched Pokemon.)'
   }, {
     name: 'Jazzed',
     cost: [ CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS ],
-    damage: 50,
+    damage: '50',
     text: 'If Lopunny evolved from Buneary during this turn, remove all ' +
       'damage counters from Lopunny.'
   }];

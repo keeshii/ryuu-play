@@ -27,14 +27,14 @@ export class RayquazaEx extends PokemonCard {
     {
       name: 'Celestial Roar',
       cost: [ CardType.COLORLESS ],
-      damage: 0,
+      damage: '',
       text: 'Discard the top 3 cards of your deck. If any of those cards ' +
         'are Energy cards, attach them to this Pokemon.'
     },
     {
       name: 'Dragon Burst',
       cost: [CardType.FIRE, CardType.LIGHTNING ],
-      damage: 60,
+      damage: '60×',
       text: 'Discard all basic R Energy or all basic L Energy attached to ' +
         'this Pokemon. This attack does 60 damage times the number of Energy ' +
         'cards you discarded.'

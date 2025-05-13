@@ -25,14 +25,14 @@ export class Raichu extends PokemonCard {
     {
       name: 'Circle Circuit',
       cost: [ CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 20,
+      damage: '20×',
       text: 'This attack does 20 damage times the number of your ' +
         'Benched Pokemon.'
     },
     {
       name: 'Thunderbolt',
       cost: [ CardType.LIGHTNING, CardType.LIGHTNING, CardType.COLORLESS ],
-      damage: 100,
+      damage: '100',
       text: 'Discard all Energy attached to this Pokemon.'
     }
   ];

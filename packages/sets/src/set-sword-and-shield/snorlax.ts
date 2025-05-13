@@ -32,7 +32,7 @@ export class Snorlax extends PokemonCard {
     {
       name: 'Body Slam',
       cost: [ CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 100,
+      damage: '100',
       text: 'Flip a coin. If heads, your opponent\'s Active Pokemon is now Paralyzed.'
     }
   ];

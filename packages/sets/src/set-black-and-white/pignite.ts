@@ -23,14 +23,14 @@ export class Pignite extends PokemonCard {
     {
       name: 'Flame Charge',
       cost: [ CardType.COLORLESS ],
-      damage: 0,
+      damage: '',
       text: 'Search your deck for a R Energy card and attach it to this ' +
         'Pokemon. Shuffle your deck afterward.'
     },
     {
       name: 'Heat Crash',
       cost: [ CardType.FIRE, CardType.FIRE, CardType.COLORLESS ],
-      damage: 50,
+      damage: '50',
       text: ''
     }
   ];

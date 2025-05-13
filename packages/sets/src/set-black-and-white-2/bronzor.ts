@@ -18,7 +18,7 @@ export class Bronzor extends PokemonCard {
   public attacks = [{
     name: 'Tackle',
     cost: [ CardType.METAL ],
-    damage: 10,
+    damage: '10',
     text: ''
   }];
 

@@ -53,7 +53,7 @@ export class UnownR extends PokemonCard {
     {
       name: 'Hidden Power',
       cost: [ ],
-      damage: 0,
+      damage: '',
       text: 'Move any number of basic Energy cards attached to your Pokémon ' +
         'to your other Pokémon in any way you like.'
     }

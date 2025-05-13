@@ -22,7 +22,7 @@ export class Duskull extends PokemonCard {
   public attacks = [{
     name: 'Confuse Ray',
     cost: [ CardType.PSYCHIC ],
-    damage: 0,
+    damage: '',
     text: 'The Defending Pokemon is now Confused.'
   }];
 

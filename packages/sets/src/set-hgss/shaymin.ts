@@ -35,7 +35,7 @@ export class Shaymin extends PokemonCard {
     {
       name: 'Energy Bloom',
       cost: [ CardType.GRASS, CardType.COLORLESS ],
-      damage: 30,
+      damage: '30',
       text: 'Remove 3 damage counters from each of your Pokemon that has ' +
         'any Energy attached to it.'
     }

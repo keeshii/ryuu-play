@@ -25,7 +25,7 @@ export class Pikachu extends PokemonCard {
     {
       name: 'Growl',
       cost: [ CardType.COLORLESS ],
-      damage: 0,
+      damage: '',
       text: 'During your opponent\'s next turn, any damage done by attacks ' +
         'from the Defending Pokemon is reduced by 20 (before applying ' +
         'Weakness and Resistance).'
@@ -33,7 +33,7 @@ export class Pikachu extends PokemonCard {
     {
       name: 'Numb',
       cost: [ CardType.LIGHTNING, CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 30,
+      damage: '30',
       text: 'If Pikachu evolved from Pichu during this turn, the Defending ' +
         'Pokemon is now Paralyzed.'
     }

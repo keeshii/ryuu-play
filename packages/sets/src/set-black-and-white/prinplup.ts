@@ -23,13 +23,13 @@ export class Prinplup extends PokemonCard {
     {
       name: 'Razor Wing',
       cost: [ CardType.COLORLESS ],
-      damage: 20,
+      damage: '20',
       text: ''
     },
     {
       name: 'Fury Attack',
       cost: [ CardType.WATER, CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 30,
+      damage: '30×',
       text: 'Flip 3 coins. This attack does 30 damage times the number of heads.'
     }
   ];

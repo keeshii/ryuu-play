@@ -35,7 +35,7 @@ export class Gothitelle extends PokemonCard {
   public attacks = [{
     name: 'Madkinesis',
     cost: [ CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS ],
-    damage: 30,
+    damage: '30+',
     text: 'Does 20 more damage for each P Energy attached to this Pokemon.'
   }];
 

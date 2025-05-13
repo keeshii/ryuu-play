@@ -69,13 +69,13 @@ export class Croagunk extends PokemonCard {
   public attacks = [{
     name: 'Knock Off',
     cost: [ CardType.COLORLESS ],
-    damage: 0,
+    damage: '',
     text: 'Flip a coin. If heads, choose 1 card from your opponent\'s hand ' +
       'without looking and discard it.'
   }, {
     name: 'Nimble',
     cost: [ CardType.PSYCHIC, CardType.PSYCHIC ],
-    damage: 30,
+    damage: '30',
     text: 'If you have Turtwig in play, remove from Croagunk the number of ' +
       'damage counters equal to the damage you did to the Defending Pokemon.'
   }];

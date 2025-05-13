@@ -34,7 +34,7 @@ export class Exeggcute extends PokemonCard {
   public attacks = [{
     name: 'Seed Bomb',
     cost: [ CardType.GRASS, CardType.COLORLESS ],
-    damage: 20,
+    damage: '20',
     text: ''
   }];
 

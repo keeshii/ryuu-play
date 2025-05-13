@@ -16,7 +16,7 @@ export class Litleo extends PokemonCard {
   public attacks = [{
     name: 'Combustion',
     cost: [ CardType.FIRE, CardType.FIRE, CardType.COLORLESS ],
-    damage: 60,
+    damage: '60',
     text: ''
   }];
 

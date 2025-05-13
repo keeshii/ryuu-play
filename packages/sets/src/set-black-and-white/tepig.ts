@@ -16,8 +16,8 @@ export class Tepig extends PokemonCard {
   public retreat = [ CardType.COLORLESS ];
 
   public attacks = [
-    { name: 'Tackle', cost: [ CardType.FIRE ], damage: 10, text: '' },
-    { name: 'Rollout', cost: [ CardType.FIRE, CardType.COLORLESS ], damage: 20, text: '' }
+    { name: 'Tackle', cost: [ CardType.FIRE ], damage: '10', text: '' },
+    { name: 'Rollout', cost: [ CardType.FIRE, CardType.COLORLESS ], damage: '20', text: '' }
   ];
 
   public set: string = 'BW';

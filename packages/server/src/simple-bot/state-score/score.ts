@@ -23,7 +23,7 @@ export abstract class SimpleScore {
     }
 
     let damage = 0;
-    card.attacks.forEach(a => damage += a.damage);
+    card.attacks.forEach(a => damage += parseInt(a.damage, 10));
 
     let score = 0;
     score += scores.hp * card.hp;

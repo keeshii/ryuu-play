@@ -21,7 +21,7 @@ export class Gothita extends PokemonCard {
     {
       name: 'Trip Over',
       cost: [ CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 10,
+      damage: '10+',
       text: 'Flip a coin. If heads, this attack does 20 more damage.'
 
     }

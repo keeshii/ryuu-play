@@ -26,14 +26,14 @@ export class Vanilluxe extends PokemonCard {
   public attacks = [{
     name: 'Double Freeze',
     cost: [ CardType.WATER, CardType.COLORLESS ],
-    damage: 40,
+    damage: '40×',
     text: 'Flip 2 coins. This attack does 40 damage times the number of heads. ' +
       'If either of them is heads, the Defending Pokemon is now Paralyzed.'
   },
   {
     name: 'Frost Breath',
     cost: [ CardType.WATER, CardType.WATER ],
-    damage: 60,
+    damage: '60',
     text: ''
   }];
 

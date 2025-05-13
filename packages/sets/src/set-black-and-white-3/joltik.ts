@@ -22,13 +22,13 @@ export class Joltik extends PokemonCard {
     {
       name: 'Gnaw',
       cost: [ CardType.LIGHTNING ],
-      damage: 10,
+      damage: '10',
       text: ''
     },
     {
       name: 'Night March',
       cost: [ CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 20,
+      damage: '20×',
       text: 'This attack does 20 damage times the number of Pokemon ' +
         'in your discard pile that have the Night March attack.'
     }

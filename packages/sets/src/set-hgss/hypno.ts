@@ -36,7 +36,7 @@ export class Hypno extends PokemonCard {
     {
       name: 'Psychic Shot',
       cost: [ CardType.PSYCHIC, CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 30,
+      damage: '30',
       text: 'Does 10 damage to 1 of your opponent\'s Benched Pokemon. ' +
         '(Don\'t apply Weakness and Resistance for Benched Pokemon.)'
     }

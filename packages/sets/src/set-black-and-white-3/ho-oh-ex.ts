@@ -101,7 +101,7 @@ export class HoOhEx extends PokemonCard {
     {
       name: 'Rainbow Burn',
       cost: [ CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 20,
+      damage: '20+',
       text: 'Does 20 more damage for each different type of basic Energy ' +
         'attached to this Pokemon.'
     }

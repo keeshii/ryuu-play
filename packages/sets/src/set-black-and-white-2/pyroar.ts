@@ -36,7 +36,7 @@ export class Pyroar extends PokemonCard {
   public attacks = [{
     name: 'Scorching Fang',
     cost: [ CardType.FIRE, CardType.COLORLESS, CardType.COLORLESS ],
-    damage: 60,
+    damage: '60+',
     text: 'You may discard a R Energy attached to this Pokemon. If you do, ' +
       'this attack does 30 more damage.'
   }];

@@ -108,13 +108,13 @@ export class Zoroark extends PokemonCard {
   public attacks = [{
     name: 'Nasty Plot',
     cost: [ CardType.DARK ],
-    damage: 0,
+    damage: '',
     text: 'Search your deck for a card and put it into your hand. ' +
       'Shuffle your deck afterward.'
   }, {
     name: 'Foul Play',
     cost: [ CardType.COLORLESS, CardType.COLORLESS ],
-    damage: 0,
+    damage: '',
     text: 'Choose 1 of the Defending Pokemon\'s attacks and use it ' +
       'as this attack.'
   }];

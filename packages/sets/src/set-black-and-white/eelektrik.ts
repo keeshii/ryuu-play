@@ -34,7 +34,7 @@ export class Eelektrik extends PokemonCard {
     {
       name: 'Electric Ball',
       cost: [ CardType.LIGHTNING, CardType.LIGHTNING, CardType.COLORLESS ],
-      damage: 50,
+      damage: '50',
       text: ''
     }
   ];

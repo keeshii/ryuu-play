@@ -65,14 +65,14 @@ export class Zweilous extends PokemonCard {
     {
       name: 'Crunch',
       cost: [ CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 30,
+      damage: '30',
       text: 'Flip a coin. If heads, discard an Energy attached to ' +
         'the Defending Pokemon.'
     },
     {
       name: 'Dragon Claw',
       cost: [ CardType.PSYCHIC, CardType.DARK, CardType.DARK ],
-      damage: 80,
+      damage: '80',
       text: ''
     }
   ];

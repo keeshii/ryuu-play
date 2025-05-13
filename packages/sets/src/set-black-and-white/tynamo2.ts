@@ -22,7 +22,7 @@ export class Tynamo2 extends PokemonCard {
     {
       name: 'Spark',
       cost: [ CardType.LIGHTNING ],
-      damage: 10,
+      damage: '10',
       text: 'Does 10 damage to 1 of your opponent\'s Benched Pokemon. ' +
         '(Don\'t apply Weakness and Resistance for Benched Pokemon.)'
     }

@@ -24,14 +24,14 @@ export class Pikachu extends PokemonCard {
     {
       name: 'Nuzzle',
       cost: [ CardType.COLORLESS ],
-      damage: 0,
+      damage: '',
       text: 'Flip a coin. If heads, your opponent\'s Active Pokemon ' +
         'is now Paralyzed.'
     },
     {
       name: 'Quick Attack',
       cost: [ CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 20,
+      damage: '20+',
       text: 'Flip a coin. If heads, this attack does 10 more damage.'
     }
   ];

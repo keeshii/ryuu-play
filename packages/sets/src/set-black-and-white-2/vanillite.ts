@@ -23,7 +23,7 @@ export class Vanillite extends PokemonCard {
   public attacks = [{
     name: 'Icicle Barb',
     cost: [ CardType.WATER ],
-    damage: 10,
+    damage: '10+',
     text: 'Flip a coin. If heads, this attack does 10 more damage.'
   }];
 

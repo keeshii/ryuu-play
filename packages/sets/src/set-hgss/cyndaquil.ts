@@ -14,8 +14,8 @@ export class Cyndaquil extends PokemonCard {
   public retreat = [ CardType.COLORLESS ];
 
   public attacks = [
-    { name: 'Beat', cost: [CardType.FIRE], damage: 10, text: '' },
-    { name: 'Flare', cost: [CardType.FIRE, CardType.COLORLESS], damage: 20, text: '' }
+    { name: 'Beat', cost: [CardType.FIRE], damage: '10', text: '' },
+    { name: 'Flare', cost: [CardType.FIRE, CardType.COLORLESS], damage: '20', text: '' }
   ];
 
   public set: string = 'HGSS';

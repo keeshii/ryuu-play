@@ -26,7 +26,7 @@ export class Tyrogue extends PokemonCard {
     {
       name: 'Mischievous Punch',
       cost: [ ],
-      damage: 30,
+      damage: '30',
       text: 'This attack\'s damage isn\'t affected by Weakness or Resistance. ' +
         'Tyrogue is now Asleep.'
     }

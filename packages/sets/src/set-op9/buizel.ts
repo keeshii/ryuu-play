@@ -72,13 +72,13 @@ export class Buizel extends PokemonCard {
   public attacks = [{
     name: 'Whirlpool',
     cost: [ CardType.WATER ],
-    damage: 0,
+    damage: '',
     text: 'Flip a coin. If heads, discard an Energy attached to ' +
       'the Defending Pokemon.'
   }, {
     name: 'Super Fast',
     cost: [ CardType.WATER, CardType.WATER ],
-    damage: 30,
+    damage: '30',
     text: 'If you have Pachirisu in play, flip a coin. If heads, prevent all ' +
       'effects of an attack, including damage, done to Buizel during your ' +
       'opponent\'s next turn.'

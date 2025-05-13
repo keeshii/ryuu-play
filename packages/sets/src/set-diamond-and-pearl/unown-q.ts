@@ -81,7 +81,7 @@ export class UnownQ extends PokemonCard {
     {
       name: 'Hidden Power',
       cost: [ CardType.COLORLESS ],
-      damage: 20,
+      damage: '20',
       text: ''
     }
   ];

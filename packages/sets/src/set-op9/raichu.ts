@@ -26,13 +26,13 @@ export class Raichu extends PokemonCard {
     {
       name: 'Slam',
       cost: [ CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 30,
+      damage: '30×',
       text: 'Flip 2 coins. This attack does 30 damage times the number of heads.'
     },
     {
       name: 'High Voltage',
       cost: [ CardType.LIGHTNING, CardType.LIGHTNING, CardType.LIGHTNING ],
-      damage: 60,
+      damage: '60',
       text: 'If Raichu evolved from Pikachu this turn, this attack\'s base ' +
         'damage is 100 instead of 60.'
     }

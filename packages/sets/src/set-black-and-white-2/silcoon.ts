@@ -26,7 +26,7 @@ export class Silcoon extends PokemonCard {
   public attacks = [{
     name: 'String Shot',
     cost: [ CardType.GRASS ],
-    damage: 10,
+    damage: '10',
     text: 'Flip a coin. If heads, the Defending Pokemon is now Paralyzed.'
   }];
 

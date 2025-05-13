@@ -31,12 +31,12 @@ export class Turtwig extends PokemonCard {
   public attacks = [{
     name: 'Absorb',
     cost: [ CardType.GRASS ],
-    damage: 10,
+    damage: '10',
     text: 'Remove 1 damage counter from Turtwig.'
   }, {
     name: 'Parboil',
     cost: [ CardType.GRASS, CardType.COLORLESS, CardType.COLORLESS ],
-    damage: 40,
+    damage: '40+',
     text: 'If you have Chimchar in play, this attack does 40 damage plus 20 ' +
       'more damage and the Defending Pokemon is now Burned.'
   }];

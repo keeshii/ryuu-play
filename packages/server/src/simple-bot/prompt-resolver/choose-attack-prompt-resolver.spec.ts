@@ -51,17 +51,17 @@ describe('ChooseAttackPromptResolver', () => {
     // given
     prompt.cards[0].attacks = [{
       name: 'Attack 1',
-      damage: 10,
+      damage: '10',
       cost: [],
       text: ''
     }, {
       name: 'Attack 2',
-      damage: 30,
+      damage: '30',
       cost: [ CardType.COLORLESS ],
       text: ''
     }, {
       name: 'Attack 3',
-      damage: 30,
+      damage: '30',
       cost: [],
       text: ''
     }];
@@ -74,7 +74,7 @@ describe('ChooseAttackPromptResolver', () => {
     expect(action instanceof ResolvePromptAction).toBeTruthy();
     expect(result).toEqual({
       name: 'Attack 2',
-      damage: 30,
+      damage: '30',
       cost: [ CardType.COLORLESS ],
       text: ''
     });
@@ -84,12 +84,12 @@ describe('ChooseAttackPromptResolver', () => {
     // given
     prompt.cards[0].attacks = [{
       name: 'Attack 1',
-      damage: 100,
+      damage: '100',
       cost: [],
       text: ''
     }, {
       name: 'Attack 2',
-      damage: 0,
+      damage: '',
       cost: [],
       text: ''
     }];
@@ -103,7 +103,7 @@ describe('ChooseAttackPromptResolver', () => {
     expect(action instanceof ResolvePromptAction).toBeTruthy();
     expect(result).toEqual({
       name: 'Attack 2',
-      damage: 0,
+      damage: '',
       cost: [],
       text: ''
     });
@@ -113,7 +113,7 @@ describe('ChooseAttackPromptResolver', () => {
     // given
     prompt.cards[0].attacks = [{
       name: 'Attack 1',
-      damage: 10,
+      damage: '10',
       cost: [],
       text: ''
     }];

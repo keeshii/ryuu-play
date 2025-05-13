@@ -36,7 +36,7 @@ export class Munna extends PokemonCard {
   public attacks = [{
     name: 'Psyshot',
     cost: [ CardType.PSYCHIC, CardType.COLORLESS ],
-    damage: 20,
+    damage: '20',
     text: ''
   }];
 

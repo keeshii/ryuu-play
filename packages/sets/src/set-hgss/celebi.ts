@@ -36,7 +36,7 @@ export class Celebi extends PokemonCard {
     {
       name: 'Time Circle',
       cost: [ CardType.GRASS, CardType.PSYCHIC, CardType.COLORLESS ],
-      damage: 30,
+      damage: '30',
       text: 'During your opponent\'s next turn, prevent all damage done to ' +
         'Celebi by attacks from your opponent\'s Stage 1 or Stage 2 Pokemon.'
     }

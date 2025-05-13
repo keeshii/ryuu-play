@@ -32,7 +32,7 @@ export class MrMime extends PokemonCard {
   public attacks = [{
     name: 'Psy Bolt',
     cost: [ CardType.PSYCHIC, CardType.COLORLESS ],
-    damage: 20,
+    damage: '20',
     text: 'Flip a coin. If heads, the Defending Pokemon is now Paralyzed.'
   }];
 

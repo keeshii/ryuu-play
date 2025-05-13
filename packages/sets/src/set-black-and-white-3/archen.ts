@@ -22,12 +22,12 @@ export class Archen extends PokemonCard {
   public attacks = [{
     name: 'Rock Throw',
     cost: [ CardType.FIGHTING ],
-    damage: 20,
+    damage: '20',
     text: ''
   }, {
     name: 'Acrobatics',
     cost: [ CardType.COLORLESS, CardType.COLORLESS ],
-    damage: 20,
+    damage: '20+',
     text: 'Flip 2 coins. This attack does 20 more damage for each heads.'
   }];
 

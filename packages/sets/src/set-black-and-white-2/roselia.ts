@@ -25,14 +25,14 @@ export class Roselia extends PokemonCard {
     {
       name: 'Double Whip',
       cost: [ CardType.COLORLESS ],
-      damage: 10,
+      damage: '10×',
       text: 'Flip 2 coins. This attack does 10 damage times the number ' +
         'of heads.'
     },
     {
       name: 'Relaxing Fragrance',
       cost: [ CardType.GRASS ],
-      damage: 0,
+      damage: '',
       text: 'Heal 30 damage and remove all Special Conditions from ' +
         'this Pokemon.'
     }

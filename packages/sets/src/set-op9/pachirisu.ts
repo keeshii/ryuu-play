@@ -33,12 +33,12 @@ export class Pachirisu extends PokemonCard {
   public attacks = [{
     name: 'Thunder Wave',
     cost: [ CardType.LIGHTNING ],
-    damage: 10,
+    damage: '10',
     text: 'Flip a coin. If heads, the Defending Pokemon is now Paralyzed.'
   }, {
     name: 'Poison Berry',
     cost: [ CardType.LIGHTNING, CardType.COLORLESS ],
-    damage: 20,
+    damage: '20+',
     text: 'If you have Croagunk in play, this attack does 20 damage plus 20 ' +
       'more damage and the Defending Pokemon is now Poisoned.'
   }];

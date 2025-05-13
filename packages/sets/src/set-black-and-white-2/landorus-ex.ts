@@ -28,13 +28,13 @@ export class LandorusEx extends PokemonCard {
     {
       name: 'Hammerhead',
       cost: [ CardType.FIGHTING ],
-      damage: 30,
+      damage: '30',
       text: 'Does 30 damage to 1 of your opponent\'s Benched Pokemon. ' +
         '(Don\'t apply Weakness and Resistance for Benched Pokemon.)'
     }, {
       name: 'Land\'s Judgment',
       cost: [ CardType.FIGHTING, CardType.FIGHTING, CardType.COLORLESS ],
-      damage: 80,
+      damage: '80+',
       text: 'You may discard all F Energy attach to this Pokemon. ' +
         'If you do, this attack does 70 more damage.'
     },

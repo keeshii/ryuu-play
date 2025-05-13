@@ -59,12 +59,12 @@ export class Oddish extends PokemonCard {
   public attacks = [{
     name: 'Ram',
     cost: [ CardType.COLORLESS ],
-    damage: 10,
+    damage: '10',
     text: ''
   }, {
     name: 'Find a Friend',
     cost: [ CardType.GRASS ],
-    damage: 0,
+    damage: '',
     text: 'Flip a coin. If heads, search your deck for a G Pokemon, ' +
       'show it to your opponent, and put it into your hand. ' +
       'Shuffle your deck afterward.'

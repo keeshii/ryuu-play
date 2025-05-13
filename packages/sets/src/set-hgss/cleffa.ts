@@ -26,7 +26,7 @@ export class Cleffa extends PokemonCard {
     {
       name: 'Eeeeeeek',
       cost: [ ],
-      damage: 0,
+      damage: '',
       text: 'Shuffle your hand into your deck, then draw 6 cards. Cleffa is ' +
         'now Asleep.'
     }

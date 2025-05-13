@@ -59,7 +59,7 @@ export class CrobatG extends PokemonCard {
     {
       name: 'Toxic Fang',
       cost: [ CardType.PSYCHIC, CardType.COLORLESS ],
-      damage: 0,
+      damage: '',
       text: 'The Defending Pokémon is now Poisoned. Put 2 damage counters ' +
       ' instead of 1 on the Defending Pokémon between turns.'
     }

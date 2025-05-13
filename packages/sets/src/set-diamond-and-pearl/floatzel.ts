@@ -73,13 +73,13 @@ export class Floatzel extends PokemonCard {
   public attacks = [{
     name: 'Agility',
     cost: [ CardType.COLORLESS, CardType.COLORLESS ],
-    damage: 20,
+    damage: '20',
     text: 'Flip a coin. If heads, prevent all effects of an attack, ' +
       'including damage, done to Floatzel during your opponent\'s next turn.'
   }, {
     name: 'Aqua Jet',
     cost: [ CardType.WATER, CardType.WATER, CardType.COLORLESS ],
-    damage: 60,
+    damage: '60',
     text: 'Flip a coin. If heads, this attack does 10 damage to 1 ' +
       'of your opponent\'s Benched Pokemon. (Don\'t apply Weakness ' +
       'and Resistance for Benched Pokemon.)'

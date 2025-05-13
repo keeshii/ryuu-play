@@ -22,13 +22,13 @@ export class Sableye extends PokemonCard {
     {
       name: 'Confuse Ray',
       cost: [ CardType.COLORLESS ],
-      damage: 10,
+      damage: '10',
       text: 'Flip a coin. If heads, the Defending Pokemon is now Confused.'
     },
     {
       name: 'Junk Hunt',
       cost: [ CardType.DARK ],
-      damage: 0,
+      damage: '',
       text: 'Put 2 Item cards from your discard pile into your hand.'
     }
   ];

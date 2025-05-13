@@ -17,8 +17,8 @@ export class Buizel extends PokemonCard {
   public retreat = [ CardType.COLORLESS ];
 
   public attacks = [
-    { name: 'Headbutt', cost: [], damage: 10, text: '' },
-    { name: 'Surf', cost: [CardType.WATER, CardType.WATER], damage: 30, text: '' }
+    { name: 'Headbutt', cost: [], damage: '10', text: '' },
+    { name: 'Surf', cost: [CardType.WATER, CardType.WATER], damage: '30', text: '' }
   ];
 
   public set: string = 'DP';

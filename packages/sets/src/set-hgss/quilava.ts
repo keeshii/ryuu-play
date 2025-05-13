@@ -26,13 +26,13 @@ export class Quilava extends PokemonCard {
     {
       name: 'Flare',
       cost: [ CardType.FIRE, CardType.COLORLESS ],
-      damage: 30,
+      damage: '30',
       text: ''
     },
     {
       name: 'Flamethrower',
       cost: [ CardType.FIRE, CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 60,
+      damage: '60',
       text: 'Discard an Energy attached to Quilava.'
     }
   ];

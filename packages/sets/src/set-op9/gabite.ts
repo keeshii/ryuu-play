@@ -32,13 +32,13 @@ export class Gabite extends PokemonCard {
   public attacks = [{
     name: 'Burrow',
     cost: [ CardType.COLORLESS ],
-    damage: 0,
+    damage: '',
     text: 'Flip a coin. If heads, prevent all damage done to Gabite by ' +
       'attacks during your opponent\'s next turn.'
   }, {
     name: 'Distorted Wave',
     cost: [ CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS ],
-    damage: 60,
+    damage: '60',
     text: 'Before doing damage, remove 2 damage counters from the Defending ' +
       'Pokemon.'
   }];

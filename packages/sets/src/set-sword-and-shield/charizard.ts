@@ -34,7 +34,7 @@ export class Charizard extends PokemonCard {
     {
       name: 'Royal Blaze',
       cost: [ CardType.FIRE, CardType.FIRE ],
-      damage: 100,
+      damage: '100+',
       text: 'This attack does 50 more damage for each Leon card ' +
         'in your discard pile.'
     }

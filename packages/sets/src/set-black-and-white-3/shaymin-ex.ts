@@ -33,7 +33,7 @@ export class ShayminEx extends PokemonCard {
     {
       name: 'Sky Return',
       cost: [ CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 30,
+      damage: '30',
       text: 'Return this Pokemon and all cards attached to it to your hand.'
     }
   ];

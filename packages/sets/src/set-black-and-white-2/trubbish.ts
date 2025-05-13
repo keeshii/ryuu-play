@@ -22,12 +22,12 @@ export class Trubbish extends PokemonCard {
   public attacks = [{
     name: 'Pound',
     cost: [ CardType.COLORLESS, CardType.COLORLESS ],
-    damage: 20,
+    damage: '20',
     text: ''
   }, {
     name: 'Poison Gas',
     cost: [ CardType.PSYCHIC, CardType.COLORLESS, CardType.COLORLESS ],
-    damage: 30,
+    damage: '30',
     text: 'The Defending Pokemon is now Poisoned.'
   }];
 

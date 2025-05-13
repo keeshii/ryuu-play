@@ -33,7 +33,7 @@ export class ChooseAttackPromptResolver extends PromptResolver {
 
     attacks.sort((a, b) => {
       if (a.damage !== b.damage) {
-        return b.damage - a.damage;
+        return parseInt(b.damage, 10) - parseInt(a.damage, 10);
       }
       return b.cost.length - a.cost.length;
     });

@@ -172,7 +172,7 @@ export function setupPhaseReducer(store: StoreLike, state: State, action: Action
         throw new GameError(GameMessage.INVALID_DECK);
       }
       const formatName = state.rules.formatName;
-      if (formatName && !deckAnalyser.getDeckFormats().find(f => f.name === formatName)) {
+      if (formatName && !deckAnalyser.getDeckFormats().some(f => f.name === formatName)) {
         throw new GameError(GameMessage.INVALID_DECK);
       }
 

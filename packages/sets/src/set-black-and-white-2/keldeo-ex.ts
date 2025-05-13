@@ -34,7 +34,7 @@ export class KeldeoEx extends PokemonCard {
     {
       name: 'Secret Sword',
       cost: [ CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 50,
+      damage: '50+',
       text: 'Does 20 more damage for each W Energy attached to this Pokemon.'
     }
   ];

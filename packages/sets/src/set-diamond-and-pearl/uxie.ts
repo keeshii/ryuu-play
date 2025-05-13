@@ -61,7 +61,7 @@ export class Uxie extends PokemonCard {
     {
       name: 'Psychic Restore',
       cost: [ CardType.COLORLESS ],
-      damage: 20,
+      damage: '20',
       text: 'You may put Uxie and all cards attached to it on the bottom of ' +
         'your deck in any order.'
     }

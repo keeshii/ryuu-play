@@ -22,7 +22,7 @@ export class Ralts extends PokemonCard {
     {
       name: 'Psy Bolt',
       cost: [ CardType.COLORLESS ],
-      damage: 0,
+      damage: '',
       text: 'Flip a coin. If heads, the Defending Pokemon is now Paralyzed.'
     }
   ];

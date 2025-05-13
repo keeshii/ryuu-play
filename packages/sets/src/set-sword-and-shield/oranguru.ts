@@ -30,7 +30,7 @@ export class Oranguru extends PokemonCard {
     {
       name: 'Whap Down',
       cost: [ CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 70,
+      damage: '70',
       text: ''
     }
   ];

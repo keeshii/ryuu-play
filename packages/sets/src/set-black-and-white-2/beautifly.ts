@@ -77,7 +77,7 @@ export class Beautifly extends PokemonCard {
   public attacks = [{
     name: 'Whirlwind',
     cost: [ CardType.GRASS, CardType.COLORLESS, CardType.COLORLESS ],
-    damage: 80,
+    damage: '80',
     text: 'You may have your opponent switch his or her Active Pokemon ' +
       'with 1 of his or her Benched Pokemon.'
   }];

@@ -22,14 +22,14 @@ export class Durant extends PokemonCard {
     {
       name: 'Devour',
       cost: [ CardType.METAL ],
-      damage: 0,
+      damage: '',
       text: 'For each of your Durant in play, discard the top card of your ' +
         'opponent\'s deck.'
     },
     {
       name: 'Vice Grip',
       cost: [ CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 30,
+      damage: '30',
       text: ''
     },
   ];

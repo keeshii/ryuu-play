@@ -22,14 +22,14 @@ export class Drowzee extends PokemonCard {
     {
       name: 'Sleep Inducer',
       cost: [ CardType.PSYCHIC ],
-      damage: 0,
+      damage: '',
       text: 'Switch the Defending Pokemon with 1 of your opponent\'s ' +
         'Benched Pokemon. The new Defending Pokemon is now Asleep.'
     },
     {
       name: 'Gentle Slap',
       cost: [ CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 20,
+      damage: '20',
       text: ''
     },
   ];

@@ -26,13 +26,13 @@ export class Garchomp extends PokemonCard {
     {
       name: 'Dragon Rage',
       cost: [ CardType.COLORLESS ],
-      damage: 80,
+      damage: '80',
       text: 'Flip 2 coins. If either of them is tails, this attack does nothing.'
     },
     {
       name: 'Jet Sword',
       cost: [ CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 100,
+      damage: '100',
       text: 'Discard 2 Energy attached to Garchomp and this attack does 10 ' +
         'damage to each of your opponent\'s Benched Pokemon. (Don\'t apply ' +
         'Weakness and Resistance for Benched Pokemon.)'

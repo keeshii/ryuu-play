@@ -25,7 +25,7 @@ export class Zorua extends PokemonCard {
   public attacks = [{
     name: 'Lunge',
     cost: [ CardType.COLORLESS, CardType.COLORLESS ],
-    damage: 30,
+    damage: '30',
     text: 'Flip a coin. If tails, this attack does nothing.'
   }];
 

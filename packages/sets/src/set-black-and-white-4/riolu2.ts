@@ -22,12 +22,12 @@ export class Riolu2 extends PokemonCard {
   public attacks = [{
     name: 'Punch',
     cost: [ CardType.COLORLESS ],
-    damage: 10,
+    damage: '10',
     text: ''
   }, {
     name: 'Quick Attack',
     cost: [ CardType.FIGHTING, CardType.COLORLESS ],
-    damage: 10,
+    damage: '10+',
     text: 'Flip a coin. If heads, this attack does 20 more damage.'
   }];
 

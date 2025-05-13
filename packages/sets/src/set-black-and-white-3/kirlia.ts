@@ -24,7 +24,7 @@ export class Kirlia extends PokemonCard {
     {
       name: 'Psy Bolt',
       cost: [ CardType.PSYCHIC ],
-      damage: 20,
+      damage: '20',
       text: 'Flip a coin. If heads, the Defending Pokemon is now Paralyzed.'
     }
   ];

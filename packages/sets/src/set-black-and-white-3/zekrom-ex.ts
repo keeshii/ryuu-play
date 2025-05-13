@@ -25,12 +25,12 @@ export class ZekromEx extends PokemonCard {
     {
       name: 'Glinting Claw',
       cost: [ CardType.LIGHTNING, CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 50,
+      damage: '50+',
       text: 'Flip a coin. If heads, this attack does 30 more damage.'
     }, {
       name: 'Strong Volt',
       cost: [ CardType.LIGHTNING, CardType.LIGHTNING, CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 150,
+      damage: '150',
       text: 'Discard 2 Energy attached to this Pokemon.'
     },
   ];

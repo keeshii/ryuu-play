@@ -43,7 +43,7 @@ export class Chandelure extends PokemonCard {
   public attacks = [{
     name: 'Eerie Glow',
     cost: [ CardType.PSYCHIC, CardType.PSYCHIC, CardType.COLORLESS ],
-    damage: 50,
+    damage: '50',
     text: 'The Defending Pokemon is now Burned and Confused.'
   }];
 

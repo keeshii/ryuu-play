@@ -24,13 +24,13 @@ export class Gothorita extends PokemonCard {
     {
       name: 'Double Slap',
       cost: [ CardType.COLORLESS ],
-      damage: 20,
+      damage: '20×',
       text: 'Flip 2 coins. This attack does 20 damage times the number of heads.'
     },
     {
       name: 'Psybeam',
       cost: [ CardType.PSYCHIC, CardType.COLORLESS ],
-      damage: 20,
+      damage: '20',
       text: 'The Defending Pokemon is now Confused.'
     },
   ];

@@ -36,7 +36,7 @@ export class Rotom extends PokemonCard {
     {
       name: 'Plasma Arrow',
       cost: [ CardType.LIGHTNING ],
-      damage: 0,
+      damage: '',
       text: 'Choose 1 of your opponent\'s Pokemon. This attack does 20 ' +
         'damage for each Energy attached to that Pokemon. This attack\'s ' +
         'damage isn\'t affected by Weakness or Resistance.'

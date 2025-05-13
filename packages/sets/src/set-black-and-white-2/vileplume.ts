@@ -36,7 +36,7 @@ export class Vileplume extends PokemonCard {
   public attacks = [{
     name: 'Dazzling Pollen',
     cost: [ CardType.GRASS, CardType.GRASS, CardType.COLORLESS ],
-    damage: 50,
+    damage: '50+',
     text: 'Flip a coin. If heads, this attack does 50 damage plus 20 more ' +
       'damage. If tails, the Defending Pokemon is now Confused.'
   }];

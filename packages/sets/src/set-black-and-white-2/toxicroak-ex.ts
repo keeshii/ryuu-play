@@ -24,13 +24,13 @@ export class ToxicroakEx extends PokemonCard {
     {
       name: 'Triple Poison',
       cost: [ CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 0,
+      damage: '',
       text: 'Your opponent\'s Active Pokemon is now Poisoned. Put 3 damage ' +
         'counters instead of 1 on that Pokemon between turns.'
     }, {
       name: 'Smash Uppercut',
       cost: [ CardType.PSYCHIC, CardType.PSYCHIC, CardType.COLORLESS ],
-      damage: 80,
+      damage: '80',
       text: 'This attack\'s damage isn\'t affected by Resistance.'
     },
   ];

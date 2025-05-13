@@ -26,13 +26,13 @@ export class YveltalEx extends PokemonCard {
     {
       name: 'Evil Ball',
       cost: [ CardType.DARK, CardType.COLORLESS ],
-      damage: 20,
+      damage: '20+',
       text: 'This attack does 20 more damage times the amount of Energy ' +
         'attached to both Active Pokemon.'
     }, {
       name: 'Y Cyclone',
       cost: [ CardType.DARK, CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 90,
+      damage: '90',
       text: 'Move an Energy from this Pokemon to 1 of your Benched Pokemon.'
     },
   ];

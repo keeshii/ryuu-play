@@ -23,13 +23,13 @@ export class Charmeleon extends PokemonCard {
     {
       name: 'Slash',
       cost: [ CardType.FIRE ],
-      damage: 20,
+      damage: '20',
       text: ''
     },
     {
       name: 'Raging Flames',
       cost: [ CardType.FIRE, CardType.FIRE ],
-      damage: 60,
+      damage: '60',
       text: 'Discard the top 3 cards of your deck.'
     }
   ];

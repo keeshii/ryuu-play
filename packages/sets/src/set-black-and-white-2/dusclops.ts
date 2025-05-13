@@ -67,13 +67,13 @@ export class Dusclops extends PokemonCard {
   public attacks = [{
     name: 'Astonish',
     cost: [ CardType.PSYCHIC ],
-    damage: 0,
+    damage: '',
     text: 'Choose a random card from your opponent\'s hand. Your opponent ' +
       'reveals that card and shuffles it into his or her deck.'
   }, {
     name: 'Psyshot',
     cost: [ CardType.PSYCHIC, CardType.COLORLESS, CardType.COLORLESS ],
-    damage: 40,
+    damage: '40',
     text: ''
   }];
 

@@ -12,7 +12,7 @@ export interface Resistance {
 
 export interface Attack {
   cost: CardType[];
-  damage: number;
+  damage: string;
   name: string;
   text: string;
 }

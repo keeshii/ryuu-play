@@ -31,7 +31,7 @@ export class Shuckle extends PokemonCard {
     {
       name: 'Shell Stunner',
       cost: [ CardType.GRASS, CardType.COLORLESS ],
-      damage: 20,
+      damage: '20',
       text: 'Flip a coin. If heads, prevent all damage done to Shuckle by ' +
         'attacks during your opponent\'s next turn.'
     }

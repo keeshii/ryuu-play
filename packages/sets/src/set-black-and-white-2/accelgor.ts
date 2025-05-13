@@ -25,12 +25,12 @@ export class Accelgor extends PokemonCard {
   public attacks = [{
     name: 'Hammer In',
     cost: [ CardType.GRASS ],
-    damage: 20,
+    damage: '20',
     text: ''
   }, {
     name: 'Deck and Cover',
     cost: [ CardType.COLORLESS, CardType.COLORLESS ],
-    damage: 50,
+    damage: '50',
     text: 'The Defending Pokemon is now Paralyzed and Poisoned. Shuffle this ' +
       'Pokemon and all cards attached to it into your deck.'
   }];

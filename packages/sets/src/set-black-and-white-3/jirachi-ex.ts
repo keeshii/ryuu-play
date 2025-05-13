@@ -69,7 +69,7 @@ export class JirachiEx extends PokemonCard {
     {
       name: 'Hypnostrike',
       cost: [ CardType.METAL, CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 60,
+      damage: '60',
       text: 'Both this Pokemon and the Defending Pokemon are now Asleep.'
     }
   ];

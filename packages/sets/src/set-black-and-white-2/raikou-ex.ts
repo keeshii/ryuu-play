@@ -27,12 +27,12 @@ export class RaikouEx extends PokemonCard {
     {
       name: 'Thunder Fang',
       cost: [ CardType.LIGHTNING, CardType.COLORLESS ],
-      damage: 30,
+      damage: '30',
       text: 'Flip a coin. If heads, the Defending Pokemon is now Paralyzed.'
     }, {
       name: 'Volt Bolt',
       cost: [ CardType.LIGHTNING, CardType.LIGHTNING, CardType.COLORLESS ],
-      damage: 0,
+      damage: '',
       text: 'Discard all L Energy attached to this Pokemon. This attack ' +
         'does 100 damage to 1 of your opponent\'s Pokemon. ' +
         '(Don\'t apply Weakness and Resistance for Benched Pokemon.)'

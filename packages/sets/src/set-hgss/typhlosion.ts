@@ -81,7 +81,7 @@ export class Typhlosion extends PokemonCard {
     {
       name: 'Flare Destroy',
       cost: [ CardType.FIRE, CardType.FIRE, CardType.COLORLESS ],
-      damage: 70,
+      damage: '70',
       text: 'Discard an Energy card attached to Typhlosion and discard ' +
         'an Energy card attached to the Defending Pokemon.'
     }

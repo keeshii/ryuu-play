@@ -22,13 +22,13 @@ export class Kyurem extends PokemonCard {
     {
       name: 'Outrage',
       cost: [ CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 20,
+      damage: '20+',
       text: 'Does 10 more damage for each damage counter on this Pokemon.'
     },
     {
       name: 'Glaciate',
       cost: [ CardType.WATER, CardType.WATER, CardType.COLORLESS ],
-      damage: 0,
+      damage: '',
       text: 'This attack does 30 damage to each of your opponent\'s Pokemon ' +
         '(Don\'t apply Weakness and Resistance for Benched Pokemon.'
     }

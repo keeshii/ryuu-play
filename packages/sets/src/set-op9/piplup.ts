@@ -28,13 +28,13 @@ export class Piplup extends PokemonCard {
   public attacks = [{
     name: 'Water Sport',
     cost: [ CardType.WATER ],
-    damage: 10,
+    damage: '10+',
     text: 'If Piplup has less Energy attached to it than the Defending ' +
       'Pokemon, this attack does 10 damage plus 10 more damage.'
   }, {
     name: 'Wavelet',
     cost: [ CardType.WATER, CardType.COLORLESS, CardType.COLORLESS ],
-    damage: 40,
+    damage: '40',
     text: 'If you have Buizel in play, this attack does 10 damage to each ' +
       'of your opponent\'s Benched Pokemon. (Don\'t apply Weakness and ' +
       'Resistance for Benched Pokemon.)'

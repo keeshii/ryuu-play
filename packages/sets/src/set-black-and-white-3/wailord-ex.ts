@@ -32,7 +32,7 @@ export class WailordEx extends PokemonCard {
     {
       name: 'High Breaching',
       cost: [ CardType.WATER, CardType.WATER, CardType.WATER, CardType.WATER, CardType.WATER ],
-      damage: 120,
+      damage: '120',
       text: 'This Pokemon is now Asleep.'
     }
   ];

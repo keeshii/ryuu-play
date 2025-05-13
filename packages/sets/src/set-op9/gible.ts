@@ -28,7 +28,7 @@ export class Gible extends PokemonCard {
   public attacks = [{
     name: 'Push Down',
     cost: [ CardType.COLORLESS ],
-    damage: 10,
+    damage: '10',
     text: 'Your opponent switches the Defending Pokemon with 1 of his or her ' +
       'Benched Pokemon.'
   }];

@@ -35,7 +35,7 @@ export class Dragalge extends PokemonCard {
   public attacks = [{
     name: 'Poison Breath',
     cost: [ CardType.WATER, CardType.PSYCHIC, CardType.COLORLESS ],
-    damage: 60,
+    damage: '60',
     text: 'Flip a coin. If heads, your opponent\'s Active Pokemon ' +
       'is now Poisoned.'
   }];

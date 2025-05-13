@@ -25,12 +25,12 @@ export class ReshiramEx extends PokemonCard {
     {
       name: 'Glinting Claw',
       cost: [ CardType.FIRE, CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 50,
+      damage: '50+',
       text: 'Flip a coin. If heads, this attack does 30 more damage.'
     }, {
       name: 'Brave Fire',
       cost: [ CardType.FIRE, CardType.FIRE, CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 150,
+      damage: '150',
       text: 'Flip a coin. If tails, this Pokemon does 50 damage to itself.'
     },
   ];

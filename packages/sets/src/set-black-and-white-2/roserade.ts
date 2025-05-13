@@ -69,7 +69,7 @@ export class Roserade extends PokemonCard {
     {
       name: 'Squeeze',
       cost: [ CardType.GRASS, CardType.COLORLESS ],
-      damage: 30,
+      damage: '30+',
       text: 'Flip a coin. If heads, this attack does 20 more damage and ' +
         'the Defending Pokemon is now Paralyzed.'
     }

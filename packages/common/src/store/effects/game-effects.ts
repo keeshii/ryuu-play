@@ -95,7 +95,8 @@ export class AttackEffect implements Effect {
     this.player = player;
     this.opponent = opponent;
     this.attack = attack;
-    this.damage = attack.damage;
+    const value = attack.damage.replace(/\D/g, '');
+    this.damage = value !== '' ? parseInt(value, 10) : 0;
   }
 }
 

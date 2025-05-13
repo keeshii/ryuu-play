@@ -33,7 +33,7 @@ export class MewEx extends PokemonCard {
     {
       name: 'Replace',
       cost: [ CardType.PSYCHIC ],
-      damage: 0,
+      damage: '',
       text: 'Move as many Energy attached to your Pokemon to your other ' +
         'Pokemon in any way you like.'
     }

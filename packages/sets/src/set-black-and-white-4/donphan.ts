@@ -26,12 +26,12 @@ export class Donphan extends PokemonCard {
     {
       name: 'Spinning Turn',
       cost: [ CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 40,
+      damage: '40',
       text: 'Switch this Pokemon with 1 of your Benched Pokemon.'
     }, {
       name: 'Wreck',
       cost: [ CardType.FIGHTING, CardType.FIGHTING, CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 80,
+      damage: '80+',
       text: 'If there is any Stadium card in play, this attack does ' +
         '60 more damage. Discard that Stadium card.'
     },

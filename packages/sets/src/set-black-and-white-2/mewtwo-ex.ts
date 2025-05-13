@@ -26,13 +26,13 @@ export class MewtwoEx extends PokemonCard {
     {
       name: 'X Ball',
       cost: [ CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 20,
+      damage: '20×',
       text: 'Does 20 damage times the amount of Energy attached to this ' +
         'Pokemon and the Defending Pokemon.'
     }, {
       name: 'Psydrive',
       cost: [ CardType.PSYCHIC, CardType.PSYCHIC, CardType.COLORLESS ],
-      damage: 120,
+      damage: '120',
       text: 'Discard an Energy attached to this Pokemon.'
     },
   ];

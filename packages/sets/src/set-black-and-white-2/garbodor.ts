@@ -35,7 +35,7 @@ export class Garbodor extends PokemonCard {
   public attacks = [{
     name: 'Sludge Toss',
     cost: [ CardType.PSYCHIC, CardType.PSYCHIC, CardType.COLORLESS ],
-    damage: 60,
+    damage: '60',
     text: ''
   }];
 

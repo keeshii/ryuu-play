@@ -36,7 +36,7 @@ export class Crobat extends PokemonCard {
     {
       name: 'Skill Dive',
       cost: [ CardType.COLORLESS ],
-      damage: 0,
+      damage: '',
       text: 'This attack does 30 damage to 1 of your opponent\'s Pokemon. ' +
         '(Don\'t apply Weakness and Resistance for Benched Pokemon.)'
     }

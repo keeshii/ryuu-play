@@ -22,14 +22,14 @@ export class Miltank extends PokemonCard {
     {
       name: 'Powerful Friends',
       cost: [ CardType.COLORLESS ],
-      damage: 10,
+      damage: '10+',
       text: 'If you have any Stage 2 Pokemon on your Bench, ' +
         'this attack does 70 more damage.'
     },
     {
       name: 'Hammer In',
       cost: [ CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 60,
+      damage: '60',
       text: ''
     },
   ];

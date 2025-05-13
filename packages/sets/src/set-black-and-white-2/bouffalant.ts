@@ -30,7 +30,7 @@ export class Bouffalant extends PokemonCard {
   public attacks = [{
     name: 'Gold Breaker',
     cost: [ CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS ],
-    damage: 60,
+    damage: '60+',
     text: 'If the Defending Pokemon is a Pokemon-EX, ' +
       'this attack does 60 more damage.'
   }];

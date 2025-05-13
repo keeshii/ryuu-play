@@ -24,13 +24,13 @@ export class Reshiram extends PokemonCard {
     {
       name: 'Outrage',
       cost: [ CardType.COLORLESS, CardType.COLORLESS ],
-      damage: 20,
+      damage: '20+',
       text: 'Does 10 more damage for each damage counter on this Pokemon.'
     },
     {
       name: 'Blue Flare',
       cost: [ CardType.FIRE, CardType.FIRE, CardType.COLORLESS ],
-      damage: 120,
+      damage: '120',
       text: 'Discard 2 R Energy attached to this Pokemon.'
     }
   ];

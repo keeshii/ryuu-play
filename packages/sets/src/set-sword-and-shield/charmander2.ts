@@ -15,8 +15,8 @@ export class Charmander2 extends PokemonCard {
   public retreat = [ CardType.COLORLESS ];
 
   public attacks = [
-    { name: 'Gnaw', cost: [CardType.FIRE], damage: 10, text: '' },
-    { name: 'Flare', cost: [CardType.FIRE, CardType.COLORLESS], damage: 20, text: '' }
+    { name: 'Gnaw', cost: [CardType.FIRE], damage: '10', text: '' },
+    { name: 'Flare', cost: [CardType.FIRE, CardType.COLORLESS], damage: '20', text: '' }
   ];
 
   public set: string = 'SSH';

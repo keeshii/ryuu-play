@@ -51,7 +51,7 @@ export abstract class BotClient implements Client {
     return game;
   }
 
-  public async loadDeck(): Promise<string[]> {
+  public async loadDeck(formatName: string = ''): Promise<string[]> {
     const deckRows = await Deck.find({
       where: {
         user: { id: this.user.id },
@@ -61,7 +61,7 @@ export abstract class BotClient implements Client {
 
     const decks = deckRows
       .map(d => JSON.parse(d.cards))
-      .filter((cards: string[]) => this.validateDeck(cards));
+      .filter((cards: string[]) => this.validateDeck(cards, formatName));
 
     if (decks.length === 0) {
       throw new GameError(GameMessage.ERROR_BOT_NO_DECK);
@@ -71,14 +71,20 @@ export abstract class BotClient implements Client {
     return decks[num];
   }
 
-  private validateDeck(cards: string[]): boolean {
+  private validateDeck(cards: string[], formatName: string): boolean {
     const cardManager = CardManager.getInstance();
     if (cards.some(c => !cardManager.isCardDefined(c))) {
       return false;
     }
 
     const analyser = new DeckAnalyser(cards);
-    return analyser.isValid();
+    if (!analyser.isValid()) {
+      return false;
+    }
+    if (formatName && !analyser.getDeckFormats().some(f => f.name === formatName)) {
+      return false;
+    }
+    return true;
   }
 
 }

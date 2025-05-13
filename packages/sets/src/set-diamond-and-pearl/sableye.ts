@@ -39,7 +39,7 @@ export class Sableye extends PokemonCard {
     {
       name: 'Impersonate',
       cost: [],
-      damage: 0,
+      damage: '',
       text: 'Search your deck for a Supporter card and discard it. ' +
         'Shuffle your deck afterward. ' +
         'Then, use the effect of that card as the effect of this attack.'
@@ -47,7 +47,7 @@ export class Sableye extends PokemonCard {
     {
       name: 'Overconfident',
       cost: [CardType.DARK],
-      damage: 10,
+      damage: '10',
       text: 'If the Defending Pokemon has fewer remaining HP than Sableye, ' +
         'this attack\'s base damage is 40.'
     }
