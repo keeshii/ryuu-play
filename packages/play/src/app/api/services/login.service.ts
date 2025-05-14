@@ -53,7 +53,7 @@ export class LoginService {
     return combineLatest([
       this.profileService.getMe(),
       this.messageService.getConversations(),
-      this.cardsService.getAll(),
+      this.cardsService.getCardsInfo(),
       this.waitForSocketConnection(response.token)
     ]).pipe(
       takeUntil(loginAborted$),
@@ -61,7 +61,7 @@ export class LoginService {
         this.sessionService.session.authToken = '';
         throw error;
       }),
-      map(([me, conversations, cards]) => {
+      map(([me, conversations, cardsInfo]) => {
 
         // Fetch logged user data
         const users = { ...this.sessionService.session.users };
@@ -78,7 +78,7 @@ export class LoginService {
         );
 
         // Fetch cards data
-        this.cardsBaseService.loadCardsInfo(cards.cardsInfo);
+        this.cardsBaseService.loadCardsInfo(cardsInfo);
 
         // Store data in the session
         this.sessionService.set({
