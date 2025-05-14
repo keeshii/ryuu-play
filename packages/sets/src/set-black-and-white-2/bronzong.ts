@@ -1,21 +1,25 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, SuperType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { PowerEffect } from '@ptcg/common';
-import { PowerType } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
-import { PlayerType, SlotType } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { PlayPokemonEffect } from '@ptcg/common';
-import { EnergyCard } from '@ptcg/common';
-import { AttachEnergyPrompt } from '@ptcg/common';
-import { EndTurnEffect } from '@ptcg/common';
+import {
+  AttachEnergyPrompt,
+  CardType,
+  Effect,
+  EndTurnEffect,
+  EnergyCard,
+  GameError,
+  GameMessage,
+  PlayerType,
+  PlayPokemonEffect,
+  PokemonCard,
+  PowerEffect,
+  PowerType,
+  SlotType,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+  SuperType,
+} from '@ptcg/common';
 
 export class Bronzong extends PokemonCard {
-
   public stage: Stage = Stage.STAGE_1;
 
   public evolvesFrom = 'Bronzor';
@@ -28,22 +32,27 @@ export class Bronzong extends PokemonCard {
 
   public resistance = [{ type: CardType.PSYCHIC, value: -20 }];
 
-  public retreat = [ CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS];
 
-  public powers = [{
-    name: 'Metal Links',
-    useWhenInPlay: true,
-    powerType: PowerType.ABILITY,
-    text: 'Once during your turn (before your attack), you may attach ' +
-    'a M Energy card from your discard pile to 1 of your Benched Pokemon.'
-  }];
+  public powers = [
+    {
+      name: 'Metal Links',
+      useWhenInPlay: true,
+      powerType: PowerType.ABILITY,
+      text:
+        'Once during your turn (before your attack), you may attach ' +
+        'a M Energy card from your discard pile to 1 of your Benched Pokémon.',
+    },
+  ];
 
-  public attacks = [{
-    name: 'Hammer In',
-    cost: [ CardType.METAL, CardType.METAL, CardType.COLORLESS ],
-    damage: '60',
-    text: ''
-  }];
+  public attacks = [
+    {
+      name: 'Hammer In',
+      cost: [CardType.METAL, CardType.METAL, CardType.COLORLESS],
+      damage: '60',
+      text: '',
+    },
+  ];
 
   public set: string = 'BW2';
 
@@ -54,7 +63,6 @@ export class Bronzong extends PokemonCard {
   public readonly METAL_LINKS_MAREKER = 'METAL_LINKS_MAREKER';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof PlayPokemonEffect && effect.pokemonCard === this) {
       const player = effect.player;
       player.marker.removeMarker(this.METAL_LINKS_MAREKER, this);
@@ -85,21 +93,25 @@ export class Bronzong extends PokemonCard {
         }
       });
 
-      state = store.prompt(state, new AttachEnergyPrompt(
-        player.id,
-        GameMessage.ATTACH_ENERGY_CARDS,
-        player.discard,
-        PlayerType.BOTTOM_PLAYER,
-        [ SlotType.BENCH ],
-        { superType: SuperType.ENERGY },
-        { allowCancel: false, min: 1, max: 1, blocked }
-      ), transfers => {
-        transfers = transfers || [];
-        for (const transfer of transfers) {
-          const target = StateUtils.getTarget(state, player, transfer.to);
-          player.discard.moveCardTo(transfer.card, target);
+      state = store.prompt(
+        state,
+        new AttachEnergyPrompt(
+          player.id,
+          GameMessage.ATTACH_ENERGY_CARDS,
+          player.discard,
+          PlayerType.BOTTOM_PLAYER,
+          [SlotType.BENCH],
+          { superType: SuperType.ENERGY },
+          { allowCancel: false, min: 1, max: 1, blocked }
+        ),
+        transfers => {
+          transfers = transfers || [];
+          for (const transfer of transfers) {
+            const target = StateUtils.getTarget(state, player, transfer.to);
+            player.discard.moveCardTo(transfer.card, target);
+          }
         }
-      });
+      );
 
       return state;
     }
@@ -110,5 +122,4 @@ export class Bronzong extends PokemonCard {
 
     return state;
   }
-
 }

@@ -1,14 +1,16 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { AttackEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { CoinFlipPrompt } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
+import {
+  AttackEffect,
+  CardType,
+  CoinFlipPrompt,
+  Effect,
+  GameMessage,
+  PokemonCard,
+  Stage,
+  State,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Riolu2 extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.FIGHTING;
@@ -17,19 +19,22 @@ export class Riolu2 extends PokemonCard {
 
   public weakness = [{ type: CardType.PSYCHIC }];
 
-  public retreat = [ CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS];
 
-  public attacks = [{
-    name: 'Punch',
-    cost: [ CardType.COLORLESS ],
-    damage: '10',
-    text: ''
-  }, {
-    name: 'Quick Attack',
-    cost: [ CardType.FIGHTING, CardType.COLORLESS ],
-    damage: '10+',
-    text: 'Flip a coin. If heads, this attack does 20 more damage.'
-  }];
+  public attacks = [
+    {
+      name: 'Punch',
+      cost: [CardType.COLORLESS],
+      damage: '10',
+      text: '',
+    },
+    {
+      name: 'Quick Attack',
+      cost: [CardType.FIGHTING, CardType.COLORLESS],
+      damage: '10+',
+      text: 'Flip a coin. If heads, this attack does 20 more damage.',
+    },
+  ];
 
   public set: string = 'BW4';
 
@@ -38,13 +43,10 @@ export class Riolu2 extends PokemonCard {
   public fullName: string = 'Riolu LT';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
       const player = effect.player;
 
-      return store.prompt(state, [
-        new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)
-      ], result => {
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
         if (result === true) {
           effect.damage += 20;
         }
@@ -53,5 +55,4 @@ export class Riolu2 extends PokemonCard {
 
     return state;
   }
-
 }

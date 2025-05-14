@@ -1,14 +1,15 @@
-import { Effect } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType } from '@ptcg/common';
+import {
+  Effect,
+  GameError,
+  GameMessage,
+  State,
+  StoreLike,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 export class Bianca extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.SUPPORTER;
 
   public set: string = 'BW';
@@ -17,8 +18,7 @@ export class Bianca extends TrainerCard {
 
   public fullName: string = 'Bianca EPO';
 
-  public text: string =
-    'Draw cards until you have 6 cards in your hand.';
+  public text: string = 'Draw cards until you have 6 cards in your hand.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
@@ -35,5 +35,4 @@ export class Bianca extends TrainerCard {
 
     return state;
   }
-
 }

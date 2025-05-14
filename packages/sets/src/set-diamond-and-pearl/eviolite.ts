@@ -1,12 +1,6 @@
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { PutDamageEffect } from '@ptcg/common';
+import { Effect, PutDamageEffect, State, StoreLike, TrainerCard, TrainerType } from '@ptcg/common';
 
 export class Eviolite extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.TOOL;
 
   public set: string = 'DP';
@@ -16,8 +10,8 @@ export class Eviolite extends TrainerCard {
   public fullName: string = 'Eviolite NV';
 
   public text: string =
-    'If the Pokemon this card is attached to is a Basic Pokemon, ' +
-    'any damage done to this Pokemon by attacks is reduced by 20 ' +
+    'If the Pokémon this card is attached to is a Basic Pokémon, ' +
+    'any damage done to this Pokémon by attacks is reduced by 20 ' +
     '(after applying Weakness and Resistance).';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
@@ -29,5 +23,4 @@ export class Eviolite extends TrainerCard {
 
     return state;
   }
-
 }

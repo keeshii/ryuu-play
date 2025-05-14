@@ -1,15 +1,22 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType } from '@ptcg/common';
-import { PowerType, StoreLike, State, GameError, GameMessage, ChooseCardsPrompt,
-  CardList } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { PowerEffect, AttackEffect } from '@ptcg/common';
-import { PlayPokemonEffect } from '@ptcg/common';
-import { EndTurnEffect } from '@ptcg/common';
-
+import {
+  AttackEffect,
+  CardList,
+  CardType,
+  ChooseCardsPrompt,
+  Effect,
+  EndTurnEffect,
+  GameError,
+  GameMessage,
+  PlayPokemonEffect,
+  PokemonCard,
+  PowerEffect,
+  PowerType,
+  Stage,
+  State,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Charizard extends PokemonCard {
-
   public stage: Stage = Stage.STAGE_2;
 
   public evolvesFrom = 'Charmeleon';
@@ -20,24 +27,26 @@ export class Charizard extends PokemonCard {
 
   public weakness = [{ type: CardType.WATER }];
 
-  public retreat = [ CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS];
 
-  public powers = [{
-    name: 'Battle Sense',
-    powerType: PowerType.ABILITY,
-    useWhenInPlay: true,
-    text: 'Once during your turn, you may look at the top 3 cards of your ' +
-      'deck and put 1 of them into your hand. Discard the other cards.'
-  }];
+  public powers = [
+    {
+      name: 'Battle Sense',
+      powerType: PowerType.ABILITY,
+      useWhenInPlay: true,
+      text:
+        'Once during your turn, you may look at the top 3 cards of your ' +
+        'deck and put 1 of them into your hand. Discard the other cards.',
+    },
+  ];
 
   public attacks = [
     {
       name: 'Royal Blaze',
-      cost: [ CardType.FIRE, CardType.FIRE ],
+      cost: [CardType.FIRE, CardType.FIRE],
       damage: '100+',
-      text: 'This attack does 50 more damage for each Leon card ' +
-        'in your discard pile.'
-    }
+      text: 'This attack does 50 more damage for each Leon card in your discard pile.',
+    },
   ];
 
   public set: string = 'SSH';
@@ -75,17 +84,21 @@ export class Charizard extends PokemonCard {
       const deckTop = new CardList();
       player.deck.moveTo(deckTop, 3);
 
-      return store.prompt(state, new ChooseCardsPrompt(
-        player.id,
-        GameMessage.CHOOSE_CARD_TO_HAND,
-        deckTop,
-        { },
-        { min: 1, max: 1, allowCancel: false }
-      ), selected => {
-        player.marker.addMarker(this.BATTLE_SENSE_MARKER, this);
-        deckTop.moveCardsTo(selected, player.hand);
-        deckTop.moveTo(player.discard);
-      });
+      return store.prompt(
+        state,
+        new ChooseCardsPrompt(
+          player.id,
+          GameMessage.CHOOSE_CARD_TO_HAND,
+          deckTop,
+          {},
+          { min: 1, max: 1, allowCancel: false }
+        ),
+        selected => {
+          player.marker.addMarker(this.BATTLE_SENSE_MARKER, this);
+          deckTop.moveCardsTo(selected, player.hand);
+          deckTop.moveTo(player.discard);
+        }
+      );
     }
 
     if (effect instanceof EndTurnEffect) {
@@ -94,5 +107,4 @@ export class Charizard extends PokemonCard {
 
     return state;
   }
-
 }

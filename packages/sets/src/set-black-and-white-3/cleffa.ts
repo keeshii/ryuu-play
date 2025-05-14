@@ -1,12 +1,25 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType } from '@ptcg/common';
-import { PowerType, StoreLike, State, ShuffleDeckPrompt, GameError, GameMessage, CoinFlipPrompt } from '@ptcg/common';
-import { PowerEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { EndTurnEffect } from '@ptcg/common';
+import {
+  CardType,
+  CoinFlipPrompt,
+  Effect,
+  EndTurnEffect,
+  GameError,
+  GameMessage,
+  PokemonCard,
+  PowerEffect,
+  PowerType,
+  ShuffleDeckPrompt,
+  Stage,
+  State,
+  StoreLike,
+} from '@ptcg/common';
 
-function* useExcitableDraw(next: Function, store: StoreLike, state: State,
-  effect: PowerEffect): IterableIterator<State> {
+function* useExcitableDraw(
+  next: Function,
+  store: StoreLike,
+  state: State,
+  effect: PowerEffect
+): IterableIterator<State> {
   const player = effect.player;
 
   if (player.deck.cards.length + player.hand.cards.length === 0) {
@@ -14,9 +27,7 @@ function* useExcitableDraw(next: Function, store: StoreLike, state: State,
   }
 
   let flipResult = false;
-  yield store.prompt(state, [
-    new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)
-  ], result => {
+  yield store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
     flipResult = result;
     next();
   });
@@ -36,23 +47,25 @@ function* useExcitableDraw(next: Function, store: StoreLike, state: State,
 }
 
 export class Cleffa extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.FAIRY;
 
   public hp: number = 60;
 
-  public retreat = [ ];
+  public retreat = [];
 
-  public powers = [{
-    name: 'Excitable Draw',
-    useWhenInPlay: true,
-    powerType: PowerType.ABILITY,
-    text: 'Once during your turn (before your attack), you may flip a coin. ' +
-      'If heads, shuffle your hand into your deck and then draw 6 cards. ' +
-      'If you use this Ability, your turn ends.'
-  }];
+  public powers = [
+    {
+      name: 'Excitable Draw',
+      useWhenInPlay: true,
+      powerType: PowerType.ABILITY,
+      text:
+        'Once during your turn (before your attack), you may flip a coin. ' +
+        'If heads, shuffle your hand into your deck and then draw 6 cards. ' +
+        'If you use this Ability, your turn ends.',
+    },
+  ];
 
   public set: string = 'BW3';
 
@@ -61,7 +74,6 @@ export class Cleffa extends PokemonCard {
   public fullName: string = 'Cleffa UNB';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     // Eeeeeeek
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
       const generator = useExcitableDraw(() => generator.next(), store, state, effect);
@@ -70,5 +82,4 @@ export class Cleffa extends PokemonCard {
 
     return state;
   }
-
 }

@@ -1,16 +1,12 @@
-import {
-  Effect,
-  State,
-  ShuffleDeckPrompt,
-  StoreLike,
-  TrainerCard,
-  TrainerEffect,
-  TrainerType
-} from '@ptcg/common';
+import { Effect, ShuffleDeckPrompt, State, StoreLike, TrainerCard, TrainerEffect, TrainerType } from '@ptcg/common';
 
-function* playCard(next: Function, store: StoreLike, state: State,
-  self: ProfessorOaksNewTheory, effect: TrainerEffect): IterableIterator<State> {
-
+function* playCard(
+  next: Function,
+  store: StoreLike,
+  state: State,
+  self: ProfessorOaksNewTheory,
+  effect: TrainerEffect
+): IterableIterator<State> {
   const player = effect.player;
   const cards = player.hand.cards.filter(c => c !== self);
 
@@ -28,7 +24,6 @@ function* playCard(next: Function, store: StoreLike, state: State,
 }
 
 export class ProfessorOaksNewTheory extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.SUPPORTER;
 
   public set: string = 'BW';
@@ -37,8 +32,7 @@ export class ProfessorOaksNewTheory extends TrainerCard {
 
   public fullName: string = 'Professor Oaks New Theory HGSS';
 
-  public text: string =
-    'Shuffle your hand into your deck. Then, draw 6 cards.';
+  public text: string = 'Shuffle your hand into your deck. Then, draw 6 cards.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
@@ -48,5 +42,4 @@ export class ProfessorOaksNewTheory extends TrainerCard {
 
     return state;
   }
-
 }

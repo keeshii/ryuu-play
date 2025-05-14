@@ -1,45 +1,56 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, SpecialCondition } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { AttackEffect } from '@ptcg/common';
-import { PlayerType } from '@ptcg/common';
-import { HealTargetEffect, AddSpecialConditionsEffect } from '@ptcg/common';
-
+import {
+  AddSpecialConditionsEffect,
+  AttackEffect,
+  CardType,
+  Effect,
+  HealTargetEffect,
+  PlayerType,
+  PokemonCard,
+  SpecialCondition,
+  Stage,
+  State,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Turtwig extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.GRASS;
 
   public hp: number = 60;
 
-  public weakness = [{
-    type: CardType.FIRE,
-    value: 10
-  }];
+  public weakness = [
+    {
+      type: CardType.FIRE,
+      value: 10,
+    },
+  ];
 
-  public resistance = [{
-    type: CardType.WATER,
-    value: -20
-  }];
+  public resistance = [
+    {
+      type: CardType.WATER,
+      value: -20,
+    },
+  ];
 
-  public retreat = [ CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS];
 
-  public attacks = [{
-    name: 'Absorb',
-    cost: [ CardType.GRASS ],
-    damage: '10',
-    text: 'Remove 1 damage counter from Turtwig.'
-  }, {
-    name: 'Parboil',
-    cost: [ CardType.GRASS, CardType.COLORLESS, CardType.COLORLESS ],
-    damage: '40+',
-    text: 'If you have Chimchar in play, this attack does 40 damage plus 20 ' +
-      'more damage and the Defending Pokemon is now Burned.'
-  }];
+  public attacks = [
+    {
+      name: 'Absorb',
+      cost: [CardType.GRASS],
+      damage: '10',
+      text: 'Remove 1 damage counter from Turtwig.',
+    },
+    {
+      name: 'Parboil',
+      cost: [CardType.GRASS, CardType.COLORLESS, CardType.COLORLESS],
+      damage: '40+',
+      text:
+        'If you have Chimchar in play, this attack does 40 damage plus 20 ' +
+        'more damage and the Defending Pokémon is now Burned.',
+    },
+  ];
 
   public set: string = 'OP9';
 
@@ -48,7 +59,6 @@ export class Turtwig extends PokemonCard {
   public fullName: string = 'Turtwig OP9';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
       const healEffect = new HealTargetEffect(effect, 10);
@@ -75,5 +85,4 @@ export class Turtwig extends PokemonCard {
 
     return state;
   }
-
 }

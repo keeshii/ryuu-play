@@ -1,38 +1,46 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType } from '@ptcg/common';
-import { PowerType, StoreLike, State, GameError, GameMessage, ChooseCardsPrompt } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { PlayPokemonEffect } from '@ptcg/common';
-import { PowerEffect } from '@ptcg/common';
-import { EndTurnEffect } from '@ptcg/common';
+import {
+  CardType,
+  ChooseCardsPrompt,
+  Effect,
+  EndTurnEffect,
+  GameError,
+  GameMessage,
+  PlayPokemonEffect,
+  PokemonCard,
+  PowerEffect,
+  PowerType,
+  Stage,
+  State,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Oranguru extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.COLORLESS;
 
   public hp: number = 120;
 
-  public retreat = [ CardType.COLORLESS, CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS, CardType.COLORLESS];
 
   public weakness = [{ type: CardType.FIGHTING }];
 
-  public powers = [{
-    name: 'Primate Wisdom',
-    useWhenInPlay: true,
-    powerType: PowerType.ABILITY,
-    text: 'Once during your turn, you may switch a card from your hand ' +
-      'with the top card of your deck.'
-  }];
+  public powers = [
+    {
+      name: 'Primate Wisdom',
+      useWhenInPlay: true,
+      powerType: PowerType.ABILITY,
+      text: 'Once during your turn, you may switch a card from your hand with the top card of your deck.',
+    },
+  ];
 
   public attacks = [
     {
       name: 'Whap Down',
-      cost: [ CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS ],
+      cost: [CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS],
       damage: '70',
-      text: ''
-    }
+      text: '',
+    },
   ];
 
   public set: string = 'SSH';
@@ -60,24 +68,28 @@ export class Oranguru extends PokemonCard {
         throw new GameError(GameMessage.POWER_ALREADY_USED);
       }
 
-      return store.prompt(state, new ChooseCardsPrompt(
-        player.id,
-        GameMessage.CHOOSE_CARD_TO_DECK,
-        player.hand,
-        { },
-        { min: 1, max: 1, allowCancel: true }
-      ), selected => {
-        const cards = selected || [];
-        if (cards.length > 0) {
-          player.deck.moveTo(player.hand, 1);
-          const index = player.hand.cards.indexOf(cards[0]);
-          if (index !== -1) {
-            player.hand.cards.splice(index, 1);
-            player.deck.cards.unshift(cards[0]);
+      return store.prompt(
+        state,
+        new ChooseCardsPrompt(
+          player.id,
+          GameMessage.CHOOSE_CARD_TO_DECK,
+          player.hand,
+          {},
+          { min: 1, max: 1, allowCancel: true }
+        ),
+        selected => {
+          const cards = selected || [];
+          if (cards.length > 0) {
+            player.deck.moveTo(player.hand, 1);
+            const index = player.hand.cards.indexOf(cards[0]);
+            if (index !== -1) {
+              player.hand.cards.splice(index, 1);
+              player.deck.cards.unshift(cards[0]);
+            }
+            player.marker.addMarker(this.PRIMATE_WISDOM_MARKER, this);
           }
-          player.marker.addMarker(this.PRIMATE_WISDOM_MARKER, this);
         }
-      });
+      );
     }
 
     if (effect instanceof EndTurnEffect) {
@@ -86,5 +98,4 @@ export class Oranguru extends PokemonCard {
 
     return state;
   }
-
 }

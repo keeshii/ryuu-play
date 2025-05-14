@@ -32,5 +32,5 @@ export const setBlackAndWhite4: Card[] = [
   new ScoopUpCyclone(),
   new StrongEnergy(),
   new Wobbuffet(),
-  new Zubat()
+  new Zubat(),
 ];

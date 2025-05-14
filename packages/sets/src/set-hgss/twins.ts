@@ -1,15 +1,17 @@
-import { Card } from '@ptcg/common';
-import { ChooseCardsPrompt } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { ShuffleDeckPrompt } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
+import {
+  Card,
+  ChooseCardsPrompt,
+  Effect,
+  GameError,
+  GameMessage,
+  ShuffleDeckPrompt,
+  State,
+  StateUtils,
+  StoreLike,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -24,16 +26,20 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   }
 
   let cards: Card[] = [];
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_HAND,
-    player.deck,
-    { },
-    { min: 0, max: 2, allowCancel: true }
-  ), selected => {
-    cards = selected || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_HAND,
+      player.deck,
+      {},
+      { min: 0, max: 2, allowCancel: true }
+    ),
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
 
   // Get selected cards
   player.deck.moveCardsTo(cards, player.hand);
@@ -45,7 +51,6 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 }
 
 export class Twins extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.SUPPORTER;
 
   public set: string = 'HGSS';
@@ -67,5 +72,4 @@ export class Twins extends TrainerCard {
 
     return state;
   }
-
 }

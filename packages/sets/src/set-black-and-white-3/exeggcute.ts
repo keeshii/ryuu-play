@@ -1,16 +1,18 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { PowerEffect } from '@ptcg/common';
-import { PowerType } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { EndTurnEffect } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
+import {
+  CardType,
+  Effect,
+  EndTurnEffect,
+  GameError,
+  GameMessage,
+  PokemonCard,
+  PowerEffect,
+  PowerType,
+  Stage,
+  State,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Exeggcute extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.GRASS;
@@ -21,22 +23,27 @@ export class Exeggcute extends PokemonCard {
 
   public resistance = [{ type: CardType.WATER, value: -20 }];
 
-  public retreat = [ CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS];
 
-  public powers = [{
-    name: 'Propagation',
-    useFromDiscard: true,
-    powerType: PowerType.ABILITY,
-    text: 'Once during your turn (before your attack), if this Pokemon is in '
-      + 'your discard pile, you may put this Pokemon into your hand.'
-  }];
+  public powers = [
+    {
+      name: 'Propagation',
+      useFromDiscard: true,
+      powerType: PowerType.ABILITY,
+      text:
+        'Once during your turn (before your attack), if this Pokémon is in ' +
+        'your discard pile, you may put this Pokémon into your hand.',
+    },
+  ];
 
-  public attacks = [{
-    name: 'Seed Bomb',
-    cost: [ CardType.GRASS, CardType.COLORLESS ],
-    damage: '20',
-    text: ''
-  }];
+  public attacks = [
+    {
+      name: 'Seed Bomb',
+      cost: [CardType.GRASS, CardType.COLORLESS],
+      damage: '20',
+      text: '',
+    },
+  ];
 
   public set: string = 'BW3';
 
@@ -47,7 +54,6 @@ export class Exeggcute extends PokemonCard {
   public readonly PROPAGATION_MAREKER = 'PROPAGATION_MAREKER';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
       const player = effect.player;
 
@@ -72,5 +78,4 @@ export class Exeggcute extends PokemonCard {
 
     return state;
   }
-
 }

@@ -1,17 +1,20 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { AttackEffect, UseAttackEffect } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { CheckProvidedEnergyEffect } from '@ptcg/common';
-import { EndTurnEffect } from '@ptcg/common';
+import {
+  AttackEffect,
+  CardType,
+  CheckProvidedEnergyEffect,
+  Effect,
+  EndTurnEffect,
+  GameError,
+  GameMessage,
+  PokemonCard,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+  UseAttackEffect,
+} from '@ptcg/common';
 
 export class Cobalion extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.METAL;
@@ -22,21 +25,22 @@ export class Cobalion extends PokemonCard {
 
   public resistance = [{ type: CardType.PSYCHIC, value: -20 }];
 
-  public retreat = [ CardType.COLORLESS, CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS, CardType.COLORLESS];
 
-  public attacks = [{
-    name: 'Energy Press',
-    cost: [ CardType.METAL, CardType.COLORLESS ],
-    damage: '20+',
-    text: 'Does 20 more damage for each Energy attached to ' +
-      'the Defending Pokemon.'
-  }, {
-    name: 'Iron Breaker',
-    cost: [ CardType.METAL, CardType.METAL, CardType.COLORLESS ],
-    damage: '80',
-    text: 'The Defending Pokemon can\'t attack during your opponent\'s ' +
-      'next turn.'
-  }];
+  public attacks = [
+    {
+      name: 'Energy Press',
+      cost: [CardType.METAL, CardType.COLORLESS],
+      damage: '20+',
+      text: 'Does 20 more damage for each Energy attached to the Defending Pokémon.',
+    },
+    {
+      name: 'Iron Breaker',
+      cost: [CardType.METAL, CardType.METAL, CardType.COLORLESS],
+      damage: '80',
+      text: 'The Defending Pokémon can\'t attack during your opponent\'s next turn.',
+    },
+  ];
 
   public set: string = 'BW2';
 
@@ -47,7 +51,6 @@ export class Cobalion extends PokemonCard {
   public readonly METAL_LINKS_MAREKER = 'IRON_BREAKER_MAREKER';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     // Energy Press
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
@@ -76,5 +79,4 @@ export class Cobalion extends PokemonCard {
 
     return state;
   }
-
 }

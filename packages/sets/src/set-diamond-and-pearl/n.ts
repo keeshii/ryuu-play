@@ -1,14 +1,15 @@
-import { Effect } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { ShuffleDeckPrompt } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType } from '@ptcg/common';
+import {
+  Effect,
+  ShuffleDeckPrompt,
+  State,
+  StateUtils,
+  StoreLike,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 export class N extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.SUPPORTER;
 
   public set: string = 'DP';
@@ -23,7 +24,6 @@ export class N extends TrainerCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
-
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
       const cards = player.hand.cards.filter(c => c !== this);
@@ -31,10 +31,7 @@ export class N extends TrainerCard {
       player.hand.moveCardsTo(cards, player.deck);
       opponent.hand.moveTo(opponent.deck);
 
-      store.prompt(state, [
-        new ShuffleDeckPrompt(player.id),
-        new ShuffleDeckPrompt(opponent.id)
-      ], deckOrder => {
+      store.prompt(state, [new ShuffleDeckPrompt(player.id), new ShuffleDeckPrompt(opponent.id)], deckOrder => {
         player.deck.applyOrder(deckOrder[0]);
         opponent.deck.applyOrder(deckOrder[1]);
 
@@ -45,5 +42,4 @@ export class N extends TrainerCard {
 
     return state;
   }
-
 }

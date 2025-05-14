@@ -1,17 +1,30 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, SuperType } from '@ptcg/common';
-import { StoreLike, State, Card, ChooseEnergyPrompt, PowerType, StateUtils,
-  CardTarget, PlayerType, MoveEnergyPrompt, SlotType } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { AttackEffect, PowerEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { CheckProvidedEnergyEffect } from '@ptcg/common';
-import { DiscardCardsEffect } from '@ptcg/common';
+import {
+  AttackEffect,
+  Card,
+  CardTarget,
+  CardType,
+  CheckProvidedEnergyEffect,
+  ChooseEnergyPrompt,
+  DiscardCardsEffect,
+  Effect,
+  GameMessage,
+  MoveEnergyPrompt,
+  PlayerType,
+  PokemonCard,
+  PowerEffect,
+  PowerType,
+  SlotType,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+  SuperType,
+} from '@ptcg/common';
 
 function* useDarkTrance(next: Function, store: StoreLike, state: State, effect: PowerEffect): IterableIterator<State> {
   const player = effect.player;
 
-  const blockedMap: { source: CardTarget, blocked: number[] }[] = [];
+  const blockedMap: { source: CardTarget; blocked: number[] }[] = [];
   player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card, target) => {
     const checkProvidedEnergy = new CheckProvidedEnergyEffect(player, cardList);
     store.reduceEffect(state, checkProvidedEnergy);
@@ -36,29 +49,31 @@ function* useDarkTrance(next: Function, store: StoreLike, state: State, effect: 
     }
   });
 
-  return store.prompt(state, new MoveEnergyPrompt(
-    effect.player.id,
-    GameMessage.MOVE_ENERGY_CARDS,
-    PlayerType.BOTTOM_PLAYER,
-    [ SlotType.ACTIVE, SlotType.BENCH ],
-    { superType: SuperType.ENERGY },
-    { allowCancel: true, blockedMap }
-  ), transfers => {
-    if (transfers === null) {
-      return;
-    }
+  return store.prompt(
+    state,
+    new MoveEnergyPrompt(
+      effect.player.id,
+      GameMessage.MOVE_ENERGY_CARDS,
+      PlayerType.BOTTOM_PLAYER,
+      [SlotType.ACTIVE, SlotType.BENCH],
+      { superType: SuperType.ENERGY },
+      { allowCancel: true, blockedMap }
+    ),
+    transfers => {
+      if (transfers === null) {
+        return;
+      }
 
-    for (const transfer of transfers) {
-      const source = StateUtils.getTarget(state, player, transfer.from);
-      const target = StateUtils.getTarget(state, player, transfer.to);
-      source.moveCardTo(transfer.card, target);
+      for (const transfer of transfers) {
+        const source = StateUtils.getTarget(state, player, transfer.from);
+        const target = StateUtils.getTarget(state, player, transfer.to);
+        source.moveCardTo(transfer.card, target);
+      }
     }
-  });
+  );
 }
 
-
 export class Hydreigon extends PokemonCard {
-
   public stage: Stage = Stage.STAGE_2;
 
   public evolvesFrom = 'Zweilous';
@@ -69,23 +84,28 @@ export class Hydreigon extends PokemonCard {
 
   public weakness = [{ type: CardType.DRAGON }];
 
-  public retreat = [ CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS];
 
-  public powers = [{
-    name: 'Dark Trance',
-    useWhenInPlay: true,
-    powerType: PowerType.ABILITY,
-    text: 'As often as you like during your turn (before your attack), ' +
-      'you may move a D Energy attached to 1 of your Pokemon to another ' +
-      'of your Pokemon.'
-  }];
+  public powers = [
+    {
+      name: 'Dark Trance',
+      useWhenInPlay: true,
+      powerType: PowerType.ABILITY,
+      text:
+        'As often as you like during your turn (before your attack), ' +
+        'you may move a D Energy attached to 1 of your Pokémon to another ' +
+        'of your Pokémon.',
+    },
+  ];
 
-  public attacks = [{
-    name: 'Dragonblast',
-    cost: [ CardType.PSYCHIC, CardType.DARK, CardType.DARK, CardType.COLORLESS ],
-    damage: '140',
-    text: 'Discard 2 D Energy attached to this Pokemon.'
-  }];
+  public attacks = [
+    {
+      name: 'Dragonblast',
+      cost: [CardType.PSYCHIC, CardType.DARK, CardType.DARK, CardType.COLORLESS],
+      damage: '140',
+      text: 'Discard 2 D Energy attached to this Pokémon.',
+    },
+  ];
 
   public set: string = 'BW2';
 
@@ -94,7 +114,6 @@ export class Hydreigon extends PokemonCard {
   public fullName: string = 'Hydreigon DGE';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
       const generator = useDarkTrance(() => generator.next(), store, state, effect);
       return generator.next().value;
@@ -106,22 +125,25 @@ export class Hydreigon extends PokemonCard {
       const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);
       state = store.reduceEffect(state, checkProvidedEnergy);
 
-      state = store.prompt(state, new ChooseEnergyPrompt(
-        player.id,
-        GameMessage.CHOOSE_ENERGIES_TO_DISCARD,
-        checkProvidedEnergy.energyMap,
-        [ CardType.DARK, CardType.DARK ],
-        { allowCancel: false }
-      ), energy => {
-        const cards: Card[] = (energy || []).map(e => e.card);
+      state = store.prompt(
+        state,
+        new ChooseEnergyPrompt(
+          player.id,
+          GameMessage.CHOOSE_ENERGIES_TO_DISCARD,
+          checkProvidedEnergy.energyMap,
+          [CardType.DARK, CardType.DARK],
+          { allowCancel: false }
+        ),
+        energy => {
+          const cards: Card[] = (energy || []).map(e => e.card);
 
-        const discardEnergy = new DiscardCardsEffect(effect, cards);
-        discardEnergy.target = player.active;
-        return store.reduceEffect(state, discardEnergy);
-      });
+          const discardEnergy = new DiscardCardsEffect(effect, cards);
+          discardEnergy.target = player.active;
+          return store.reduceEffect(state, discardEnergy);
+        }
+      );
     }
 
     return state;
   }
-
 }

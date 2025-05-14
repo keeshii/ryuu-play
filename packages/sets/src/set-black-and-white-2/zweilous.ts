@@ -1,15 +1,22 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, SuperType } from '@ptcg/common';
-import { StoreLike, State, StateUtils, CoinFlipPrompt, Card, ChooseCardsPrompt,
-  EnergyCard } from '@ptcg/common';
-import { AttackEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { DiscardCardsEffect } from '@ptcg/common';
+import {
+  AttackEffect,
+  Card,
+  CardType,
+  ChooseCardsPrompt,
+  CoinFlipPrompt,
+  DiscardCardsEffect,
+  Effect,
+  EnergyCard,
+  GameMessage,
+  PokemonCard,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+  SuperType,
+} from '@ptcg/common';
 
-function* useWhirlpool(next: Function, store: StoreLike, state: State,
-  effect: AttackEffect): IterableIterator<State> {
-
+function* useWhirlpool(next: Function, store: StoreLike, state: State, effect: AttackEffect): IterableIterator<State> {
   const player = effect.player;
   const opponent = StateUtils.getOpponent(state, player);
 
@@ -19,9 +26,7 @@ function* useWhirlpool(next: Function, store: StoreLike, state: State,
   }
 
   let flipResult = false;
-  yield store.prompt(state, new CoinFlipPrompt(
-    player.id, GameMessage.COIN_FLIP
-  ), result => {
+  yield store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
     flipResult = result;
     next();
   });
@@ -31,24 +36,26 @@ function* useWhirlpool(next: Function, store: StoreLike, state: State,
   }
 
   let cards: Card[] = [];
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_DISCARD,
-    opponent.active,
-    { superType: SuperType.ENERGY },
-    { min: 1, max: 1, allowCancel: false }
-  ), selected => {
-    cards = selected || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_DISCARD,
+      opponent.active,
+      { superType: SuperType.ENERGY },
+      { min: 1, max: 1, allowCancel: false }
+    ),
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
 
   const discardEnergy = new DiscardCardsEffect(effect, cards);
   return store.reduceEffect(state, discardEnergy);
 }
 
-
 export class Zweilous extends PokemonCard {
-
   public stage: Stage = Stage.STAGE_1;
 
   public evolvesFrom = 'Deino';
@@ -59,22 +66,21 @@ export class Zweilous extends PokemonCard {
 
   public weakness = [{ type: CardType.DRAGON }];
 
-  public retreat = [ CardType.COLORLESS, CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS, CardType.COLORLESS];
 
   public attacks = [
     {
       name: 'Crunch',
-      cost: [ CardType.COLORLESS, CardType.COLORLESS ],
+      cost: [CardType.COLORLESS, CardType.COLORLESS],
       damage: '30',
-      text: 'Flip a coin. If heads, discard an Energy attached to ' +
-        'the Defending Pokemon.'
+      text: 'Flip a coin. If heads, discard an Energy attached to the Defending Pokémon.',
     },
     {
       name: 'Dragon Claw',
-      cost: [ CardType.PSYCHIC, CardType.DARK, CardType.DARK ],
+      cost: [CardType.PSYCHIC, CardType.DARK, CardType.DARK],
       damage: '80',
-      text: ''
-    }
+      text: '',
+    },
   ];
 
   public set: string = 'BW2';
@@ -91,5 +97,4 @@ export class Zweilous extends PokemonCard {
 
     return state;
   }
-
 }

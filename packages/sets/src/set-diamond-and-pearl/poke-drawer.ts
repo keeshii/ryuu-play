@@ -1,15 +1,17 @@
-import { Card } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { ConfirmPrompt } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { ChooseCardsPrompt } from '@ptcg/common';
-import { ShuffleDeckPrompt } from '@ptcg/common';
+import {
+  Card,
+  ChooseCardsPrompt,
+  ConfirmPrompt,
+  Effect,
+  GameError,
+  GameMessage,
+  ShuffleDeckPrompt,
+  State,
+  StoreLike,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -25,10 +27,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   let playTwoCards = false;
 
   if (count >= 2) {
-    yield store.prompt(state, new ConfirmPrompt(
-      player.id,
-      GameMessage.WANT_TO_PLAY_BOTH_CARDS_AT_ONCE
-    ), result => {
+    yield store.prompt(state, new ConfirmPrompt(player.id, GameMessage.WANT_TO_PLAY_BOTH_CARDS_AT_ONCE), result => {
       playTwoCards = result;
       next();
     });
@@ -48,16 +47,20 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   }
 
   let cards: Card[] = [];
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_HAND,
-    player.deck,
-    { },
-    { min: 0, max: 2, allowCancel: true }
-  ), selected => {
-    cards = selected || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_HAND,
+      player.deck,
+      {},
+      { min: 0, max: 2, allowCancel: true }
+    ),
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
 
   // Get selected cards
   player.deck.moveCardsTo(cards, player.hand);
@@ -69,7 +72,6 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 }
 
 export class PokeDrawer extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'DP';
@@ -92,5 +94,4 @@ export class PokeDrawer extends TrainerCard {
 
     return state;
   }
-
 }

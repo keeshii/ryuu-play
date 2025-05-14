@@ -1,14 +1,32 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, CardTag, EnergyType, SuperType } from '@ptcg/common';
-import { StoreLike, State, PowerType, EnergyCard, GameError, GameMessage,
-  CoinFlipPrompt, PokemonCardList, ChooseCardsPrompt } from '@ptcg/common';
-import { AttackEffect, PowerEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { EndTurnEffect } from '@ptcg/common';
+import {
+  AttackEffect,
+  CardTag,
+  CardType,
+  ChooseCardsPrompt,
+  CoinFlipPrompt,
+  Effect,
+  EndTurnEffect,
+  EnergyCard,
+  EnergyType,
+  GameError,
+  GameMessage,
+  PokemonCard,
+  PokemonCardList,
+  PowerEffect,
+  PowerType,
+  Stage,
+  State,
+  StoreLike,
+  SuperType,
+} from '@ptcg/common';
 
-
-function* useRebirth(next: Function, store: StoreLike, state: State,
-  self: HoOhEx, effect: PowerEffect): IterableIterator<State> {
+function* useRebirth(
+  next: Function,
+  store: StoreLike,
+  state: State,
+  self: HoOhEx,
+  effect: PowerEffect
+): IterableIterator<State> {
   const player = effect.player;
 
   // Check if card is in the discard
@@ -29,9 +47,7 @@ function* useRebirth(next: Function, store: StoreLike, state: State,
   player.marker.addMarker(self.REBIRTH_MAREKER, self);
 
   let flipResult = false;
-  yield store.prompt(state, [
-    new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)
-  ], result => {
+  yield store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
     flipResult = result;
     next();
   });
@@ -43,7 +59,7 @@ function* useRebirth(next: Function, store: StoreLike, state: State,
   player.discard.moveCardTo(self, slots[0]);
 
   let basicEnergies = 0;
-  const typeMap: {[key: number]: boolean} = {};
+  const typeMap: { [key: number]: boolean } = {};
   player.discard.cards.forEach(c => {
     if (c instanceof EnergyCard && c.energyType === EnergyType.BASIC) {
       const cardType = c.provides[0];
@@ -53,27 +69,30 @@ function* useRebirth(next: Function, store: StoreLike, state: State,
       }
     }
   });
-  
+
   if (basicEnergies === 0) {
     return state;
   }
 
   const count = Math.min(3, basicEnergies);
-  return store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_ATTACH,
-    player.discard,
-    { superType: SuperType.ENERGY, energyType: EnergyType.BASIC },
-    { min: count, max: count, allowCancel: false, differentTypes: true }
-  ), selected => {
-    const cards = selected || [];
-    player.discard.moveCardsTo(cards, slots[0]);
-  });
+  return store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_ATTACH,
+      player.discard,
+      { superType: SuperType.ENERGY, energyType: EnergyType.BASIC },
+      { min: count, max: count, allowCancel: false, differentTypes: true }
+    ),
+    selected => {
+      const cards = selected || [];
+      player.discard.moveCardsTo(cards, slots[0]);
+    }
+  );
 }
 
 export class HoOhEx extends PokemonCard {
-
-  public tags = [ CardTag.POKEMON_EX ];
+  public tags = [CardTag.POKEMON_EX];
 
   public stage: Stage = Stage.BASIC;
 
@@ -85,26 +104,28 @@ export class HoOhEx extends PokemonCard {
 
   public resistance = [{ type: CardType.FIGHTING, value: -20 }];
 
-  public retreat = [ CardType.COLORLESS, CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS, CardType.COLORLESS];
 
-  public powers = [{
-    name: 'Rebirth',
-    useFromDiscard: true,
-    powerType: PowerType.ABILITY,
-    text: 'Once during your turn (before your attack), if this Pokemon is ' +
-      'in your discard pile, you may flip a coin. If heads, put this Pokemon ' +
-      'onto your Bench and attach 3 different types of basic Energy cards ' +
-      'from your discard pile to this Pokemon.'
-  }];
+  public powers = [
+    {
+      name: 'Rebirth',
+      useFromDiscard: true,
+      powerType: PowerType.ABILITY,
+      text:
+        'Once during your turn (before your attack), if this Pokémon is ' +
+        'in your discard pile, you may flip a coin. If heads, put this Pokémon ' +
+        'onto your Bench and attach 3 different types of basic Energy cards ' +
+        'from your discard pile to this Pokémon.',
+    },
+  ];
 
   public attacks = [
     {
       name: 'Rainbow Burn',
-      cost: [ CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS ],
+      cost: [CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS],
       damage: '20+',
-      text: 'Does 20 more damage for each different type of basic Energy ' +
-        'attached to this Pokemon.'
-    }
+      text: 'Does 20 more damage for each different type of basic Energy attached to this Pokémon.',
+    },
   ];
 
   public set: string = 'BW3';
@@ -116,12 +137,11 @@ export class HoOhEx extends PokemonCard {
   public readonly REBIRTH_MAREKER = 'REBIRTH_MAREKER';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
 
       let basicEnergies = 0;
-      const typeMap: {[key: number]: boolean} = {};
+      const typeMap: { [key: number]: boolean } = {};
       player.active.cards.forEach(c => {
         if (c instanceof EnergyCard && c.energyType === EnergyType.BASIC) {
           const cardType = c.provides[0];
@@ -147,5 +167,4 @@ export class HoOhEx extends PokemonCard {
 
     return state;
   }
-
 }

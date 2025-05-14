@@ -1,13 +1,6 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { AttackEffect } from '@ptcg/common';
-import { PlayerType } from '@ptcg/common';
+import { AttackEffect, CardType, Effect, PlayerType, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Miltank extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.COLORLESS;
@@ -16,21 +9,20 @@ export class Miltank extends PokemonCard {
 
   public weakness = [{ type: CardType.FIGHTING }];
 
-  public retreat = [ CardType.COLORLESS, CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS, CardType.COLORLESS];
 
   public attacks = [
     {
       name: 'Powerful Friends',
-      cost: [ CardType.COLORLESS ],
+      cost: [CardType.COLORLESS],
       damage: '10+',
-      text: 'If you have any Stage 2 Pokemon on your Bench, ' +
-        'this attack does 70 more damage.'
+      text: 'If you have any Stage 2 Pokémon on your Bench, this attack does 70 more damage.',
     },
     {
       name: 'Hammer In',
-      cost: [ CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS ],
+      cost: [CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS],
       damage: '60',
-      text: ''
+      text: '',
     },
   ];
 
@@ -41,7 +33,6 @@ export class Miltank extends PokemonCard {
   public fullName: string = 'Miltank FLF';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
 
@@ -59,5 +50,4 @@ export class Miltank extends PokemonCard {
 
     return state;
   }
-
 }

@@ -1,11 +1,18 @@
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { ChoosePokemonPrompt } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { PlayerType, SlotType, GameError, GameMessage, PokemonCardList, StateUtils } from '@ptcg/common';
+import {
+  ChoosePokemonPrompt,
+  Effect,
+  GameError,
+  GameMessage,
+  PlayerType,
+  PokemonCardList,
+  SlotType,
+  State,
+  StateUtils,
+  StoreLike,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -20,16 +27,20 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 
   let targets: PokemonCardList[] = [];
   if (opponentHasBench) {
-    yield store.prompt(state, new ChoosePokemonPrompt(
-      opponent.id,
-      GameMessage.CHOOSE_POKEMON_TO_SWITCH,
-      PlayerType.BOTTOM_PLAYER,
-      [ SlotType.BENCH ],
-      { allowCancel: false }
-    ), results => {
-      targets = results || [];
-      next();
-    });
+    yield store.prompt(
+      state,
+      new ChoosePokemonPrompt(
+        opponent.id,
+        GameMessage.CHOOSE_POKEMON_TO_SWITCH,
+        PlayerType.BOTTOM_PLAYER,
+        [SlotType.BENCH],
+        { allowCancel: false }
+      ),
+      results => {
+        targets = results || [];
+        next();
+      }
+    );
 
     if (targets.length > 0) {
       opponent.switchPokemon(targets[0]);
@@ -37,16 +48,20 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   }
 
   if (playerHasBench) {
-    yield store.prompt(state, new ChoosePokemonPrompt(
-      player.id,
-      GameMessage.CHOOSE_POKEMON_TO_SWITCH,
-      PlayerType.BOTTOM_PLAYER,
-      [ SlotType.BENCH ],
-      { allowCancel: false }
-    ), results => {
-      targets = results || [];
-      next();
-    });
+    yield store.prompt(
+      state,
+      new ChoosePokemonPrompt(
+        player.id,
+        GameMessage.CHOOSE_POKEMON_TO_SWITCH,
+        PlayerType.BOTTOM_PLAYER,
+        [SlotType.BENCH],
+        { allowCancel: false }
+      ),
+      results => {
+        targets = results || [];
+        next();
+      }
+    );
 
     if (targets.length > 0) {
       player.switchPokemon(targets[0]);
@@ -57,7 +72,6 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 }
 
 export class EscapeRope extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'BW2';
@@ -67,9 +81,9 @@ export class EscapeRope extends TrainerCard {
   public fullName: string = 'Escape Rope PLS';
 
   public text: string =
-    'Each player switches his or her Active Pokemon with 1 of his or her ' +
-    'Benched Pokemon. (Your opponent switches first. If a player does not ' +
-    'have a Benched Pokemon, he or she doesn\'t switch Pokemon.)';
+    'Each player switches his or her Active Pokémon with 1 of his or her ' +
+    'Benched Pokémon. (Your opponent switches first. If a player does not ' +
+    'have a Benched Pokémon, he or she doesn\'t switch Pokémon.)';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
@@ -78,5 +92,4 @@ export class EscapeRope extends TrainerCard {
     }
     return state;
   }
-
 }

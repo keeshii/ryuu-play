@@ -1,14 +1,11 @@
-import { CardType } from '@ptcg/common';
-import { EnergyCard } from '@ptcg/common';
+import { CardType, EnergyCard } from '@ptcg/common';
 
 export class GrassEnergy extends EnergyCard {
-
-  public provides: CardType[] = [ CardType.GRASS ];
+  public provides: CardType[] = [CardType.GRASS];
 
   public set: string = 'DP';
 
   public name = 'Grass Energy';
 
   public fullName = 'Grass Energy EVO';
-
 }

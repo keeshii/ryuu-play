@@ -1,17 +1,18 @@
-import { Effect } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { DealDamageEffect } from '@ptcg/common';
-import { EndTurnEffect } from '@ptcg/common';
+import {
+  DealDamageEffect,
+  Effect,
+  EndTurnEffect,
+  GameError,
+  GameMessage,
+  State,
+  StateUtils,
+  StoreLike,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 export class BlackBelt extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.SUPPORTER;
 
   public set: string = 'HGSS';
@@ -22,8 +23,8 @@ export class BlackBelt extends TrainerCard {
 
   public text: string =
     'You may use this card only if you have more Prize cards left than your ' +
-    'opponent. During this turn, each of your Active Pokemon\'s attacks does ' +
-    '40 more damage to your opponent\'s Active Pokemon (before applying ' +
+    'opponent. During this turn, each of your Active Pokémon\'s attacks does ' +
+    '40 more damage to your opponent\'s Active Pokémon (before applying ' +
     'Weakness and Resistance).';
 
   private readonly BLACK_BELT_MARKER = 'BLACK_BELT_MARKER';
@@ -53,5 +54,4 @@ export class BlackBelt extends TrainerCard {
 
     return state;
   }
-
 }

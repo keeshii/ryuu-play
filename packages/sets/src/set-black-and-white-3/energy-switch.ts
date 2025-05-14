@@ -1,15 +1,21 @@
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType, SuperType, EnergyType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { EnergyCard } from '@ptcg/common';
-import { PlayerType, SlotType } from '@ptcg/common';
-import { MoveEnergyPrompt, CardTransfer } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
+import {
+  CardTransfer,
+  Effect,
+  EnergyCard,
+  EnergyType,
+  GameError,
+  GameMessage,
+  MoveEnergyPrompt,
+  PlayerType,
+  SlotType,
+  State,
+  StateUtils,
+  StoreLike,
+  SuperType,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -33,17 +39,21 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   effect.preventDefault = true;
 
   let transfers: CardTransfer[] = [];
-  yield store.prompt(state, new MoveEnergyPrompt(
-    player.id,
-    GameMessage.MOVE_ENERGY_CARDS,
-    PlayerType.BOTTOM_PLAYER,
-    [ SlotType.ACTIVE, SlotType.BENCH ],
-    { superType: SuperType.ENERGY, energyType: EnergyType.BASIC },
-    { min: 1, max: 1, allowCancel: true }
-  ), result => {
-    transfers = result || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new MoveEnergyPrompt(
+      player.id,
+      GameMessage.MOVE_ENERGY_CARDS,
+      PlayerType.BOTTOM_PLAYER,
+      [SlotType.ACTIVE, SlotType.BENCH],
+      { superType: SuperType.ENERGY, energyType: EnergyType.BASIC },
+      { min: 1, max: 1, allowCancel: true }
+    ),
+    result => {
+      transfers = result || [];
+      next();
+    }
+  );
 
   // Cancelled by the user
   if (transfers.length === 0) {
@@ -63,7 +73,6 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 }
 
 export class EnergySwitch extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'BW3';
@@ -72,8 +81,7 @@ export class EnergySwitch extends TrainerCard {
 
   public fullName: string = 'Energy Switch LT';
 
-  public text: string =
-    'Move a basic Energy from 1 of your Pokemon to another of your Pokemon.';
+  public text: string = 'Move a basic Energy from 1 of your Pokémon to another of your Pokémon.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
@@ -83,5 +91,4 @@ export class EnergySwitch extends TrainerCard {
 
     return state;
   }
-
 }

@@ -1,19 +1,22 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, SpecialCondition } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { PowerEffect } from '@ptcg/common';
-import { PowerType } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { CoinFlipPrompt } from '@ptcg/common';
-import { EndTurnEffect } from '@ptcg/common';
-import { PlayPokemonEffect } from '@ptcg/common';
+import {
+  CardType,
+  CoinFlipPrompt,
+  Effect,
+  EndTurnEffect,
+  GameError,
+  GameMessage,
+  PlayPokemonEffect,
+  PokemonCard,
+  PowerEffect,
+  PowerType,
+  SpecialCondition,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Munna extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.PSYCHIC;
@@ -22,23 +25,28 @@ export class Munna extends PokemonCard {
 
   public weakness = [{ type: CardType.PSYCHIC }];
 
-  public retreat = [ CardType.COLORLESS, CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS, CardType.COLORLESS];
 
-  public powers = [{
-    name: 'Long-Distance Hypnosis',
-    useWhenInPlay: true,
-    powerType: PowerType.ABILITY,
-    text: 'Once during your turn (before your attack), you may flip a coin. ' +
-      'If heads, your opponent\'s Active Pokemon is now Asleep. ' +
-      'If tails, your Active Pokemon is now Asleep.'
-  }];
+  public powers = [
+    {
+      name: 'Long-Distance Hypnosis',
+      useWhenInPlay: true,
+      powerType: PowerType.ABILITY,
+      text:
+        'Once during your turn (before your attack), you may flip a coin. ' +
+        'If heads, your opponent\'s Active Pokémon is now Asleep. ' +
+        'If tails, your Active Pokémon is now Asleep.',
+    },
+  ];
 
-  public attacks = [{
-    name: 'Psyshot',
-    cost: [ CardType.PSYCHIC, CardType.COLORLESS ],
-    damage: '20',
-    text: ''
-  }];
+  public attacks = [
+    {
+      name: 'Psyshot',
+      cost: [CardType.PSYCHIC, CardType.COLORLESS],
+      damage: '20',
+      text: '',
+    },
+  ];
 
   public set: string = 'BW2';
 
@@ -49,7 +57,6 @@ export class Munna extends PokemonCard {
   public readonly LONG_DISTANCE_HYPNOSIS_MARKER = 'LONG_DISTANCE_HYPNOSIS_MARKER';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof PlayPokemonEffect && effect.pokemonCard === this) {
       const player = effect.player;
       player.marker.removeMarker(this.LONG_DISTANCE_HYPNOSIS_MARKER, this);
@@ -64,10 +71,7 @@ export class Munna extends PokemonCard {
       }
       player.marker.addMarker(this.LONG_DISTANCE_HYPNOSIS_MARKER, this);
 
-      return store.prompt(state, new CoinFlipPrompt(
-        player.id,
-        GameMessage.COIN_FLIP
-      ), result => {
+      return store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
         if (result) {
           opponent.active.addSpecialCondition(SpecialCondition.ASLEEP);
         } else {
@@ -82,5 +86,4 @@ export class Munna extends PokemonCard {
 
     return state;
   }
-
 }

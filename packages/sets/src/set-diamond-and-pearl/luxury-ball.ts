@@ -1,12 +1,21 @@
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType, SuperType, CardTag } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { ChooseCardsPrompt, Card, StateUtils, ShowCardsPrompt, ShuffleDeckPrompt,
-  PokemonCard, GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
+import {
+  Card,
+  CardTag,
+  ChooseCardsPrompt,
+  Effect,
+  GameError,
+  GameMessage,
+  PokemonCard,
+  ShowCardsPrompt,
+  ShuffleDeckPrompt,
+  State,
+  StateUtils,
+  StoreLike,
+  SuperType,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -17,16 +26,20 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     .filter(c => c instanceof PokemonCard && c.tags.includes(CardTag.POKEMON_LV_X))
     .map(c => player.deck.cards.indexOf(c));
 
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_HAND,
-    player.deck,
-    { superType: SuperType.POKEMON },
-    { min: 1, max: 1, allowCancel: true, blocked }
-  ), selected => {
-    cards = selected;
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_HAND,
+      player.deck,
+      { superType: SuperType.POKEMON },
+      { min: 1, max: 1, allowCancel: true, blocked }
+    ),
+    selected => {
+      cards = selected;
+      next();
+    }
+  );
 
   if (cards === null) {
     return state;
@@ -35,11 +48,9 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   player.deck.moveCardsTo(cards, player.hand);
 
   if (cards.length > 0) {
-    yield store.prompt(state, new ShowCardsPrompt(
-      opponent.id,
-      GameMessage.CARDS_SHOWED_BY_THE_OPPONENT,
-      cards
-    ), () => next());
+    yield store.prompt(state, new ShowCardsPrompt(opponent.id, GameMessage.CARDS_SHOWED_BY_THE_OPPONENT, cards), () =>
+      next()
+    );
   }
 
   return store.prompt(state, new ShuffleDeckPrompt(player.id), order => {
@@ -48,7 +59,6 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 }
 
 export class LuxuryBall extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'DP';
@@ -58,7 +68,7 @@ export class LuxuryBall extends TrainerCard {
   public fullName: string = 'Luxury Ball SF';
 
   public text: string =
-    'Search your deck for a Pokemon (excluding Pokemon LV.X), show it to ' +
+    'Search your deck for a Pokémon (excluding Pokémon LV.X), show it to ' +
     'your opponent, and put it into your hand. Shuffle your deck afterward. ' +
     'If any Luxury Ball is in your discard pile, you can\'t play this card.';
 
@@ -79,5 +89,4 @@ export class LuxuryBall extends TrainerCard {
 
     return state;
   }
-
 }

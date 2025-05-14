@@ -1,16 +1,19 @@
-import { Effect } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType, CardType } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
-import { UseStadiumEffect } from '@ptcg/common';
-import { CheckPokemonTypeEffect, CheckTableStateEffect } from '@ptcg/common';
+import {
+  CardType,
+  CheckPokemonTypeEffect,
+  CheckTableStateEffect,
+  Effect,
+  GameError,
+  GameMessage,
+  State,
+  StateUtils,
+  StoreLike,
+  TrainerCard,
+  TrainerType,
+  UseStadiumEffect,
+} from '@ptcg/common';
 
 export class SteelShelter extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.STADIUM;
 
   public set: string = 'BW3';
@@ -20,9 +23,9 @@ export class SteelShelter extends TrainerCard {
   public fullName: string = 'Steel Shelter PFO';
 
   public text: string =
-    'Each M Pokemon (both yours and your opponent\'s) can\'t be affected ' +
+    'Each M Pokémon (both yours and your opponent\'s) can\'t be affected ' +
     'by any Special Conditions. (Remove any Special Conditions affecting ' +
-    'those Pokemon.)';
+    'those Pokémon.)';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof CheckTableStateEffect && StateUtils.getStadiumCard(state) === this) {
@@ -50,5 +53,4 @@ export class SteelShelter extends TrainerCard {
 
     return state;
   }
-
 }

@@ -1,22 +1,30 @@
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType, SuperType, EnergyType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { Card } from '@ptcg/common';
-import { ChooseCardsPrompt } from '@ptcg/common';
-import { CardList } from '@ptcg/common';
-import { EnergyCard } from '@ptcg/common';
+import {
+  Card,
+  CardList,
+  ChooseCardsPrompt,
+  Effect,
+  EnergyCard,
+  EnergyType,
+  GameError,
+  GameMessage,
+  State,
+  StoreLike,
+  SuperType,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
-
-function* playCard(next: Function, store: StoreLike, state: State,
-  self: SuperiorEnergyRetrieval, effect: TrainerEffect): IterableIterator<State> {
+function* playCard(
+  next: Function,
+  store: StoreLike,
+  state: State,
+  self: SuperiorEnergyRetrieval,
+  effect: TrainerEffect
+): IterableIterator<State> {
   const player = effect.player;
   let cards: Card[] = [];
-  
+
   cards = player.hand.cards.filter(c => c !== self);
   if (cards.length < 2) {
     throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
@@ -40,16 +48,20 @@ function* playCard(next: Function, store: StoreLike, state: State,
   const handTemp = new CardList();
   handTemp.cards = player.hand.cards.filter(c => c !== self);
 
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_DISCARD,
-    handTemp,
-    { },
-    { min: 2, max: 2, allowCancel: true }
-  ), selected => {
-    cards = selected || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_DISCARD,
+      handTemp,
+      {},
+      { min: 2, max: 2, allowCancel: true }
+    ),
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
 
   // Operation canceled by the user
   if (cards.length === 0) {
@@ -58,16 +70,20 @@ function* playCard(next: Function, store: StoreLike, state: State,
 
   const count = Math.min(4, basicEnergies);
   let recovered: Card[] = [];
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_HAND,
-    player.discard,
-    { superType: SuperType.ENERGY, energyType: EnergyType.BASIC },
-    { min: count, max: count, allowCancel: true }
-  ), selected => {
-    recovered = selected || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_HAND,
+      player.discard,
+      { superType: SuperType.ENERGY, energyType: EnergyType.BASIC },
+      { min: count, max: count, allowCancel: true }
+    ),
+    selected => {
+      recovered = selected || [];
+      next();
+    }
+  );
 
   // Operation canceled by the user
   if (recovered.length === 0) {
@@ -81,7 +97,6 @@ function* playCard(next: Function, store: StoreLike, state: State,
 }
 
 export class SuperiorEnergyRetrieval extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'BW3';
@@ -103,5 +118,4 @@ export class SuperiorEnergyRetrieval extends TrainerCard {
     }
     return state;
   }
-
 }

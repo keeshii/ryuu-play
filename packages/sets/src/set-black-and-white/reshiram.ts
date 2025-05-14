@@ -1,15 +1,19 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType } from '@ptcg/common';
-import { StoreLike, State, Card, ChooseEnergyPrompt } from '@ptcg/common';
-import { AttackEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { CheckProvidedEnergyEffect } from '@ptcg/common';
-import { DiscardCardsEffect } from '@ptcg/common';
-
+import {
+  AttackEffect,
+  Card,
+  CardType,
+  CheckProvidedEnergyEffect,
+  ChooseEnergyPrompt,
+  DiscardCardsEffect,
+  Effect,
+  GameMessage,
+  PokemonCard,
+  Stage,
+  State,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Reshiram extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.FIRE;
@@ -18,21 +22,21 @@ export class Reshiram extends PokemonCard {
 
   public weakness = [{ type: CardType.WATER }];
 
-  public retreat = [ CardType.COLORLESS, CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS, CardType.COLORLESS];
 
   public attacks = [
     {
       name: 'Outrage',
-      cost: [ CardType.COLORLESS, CardType.COLORLESS ],
+      cost: [CardType.COLORLESS, CardType.COLORLESS],
       damage: '20+',
-      text: 'Does 10 more damage for each damage counter on this Pokemon.'
+      text: 'Does 10 more damage for each damage counter on this Pokémon.',
     },
     {
       name: 'Blue Flare',
-      cost: [ CardType.FIRE, CardType.FIRE, CardType.COLORLESS ],
+      cost: [CardType.FIRE, CardType.FIRE, CardType.COLORLESS],
       damage: '120',
-      text: 'Discard 2 R Energy attached to this Pokemon.'
-    }
+      text: 'Discard 2 R Energy attached to this Pokémon.',
+    },
   ];
 
   public set: string = 'BW';
@@ -53,21 +57,24 @@ export class Reshiram extends PokemonCard {
       const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);
       state = store.reduceEffect(state, checkProvidedEnergy);
 
-      state = store.prompt(state, new ChooseEnergyPrompt(
-        player.id,
-        GameMessage.CHOOSE_ENERGIES_TO_DISCARD,
-        checkProvidedEnergy.energyMap,
-        [ CardType.FIRE, CardType.FIRE ],
-        { allowCancel: false }
-      ), energy => {
-        const cards: Card[] = (energy || []).map(e => e.card);
-        const discardEnergy = new DiscardCardsEffect(effect, cards);
-        discardEnergy.target = player.active;
-        store.reduceEffect(state, discardEnergy);
-      });
+      state = store.prompt(
+        state,
+        new ChooseEnergyPrompt(
+          player.id,
+          GameMessage.CHOOSE_ENERGIES_TO_DISCARD,
+          checkProvidedEnergy.energyMap,
+          [CardType.FIRE, CardType.FIRE],
+          { allowCancel: false }
+        ),
+        energy => {
+          const cards: Card[] = (energy || []).map(e => e.card);
+          const discardEnergy = new DiscardCardsEffect(effect, cards);
+          discardEnergy.target = player.active;
+          store.reduceEffect(state, discardEnergy);
+        }
+      );
     }
 
     return state;
   }
-
 }

@@ -1,20 +1,24 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, SpecialCondition } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { AttackEffect, PowerEffect } from '@ptcg/common';
-import { AddSpecialConditionsEffect } from '@ptcg/common';
-import { PowerType } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
-import { PlayerType } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { CoinFlipPrompt } from '@ptcg/common';
-import { PlayItemEffect } from '@ptcg/common';
+import {
+  AddSpecialConditionsEffect,
+  AttackEffect,
+  CardType,
+  CoinFlipPrompt,
+  Effect,
+  GameError,
+  GameMessage,
+  PlayerType,
+  PlayItemEffect,
+  PokemonCard,
+  PowerEffect,
+  PowerType,
+  SpecialCondition,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Vileplume extends PokemonCard {
-
   public stage: Stage = Stage.STAGE_2;
 
   public evolvesFrom = 'Gloom';
@@ -25,21 +29,26 @@ export class Vileplume extends PokemonCard {
 
   public weakness = [{ type: CardType.PSYCHIC }];
 
-  public retreat = [ CardType.COLORLESS, CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS, CardType.COLORLESS];
 
-  public powers = [{
-    name: 'Allergy Flower',
-    powerType: PowerType.POKEBODY,
-    text: 'Each player can\'t play any Trainer cards from his or her hand.'
-  }];
+  public powers = [
+    {
+      name: 'Allergy Flower',
+      powerType: PowerType.POKEBODY,
+      text: 'Each player can\'t play any Trainer cards from his or her hand.',
+    },
+  ];
 
-  public attacks = [{
-    name: 'Dazzling Pollen',
-    cost: [ CardType.GRASS, CardType.GRASS, CardType.COLORLESS ],
-    damage: '50+',
-    text: 'Flip a coin. If heads, this attack does 50 damage plus 20 more ' +
-      'damage. If tails, the Defending Pokemon is now Confused.'
-  }];
+  public attacks = [
+    {
+      name: 'Dazzling Pollen',
+      cost: [CardType.GRASS, CardType.GRASS, CardType.COLORLESS],
+      damage: '50+',
+      text:
+        'Flip a coin. If heads, this attack does 50 damage plus 20 more ' +
+        'damage. If tails, the Defending Pokémon is now Confused.',
+    },
+  ];
 
   public set: string = 'BW2';
 
@@ -48,12 +57,9 @@ export class Vileplume extends PokemonCard {
   public fullName: string = 'Vileplume UND';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
-      return store.prompt(state, [
-        new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)
-      ], result => {
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
         if (result) {
           effect.damage += 20;
         } else {
@@ -97,5 +103,4 @@ export class Vileplume extends PokemonCard {
 
     return state;
   }
-
 }

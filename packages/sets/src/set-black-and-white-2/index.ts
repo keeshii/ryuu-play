@@ -1,3 +1,4 @@
+import { Card } from '@ptcg/common';
 import { Accelgor } from './accelgor';
 import { AspertiaCityGym } from './aspertia-city-gym';
 import { Beautifly } from './beautifly';
@@ -5,7 +6,6 @@ import { Bicycle } from './bicycle';
 import { Bouffalant } from './bouffalant';
 import { Bronzong } from './bronzong';
 import { Bronzor } from './bronzor';
-import { Card } from '@ptcg/common';
 import { Cobalion } from './cobalion';
 import { Copycat } from './copycat';
 import { DarkClaw } from './dark-claw';
@@ -35,8 +35,8 @@ import { MewtwoEx } from './mewtwo-ex';
 import { Miltank } from './miltank';
 import { MrMime } from './mr-mime';
 import { Munna } from './munna';
-import { Musharna } from './musharna';
 import { MuscleBand } from './muscle-band';
+import { Musharna } from './musharna';
 import { Oddish } from './oddish';
 import { Pikachu } from './pikachu';
 import { PokemonCenter } from './pokemon-center';
@@ -73,8 +73,8 @@ import { Trubbish } from './trubbish';
 import { Vanillish } from './vanillish';
 import { Vanillite } from './vanillite';
 import { Vanilluxe } from './vanilluxe';
-import { VirbankCityGym } from './virbank-city-gym';
 import { Vileplume } from './vileplume';
+import { VirbankCityGym } from './virbank-city-gym';
 import { ViridianForest } from './viridian-forest';
 import { VsSeeker } from './vs-seeker';
 import { Wurmple } from './wurmple';
@@ -162,5 +162,5 @@ export const setBlackAndWhite2: Card[] = [
   new VsSeeker(),
   new Wurmple(),
   new YveltalEx(),
-  new Zweilous()
+  new Zweilous(),
 ];

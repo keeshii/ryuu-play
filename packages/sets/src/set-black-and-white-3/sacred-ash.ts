@@ -1,18 +1,26 @@
-import { Card } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType, SuperType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { PokemonCard } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { ChooseCardsPrompt } from '@ptcg/common';
-import { ShuffleDeckPrompt } from '@ptcg/common';
+import {
+  Card,
+  ChooseCardsPrompt,
+  Effect,
+  GameError,
+  GameMessage,
+  PokemonCard,
+  ShuffleDeckPrompt,
+  State,
+  StoreLike,
+  SuperType,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
-function* playCard(next: Function, store: StoreLike, state: State,
-  self: SacredAsh, effect: TrainerEffect): IterableIterator<State> {
+function* playCard(
+  next: Function,
+  store: StoreLike,
+  state: State,
+  self: SacredAsh,
+  effect: TrainerEffect
+): IterableIterator<State> {
   const player = effect.player;
 
   let pokemonsInDiscard: number = 0;
@@ -33,16 +41,20 @@ function* playCard(next: Function, store: StoreLike, state: State,
 
   const max = Math.min(5, pokemonsInDiscard);
   let cards: Card[] = [];
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_DECK,
-    player.discard,
-    { superType: SuperType.POKEMON },
-    { min: max, max, allowCancel: true, blocked }
-  ), selected => {
-    cards = selected || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_DECK,
+      player.discard,
+      { superType: SuperType.POKEMON },
+      { min: max, max, allowCancel: true, blocked }
+    ),
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
 
   // Operation canceled by the user
   if (cards.length === 0) {
@@ -58,7 +70,6 @@ function* playCard(next: Function, store: StoreLike, state: State,
 }
 
 export class SacredAsh extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'BW3';
@@ -67,8 +78,7 @@ export class SacredAsh extends TrainerCard {
 
   public fullName: string = 'Sacred Ash FLF';
 
-  public text: string =
-    'Shuffle 5 Pokemon from your discard pile into your deck.';
+  public text: string = 'Shuffle 5 Pokémon from your discard pile into your deck.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
@@ -78,5 +88,4 @@ export class SacredAsh extends TrainerCard {
 
     return state;
   }
-
 }

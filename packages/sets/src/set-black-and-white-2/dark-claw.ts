@@ -1,14 +1,16 @@
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType, CardType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { DealDamageEffect } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
-import { CheckPokemonTypeEffect } from '@ptcg/common';
+import {
+  CardType,
+  CheckPokemonTypeEffect,
+  DealDamageEffect,
+  Effect,
+  State,
+  StateUtils,
+  StoreLike,
+  TrainerCard,
+  TrainerType,
+} from '@ptcg/common';
 
 export class DarkClaw extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.TOOL;
 
   public set: string = 'BW2';
@@ -18,8 +20,8 @@ export class DarkClaw extends TrainerCard {
   public fullName: string = 'Dark Claw DEX';
 
   public text: string =
-    'If this card is attached to a D Pokemon, each of the attacks ' +
-    'of that Pokemon does 20 more damage to the Active Pokemon ' +
+    'If this card is attached to a D Pokémon, each of the attacks ' +
+    'of that Pokémon does 20 more damage to the Active Pokémon ' +
     '(before applying Weakness and Resistance).';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
@@ -41,5 +43,4 @@ export class DarkClaw extends TrainerCard {
 
     return state;
   }
-
 }

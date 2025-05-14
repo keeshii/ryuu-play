@@ -1,44 +1,52 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { AttackEffect } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
-import { PlayerType } from '@ptcg/common';
-import { CheckProvidedEnergyEffect } from '@ptcg/common';
-import { PutDamageEffect } from '@ptcg/common';
-
+import {
+  AttackEffect,
+  CardType,
+  CheckProvidedEnergyEffect,
+  Effect,
+  PlayerType,
+  PokemonCard,
+  PutDamageEffect,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Piplup extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.WATER;
 
   public hp: number = 50;
 
-  public weakness = [{
-    type: CardType.LIGHTNING,
-    value: 10
-  }];
+  public weakness = [
+    {
+      type: CardType.LIGHTNING,
+      value: 10,
+    },
+  ];
 
-  public retreat = [ CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS];
 
-  public attacks = [{
-    name: 'Water Sport',
-    cost: [ CardType.WATER ],
-    damage: '10+',
-    text: 'If Piplup has less Energy attached to it than the Defending ' +
-      'Pokemon, this attack does 10 damage plus 10 more damage.'
-  }, {
-    name: 'Wavelet',
-    cost: [ CardType.WATER, CardType.COLORLESS, CardType.COLORLESS ],
-    damage: '40',
-    text: 'If you have Buizel in play, this attack does 10 damage to each ' +
-      'of your opponent\'s Benched Pokemon. (Don\'t apply Weakness and ' +
-      'Resistance for Benched Pokemon.)'
-  }];
+  public attacks = [
+    {
+      name: 'Water Sport',
+      cost: [CardType.WATER],
+      damage: '10+',
+      text:
+        'If Piplup has less Energy attached to it than the Defending ' +
+        'Pokémon, this attack does 10 damage plus 10 more damage.',
+    },
+    {
+      name: 'Wavelet',
+      cost: [CardType.WATER, CardType.COLORLESS, CardType.COLORLESS],
+      damage: '40',
+      text:
+        'If you have Buizel in play, this attack does 10 damage to each ' +
+        'of your opponent\'s Benched Pokémon. (Don\'t apply Weakness and ' +
+        'Resistance for Benched Pokémon.)',
+    },
+  ];
 
   public set: string = 'OP9';
 
@@ -47,7 +55,6 @@ export class Piplup extends PokemonCard {
   public fullName: string = 'Piplup OP9';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
@@ -59,10 +66,10 @@ export class Piplup extends PokemonCard {
       state = store.reduceEffect(state, opponentEnergy);
 
       let playerEnergyCount = 0;
-      playerEnergy.energyMap.forEach(e => playerEnergyCount += e.provides.length);
+      playerEnergy.energyMap.forEach(e => (playerEnergyCount += e.provides.length));
 
       let opponentEnergyCount = 0;
-      opponentEnergy.energyMap.forEach(e => opponentEnergyCount += e.provides.length);
+      opponentEnergy.energyMap.forEach(e => (opponentEnergyCount += e.provides.length));
 
       if (playerEnergyCount < opponentEnergyCount) {
         effect.damage += 10;
@@ -95,5 +102,4 @@ export class Piplup extends PokemonCard {
 
     return state;
   }
-
 }

@@ -1,7 +1,7 @@
+import { Card } from '@ptcg/common';
 import { AlphLithograph } from './alph-lithograph';
 import { BlackBelt } from './black-belt';
 import { Celebi } from './celebi';
-import { Card } from '@ptcg/common';
 import { Cleffa } from './cleffa';
 import { Cyndaquil } from './cyndaquil';
 import { DarknessEnergySpecial } from './darkness-energy-special';
@@ -46,5 +46,5 @@ export const setHgss: Card[] = [
   new Twins(),
   new Typhlosion(),
   new Tyrogue(),
-  new Unown()
+  new Unown(),
 ];

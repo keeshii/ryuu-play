@@ -1,14 +1,12 @@
-import { Effect } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType } from '@ptcg/common';
-import { ShuffleDeckPrompt } from '@ptcg/common';
+import { Effect, ShuffleDeckPrompt, State, StoreLike, TrainerCard, TrainerEffect, TrainerType } from '@ptcg/common';
 
-function* playCard(next: Function, store: StoreLike, state: State,
-  self: Shauna, effect: TrainerEffect): IterableIterator<State> {
-
+function* playCard(
+  next: Function,
+  store: StoreLike,
+  state: State,
+  self: Shauna,
+  effect: TrainerEffect
+): IterableIterator<State> {
   const player = effect.player;
   const cards = player.hand.cards.filter(c => c !== self);
 
@@ -26,7 +24,6 @@ function* playCard(next: Function, store: StoreLike, state: State,
 }
 
 export class Shauna extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.SUPPORTER;
 
   public set: string = 'BW2';
@@ -35,8 +32,7 @@ export class Shauna extends TrainerCard {
 
   public fullName: string = 'Shauna XY';
 
-  public text: string =
-    'Shuffle your hand into your deck. Then, draw 5 cards.';
+  public text: string = 'Shuffle your hand into your deck. Then, draw 5 cards.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
@@ -46,5 +42,4 @@ export class Shauna extends TrainerCard {
 
     return state;
   }
-
 }

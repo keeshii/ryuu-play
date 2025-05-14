@@ -1,29 +1,36 @@
-import { Effect } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { ChoosePokemonPrompt } from '@ptcg/common';
-import { PlayerType, SlotType } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { Player } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
+import {
+  ChoosePokemonPrompt,
+  Effect,
+  GameError,
+  GameMessage,
+  Player,
+  PlayerType,
+  SlotType,
+  State,
+  StateUtils,
+  StoreLike,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 function pickUpBenchedPokemon(next: Function, store: StoreLike, state: State, player: Player): State {
-  return store.prompt(state, new ChoosePokemonPrompt(
-    player.id,
-    GameMessage.CHOOSE_POKEMON_TO_PICK_UP,
-    PlayerType.BOTTOM_PLAYER,
-    [ SlotType.BENCH ],
-    { allowCancel: false }
-  ), selection => {
-    const cardList = selection[0];
-    cardList.moveTo(player.hand);
-    cardList.clearEffects();
-    next();
-  });
+  return store.prompt(
+    state,
+    new ChoosePokemonPrompt(
+      player.id,
+      GameMessage.CHOOSE_POKEMON_TO_PICK_UP,
+      PlayerType.BOTTOM_PLAYER,
+      [SlotType.BENCH],
+      { allowCancel: false }
+    ),
+    selection => {
+      const cardList = selection[0];
+      cardList.moveTo(player.hand);
+      cardList.clearEffects();
+      next();
+    }
+  );
 }
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
@@ -48,7 +55,6 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 }
 
 export class Seeker extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.SUPPORTER;
 
   public set: string = 'HGSS';
@@ -58,8 +64,8 @@ export class Seeker extends TrainerCard {
   public fullName: string = 'Seeker TRM';
 
   public text: string =
-    'Each player returns 1 of his or her Benched Pokemon and all cards ' +
-    'attached to it to his or her hand. (You return your Pokemon first.)';
+    'Each player returns 1 of his or her Benched Pokémon and all cards ' +
+    'attached to it to his or her hand. (You return your Pokémon first.)';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
@@ -68,5 +74,4 @@ export class Seeker extends TrainerCard {
     }
     return state;
   }
-
 }

@@ -1,12 +1,23 @@
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType, SuperType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { ChoosePokemonPrompt } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { PlayerType, SlotType, CoinFlipPrompt, StateUtils, CardTarget,
-  GameError, GameMessage, PokemonCardList, ChooseCardsPrompt, Card } from '@ptcg/common';
+import {
+  Card,
+  CardTarget,
+  ChooseCardsPrompt,
+  ChoosePokemonPrompt,
+  CoinFlipPrompt,
+  Effect,
+  GameError,
+  GameMessage,
+  PlayerType,
+  PokemonCardList,
+  SlotType,
+  State,
+  StateUtils,
+  StoreLike,
+  SuperType,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -37,16 +48,20 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   }
 
   let targets: PokemonCardList[] = [];
-  yield store.prompt(state, new ChoosePokemonPrompt(
-    player.id,
-    GameMessage.CHOOSE_POKEMON_TO_DISCARD_CARDS,
-    PlayerType.TOP_PLAYER,
-    [ SlotType.ACTIVE, SlotType.BENCH ],
-    { allowCancel: false, blocked }
-  ), results => {
-    targets = results || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChoosePokemonPrompt(
+      player.id,
+      GameMessage.CHOOSE_POKEMON_TO_DISCARD_CARDS,
+      PlayerType.TOP_PLAYER,
+      [SlotType.ACTIVE, SlotType.BENCH],
+      { allowCancel: false, blocked }
+    ),
+    results => {
+      targets = results || [];
+      next();
+    }
+  );
 
   if (targets.length === 0) {
     return state;
@@ -54,23 +69,26 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 
   const target = targets[0];
   let cards: Card[] = [];
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_DISCARD,
-    target,
-    { superType: SuperType.ENERGY },
-    { min: 1, max: 1, allowCancel: false }
-  ), selected => {
-    cards = selected;
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_DISCARD,
+      target,
+      { superType: SuperType.ENERGY },
+      { min: 1, max: 1, allowCancel: false }
+    ),
+    selected => {
+      cards = selected;
+      next();
+    }
+  );
 
   target.moveCardsTo(cards, opponent.discard);
   return state;
 }
 
 export class CrushingHammer extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'BW';
@@ -79,9 +97,7 @@ export class CrushingHammer extends TrainerCard {
 
   public fullName: string = 'Crushing Hammer EPO';
 
-  public text: string =
-    'Flip a coin. If heads, discard an Energy attached to 1 of your ' +
-    'opponent\'s Pokemon.';
+  public text: string = 'Flip a coin. If heads, discard an Energy attached to 1 of your opponent\'s Pokémon.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
@@ -90,5 +106,4 @@ export class CrushingHammer extends TrainerCard {
     }
     return state;
   }
-
 }

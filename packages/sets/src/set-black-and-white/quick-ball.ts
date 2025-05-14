@@ -1,21 +1,29 @@
-import { Card } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType, SuperType, Stage } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { ChooseCardsPrompt } from '@ptcg/common';
-import { ShowCardsPrompt } from '@ptcg/common';
-import { ShuffleDeckPrompt } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { CardList } from '@ptcg/common';
+import {
+  Card,
+  CardList,
+  ChooseCardsPrompt,
+  Effect,
+  GameError,
+  GameMessage,
+  ShowCardsPrompt,
+  ShuffleDeckPrompt,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+  SuperType,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
-function* playCard(next: Function, store: StoreLike, state: State,
-  self: QuickBall, effect: TrainerEffect): IterableIterator<State> {
-
+function* playCard(
+  next: Function,
+  store: StoreLike,
+  state: State,
+  self: QuickBall,
+  effect: TrainerEffect
+): IterableIterator<State> {
   const player = effect.player;
   const opponent = StateUtils.getOpponent(state, player);
   let cards: Card[] = [];
@@ -36,16 +44,20 @@ function* playCard(next: Function, store: StoreLike, state: State,
   const handTemp = new CardList();
   handTemp.cards = player.hand.cards.filter(c => c !== self);
 
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_DISCARD,
-    handTemp,
-    { },
-    { min: 1, max: 1, allowCancel: true }
-  ), selected => {
-    cards = selected || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_DISCARD,
+      handTemp,
+      {},
+      { min: 1, max: 1, allowCancel: true }
+    ),
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
 
   // Operation canceled by the user
   if (cards.length === 0) {
@@ -55,25 +67,27 @@ function* playCard(next: Function, store: StoreLike, state: State,
   player.hand.moveCardTo(self, player.discard);
   player.hand.moveCardsTo(cards, player.discard);
 
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_HAND,
-    player.deck,
-    { superType: SuperType.POKEMON, stage: Stage.BASIC },
-    { min: 1, max: 1, allowCancel: true }
-  ), selected => {
-    cards = selected || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_HAND,
+      player.deck,
+      { superType: SuperType.POKEMON, stage: Stage.BASIC },
+      { min: 1, max: 1, allowCancel: true }
+    ),
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
 
   player.deck.moveCardsTo(cards, player.hand);
 
   if (cards.length > 0) {
-    yield store.prompt(state, new ShowCardsPrompt(
-      opponent.id,
-      GameMessage.CARDS_SHOWED_BY_THE_OPPONENT,
-      cards
-    ), () => next());
+    yield store.prompt(state, new ShowCardsPrompt(opponent.id, GameMessage.CARDS_SHOWED_BY_THE_OPPONENT, cards), () =>
+      next()
+    );
   }
 
   return store.prompt(state, new ShuffleDeckPrompt(player.id), order => {
@@ -82,7 +96,6 @@ function* playCard(next: Function, store: StoreLike, state: State,
 }
 
 export class QuickBall extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'BW';
@@ -93,12 +106,10 @@ export class QuickBall extends TrainerCard {
 
   public text: string =
     'You can play this card only if you discard another card from your hand. ' +
-    'Search your deck for a Basic Pokemon, reveal it, and put it into your ' +
+    'Search your deck for a Basic Pokémon, reveal it, and put it into your ' +
     'hand. Then, shuffle your deck.';
 
-
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
       const generator = playCard(() => generator.next(), store, state, this, effect);
       return generator.next().value;
@@ -106,5 +117,4 @@ export class QuickBall extends TrainerCard {
 
     return state;
   }
-
 }

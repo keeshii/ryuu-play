@@ -1,14 +1,15 @@
-import { Effect } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { DealDamageEffect } from '@ptcg/common';
-import { EndTurnEffect } from '@ptcg/common';
+import {
+  DealDamageEffect,
+  Effect,
+  EndTurnEffect,
+  State,
+  StoreLike,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 export class PlusPower extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'BW';
@@ -18,8 +19,8 @@ export class PlusPower extends TrainerCard {
   public fullName: string = 'PlusPower BW';
 
   public text: string =
-    'During this turn, your Pokemon\'s attacks do 10 more damage to the ' +
-    'Active Pokemon (before applying Weakness and Resistance).';
+    'During this turn, your Pokémon\'s attacks do 10 more damage to the ' +
+    'Active Pokémon (before applying Weakness and Resistance).';
 
   private readonly PLUS_POWER_MARKER = 'PLUS_POWER_MARKER';
 
@@ -42,5 +43,4 @@ export class PlusPower extends TrainerCard {
 
     return state;
   }
-
 }

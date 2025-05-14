@@ -1,15 +1,19 @@
-import { Card } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType, SuperType, Stage } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { ChooseCardsPrompt } from '@ptcg/common';
-import { ShuffleDeckPrompt } from '@ptcg/common';
-import { PokemonCardList } from '@ptcg/common';
+import {
+  Card,
+  ChooseCardsPrompt,
+  Effect,
+  GameError,
+  GameMessage,
+  PokemonCardList,
+  ShuffleDeckPrompt,
+  Stage,
+  State,
+  StoreLike,
+  SuperType,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -21,16 +25,20 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   }
 
   let cards: Card[] = [];
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_HAND,
-    player.deck,
-    { superType: SuperType.POKEMON, stage: Stage.BASIC } as any,
-    { min: 0, max, allowCancel: true, differentTypes: true }
-  ), selected => {
-    cards = selected || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_HAND,
+      player.deck,
+      { superType: SuperType.POKEMON, stage: Stage.BASIC } as any,
+      { min: 0, max, allowCancel: true, differentTypes: true }
+    ),
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
 
   cards.forEach((card, index) => {
     player.deck.moveCardTo(card, slots[index]);
@@ -43,7 +51,6 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 }
 
 export class ProfessorOaksSetup extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.SUPPORTER;
 
   public set: string = 'BW3';
@@ -53,12 +60,10 @@ export class ProfessorOaksSetup extends TrainerCard {
   public fullName: string = 'Professor Oak\'s Setup CEC';
 
   public text: string =
-    'Search your deck for up to 3 Basic Pokemon of different types and ' +
+    'Search your deck for up to 3 Basic Pokémon of different types and ' +
     'put them onto your Bench. Then, shuffle your deck.';
 
-
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
       const generator = playCard(() => generator.next(), store, state, effect);
       return generator.next().value;
@@ -66,5 +71,4 @@ export class ProfessorOaksSetup extends TrainerCard {
 
     return state;
   }
-
 }

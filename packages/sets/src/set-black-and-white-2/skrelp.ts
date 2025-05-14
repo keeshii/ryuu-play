@@ -1,16 +1,18 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, SpecialCondition } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { AttackEffect } from '@ptcg/common';
-import { CoinFlipPrompt } from '@ptcg/common';
-import { AddSpecialConditionsEffect } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-
+import {
+  AddSpecialConditionsEffect,
+  AttackEffect,
+  CardType,
+  CoinFlipPrompt,
+  Effect,
+  GameMessage,
+  PokemonCard,
+  SpecialCondition,
+  Stage,
+  State,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Skrelp extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.PSYCHIC;
@@ -19,15 +21,16 @@ export class Skrelp extends PokemonCard {
 
   public weakness = [{ type: CardType.PSYCHIC }];
 
-  public retreat = [ CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS];
 
-  public attacks = [{
-    name: 'Spit Poison',
-    cost: [ CardType.PSYCHIC ],
-    damage: '',
-    text: 'Flip a coin. If heads, your opponent\'s Active Pokemon ' +
-      'is now Poisoned.'
-  }];
+  public attacks = [
+    {
+      name: 'Spit Poison',
+      cost: [CardType.PSYCHIC],
+      damage: '',
+      text: 'Flip a coin. If heads, your opponent\'s Active Pokémon is now Poisoned.',
+    },
+  ];
 
   public set: string = 'BW2';
 
@@ -36,13 +39,10 @@ export class Skrelp extends PokemonCard {
   public fullName: string = 'Skrelp FLF';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
 
-      return store.prompt(state, [
-        new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)
-      ], result => {
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
         if (result === true) {
           const specialCondition = new AddSpecialConditionsEffect(effect, [SpecialCondition.POISONED]);
           store.reduceEffect(state, specialCondition);
@@ -51,5 +51,4 @@ export class Skrelp extends PokemonCard {
     }
     return state;
   }
-
 }

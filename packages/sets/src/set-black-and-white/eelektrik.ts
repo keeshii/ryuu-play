@@ -1,15 +1,26 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, EnergyType, SuperType } from '@ptcg/common';
-import { PowerType, StoreLike, State, StateUtils,
-  GameError, GameMessage, EnergyCard, PlayerType, SlotType } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { PowerEffect } from '@ptcg/common';
-import { PlayPokemonEffect } from '@ptcg/common';
-import { EndTurnEffect } from '@ptcg/common';
-import {AttachEnergyPrompt } from '@ptcg/common';
+import {
+  AttachEnergyPrompt,
+  CardType,
+  Effect,
+  EndTurnEffect,
+  EnergyCard,
+  EnergyType,
+  GameError,
+  GameMessage,
+  PlayerType,
+  PlayPokemonEffect,
+  PokemonCard,
+  PowerEffect,
+  PowerType,
+  SlotType,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+  SuperType,
+} from '@ptcg/common';
 
 export class Eelektrik extends PokemonCard {
-
   public stage: Stage = Stage.STAGE_1;
 
   public evolvesFrom = 'Tynamo';
@@ -20,23 +31,26 @@ export class Eelektrik extends PokemonCard {
 
   public weakness = [{ type: CardType.FIGHTING }];
 
-  public retreat = [ CardType.COLORLESS, CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS, CardType.COLORLESS];
 
-  public powers = [{
-    name: 'Dynamotor',
-    powerType: PowerType.ABILITY,
-    useWhenInPlay: true,
-    text: 'Once during your turn (before your attack), you may attach a L ' +
-      'Energy card from your discard pile to 1 of your Benched Pokemon.'
-  }];
+  public powers = [
+    {
+      name: 'Dynamotor',
+      powerType: PowerType.ABILITY,
+      useWhenInPlay: true,
+      text:
+        'Once during your turn (before your attack), you may attach a L ' +
+        'Energy card from your discard pile to 1 of your Benched Pokémon.',
+    },
+  ];
 
   public attacks = [
     {
       name: 'Electric Ball',
-      cost: [ CardType.LIGHTNING, CardType.LIGHTNING, CardType.COLORLESS ],
+      cost: [CardType.LIGHTNING, CardType.LIGHTNING, CardType.COLORLESS],
       damage: '50',
-      text: ''
-    }
+      text: '',
+    },
   ];
 
   public set: string = 'BW';
@@ -61,9 +75,7 @@ export class Eelektrik extends PokemonCard {
         throw new GameError(GameMessage.CANNOT_USE_POWER);
       }
       const hasEnergyInDiscard = player.discard.cards.some(c => {
-        return c instanceof EnergyCard
-          && c.energyType === EnergyType.BASIC
-          && c.provides.includes(CardType.LIGHTNING);
+        return c instanceof EnergyCard && c.energyType === EnergyType.BASIC && c.provides.includes(CardType.LIGHTNING);
       });
       if (!hasEnergyInDiscard) {
         throw new GameError(GameMessage.CANNOT_USE_POWER);
@@ -72,26 +84,34 @@ export class Eelektrik extends PokemonCard {
         throw new GameError(GameMessage.POWER_ALREADY_USED);
       }
 
-      state = store.prompt(state, new AttachEnergyPrompt(
-        player.id,
-        GameMessage.ATTACH_ENERGY_TO_BENCH,
-        player.discard,
-        PlayerType.BOTTOM_PLAYER,
-        [ SlotType.BENCH ],
-        { superType: SuperType.ENERGY, energyType: EnergyType.BASIC, name: 'Lightning Energy' },
-        { allowCancel: true, min: 1, max: 1 }
-      ), transfers => {
-        transfers = transfers || [];
-        // cancelled by user
-        if (transfers.length === 0) {
-          return;
+      state = store.prompt(
+        state,
+        new AttachEnergyPrompt(
+          player.id,
+          GameMessage.ATTACH_ENERGY_TO_BENCH,
+          player.discard,
+          PlayerType.BOTTOM_PLAYER,
+          [SlotType.BENCH],
+          {
+            superType: SuperType.ENERGY,
+            energyType: EnergyType.BASIC,
+            name: 'Lightning Energy',
+          },
+          { allowCancel: true, min: 1, max: 1 }
+        ),
+        transfers => {
+          transfers = transfers || [];
+          // cancelled by user
+          if (transfers.length === 0) {
+            return;
+          }
+          player.marker.addMarker(this.DYNAMOTOR_MAREKER, this);
+          for (const transfer of transfers) {
+            const target = StateUtils.getTarget(state, player, transfer.to);
+            player.discard.moveCardTo(transfer.card, target);
+          }
         }
-        player.marker.addMarker(this.DYNAMOTOR_MAREKER, this);
-        for (const transfer of transfers) {
-          const target = StateUtils.getTarget(state, player, transfer.to);
-          player.discard.moveCardTo(transfer.card, target);
-        }
-      });
+      );
 
       return state;
     }
@@ -102,6 +122,4 @@ export class Eelektrik extends PokemonCard {
 
     return state;
   }
-
-
 }

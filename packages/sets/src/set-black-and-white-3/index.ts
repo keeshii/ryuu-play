@@ -1,3 +1,4 @@
+import { Card } from '@ptcg/common';
 import { AcroBike } from './acro-bike';
 import { Archen } from './archen';
 import { Archeops } from './archeops';
@@ -9,7 +10,6 @@ import { Blastoise } from './blastoise';
 import { Chandelure } from './chandelure';
 import { Cleffa } from './cleffa';
 import { DimensionValley } from './dimension-valley';
-import { Card } from '@ptcg/common';
 import { EnergySwitch } from './energy-switch';
 import { Exeggcute } from './exeggcute';
 import { Gallade } from './gallade';
@@ -17,7 +17,6 @@ import { Gothita } from './gothita';
 import { Gothitelle } from './gothitelle';
 import { Gothorita } from './gothorita';
 import { HoOhEx } from './ho-oh-ex';
-import { SacredAsh } from './sacred-ash';
 import { JirachiEx } from './jirachi-ex';
 import { Joltik } from './joltik';
 import { Kirlia } from './kirlia';
@@ -33,12 +32,13 @@ import { Pumpkaboo } from './pumpkaboo';
 import { Ralts } from './ralts';
 import { RescueScarf } from './rescue-scarf';
 import { ReshiramEx } from './reshiram-ex';
+import { SacredAsh } from './sacred-ash';
 import { ShadowCircle } from './shadow-circle';
 import { ShayminEx } from './shaymin-ex';
 import { SkyField } from './sky-field';
+import { Squirtle } from './squirtle';
 import { SteelShelter } from './steel-shelter';
 import { SuperPotion } from './super-potion';
-import { Squirtle } from './squirtle';
 import { SuperiorEnergyRetrieval } from './superior-energy-retrieval';
 import { TownMap } from './town-map';
 import { TrainersMail } from './trainers-mail';
@@ -106,5 +106,5 @@ export const setBlackAndWhite3: Card[] = [
   new ZekromEx(),
   new Zoroark(),
   new Zorua(),
-  new Zorua2()
+  new Zorua2(),
 ];

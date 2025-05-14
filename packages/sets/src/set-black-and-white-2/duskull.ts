@@ -1,14 +1,16 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, SpecialCondition } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { AttackEffect } from '@ptcg/common';
-import {AddSpecialConditionsEffect } from '@ptcg/common';
-
+import {
+  AddSpecialConditionsEffect,
+  AttackEffect,
+  CardType,
+  Effect,
+  PokemonCard,
+  SpecialCondition,
+  Stage,
+  State,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Duskull extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.PSYCHIC;
@@ -17,14 +19,16 @@ export class Duskull extends PokemonCard {
 
   public weakness = [{ type: CardType.DARK }];
 
-  public retreat = [ CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS];
 
-  public attacks = [{
-    name: 'Confuse Ray',
-    cost: [ CardType.PSYCHIC ],
-    damage: '',
-    text: 'The Defending Pokemon is now Confused.'
-  }];
+  public attacks = [
+    {
+      name: 'Confuse Ray',
+      cost: [CardType.PSYCHIC],
+      damage: '',
+      text: 'The Defending Pokémon is now Confused.',
+    },
+  ];
 
   public set: string = 'BW2';
 
@@ -33,12 +37,10 @@ export class Duskull extends PokemonCard {
   public fullName: string = 'Duskull BC';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.CONFUSED]);
       store.reduceEffect(state, specialConditionEffect);
     }
     return state;
   }
-
 }

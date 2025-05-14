@@ -1,13 +1,21 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, SpecialCondition } from '@ptcg/common';
-import { StoreLike, State, StateUtils, ChoosePokemonPrompt, PlayerType, SlotType } from '@ptcg/common';
-import { AttackEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { AddSpecialConditionsEffect } from '@ptcg/common';
+import {
+  AddSpecialConditionsEffect,
+  AttackEffect,
+  CardType,
+  ChoosePokemonPrompt,
+  Effect,
+  GameMessage,
+  PlayerType,
+  PokemonCard,
+  SlotType,
+  SpecialCondition,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Drowzee extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.PSYCHIC;
@@ -16,21 +24,22 @@ export class Drowzee extends PokemonCard {
 
   public weakness = [{ type: CardType.PSYCHIC }];
 
-  public retreat = [ CardType.COLORLESS, CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS, CardType.COLORLESS];
 
   public attacks = [
     {
       name: 'Sleep Inducer',
-      cost: [ CardType.PSYCHIC ],
+      cost: [CardType.PSYCHIC],
       damage: '',
-      text: 'Switch the Defending Pokemon with 1 of your opponent\'s ' +
-        'Benched Pokemon. The new Defending Pokemon is now Asleep.'
+      text:
+        'Switch the Defending Pokémon with 1 of your opponent\'s ' +
+        'Benched Pokémon. The new Defending Pokémon is now Asleep.',
     },
     {
       name: 'Gentle Slap',
-      cost: [ CardType.COLORLESS, CardType.COLORLESS ],
+      cost: [CardType.COLORLESS, CardType.COLORLESS],
       damage: '20',
-      text: ''
+      text: '',
     },
   ];
 
@@ -50,24 +59,27 @@ export class Drowzee extends PokemonCard {
         return state;
       }
 
-      store.prompt(state, new ChoosePokemonPrompt(
-        player.id,
-        GameMessage.CHOOSE_POKEMON_TO_SWITCH,
-        PlayerType.TOP_PLAYER,
-        [ SlotType.BENCH ],
-        { allowCancel: false }
-      ), targets => {
-        if (!targets || targets.length === 0) {
-          return;
+      store.prompt(
+        state,
+        new ChoosePokemonPrompt(
+          player.id,
+          GameMessage.CHOOSE_POKEMON_TO_SWITCH,
+          PlayerType.TOP_PLAYER,
+          [SlotType.BENCH],
+          { allowCancel: false }
+        ),
+        targets => {
+          if (!targets || targets.length === 0) {
+            return;
+          }
+          opponent.switchPokemon(targets[0]);
+          const specialCondition = new AddSpecialConditionsEffect(effect, [SpecialCondition.ASLEEP]);
+          specialCondition.target = targets[0];
+          store.reduceEffect(state, specialCondition);
         }
-        opponent.switchPokemon(targets[0]);
-        const specialCondition = new AddSpecialConditionsEffect(effect, [SpecialCondition.ASLEEP]);
-        specialCondition.target = targets[0];
-        store.reduceEffect(state, specialCondition);
-      });
+      );
     }
 
     return state;
   }
-
 }

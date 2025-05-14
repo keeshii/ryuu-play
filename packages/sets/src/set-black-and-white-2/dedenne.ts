@@ -1,28 +1,46 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, SuperType } from '@ptcg/common';
-import { StoreLike, State, ChooseCardsPrompt, PokemonCardList, Card,
-  ShuffleDeckPrompt, StateUtils, GameMessage } from '@ptcg/common';
-import { AttackEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { CheckProvidedEnergyEffect } from '@ptcg/common';
+import {
+  AttackEffect,
+  Card,
+  CardType,
+  CheckProvidedEnergyEffect,
+  ChooseCardsPrompt,
+  Effect,
+  GameMessage,
+  PokemonCard,
+  PokemonCardList,
+  ShuffleDeckPrompt,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+  SuperType,
+} from '@ptcg/common';
 
-function* useEntrainment(next: Function, store: StoreLike, state: State,
-  effect: AttackEffect): IterableIterator<State> {
+function* useEntrainment(
+  next: Function,
+  store: StoreLike,
+  state: State,
+  effect: AttackEffect
+): IterableIterator<State> {
   const player = effect.player;
   const slots: PokemonCardList[] = player.bench.filter(b => b.cards.length === 0);
   const max = Math.min(slots.length, 2);
 
   let cards: Card[] = [];
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_PUT_ONTO_BENCH,
-    player.deck,
-    { superType: SuperType.POKEMON, stage: Stage.BASIC },
-    { min: 0, max, allowCancel: true }
-  ), selected => {
-    cards = selected || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_PUT_ONTO_BENCH,
+      player.deck,
+      { superType: SuperType.POKEMON, stage: Stage.BASIC },
+      { min: 0, max, allowCancel: true }
+    ),
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
 
   if (cards.length > slots.length) {
     cards.length = slots.length;
@@ -39,7 +57,6 @@ function* useEntrainment(next: Function, store: StoreLike, state: State,
 }
 
 export class Dedenne extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.LIGHTNING;
@@ -50,23 +67,22 @@ export class Dedenne extends PokemonCard {
 
   public resistance = [{ type: CardType.METAL, value: -20 }];
 
-  public retreat = [ CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS];
 
   public attacks = [
     {
       name: 'Entrainment',
-      cost: [ CardType.COLORLESS ],
+      cost: [CardType.COLORLESS],
       damage: '',
-      text: 'Search your deck for up to 2 Basic Pokemon and put them onto ' +
-        'your Bench. Shuffle your deck afterward.'
+      text:
+        'Search your deck for up to 2 Basic Pokémon and put them onto your Bench. Shuffle your deck afterward.',
     },
     {
       name: 'Energy Short',
-      cost: [ CardType.COLORLESS ],
+      cost: [CardType.COLORLESS],
       damage: '20x',
-      text: 'This attack does 20 damage times the amount of Energy attached ' +
-        'to your opponent\'s Active Pokemon.'
-    }
+      text: 'This attack does 20 damage times the amount of Energy attached to your opponent\'s Active Pokémon.',
+    },
   ];
 
   public set: string = 'BW2';
@@ -93,5 +109,4 @@ export class Dedenne extends PokemonCard {
 
     return state;
   }
-
 }

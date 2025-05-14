@@ -1,27 +1,44 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, SuperType } from '@ptcg/common';
-import { StoreLike, State, ChooseCardsPrompt, PokemonCardList, Card,
-  ShuffleDeckPrompt, GameMessage } from '@ptcg/common';
-import { AttackEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
+import {
+  AttackEffect,
+  Card,
+  CardType,
+  ChooseCardsPrompt,
+  Effect,
+  GameMessage,
+  PokemonCard,
+  PokemonCardList,
+  ShuffleDeckPrompt,
+  Stage,
+  State,
+  StoreLike,
+  SuperType,
+} from '@ptcg/common';
 
-function* useCallForFamily(next: Function, store: StoreLike, state: State,
-  effect: AttackEffect): IterableIterator<State> {
+function* useCallForFamily(
+  next: Function,
+  store: StoreLike,
+  state: State,
+  effect: AttackEffect
+): IterableIterator<State> {
   const player = effect.player;
   const slots: PokemonCardList[] = player.bench.filter(b => b.cards.length === 0);
   const max = Math.min(slots.length, 2);
 
   let cards: Card[] = [];
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_PUT_ONTO_BENCH,
-    player.deck,
-    { superType: SuperType.POKEMON, stage: Stage.BASIC },
-    { min: 0, max, allowCancel: true }
-  ), selected => {
-    cards = selected || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_PUT_ONTO_BENCH,
+      player.deck,
+      { superType: SuperType.POKEMON, stage: Stage.BASIC },
+      { min: 0, max, allowCancel: true }
+    ),
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
 
   if (cards.length > slots.length) {
     cards.length = slots.length;
@@ -38,7 +55,6 @@ function* useCallForFamily(next: Function, store: StoreLike, state: State,
 }
 
 export class Emolga extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.LIGHTNING;
@@ -49,22 +65,21 @@ export class Emolga extends PokemonCard {
 
   public resistance = [{ type: CardType.FIGHTING, value: -20 }];
 
-  public retreat = [ ];
+  public retreat = [];
 
   public attacks = [
     {
       name: 'Call for Family',
-      cost: [ CardType.COLORLESS ],
+      cost: [CardType.COLORLESS],
       damage: '',
-      text: 'Search your deck for 2 Basic Pokemon and put them onto your ' +
-        'Bench. Shuffle your deck afterward.'
+      text: 'Search your deck for 2 Basic Pokémon and put them onto your Bench. Shuffle your deck afterward.',
     },
     {
       name: 'Static Shock',
-      cost: [ CardType.LIGHTNING ],
+      cost: [CardType.LIGHTNING],
       damage: '20',
-      text: ''
-    }
+      text: '',
+    },
   ];
 
   public set: string = 'BW';
@@ -81,5 +96,4 @@ export class Emolga extends PokemonCard {
 
     return state;
   }
-
 }

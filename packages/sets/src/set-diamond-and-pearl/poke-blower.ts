@@ -1,15 +1,18 @@
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { ConfirmPrompt } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { CoinFlipPrompt } from '@ptcg/common';
-import { ChoosePokemonPrompt } from '@ptcg/common';
-import { PlayerType, SlotType } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
+import {
+  ChoosePokemonPrompt,
+  CoinFlipPrompt,
+  ConfirmPrompt,
+  Effect,
+  GameMessage,
+  PlayerType,
+  SlotType,
+  State,
+  StateUtils,
+  StoreLike,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -29,10 +32,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   let playTwoCards = false;
 
   if (benchCount > 0 && count >= 2) {
-    yield store.prompt(state, new ConfirmPrompt(
-      player.id,
-      GameMessage.WANT_TO_PLAY_BOTH_CARDS_AT_ONCE
-    ), result => {
+    yield store.prompt(state, new ConfirmPrompt(player.id, GameMessage.WANT_TO_PLAY_BOTH_CARDS_AT_ONCE), result => {
       playTwoCards = result;
       next();
     });
@@ -40,10 +40,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 
   if (playTwoCards === false) {
     let coinFlip = false;
-    yield store.prompt(state, new CoinFlipPrompt(
-      player.id,
-      GameMessage.COIN_FLIP
-    ), result => {
+    yield store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
       coinFlip = result;
       next();
     });
@@ -52,18 +49,22 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
       return state;
     }
 
-    yield store.prompt(state, new ChoosePokemonPrompt(
-      player.id,
-      GameMessage.CHOOSE_POKEMON_TO_DAMAGE,
-      PlayerType.TOP_PLAYER,
-      [ SlotType.ACTIVE, SlotType.BENCH ],
-      { allowCancel: false }
-    ), targets => {
-      if (targets && targets.length > 0) {
-        targets[0].damage += 10;
+    yield store.prompt(
+      state,
+      new ChoosePokemonPrompt(
+        player.id,
+        GameMessage.CHOOSE_POKEMON_TO_DAMAGE,
+        PlayerType.TOP_PLAYER,
+        [SlotType.ACTIVE, SlotType.BENCH],
+        { allowCancel: false }
+      ),
+      targets => {
+        if (targets && targets.length > 0) {
+          targets[0].damage += 10;
+        }
+        next();
       }
-      next();
-    });
+    );
 
     return state;
   }
@@ -76,22 +77,21 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     player.hand.moveCardTo(second, player.discard);
   }
 
-  return store.prompt(state, new ChoosePokemonPrompt(
-    player.id,
-    GameMessage.CHOOSE_POKEMON_TO_SWITCH,
-    PlayerType.TOP_PLAYER,
-    [ SlotType.BENCH ],
-    { allowCancel: false }
-  ), targets => {
-    if (!targets || targets.length === 0) {
-      return;
+  return store.prompt(
+    state,
+    new ChoosePokemonPrompt(player.id, GameMessage.CHOOSE_POKEMON_TO_SWITCH, PlayerType.TOP_PLAYER, [SlotType.BENCH], {
+      allowCancel: false,
+    }),
+    targets => {
+      if (!targets || targets.length === 0) {
+        return;
+      }
+      opponent.switchPokemon(targets[0]);
     }
-    opponent.switchPokemon(targets[0]);
-  });
+  );
 }
 
 export class PokeBlower extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'DP';
@@ -103,9 +103,9 @@ export class PokeBlower extends TrainerCard {
   public text: string =
     'You may play 2 Poke Blower + at the same time. If you play 1 ' +
     'Poke Blower +, flip a coin. If heads, put 1 damage counter on 1 of your ' +
-    'opponent\'s Pokemon. If you play 2 Poke Blower +, choose 1 of your ' +
-    'opponent\'s Benched Pokemon and switch it with 1 of your opponent\'s ' +
-    'Active Pokemon.';
+    'opponent\'s Pokémon. If you play 2 Poke Blower +, choose 1 of your ' +
+    'opponent\'s Benched Pokémon and switch it with 1 of your opponent\'s ' +
+    'Active Pokémon.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
@@ -115,5 +115,4 @@ export class PokeBlower extends TrainerCard {
 
     return state;
   }
-
 }

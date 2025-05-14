@@ -1,16 +1,19 @@
-import { Effect } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType, CardType, SuperType } from '@ptcg/common';
-import { PokemonCard } from '@ptcg/common';
-import { ChooseCardsPrompt } from '@ptcg/common';
+import {
+  CardType,
+  ChooseCardsPrompt,
+  Effect,
+  GameError,
+  GameMessage,
+  PokemonCard,
+  State,
+  StoreLike,
+  SuperType,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 export class ArchiesAceInTheHole extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.SUPPORTER;
 
   public set: string = 'BW3';
@@ -21,7 +24,7 @@ export class ArchiesAceInTheHole extends TrainerCard {
 
   public text: string =
     'You can play this card only when it is the last card in your hand. ' +
-    'Put a W Pokemon from your discard pile onto your Bench. ' +
+    'Put a W Pokémon from your discard pile onto your Bench. ' +
     'Then, draw 5 cards.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
@@ -47,21 +50,24 @@ export class ArchiesAceInTheHole extends TrainerCard {
         return state;
       }
 
-      return store.prompt(state, new ChooseCardsPrompt(
-        player.id,
-        GameMessage.CHOOSE_CARD_TO_PUT_ONTO_BENCH,
-        player.discard,
-        { superType: SuperType.POKEMON, cardType: CardType.WATER },
-        { min: 1, max: 1, allowCancel: false }
-      ), selected => {
-        const cards = selected || [];
-        player.discard.moveCardsTo(cards, slot);
-        slot.pokemonPlayedTurn = state.turn;
-        player.deck.moveTo(player.hand, 5);
-      });
+      return store.prompt(
+        state,
+        new ChooseCardsPrompt(
+          player.id,
+          GameMessage.CHOOSE_CARD_TO_PUT_ONTO_BENCH,
+          player.discard,
+          { superType: SuperType.POKEMON, cardType: CardType.WATER },
+          { min: 1, max: 1, allowCancel: false }
+        ),
+        selected => {
+          const cards = selected || [];
+          player.discard.moveCardsTo(cards, slot);
+          slot.pokemonPlayedTurn = state.turn;
+          player.deck.moveTo(player.hand, 5);
+        }
+      );
     }
 
     return state;
   }
-
 }

@@ -1,15 +1,17 @@
-import { AddSpecialConditionsEffect } from '@ptcg/common';
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, SpecialCondition } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { AttackEffect } from '@ptcg/common';
-import { ShuffleDeckPrompt } from '@ptcg/common';
-
+import {
+  AddSpecialConditionsEffect,
+  AttackEffect,
+  CardType,
+  Effect,
+  PokemonCard,
+  ShuffleDeckPrompt,
+  SpecialCondition,
+  Stage,
+  State,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Accelgor extends PokemonCard {
-
   public stage: Stage = Stage.STAGE_1;
 
   public evolvesFrom = 'Shelmet';
@@ -20,20 +22,24 @@ export class Accelgor extends PokemonCard {
 
   public weakness = [{ type: CardType.FIRE }];
 
-  public retreat = [ ];
+  public retreat = [];
 
-  public attacks = [{
-    name: 'Hammer In',
-    cost: [ CardType.GRASS ],
-    damage: '20',
-    text: ''
-  }, {
-    name: 'Deck and Cover',
-    cost: [ CardType.COLORLESS, CardType.COLORLESS ],
-    damage: '50',
-    text: 'The Defending Pokemon is now Paralyzed and Poisoned. Shuffle this ' +
-      'Pokemon and all cards attached to it into your deck.'
-  }];
+  public attacks = [
+    {
+      name: 'Hammer In',
+      cost: [CardType.GRASS],
+      damage: '20',
+      text: '',
+    },
+    {
+      name: 'Deck and Cover',
+      cost: [CardType.COLORLESS, CardType.COLORLESS],
+      damage: '50',
+      text:
+        'The Defending Pokémon is now Paralyzed and Poisoned. Shuffle this ' +
+        'Pokémon and all cards attached to it into your deck.',
+    },
+  ];
 
   public set: string = 'BW2';
 
@@ -42,13 +48,13 @@ export class Accelgor extends PokemonCard {
   public fullName: string = 'Accelgor DEX';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
       const player = effect.player;
 
-      const specialConditionEffect = new AddSpecialConditionsEffect(
-        effect, [ SpecialCondition.PARALYZED, SpecialCondition.POISONED ]
-      );
+      const specialConditionEffect = new AddSpecialConditionsEffect(effect, [
+        SpecialCondition.PARALYZED,
+        SpecialCondition.POISONED,
+      ]);
       store.reduceEffect(state, specialConditionEffect);
 
       player.active.moveTo(player.deck);
@@ -61,5 +67,4 @@ export class Accelgor extends PokemonCard {
 
     return state;
   }
-
 }

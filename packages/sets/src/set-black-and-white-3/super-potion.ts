@@ -1,13 +1,23 @@
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType, SuperType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { ChoosePokemonPrompt } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { PlayerType, SlotType, CardTarget, GameError, GameMessage,
-  PokemonCardList, Card, ChooseCardsPrompt, EnergyCard } from '@ptcg/common';
-import { HealEffect } from '@ptcg/common';
+import {
+  Card,
+  CardTarget,
+  ChooseCardsPrompt,
+  ChoosePokemonPrompt,
+  Effect,
+  EnergyCard,
+  GameError,
+  GameMessage,
+  HealEffect,
+  PlayerType,
+  PokemonCardList,
+  SlotType,
+  State,
+  StoreLike,
+  SuperType,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -30,16 +40,20 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   effect.preventDefault = true;
 
   let targets: PokemonCardList[] = [];
-  yield store.prompt(state, new ChoosePokemonPrompt(
-    player.id,
-    GameMessage.CHOOSE_POKEMON_TO_HEAL,
-    PlayerType.BOTTOM_PLAYER,
-    [ SlotType.ACTIVE, SlotType.BENCH ],
-    { allowCancel: true, blocked }
-  ), results => {
-    targets = results || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChoosePokemonPrompt(
+      player.id,
+      GameMessage.CHOOSE_POKEMON_TO_HEAL,
+      PlayerType.BOTTOM_PLAYER,
+      [SlotType.ACTIVE, SlotType.BENCH],
+      { allowCancel: true, blocked }
+    ),
+    results => {
+      targets = results || [];
+      next();
+    }
+  );
 
   if (targets.length === 0) {
     return state;
@@ -47,16 +61,20 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 
   const target = targets[0];
   let cards: Card[] = [];
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_DISCARD,
-    target,
-    { superType: SuperType.ENERGY },
-    { min: 1, max: 1, allowCancel: true }
-  ), selected => {
-    cards = selected || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_DISCARD,
+      target,
+      { superType: SuperType.ENERGY },
+      { min: 1, max: 1, allowCancel: true }
+    ),
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
 
   if (cards.length === 0) {
     return state;
@@ -73,7 +91,6 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 }
 
 export class SuperPotion extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'BW3';
@@ -83,8 +100,7 @@ export class SuperPotion extends TrainerCard {
   public fullName: string = 'Super Potion XY';
 
   public text: string =
-    'Heal 60 damage from 1 of your Pokemon. If you do, discard an Energy ' +
-    'attached to that Pokemon.';
+    'Heal 60 damage from 1 of your Pokémon. If you do, discard an Energy attached to that Pokémon.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
@@ -93,5 +109,4 @@ export class SuperPotion extends TrainerCard {
     }
     return state;
   }
-
 }

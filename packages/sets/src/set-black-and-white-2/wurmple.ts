@@ -1,28 +1,39 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, SuperType } from '@ptcg/common';
-import { StoreLike, State, ChooseCardsPrompt, PokemonCardList, Card,
-  ShuffleDeckPrompt } from '@ptcg/common';
-import { AttackEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
+import {
+  AttackEffect,
+  Card,
+  CardType,
+  ChooseCardsPrompt,
+  Effect,
+  GameMessage,
+  PokemonCard,
+  PokemonCardList,
+  ShuffleDeckPrompt,
+  Stage,
+  State,
+  StoreLike,
+  SuperType,
+} from '@ptcg/common';
 
-function* useFlock(next: Function, store: StoreLike, state: State,
-  effect: AttackEffect): IterableIterator<State> {
+function* useFlock(next: Function, store: StoreLike, state: State, effect: AttackEffect): IterableIterator<State> {
   const player = effect.player;
   const slots: PokemonCardList[] = player.bench.filter(b => b.cards.length === 0);
   const max = Math.min(slots.length, 1);
 
   let cards: Card[] = [];
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_PUT_ONTO_BENCH,
-    player.deck,
-    { superType: SuperType.POKEMON, stage: Stage.BASIC, name: 'Wurmple' },
-    { min: 0, max, allowCancel: true }
-  ), selected => {
-    cards = selected || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_PUT_ONTO_BENCH,
+      player.deck,
+      { superType: SuperType.POKEMON, stage: Stage.BASIC, name: 'Wurmple' },
+      { min: 0, max, allowCancel: true }
+    ),
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
 
   if (cards.length > slots.length) {
     cards.length = slots.length;
@@ -39,7 +50,6 @@ function* useFlock(next: Function, store: StoreLike, state: State,
 }
 
 export class Wurmple extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.GRASS;
@@ -48,22 +58,21 @@ export class Wurmple extends PokemonCard {
 
   public weakness = [{ type: CardType.FIRE }];
 
-  public retreat = [ CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS];
 
   public attacks = [
     {
       name: 'Flock',
-      cost: [ CardType.GRASS ],
+      cost: [CardType.GRASS],
       damage: '',
-      text: 'Search your deck for Wurmple and put it onto your Bench. ' +
-        'Shuffle your deck afterward.'
+      text: 'Search your deck for Wurmple and put it onto your Bench. Shuffle your deck afterward.',
     },
     {
       name: 'Tackle',
-      cost: [ CardType.COLORLESS, CardType.COLORLESS ],
+      cost: [CardType.COLORLESS, CardType.COLORLESS],
       damage: '20',
-      text: ''
-    }
+      text: '',
+    },
   ];
 
   public set: string = 'BW2';
@@ -80,5 +89,4 @@ export class Wurmple extends PokemonCard {
 
     return state;
   }
-
 }

@@ -1,16 +1,18 @@
-import { Effect } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage, GameLog } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
-import { UseStadiumEffect } from '@ptcg/common';
-import { EndTurnEffect } from '@ptcg/common';
+import {
+  Effect,
+  EndTurnEffect,
+  GameError,
+  GameLog,
+  GameMessage,
+  State,
+  StateUtils,
+  StoreLike,
+  TrainerCard,
+  TrainerType,
+  UseStadiumEffect,
+} from '@ptcg/common';
 
 export class TropicalBeach extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.STADIUM;
 
   public set: string = 'BW3';
@@ -37,7 +39,10 @@ export class TropicalBeach extends TrainerCard {
 
       // Log the message before turn ends.
       effect.preventDefault = true;
-      store.log(state, GameLog.LOG_PLAYER_USES_STADIUM, { name: player.name, stadium: effect.stadium.name });
+      store.log(state, GameLog.LOG_PLAYER_USES_STADIUM, {
+        name: player.name,
+        stadium: effect.stadium.name,
+      });
       player.stadiumUsedTurn = state.turn;
 
       const endTurnEffect = new EndTurnEffect(player);
@@ -46,5 +51,4 @@ export class TropicalBeach extends TrainerCard {
 
     return state;
   }
-
 }

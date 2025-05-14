@@ -1,13 +1,17 @@
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType, SuperType, EnergyType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { ChooseCardsPrompt } from '@ptcg/common';
-import { EnergyCard } from '@ptcg/common';
+import {
+  ChooseCardsPrompt,
+  Effect,
+  EnergyCard,
+  EnergyType,
+  GameError,
+  GameMessage,
+  State,
+  StoreLike,
+  SuperType,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -27,25 +31,28 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   effect.preventDefault = true;
 
   const min = Math.min(basicEnergyCards, 2);
-  return store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_HAND,
-    player.discard,
-    { superType: SuperType.ENERGY, energyType: EnergyType.BASIC },
-    { min, max: min, allowCancel: true }
-  ), cards => {
-    cards = cards || [];
-    if (cards.length > 0) {
-      // Discard trainer only when user selected a Pokemon
-      player.hand.moveCardTo(effect.trainerCard, player.discard);
-      // Recover discarded Pokemon
-      player.discard.moveCardsTo(cards, player.hand);
+  return store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_HAND,
+      player.discard,
+      { superType: SuperType.ENERGY, energyType: EnergyType.BASIC },
+      { min, max: min, allowCancel: true }
+    ),
+    cards => {
+      cards = cards || [];
+      if (cards.length > 0) {
+        // Discard trainer only when user selected a Pokemon
+        player.hand.moveCardTo(effect.trainerCard, player.discard);
+        // Recover discarded Pokemon
+        player.discard.moveCardsTo(cards, player.hand);
+      }
     }
-  });
+  );
 }
 
 export class EnergyRetrieval extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'BW';
@@ -54,8 +61,7 @@ export class EnergyRetrieval extends TrainerCard {
 
   public fullName: string = 'Energy Retrieval SUM';
 
-  public text: string =
-    'Put 2 basic Energy cards from your discard pile into your hand.';
+  public text: string = 'Put 2 basic Energy cards from your discard pile into your hand.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
@@ -65,5 +71,4 @@ export class EnergyRetrieval extends TrainerCard {
 
     return state;
   }
-
 }

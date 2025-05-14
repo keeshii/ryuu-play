@@ -1,13 +1,19 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType } from '@ptcg/common';
-import { StoreLike, State, StateUtils, ChoosePokemonPrompt, PlayerType, SlotType } from '@ptcg/common';
-import { AttackEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-
+import {
+  AttackEffect,
+  CardType,
+  ChoosePokemonPrompt,
+  Effect,
+  GameMessage,
+  PlayerType,
+  PokemonCard,
+  SlotType,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Donphan extends PokemonCard {
-
   public stage: Stage = Stage.STAGE_1;
 
   public evolvesFrom = 'Phanpy';
@@ -20,20 +26,20 @@ export class Donphan extends PokemonCard {
 
   public resistance = [{ type: CardType.LIGHTNING, value: -20 }];
 
-  public retreat = [ CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS];
 
   public attacks = [
     {
       name: 'Spinning Turn',
-      cost: [ CardType.COLORLESS, CardType.COLORLESS ],
+      cost: [CardType.COLORLESS, CardType.COLORLESS],
       damage: '40',
-      text: 'Switch this Pokemon with 1 of your Benched Pokemon.'
-    }, {
+      text: 'Switch this Pokémon with 1 of your Benched Pokémon.',
+    },
+    {
       name: 'Wreck',
-      cost: [ CardType.FIGHTING, CardType.FIGHTING, CardType.COLORLESS, CardType.COLORLESS ],
+      cost: [CardType.FIGHTING, CardType.FIGHTING, CardType.COLORLESS, CardType.COLORLESS],
       damage: '80+',
-      text: 'If there is any Stadium card in play, this attack does ' +
-        '60 more damage. Discard that Stadium card.'
+      text: 'If there is any Stadium card in play, this attack does 60 more damage. Discard that Stadium card.',
     },
   ];
 
@@ -44,7 +50,6 @@ export class Donphan extends PokemonCard {
   public fullName: string = 'Donphan PLS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
 
@@ -53,19 +58,23 @@ export class Donphan extends PokemonCard {
         return state;
       }
 
-      return store.prompt(state, new ChoosePokemonPrompt(
-        player.id,
-        GameMessage.CHOOSE_NEW_ACTIVE_POKEMON,
-        PlayerType.BOTTOM_PLAYER,
-        [ SlotType.BENCH ],
-        { allowCancel: false },
-      ), selected => {
-        if (!selected || selected.length === 0) {
-          return state;
+      return store.prompt(
+        state,
+        new ChoosePokemonPrompt(
+          player.id,
+          GameMessage.CHOOSE_NEW_ACTIVE_POKEMON,
+          PlayerType.BOTTOM_PLAYER,
+          [SlotType.BENCH],
+          { allowCancel: false }
+        ),
+        selected => {
+          if (!selected || selected.length === 0) {
+            return state;
+          }
+          const target = selected[0];
+          player.switchPokemon(target);
         }
-        const target = selected[0];
-        player.switchPokemon(target);
-      });
+      );
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
@@ -81,5 +90,4 @@ export class Donphan extends PokemonCard {
 
     return state;
   }
-
 }

@@ -1,16 +1,17 @@
-import { Effect } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType } from '@ptcg/common';
-import {ShuffleDeckPrompt } from '@ptcg/common';
-import {StateUtils } from '@ptcg/common';
+import {
+  Effect,
+  GameError,
+  GameMessage,
+  ShuffleDeckPrompt,
+  State,
+  StateUtils,
+  StoreLike,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 export class Colress extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.SUPPORTER;
 
   public set: string = 'BW';
@@ -21,7 +22,7 @@ export class Colress extends TrainerCard {
 
   public text: string =
     'Shuffle your hand into your deck. Then, draw a number of cards equal ' +
-    'to the number of Benched Pokemon (both yours and your opponent\'s).';
+    'to the number of Benched Pokémon (both yours and your opponent\'s).';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
@@ -34,8 +35,8 @@ export class Colress extends TrainerCard {
       }
 
       let benchCount = 0;
-      player.bench.forEach(b => benchCount += b.cards.length > 0 ? 1 : 0);
-      opponent.bench.forEach(b => benchCount += b.cards.length > 0 ? 1 : 0);
+      player.bench.forEach(b => (benchCount += b.cards.length > 0 ? 1 : 0));
+      opponent.bench.forEach(b => (benchCount += b.cards.length > 0 ? 1 : 0));
 
       player.hand.moveCardsTo(cards, player.deck);
 
@@ -47,5 +48,4 @@ export class Colress extends TrainerCard {
 
     return state;
   }
-
 }

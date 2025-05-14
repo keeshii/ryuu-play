@@ -1,14 +1,17 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { PowerType } from '@ptcg/common';
-import { PowerEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { CheckRetreatCostEffect, CheckProvidedEnergyEffect } from '@ptcg/common';
+import {
+  CardType,
+  CheckProvidedEnergyEffect,
+  CheckRetreatCostEffect,
+  Effect,
+  PokemonCard,
+  PowerEffect,
+  PowerType,
+  Stage,
+  State,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Zubat extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.PSYCHIC;
@@ -19,21 +22,24 @@ export class Zubat extends PokemonCard {
 
   public resistance = [{ type: CardType.FIGHTING, value: -20 }];
 
-  public retreat = [ CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS];
 
-  public powers = [{
-    name: 'Free Flight',
-    powerType: PowerType.ABILITY,
-    text: 'If this Pokemon has no Energy attached to it, this Pokemon has ' +
-      'no Retreat Cost.'
-  }];
+  public powers = [
+    {
+      name: 'Free Flight',
+      powerType: PowerType.ABILITY,
+      text: 'If this Pokémon has no Energy attached to it, this Pokémon has no Retreat Cost.',
+    },
+  ];
 
-  public attacks = [{
-    name: 'Wing Attack',
-    cost: [ CardType.PSYCHIC, CardType.COLORLESS ],
-    damage: '20',
-    text: ''
-  }];
+  public attacks = [
+    {
+      name: 'Wing Attack',
+      cost: [CardType.PSYCHIC, CardType.COLORLESS],
+      damage: '20',
+      text: '',
+    },
+  ];
 
   public set: string = 'BW4';
 
@@ -42,7 +48,6 @@ export class Zubat extends PokemonCard {
   public fullName: string = 'Zubat PLS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof CheckRetreatCostEffect && effect.player.active.cards.includes(this)) {
       const player = effect.player;
       const pokemonCard = player.active.getPokemonCard();
@@ -59,7 +64,6 @@ export class Zubat extends PokemonCard {
         return state;
       }
 
-
       const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);
       state = store.reduceEffect(state, checkProvidedEnergy);
 
@@ -70,5 +74,4 @@ export class Zubat extends PokemonCard {
 
     return state;
   }
-
 }

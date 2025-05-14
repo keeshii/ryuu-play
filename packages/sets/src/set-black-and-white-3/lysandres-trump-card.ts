@@ -1,15 +1,21 @@
-import { Effect } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
-import { ShuffleDeckPrompt } from '@ptcg/common';
+import {
+  Effect,
+  ShuffleDeckPrompt,
+  State,
+  StateUtils,
+  StoreLike,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
-function* playCard(next: Function, store: StoreLike, state: State,
-  self: LysandresTrumpCard, effect: TrainerEffect): IterableIterator<State> {
-
+function* playCard(
+  next: Function,
+  store: StoreLike,
+  state: State,
+  self: LysandresTrumpCard,
+  effect: TrainerEffect
+): IterableIterator<State> {
   const player = effect.player;
   const opponent = StateUtils.getOpponent(state, player);
 
@@ -30,7 +36,6 @@ function* playCard(next: Function, store: StoreLike, state: State,
 }
 
 export class LysandresTrumpCard extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.SUPPORTER;
 
   public set: string = 'BW3';
@@ -51,5 +56,4 @@ export class LysandresTrumpCard extends TrainerCard {
 
     return state;
   }
-
 }

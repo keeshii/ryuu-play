@@ -1,17 +1,19 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { PowerEffect } from '@ptcg/common';
-import { PowerType } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
-import { PlayerType } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
+import {
+  CardType,
+  Effect,
+  GameError,
+  GameMessage,
+  PlayerType,
+  PokemonCard,
+  PowerEffect,
+  PowerType,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Garbodor extends PokemonCard {
-
   public stage: Stage = Stage.STAGE_1;
 
   public evolvesFrom = 'Trubbish';
@@ -22,22 +24,27 @@ export class Garbodor extends PokemonCard {
 
   public weakness = [{ type: CardType.PSYCHIC }];
 
-  public retreat = [ CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS];
 
-  public powers = [{
-    name: 'Garbotoxin',
-    powerType: PowerType.ABILITY,
-    text: 'If this Pokemon has a Pokemon Tool card attached to it, ' +
-      'each Pokemon in play, in each player\'s hand, and in each ' +
-      'player\'s discard pile has no Abilities (except for Garbotoxin).'
-  }];
+  public powers = [
+    {
+      name: 'Garbotoxin',
+      powerType: PowerType.ABILITY,
+      text:
+        'If this Pokémon has a Pokémon Tool card attached to it, ' +
+        'each Pokémon in play, in each player\'s hand, and in each ' +
+        'player\'s discard pile has no Abilities (except for Garbotoxin).',
+    },
+  ];
 
-  public attacks = [{
-    name: 'Sludge Toss',
-    cost: [ CardType.PSYCHIC, CardType.PSYCHIC, CardType.COLORLESS ],
-    damage: '60',
-    text: ''
-  }];
+  public attacks = [
+    {
+      name: 'Sludge Toss',
+      cost: [CardType.PSYCHIC, CardType.PSYCHIC, CardType.COLORLESS],
+      damage: '60',
+      text: '',
+    },
+  ];
 
   public set: string = 'BW2';
 
@@ -46,10 +53,11 @@ export class Garbodor extends PokemonCard {
   public fullName: string = 'Garbodor DGE';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
-    if (effect instanceof PowerEffect
-      && effect.power.powerType === PowerType.ABILITY
-      && effect.power.name !== 'Garbotoxin') {
+    if (
+      effect instanceof PowerEffect &&
+      effect.power.powerType === PowerType.ABILITY &&
+      effect.power.name !== 'Garbotoxin'
+    ) {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
 
@@ -82,5 +90,4 @@ export class Garbodor extends PokemonCard {
 
     return state;
   }
-
 }

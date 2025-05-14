@@ -1,16 +1,19 @@
-import { Effect } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType, Stage, CardType } from '@ptcg/common';
-import { CheckRetreatCostEffect } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
-import { UseStadiumEffect } from '@ptcg/common';
+import {
+  CardType,
+  CheckRetreatCostEffect,
+  Effect,
+  GameError,
+  GameMessage,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+  TrainerCard,
+  TrainerType,
+  UseStadiumEffect,
+} from '@ptcg/common';
 
 export class SkyarrowBridge extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.STADIUM;
 
   public set: string = 'BW';
@@ -19,8 +22,7 @@ export class SkyarrowBridge extends TrainerCard {
 
   public fullName: string = 'Skyarrow Bridge NXD';
 
-  public text: string =
-    'The Retreat Cost of each Basic Pokemon in play is C less.';
+  public text: string = 'The Retreat Cost of each Basic Pokémon in play is C less.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof CheckRetreatCostEffect && StateUtils.getStadiumCard(state) === this) {
@@ -41,5 +43,4 @@ export class SkyarrowBridge extends TrainerCard {
 
     return state;
   }
-
 }

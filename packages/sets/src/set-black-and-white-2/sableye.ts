@@ -1,36 +1,45 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, SpecialCondition, TrainerType, SuperType } from '@ptcg/common';
-import { StoreLike, State, CoinFlipPrompt, TrainerCard, ChooseCardsPrompt } from '@ptcg/common';
-import { AttackEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { AddSpecialConditionsEffect } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
+import {
+  AddSpecialConditionsEffect,
+  AttackEffect,
+  CardType,
+  ChooseCardsPrompt,
+  CoinFlipPrompt,
+  Effect,
+  GameMessage,
+  PokemonCard,
+  SpecialCondition,
+  Stage,
+  State,
+  StoreLike,
+  SuperType,
+  TrainerCard,
+  TrainerType,
+} from '@ptcg/common';
 
 export class Sableye extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.DARK;
 
   public hp: number = 70;
 
-  public weakness = [ ];
+  public weakness = [];
 
-  public retreat = [ CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS];
 
   public attacks = [
     {
       name: 'Confuse Ray',
-      cost: [ CardType.COLORLESS ],
+      cost: [CardType.COLORLESS],
       damage: '10',
-      text: 'Flip a coin. If heads, the Defending Pokemon is now Confused.'
+      text: 'Flip a coin. If heads, the Defending Pokémon is now Confused.',
     },
     {
       name: 'Junk Hunt',
-      cost: [ CardType.DARK ],
+      cost: [CardType.DARK],
       damage: '',
-      text: 'Put 2 Item cards from your discard pile into your hand.'
-    }
+      text: 'Put 2 Item cards from your discard pile into your hand.',
+    },
   ];
 
   public set: string = 'BW2';
@@ -43,9 +52,7 @@ export class Sableye extends PokemonCard {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
 
-      return store.prompt(state, [
-        new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)
-      ], result => {
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
         if (result === true) {
           const addSpecialCondition = new AddSpecialConditionsEffect(effect, [SpecialCondition.CONFUSED]);
           store.reduceEffect(state, addSpecialCondition);
@@ -67,20 +74,24 @@ export class Sableye extends PokemonCard {
       const max = Math.min(2, itemCount);
       const min = max;
 
-      return store.prompt(state, [
-        new ChooseCardsPrompt(
-          player.id,
-          GameMessage.CHOOSE_CARD_TO_HAND,
-          player.discard,
-          { superType: SuperType.TRAINER, trainerType: TrainerType.ITEM },
-          { min, max, allowCancel: false }
-        )], selected => {
-        const cards = selected || [];
-        player.discard.moveCardsTo(cards, player.hand);
-      });
+      return store.prompt(
+        state,
+        [
+          new ChooseCardsPrompt(
+            player.id,
+            GameMessage.CHOOSE_CARD_TO_HAND,
+            player.discard,
+            { superType: SuperType.TRAINER, trainerType: TrainerType.ITEM },
+            { min, max, allowCancel: false }
+          ),
+        ],
+        selected => {
+          const cards = selected || [];
+          player.discard.moveCardsTo(cards, player.hand);
+        }
+      );
     }
 
     return state;
   }
-
 }

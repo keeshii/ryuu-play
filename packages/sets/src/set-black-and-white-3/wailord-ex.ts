@@ -1,15 +1,21 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, CardTag, SpecialCondition } from '@ptcg/common';
-import { StoreLike, State, PowerType } from '@ptcg/common';
-import { AttackEffect, PowerEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { AddSpecialConditionsEffect } from '@ptcg/common';
-import { AttachEnergyEffect } from '@ptcg/common';
-
+import {
+  AddSpecialConditionsEffect,
+  AttachEnergyEffect,
+  AttackEffect,
+  CardTag,
+  CardType,
+  Effect,
+  PokemonCard,
+  PowerEffect,
+  PowerType,
+  SpecialCondition,
+  Stage,
+  State,
+  StoreLike,
+} from '@ptcg/common';
 
 export class WailordEx extends PokemonCard {
-
-  public tags = [ CardTag.POKEMON_EX ];
+  public tags = [CardTag.POKEMON_EX];
 
   public stage: Stage = Stage.BASIC;
 
@@ -19,22 +25,25 @@ export class WailordEx extends PokemonCard {
 
   public weakness = [{ type: CardType.GRASS }];
 
-  public retreat = [ CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS];
 
-  public powers = [{
-    name: 'Water Veil',
-    powerType: PowerType.ABILITY,
-    text: 'Whenever you attach an Energy card from your hand to this ' +
-      'Pokemon, remove all Special Conditions from it.'
-  }];
+  public powers = [
+    {
+      name: 'Water Veil',
+      powerType: PowerType.ABILITY,
+      text:
+        'Whenever you attach an Energy card from your hand to this ' +
+        'Pokémon, remove all Special Conditions from it.',
+    },
+  ];
 
   public attacks = [
     {
       name: 'High Breaching',
-      cost: [ CardType.WATER, CardType.WATER, CardType.WATER, CardType.WATER, CardType.WATER ],
+      cost: [CardType.WATER, CardType.WATER, CardType.WATER, CardType.WATER, CardType.WATER],
       damage: '120',
-      text: 'This Pokemon is now Asleep.'
-    }
+      text: 'This Pokémon is now Asleep.',
+    },
   ];
 
   public set: string = 'BW3';
@@ -44,7 +53,6 @@ export class WailordEx extends PokemonCard {
   public fullName: string = 'Wailord EX PCL';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.ASLEEP]);
       specialConditionEffect.target = effect.player.active;
@@ -78,5 +86,4 @@ export class WailordEx extends PokemonCard {
 
     return state;
   }
-
 }

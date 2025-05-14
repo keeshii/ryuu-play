@@ -1,12 +1,21 @@
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType, SuperType, Stage } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { CoinFlipPrompt, ChooseCardsPrompt, Card, StateUtils, ShowCardsPrompt,
-  ShuffleDeckPrompt, GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
+import {
+  Card,
+  ChooseCardsPrompt,
+  CoinFlipPrompt,
+  Effect,
+  GameError,
+  GameMessage,
+  ShowCardsPrompt,
+  ShuffleDeckPrompt,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+  SuperType,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -17,38 +26,43 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   }
 
   let heads: number = 0;
-  yield store.prompt(state, [
-    new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP),
-    new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)
-  ], results => {
-    results.forEach(r => { heads += r ? 1 : 0; });
-    next();
-  });
+  yield store.prompt(
+    state,
+    [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)],
+    results => {
+      results.forEach(r => {
+        heads += r ? 1 : 0;
+      });
+      next();
+    }
+  );
 
   if (heads === 0) {
     return state;
   }
 
   let cards: Card[] = [];
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_HAND,
-    player.deck,
-    { superType: SuperType.POKEMON, stage: Stage.BASIC },
-    { allowCancel: true, min: 0, max: heads }
-  ), results => {
-    cards = results || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_HAND,
+      player.deck,
+      { superType: SuperType.POKEMON, stage: Stage.BASIC },
+      { allowCancel: true, min: 0, max: heads }
+    ),
+    results => {
+      cards = results || [];
+      next();
+    }
+  );
 
   player.deck.moveCardsTo(cards, player.hand);
 
   if (cards.length > 0) {
-    yield store.prompt(state, new ShowCardsPrompt(
-      opponent.id,
-      GameMessage.CARDS_SHOWED_BY_THE_OPPONENT,
-      cards
-    ), () => next());
+    yield store.prompt(state, new ShowCardsPrompt(opponent.id, GameMessage.CARDS_SHOWED_BY_THE_OPPONENT, cards), () =>
+      next()
+    );
   }
 
   return store.prompt(state, new ShuffleDeckPrompt(player.id), order => {
@@ -57,7 +71,6 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 }
 
 export class DualBall extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'HGSS';
@@ -67,7 +80,7 @@ export class DualBall extends TrainerCard {
   public fullName: string = 'Dual Ball UNL';
 
   public text: string =
-    'Flip 2 coins. For each heads, search your deck for a Basic Pokemon ' +
+    'Flip 2 coins. For each heads, search your deck for a Basic Pokémon ' +
     'card, show it to your opponent, and put it into your hand. Shuffle your ' +
     'deck afterward.';
 
@@ -78,5 +91,4 @@ export class DualBall extends TrainerCard {
     }
     return state;
   }
-
 }

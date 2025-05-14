@@ -1,15 +1,17 @@
-import { Card } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { ShowCardsPrompt } from '@ptcg/common';
-import { ShuffleDeckPrompt } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
+import {
+  Card,
+  Effect,
+  GameError,
+  GameMessage,
+  ShowCardsPrompt,
+  ShuffleDeckPrompt,
+  State,
+  StateUtils,
+  StoreLike,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -25,17 +27,20 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     const card = player.deck.cards[i];
     cards.push(card);
 
-    if (card instanceof TrainerCard
-      && card.trainerType === TrainerType.SUPPORTER) {
+    if (card instanceof TrainerCard && card.trainerType === TrainerType.SUPPORTER) {
       supporter = card;
       break;
     }
   }
 
-  yield store.prompt(state, [
-    new ShowCardsPrompt(player.id, GameMessage.CARDS_SHOWED_BY_EFFECT, cards),
-    new ShowCardsPrompt(opponent.id, GameMessage.CARDS_SHOWED_BY_THE_OPPONENT, cards)
-  ], () => next());
+  yield store.prompt(
+    state,
+    [
+      new ShowCardsPrompt(player.id, GameMessage.CARDS_SHOWED_BY_EFFECT, cards),
+      new ShowCardsPrompt(opponent.id, GameMessage.CARDS_SHOWED_BY_THE_OPPONENT, cards),
+    ],
+    () => next()
+  );
 
   if (supporter !== undefined) {
     player.deck.moveCardTo(supporter, player.hand);
@@ -47,7 +52,6 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 }
 
 export class RandomReceiver extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'BW2';
@@ -60,9 +64,7 @@ export class RandomReceiver extends TrainerCard {
     'Reveal cards from the top of your deck until you reveal a Supporter ' +
     'card. Put it into your hand. Shuffle the other cards back into your deck.';
 
-
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
       const generator = playCard(() => generator.next(), store, state, effect);
       return generator.next().value;
@@ -70,5 +72,4 @@ export class RandomReceiver extends TrainerCard {
 
     return state;
   }
-
 }

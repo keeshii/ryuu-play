@@ -1,17 +1,20 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { PowerEffect, AttackEffect } from '@ptcg/common';
-import { PowerType } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { CoinFlipPrompt } from '@ptcg/common';
-import { PutDamageEffect } from '@ptcg/common';
+import {
+  AttackEffect,
+  CardType,
+  CoinFlipPrompt,
+  Effect,
+  GameMessage,
+  PokemonCard,
+  PowerEffect,
+  PowerType,
+  PutDamageEffect,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Squirtle extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.WATER;
@@ -20,21 +23,26 @@ export class Squirtle extends PokemonCard {
 
   public weakness = [{ type: CardType.GRASS }];
 
-  public retreat = [ CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS];
 
-  public powers = [{
-    name: 'Shell Shield',
-    powerType: PowerType.ABILITY,
-    text: 'As long as this Pokemon is on your Bench, prevent all damage ' +
-      'done to this Pokemon by attacks (both yours and your opponent\'s).'
-  }];
+  public powers = [
+    {
+      name: 'Shell Shield',
+      powerType: PowerType.ABILITY,
+      text:
+        'As long as this Pokémon is on your Bench, prevent all damage ' +
+        'done to this Pokémon by attacks (both yours and your opponent\'s).',
+    },
+  ];
 
-  public attacks = [{
-    name: 'Water Splash',
-    cost: [ CardType.WATER, CardType.COLORLESS ],
-    damage: '10+',
-    text: 'Flip a coin. If heads, this attack does 20 more damage.'
-  }];
+  public attacks = [
+    {
+      name: 'Water Splash',
+      cost: [CardType.WATER, CardType.COLORLESS],
+      damage: '10+',
+      text: 'Flip a coin. If heads, this attack does 20 more damage.',
+    },
+  ];
 
   public set: string = 'BW3';
 
@@ -43,13 +51,10 @@ export class Squirtle extends PokemonCard {
   public fullName: string = 'Squirtle BC';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
 
-      return store.prompt(state, [
-        new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)
-      ], result => {
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
         if (result === true) {
           effect.damage += 20;
         }
@@ -89,5 +94,4 @@ export class Squirtle extends PokemonCard {
 
     return state;
   }
-
 }

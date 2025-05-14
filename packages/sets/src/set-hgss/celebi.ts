@@ -1,17 +1,28 @@
-import { GameMessage } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, SuperType } from '@ptcg/common';
-import { PlayPokemonEffect } from '@ptcg/common';
-import { PowerType, StoreLike, State, PlayerType, SlotType,
-  StateUtils, PokemonCardList, EnergyCard, GameError, AttachEnergyPrompt } from '@ptcg/common';
-import { PowerEffect, AttackEffect } from '@ptcg/common';
-import { PutDamageEffect } from '@ptcg/common';
-import { EndTurnEffect } from '@ptcg/common';
-
+import {
+  AttachEnergyPrompt,
+  AttackEffect,
+  CardType,
+  Effect,
+  EndTurnEffect,
+  EnergyCard,
+  GameError,
+  GameMessage,
+  PlayerType,
+  PlayPokemonEffect,
+  PokemonCard,
+  PokemonCardList,
+  PowerEffect,
+  PowerType,
+  PutDamageEffect,
+  SlotType,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+  SuperType,
+} from '@ptcg/common';
 
 export class Celebi extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.GRASS;
@@ -20,26 +31,30 @@ export class Celebi extends PokemonCard {
 
   public weakness = [{ type: CardType.FIRE }];
 
-  public retreat = [ CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS];
 
-  public powers = [{
-    name: 'Forest Breath',
-    powerType: PowerType.POKEPOWER,
-    useWhenInPlay: true,
-    text: 'Once during your turn (before your attack), if Celebi is your ' +
-      'Active Pokemon, you may attach a G Energy card from your hand ' +
-      'to 1 of your Pokemon. This power can\'t be used if Celebi is ' +
-      'affected by a Special Condition.'
-  }];
+  public powers = [
+    {
+      name: 'Forest Breath',
+      powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
+      text:
+        'Once during your turn (before your attack), if Celebi is your ' +
+        'Active Pokémon, you may attach a G Energy card from your hand ' +
+        'to 1 of your Pokémon. This power can\'t be used if Celebi is ' +
+        'affected by a Special Condition.',
+    },
+  ];
 
   public attacks = [
     {
       name: 'Time Circle',
-      cost: [ CardType.GRASS, CardType.PSYCHIC, CardType.COLORLESS ],
+      cost: [CardType.GRASS, CardType.PSYCHIC, CardType.COLORLESS],
       damage: '30',
-      text: 'During your opponent\'s next turn, prevent all damage done to ' +
-        'Celebi by attacks from your opponent\'s Stage 1 or Stage 2 Pokemon.'
-    }
+      text:
+        'During your opponent\'s next turn, prevent all damage done to ' +
+        'Celebi by attacks from your opponent\'s Stage 1 or Stage 2 Pokémon.',
+    },
   ];
 
   public set: string = 'HGSS';
@@ -80,26 +95,30 @@ export class Celebi extends PokemonCard {
         throw new GameError(GameMessage.POWER_ALREADY_USED);
       }
 
-      return store.prompt(state, new AttachEnergyPrompt(
-        player.id,
-        GameMessage.ATTACH_ENERGY_TO_BENCH,
-        player.hand,
-        PlayerType.BOTTOM_PLAYER,
-        [ SlotType.ACTIVE, SlotType.BENCH ],
-        { superType: SuperType.ENERGY, name: 'Grass Energy' },
-        { allowCancel: true, min: 1, max: 1 }
-      ), transfers => {
-        transfers = transfers || [];
-        // cancelled by user
-        if (transfers.length === 0) {
-          return;
+      return store.prompt(
+        state,
+        new AttachEnergyPrompt(
+          player.id,
+          GameMessage.ATTACH_ENERGY_TO_BENCH,
+          player.hand,
+          PlayerType.BOTTOM_PLAYER,
+          [SlotType.ACTIVE, SlotType.BENCH],
+          { superType: SuperType.ENERGY, name: 'Grass Energy' },
+          { allowCancel: true, min: 1, max: 1 }
+        ),
+        transfers => {
+          transfers = transfers || [];
+          // cancelled by user
+          if (transfers.length === 0) {
+            return;
+          }
+          player.marker.addMarker(this.FOREST_BREATH_MARKER, this);
+          for (const transfer of transfers) {
+            const target = StateUtils.getTarget(state, player, transfer.to);
+            player.hand.moveCardTo(transfer.card, target);
+          }
         }
-        player.marker.addMarker(this.FOREST_BREATH_MARKER, this);
-        for (const transfer of transfers) {
-          const target = StateUtils.getTarget(state, player, transfer.to);
-          player.hand.moveCardTo(transfer.card, target);
-        }
-      });
+      );
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
@@ -110,8 +129,7 @@ export class Celebi extends PokemonCard {
       return state;
     }
 
-    if (effect instanceof PutDamageEffect
-      && effect.target.marker.hasMarker(this.TIME_CIRCLE_MARKER)) {
+    if (effect instanceof PutDamageEffect && effect.target.marker.hasMarker(this.TIME_CIRCLE_MARKER)) {
       const card = effect.source.getPokemonCard();
       const stage = card !== undefined ? card.stage : undefined;
 
@@ -128,7 +146,7 @@ export class Celebi extends PokemonCard {
       if (effect.player.marker.hasMarker(this.CLEAR_TIME_CIRCLE_MARKER, this)) {
         effect.player.marker.removeMarker(this.CLEAR_TIME_CIRCLE_MARKER, this);
         const opponent = StateUtils.getOpponent(state, effect.player);
-        opponent.forEachPokemon(PlayerType.TOP_PLAYER, (cardList) => {
+        opponent.forEachPokemon(PlayerType.TOP_PLAYER, cardList => {
           cardList.marker.removeMarker(this.TIME_CIRCLE_MARKER, this);
         });
       }
@@ -136,5 +154,4 @@ export class Celebi extends PokemonCard {
 
     return state;
   }
-
 }

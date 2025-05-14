@@ -1,19 +1,24 @@
-import { AddSpecialConditionsEffect } from '@ptcg/common';
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, SpecialCondition } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { PowerEffect, AttackEffect, RetreatEffect } from '@ptcg/common';
-import { PowerType } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { CoinFlipPrompt } from '@ptcg/common';
-import { PlayerType } from '@ptcg/common';
+import {
+  AddSpecialConditionsEffect,
+  AttackEffect,
+  CardType,
+  CoinFlipPrompt,
+  Effect,
+  GameError,
+  GameMessage,
+  PlayerType,
+  PokemonCard,
+  PowerEffect,
+  PowerType,
+  RetreatEffect,
+  SpecialCondition,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Dragalge extends PokemonCard {
-
   public stage: Stage = Stage.STAGE_1;
 
   public evolvesFrom = 'Skrelp';
@@ -24,21 +29,24 @@ export class Dragalge extends PokemonCard {
 
   public weakness = [{ type: CardType.FAIRY }];
 
-  public retreat = [ CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS];
 
-  public powers = [{
-    name: 'Poison Barrier',
-    powerType: PowerType.ABILITY,
-    text: 'Your opponent\'s Poisoned Pokemon can\'t retreat.'
-  }];
+  public powers = [
+    {
+      name: 'Poison Barrier',
+      powerType: PowerType.ABILITY,
+      text: 'Your opponent\'s Poisoned Pokémon can\'t retreat.',
+    },
+  ];
 
-  public attacks = [{
-    name: 'Poison Breath',
-    cost: [ CardType.WATER, CardType.PSYCHIC, CardType.COLORLESS ],
-    damage: '60',
-    text: 'Flip a coin. If heads, your opponent\'s Active Pokemon ' +
-      'is now Poisoned.'
-  }];
+  public attacks = [
+    {
+      name: 'Poison Breath',
+      cost: [CardType.WATER, CardType.PSYCHIC, CardType.COLORLESS],
+      damage: '60',
+      text: 'Flip a coin. If heads, your opponent\'s Active Pokémon is now Poisoned.',
+    },
+  ];
 
   public set: string = 'BW2';
 
@@ -47,17 +55,12 @@ export class Dragalge extends PokemonCard {
   public fullName: string = 'Dragalge FLF';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
 
-      return store.prompt(state, [
-        new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)
-      ], result => {
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
         if (result === true) {
-          const specialConditionEffect = new AddSpecialConditionsEffect(
-            effect, [SpecialCondition.POISONED]
-          );
+          const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.POISONED]);
           store.reduceEffect(state, specialConditionEffect);
         }
       });
@@ -94,5 +97,4 @@ export class Dragalge extends PokemonCard {
 
     return state;
   }
-
 }

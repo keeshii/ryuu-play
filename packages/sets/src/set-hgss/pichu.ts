@@ -1,13 +1,26 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, SpecialCondition, SuperType } from '@ptcg/common';
-import { PowerType, StoreLike, State, ShuffleDeckPrompt, StateUtils,
-  PokemonCardList, Card, ChooseCardsPrompt, GameMessage } from '@ptcg/common';
-import { AttackEffect, PowerEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { PutDamageEffect, AddSpecialConditionsEffect } from '@ptcg/common';
+import {
+  AddSpecialConditionsEffect,
+  AttackEffect,
+  Card,
+  CardType,
+  ChooseCardsPrompt,
+  Effect,
+  GameMessage,
+  PokemonCard,
+  PokemonCardList,
+  PowerEffect,
+  PowerType,
+  PutDamageEffect,
+  ShuffleDeckPrompt,
+  SpecialCondition,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+  SuperType,
+} from '@ptcg/common';
 
-function* usePlayground(next: Function, store: StoreLike, state: State,
-  effect: AttackEffect): IterableIterator<State> {
+function* usePlayground(next: Function, store: StoreLike, state: State, effect: AttackEffect): IterableIterator<State> {
   const player = effect.player;
   const opponent = StateUtils.getOpponent(state, player);
 
@@ -20,16 +33,20 @@ function* usePlayground(next: Function, store: StoreLike, state: State,
   let max = slots.length;
 
   let cards: Card[] = [];
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_PUT_ONTO_BENCH,
-    player.deck,
-    { superType: SuperType.POKEMON, stage: Stage.BASIC },
-    { min: 0, max, allowCancel: true }
-  ), selected => {
-    cards = selected || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_PUT_ONTO_BENCH,
+      player.deck,
+      { superType: SuperType.POKEMON, stage: Stage.BASIC },
+      { min: 0, max, allowCancel: true }
+    ),
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
 
   if (cards.length > slots.length) {
     cards.length = slots.length;
@@ -44,16 +61,20 @@ function* usePlayground(next: Function, store: StoreLike, state: State,
   slots = opponent.bench.filter(b => b.cards.length === 0);
   max = slots.length;
 
-  yield store.prompt(state, new ChooseCardsPrompt(
-    opponent.id,
-    GameMessage.CHOOSE_CARD_TO_PUT_ONTO_BENCH,
-    opponent.deck,
-    { superType: SuperType.POKEMON, stage: Stage.BASIC },
-    { min: 0, max, allowCancel: true }
-  ), selected => {
-    cards = selected || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      opponent.id,
+      GameMessage.CHOOSE_CARD_TO_PUT_ONTO_BENCH,
+      opponent.deck,
+      { superType: SuperType.POKEMON, stage: Stage.BASIC },
+      { min: 0, max, allowCancel: true }
+    ),
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
 
   if (cards.length > slots.length) {
     cards.length = slots.length;
@@ -77,32 +98,33 @@ function* usePlayground(next: Function, store: StoreLike, state: State,
 }
 
 export class Pichu extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.LIGHTNING;
 
   public hp: number = 30;
 
-  public retreat = [ ];
+  public retreat = [];
 
-  public powers = [{
-    name: 'Sweet Sleeping Face',
-    powerType: PowerType.POKEBODY,
-    text: 'As long as Pichu is Asleep, prevent all damage done to Cleffa ' +
-      'by attacks.'
-  }];
+  public powers = [
+    {
+      name: 'Sweet Sleeping Face',
+      powerType: PowerType.POKEBODY,
+      text: 'As long as Pichu is Asleep, prevent all damage done to Cleffa by attacks.',
+    },
+  ];
 
   public attacks = [
     {
       name: 'Playground',
-      cost: [ ],
+      cost: [],
       damage: '',
-      text: 'Each player may search his or her deck for as many Basic ' +
-        'Pokemon as he or she likes, put them onto his or her Bench, and ' +
-        'shuffle his or her deck afterward. (You put your Pokemon on the ' +
-        'Bench first.) Pichu is now Asleep.'
-    }
+      text:
+        'Each player may search his or her deck for as many Basic ' +
+        'Pokémon as he or she likes, put them onto his or her Bench, and ' +
+        'shuffle his or her deck afterward. (You put your Pokémon on the ' +
+        'Bench first.) Pichu is now Asleep.',
+    },
   ];
 
   public set: string = 'HGSS';
@@ -112,7 +134,6 @@ export class Pichu extends PokemonCard {
   public fullName: string = 'Pichu HGSS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     // Playground
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const generator = usePlayground(() => generator.next(), store, state, effect);
@@ -139,5 +160,4 @@ export class Pichu extends PokemonCard {
 
     return state;
   }
-
 }

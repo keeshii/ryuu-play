@@ -1,14 +1,18 @@
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType, SuperType, Stage } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { PokemonCard } from '@ptcg/common';
-import { PokemonCardList } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { ChooseCardsPrompt } from '@ptcg/common';
+import {
+  ChooseCardsPrompt,
+  Effect,
+  GameError,
+  GameMessage,
+  PokemonCard,
+  PokemonCardList,
+  Stage,
+  State,
+  StoreLike,
+  SuperType,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -27,24 +31,27 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   // We will discard this card after prompt confirmation
   effect.preventDefault = true;
 
-  return store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_PUT_ONTO_BENCH,
-    player.discard,
-    { superType: SuperType.POKEMON, stage: Stage.BASIC },
-    { min: 1, max: 1, allowCancel: true }
-  ), selected => {
-    if (selected && selected.length > 0) {
-      // Discard trainer only when user selected a Pokemon
-      player.hand.moveCardTo(effect.trainerCard, player.discard);
-      // Recover discarded Pokemon
-      player.discard.moveCardsTo(selected, slots[0]);
+  return store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_PUT_ONTO_BENCH,
+      player.discard,
+      { superType: SuperType.POKEMON, stage: Stage.BASIC },
+      { min: 1, max: 1, allowCancel: true }
+    ),
+    selected => {
+      if (selected && selected.length > 0) {
+        // Discard trainer only when user selected a Pokemon
+        player.hand.moveCardTo(effect.trainerCard, player.discard);
+        // Recover discarded Pokemon
+        player.discard.moveCardsTo(selected, slots[0]);
+      }
     }
-  });
+  );
 }
 
 export class Revive extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'BW';
@@ -53,8 +60,7 @@ export class Revive extends TrainerCard {
 
   public fullName: string = 'Revive BW';
 
-  public text: string =
-    'Put a Basic Pokemon from your discard pile onto your Bench.';
+  public text: string = 'Put a Basic Pokémon from your discard pile onto your Bench.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
@@ -64,5 +70,4 @@ export class Revive extends TrainerCard {
 
     return state;
   }
-
 }

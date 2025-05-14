@@ -1,16 +1,26 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, CardTag } from '@ptcg/common';
-import { StoreLike, State, PowerType, PlayerType, SlotType, PokemonCardList, GameError, GameMessage } from '@ptcg/common';
-import { PowerEffect, AttackEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { CheckProvidedEnergyEffect } from '@ptcg/common';
-import {PlayPokemonEffect } from '@ptcg/common';
-import {EndTurnEffect } from '@ptcg/common';
-
+import {
+  AttackEffect,
+  CardTag,
+  CardType,
+  CheckProvidedEnergyEffect,
+  Effect,
+  EndTurnEffect,
+  GameError,
+  GameMessage,
+  PlayerType,
+  PlayPokemonEffect,
+  PokemonCard,
+  PokemonCardList,
+  PowerEffect,
+  PowerType,
+  SlotType,
+  Stage,
+  State,
+  StoreLike,
+} from '@ptcg/common';
 
 export class KeldeoEx extends PokemonCard {
-
-  public tags = [ CardTag.POKEMON_EX ];
+  public tags = [CardTag.POKEMON_EX];
 
   public stage: Stage = Stage.BASIC;
 
@@ -20,23 +30,26 @@ export class KeldeoEx extends PokemonCard {
 
   public weakness = [{ type: CardType.GRASS }];
 
-  public retreat = [ CardType.COLORLESS, CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS, CardType.COLORLESS];
 
-  public powers = [{
-    name: 'Rush In',
-    useWhenInPlay: true,
-    powerType: PowerType.ABILITY,
-    text: 'Once during your turn (before your attack), if this Pokemon is ' +
-      'on your Bench, you may switch this Pokemon with your Active Pokemon.'
-  }];
+  public powers = [
+    {
+      name: 'Rush In',
+      useWhenInPlay: true,
+      powerType: PowerType.ABILITY,
+      text:
+        'Once during your turn (before your attack), if this Pokémon is ' +
+        'on your Bench, you may switch this Pokémon with your Active Pokémon.',
+    },
+  ];
 
   public attacks = [
     {
       name: 'Secret Sword',
-      cost: [ CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS ],
+      cost: [CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS],
       damage: '50+',
-      text: 'Does 20 more damage for each W Energy attached to this Pokemon.'
-    }
+      text: 'Does 20 more damage for each W Energy attached to this Pokémon.',
+    },
   ];
 
   public set: string = 'BW2';
@@ -48,7 +61,6 @@ export class KeldeoEx extends PokemonCard {
   public readonly RUSH_IN_MARKER = 'RUSH_IN_MARKER';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof PlayPokemonEffect && effect.pokemonCard === this) {
       const player = effect.player;
       player.marker.removeMarker(this.RUSH_IN_MARKER, this);
@@ -98,5 +110,4 @@ export class KeldeoEx extends PokemonCard {
 
     return state;
   }
-
 }

@@ -1,13 +1,18 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType } from '@ptcg/common';
-import { StoreLike, State, StateUtils, PokemonCardList, CoinFlipPrompt } from '@ptcg/common';
-import { AttackEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-
+import {
+  AttackEffect,
+  CardType,
+  CoinFlipPrompt,
+  Effect,
+  GameMessage,
+  PokemonCard,
+  PokemonCardList,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Raichu extends PokemonCard {
-
   public stage: Stage = Stage.STAGE_1;
 
   public evolvesFrom = 'Pikachu';
@@ -20,22 +25,21 @@ export class Raichu extends PokemonCard {
 
   public resistance = [{ type: CardType.METAL, value: -20 }];
 
-  public retreat = [ CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS];
 
   public attacks = [
     {
       name: 'Slam',
-      cost: [ CardType.COLORLESS, CardType.COLORLESS ],
+      cost: [CardType.COLORLESS, CardType.COLORLESS],
       damage: '30×',
-      text: 'Flip 2 coins. This attack does 30 damage times the number of heads.'
+      text: 'Flip 2 coins. This attack does 30 damage times the number of heads.',
     },
     {
       name: 'High Voltage',
-      cost: [ CardType.LIGHTNING, CardType.LIGHTNING, CardType.LIGHTNING ],
+      cost: [CardType.LIGHTNING, CardType.LIGHTNING, CardType.LIGHTNING],
       damage: '60',
-      text: 'If Raichu evolved from Pikachu this turn, this attack\'s base ' +
-        'damage is 100 instead of 60.'
-    }
+      text: 'If Raichu evolved from Pikachu this turn, this attack\'s base damage is 100 instead of 60.',
+    },
   ];
 
   public set: string = 'OP9';
@@ -45,17 +49,19 @@ export class Raichu extends PokemonCard {
   public fullName: string = 'Raichu OP9';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
-      return store.prompt(state, [
-        new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP),
-        new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP),
-      ], results => {
-        let heads: number = 0;
-        results.forEach(r => { heads += r ? 1 : 0; });
-        effect.damage = 30 * heads;
-      });
+      return store.prompt(
+        state,
+        [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)],
+        results => {
+          let heads: number = 0;
+          results.forEach(r => {
+            heads += r ? 1 : 0;
+          });
+          effect.damage = 30 * heads;
+        }
+      );
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
@@ -70,5 +76,4 @@ export class Raichu extends PokemonCard {
 
     return state;
   }
-
 }

@@ -1,13 +1,33 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, SuperType } from '@ptcg/common';
-import { StoreLike, State, ChooseCardsPrompt, Card, ShuffleDeckPrompt,
-  CoinFlipPrompt, ShowCardsPrompt, StateUtils, PowerType, GameError,
-  GameMessage, PokemonCardList } from '@ptcg/common';
-import { AttackEffect, PowerEffect, EvolveEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
+import {
+  AttackEffect,
+  Card,
+  CardType,
+  ChooseCardsPrompt,
+  CoinFlipPrompt,
+  Effect,
+  EvolveEffect,
+  GameError,
+  GameMessage,
+  PokemonCard,
+  PokemonCardList,
+  PowerEffect,
+  PowerType,
+  ShowCardsPrompt,
+  ShuffleDeckPrompt,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+  SuperType,
+} from '@ptcg/common';
 
-function* useBabyEvolution(next: Function, store: StoreLike, state: State,
-  self: Pichu, effect: PowerEffect): IterableIterator<State> {
+function* useBabyEvolution(
+  next: Function,
+  store: StoreLike,
+  state: State,
+  self: Pichu,
+  effect: PowerEffect
+): IterableIterator<State> {
   const player = effect.player;
   const cardList = StateUtils.findCardList(state, self);
   if (!(cardList instanceof PokemonCardList)) {
@@ -19,27 +39,35 @@ function* useBabyEvolution(next: Function, store: StoreLike, state: State,
   }
 
   let cards: Card[] = [];
-  return store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_POKEMON_TO_EVOLVE,
-    player.hand,
-    { superType: SuperType.POKEMON, name: 'Pikachu' },
-    { min:1, max: 1, allowCancel: true }
-  ), selected => {
-    cards = selected || [];
+  return store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_POKEMON_TO_EVOLVE,
+      player.hand,
+      { superType: SuperType.POKEMON, name: 'Pikachu' },
+      { min: 1, max: 1, allowCancel: true }
+    ),
+    selected => {
+      cards = selected || [];
 
-    if (cards.length > 0) {
-      const pokemonCard = cards[0] as PokemonCard;
-      const evolveEffect = new EvolveEffect(player, cardList, pokemonCard);
-      store.reduceEffect(state, evolveEffect);
+      if (cards.length > 0) {
+        const pokemonCard = cards[0] as PokemonCard;
+        const evolveEffect = new EvolveEffect(player, cardList, pokemonCard);
+        store.reduceEffect(state, evolveEffect);
 
-      cardList.damage = 0;
+        cardList.damage = 0;
+      }
     }
-  });
+  );
 }
 
-function* useFindAFriend(next: Function, store: StoreLike, state: State,
-  effect: AttackEffect): IterableIterator<State> {
+function* useFindAFriend(
+  next: Function,
+  store: StoreLike,
+  state: State,
+  effect: AttackEffect
+): IterableIterator<State> {
   const player = effect.player;
   const opponent = StateUtils.getOpponent(state, player);
 
@@ -48,10 +76,7 @@ function* useFindAFriend(next: Function, store: StoreLike, state: State,
   }
 
   let coinResult: boolean = false;
-  yield store.prompt(state, new CoinFlipPrompt(
-    player.id,
-    GameMessage.COIN_FLIP
-  ), result => {
+  yield store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
     coinResult = result;
     next();
   });
@@ -61,23 +86,25 @@ function* useFindAFriend(next: Function, store: StoreLike, state: State,
   }
 
   let cards: Card[] = [];
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_HAND,
-    player.deck,
-    { superType: SuperType.POKEMON },
-    { allowCancel: true, min: 1, max: 1 }
-  ), selected => {
-    cards = selected || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_HAND,
+      player.deck,
+      { superType: SuperType.POKEMON },
+      { allowCancel: true, min: 1, max: 1 }
+    ),
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
 
   if (cards.length > 0) {
-    yield store.prompt(state, new ShowCardsPrompt(
-      opponent.id,
-      GameMessage.CARDS_SHOWED_BY_THE_OPPONENT,
-      cards
-    ), () => next());
+    yield store.prompt(state, new ShowCardsPrompt(opponent.id, GameMessage.CARDS_SHOWED_BY_THE_OPPONENT, cards), () =>
+      next()
+    );
   }
 
   player.deck.moveCardsTo(cards, player.hand);
@@ -87,9 +114,7 @@ function* useFindAFriend(next: Function, store: StoreLike, state: State,
   });
 }
 
-
 export class Pichu extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.LIGHTNING;
@@ -100,26 +125,30 @@ export class Pichu extends PokemonCard {
 
   public resistance = [{ type: CardType.METAL, value: -20 }];
 
-  public retreat = [ CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS];
 
-  public powers = [{
-    name: 'Baby Evolution',
-    useWhenInPlay: true,
-    powerType: PowerType.POKEPOWER,
-    text: 'Once during your turn (before your attack), you may put Pikachu ' +
-      'from your hand onto Pichu (this counts as evolving Pichu) and remove ' +
-      'all damage counters from Pichu.'
-  }];
+  public powers = [
+    {
+      name: 'Baby Evolution',
+      useWhenInPlay: true,
+      powerType: PowerType.POKEPOWER,
+      text:
+        'Once during your turn (before your attack), you may put Pikachu ' +
+        'from your hand onto Pichu (this counts as evolving Pichu) and remove ' +
+        'all damage counters from Pichu.',
+    },
+  ];
 
   public attacks = [
     {
       name: 'Find a Friend',
-      cost: [ ],
+      cost: [],
       damage: '',
-      text: 'Flip a coin. If heads, search your deck for a Pokemon, ' +
+      text:
+        'Flip a coin. If heads, search your deck for a Pokémon, ' +
         'show it to your opponent, and put it into your hand. ' +
-        'Shuffle your deck afterward.'
-    }
+        'Shuffle your deck afterward.',
+    },
   ];
 
   public set: string = 'OP9';
@@ -141,5 +170,4 @@ export class Pichu extends PokemonCard {
 
     return state;
   }
-
 }

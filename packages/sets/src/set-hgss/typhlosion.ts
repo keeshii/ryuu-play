@@ -1,17 +1,36 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, EnergyType, SuperType } from '@ptcg/common';
-import { PowerType, StoreLike, State, StateUtils, GameError, GameMessage,
-  EnergyCard, PlayerType, SlotType, PokemonCardList, ChooseCardsPrompt } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { PowerEffect, AttackEffect } from '@ptcg/common';
-import { PlayPokemonEffect } from '@ptcg/common';
-import { EndTurnEffect } from '@ptcg/common';
-import {AttachEnergyPrompt } from '@ptcg/common';
-import {CheckProvidedEnergyEffect } from '@ptcg/common';
-import {DiscardCardsEffect } from '@ptcg/common';
+import {
+  AttachEnergyPrompt,
+  AttackEffect,
+  CardType,
+  CheckProvidedEnergyEffect,
+  ChooseCardsPrompt,
+  DiscardCardsEffect,
+  Effect,
+  EndTurnEffect,
+  EnergyCard,
+  EnergyType,
+  GameError,
+  GameMessage,
+  PlayerType,
+  PlayPokemonEffect,
+  PokemonCard,
+  PokemonCardList,
+  PowerEffect,
+  PowerType,
+  SlotType,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+  SuperType,
+} from '@ptcg/common';
 
-function* useFlareDestroy(next: Function, store: StoreLike, state: State,
-  effect: AttackEffect): IterableIterator<State> {
+function* useFlareDestroy(
+  next: Function,
+  store: StoreLike,
+  state: State,
+  effect: AttackEffect
+): IterableIterator<State> {
   const player = effect.player;
   const opponent = StateUtils.getOpponent(state, player);
 
@@ -19,42 +38,49 @@ function* useFlareDestroy(next: Function, store: StoreLike, state: State,
   state = store.reduceEffect(state, checkProvidedEnergy);
 
   if (player.active.cards.some(c => c instanceof EnergyCard)) {
-    yield store.prompt(state, new ChooseCardsPrompt(
-      player.id,
-      GameMessage.CHOOSE_ENERGIES_TO_DISCARD,
-      player.active,
-      { superType: SuperType.ENERGY },
-      { min: 1, max: 1, allowCancel: false }
-    ), selected => {
-      const cards = selected || [];
-      const discardEnergy = new DiscardCardsEffect(effect, cards);
-      discardEnergy.target = player.active;
-      store.reduceEffect(state, discardEnergy);
-      next();
-    });
+    yield store.prompt(
+      state,
+      new ChooseCardsPrompt(
+        player.id,
+        GameMessage.CHOOSE_ENERGIES_TO_DISCARD,
+        player.active,
+        { superType: SuperType.ENERGY },
+        { min: 1, max: 1, allowCancel: false }
+      ),
+      selected => {
+        const cards = selected || [];
+        const discardEnergy = new DiscardCardsEffect(effect, cards);
+        discardEnergy.target = player.active;
+        store.reduceEffect(state, discardEnergy);
+        next();
+      }
+    );
   }
 
   // Defending Pokemon has no energy cards attached
   if (opponent.active.cards.some(c => c instanceof EnergyCard)) {
-    yield store.prompt(state, new ChooseCardsPrompt(
-      player.id,
-      GameMessage.CHOOSE_ENERGIES_TO_DISCARD,
-      opponent.active,
-      { superType: SuperType.ENERGY },
-      { min: 1, max: 1, allowCancel: false }
-    ), selected => {
-      const cards = selected || [];
-      const discardEnergy = new DiscardCardsEffect(effect, cards);
-      return store.reduceEffect(state, discardEnergy);
-      next();
-    });
+    yield store.prompt(
+      state,
+      new ChooseCardsPrompt(
+        player.id,
+        GameMessage.CHOOSE_ENERGIES_TO_DISCARD,
+        opponent.active,
+        { superType: SuperType.ENERGY },
+        { min: 1, max: 1, allowCancel: false }
+      ),
+      selected => {
+        const cards = selected || [];
+        const discardEnergy = new DiscardCardsEffect(effect, cards);
+        return store.reduceEffect(state, discardEnergy);
+        next();
+      }
+    );
   }
 
   return state;
 }
 
 export class Typhlosion extends PokemonCard {
-
   public stage: Stage = Stage.STAGE_2;
 
   public evolvesFrom = 'Quilava';
@@ -65,26 +91,30 @@ export class Typhlosion extends PokemonCard {
 
   public weakness = [{ type: CardType.WATER }];
 
-  public retreat = [ CardType.COLORLESS, CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS, CardType.COLORLESS];
 
-  public powers = [{
-    name: 'Afterburner',
-    powerType: PowerType.POKEPOWER,
-    useWhenInPlay: true,
-    text: 'Once during your turn (before your attack), you may search your ' +
-      'discard pile for a R Energy card and attach it to 1 of your Pokemon. ' +
-      'If you do, put 1 damage counter on that Pokemon. This Power can\'t ' +
-      'be used if Typhlosion is affected by a Special Condition.'
-  }];
+  public powers = [
+    {
+      name: 'Afterburner',
+      powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
+      text:
+        'Once during your turn (before your attack), you may search your ' +
+        'discard pile for a R Energy card and attach it to 1 of your Pokémon. ' +
+        'If you do, put 1 damage counter on that Pokémon. This Power can\'t ' +
+        'be used if Typhlosion is affected by a Special Condition.',
+    },
+  ];
 
   public attacks = [
     {
       name: 'Flare Destroy',
-      cost: [ CardType.FIRE, CardType.FIRE, CardType.COLORLESS ],
+      cost: [CardType.FIRE, CardType.FIRE, CardType.COLORLESS],
       damage: '70',
-      text: 'Discard an Energy card attached to Typhlosion and discard ' +
-        'an Energy card attached to the Defending Pokemon.'
-    }
+      text:
+        'Discard an Energy card attached to Typhlosion and discard ' +
+        'an Energy card attached to the Defending Pokémon.',
+    },
   ];
 
   public set: string = 'HGSS';
@@ -115,8 +145,7 @@ export class Typhlosion extends PokemonCard {
         throw new GameError(GameMessage.CANNOT_USE_POWER);
       }
       const hasEnergyInDiscard = player.discard.cards.some(c => {
-        return c instanceof EnergyCard
-          && c.provides.includes(CardType.FIRE);
+        return c instanceof EnergyCard && c.provides.includes(CardType.FIRE);
       });
       if (!hasEnergyInDiscard) {
         throw new GameError(GameMessage.CANNOT_USE_POWER);
@@ -125,27 +154,35 @@ export class Typhlosion extends PokemonCard {
         throw new GameError(GameMessage.POWER_ALREADY_USED);
       }
 
-      return store.prompt(state, new AttachEnergyPrompt(
-        player.id,
-        GameMessage.ATTACH_ENERGY_CARDS,
-        player.discard,
-        PlayerType.BOTTOM_PLAYER,
-        [ SlotType.ACTIVE, SlotType.BENCH ],
-        { superType: SuperType.ENERGY, energyType: EnergyType.BASIC, name: 'Fire Energy' },
-        { allowCancel: true, min: 1, max: 1 }
-      ), transfers => {
-        transfers = transfers || [];
-        // cancelled by user
-        if (transfers.length === 0) {
-          return;
+      return store.prompt(
+        state,
+        new AttachEnergyPrompt(
+          player.id,
+          GameMessage.ATTACH_ENERGY_CARDS,
+          player.discard,
+          PlayerType.BOTTOM_PLAYER,
+          [SlotType.ACTIVE, SlotType.BENCH],
+          {
+            superType: SuperType.ENERGY,
+            energyType: EnergyType.BASIC,
+            name: 'Fire Energy',
+          },
+          { allowCancel: true, min: 1, max: 1 }
+        ),
+        transfers => {
+          transfers = transfers || [];
+          // cancelled by user
+          if (transfers.length === 0) {
+            return;
+          }
+          player.marker.addMarker(this.AFTERBURNER_MAREKER, this);
+          for (const transfer of transfers) {
+            const target = StateUtils.getTarget(state, player, transfer.to);
+            player.discard.moveCardTo(transfer.card, target);
+            target.damage += 10;
+          }
         }
-        player.marker.addMarker(this.AFTERBURNER_MAREKER, this);
-        for (const transfer of transfers) {
-          const target = StateUtils.getTarget(state, player, transfer.to);
-          player.discard.moveCardTo(transfer.card, target);
-          target.damage += 10;
-        }
-      });
+      );
     }
 
     if (effect instanceof EndTurnEffect) {
@@ -154,6 +191,4 @@ export class Typhlosion extends PokemonCard {
 
     return state;
   }
-
-
 }

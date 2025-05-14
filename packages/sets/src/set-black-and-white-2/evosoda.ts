@@ -1,18 +1,24 @@
-import { Card } from '@ptcg/common';
-import { CardTarget, PlayerType, SlotType } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType, Stage, SuperType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { ChoosePokemonPrompt } from '@ptcg/common';
-import { PokemonCard } from '@ptcg/common';
-import { CardManager } from '@ptcg/common';
-import { PokemonCardList } from '@ptcg/common';
-import { ChooseCardsPrompt } from '@ptcg/common';
+import {
+  Card,
+  CardManager,
+  CardTarget,
+  ChooseCardsPrompt,
+  ChoosePokemonPrompt,
+  Effect,
+  GameError,
+  GameMessage,
+  PlayerType,
+  PokemonCard,
+  PokemonCardList,
+  SlotType,
+  Stage,
+  State,
+  StoreLike,
+  SuperType,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -55,16 +61,20 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   });
 
   let cards: Card[] = [];
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_EVOLVE,
-    player.deck,
-    { superType: SuperType.POKEMON },
-    { min: 1, max: 1, allowCancel: true, blocked }
-  ), selected => {
-    cards = selected || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_EVOLVE,
+      player.deck,
+      { superType: SuperType.POKEMON },
+      { min: 1, max: 1, allowCancel: true, blocked }
+    ),
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
 
   // Canceled by user, he didn't found the card in the deck
   if (cards.length === 0) {
@@ -81,16 +91,20 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   });
 
   let targets: PokemonCardList[] = [];
-  yield store.prompt(state, new ChoosePokemonPrompt(
-    player.id,
-    GameMessage.CHOOSE_POKEMON_TO_EVOLVE,
-    PlayerType.BOTTOM_PLAYER,
-    [ SlotType.ACTIVE, SlotType.BENCH ],
-    { allowCancel: false, blocked: blocked2 }
-  ), selection => {
-    targets = selection || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChoosePokemonPrompt(
+      player.id,
+      GameMessage.CHOOSE_POKEMON_TO_EVOLVE,
+      PlayerType.BOTTOM_PLAYER,
+      [SlotType.ACTIVE, SlotType.BENCH],
+      { allowCancel: false, blocked: blocked2 }
+    ),
+    selection => {
+      targets = selection || [];
+      next();
+    }
+  );
 
   if (targets.length === 0) {
     return state; // canceled by user
@@ -109,7 +123,6 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 }
 
 export class Evosoda extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'BW2';
@@ -119,10 +132,10 @@ export class Evosoda extends TrainerCard {
   public fullName: string = 'Evosoda XY';
 
   public text: string =
-    'Search your deck for a card that evolves from 1 of your Pokemon and put ' +
-    'it onto that Pokemon. (This counts as evolving that Pokemon). ' +
+    'Search your deck for a card that evolves from 1 of your Pokémon and put ' +
+    'it onto that Pokémon. (This counts as evolving that Pokémon). ' +
     'Shuffle your deck afterward. You can\'t use this card during your first ' +
-    'turn or on a Pokemon that was put into play this turn.';
+    'turn or on a Pokémon that was put into play this turn.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
@@ -132,5 +145,4 @@ export class Evosoda extends TrainerCard {
 
     return state;
   }
-
 }

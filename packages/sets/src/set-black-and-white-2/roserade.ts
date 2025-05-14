@@ -1,14 +1,29 @@
-import { Effect } from '@ptcg/common';
-import { PokemonCard } from '@ptcg/common';
-import { PowerType, StoreLike, State, CoinFlipPrompt, ChooseCardsPrompt, ShuffleDeckPrompt } from '@ptcg/common';
-import { Stage, CardType, SpecialCondition } from '@ptcg/common';
-import { PlayPokemonEffect } from '@ptcg/common';
-import { AttackEffect, PowerEffect } from '@ptcg/common';
-import { AddSpecialConditionsEffect } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
+import {
+  AddSpecialConditionsEffect,
+  AttackEffect,
+  CardType,
+  ChooseCardsPrompt,
+  CoinFlipPrompt,
+  Effect,
+  GameMessage,
+  PlayPokemonEffect,
+  PokemonCard,
+  PowerEffect,
+  PowerType,
+  ShuffleDeckPrompt,
+  SpecialCondition,
+  Stage,
+  State,
+  StoreLike,
+} from '@ptcg/common';
 
-function* useLeParfum(next: Function, store: StoreLike, state: State,
-  self: Roserade, effect: PlayPokemonEffect): IterableIterator<State> {
+function* useLeParfum(
+  next: Function,
+  store: StoreLike,
+  state: State,
+  self: Roserade,
+  effect: PlayPokemonEffect
+): IterableIterator<State> {
   const player = effect.player;
 
   if (player.deck.cards.length === 0) {
@@ -23,26 +38,28 @@ function* useLeParfum(next: Function, store: StoreLike, state: State,
     return state;
   }
 
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_HAND,
-    player.deck,
-    { },
-    { min: 1, max: 1, allowCancel: true }
-  ), selected => {
-    const cards = selected || [];
-    player.deck.moveCardsTo(cards, player.hand);
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_HAND,
+      player.deck,
+      {},
+      { min: 1, max: 1, allowCancel: true }
+    ),
+    selected => {
+      const cards = selected || [];
+      player.deck.moveCardsTo(cards, player.hand);
+      next();
+    }
+  );
 
   return store.prompt(state, new ShuffleDeckPrompt(player.id), order => {
     player.deck.applyOrder(order);
   });
 }
 
-
 export class Roserade extends PokemonCard {
-
   public stage: Stage = Stage.STAGE_1;
 
   evolvesFrom = 'Roselia';
@@ -55,24 +72,26 @@ export class Roserade extends PokemonCard {
 
   public resistance = [{ type: CardType.WATER, value: -20 }];
 
-  public retreat = [ CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS];
 
-  public powers = [{
-    name: 'Le Parfum',
-    powerType: PowerType.ABILITY,
-    text: 'When you play this Pokemon from your hand to evolve 1 of your ' +
-      'Pokemon, you may search your deck for any card and put it into your ' +
-      'hand. Shuffle your deck afterward.'
-  }];
+  public powers = [
+    {
+      name: 'Le Parfum',
+      powerType: PowerType.ABILITY,
+      text:
+        'When you play this Pokémon from your hand to evolve 1 of your ' +
+        'Pokémon, you may search your deck for any card and put it into your ' +
+        'hand. Shuffle your deck afterward.',
+    },
+  ];
 
   public attacks = [
     {
       name: 'Squeeze',
-      cost: [ CardType.GRASS, CardType.COLORLESS ],
+      cost: [CardType.GRASS, CardType.COLORLESS],
       damage: '30+',
-      text: 'Flip a coin. If heads, this attack does 20 more damage and ' +
-        'the Defending Pokemon is now Paralyzed.'
-    }
+      text: 'Flip a coin. If heads, this attack does 20 more damage and the Defending Pokémon is now Paralyzed.',
+    },
   ];
 
   public set: string = 'BW2';
@@ -90,9 +109,7 @@ export class Roserade extends PokemonCard {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
 
-      return store.prompt(state, [
-        new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)
-      ], result => {
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
         if (result === true) {
           const addSpecialCondition = new AddSpecialConditionsEffect(effect, [SpecialCondition.PARALYZED]);
           effect.damage += 20;
@@ -103,5 +120,4 @@ export class Roserade extends PokemonCard {
 
     return state;
   }
-
 }

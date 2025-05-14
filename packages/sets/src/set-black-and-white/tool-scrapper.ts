@@ -1,12 +1,19 @@
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { ChoosePokemonPrompt } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { PlayerType, SlotType, StateUtils, CardTarget, GameError, GameMessage,
-  PokemonCardList } from '@ptcg/common';
+import {
+  CardTarget,
+  ChoosePokemonPrompt,
+  Effect,
+  GameError,
+  GameMessage,
+  PlayerType,
+  PokemonCardList,
+  SlotType,
+  State,
+  StateUtils,
+  StoreLike,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -38,16 +45,20 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 
   const max = Math.min(2, pokemonsWithTool);
   let targets: PokemonCardList[] = [];
-  yield store.prompt(state, new ChoosePokemonPrompt(
-    player.id,
-    GameMessage.CHOOSE_POKEMON_TO_DISCARD_CARDS,
-    PlayerType.ANY,
-    [ SlotType.ACTIVE, SlotType.BENCH ],
-    { min: 1, max: max, allowCancel: true, blocked }
-  ), results => {
-    targets = results || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChoosePokemonPrompt(
+      player.id,
+      GameMessage.CHOOSE_POKEMON_TO_DISCARD_CARDS,
+      PlayerType.ANY,
+      [SlotType.ACTIVE, SlotType.BENCH],
+      { min: 1, max: max, allowCancel: true, blocked }
+    ),
+    results => {
+      targets = results || [];
+      next();
+    }
+  );
 
   if (targets.length === 0) {
     return state;
@@ -68,7 +79,6 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 }
 
 export class ToolScrapper extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'BW';
@@ -78,8 +88,7 @@ export class ToolScrapper extends TrainerCard {
   public fullName: string = 'Tool Scrapper DRX';
 
   public text: string =
-    'Choose up to 2 Pokemon Tool cards attached to Pokemon in play (yours or ' +
-    'your opponent\'s) and discard them.';
+    'Choose up to 2 Pokémon Tool cards attached to Pokémon in play (yours or your opponent\'s) and discard them.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
@@ -88,5 +97,4 @@ export class ToolScrapper extends TrainerCard {
     }
     return state;
   }
-
 }

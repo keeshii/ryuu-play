@@ -1,14 +1,18 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, CardTag } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { PowerEffect, AttackEffect } from '@ptcg/common';
-import { PowerType } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
+import {
+  AttackEffect,
+  CardTag,
+  CardType,
+  Effect,
+  PokemonCard,
+  PowerEffect,
+  PowerType,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Hawlucha extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.FIGHTING;
@@ -19,22 +23,24 @@ export class Hawlucha extends PokemonCard {
 
   public resistance = [{ type: CardType.FIGHTING, value: -20 }];
 
-  public retreat = [ ];
+  public retreat = [];
 
-  public powers = [{
-    name: 'Shining Spirit',
-    powerType: PowerType.ABILITY,
-    text: 'Damage from this Pokemon\'s attacks isn\'t affected by ' +
-      'Weakness or Resistance.'
-  }];
+  public powers = [
+    {
+      name: 'Shining Spirit',
+      powerType: PowerType.ABILITY,
+      text: 'Damage from this Pokémon\'s attacks isn\'t affected by Weakness or Resistance.',
+    },
+  ];
 
-  public attacks = [{
-    name: 'Flying Press',
-    cost: [ CardType.FIGHTING ],
-    damage: '60',
-    text: 'If your opponent\'s Active Pokemon isn\'t a Pokemon-EX, ' +
-      'this attack does nothing.'
-  }];
+  public attacks = [
+    {
+      name: 'Flying Press',
+      cost: [CardType.FIGHTING],
+      damage: '60',
+      text: 'If your opponent\'s Active Pokémon isn\'t a Pokémon-EX, this attack does nothing.',
+    },
+  ];
 
   public set: string = 'BW4';
 
@@ -43,7 +49,6 @@ export class Hawlucha extends PokemonCard {
   public fullName: string = 'Hawlucha FFI';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
@@ -69,5 +74,4 @@ export class Hawlucha extends PokemonCard {
 
     return state;
   }
-
 }

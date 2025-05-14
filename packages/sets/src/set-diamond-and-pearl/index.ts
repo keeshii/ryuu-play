@@ -56,5 +56,5 @@ export const setDiamondAndPearl: Card[] = [
   new UnownR(),
   new Uxie(),
   new VictoryMedal(),
-  new WaterEnergy()
+  new WaterEnergy(),
 ];

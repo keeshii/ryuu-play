@@ -1,17 +1,20 @@
-import { Card } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType, SuperType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { CardList } from '@ptcg/common';
-import { ChooseCardsPrompt } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { ShowCardsPrompt } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
-import { ShuffleDeckPrompt } from '@ptcg/common';
+import {
+  Card,
+  CardList,
+  ChooseCardsPrompt,
+  Effect,
+  GameError,
+  GameMessage,
+  ShowCardsPrompt,
+  ShuffleDeckPrompt,
+  State,
+  StateUtils,
+  StoreLike,
+  SuperType,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -25,26 +28,28 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   player.deck.moveTo(deckTop, 7);
 
   let cards: Card[] = [];
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_HAND,
-    deckTop,
-    { superType: SuperType.TRAINER, trainerType: TrainerType.SUPPORTER },
-    { min: 1, max: 1, allowCancel: true }
-  ), selected => {
-    cards = selected || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_HAND,
+      deckTop,
+      { superType: SuperType.TRAINER, trainerType: TrainerType.SUPPORTER },
+      { min: 1, max: 1, allowCancel: true }
+    ),
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
 
   deckTop.moveCardsTo(cards, player.hand);
   deckTop.moveTo(player.deck);
 
   if (cards.length > 0) {
-    yield store.prompt(state, new ShowCardsPrompt(
-      opponent.id,
-      GameMessage.CARDS_SHOWED_BY_THE_OPPONENT,
-      cards
-    ), () => next());
+    yield store.prompt(state, new ShowCardsPrompt(opponent.id, GameMessage.CARDS_SHOWED_BY_THE_OPPONENT, cards), () =>
+      next()
+    );
   }
 
   return store.prompt(state, new ShuffleDeckPrompt(player.id), order => {
@@ -53,7 +58,6 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 }
 
 export class Pokegear30 extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'BW';
@@ -75,5 +79,4 @@ export class Pokegear30 extends TrainerCard {
 
     return state;
   }
-
 }

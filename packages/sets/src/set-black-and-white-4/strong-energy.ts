@@ -1,20 +1,23 @@
-import { CardType, EnergyType } from '@ptcg/common';
-import { EnergyCard } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { DealDamageEffect } from '@ptcg/common';
-import { CheckProvidedEnergyEffect, CheckPokemonTypeEffect,
-  CheckTableStateEffect } from '@ptcg/common';
-import { PlayerType } from '@ptcg/common';
-import { AttachEnergyEffect } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import {StateUtils } from '@ptcg/common';
+import {
+  AttachEnergyEffect,
+  CardType,
+  CheckPokemonTypeEffect,
+  CheckProvidedEnergyEffect,
+  CheckTableStateEffect,
+  DealDamageEffect,
+  Effect,
+  EnergyCard,
+  EnergyType,
+  GameError,
+  GameMessage,
+  PlayerType,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class StrongEnergy extends EnergyCard {
-
-  public provides: CardType[] = [ ];
+  public provides: CardType[] = [];
 
   public energyType = EnergyType.SPECIAL;
 
@@ -27,15 +30,14 @@ export class StrongEnergy extends EnergyCard {
   public readonly STRONG_ENERGY_MAREKER = 'STRONG_ENERGY_MAREKER';
 
   public text =
-    'This card can only be attached to F Pokemon. This card provides F ' +
-    'Energy only while this card is attached to a F Pokemon. The attacks of ' +
-    'the F Pokemon this card is attached to do 20 more damage to your ' +
-    'opponent\'s Active Pokemon (before applying Weakness and Resistance). ' +
-    '(If this card is attached to anything other than a F Pokemon, discard ' +
+    'This card can only be attached to F Pokémon. This card provides F ' +
+    'Energy only while this card is attached to a F Pokémon. The attacks of ' +
+    'the F Pokémon this card is attached to do 20 more damage to your ' +
+    'opponent\'s Active Pokémon (before applying Weakness and Resistance). ' +
+    '(If this card is attached to anything other than a F Pokémon, discard ' +
     'this card.)';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     // Cannot attach to other than Fighting Pokemon
     if (effect instanceof AttachEnergyEffect && effect.energyCard === this) {
       const checkPokemonType = new CheckPokemonTypeEffect(effect.target);
@@ -51,7 +53,7 @@ export class StrongEnergy extends EnergyCard {
       const checkPokemonType = new CheckPokemonTypeEffect(effect.source);
       store.reduceEffect(state, checkPokemonType);
       if (checkPokemonType.cardTypes.includes(CardType.FIGHTING)) {
-        effect.energyMap.push({ card: this, provides: [ CardType.FIGHTING ] });
+        effect.energyMap.push({ card: this, provides: [CardType.FIGHTING] });
       }
       return state;
     }
@@ -84,5 +86,4 @@ export class StrongEnergy extends EnergyCard {
 
     return state;
   }
-
 }

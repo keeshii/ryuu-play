@@ -1,14 +1,16 @@
-import { Card } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { ChooseCardsPrompt } from '@ptcg/common';
-import { ShuffleDeckPrompt } from '@ptcg/common';
+import {
+  Card,
+  ChooseCardsPrompt,
+  Effect,
+  GameError,
+  GameMessage,
+  ShuffleDeckPrompt,
+  State,
+  StoreLike,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -18,16 +20,20 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
   }
 
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_DISCARD,
-    player.deck,
-    { },
-    { min: 1, max: 3, allowCancel: false }
-  ), selected => {
-    cards = selected || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_DISCARD,
+      player.deck,
+      {},
+      { min: 1, max: 3, allowCancel: false }
+    ),
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
 
   player.deck.moveCardsTo(cards, player.discard);
 
@@ -37,7 +43,6 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 }
 
 export class BattleCompressor extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'BW3';
@@ -46,13 +51,9 @@ export class BattleCompressor extends TrainerCard {
 
   public fullName: string = 'Battle Compressor PFO';
 
-  public text: string =
-    'Search your deck for up to 3 cards and discard them. Shuffle your ' +
-    'deck afterward.';
-
+  public text: string = 'Search your deck for up to 3 cards and discard them. Shuffle your deck afterward.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
       const generator = playCard(() => generator.next(), store, state, effect);
       return generator.next().value;
@@ -60,5 +61,4 @@ export class BattleCompressor extends TrainerCard {
 
     return state;
   }
-
 }

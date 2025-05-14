@@ -1,39 +1,48 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State, GamePhase } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { EndTurnEffect } from '@ptcg/common';
-import { AttackEffect, KnockOutEffect } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
+import {
+  AttackEffect,
+  CardType,
+  Effect,
+  EndTurnEffect,
+  GamePhase,
+  KnockOutEffect,
+  PokemonCard,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Terrakion extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.FIGHTING;
 
   public hp: number = 130;
 
-  public weakness = [{
-    type: CardType.GRASS
-  }];
+  public weakness = [
+    {
+      type: CardType.GRASS,
+    },
+  ];
 
-  public retreat = [ CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS];
 
-  public attacks = [{
-    name: 'Retaliate',
-    cost: [ CardType.FIGHTING, CardType.COLORLESS ],
-    damage: '30+',
-    text:
-      'If any of your Pokemon were Knocked Out by damage from an opponent\'s ' +
-      'attack during his or her last turn, this attack does 60 more damage.'
-  }, {
-    name: 'Land Crush',
-    cost: [ CardType.FIGHTING, CardType.FIGHTING, CardType.COLORLESS ],
-    damage: '90',
-    text: ''
-  }];
+  public attacks = [
+    {
+      name: 'Retaliate',
+      cost: [CardType.FIGHTING, CardType.COLORLESS],
+      damage: '30+',
+      text:
+        'If any of your Pokémon were Knocked Out by damage from an opponent\'s ' +
+        'attack during his or her last turn, this attack does 60 more damage.',
+    },
+    {
+      name: 'Land Crush',
+      cost: [CardType.FIGHTING, CardType.FIGHTING, CardType.COLORLESS],
+      damage: '90',
+      text: '',
+    },
+  ];
 
   public set: string = 'BW';
 
@@ -77,5 +86,4 @@ export class Terrakion extends PokemonCard {
 
     return state;
   }
-
 }

@@ -1,21 +1,29 @@
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType, CardTag, SuperType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { Card } from '@ptcg/common';
-import { ChooseCardsPrompt } from '@ptcg/common';
-import { CardList } from '@ptcg/common';
+import {
+  Card,
+  CardList,
+  CardTag,
+  ChooseCardsPrompt,
+  Effect,
+  GameError,
+  GameMessage,
+  State,
+  StoreLike,
+  SuperType,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
-
-function* playCard(next: Function, store: StoreLike, state: State,
-  self: DowsingMachine, effect: TrainerEffect): IterableIterator<State> {
+function* playCard(
+  next: Function,
+  store: StoreLike,
+  state: State,
+  self: DowsingMachine,
+  effect: TrainerEffect
+): IterableIterator<State> {
   const player = effect.player;
   let cards: Card[] = [];
-  
+
   cards = player.hand.cards.filter(c => c !== self);
   if (cards.length < 2) {
     throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
@@ -39,16 +47,20 @@ function* playCard(next: Function, store: StoreLike, state: State,
   handTemp.cards = player.hand.cards.filter(c => c !== self);
 
   cards = [];
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_DISCARD,
-    handTemp,
-    { },
-    { min: 2, max: 2, allowCancel: true }
-  ), selected => {
-    cards = selected || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_DISCARD,
+      handTemp,
+      {},
+      { min: 2, max: 2, allowCancel: true }
+    ),
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
 
   // Operation canceled by the user
   if (cards.length === 0) {
@@ -56,16 +68,20 @@ function* playCard(next: Function, store: StoreLike, state: State,
   }
 
   let recovered: Card[] = [];
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_HAND,
-    player.discard,
-    { superType: SuperType.TRAINER },
-    { min: 1, max: 1, allowCancel: true }
-  ), selected => {
-    recovered = selected || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_HAND,
+      player.discard,
+      { superType: SuperType.TRAINER },
+      { min: 1, max: 1, allowCancel: true }
+    ),
+    selected => {
+      recovered = selected || [];
+      next();
+    }
+  );
 
   // Operation cancelled by the user
   if (recovered.length === 0) {
@@ -79,10 +95,9 @@ function* playCard(next: Function, store: StoreLike, state: State,
 }
 
 export class DowsingMachine extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.ITEM;
 
-  public tags = [ CardTag.ACE_SPEC ];
+  public tags = [CardTag.ACE_SPEC];
 
   public set: string = 'BW';
 
@@ -102,5 +117,4 @@ export class DowsingMachine extends TrainerCard {
     }
     return state;
   }
-
 }

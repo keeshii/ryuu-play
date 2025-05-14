@@ -1,15 +1,20 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, CardTag } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State, GamePhase } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { PowerEffect, AttackEffect } from '@ptcg/common';
-import { PutDamageEffect } from '@ptcg/common';
-import { PowerType } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
+import {
+  AttackEffect,
+  CardTag,
+  CardType,
+  Effect,
+  GamePhase,
+  PokemonCard,
+  PowerEffect,
+  PowerType,
+  PutDamageEffect,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Bouffalant extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.COLORLESS;
@@ -18,22 +23,25 @@ export class Bouffalant extends PokemonCard {
 
   public weakness = [{ type: CardType.FIGHTING }];
 
-  public retreat = [ CardType.COLORLESS, CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS, CardType.COLORLESS];
 
-  public powers = [{
-    name: 'Bouffer',
-    powerType: PowerType.ABILITY,
-    text: 'Any damage done to this Pokemon by attacks is reduced by 20 ' +
-      '(after applying Weakness and Resistance).'
-  }];
+  public powers = [
+    {
+      name: 'Bouffer',
+      powerType: PowerType.ABILITY,
+      text:
+        'Any damage done to this Pokémon by attacks is reduced by 20 (after applying Weakness and Resistance).',
+    },
+  ];
 
-  public attacks = [{
-    name: 'Gold Breaker',
-    cost: [ CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS ],
-    damage: '60+',
-    text: 'If the Defending Pokemon is a Pokemon-EX, ' +
-      'this attack does 60 more damage.'
-  }];
+  public attacks = [
+    {
+      name: 'Gold Breaker',
+      cost: [CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS],
+      damage: '60+',
+      text: 'If the Defending Pokémon is a Pokémon-EX, this attack does 60 more damage.',
+    },
+  ];
 
   public set: string = 'BW2';
 
@@ -42,7 +50,6 @@ export class Bouffalant extends PokemonCard {
   public fullName: string = 'Bouffalant DGE';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
@@ -82,5 +89,4 @@ export class Bouffalant extends PokemonCard {
 
     return state;
   }
-
 }

@@ -1,14 +1,16 @@
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State, GamePhase } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { KnockOutEffect } from '@ptcg/common';
-import { BetweenTurnsEffect } from '@ptcg/common';
-import { Card } from '@ptcg/common';
+import {
+  BetweenTurnsEffect,
+  Card,
+  Effect,
+  GamePhase,
+  KnockOutEffect,
+  State,
+  StoreLike,
+  TrainerCard,
+  TrainerType,
+} from '@ptcg/common';
 
 export class RescueScarf extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.TOOL;
 
   public set: string = 'BW3';
@@ -18,9 +20,9 @@ export class RescueScarf extends TrainerCard {
   public fullName: string = 'Rescue Scarf DGE';
 
   public text: string =
-    'If the Pokemon this card is attached to is Knocked Out by damage from ' +
-    'an attack, put that Pokemon into your hand. (Discard all cards ' +
-    'attached to that Pokemon.)';
+    'If the Pokémon this card is attached to is Knocked Out by damage from ' +
+    'an attack, put that Pokémon into your hand. (Discard all cards ' +
+    'attached to that Pokémon.)';
 
   public readonly RESCUE_SCARF_MAREKER = 'RESCUE_SCARF_MAREKER';
 
@@ -42,7 +44,6 @@ export class RescueScarf extends TrainerCard {
 
     if (effect instanceof BetweenTurnsEffect) {
       state.players.forEach(player => {
-
         if (!player.marker.hasMarker(this.RESCUE_SCARF_MAREKER)) {
           return;
         }
@@ -58,5 +59,4 @@ export class RescueScarf extends TrainerCard {
 
     return state;
   }
-
 }

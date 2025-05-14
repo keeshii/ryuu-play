@@ -1,18 +1,27 @@
-import { Effect } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType, SuperType, EnergyType } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
-import { UseStadiumEffect } from '@ptcg/common';
-import { ChooseCardsPrompt } from '@ptcg/common';
-import { Card } from '@ptcg/common';
-import { ShowCardsPrompt } from '@ptcg/common';
-import { ShuffleDeckPrompt } from '@ptcg/common';
+import {
+  Card,
+  ChooseCardsPrompt,
+  Effect,
+  EnergyType,
+  GameError,
+  GameMessage,
+  ShowCardsPrompt,
+  ShuffleDeckPrompt,
+  State,
+  StateUtils,
+  StoreLike,
+  SuperType,
+  TrainerCard,
+  TrainerType,
+  UseStadiumEffect,
+} from '@ptcg/common';
 
-function* useStadium(next: Function, store: StoreLike, state: State, effect: UseStadiumEffect): IterableIterator<State> {
+function* useStadium(
+  next: Function,
+  store: StoreLike,
+  state: State,
+  effect: UseStadiumEffect
+): IterableIterator<State> {
   const player = effect.player;
   const opponent = StateUtils.getOpponent(state, player);
   const stadiumUsedTurn = player.stadiumUsedTurn;
@@ -22,16 +31,20 @@ function* useStadium(next: Function, store: StoreLike, state: State, effect: Use
     throw new GameError(GameMessage.CANNOT_USE_STADIUM);
   }
 
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_DISCARD,
-    player.hand,
-    { },
-    { min: 1, max: 1, allowCancel: true }
-  ), selected => {
-    cards = selected || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_DISCARD,
+      player.hand,
+      {},
+      { min: 1, max: 1, allowCancel: true }
+    ),
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
 
   if (cards.length === 0) {
     player.stadiumUsedTurn = stadiumUsedTurn;
@@ -40,25 +53,31 @@ function* useStadium(next: Function, store: StoreLike, state: State, effect: Use
 
   player.hand.moveCardsTo(cards, player.discard);
 
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_HAND,
-    player.deck,
-    { superType: SuperType.ENERGY, energyType: EnergyType.BASIC, name: 'Fire Energy' },
-    { min: 1, max: 2, allowCancel: true }
-  ), selected => {
-    cards = selected || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_HAND,
+      player.deck,
+      {
+        superType: SuperType.ENERGY,
+        energyType: EnergyType.BASIC,
+        name: 'Fire Energy',
+      },
+      { min: 1, max: 2, allowCancel: true }
+    ),
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
 
   player.deck.moveCardsTo(cards, player.hand);
 
   if (cards.length > 0) {
-    yield store.prompt(state, new ShowCardsPrompt(
-      opponent.id,
-      GameMessage.CARDS_SHOWED_BY_THE_OPPONENT,
-      cards
-    ), () => next());
+    yield store.prompt(state, new ShowCardsPrompt(opponent.id, GameMessage.CARDS_SHOWED_BY_THE_OPPONENT, cards), () =>
+      next()
+    );
   }
 
   return store.prompt(state, new ShuffleDeckPrompt(player.id), order => {
@@ -67,7 +86,6 @@ function* useStadium(next: Function, store: StoreLike, state: State, effect: Use
 }
 
 export class GiantHearth extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.STADIUM;
 
   public set: string = 'SSH';
@@ -90,5 +108,4 @@ export class GiantHearth extends TrainerCard {
 
     return state;
   }
-
 }

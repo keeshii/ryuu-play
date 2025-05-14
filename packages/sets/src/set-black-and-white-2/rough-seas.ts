@@ -1,17 +1,20 @@
-import { Effect } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType, CardType } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
-import { UseStadiumEffect, HealEffect } from '@ptcg/common';
-import { PlayerType } from '@ptcg/common';
-import { PokemonCardList } from '@ptcg/common';
+import {
+  CardType,
+  Effect,
+  GameError,
+  GameMessage,
+  HealEffect,
+  PlayerType,
+  PokemonCardList,
+  State,
+  StateUtils,
+  StoreLike,
+  TrainerCard,
+  TrainerType,
+  UseStadiumEffect,
+} from '@ptcg/common';
 
 export class RoughSeas extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.STADIUM;
 
   public set: string = 'BW2';
@@ -22,7 +25,7 @@ export class RoughSeas extends TrainerCard {
 
   public text: string =
     'Once during each player\'s turn, that player may heal 30 damage ' +
-    'from each of his or her W Pokemon and L Pokemon.';
+    'from each of his or her W Pokémon and L Pokémon.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof UseStadiumEffect && StateUtils.getStadiumCard(state) === this) {
@@ -48,5 +51,4 @@ export class RoughSeas extends TrainerCard {
 
     return state;
   }
-
 }

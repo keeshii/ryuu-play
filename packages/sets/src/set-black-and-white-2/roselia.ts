@@ -1,14 +1,18 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType } from '@ptcg/common';
-import { StoreLike, State, CoinFlipPrompt } from '@ptcg/common';
-import { AttackEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { HealTargetEffect, RemoveSpecialConditionsEffect } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-
+import {
+  AttackEffect,
+  CardType,
+  CoinFlipPrompt,
+  Effect,
+  GameMessage,
+  HealTargetEffect,
+  PokemonCard,
+  RemoveSpecialConditionsEffect,
+  Stage,
+  State,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Roselia extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.GRASS;
@@ -19,23 +23,21 @@ export class Roselia extends PokemonCard {
 
   public resistance = [{ type: CardType.WATER, value: -20 }];
 
-  public retreat = [ CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS];
 
   public attacks = [
     {
       name: 'Double Whip',
-      cost: [ CardType.COLORLESS ],
+      cost: [CardType.COLORLESS],
       damage: '10×',
-      text: 'Flip 2 coins. This attack does 10 damage times the number ' +
-        'of heads.'
+      text: 'Flip 2 coins. This attack does 10 damage times the number of heads.',
     },
     {
       name: 'Relaxing Fragrance',
-      cost: [ CardType.GRASS ],
+      cost: [CardType.GRASS],
       damage: '',
-      text: 'Heal 30 damage and remove all Special Conditions from ' +
-        'this Pokemon.'
-    }
+      text: 'Heal 30 damage and remove all Special Conditions from this Pokémon.',
+    },
   ];
 
   public set: string = 'BW2';
@@ -47,14 +49,17 @@ export class Roselia extends PokemonCard {
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
-      state = store.prompt(state, [
-        new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP),
-        new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)
-      ], results => {
-        let heads: number = 0;
-        results.forEach(r => { heads += r ? 1 : 0; });
-        effect.damage = 10 * heads;
-      });
+      state = store.prompt(
+        state,
+        [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)],
+        results => {
+          let heads: number = 0;
+          results.forEach(r => {
+            heads += r ? 1 : 0;
+          });
+          effect.damage = 10 * heads;
+        }
+      );
       return state;
     }
 
@@ -73,5 +78,4 @@ export class Roselia extends PokemonCard {
 
     return state;
   }
-
 }

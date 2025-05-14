@@ -1,14 +1,15 @@
-import { Effect } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { DealDamageEffect } from '@ptcg/common';
-import { EndTurnEffect } from '@ptcg/common';
+import {
+  DealDamageEffect,
+  Effect,
+  EndTurnEffect,
+  State,
+  StoreLike,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 export class Leon extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.SUPPORTER;
 
   public set: string = 'SSH';
@@ -18,8 +19,8 @@ export class Leon extends TrainerCard {
   public fullName: string = 'Leon VIV';
 
   public text: string =
-    'During this turn, your Pokemon\'s attacks do 30 more damage to your ' +
-    'opponent\'s Active Pokemon (before applying Weakness and Resistance).';
+    'During this turn, your Pokémon\'s attacks do 30 more damage to your ' +
+    'opponent\'s Active Pokémon (before applying Weakness and Resistance).';
 
   private readonly LEON_MARKER = 'LEON_MARKER';
 
@@ -45,5 +46,4 @@ export class Leon extends TrainerCard {
 
     return state;
   }
-
 }

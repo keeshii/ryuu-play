@@ -1,35 +1,57 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, SuperType, EnergyType } from '@ptcg/common';
-import { PowerType, StoreLike, State, StateUtils, GameError, GameMessage,
-  PokemonCardList, MoveEnergyPrompt, PlayerType, SlotType } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { PowerEffect, AttackEffect } from '@ptcg/common';
+import {
+  AttackEffect,
+  CardType,
+  Effect,
+  EnergyType,
+  GameError,
+  GameMessage,
+  MoveEnergyPrompt,
+  PlayerType,
+  PokemonCard,
+  PokemonCardList,
+  PowerEffect,
+  PowerType,
+  SlotType,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+  SuperType,
+} from '@ptcg/common';
 
-function* useHiddenPower(next: Function, store: StoreLike, state: State, effect: AttackEffect): IterableIterator<State> {
+function* useHiddenPower(
+  next: Function,
+  store: StoreLike,
+  state: State,
+  effect: AttackEffect
+): IterableIterator<State> {
   const player = effect.player;
 
-  return store.prompt(state, new MoveEnergyPrompt(
-    effect.player.id,
-    GameMessage.MOVE_ENERGY_CARDS,
-    PlayerType.BOTTOM_PLAYER,
-    [ SlotType.ACTIVE, SlotType.BENCH ],
-    { superType: SuperType.ENERGY, energyType: EnergyType.BASIC },
-    { allowCancel: true }
-  ), transfers => {
-    if (transfers === null) {
-      return;
-    }
+  return store.prompt(
+    state,
+    new MoveEnergyPrompt(
+      effect.player.id,
+      GameMessage.MOVE_ENERGY_CARDS,
+      PlayerType.BOTTOM_PLAYER,
+      [SlotType.ACTIVE, SlotType.BENCH],
+      { superType: SuperType.ENERGY, energyType: EnergyType.BASIC },
+      { allowCancel: true }
+    ),
+    transfers => {
+      if (transfers === null) {
+        return;
+      }
 
-    for (const transfer of transfers) {
-      const source = StateUtils.getTarget(state, player, transfer.from);
-      const target = StateUtils.getTarget(state, player, transfer.to);
-      source.moveCardTo(transfer.card, target);
+      for (const transfer of transfers) {
+        const source = StateUtils.getTarget(state, player, transfer.from);
+        const target = StateUtils.getTarget(state, player, transfer.to);
+        source.moveCardTo(transfer.card, target);
+      }
     }
-  });
+  );
 }
 
 export class UnownR extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.PSYCHIC;
@@ -38,25 +60,29 @@ export class UnownR extends PokemonCard {
 
   public weakness = [{ type: CardType.PSYCHIC, value: 10 }];
 
-  public retreat = [ CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS];
 
-  public powers = [{
-    name: 'Retire',
-    useWhenInPlay: true,
-    powerType: PowerType.POKEPOWER,
-    text: 'Once during your turn, if Unown R is on your Bench, you may ' +
-      'discard Unown R and all cards attached to it. (This doesn\'t count ' +
-      'as a Knocked Out Pokémon.) Then, draw a card.'
-  }];
+  public powers = [
+    {
+      name: 'Retire',
+      useWhenInPlay: true,
+      powerType: PowerType.POKEPOWER,
+      text:
+        'Once during your turn, if Unown R is on your Bench, you may ' +
+        'discard Unown R and all cards attached to it. (This doesn\'t count ' +
+        'as a Knocked Out Pokémon.) Then, draw a card.',
+    },
+  ];
 
   public attacks = [
     {
       name: 'Hidden Power',
-      cost: [ ],
+      cost: [],
       damage: '',
-      text: 'Move any number of basic Energy cards attached to your Pokémon ' +
-        'to your other Pokémon in any way you like.'
-    }
+      text:
+        'Move any number of basic Energy cards attached to your Pokémon ' +
+        'to your other Pokémon in any way you like.',
+    },
   ];
 
   public set: string = 'DP';
@@ -89,5 +115,4 @@ export class UnownR extends PokemonCard {
 
     return state;
   }
-
 }

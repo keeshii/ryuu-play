@@ -1,11 +1,18 @@
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { ChoosePokemonPrompt } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { PlayerType, SlotType, CoinFlipPrompt, StateUtils, GameError, GameMessage } from '@ptcg/common';
+import {
+  ChoosePokemonPrompt,
+  CoinFlipPrompt,
+  Effect,
+  GameError,
+  GameMessage,
+  PlayerType,
+  SlotType,
+  State,
+  StateUtils,
+  StoreLike,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -26,20 +33,19 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     return state;
   }
 
-  return store.prompt(state, new ChoosePokemonPrompt(
-    player.id,
-    GameMessage.CHOOSE_POKEMON_TO_SWITCH,
-    PlayerType.TOP_PLAYER,
-    [ SlotType.BENCH ],
-    { allowCancel: false }
-  ), result => {
-    const cardList = result[0];
-    opponent.switchPokemon(cardList);
-  });
+  return store.prompt(
+    state,
+    new ChoosePokemonPrompt(player.id, GameMessage.CHOOSE_POKEMON_TO_SWITCH, PlayerType.TOP_PLAYER, [SlotType.BENCH], {
+      allowCancel: false,
+    }),
+    result => {
+      const cardList = result[0];
+      opponent.switchPokemon(cardList);
+    }
+  );
 }
 
 export class PokemonCatcher extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'BW';
@@ -49,8 +55,7 @@ export class PokemonCatcher extends TrainerCard {
   public fullName: string = 'Pokemon Catcher SSH';
 
   public text: string =
-    'Flip a coin. If heads, switch 1 of your opponent\'s Benched Pokemon ' +
-    'with their Active Pokemon.';
+    'Flip a coin. If heads, switch 1 of your opponent\'s Benched Pokémon with their Active Pokémon.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
@@ -59,5 +64,4 @@ export class PokemonCatcher extends TrainerCard {
     }
     return state;
   }
-
 }

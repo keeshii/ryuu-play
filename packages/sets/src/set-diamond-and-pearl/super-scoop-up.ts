@@ -1,12 +1,16 @@
-import { GameMessage } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { ChoosePokemonPrompt } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { PlayerType, SlotType, CoinFlipPrompt } from '@ptcg/common';
+import {
+  ChoosePokemonPrompt,
+  CoinFlipPrompt,
+  Effect,
+  GameMessage,
+  PlayerType,
+  SlotType,
+  State,
+  StoreLike,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -21,21 +25,24 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     return state;
   }
 
-  return store.prompt(state, new ChoosePokemonPrompt(
-    player.id,
-    GameMessage.CHOOSE_POKEMON_TO_PICK_UP,
-    PlayerType.BOTTOM_PLAYER,
-    [ SlotType.ACTIVE, SlotType.BENCH ],
-    { allowCancel: false }
-  ), result => {
-    const cardList = result[0];
-    cardList.moveTo(player.hand);
-    cardList.clearEffects();
-  });
+  return store.prompt(
+    state,
+    new ChoosePokemonPrompt(
+      player.id,
+      GameMessage.CHOOSE_POKEMON_TO_PICK_UP,
+      PlayerType.BOTTOM_PLAYER,
+      [SlotType.ACTIVE, SlotType.BENCH],
+      { allowCancel: false }
+    ),
+    result => {
+      const cardList = result[0];
+      cardList.moveTo(player.hand);
+      cardList.clearEffects();
+    }
+  );
 }
 
 export class SuperScoopUp extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'DP';
@@ -45,8 +52,7 @@ export class SuperScoopUp extends TrainerCard {
   public fullName: string = 'Super Scoop Up CES';
 
   public text: string =
-    'Flip a coin. If heads, put 1 of your Pokemon ' +
-    'and all cards attached to it into your hand.';
+    'Flip a coin. If heads, put 1 of your Pokémon and all cards attached to it into your hand.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
@@ -55,5 +61,4 @@ export class SuperScoopUp extends TrainerCard {
     }
     return state;
   }
-
 }

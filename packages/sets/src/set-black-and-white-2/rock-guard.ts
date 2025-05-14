@@ -1,14 +1,17 @@
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType, CardTag } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State, GamePhase } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { AfterDamageEffect } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
+import {
+  AfterDamageEffect,
+  CardTag,
+  Effect,
+  GamePhase,
+  State,
+  StateUtils,
+  StoreLike,
+  TrainerCard,
+  TrainerType,
+} from '@ptcg/common';
 
 export class RockGuard extends TrainerCard {
-
-  public tags = [ CardTag.ACE_SPEC ];
+  public tags = [CardTag.ACE_SPEC];
 
   public trainerType: TrainerType = TrainerType.TOOL;
 
@@ -19,9 +22,9 @@ export class RockGuard extends TrainerCard {
   public fullName: string = 'Rock Guard PLF';
 
   public text: string =
-    'If the Pokemon this card is attached to is your Active Pokemon and is ' +
-    'damaged by an opponent\'s attack (even if that Pokemon is Knocked Out), ' +
-    'put 6 damage counters on the Attacking Pokemon.';
+    'If the Pokémon this card is attached to is your Active Pokémon and is ' +
+    'damaged by an opponent\'s attack (even if that Pokémon is Knocked Out), ' +
+    'put 6 damage counters on the Attacking Pokémon.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AfterDamageEffect && effect.target.tool === this) {
@@ -39,5 +42,4 @@ export class RockGuard extends TrainerCard {
 
     return state;
   }
-
 }

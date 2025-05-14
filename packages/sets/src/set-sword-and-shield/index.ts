@@ -22,5 +22,5 @@ export const setSwordAndShield: Card[] = [
   new Oranguru(),
   new Rosa(),
   new Snorlax(),
-  new Welder()
+  new Welder(),
 ];

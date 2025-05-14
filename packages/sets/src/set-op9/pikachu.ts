@@ -1,14 +1,20 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, SpecialCondition } from '@ptcg/common';
-import { StoreLike, State, StateUtils, PokemonCardList } from '@ptcg/common';
-import { AttackEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { DealDamageEffect, AddSpecialConditionsEffect } from '@ptcg/common';
-import { EndTurnEffect } from '@ptcg/common';
-
+import {
+  AddSpecialConditionsEffect,
+  AttackEffect,
+  CardType,
+  DealDamageEffect,
+  Effect,
+  EndTurnEffect,
+  PokemonCard,
+  PokemonCardList,
+  SpecialCondition,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Pikachu extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.LIGHTNING;
@@ -19,24 +25,24 @@ export class Pikachu extends PokemonCard {
 
   public resistance = [{ type: CardType.METAL, value: -20 }];
 
-  public retreat = [ CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS];
 
   public attacks = [
     {
       name: 'Growl',
-      cost: [ CardType.COLORLESS ],
+      cost: [CardType.COLORLESS],
       damage: '',
-      text: 'During your opponent\'s next turn, any damage done by attacks ' +
-        'from the Defending Pokemon is reduced by 20 (before applying ' +
-        'Weakness and Resistance).'
+      text:
+        'During your opponent\'s next turn, any damage done by attacks ' +
+        'from the Defending Pokémon is reduced by 20 (before applying ' +
+        'Weakness and Resistance).',
     },
     {
       name: 'Numb',
-      cost: [ CardType.LIGHTNING, CardType.COLORLESS, CardType.COLORLESS ],
+      cost: [CardType.LIGHTNING, CardType.COLORLESS, CardType.COLORLESS],
       damage: '30',
-      text: 'If Pikachu evolved from Pichu during this turn, the Defending ' +
-        'Pokemon is now Paralyzed.'
-    }
+      text: 'If Pikachu evolved from Pichu during this turn, the Defending Pokémon is now Paralyzed.',
+    },
   ];
 
   public set: string = 'OP9';
@@ -48,7 +54,6 @@ export class Pikachu extends PokemonCard {
   public readonly GROWL_MARKER = 'GROWL_MARKER';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
@@ -79,5 +84,4 @@ export class Pikachu extends PokemonCard {
 
     return state;
   }
-
 }

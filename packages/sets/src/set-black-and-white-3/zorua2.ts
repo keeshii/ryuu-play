@@ -1,16 +1,19 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, SuperType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { AttackEffect } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { Card } from '@ptcg/common';
-import { ChooseCardsPrompt } from '@ptcg/common';
-import { ShuffleDeckPrompt } from '@ptcg/common';
+import {
+  AttackEffect,
+  Card,
+  CardType,
+  ChooseCardsPrompt,
+  Effect,
+  GameMessage,
+  PokemonCard,
+  ShuffleDeckPrompt,
+  Stage,
+  State,
+  StoreLike,
+  SuperType,
+} from '@ptcg/common';
 
-function* useAscension(next: Function, store: StoreLike, state: State,
-  effect: AttackEffect): IterableIterator<State> {
+function* useAscension(next: Function, store: StoreLike, state: State, effect: AttackEffect): IterableIterator<State> {
   const player = effect.player;
 
   if (player.deck.cards.length === 0) {
@@ -18,16 +21,24 @@ function* useAscension(next: Function, store: StoreLike, state: State,
   }
 
   let cards: Card[] = [];
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_EVOLVE,
-    player.deck,
-    { superType: SuperType.POKEMON, stage: Stage.STAGE_1, evolvesFrom: 'Zorua'},
-    { min: 1, max: 1, allowCancel: true }
-  ), selected => {
-    cards = selected || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_EVOLVE,
+      player.deck,
+      {
+        superType: SuperType.POKEMON,
+        stage: Stage.STAGE_1,
+        evolvesFrom: 'Zorua',
+      },
+      { min: 1, max: 1, allowCancel: true }
+    ),
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
 
   if (cards.length > 0) {
     // Evolve Pokemon
@@ -42,7 +53,6 @@ function* useAscension(next: Function, store: StoreLike, state: State,
 }
 
 export class Zorua2 extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.DARK;
@@ -53,21 +63,25 @@ export class Zorua2 extends PokemonCard {
 
   public resistance = [{ type: CardType.PSYCHIC, value: -20 }];
 
-  public retreat = [ CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS];
 
-  public attacks = [{
-    name: 'Ascension',
-    cost: [ CardType.DARK ],
-    damage: '',
-    text: 'Search your deck for a card that evolves from this Pokemon ' +
-      'and put it onto this Pokemon. (This counts as evolving this Pokemon.) ' +
-      'Shuffle your deck afterward.'
-  }, {
-    name: 'Scratch',
-    cost: [ CardType.COLORLESS, CardType.COLORLESS ],
-    damage: '20',
-    text: ''
-  }];
+  public attacks = [
+    {
+      name: 'Ascension',
+      cost: [CardType.DARK],
+      damage: '',
+      text:
+        'Search your deck for a card that evolves from this Pokémon ' +
+        'and put it onto this Pokémon. (This counts as evolving this Pokémon.) ' +
+        'Shuffle your deck afterward.',
+    },
+    {
+      name: 'Scratch',
+      cost: [CardType.COLORLESS, CardType.COLORLESS],
+      damage: '20',
+      text: '',
+    },
+  ];
 
   public set: string = 'BW3';
 
@@ -76,7 +90,6 @@ export class Zorua2 extends PokemonCard {
   public fullName: string = 'Zorua DEX';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const generator = useAscension(() => generator.next(), store, state, effect);
       return generator.next().value;
@@ -84,5 +97,4 @@ export class Zorua2 extends PokemonCard {
 
     return state;
   }
-
 }

@@ -1,5 +1,5 @@
-import { Bianca } from './bianca';
 import { Card } from '@ptcg/common';
+import { Bianca } from './bianca';
 import { Cheren } from './cheren';
 import { Colress } from './colress';
 import { ComputerSearch } from './computer-search';
@@ -90,5 +90,5 @@ export const setBlackAndWhite: Card[] = [
   new Tynamo(),
   new Tynamo2(),
   new UltraBall(),
-  new Zekrom()
+  new Zekrom(),
 ];

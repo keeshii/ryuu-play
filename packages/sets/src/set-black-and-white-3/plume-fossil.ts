@@ -1,16 +1,20 @@
-import { Card } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType, SuperType, Stage } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { CardList } from '@ptcg/common';
-import { ChooseCardsPrompt } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { ShuffleDeckPrompt } from '@ptcg/common';
-import { PokemonCardList } from '@ptcg/common';
+import {
+  Card,
+  CardList,
+  ChooseCardsPrompt,
+  Effect,
+  GameError,
+  GameMessage,
+  PokemonCardList,
+  ShuffleDeckPrompt,
+  Stage,
+  State,
+  StoreLike,
+  SuperType,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -29,16 +33,20 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   deckBottom.cards = player.deck.cards.slice(start, end);
 
   let cards: Card[] = [];
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_PUT_ONTO_BENCH,
-    deckBottom,
-    { superType: SuperType.POKEMON, stage: Stage.RESTORED, name: 'Archen' },
-    { min: 0, max, allowCancel: true }
-  ), selected => {
-    cards = selected || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_PUT_ONTO_BENCH,
+      deckBottom,
+      { superType: SuperType.POKEMON, stage: Stage.RESTORED, name: 'Archen' },
+      { min: 0, max, allowCancel: true }
+    ),
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
 
   if (cards.length > slots.length) {
     cards.length = slots.length;
@@ -55,7 +63,6 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 }
 
 export class PlumeFossil extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'BW3';
@@ -77,5 +84,4 @@ export class PlumeFossil extends TrainerCard {
 
     return state;
   }
-
 }

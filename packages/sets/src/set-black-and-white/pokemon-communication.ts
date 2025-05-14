@@ -1,16 +1,19 @@
-import { Card } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType, SuperType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { ChooseCardsPrompt } from '@ptcg/common';
-import { ShowCardsPrompt } from '@ptcg/common';
-import { ShuffleDeckPrompt } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
+import {
+  Card,
+  ChooseCardsPrompt,
+  Effect,
+  GameError,
+  GameMessage,
+  ShowCardsPrompt,
+  ShuffleDeckPrompt,
+  State,
+  StateUtils,
+  StoreLike,
+  SuperType,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -25,16 +28,20 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   effect.preventDefault = true;
 
   let cards: Card[] = [];
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_DECK,
-    player.hand,
-    { superType: SuperType.POKEMON },
-    { min: 1, max: 1, allowCancel: true }
-  ), selected => {
-    cards = selected || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_DECK,
+      player.hand,
+      { superType: SuperType.POKEMON },
+      { min: 1, max: 1, allowCancel: true }
+    ),
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
 
   if (cards.length === 0) {
     return;
@@ -45,31 +52,31 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   // Put Pokemon from hand into the deck
   player.hand.moveCardsTo(cards, player.deck);
 
-  yield store.prompt(state, new ShowCardsPrompt(
-    opponent.id,
-    GameMessage.CARDS_SHOWED_BY_THE_OPPONENT,
-    cards
-  ), () => next());
+  yield store.prompt(state, new ShowCardsPrompt(opponent.id, GameMessage.CARDS_SHOWED_BY_THE_OPPONENT, cards), () =>
+    next()
+  );
 
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_HAND,
-    player.deck,
-    { superType: SuperType.POKEMON },
-    { min: 1, max: 1, allowCancel: true }
-  ), selected => {
-    cards = selected || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_HAND,
+      player.deck,
+      { superType: SuperType.POKEMON },
+      { min: 1, max: 1, allowCancel: true }
+    ),
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
 
   player.deck.moveCardsTo(cards, player.hand);
 
   if (cards.length > 0) {
-    yield store.prompt(state, new ShowCardsPrompt(
-      opponent.id,
-      GameMessage.CARDS_SHOWED_BY_THE_OPPONENT,
-      cards
-    ), () => next());
+    yield store.prompt(state, new ShowCardsPrompt(opponent.id, GameMessage.CARDS_SHOWED_BY_THE_OPPONENT, cards), () =>
+      next()
+    );
   }
 
   return store.prompt(state, new ShuffleDeckPrompt(player.id), order => {
@@ -78,7 +85,6 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 }
 
 export class PokemonCommunication extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'BW';
@@ -88,13 +94,11 @@ export class PokemonCommunication extends TrainerCard {
   public fullName: string = 'Pokemon Communication TEU';
 
   public text: string =
-    'Reveal a Pokemon from your hand and put it into your deck. If you do, ' +
-    'search your deck for a Pokemon, reveal it, and put it into your hand. ' +
+    'Reveal a Pokémon from your hand and put it into your deck. If you do, ' +
+    'search your deck for a Pokémon, reveal it, and put it into your hand. ' +
     'Then, shuffle your deck.';
 
-
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
       const generator = playCard(() => generator.next(), store, state, effect);
       return generator.next().value;
@@ -102,5 +106,4 @@ export class PokemonCommunication extends TrainerCard {
 
     return state;
   }
-
 }

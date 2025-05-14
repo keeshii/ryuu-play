@@ -1,13 +1,20 @@
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { ChoosePokemonPrompt } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { PlayerType, SlotType, CardTarget, GameError, GameMessage,
-  PokemonCardList, EnergyCard } from '@ptcg/common';
-import { HealEffect } from '@ptcg/common';
+import {
+  CardTarget,
+  ChoosePokemonPrompt,
+  Effect,
+  EnergyCard,
+  GameError,
+  GameMessage,
+  HealEffect,
+  PlayerType,
+  PokemonCardList,
+  SlotType,
+  State,
+  StoreLike,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -30,16 +37,20 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   effect.preventDefault = true;
 
   let targets: PokemonCardList[] = [];
-  yield store.prompt(state, new ChoosePokemonPrompt(
-    player.id,
-    GameMessage.CHOOSE_POKEMON_TO_HEAL,
-    PlayerType.BOTTOM_PLAYER,
-    [ SlotType.ACTIVE, SlotType.BENCH ],
-    { allowCancel: true, blocked }
-  ), results => {
-    targets = results || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChoosePokemonPrompt(
+      player.id,
+      GameMessage.CHOOSE_POKEMON_TO_HEAL,
+      PlayerType.BOTTOM_PLAYER,
+      [SlotType.ACTIVE, SlotType.BENCH],
+      { allowCancel: true, blocked }
+    ),
+    results => {
+      targets = results || [];
+      next();
+    }
+  );
 
   if (targets.length === 0) {
     return state;
@@ -61,7 +72,6 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 }
 
 export class MaxPotion extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'BW';
@@ -71,8 +81,7 @@ export class MaxPotion extends TrainerCard {
   public fullName: string = 'Max Potion EPO';
 
   public text: string =
-    'Heal all damage from 1 of your Pokemon. Then, discard all Energy ' +
-    'attached to that Pokemon.';
+    'Heal all damage from 1 of your Pokémon. Then, discard all Energy attached to that Pokémon.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
@@ -81,5 +90,4 @@ export class MaxPotion extends TrainerCard {
     }
     return state;
   }
-
 }

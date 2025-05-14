@@ -1,13 +1,20 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType } from '@ptcg/common';
-import { StoreLike, State, StateUtils, ChoosePokemonPrompt, PlayerType, SlotType } from '@ptcg/common';
-import { AttackEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { PutDamageEffect } from '@ptcg/common';
+import {
+  AttackEffect,
+  CardType,
+  ChoosePokemonPrompt,
+  Effect,
+  GameMessage,
+  PlayerType,
+  PokemonCard,
+  PutDamageEffect,
+  SlotType,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Tynamo2 extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.LIGHTNING;
@@ -16,16 +23,17 @@ export class Tynamo2 extends PokemonCard {
 
   public weakness = [{ type: CardType.FIGHTING }];
 
-  public retreat = [ CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS];
 
   public attacks = [
     {
       name: 'Spark',
-      cost: [ CardType.LIGHTNING ],
+      cost: [CardType.LIGHTNING],
       damage: '10',
-      text: 'Does 10 damage to 1 of your opponent\'s Benched Pokemon. ' +
-        '(Don\'t apply Weakness and Resistance for Benched Pokemon.)'
-    }
+      text:
+        'Does 10 damage to 1 of your opponent\'s Benched Pokémon. ' +
+        '(Don\'t apply Weakness and Resistance for Benched Pokémon.)',
+    },
   ];
 
   public set: string = 'BW';
@@ -44,23 +52,26 @@ export class Tynamo2 extends PokemonCard {
         return state;
       }
 
-      return store.prompt(state, new ChoosePokemonPrompt(
-        player.id,
-        GameMessage.CHOOSE_POKEMON_TO_DAMAGE,
-        PlayerType.TOP_PLAYER,
-        [ SlotType.BENCH ],
-        { allowCancel: false }
-      ), targets => {
-        if (!targets || targets.length === 0) {
-          return;
+      return store.prompt(
+        state,
+        new ChoosePokemonPrompt(
+          player.id,
+          GameMessage.CHOOSE_POKEMON_TO_DAMAGE,
+          PlayerType.TOP_PLAYER,
+          [SlotType.BENCH],
+          { allowCancel: false }
+        ),
+        targets => {
+          if (!targets || targets.length === 0) {
+            return;
+          }
+          const damageEffect = new PutDamageEffect(effect, 10);
+          damageEffect.target = targets[0];
+          store.reduceEffect(state, damageEffect);
         }
-        const damageEffect = new PutDamageEffect(effect, 10);
-        damageEffect.target = targets[0];
-        store.reduceEffect(state, damageEffect);
-      });
+      );
     }
 
     return state;
   }
-
 }

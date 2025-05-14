@@ -1,13 +1,15 @@
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType, CardTag } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
-import { DealDamageEffect } from '@ptcg/common';
+import {
+  CardTag,
+  DealDamageEffect,
+  Effect,
+  State,
+  StateUtils,
+  StoreLike,
+  TrainerCard,
+  TrainerType,
+} from '@ptcg/common';
 
 export class SilverBangle extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.TOOL;
 
   public set: string = 'BW2';
@@ -17,8 +19,8 @@ export class SilverBangle extends TrainerCard {
   public fullName: string = 'Silver Bangle PLB';
 
   public text: string =
-    'The attacks of the Pokemon this card is attached to (excluding ' +
-    'Pokemon-EX) do 30 more damage to Active Pokemon-EX (before applying ' +
+    'The attacks of the Pokémon this card is attached to (excluding ' +
+    'Pokémon-EX) do 30 more damage to Active Pokémon-EX (before applying ' +
     'Weakness and Resistance).';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
@@ -43,5 +45,4 @@ export class SilverBangle extends TrainerCard {
 
     return state;
   }
-
 }

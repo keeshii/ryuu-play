@@ -1,12 +1,16 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType } from '@ptcg/common';
-import { StoreLike, State, StateUtils, PlayerType } from '@ptcg/common';
-import { AttackEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-
+import {
+  AttackEffect,
+  CardType,
+  Effect,
+  PlayerType,
+  PokemonCard,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Lucario extends PokemonCard {
-
   public stage: Stage = Stage.STAGE_1;
 
   public evolvesFrom = 'Riolu';
@@ -19,20 +23,22 @@ export class Lucario extends PokemonCard {
 
   public resistance = [{ type: CardType.PSYCHIC, value: -20 }];
 
-  public retreat = [ CardType.COLORLESS, CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS, CardType.COLORLESS];
 
   public attacks = [
     {
       name: 'Vacuum Wave',
-      cost: [ CardType.METAL ],
+      cost: [CardType.METAL],
       damage: '50',
-      text: 'This attack\'s damage isn\'t affected by Weakness or Resistance.'
-    }, {
+      text: 'This attack\'s damage isn\'t affected by Weakness or Resistance.',
+    },
+    {
       name: 'Fight Alone',
-      cost: [ CardType.METAL, CardType.COLORLESS ],
+      cost: [CardType.METAL, CardType.COLORLESS],
       damage: '30+',
-      text: 'If you have fewer Pokemon in play than your opponent, this ' +
-        'attack does 60 more damage for each Pokemon fewer you have in play.'
+      text:
+        'If you have fewer Pokémon in play than your opponent, this ' +
+        'attack does 60 more damage for each Pokémon fewer you have in play.',
     },
   ];
 
@@ -43,7 +49,6 @@ export class Lucario extends PokemonCard {
   public fullName: string = 'Lucario FCO';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       effect.ignoreWeakness = true;
       effect.ignoreResistance = true;
@@ -56,8 +61,12 @@ export class Lucario extends PokemonCard {
 
       let playerPokemons = 0;
       let opponentPokemons = 0;
-      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, () => { playerPokemons += 1; });
-      opponent.forEachPokemon(PlayerType.TOP_PLAYER, () => { opponentPokemons += 1; });
+      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, () => {
+        playerPokemons += 1;
+      });
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, () => {
+        opponentPokemons += 1;
+      });
 
       const fewerPokemons = Math.max(0, opponentPokemons - playerPokemons);
       effect.damage += fewerPokemons * 60;
@@ -65,5 +74,4 @@ export class Lucario extends PokemonCard {
 
     return state;
   }
-
 }

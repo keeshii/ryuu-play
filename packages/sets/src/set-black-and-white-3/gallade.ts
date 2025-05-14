@@ -1,13 +1,20 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType } from '@ptcg/common';
-import { StoreLike, State, PlayerType, StateUtils, ChoosePokemonPrompt, SlotType } from '@ptcg/common';
-import { AttackEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { CheckProvidedEnergyEffect } from '@ptcg/common';
+import {
+  AttackEffect,
+  CardType,
+  CheckProvidedEnergyEffect,
+  ChoosePokemonPrompt,
+  Effect,
+  GameMessage,
+  PlayerType,
+  PokemonCard,
+  SlotType,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Gallade extends PokemonCard {
-
   public stage: Stage = Stage.STAGE_2;
 
   public evolvesFrom: string = 'Kirlia';
@@ -18,22 +25,20 @@ export class Gallade extends PokemonCard {
 
   public weakness = [{ type: CardType.PSYCHIC }];
 
-  public retreat = [ CardType.COLORLESS, CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS, CardType.COLORLESS];
 
   public attacks = [
     {
       name: 'Powerful Storm',
-      cost: [ CardType.COLORLESS, CardType.COLORLESS ],
+      cost: [CardType.COLORLESS, CardType.COLORLESS],
       damage: '20×',
-      text: 'Does 20 damage times the amount of Energy attached to all of ' +
-        'your Pokemon.'
+      text: 'Does 20 damage times the amount of Energy attached to all of your Pokémon.',
     },
     {
       name: 'Swift Lunge',
-      cost: [ CardType.PSYCHIC, CardType.COLORLESS, CardType.COLORLESS ],
+      cost: [CardType.PSYCHIC, CardType.COLORLESS, CardType.COLORLESS],
       damage: '80',
-      text: 'Your opponent switches the Defending Pokemon with ' +
-        '1 of his or her Benched Pokemon.'
+      text: 'Your opponent switches the Defending Pokémon with 1 of his or her Benched Pokémon.',
     },
   ];
 
@@ -67,22 +72,25 @@ export class Gallade extends PokemonCard {
         return state;
       }
 
-      return store.prompt(state, new ChoosePokemonPrompt(
-        opponent.id,
-        GameMessage.CHOOSE_NEW_ACTIVE_POKEMON,
-        PlayerType.BOTTOM_PLAYER,
-        [ SlotType.BENCH ],
-        { allowCancel: false },
-      ), selected => {
-        if (!selected || selected.length === 0) {
-          return state;
+      return store.prompt(
+        state,
+        new ChoosePokemonPrompt(
+          opponent.id,
+          GameMessage.CHOOSE_NEW_ACTIVE_POKEMON,
+          PlayerType.BOTTOM_PLAYER,
+          [SlotType.BENCH],
+          { allowCancel: false }
+        ),
+        selected => {
+          if (!selected || selected.length === 0) {
+            return state;
+          }
+          const target = selected[0];
+          opponent.switchPokemon(target);
         }
-        const target = selected[0];
-        opponent.switchPokemon(target);
-      });
+      );
     }
 
     return state;
   }
-
 }

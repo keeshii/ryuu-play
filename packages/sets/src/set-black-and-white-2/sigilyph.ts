@@ -1,17 +1,20 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, CardTag } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { AttackEffect, PowerEffect } from '@ptcg/common';
-import { AbstractAttackEffect } from '@ptcg/common';
-import { PowerType } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
-import { CheckProvidedEnergyEffect } from '@ptcg/common';
-
+import {
+  AbstractAttackEffect,
+  AttackEffect,
+  CardTag,
+  CardType,
+  CheckProvidedEnergyEffect,
+  Effect,
+  PokemonCard,
+  PowerEffect,
+  PowerType,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Sigilyph extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.PSYCHIC;
@@ -20,22 +23,24 @@ export class Sigilyph extends PokemonCard {
 
   public weakness = [{ type: CardType.PSYCHIC }];
 
-  public retreat = [ CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS];
 
-  public powers = [{
-    name: 'Safeguard',
-    powerType: PowerType.ABILITY,
-    text: 'Prevent all effects of attacks, including damage, done to ' +
-      'this Pokemon by Pokemon-EX.'
-  }];
+  public powers = [
+    {
+      name: 'Safeguard',
+      powerType: PowerType.ABILITY,
+      text: 'Prevent all effects of attacks, including damage, done to this Pokémon by Pokémon-EX.',
+    },
+  ];
 
-  public attacks = [{
-    name: 'Psychic',
-    cost: [ CardType.PSYCHIC, CardType.COLORLESS, CardType.COLORLESS ],
-    damage: '50+',
-    text: 'Does 10 more damage for each Energy attached to ' +
-      'the Defending Pokemon.'
-  }];
+  public attacks = [
+    {
+      name: 'Psychic',
+      cost: [CardType.PSYCHIC, CardType.COLORLESS, CardType.COLORLESS],
+      damage: '50+',
+      text: 'Does 10 more damage for each Energy attached to the Defending Pokémon.',
+    },
+  ];
 
   public set: string = 'BW2';
 
@@ -44,15 +49,13 @@ export class Sigilyph extends PokemonCard {
   public fullName: string = 'Sigilyph DGE';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
 
       const checkProvidedEnergyEffect = new CheckProvidedEnergyEffect(opponent);
       store.reduceEffect(state, checkProvidedEnergyEffect);
-      const energyCount = checkProvidedEnergyEffect.energyMap
-        .reduce((left, p) => left + p.provides.length, 0);
+      const energyCount = checkProvidedEnergyEffect.energyMap.reduce((left, p) => left + p.provides.length, 0);
 
       effect.damage += energyCount * 10;
     }
@@ -68,7 +71,6 @@ export class Sigilyph extends PokemonCard {
       }
 
       if (sourceCard && sourceCard.tags.includes(CardTag.POKEMON_EX)) {
-
         // Try to reduce PowerEffect, to check if something is blocking our ability
         try {
           const player = StateUtils.findOwner(state, effect.target);
@@ -84,5 +86,4 @@ export class Sigilyph extends PokemonCard {
 
     return state;
   }
-
 }

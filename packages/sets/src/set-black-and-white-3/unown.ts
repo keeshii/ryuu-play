@@ -1,13 +1,19 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType } from '@ptcg/common';
-import { PowerType, StoreLike, State, StateUtils, GameError, GameMessage,
-  PokemonCardList } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { PowerEffect } from '@ptcg/common';
-
+import {
+  CardType,
+  Effect,
+  GameError,
+  GameMessage,
+  PokemonCard,
+  PokemonCardList,
+  PowerEffect,
+  PowerType,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Unown extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.PSYCHIC;
@@ -16,24 +22,27 @@ export class Unown extends PokemonCard {
 
   public weakness = [{ type: CardType.PSYCHIC }];
 
-  public retreat = [ CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS];
 
-  public powers = [{
-    name: 'Farewell Letter',
-    useWhenInPlay: true,
-    powerType: PowerType.ABILITY,
-    text: 'Once during your turn (before your attack), if this Pokemon is ' +
-      'on your Bench, you may discard this Pokemon and all cards attached ' +
-      'to it (this does not count as a Knock Out). If you do, draw a card.'
-  }];
+  public powers = [
+    {
+      name: 'Farewell Letter',
+      useWhenInPlay: true,
+      powerType: PowerType.ABILITY,
+      text:
+        'Once during your turn (before your attack), if this Pokémon is ' +
+        'on your Bench, you may discard this Pokémon and all cards attached ' +
+        'to it (this does not count as a Knock Out). If you do, draw a card.',
+    },
+  ];
 
   public attacks = [
     {
       name: 'Hidden Power',
-      cost: [ CardType.COLORLESS ],
+      cost: [CardType.COLORLESS],
       damage: '10',
-      text: ''
-    }
+      text: '',
+    },
   ];
 
   public set: string = 'BW3';
@@ -61,5 +70,4 @@ export class Unown extends PokemonCard {
 
     return state;
   }
-
 }

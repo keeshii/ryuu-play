@@ -1,13 +1,17 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType } from '@ptcg/common';
-import { StoreLike, State, StateUtils } from '@ptcg/common';
-import { AttackEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { ApplyWeaknessEffect, AfterDamageEffect } from '@ptcg/common';
-
+import {
+  AfterDamageEffect,
+  ApplyWeaknessEffect,
+  AttackEffect,
+  CardType,
+  Effect,
+  PokemonCard,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Rayquaza extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.DRAGON;
@@ -16,22 +20,21 @@ export class Rayquaza extends PokemonCard {
 
   public weakness = [{ type: CardType.DRAGON }];
 
-  public retreat = [ CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS];
 
   public attacks = [
     {
       name: 'Dragon Pulse',
-      cost: [ CardType.LIGHTNING ],
+      cost: [CardType.LIGHTNING],
       damage: '40',
-      text: 'Discard the top 2 cards of your deck.'
+      text: 'Discard the top 2 cards of your deck.',
     },
     {
       name: 'Shred',
-      cost: [CardType.FIRE, CardType.LIGHTNING, CardType.COLORLESS ],
+      cost: [CardType.FIRE, CardType.LIGHTNING, CardType.COLORLESS],
       damage: '90',
-      text: 'This attack\'s damage isn\'t affected by any effects on ' +
-        'the Defending Pokemon.'
-    }
+      text: 'This attack\'s damage isn\'t affected by any effects on the Defending Pokémon.',
+    },
   ];
 
   public set: string = 'BW';
@@ -66,5 +69,4 @@ export class Rayquaza extends PokemonCard {
 
     return state;
   }
-
 }

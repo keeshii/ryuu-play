@@ -1,17 +1,20 @@
-import { Effect } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType, CardType, SuperType } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
-import { UseStadiumEffect } from '@ptcg/common';
-import { ChooseCardsPrompt } from '@ptcg/common';
-import { EnergyCard } from '@ptcg/common';
+import {
+  CardType,
+  ChooseCardsPrompt,
+  Effect,
+  EnergyCard,
+  GameError,
+  GameMessage,
+  State,
+  StateUtils,
+  StoreLike,
+  SuperType,
+  TrainerCard,
+  TrainerType,
+  UseStadiumEffect,
+} from '@ptcg/common';
 
 export class ScorchedEarth extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.STADIUM;
 
   public set: string = 'BW2';
@@ -46,24 +49,27 @@ export class ScorchedEarth extends TrainerCard {
         throw new GameError(GameMessage.CANNOT_USE_POWER);
       }
 
-      return store.prompt(state, new ChooseCardsPrompt(
-        player.id,
-        GameMessage.CHOOSE_CARD_TO_DISCARD,
-        player.hand,
-        { superType: SuperType.ENERGY },
-        { allowCancel: true, min: 1, max: 1, blocked }
-      ), selected => {
-        selected = selected || [];
-        if (selected.length === 0) {
-          player.stadiumUsedTurn = stadiumUsedTurn;
-          return;
+      return store.prompt(
+        state,
+        new ChooseCardsPrompt(
+          player.id,
+          GameMessage.CHOOSE_CARD_TO_DISCARD,
+          player.hand,
+          { superType: SuperType.ENERGY },
+          { allowCancel: true, min: 1, max: 1, blocked }
+        ),
+        selected => {
+          selected = selected || [];
+          if (selected.length === 0) {
+            player.stadiumUsedTurn = stadiumUsedTurn;
+            return;
+          }
+          player.hand.moveCardsTo(selected, player.discard);
+          player.deck.moveTo(player.hand, 2);
         }
-        player.hand.moveCardsTo(selected, player.discard);
-        player.deck.moveTo(player.hand, 2);
-      });
+      );
     }
 
     return state;
   }
-
 }

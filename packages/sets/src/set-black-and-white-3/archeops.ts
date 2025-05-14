@@ -1,19 +1,24 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { PowerEffect, AttackEffect, EvolveEffect } from '@ptcg/common';
-import { PowerType } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
-import { PlayerType, SlotType } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { ChoosePokemonPrompt } from '@ptcg/common';
-import { PutDamageEffect } from '@ptcg/common';
+import {
+  AttackEffect,
+  CardType,
+  ChoosePokemonPrompt,
+  Effect,
+  EvolveEffect,
+  GameError,
+  GameMessage,
+  PlayerType,
+  PokemonCard,
+  PowerEffect,
+  PowerType,
+  PutDamageEffect,
+  SlotType,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Archeops extends PokemonCard {
-
   public stage: Stage = Stage.STAGE_1;
 
   public evolvesFrom = 'Archen';
@@ -24,22 +29,26 @@ export class Archeops extends PokemonCard {
 
   public weakness = [{ type: CardType.GRASS }];
 
-  public retreat = [ CardType.COLORLESS, CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS, CardType.COLORLESS];
 
-  public powers = [{
-    name: 'Ancient Power',
-    powerType: PowerType.ABILITY,
-    text: 'Each player can\'t play any Pokemon from his or her hand ' +
-      'to evolve his or her Pokemon.'
-  }];
+  public powers = [
+    {
+      name: 'Ancient Power',
+      powerType: PowerType.ABILITY,
+      text: 'Each player can\'t play any Pokémon from his or her hand to evolve his or her Pokémon.',
+    },
+  ];
 
-  public attacks = [{
-    name: 'Rock Slide',
-    cost: [ CardType.FIGHTING, CardType.FIGHTING, CardType.COLORLESS ],
-    damage: '60',
-    text: 'Does 10 damage to 2 of your opponent\'s Benched Pokemon. ' +
-      '(Don\'t apply Weakness and Resistance for Benched Pokemon.)'
-  }];
+  public attacks = [
+    {
+      name: 'Rock Slide',
+      cost: [CardType.FIGHTING, CardType.FIGHTING, CardType.COLORLESS],
+      damage: '60',
+      text:
+        'Does 10 damage to 2 of your opponent\'s Benched Pokémon. ' +
+        '(Don\'t apply Weakness and Resistance for Benched Pokémon.)',
+    },
+  ];
 
   public set: string = 'BW3';
 
@@ -48,7 +57,6 @@ export class Archeops extends PokemonCard {
   public fullName: string = 'Archeops NVI';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
@@ -59,22 +67,26 @@ export class Archeops extends PokemonCard {
       }
       const count = Math.min(2, benched);
 
-      return store.prompt(state, new ChoosePokemonPrompt(
-        player.id,
-        GameMessage.CHOOSE_POKEMON_TO_DAMAGE,
-        PlayerType.TOP_PLAYER,
-        [ SlotType.BENCH ],
-        { min: count, max: count, allowCancel: false }
-      ), targets => {
-        if (!targets || targets.length === 0) {
-          return;
+      return store.prompt(
+        state,
+        new ChoosePokemonPrompt(
+          player.id,
+          GameMessage.CHOOSE_POKEMON_TO_DAMAGE,
+          PlayerType.TOP_PLAYER,
+          [SlotType.BENCH],
+          { min: count, max: count, allowCancel: false }
+        ),
+        targets => {
+          if (!targets || targets.length === 0) {
+            return;
+          }
+          targets.forEach(target => {
+            const damageEffect = new PutDamageEffect(effect, 10);
+            damageEffect.target = target;
+            store.reduceEffect(state, damageEffect);
+          });
         }
-        targets.forEach(target => {
-          const damageEffect = new PutDamageEffect(effect, 10);
-          damageEffect.target = target;
-          store.reduceEffect(state, damageEffect);
-        });
-      });
+      );
     }
 
     if (effect instanceof EvolveEffect) {
@@ -110,5 +122,4 @@ export class Archeops extends PokemonCard {
 
     return state;
   }
-
 }

@@ -1,20 +1,24 @@
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { ShowCardsPrompt } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { Card } from '@ptcg/common';
+import {
+  Card,
+  Effect,
+  GameError,
+  GameMessage,
+  ShowCardsPrompt,
+  State,
+  StoreLike,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
 
   const prizes = player.prizes.filter(p => p.isSecret);
   const cards: Card[] = [];
-  prizes.forEach(p => { p.cards.forEach(c => cards.push(c)); });
+  prizes.forEach(p => {
+    p.cards.forEach(c => cards.push(c));
+  });
 
   // All prizes are face-up
   if (cards.length === 0) {
@@ -22,22 +26,23 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   }
 
   // Make prizes no more secret, before displaying prompt
-  prizes.forEach(p => { p.isSecret = false; });
+  prizes.forEach(p => {
+    p.isSecret = false;
+  });
 
-  yield store.prompt(state, new ShowCardsPrompt(
-    player.id,
-    GameMessage.CARDS_SHOWED_BY_EFFECT,
-    cards,
-  ), () => { next(); });
+  yield store.prompt(state, new ShowCardsPrompt(player.id, GameMessage.CARDS_SHOWED_BY_EFFECT, cards), () => {
+    next();
+  });
 
   // Prizes are secret once again.
-  prizes.forEach(p => { p.isSecret = true; });
+  prizes.forEach(p => {
+    p.isSecret = true;
+  });
 
   return state;
 }
 
 export class AlphLithograph extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'HGSS';
@@ -46,8 +51,7 @@ export class AlphLithograph extends TrainerCard {
 
   public fullName: string = 'Alph Lithograph TRM';
 
-  public text: string =
-    'Look at all of your face down prize cards!';
+  public text: string = 'Look at all of your face down prize cards!';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
@@ -57,5 +61,4 @@ export class AlphLithograph extends TrainerCard {
 
     return state;
   }
-
 }

@@ -1,6 +1,6 @@
+import { Card } from '@ptcg/common';
 import { Buizel } from './buizel';
 import { Buneary } from './buneary';
-import { Card } from '@ptcg/common';
 import { Chimchar } from './chimchar';
 import { Croagunk } from './croagunk';
 import { Gabite } from './gabite';
@@ -30,5 +30,5 @@ export const setOp9: Card[] = [
   new Piplup(),
   new Raichu(),
   new Rotom(),
-  new Turtwig()
+  new Turtwig(),
 ];

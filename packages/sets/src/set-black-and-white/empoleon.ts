@@ -1,14 +1,23 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType } from '@ptcg/common';
-import { PowerType, StoreLike, State, StateUtils, GameError, GameMessage,
-  PlayerType, ChooseCardsPrompt } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { PowerEffect, AttackEffect } from '@ptcg/common';
-import { EndTurnEffect } from '@ptcg/common';
-import { PlayPokemonEffect } from '@ptcg/common';
+import {
+  AttackEffect,
+  CardType,
+  ChooseCardsPrompt,
+  Effect,
+  EndTurnEffect,
+  GameError,
+  GameMessage,
+  PlayerType,
+  PlayPokemonEffect,
+  PokemonCard,
+  PowerEffect,
+  PowerType,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Empoleon extends PokemonCard {
-
   public stage: Stage = Stage.STAGE_2;
 
   public evolvesFrom = 'Prinplup';
@@ -19,24 +28,26 @@ export class Empoleon extends PokemonCard {
 
   public weakness = [{ type: CardType.LIGHTNING }];
 
-  public retreat = [ CardType.COLORLESS, CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS, CardType.COLORLESS];
 
-  public powers = [{
-    name: 'Diving Draw',
-    useWhenInPlay: true,
-    powerType: PowerType.ABILITY,
-    text: 'Once during your turn (before your attack), you may discard ' +
-      'a card from your hand. If you do, draw 2 cards.'
-  }];
+  public powers = [
+    {
+      name: 'Diving Draw',
+      useWhenInPlay: true,
+      powerType: PowerType.ABILITY,
+      text:
+        'Once during your turn (before your attack), you may discard ' +
+        'a card from your hand. If you do, draw 2 cards.',
+    },
+  ];
 
   public attacks = [
     {
       name: 'Attack Command',
-      cost: [ CardType.WATER ],
+      cost: [CardType.WATER],
       damage: '10×',
-      text: 'Does 10 damage times the number of Pokemon in play (both yours ' +
-        'and your opponent\'s).'
-    }
+      text: 'Does 10 damage times the number of Pokémon in play (both yours and your opponent\'s).',
+    },
   ];
 
   public set: string = 'BW';
@@ -61,21 +72,25 @@ export class Empoleon extends PokemonCard {
       if (player.marker.hasMarker(this.DIVING_DRAW_MAREKER, this)) {
         throw new GameError(GameMessage.POWER_ALREADY_USED);
       }
-      state = store.prompt(state, new ChooseCardsPrompt(
-        player.id,
-        GameMessage.CHOOSE_CARD_TO_DISCARD,
-        player.hand,
-        { },
-        { allowCancel: true, min: 1, max: 1 }
-      ), cards => {
-        cards = cards || [];
-        if (cards.length === 0) {
-          return;
+      state = store.prompt(
+        state,
+        new ChooseCardsPrompt(
+          player.id,
+          GameMessage.CHOOSE_CARD_TO_DISCARD,
+          player.hand,
+          {},
+          { allowCancel: true, min: 1, max: 1 }
+        ),
+        cards => {
+          cards = cards || [];
+          if (cards.length === 0) {
+            return;
+          }
+          player.marker.addMarker(this.DIVING_DRAW_MAREKER, this);
+          player.hand.moveCardsTo(cards, player.discard);
+          player.deck.moveTo(player.hand, 2);
         }
-        player.marker.addMarker(this.DIVING_DRAW_MAREKER, this);
-        player.hand.moveCardsTo(cards, player.discard);
-        player.deck.moveTo(player.hand, 2);
-      });
+      );
 
       return state;
     }
@@ -84,8 +99,12 @@ export class Empoleon extends PokemonCard {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
       let pokemonInPlay = 0;
-      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, () => { pokemonInPlay += 1; });
-      opponent.forEachPokemon(PlayerType.TOP_PLAYER, () => { pokemonInPlay += 1; });
+      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, () => {
+        pokemonInPlay += 1;
+      });
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, () => {
+        pokemonInPlay += 1;
+      });
       effect.damage = 10 * pokemonInPlay;
     }
 
@@ -95,5 +114,4 @@ export class Empoleon extends PokemonCard {
 
     return state;
   }
-
 }

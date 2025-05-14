@@ -1,16 +1,22 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, CardTag } from '@ptcg/common';
-import { StoreLike, State, StateUtils, Card, ChooseEnergyPrompt } from '@ptcg/common';
-import { AttackEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { CheckProvidedEnergyEffect } from '@ptcg/common';
-import { DiscardCardsEffect } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-
+import {
+  AttackEffect,
+  Card,
+  CardTag,
+  CardType,
+  CheckProvidedEnergyEffect,
+  ChooseEnergyPrompt,
+  DiscardCardsEffect,
+  Effect,
+  GameMessage,
+  PokemonCard,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class MewtwoEx extends PokemonCard {
-
-  public tags = [ CardTag.POKEMON_EX ];
+  public tags = [CardTag.POKEMON_EX];
 
   public stage: Stage = Stage.BASIC;
 
@@ -20,20 +26,20 @@ export class MewtwoEx extends PokemonCard {
 
   public weakness = [{ type: CardType.PSYCHIC }];
 
-  public retreat = [ CardType.COLORLESS, CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS, CardType.COLORLESS];
 
   public attacks = [
     {
       name: 'X Ball',
-      cost: [ CardType.COLORLESS, CardType.COLORLESS ],
+      cost: [CardType.COLORLESS, CardType.COLORLESS],
       damage: '20×',
-      text: 'Does 20 damage times the amount of Energy attached to this ' +
-        'Pokemon and the Defending Pokemon.'
-    }, {
+      text: 'Does 20 damage times the amount of Energy attached to this Pokémon and the Defending Pokémon.',
+    },
+    {
       name: 'Psydrive',
-      cost: [ CardType.PSYCHIC, CardType.PSYCHIC, CardType.COLORLESS ],
+      cost: [CardType.PSYCHIC, CardType.PSYCHIC, CardType.COLORLESS],
       damage: '120',
-      text: 'Discard an Energy attached to this Pokemon.'
+      text: 'Discard an Energy attached to this Pokémon.',
     },
   ];
 
@@ -44,20 +50,17 @@ export class MewtwoEx extends PokemonCard {
   public fullName: string = 'Mewtwo EX NXD';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
 
       const playerProvidedEnergy = new CheckProvidedEnergyEffect(player);
       store.reduceEffect(state, playerProvidedEnergy);
-      const playerEnergyCount = playerProvidedEnergy.energyMap
-        .reduce((left, p) => left + p.provides.length, 0);
+      const playerEnergyCount = playerProvidedEnergy.energyMap.reduce((left, p) => left + p.provides.length, 0);
 
       const opponentProvidedEnergy = new CheckProvidedEnergyEffect(opponent);
       store.reduceEffect(state, opponentProvidedEnergy);
-      const opponentEnergyCount = opponentProvidedEnergy.energyMap
-        .reduce((left, p) => left + p.provides.length, 0);
+      const opponentEnergyCount = opponentProvidedEnergy.energyMap.reduce((left, p) => left + p.provides.length, 0);
 
       effect.damage = (playerEnergyCount + opponentEnergyCount) * 20;
     }
@@ -68,21 +71,24 @@ export class MewtwoEx extends PokemonCard {
       const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);
       state = store.reduceEffect(state, checkProvidedEnergy);
 
-      state = store.prompt(state, new ChooseEnergyPrompt(
-        player.id,
-        GameMessage.CHOOSE_ENERGIES_TO_DISCARD,
-        checkProvidedEnergy.energyMap,
-        [ CardType.COLORLESS ],
-        { allowCancel: false }
-      ), energy => {
-        const cards: Card[] = (energy || []).map(e => e.card);
-        const discardEnergy = new DiscardCardsEffect(effect, cards);
-        discardEnergy.target = player.active;
-        return store.reduceEffect(state, discardEnergy);
-      });
+      state = store.prompt(
+        state,
+        new ChooseEnergyPrompt(
+          player.id,
+          GameMessage.CHOOSE_ENERGIES_TO_DISCARD,
+          checkProvidedEnergy.energyMap,
+          [CardType.COLORLESS],
+          { allowCancel: false }
+        ),
+        energy => {
+          const cards: Card[] = (energy || []).map(e => e.card);
+          const discardEnergy = new DiscardCardsEffect(effect, cards);
+          discardEnergy.target = player.active;
+          return store.reduceEffect(state, discardEnergy);
+        }
+      );
     }
 
     return state;
   }
-
 }

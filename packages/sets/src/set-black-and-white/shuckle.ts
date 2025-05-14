@@ -1,15 +1,23 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType } from '@ptcg/common';
-import { PowerType, StoreLike, State, StateUtils, PlayerType, CoinFlipPrompt } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { AttackEffect, PowerEffect } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { AttachEnergyEffect } from '@ptcg/common';
-import { EndTurnEffect } from '@ptcg/common';
-import { PutDamageEffect } from '@ptcg/common';
+import {
+  AttachEnergyEffect,
+  AttackEffect,
+  CardType,
+  CoinFlipPrompt,
+  Effect,
+  EndTurnEffect,
+  GameMessage,
+  PlayerType,
+  PokemonCard,
+  PowerEffect,
+  PowerType,
+  PutDamageEffect,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Shuckle extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.FIGHTING;
@@ -18,23 +26,24 @@ export class Shuckle extends PokemonCard {
 
   public weakness = [{ type: CardType.WATER }];
 
-  public retreat = [ CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS];
 
-  public powers = [{
-    name: 'Fermenting Liquid',
-    powerType: PowerType.POKEBODY,
-    text: 'Whenever you attach an Energy card from your hand to Shuckle, ' +
-      'draw a card.'
-  }];
+  public powers = [
+    {
+      name: 'Fermenting Liquid',
+      powerType: PowerType.POKEBODY,
+      text: 'Whenever you attach an Energy card from your hand to Shuckle, draw a card.',
+    },
+  ];
 
   public attacks = [
     {
       name: 'Shell Stunner',
-      cost: [ CardType.GRASS, CardType.COLORLESS ],
+      cost: [CardType.GRASS, CardType.COLORLESS],
       damage: '20',
-      text: 'Flip a coin. If heads, prevent all damage done to Shuckle by ' +
-        'attacks during your opponent\'s next turn.'
-    }
+      text:
+        'Flip a coin. If heads, prevent all damage done to Shuckle by attacks during your opponent\'s next turn.',
+    },
   ];
 
   public set: string = 'BW';
@@ -48,7 +57,6 @@ export class Shuckle extends PokemonCard {
   public readonly CLEAR_SHELL_STUNNER_MAREKER = 'CLEAR_SHELL_STUNNER_MAREKER';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof AttachEnergyEffect && effect.target.cards.includes(this)) {
       const player = effect.player;
       const pokemonCard = effect.target.getPokemonCard();
@@ -69,8 +77,7 @@ export class Shuckle extends PokemonCard {
       return state;
     }
 
-    if (effect instanceof PutDamageEffect
-      && effect.target.marker.hasMarker(this.SHELL_STUNNER_MAREKER)) {
+    if (effect instanceof PutDamageEffect && effect.target.marker.hasMarker(this.SHELL_STUNNER_MAREKER)) {
       effect.preventDefault = true;
       return state;
     }
@@ -79,10 +86,7 @@ export class Shuckle extends PokemonCard {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
 
-      state = store.prompt(state, new CoinFlipPrompt(
-        player.id,
-        GameMessage.COIN_FLIP
-      ), flipResult => {
+      state = store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), flipResult => {
         if (flipResult) {
           player.active.marker.addMarker(this.SHELL_STUNNER_MAREKER, this);
           opponent.marker.addMarker(this.CLEAR_SHELL_STUNNER_MAREKER, this);
@@ -92,18 +96,15 @@ export class Shuckle extends PokemonCard {
       return state;
     }
 
-    if (effect instanceof EndTurnEffect
-      && effect.player.marker.hasMarker(this.CLEAR_SHELL_STUNNER_MAREKER, this)) {
-
+    if (effect instanceof EndTurnEffect && effect.player.marker.hasMarker(this.CLEAR_SHELL_STUNNER_MAREKER, this)) {
       effect.player.marker.removeMarker(this.CLEAR_SHELL_STUNNER_MAREKER, this);
 
       const opponent = StateUtils.getOpponent(state, effect.player);
-      opponent.forEachPokemon(PlayerType.TOP_PLAYER, (cardList) => {
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, cardList => {
         cardList.marker.removeMarker(this.SHELL_STUNNER_MAREKER, this);
       });
     }
 
     return state;
   }
-
 }

@@ -1,18 +1,22 @@
-import { CardType, EnergyType } from '@ptcg/common';
-import { EnergyCard } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { CheckProvidedEnergyEffect, CheckPokemonTypeEffect, CheckTableStateEffect,
-  CheckRetreatCostEffect } from '@ptcg/common';
-import { PlayerType } from '@ptcg/common';
-import { AttachEnergyEffect } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
+import {
+  AttachEnergyEffect,
+  CardType,
+  CheckPokemonTypeEffect,
+  CheckProvidedEnergyEffect,
+  CheckRetreatCostEffect,
+  CheckTableStateEffect,
+  Effect,
+  EnergyCard,
+  EnergyType,
+  GameError,
+  GameMessage,
+  PlayerType,
+  State,
+  StoreLike,
+} from '@ptcg/common';
 
 export class MysteryEnergy extends EnergyCard {
-
-  public provides: CardType[] = [ ];
+  public provides: CardType[] = [];
 
   public energyType = EnergyType.SPECIAL;
 
@@ -25,14 +29,13 @@ export class MysteryEnergy extends EnergyCard {
   public readonly STRONG_ENERGY_MAREKER = 'STRONG_ENERGY_MAREKER';
 
   public text =
-    'This card can only be attached to P Pokemon. This card provides P ' +
-    'Energy, but only while this card is attached to a P Pokemon. ' +
-    'The Retreat Cost of the Pokemon this card is attached to is 2 less. ' +
-    '(If this card is attached to anything other than a P Pokemon, discard ' +
+    'This card can only be attached to P Pokémon. This card provides P ' +
+    'Energy, but only while this card is attached to a P Pokémon. ' +
+    'The Retreat Cost of the Pokémon this card is attached to is 2 less. ' +
+    '(If this card is attached to anything other than a P Pokémon, discard ' +
     'this card.)';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     // Cannot attach to other than Psychic Pokemon
     if (effect instanceof AttachEnergyEffect && effect.energyCard === this) {
       const checkPokemonType = new CheckPokemonTypeEffect(effect.target);
@@ -48,7 +51,7 @@ export class MysteryEnergy extends EnergyCard {
       const checkPokemonType = new CheckPokemonTypeEffect(effect.source);
       store.reduceEffect(state, checkPokemonType);
       if (checkPokemonType.cardTypes.includes(CardType.PSYCHIC)) {
-        effect.energyMap.push({ card: this, provides: [ CardType.PSYCHIC ] });
+        effect.energyMap.push({ card: this, provides: [CardType.PSYCHIC] });
       }
       return state;
     }
@@ -84,5 +87,4 @@ export class MysteryEnergy extends EnergyCard {
 
     return state;
   }
-
 }

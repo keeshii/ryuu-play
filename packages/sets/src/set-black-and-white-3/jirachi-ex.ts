@@ -1,15 +1,31 @@
-import { AttackEffect, PowerEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, CardTag, SuperType, TrainerType, SpecialCondition } from '@ptcg/common';
-import { PlayPokemonEffect } from '@ptcg/common';
-import { PowerType, StoreLike, State, GameMessage, ChooseCardsPrompt,
-  ShuffleDeckPrompt } from '@ptcg/common';
-import {AddSpecialConditionsEffect } from '@ptcg/common';
+import {
+  AddSpecialConditionsEffect,
+  AttackEffect,
+  CardTag,
+  CardType,
+  ChooseCardsPrompt,
+  Effect,
+  GameMessage,
+  PlayPokemonEffect,
+  PokemonCard,
+  PowerEffect,
+  PowerType,
+  ShuffleDeckPrompt,
+  SpecialCondition,
+  Stage,
+  State,
+  StoreLike,
+  SuperType,
+  TrainerType,
+} from '@ptcg/common';
 
-
-function* useStellarGuidance(next: Function, store: StoreLike, state: State,
-  self: JirachiEx, effect: PlayPokemonEffect): IterableIterator<State> {
+function* useStellarGuidance(
+  next: Function,
+  store: StoreLike,
+  state: State,
+  self: JirachiEx,
+  effect: PlayPokemonEffect
+): IterableIterator<State> {
   const player = effect.player;
 
   if (player.deck.cards.length === 0) {
@@ -24,17 +40,21 @@ function* useStellarGuidance(next: Function, store: StoreLike, state: State,
     return state;
   }
 
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_HAND,
-    player.deck,
-    { superType: SuperType.TRAINER, trainerType: TrainerType.SUPPORTER },
-    { min: 1, max: 1, allowCancel: true }
-  ), selected => {
-    const cards = selected || [];
-    player.deck.moveCardsTo(cards, player.hand);
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_HAND,
+      player.deck,
+      { superType: SuperType.TRAINER, trainerType: TrainerType.SUPPORTER },
+      { min: 1, max: 1, allowCancel: true }
+    ),
+    selected => {
+      const cards = selected || [];
+      player.deck.moveCardsTo(cards, player.hand);
+      next();
+    }
+  );
 
   return store.prompt(state, new ShuffleDeckPrompt(player.id), order => {
     player.deck.applyOrder(order);
@@ -42,8 +62,7 @@ function* useStellarGuidance(next: Function, store: StoreLike, state: State,
 }
 
 export class JirachiEx extends PokemonCard {
-
-  public tags = [ CardTag.POKEMON_EX ];
+  public tags = [CardTag.POKEMON_EX];
 
   public stage: Stage = Stage.BASIC;
 
@@ -55,23 +74,26 @@ export class JirachiEx extends PokemonCard {
 
   public resistance = [{ type: CardType.PSYCHIC, value: -20 }];
 
-  public retreat = [ CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS];
 
-  public powers = [{
-    name: 'Stellar Guidance',
-    powerType: PowerType.ABILITY,
-    text: 'When you play this Pokemon from your hand onto your Bench, ' +
-      'you may search your deck for a Supporter card, reveal it, and put it ' +
-      'into your hand. Shuffle your deck afterward.'
-  }];
+  public powers = [
+    {
+      name: 'Stellar Guidance',
+      powerType: PowerType.ABILITY,
+      text:
+        'When you play this Pokémon from your hand onto your Bench, ' +
+        'you may search your deck for a Supporter card, reveal it, and put it ' +
+        'into your hand. Shuffle your deck afterward.',
+    },
+  ];
 
   public attacks = [
     {
       name: 'Hypnostrike',
-      cost: [ CardType.METAL, CardType.COLORLESS, CardType.COLORLESS ],
+      cost: [CardType.METAL, CardType.COLORLESS, CardType.COLORLESS],
       damage: '60',
-      text: 'Both this Pokemon and the Defending Pokemon are now Asleep.'
-    }
+      text: 'Both this Pokémon and the Defending Pokémon are now Asleep.',
+    },
   ];
 
   public set: string = 'BW3';
@@ -81,7 +103,6 @@ export class JirachiEx extends PokemonCard {
   public fullName: string = 'Jirachi EX PLB';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof PlayPokemonEffect && effect.pokemonCard === this) {
       const generator = useStellarGuidance(() => generator.next(), store, state, this, effect);
       return generator.next().value;
@@ -99,5 +120,4 @@ export class JirachiEx extends PokemonCard {
 
     return state;
   }
-
 }

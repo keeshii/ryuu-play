@@ -1,35 +1,42 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, SpecialCondition } from '@ptcg/common';
-import { PowerType, StoreLike, State } from '@ptcg/common';
-import { AttackEffect, PowerEffect } from '@ptcg/common';
-import { PutDamageEffect, AddSpecialConditionsEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
+import {
+  AddSpecialConditionsEffect,
+  AttackEffect,
+  CardType,
+  Effect,
+  PokemonCard,
+  PowerEffect,
+  PowerType,
+  PutDamageEffect,
+  SpecialCondition,
+  Stage,
+  State,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Tyrogue extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.FIGHTING;
 
   public hp: number = 30;
 
-  public retreat = [ ];
+  public retreat = [];
 
-  public powers = [{
-    name: 'Sweet Sleeping Face',
-    powerType: PowerType.POKEBODY,
-    text: 'As long as Tyrogue is Asleep, prevent all damage done to Tyrogue ' +
-      'by attacks.'
-  }];
+  public powers = [
+    {
+      name: 'Sweet Sleeping Face',
+      powerType: PowerType.POKEBODY,
+      text: 'As long as Tyrogue is Asleep, prevent all damage done to Tyrogue by attacks.',
+    },
+  ];
 
   public attacks = [
     {
       name: 'Mischievous Punch',
-      cost: [ ],
+      cost: [],
       damage: '30',
-      text: 'This attack\'s damage isn\'t affected by Weakness or Resistance. ' +
-        'Tyrogue is now Asleep.'
-    }
+      text: 'This attack\'s damage isn\'t affected by Weakness or Resistance. Tyrogue is now Asleep.',
+    },
   ];
 
   public set: string = 'HGSS';
@@ -70,5 +77,4 @@ export class Tyrogue extends PokemonCard {
 
     return state;
   }
-
 }

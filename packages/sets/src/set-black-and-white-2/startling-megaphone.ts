@@ -1,14 +1,18 @@
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { PlayerType, StateUtils, GameError, GameMessage, PokemonCardList } from '@ptcg/common';
-
+import {
+  Effect,
+  GameError,
+  GameMessage,
+  PlayerType,
+  PokemonCardList,
+  State,
+  StateUtils,
+  StoreLike,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 export class StartlingMegaphone extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'BW2';
@@ -17,9 +21,7 @@ export class StartlingMegaphone extends TrainerCard {
 
   public fullName: string = 'Startling Megaphone FLF';
 
-  public text: string =
-    'Discard all Pokemon Tool cards attached to each of your ' +
-    'opponent\'s Pokemon.';
+  public text: string = 'Discard all Pokémon Tool cards attached to each of your opponent\'s Pokémon.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
@@ -47,5 +49,4 @@ export class StartlingMegaphone extends TrainerCard {
 
     return state;
   }
-
 }

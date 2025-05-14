@@ -1,18 +1,21 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { AttackEffect, PowerEffect } from '@ptcg/common';
-import { PowerType } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { PlayItemEffect } from '@ptcg/common';
-import { CheckProvidedEnergyEffect } from '@ptcg/common';
+import {
+  AttackEffect,
+  CardType,
+  CheckProvidedEnergyEffect,
+  Effect,
+  GameError,
+  GameMessage,
+  PlayItemEffect,
+  PokemonCard,
+  PowerEffect,
+  PowerType,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Gothitelle extends PokemonCard {
-
   public stage: Stage = Stage.STAGE_2;
 
   public evolvesFrom = 'Gothorita';
@@ -23,21 +26,26 @@ export class Gothitelle extends PokemonCard {
 
   public weakness = [{ type: CardType.PSYCHIC }];
 
-  public retreat = [ CardType.COLORLESS, CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS, CardType.COLORLESS];
 
-  public powers = [{
-    name: 'Magic Room',
-    powerType: PowerType.ABILITY,
-    text: 'As long as this Pokemon is your Active Pokemon, your opponent ' +
-      'can\'t play any Item cards from his or her hand.'
-  }];
+  public powers = [
+    {
+      name: 'Magic Room',
+      powerType: PowerType.ABILITY,
+      text:
+        'As long as this Pokémon is your Active Pokémon, your opponent ' +
+        'can\'t play any Item cards from his or her hand.',
+    },
+  ];
 
-  public attacks = [{
-    name: 'Madkinesis',
-    cost: [ CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS ],
-    damage: '30+',
-    text: 'Does 20 more damage for each P Energy attached to this Pokemon.'
-  }];
+  public attacks = [
+    {
+      name: 'Madkinesis',
+      cost: [CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS],
+      damage: '30+',
+      text: 'Does 20 more damage for each P Energy attached to this Pokémon.',
+    },
+  ];
 
   public set: string = 'BW3';
 
@@ -46,7 +54,6 @@ export class Gothitelle extends PokemonCard {
   public fullName: string = 'Gothitelle LT';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
       const checkProvidedEnergyEffect = new CheckProvidedEnergyEffect(player);
@@ -87,5 +94,4 @@ export class Gothitelle extends PokemonCard {
 
     return state;
   }
-
 }

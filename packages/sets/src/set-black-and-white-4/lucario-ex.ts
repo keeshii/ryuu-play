@@ -1,14 +1,18 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, CardTag } from '@ptcg/common';
-import { StoreLike, State, ConfirmPrompt } from '@ptcg/common';
-import { AttackEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-
+import {
+  AttackEffect,
+  CardTag,
+  CardType,
+  ConfirmPrompt,
+  Effect,
+  GameMessage,
+  PokemonCard,
+  Stage,
+  State,
+  StoreLike,
+} from '@ptcg/common';
 
 export class LucarioEx extends PokemonCard {
-
-  public tags = [ CardTag.POKEMON_EX ];
+  public tags = [CardTag.POKEMON_EX];
 
   public stage: Stage = Stage.BASIC;
 
@@ -18,25 +22,27 @@ export class LucarioEx extends PokemonCard {
 
   public weakness = [{ type: CardType.PSYCHIC }];
 
-  public retreat = [ CardType.COLORLESS, CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS, CardType.COLORLESS];
 
   public attacks = [
     {
       name: 'Missile Jab',
-      cost: [ CardType.FIGHTING ],
+      cost: [CardType.FIGHTING],
       damage: '30',
-      text: 'This attack\'s damage isn\'t affected by Resistance.'
-    }, {
+      text: 'This attack\'s damage isn\'t affected by Resistance.',
+    },
+    {
       name: 'Corkscrew Smash',
-      cost: [ CardType.FIGHTING, CardType.FIGHTING ],
+      cost: [CardType.FIGHTING, CardType.FIGHTING],
       damage: '60',
-      text: 'You may draw cards until you have 6 cards in your hand.'
-    }, {
+      text: 'You may draw cards until you have 6 cards in your hand.',
+    },
+    {
       name: 'Somersault Kick',
-      cost: [ CardType.FIGHTING, CardType.FIGHTING, CardType.FIGHTING ],
+      cost: [CardType.FIGHTING, CardType.FIGHTING, CardType.FIGHTING],
       damage: '100',
-      text: ''
-    }
+      text: '',
+    },
   ];
 
   public set: string = 'BW4';
@@ -46,7 +52,6 @@ export class LucarioEx extends PokemonCard {
   public fullName: string = 'Lucario EX FFI';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       effect.ignoreResistance = true;
     }
@@ -59,10 +64,7 @@ export class LucarioEx extends PokemonCard {
         return state;
       }
 
-      return store.prompt(state, new ConfirmPrompt(
-        effect.player.id,
-        GameMessage.WANT_TO_DRAW_CARDS
-      ), result => {
+      return store.prompt(state, new ConfirmPrompt(effect.player.id, GameMessage.WANT_TO_DRAW_CARDS), result => {
         if (result) {
           player.deck.moveTo(player.hand, cardsToDraw);
         }
@@ -71,5 +73,4 @@ export class LucarioEx extends PokemonCard {
 
     return state;
   }
-
 }

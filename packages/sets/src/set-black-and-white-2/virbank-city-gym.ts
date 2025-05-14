@@ -1,16 +1,17 @@
-import { Effect } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
-import { UseStadiumEffect } from '@ptcg/common';
-import { BetweenTurnsEffect } from '@ptcg/common';
+import {
+  BetweenTurnsEffect,
+  Effect,
+  GameError,
+  GameMessage,
+  State,
+  StateUtils,
+  StoreLike,
+  TrainerCard,
+  TrainerType,
+  UseStadiumEffect,
+} from '@ptcg/common';
 
 export class VirbankCityGym extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.STADIUM;
 
   public set: string = 'BW2';
@@ -20,8 +21,7 @@ export class VirbankCityGym extends TrainerCard {
   public fullName: string = 'Virbank City Gym PLS';
 
   public text: string =
-    'Put 2 more damage counters on Poisoned Pokemon (both yours and your ' +
-    'opponent\'s) between turns.';
+    'Put 2 more damage counters on Poisoned Pokémon (both yours and your opponent\'s) between turns.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof BetweenTurnsEffect && StateUtils.getStadiumCard(state) === this) {
@@ -34,5 +34,4 @@ export class VirbankCityGym extends TrainerCard {
 
     return state;
   }
-
 }

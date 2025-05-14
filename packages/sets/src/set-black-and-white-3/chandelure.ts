@@ -1,24 +1,28 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, SpecialCondition } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { PowerEffect, AttackEffect } from '@ptcg/common';
-import { PowerType } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
-import { PlayerType, SlotType } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { DamageMap } from '@ptcg/common';
-import { CheckHpEffect } from '@ptcg/common';
-import { PutDamagePrompt } from '@ptcg/common';
-import { AddSpecialConditionsEffect } from '@ptcg/common';
-import { EndTurnEffect } from '@ptcg/common';
-import { PlayPokemonEffect } from '@ptcg/common';
-import {GameError } from '@ptcg/common';
-
+import {
+  AddSpecialConditionsEffect,
+  AttackEffect,
+  CardType,
+  CheckHpEffect,
+  DamageMap,
+  Effect,
+  EndTurnEffect,
+  GameError,
+  GameMessage,
+  PlayerType,
+  PlayPokemonEffect,
+  PokemonCard,
+  PowerEffect,
+  PowerType,
+  PutDamagePrompt,
+  SlotType,
+  SpecialCondition,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Chandelure extends PokemonCard {
-
   public stage: Stage = Stage.STAGE_2;
 
   public evolvesFrom = 'Lampent';
@@ -29,23 +33,28 @@ export class Chandelure extends PokemonCard {
 
   public weakness = [{ type: CardType.DARK }];
 
-  public retreat = [ CardType.COLORLESS, CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS, CardType.COLORLESS];
 
-  public powers = [{
-    name: 'Cursed Shadow',
-    useWhenInPlay: true,
-    powerType: PowerType.ABILITY,
-    text: 'Once during your turn (before attack), if this Pokemon is your ' +
-      'Active Pokemon, you may put 3 damage counters on your opponent\'s ' +
-      'Pokemon in any way you like.'
-  }];
+  public powers = [
+    {
+      name: 'Cursed Shadow',
+      useWhenInPlay: true,
+      powerType: PowerType.ABILITY,
+      text:
+        'Once during your turn (before attack), if this Pokémon is your ' +
+        'Active Pokémon, you may put 3 damage counters on your opponent\'s ' +
+        'Pokémon in any way you like.',
+    },
+  ];
 
-  public attacks = [{
-    name: 'Eerie Glow',
-    cost: [ CardType.PSYCHIC, CardType.PSYCHIC, CardType.COLORLESS ],
-    damage: '50',
-    text: 'The Defending Pokemon is now Burned and Confused.'
-  }];
+  public attacks = [
+    {
+      name: 'Eerie Glow',
+      cost: [CardType.PSYCHIC, CardType.PSYCHIC, CardType.COLORLESS],
+      damage: '50',
+      text: 'The Defending Pokémon is now Burned and Confused.',
+    },
+  ];
 
   public set: string = 'BW3';
 
@@ -84,32 +93,36 @@ export class Chandelure extends PokemonCard {
 
       const damage = Math.min(30, damageLeft);
 
-      return store.prompt(state, new PutDamagePrompt(
-        effect.player.id,
-        GameMessage.CHOOSE_POKEMON_TO_DAMAGE,
-        PlayerType.TOP_PLAYER,
-        [ SlotType.ACTIVE, SlotType.BENCH ],
-        damage,
-        maxAllowedDamage,
-        { allowCancel: true }
-      ), targets => {
-        const results = targets || [];
-        // cancelled by user
-        if (results.length === 0) {
-          return;
+      return store.prompt(
+        state,
+        new PutDamagePrompt(
+          effect.player.id,
+          GameMessage.CHOOSE_POKEMON_TO_DAMAGE,
+          PlayerType.TOP_PLAYER,
+          [SlotType.ACTIVE, SlotType.BENCH],
+          damage,
+          maxAllowedDamage,
+          { allowCancel: true }
+        ),
+        targets => {
+          const results = targets || [];
+          // cancelled by user
+          if (results.length === 0) {
+            return;
+          }
+          player.marker.addMarker(this.CURSED_SHADOW_MAREKER, this);
+          for (const result of results) {
+            const target = StateUtils.getTarget(state, player, result.target);
+            target.damage += result.damage;
+          }
         }
-        player.marker.addMarker(this.CURSED_SHADOW_MAREKER, this);
-        for (const result of results) {
-          const target = StateUtils.getTarget(state, player, result.target);
-          target.damage += result.damage;
-        }
-      });
+      );
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const specialConditionEffect = new AddSpecialConditionsEffect(effect, [
         SpecialCondition.BURNED,
-        SpecialCondition.CONFUSED
+        SpecialCondition.CONFUSED,
       ]);
       store.reduceEffect(state, specialConditionEffect);
     }
@@ -120,5 +133,4 @@ export class Chandelure extends PokemonCard {
 
     return state;
   }
-
 }

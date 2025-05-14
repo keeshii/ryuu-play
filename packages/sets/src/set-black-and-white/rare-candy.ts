@@ -1,20 +1,26 @@
-import { Card } from '@ptcg/common';
-import { CardTarget, PlayerType, SlotType } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType, Stage, SuperType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { ChoosePokemonPrompt } from '@ptcg/common';
-import { PokemonCard } from '@ptcg/common';
-import { CardManager } from '@ptcg/common';
-import { PokemonCardList } from '@ptcg/common';
-import { CheckPokemonPlayedTurnEffect } from '@ptcg/common';
-import { ChooseCardsPrompt } from '@ptcg/common';
-import { EvolveEffect } from '@ptcg/common';
+import {
+  Card,
+  CardManager,
+  CardTarget,
+  CheckPokemonPlayedTurnEffect,
+  ChooseCardsPrompt,
+  ChoosePokemonPrompt,
+  Effect,
+  EvolveEffect,
+  GameError,
+  GameMessage,
+  PlayerType,
+  PokemonCard,
+  PokemonCardList,
+  SlotType,
+  Stage,
+  State,
+  StoreLike,
+  SuperType,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 function isMatchingStage2(stage1: PokemonCard[], basic: PokemonCard, stage2: PokemonCard): boolean {
   for (const card of stage1) {
@@ -66,16 +72,20 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   effect.preventDefault = true;
 
   let targets: PokemonCardList[] = [];
-  yield store.prompt(state, new ChoosePokemonPrompt(
-    player.id,
-    GameMessage.CHOOSE_POKEMON_TO_EVOLVE,
-    PlayerType.BOTTOM_PLAYER,
-    [ SlotType.ACTIVE, SlotType.BENCH ],
-    { allowCancel: true, blocked }
-  ), selection => {
-    targets = selection || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChoosePokemonPrompt(
+      player.id,
+      GameMessage.CHOOSE_POKEMON_TO_EVOLVE,
+      PlayerType.BOTTOM_PLAYER,
+      [SlotType.ACTIVE, SlotType.BENCH],
+      { allowCancel: true, blocked }
+    ),
+    selection => {
+      targets = selection || [];
+      next();
+    }
+  );
 
   if (targets.length === 0) {
     return state; // canceled by user
@@ -95,28 +105,31 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   });
 
   let cards: Card[] = [];
-  return store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_EVOLVE,
-    player.hand,
-    { superType: SuperType.POKEMON, stage: Stage.STAGE_2 },
-    { min: 1, max: 1, allowCancel: true, blocked: blocked2 }
-  ), selected => {
-    cards = selected || [];
+  return store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_EVOLVE,
+      player.hand,
+      { superType: SuperType.POKEMON, stage: Stage.STAGE_2 },
+      { min: 1, max: 1, allowCancel: true, blocked: blocked2 }
+    ),
+    selected => {
+      cards = selected || [];
 
-    if (cards.length > 0) {
-      const pokemonCard = cards[0] as PokemonCard;
-      const evolveEffect = new EvolveEffect(player, targets[0], pokemonCard);
-      store.reduceEffect(state, evolveEffect);
+      if (cards.length > 0) {
+        const pokemonCard = cards[0] as PokemonCard;
+        const evolveEffect = new EvolveEffect(player, targets[0], pokemonCard);
+        store.reduceEffect(state, evolveEffect);
 
-      // Discard trainer only when user selected a Pokemon
-      player.hand.moveCardTo(effect.trainerCard, player.discard);
+        // Discard trainer only when user selected a Pokemon
+        player.hand.moveCardTo(effect.trainerCard, player.discard);
+      }
     }
-  });
+  );
 }
 
 export class RareCandy extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'BW';
@@ -126,10 +139,10 @@ export class RareCandy extends TrainerCard {
   public fullName: string = 'Rare Candy SUM';
 
   public text: string =
-    'Choose 1 of your Basic Pokemon in play. If you have a Stage 2 card in ' +
-    'your hand that evolves from that Pokemon, put that card onto the Basic ' +
-    'Pokemon to evolve it. You can\'t use this card during your first turn ' +
-    'or on a Basic Pokemon that was put into play this turn.';
+    'Choose 1 of your Basic Pokémon in play. If you have a Stage 2 card in ' +
+    'your hand that evolves from that Pokémon, put that card onto the Basic ' +
+    'Pokémon to evolve it. You can\'t use this card during your first turn ' +
+    'or on a Basic Pokémon that was put into play this turn.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
@@ -139,5 +152,4 @@ export class RareCandy extends TrainerCard {
 
     return state;
   }
-
 }

@@ -1,12 +1,16 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType } from '@ptcg/common';
-import { StoreLike, State, EnergyCard } from '@ptcg/common';
-import { AttackEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { DiscardCardsEffect } from '@ptcg/common';
+import {
+  AttackEffect,
+  CardType,
+  DiscardCardsEffect,
+  Effect,
+  EnergyCard,
+  PokemonCard,
+  Stage,
+  State,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Raichu extends PokemonCard {
-
   public stage: Stage = Stage.STAGE_1;
 
   public evolvesFrom = 'Pikachu';
@@ -19,22 +23,21 @@ export class Raichu extends PokemonCard {
 
   public resistance = [{ type: CardType.METAL, value: -20 }];
 
-  public retreat = [ ];
+  public retreat = [];
 
   public attacks = [
     {
       name: 'Circle Circuit',
-      cost: [ CardType.COLORLESS, CardType.COLORLESS ],
+      cost: [CardType.COLORLESS, CardType.COLORLESS],
       damage: '20×',
-      text: 'This attack does 20 damage times the number of your ' +
-        'Benched Pokemon.'
+      text: 'This attack does 20 damage times the number of your Benched Pokémon.',
     },
     {
       name: 'Thunderbolt',
-      cost: [ CardType.LIGHTNING, CardType.LIGHTNING, CardType.COLORLESS ],
+      cost: [CardType.LIGHTNING, CardType.LIGHTNING, CardType.COLORLESS],
       damage: '100',
-      text: 'Discard all Energy attached to this Pokemon.'
-    }
+      text: 'Discard all Energy attached to this Pokémon.',
+    },
   ];
 
   public set: string = 'BW2';
@@ -61,5 +64,4 @@ export class Raichu extends PokemonCard {
 
     return state;
   }
-
 }

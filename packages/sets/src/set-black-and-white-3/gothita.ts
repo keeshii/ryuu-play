@@ -1,12 +1,16 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType } from '@ptcg/common';
-import { StoreLike, State, CoinFlipPrompt } from '@ptcg/common';
-import { AttackEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
+import {
+  AttackEffect,
+  CardType,
+  CoinFlipPrompt,
+  Effect,
+  GameMessage,
+  PokemonCard,
+  Stage,
+  State,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Gothita extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.PSYCHIC;
@@ -15,16 +19,15 @@ export class Gothita extends PokemonCard {
 
   public weakness = [{ type: CardType.PSYCHIC }];
 
-  public retreat = [ CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS];
 
   public attacks = [
     {
       name: 'Trip Over',
-      cost: [ CardType.COLORLESS, CardType.COLORLESS ],
+      cost: [CardType.COLORLESS, CardType.COLORLESS],
       damage: '10+',
-      text: 'Flip a coin. If heads, this attack does 20 more damage.'
-
-    }
+      text: 'Flip a coin. If heads, this attack does 20 more damage.',
+    },
   ];
 
   public set: string = 'BW3';
@@ -37,9 +40,7 @@ export class Gothita extends PokemonCard {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
 
-      return store.prompt(state, [
-        new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)
-      ], result => {
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
         if (result === true) {
           effect.damage += 20;
         }
@@ -48,5 +49,4 @@ export class Gothita extends PokemonCard {
 
     return state;
   }
-
 }

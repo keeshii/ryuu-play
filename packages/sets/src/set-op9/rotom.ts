@@ -1,15 +1,25 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType } from '@ptcg/common';
-import { StoreLike, State, ShowCardsPrompt, StateUtils, PowerType, GameError,
-  GameMessage, PokemonCardList, PlayerType, TrainerCard } from '@ptcg/common';
-import { AttackEffect, PowerEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { EndTurnEffect } from '@ptcg/common';
-import { CheckPokemonTypeEffect } from '@ptcg/common';
-
+import {
+  AttackEffect,
+  CardType,
+  CheckPokemonTypeEffect,
+  Effect,
+  EndTurnEffect,
+  GameError,
+  GameMessage,
+  PlayerType,
+  PokemonCard,
+  PokemonCardList,
+  PowerEffect,
+  PowerType,
+  ShowCardsPrompt,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+  TrainerCard,
+} from '@ptcg/common';
 
 export class Rotom extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.LIGHTNING;
@@ -20,25 +30,29 @@ export class Rotom extends PokemonCard {
 
   public resistance = [{ type: CardType.COLORLESS, value: -20 }];
 
-  public retreat = [ CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS];
 
-  public powers = [{
-    name: 'Type Shift',
-    useWhenInPlay: true,
-    powerType: PowerType.POKEPOWER,
-    text: 'Once during your turn (before your attack), you may use this ' +
-      'power. Rotom\'s type is P until the end of your turn.'
-  }];
+  public powers = [
+    {
+      name: 'Type Shift',
+      useWhenInPlay: true,
+      powerType: PowerType.POKEPOWER,
+      text:
+        'Once during your turn (before your attack), you may use this ' +
+        'power. Rotom\'s type is P until the end of your turn.',
+    },
+  ];
 
   public attacks = [
     {
       name: 'Poltergeist',
-      cost: [ CardType.PSYCHIC, CardType.COLORLESS ],
+      cost: [CardType.PSYCHIC, CardType.COLORLESS],
       damage: '30+',
-      text: 'Look at your opponent\'s hand. This attack does 30 damage plus ' +
+      text:
+        'Look at your opponent\'s hand. This attack does 30 damage plus ' +
         '10 more damage for each Trainer, Supporter, and Stadium card in ' +
-        'your opponent\'s hand.'
-    }
+        'your opponent\'s hand.',
+    },
   ];
 
   public set: string = 'OP9';
@@ -72,31 +86,29 @@ export class Rotom extends PokemonCard {
       if (opponent.hand.cards.length === 0) {
         return state;
       }
-      return store.prompt(state, new ShowCardsPrompt(
-        player.id,
-        GameMessage.CARDS_SHOWED_BY_THE_OPPONENT,
-        opponent.hand.cards
-      ), () => {
-        const trainers = opponent.hand.cards.filter(c => c instanceof TrainerCard);
-        effect.damage += 10 * trainers.length;
-      });
+      return store.prompt(
+        state,
+        new ShowCardsPrompt(player.id, GameMessage.CARDS_SHOWED_BY_THE_OPPONENT, opponent.hand.cards),
+        () => {
+          const trainers = opponent.hand.cards.filter(c => c instanceof TrainerCard);
+          effect.damage += 10 * trainers.length;
+        }
+      );
     }
 
     if (effect instanceof CheckPokemonTypeEffect && effect.target.marker.hasMarker(this.TYPE_SHIFT_MARKER, this)) {
-      effect.cardTypes = [ CardType.PSYCHIC ];
+      effect.cardTypes = [CardType.PSYCHIC];
       return state;
     }
 
-    if (effect instanceof EndTurnEffect
-      && effect.player.marker.hasMarker(this.CLEAR_TYPE_SHIFT_MARKER, this)) {
+    if (effect instanceof EndTurnEffect && effect.player.marker.hasMarker(this.CLEAR_TYPE_SHIFT_MARKER, this)) {
       const player = effect.player;
       player.marker.removeMarker(this.CLEAR_TYPE_SHIFT_MARKER, this);
-      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList) => {
+      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, cardList => {
         cardList.marker.removeMarker(this.TYPE_SHIFT_MARKER, this);
       });
     }
 
     return state;
   }
-
 }

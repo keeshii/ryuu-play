@@ -1,14 +1,16 @@
-import { CardType, EnergyType } from '@ptcg/common';
-import { EnergyCard } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { PutDamageEffect } from '@ptcg/common';
-import { CheckPokemonTypeEffect } from '@ptcg/common';
+import {
+  CardType,
+  CheckPokemonTypeEffect,
+  Effect,
+  EnergyCard,
+  EnergyType,
+  PutDamageEffect,
+  State,
+  StoreLike,
+} from '@ptcg/common';
 
 export class MetalEnergySpecial extends EnergyCard {
-
-  public provides: CardType[] = [ CardType.METAL ];
+  public provides: CardType[] = [CardType.METAL];
 
   public energyType = EnergyType.SPECIAL;
 
@@ -18,9 +20,10 @@ export class MetalEnergySpecial extends EnergyCard {
 
   public fullName = 'Metal Energy (Special) HGSS';
 
-  public text = 'Damage done by attacks to the Pokemon that Metal Energy is ' +
+  public text =
+    'Damage done by attacks to the Pokémon that Metal Energy is ' +
     'attached to is reduced by 10 (after applying Weakness and Resistance). ' +
-    'Ignore this effect if the Pokemon that Metal Energy is attached to ' +
+    'Ignore this effect if the Pokémon that Metal Energy is attached to ' +
     'isn\'t M. Metal Energy provides M Energy. (Doesn\'t count as a basic ' +
     'Energy card.)';
 
@@ -37,5 +40,4 @@ export class MetalEnergySpecial extends EnergyCard {
 
     return state;
   }
-
 }

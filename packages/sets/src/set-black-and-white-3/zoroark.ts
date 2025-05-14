@@ -1,20 +1,23 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { AttackEffect } from '@ptcg/common';
-import { GameMessage, GameLog } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
-import { ChooseCardsPrompt } from '@ptcg/common';
-import { ShuffleDeckPrompt } from '@ptcg/common';
-import { Card } from '@ptcg/common';
-import { ChooseAttackPrompt } from '@ptcg/common';
-import { Attack } from '@ptcg/common';
-import { DealDamageEffect } from '@ptcg/common';
+import {
+  Attack,
+  AttackEffect,
+  Card,
+  CardType,
+  ChooseAttackPrompt,
+  ChooseCardsPrompt,
+  DealDamageEffect,
+  Effect,
+  GameLog,
+  GameMessage,
+  PokemonCard,
+  ShuffleDeckPrompt,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
-function* useNastyPlot(next: Function, store: StoreLike, state: State,
-  effect: AttackEffect): IterableIterator<State> {
+function* useNastyPlot(next: Function, store: StoreLike, state: State, effect: AttackEffect): IterableIterator<State> {
   const player = effect.player;
 
   if (player.deck.cards.length === 0) {
@@ -22,16 +25,20 @@ function* useNastyPlot(next: Function, store: StoreLike, state: State,
   }
 
   let cards: Card[] = [];
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_HAND,
-    player.deck,
-    { },
-    { min: 1, max: 1, allowCancel: false }
-  ), selected => {
-    cards = selected || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_HAND,
+      player.deck,
+      {},
+      { min: 1, max: 1, allowCancel: false }
+    ),
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
 
   player.deck.moveCardsTo(cards, player.hand);
 
@@ -40,8 +47,7 @@ function* useNastyPlot(next: Function, store: StoreLike, state: State,
   });
 }
 
-function* useFoulPlay(next: Function, store: StoreLike, state: State,
-  effect: AttackEffect): IterableIterator<State> {
+function* useFoulPlay(next: Function, store: StoreLike, state: State, effect: AttackEffect): IterableIterator<State> {
   const player = effect.player;
   const opponent = StateUtils.getOpponent(state, player);
   const pokemonCard = opponent.active.getPokemonCard();
@@ -51,15 +57,14 @@ function* useFoulPlay(next: Function, store: StoreLike, state: State,
   }
 
   let selected: any;
-  yield store.prompt(state, new ChooseAttackPrompt(
-    player.id,
-    GameMessage.CHOOSE_ATTACK_TO_COPY,
-    [ pokemonCard ],
-    { allowCancel: false }
-  ), result => {
-    selected = result;
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseAttackPrompt(player.id, GameMessage.CHOOSE_ATTACK_TO_COPY, [pokemonCard], { allowCancel: false }),
+    result => {
+      selected = result;
+      next();
+    }
+  );
 
   const attack: Attack | null = selected;
 
@@ -69,7 +74,7 @@ function* useFoulPlay(next: Function, store: StoreLike, state: State,
 
   store.log(state, GameLog.LOG_PLAYER_COPIES_ATTACK, {
     name: player.name,
-    attack: attack.name
+    attack: attack.name,
   });
 
   // Perform attack
@@ -88,9 +93,7 @@ function* useFoulPlay(next: Function, store: StoreLike, state: State,
   return state;
 }
 
-
 export class Zoroark extends PokemonCard {
-
   public stage: Stage = Stage.STAGE_1;
 
   public evolvesFrom: string = 'Zorua';
@@ -103,21 +106,22 @@ export class Zoroark extends PokemonCard {
 
   public resistance = [{ type: CardType.PSYCHIC, value: -20 }];
 
-  public retreat = [ CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS];
 
-  public attacks = [{
-    name: 'Nasty Plot',
-    cost: [ CardType.DARK ],
-    damage: '',
-    text: 'Search your deck for a card and put it into your hand. ' +
-      'Shuffle your deck afterward.'
-  }, {
-    name: 'Foul Play',
-    cost: [ CardType.COLORLESS, CardType.COLORLESS ],
-    damage: '',
-    text: 'Choose 1 of the Defending Pokemon\'s attacks and use it ' +
-      'as this attack.'
-  }];
+  public attacks = [
+    {
+      name: 'Nasty Plot',
+      cost: [CardType.DARK],
+      damage: '',
+      text: 'Search your deck for a card and put it into your hand. Shuffle your deck afterward.',
+    },
+    {
+      name: 'Foul Play',
+      cost: [CardType.COLORLESS, CardType.COLORLESS],
+      damage: '',
+      text: 'Choose 1 of the Defending Pokémon\'s attacks and use it as this attack.',
+    },
+  ];
 
   public set: string = 'BW3';
 
@@ -126,7 +130,6 @@ export class Zoroark extends PokemonCard {
   public fullName: string = 'Zoroark BW';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const generator = useNastyPlot(() => generator.next(), store, state, effect);
       return generator.next().value;
@@ -139,5 +142,4 @@ export class Zoroark extends PokemonCard {
 
     return state;
   }
-
 }

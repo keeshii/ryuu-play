@@ -1,11 +1,17 @@
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { ChoosePokemonPrompt } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { PlayerType, SlotType, GameError, GameMessage, PokemonCardList } from '@ptcg/common';
+import {
+  ChoosePokemonPrompt,
+  Effect,
+  GameError,
+  GameMessage,
+  PlayerType,
+  PokemonCardList,
+  SlotType,
+  State,
+  StoreLike,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -19,16 +25,20 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   effect.preventDefault = true;
 
   let targets: PokemonCardList[] = [];
-  yield store.prompt(state, new ChoosePokemonPrompt(
-    player.id,
-    GameMessage.CHOOSE_POKEMON_TO_SWITCH,
-    PlayerType.BOTTOM_PLAYER,
-    [ SlotType.BENCH ],
-    { allowCancel: true }
-  ), results => {
-    targets = results || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChoosePokemonPrompt(
+      player.id,
+      GameMessage.CHOOSE_POKEMON_TO_SWITCH,
+      PlayerType.BOTTOM_PLAYER,
+      [SlotType.BENCH],
+      { allowCancel: true }
+    ),
+    results => {
+      targets = results || [];
+      next();
+    }
+  );
 
   if (targets.length === 0) {
     return state;
@@ -42,7 +52,6 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 }
 
 export class Switch extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'BW';
@@ -51,8 +60,7 @@ export class Switch extends TrainerCard {
 
   public fullName: string = 'Switch SSH';
 
-  public text: string =
-    'Switch your Active Pokemon with 1 of your Benched Pokemon.';
+  public text: string = 'Switch your Active Pokémon with 1 of your Benched Pokémon.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
@@ -61,5 +69,4 @@ export class Switch extends TrainerCard {
     }
     return state;
   }
-
 }

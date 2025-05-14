@@ -1,14 +1,28 @@
-import { GameMessage } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, SuperType } from '@ptcg/common';
-import { PlayPokemonEffect } from '@ptcg/common';
-import { PowerType, StoreLike, State, ChoosePokemonPrompt, PlayerType, SlotType,
-  PokemonCardList } from '@ptcg/common';
-import {PowerEffect } from '@ptcg/common';
+import {
+  CardType,
+  ChoosePokemonPrompt,
+  Effect,
+  GameMessage,
+  PlayerType,
+  PlayPokemonEffect,
+  PokemonCard,
+  PokemonCardList,
+  PowerEffect,
+  PowerType,
+  SlotType,
+  Stage,
+  State,
+  StoreLike,
+  SuperType,
+} from '@ptcg/common';
 
-function* useReturn(next: Function, store: StoreLike, state: State,
-  self: Unown, effect: PlayPokemonEffect): IterableIterator<State> {
+function* useReturn(
+  next: Function,
+  store: StoreLike,
+  state: State,
+  self: Unown,
+  effect: PlayPokemonEffect
+): IterableIterator<State> {
   const player = effect.player;
 
   // Try to reduce PowerEffect, to check if something is blocking our ability
@@ -20,16 +34,20 @@ function* useReturn(next: Function, store: StoreLike, state: State,
   }
 
   let targets: PokemonCardList[] = [];
-  yield store.prompt(state, new ChoosePokemonPrompt(
-    player.id,
-    GameMessage.CHOOSE_POKEMON_TO_PICK_UP,
-    PlayerType.BOTTOM_PLAYER,
-    [ SlotType.ACTIVE, SlotType.BENCH ],
-    { allowCancel: true }
-  ), selection => {
-    targets = selection || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChoosePokemonPrompt(
+      player.id,
+      GameMessage.CHOOSE_POKEMON_TO_PICK_UP,
+      PlayerType.BOTTOM_PLAYER,
+      [SlotType.ACTIVE, SlotType.BENCH],
+      { allowCancel: true }
+    ),
+    selection => {
+      targets = selection || [];
+      next();
+    }
+  );
 
   if (targets.length === 0) {
     return state;
@@ -41,7 +59,6 @@ function* useReturn(next: Function, store: StoreLike, state: State,
 }
 
 export class Unown extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.PSYCHIC;
@@ -50,23 +67,26 @@ export class Unown extends PokemonCard {
 
   public weakness = [{ type: CardType.PSYCHIC }];
 
-  public retreat = [ CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS];
 
-  public powers = [{
-    name: 'Return',
-    powerType: PowerType.POKEPOWER,
-    text: 'Once during your turn, when you put Unown from your hand onto ' +
-      'your Bench, you may return all Energy attached to 1 of your Pokemon ' +
-      'to your hand.'
-  }];
+  public powers = [
+    {
+      name: 'Return',
+      powerType: PowerType.POKEPOWER,
+      text:
+        'Once during your turn, when you put Unown from your hand onto ' +
+        'your Bench, you may return all Energy attached to 1 of your Pokémon ' +
+        'to your hand.',
+    },
+  ];
 
   public attacks = [
     {
       name: 'Hidden Power',
-      cost: [ CardType.PSYCHIC ],
+      cost: [CardType.PSYCHIC],
       damage: '10',
-      text: ''
-    }
+      text: '',
+    },
   ];
 
   public set: string = 'HGSS';
@@ -83,5 +103,4 @@ export class Unown extends PokemonCard {
 
     return state;
   }
-
 }

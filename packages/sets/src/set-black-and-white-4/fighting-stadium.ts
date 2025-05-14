@@ -1,17 +1,20 @@
-import { Effect } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType, CardType, CardTag } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
-import { UseStadiumEffect } from '@ptcg/common';
-import { CheckPokemonTypeEffect } from '@ptcg/common';
-import { DealDamageEffect } from '@ptcg/common';
+import {
+  CardTag,
+  CardType,
+  CheckPokemonTypeEffect,
+  DealDamageEffect,
+  Effect,
+  GameError,
+  GameMessage,
+  State,
+  StateUtils,
+  StoreLike,
+  TrainerCard,
+  TrainerType,
+  UseStadiumEffect,
+} from '@ptcg/common';
 
 export class FightingStadium extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.STADIUM;
 
   public set: string = 'BW4';
@@ -21,8 +24,8 @@ export class FightingStadium extends TrainerCard {
   public fullName: string = 'Fighting Stadium FFI';
 
   public text: string =
-    'The attacks of each F Pokemon in play (both yours and your opponent\'s) ' +
-    'do 20 more damage to the Defending Pokemon-EX (before applying Weakness ' +
+    'The attacks of each F Pokémon in play (both yours and your opponent\'s) ' +
+    'do 20 more damage to the Defending Pokémon-EX (before applying Weakness ' +
     'and Resistance).';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
@@ -57,5 +60,4 @@ export class FightingStadium extends TrainerCard {
 
     return state;
   }
-
 }

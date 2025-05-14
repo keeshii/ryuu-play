@@ -1,20 +1,28 @@
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { Card } from '@ptcg/common';
-import { ChooseCardsPrompt } from '@ptcg/common';
-import { CardList } from '@ptcg/common';
+import {
+  Card,
+  CardList,
+  ChooseCardsPrompt,
+  Effect,
+  GameError,
+  GameMessage,
+  State,
+  StoreLike,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
-function* playCard(next: Function, store: StoreLike, state: State, self: JunkArm, effect: TrainerEffect): IterableIterator<State> {
+function* playCard(
+  next: Function,
+  store: StoreLike,
+  state: State,
+  self: JunkArm,
+  effect: TrainerEffect
+): IterableIterator<State> {
   const player = effect.player;
   const itemTypes = [TrainerType.ITEM, TrainerType.TOOL];
   let cards: Card[] = [];
-  
+
   cards = player.hand.cards.filter(c => c !== self);
   if (cards.length < 2) {
     throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
@@ -37,16 +45,20 @@ function* playCard(next: Function, store: StoreLike, state: State, self: JunkArm
   const handTemp = new CardList();
   handTemp.cards = player.hand.cards.filter(c => c !== self);
 
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_DISCARD,
-    handTemp,
-    { },
-    { min: 2, max: 2, allowCancel: true }
-  ), selected => {
-    cards = selected || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_DISCARD,
+      handTemp,
+      {},
+      { min: 2, max: 2, allowCancel: true }
+    ),
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
 
   // Operation canceled by the user
   if (cards.length === 0) {
@@ -66,16 +78,20 @@ function* playCard(next: Function, store: StoreLike, state: State, self: JunkArm
   });
 
   let recovered: Card[] = [];
-  yield store.prompt(state, new ChooseCardsPrompt(
-    player.id,
-    GameMessage.CHOOSE_CARD_TO_HAND,
-    player.discard,
-    { },
-    { min: 1, max: 1, allowCancel: true, blocked }
-  ), selected => {
-    recovered = selected || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_HAND,
+      player.discard,
+      {},
+      { min: 1, max: 1, allowCancel: true, blocked }
+    ),
+    selected => {
+      recovered = selected || [];
+      next();
+    }
+  );
 
   // Operation canceled by the user
   if (recovered.length === 0) {
@@ -89,7 +105,6 @@ function* playCard(next: Function, store: StoreLike, state: State, self: JunkArm
 }
 
 export class JunkArm extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'HGSS';
@@ -110,5 +125,4 @@ export class JunkArm extends TrainerCard {
     }
     return state;
   }
-
 }

@@ -1,11 +1,16 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType } from '@ptcg/common';
-import { StoreLike, State, StateUtils, PlayerType } from '@ptcg/common';
-import { AttackEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
+import {
+  AttackEffect,
+  CardType,
+  Effect,
+  PlayerType,
+  PokemonCard,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Durant extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.METAL;
@@ -16,21 +21,20 @@ export class Durant extends PokemonCard {
 
   public resistance = [{ type: CardType.PSYCHIC, value: -20 }];
 
-  public retreat = [ CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS];
 
   public attacks = [
     {
       name: 'Devour',
-      cost: [ CardType.METAL ],
+      cost: [CardType.METAL],
       damage: '',
-      text: 'For each of your Durant in play, discard the top card of your ' +
-        'opponent\'s deck.'
+      text: 'For each of your Durant in play, discard the top card of your opponent\'s deck.',
     },
     {
       name: 'Vice Grip',
-      cost: [ CardType.COLORLESS, CardType.COLORLESS ],
+      cost: [CardType.COLORLESS, CardType.COLORLESS],
       damage: '30',
-      text: ''
+      text: '',
     },
   ];
 
@@ -57,5 +61,4 @@ export class Durant extends PokemonCard {
 
     return state;
   }
-
 }

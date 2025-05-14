@@ -1,21 +1,24 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, SpecialCondition } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { PowerEffect, AttackEffect } from '@ptcg/common';
-import { PowerType } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { EndTurnEffect } from '@ptcg/common';
-import { PlayPokemonEffect } from '@ptcg/common';
-import { CardList } from '@ptcg/common';
-import { ChooseCardsPrompt } from '@ptcg/common';
-import {AddSpecialConditionsEffect } from '@ptcg/common';
-
+import {
+  AddSpecialConditionsEffect,
+  AttackEffect,
+  CardList,
+  CardType,
+  ChooseCardsPrompt,
+  Effect,
+  EndTurnEffect,
+  GameError,
+  GameMessage,
+  PlayPokemonEffect,
+  PokemonCard,
+  PowerEffect,
+  PowerType,
+  SpecialCondition,
+  Stage,
+  State,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Musharna extends PokemonCard {
-
   public stage: Stage = Stage.STAGE_1;
 
   public evolvesFrom = 'Munna';
@@ -26,23 +29,28 @@ export class Musharna extends PokemonCard {
 
   public weakness = [{ type: CardType.PSYCHIC }];
 
-  public retreat = [ CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS];
 
-  public powers = [{
-    name: 'Forewarn',
-    useWhenInPlay: true,
-    powerType: PowerType.ABILITY,
-    text: 'Once during your turn (before your attack), you may look at ' +
-      'the top 2 cards of your deck, choose 1 of them, and put it into ' +
-      'your hand. Put the other card back on top of your deck.'
-  }];
+  public powers = [
+    {
+      name: 'Forewarn',
+      useWhenInPlay: true,
+      powerType: PowerType.ABILITY,
+      text:
+        'Once during your turn (before your attack), you may look at ' +
+        'the top 2 cards of your deck, choose 1 of them, and put it into ' +
+        'your hand. Put the other card back on top of your deck.',
+    },
+  ];
 
-  public attacks = [{
-    name: 'Fluffy Dream',
-    cost: [ CardType.PSYCHIC, CardType.PSYCHIC ],
-    damage: '40',
-    text: 'This Pokemon is now Asleep.'
-  }];
+  public attacks = [
+    {
+      name: 'Fluffy Dream',
+      cost: [CardType.PSYCHIC, CardType.PSYCHIC],
+      damage: '40',
+      text: 'This Pokémon is now Asleep.',
+    },
+  ];
 
   public set: string = 'BW2';
 
@@ -53,7 +61,6 @@ export class Musharna extends PokemonCard {
   public readonly FOREWARN_MARKER = 'FOREWARN_MARKER';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof PlayPokemonEffect && effect.pokemonCard === this) {
       const player = effect.player;
       player.marker.removeMarker(this.FOREWARN_MARKER, this);
@@ -81,15 +88,19 @@ export class Musharna extends PokemonCard {
       const deckTop = new CardList();
       deckTop.cards = player.deck.cards.slice(0, 2);
 
-      return store.prompt(state, new ChooseCardsPrompt(
-        player.id,
-        GameMessage.CHOOSE_CARD_TO_HAND,
-        deckTop,
-        { },
-        { min: 1, max: 1, allowCancel: false }
-      ), selected => {
-        player.deck.moveCardsTo(selected, player.hand);
-      });
+      return store.prompt(
+        state,
+        new ChooseCardsPrompt(
+          player.id,
+          GameMessage.CHOOSE_CARD_TO_HAND,
+          deckTop,
+          {},
+          { min: 1, max: 1, allowCancel: false }
+        ),
+        selected => {
+          player.deck.moveCardsTo(selected, player.hand);
+        }
+      );
     }
 
     if (effect instanceof EndTurnEffect) {
@@ -98,5 +109,4 @@ export class Musharna extends PokemonCard {
 
     return state;
   }
-
 }

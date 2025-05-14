@@ -1,13 +1,21 @@
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType, CardTag, SuperType } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { ChoosePokemonPrompt } from '@ptcg/common';
-import { TrainerEffect } from '@ptcg/common';
-import { PlayerType, SlotType, GameError, PokemonCardList, ChooseCardsPrompt, EnergyCard } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-
+import {
+  CardTag,
+  ChooseCardsPrompt,
+  ChoosePokemonPrompt,
+  Effect,
+  EnergyCard,
+  GameError,
+  GameMessage,
+  PlayerType,
+  PokemonCardList,
+  SlotType,
+  State,
+  StoreLike,
+  SuperType,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -21,16 +29,20 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   effect.preventDefault = true;
 
   let targets: PokemonCardList[] = [];
-  yield store.prompt(state, new ChoosePokemonPrompt(
-    player.id,
-    GameMessage.CHOOSE_POKEMON_TO_SWITCH,
-    PlayerType.BOTTOM_PLAYER,
-    [ SlotType.BENCH ],
-    { allowCancel: true }
-  ), results => {
-    targets = results || [];
-    next();
-  });
+  yield store.prompt(
+    state,
+    new ChoosePokemonPrompt(
+      player.id,
+      GameMessage.CHOOSE_POKEMON_TO_SWITCH,
+      PlayerType.BOTTOM_PLAYER,
+      [SlotType.BENCH],
+      { allowCancel: true }
+    ),
+    results => {
+      targets = results || [];
+      next();
+    }
+  );
 
   if (targets.length === 0) {
     return state;
@@ -40,17 +52,21 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   const hasEnergies = player.active.cards.some(c => c instanceof EnergyCard);
 
   if (hasEnergies) {
-    yield store.prompt(state, new ChooseCardsPrompt(
-      player.id,
-      GameMessage.ATTACH_ENERGY_TO_BENCH,
-      player.active,
-      { superType: SuperType.ENERGY },
-      { allowCancel: false, min: 0 }
-    ), selected => {
-      selected = selected || [];
-      player.active.moveCardsTo(selected, target);
-      next();
-    });
+    yield store.prompt(
+      state,
+      new ChooseCardsPrompt(
+        player.id,
+        GameMessage.ATTACH_ENERGY_TO_BENCH,
+        player.active,
+        { superType: SuperType.ENERGY },
+        { allowCancel: false, min: 0 }
+      ),
+      selected => {
+        selected = selected || [];
+        player.active.moveCardsTo(selected, target);
+        next();
+      }
+    );
   }
 
   // Discard trainer only when user selected a Pokemon
@@ -61,8 +77,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 }
 
 export class ScrambleSwitch extends TrainerCard {
-
-  public tags = [ CardTag.ACE_SPEC ];
+  public tags = [CardTag.ACE_SPEC];
 
   public trainerType: TrainerType = TrainerType.ITEM;
 
@@ -73,9 +88,9 @@ export class ScrambleSwitch extends TrainerCard {
   public fullName: string = 'Scramble Switch PS';
 
   public text: string =
-    'Switch your Active Pokemon with 1 of your Benched Pokemon. ' +
-    'Then, you may move as many Energy attached to the old Active Pokemon ' +
-    'to the new Active Pokemon as you like.';
+    'Switch your Active Pokémon with 1 of your Benched Pokémon. ' +
+    'Then, you may move as many Energy attached to the old Active Pokémon ' +
+    'to the new Active Pokémon as you like.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
@@ -84,5 +99,4 @@ export class ScrambleSwitch extends TrainerCard {
     }
     return state;
   }
-
 }

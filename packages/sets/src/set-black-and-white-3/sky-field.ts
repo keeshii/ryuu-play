@@ -1,16 +1,17 @@
-import { Effect } from '@ptcg/common';
-import { GameError } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
-import { State } from '@ptcg/common';
-import { StoreLike } from '@ptcg/common';
-import { TrainerCard } from '@ptcg/common';
-import { TrainerType } from '@ptcg/common';
-import { StateUtils } from '@ptcg/common';
-import { UseStadiumEffect } from '@ptcg/common';
-import { CheckTableStateEffect } from '@ptcg/common';
+import {
+  CheckTableStateEffect,
+  Effect,
+  GameError,
+  GameMessage,
+  State,
+  StateUtils,
+  StoreLike,
+  TrainerCard,
+  TrainerType,
+  UseStadiumEffect,
+} from '@ptcg/common';
 
 export class SkyField extends TrainerCard {
-
   public trainerType: TrainerType = TrainerType.STADIUM;
 
   public set: string = 'BW3';
@@ -20,9 +21,9 @@ export class SkyField extends TrainerCard {
   public fullName: string = 'Sky Field ROS';
 
   public text: string =
-    'Each player can have 8 Pokemon on his or her Bench. (When this card ' +
-    'leaves play, each player discards Benched Pokemon until he or she has ' +
-    '5 Pokemon on the Bench. The owner of this card discard first.)';
+    'Each player can have 8 Pokémon on his or her Bench. (When this card ' +
+    'leaves play, each player discards Benched Pokémon until he or she has ' +
+    '5 Pokémon on the Bench. The owner of this card discard first.)';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof CheckTableStateEffect && StateUtils.getStadiumCard(state) === this) {
@@ -35,5 +36,4 @@ export class SkyField extends TrainerCard {
 
     return state;
   }
-
 }

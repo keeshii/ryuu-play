@@ -1,12 +1,19 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, SuperType, EnergyType } from '@ptcg/common';
-import { StoreLike, State, StateUtils, ChooseCardsPrompt } from '@ptcg/common';
-import { AttackEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
+import {
+  AttackEffect,
+  CardType,
+  ChooseCardsPrompt,
+  Effect,
+  EnergyType,
+  GameMessage,
+  PokemonCard,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+  SuperType,
+} from '@ptcg/common';
 
 export class Pignite extends PokemonCard {
-
   public stage: Stage = Stage.STAGE_1;
 
   public evolvesFrom = 'Tepig';
@@ -17,22 +24,21 @@ export class Pignite extends PokemonCard {
 
   public weakness = [{ type: CardType.WATER }];
 
-  public retreat = [ CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS];
 
   public attacks = [
     {
       name: 'Flame Charge',
-      cost: [ CardType.COLORLESS ],
+      cost: [CardType.COLORLESS],
       damage: '',
-      text: 'Search your deck for a R Energy card and attach it to this ' +
-        'Pokemon. Shuffle your deck afterward.'
+      text: 'Search your deck for a R Energy card and attach it to this Pokémon. Shuffle your deck afterward.',
     },
     {
       name: 'Heat Crash',
-      cost: [ CardType.FIRE, CardType.FIRE, CardType.COLORLESS ],
+      cost: [CardType.FIRE, CardType.FIRE, CardType.COLORLESS],
       damage: '50',
-      text: ''
-    }
+      text: '',
+    },
   ];
 
   public set: string = 'BW';
@@ -50,21 +56,28 @@ export class Pignite extends PokemonCard {
         return state;
       }
 
-      return store.prompt(state, new ChooseCardsPrompt(
-        player.id,
-        GameMessage.CHOOSE_CARD_TO_ATTACH,
-        player.deck,
-        { superType: SuperType.ENERGY, energyType: EnergyType.BASIC, name: 'Fire Energy' },
-        { min: 1, max: 1, allowCancel: true }
-      ), cards => {
-        cards = cards || [];
-        if (cards.length > 0) {
-          player.deck.moveCardsTo(cards, cardList);
+      return store.prompt(
+        state,
+        new ChooseCardsPrompt(
+          player.id,
+          GameMessage.CHOOSE_CARD_TO_ATTACH,
+          player.deck,
+          {
+            superType: SuperType.ENERGY,
+            energyType: EnergyType.BASIC,
+            name: 'Fire Energy',
+          },
+          { min: 1, max: 1, allowCancel: true }
+        ),
+        cards => {
+          cards = cards || [];
+          if (cards.length > 0) {
+            player.deck.moveCardsTo(cards, cardList);
+          }
         }
-      });
+      );
     }
 
     return state;
   }
-
 }

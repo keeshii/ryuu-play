@@ -1,35 +1,43 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, SpecialCondition } from '@ptcg/common';
-import { PowerType, StoreLike, State, ShuffleDeckPrompt } from '@ptcg/common';
-import { AttackEffect, PowerEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { PutDamageEffect, AddSpecialConditionsEffect } from '@ptcg/common';
+import {
+  AddSpecialConditionsEffect,
+  AttackEffect,
+  CardType,
+  Effect,
+  PokemonCard,
+  PowerEffect,
+  PowerType,
+  PutDamageEffect,
+  ShuffleDeckPrompt,
+  SpecialCondition,
+  Stage,
+  State,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Cleffa extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.COLORLESS;
 
   public hp: number = 30;
 
-  public retreat = [ ];
+  public retreat = [];
 
-  public powers = [{
-    name: 'Sweet Sleeping Face',
-    powerType: PowerType.POKEBODY,
-    text: 'As long as Cleffa is Asleep, prevent all damage done to Cleffa ' +
-      'by attacks.'
-  }];
+  public powers = [
+    {
+      name: 'Sweet Sleeping Face',
+      powerType: PowerType.POKEBODY,
+      text: 'As long as Cleffa is Asleep, prevent all damage done to Cleffa by attacks.',
+    },
+  ];
 
   public attacks = [
     {
       name: 'Eeeeeeek',
-      cost: [ ],
+      cost: [],
       damage: '',
-      text: 'Shuffle your hand into your deck, then draw 6 cards. Cleffa is ' +
-        'now Asleep.'
-    }
+      text: 'Shuffle your hand into your deck, then draw 6 cards. Cleffa is now Asleep.',
+    },
   ];
 
   public set: string = 'HGSS';
@@ -39,7 +47,6 @@ export class Cleffa extends PokemonCard {
   public fullName: string = 'Cleffa HGSS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     // Eeeeeeek
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
@@ -50,9 +57,7 @@ export class Cleffa extends PokemonCard {
       specialCondition.target = player.active;
       store.reduceEffect(state, specialCondition);
 
-      return store.prompt(state, [
-        new ShuffleDeckPrompt(player.id)
-      ], deckOrder => {
+      return store.prompt(state, [new ShuffleDeckPrompt(player.id)], deckOrder => {
         player.deck.applyOrder(deckOrder);
         player.deck.moveTo(player.hand, 6);
       });
@@ -78,5 +83,4 @@ export class Cleffa extends PokemonCard {
 
     return state;
   }
-
 }

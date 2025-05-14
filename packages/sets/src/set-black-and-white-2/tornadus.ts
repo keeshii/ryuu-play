@@ -1,13 +1,24 @@
-import { PokemonCard } from '@ptcg/common';
-import { Stage, CardType, SuperType, EnergyType } from '@ptcg/common';
-import { StoreLike, State, StateUtils, AttachEnergyPrompt, PlayerType, SlotType,
-  EnergyCard, MoveEnergyPrompt, CardTarget } from '@ptcg/common';
-import { AttackEffect } from '@ptcg/common';
-import { Effect } from '@ptcg/common';
-import { GameMessage } from '@ptcg/common';
+import {
+  AttachEnergyPrompt,
+  AttackEffect,
+  CardTarget,
+  CardType,
+  Effect,
+  EnergyCard,
+  EnergyType,
+  GameMessage,
+  MoveEnergyPrompt,
+  PlayerType,
+  PokemonCard,
+  SlotType,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+  SuperType,
+} from '@ptcg/common';
 
 export class Tornadus extends PokemonCard {
-
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.COLORLESS;
@@ -18,20 +29,20 @@ export class Tornadus extends PokemonCard {
 
   public resistance = [{ type: CardType.FIGHTING, value: -20 }];
 
-  public retreat = [ CardType.COLORLESS ];
+  public retreat = [CardType.COLORLESS];
 
   public attacks = [
     {
       name: 'Energy Wheel',
-      cost: [ CardType.COLORLESS ],
+      cost: [CardType.COLORLESS],
       damage: '',
-      text: 'Move an Energy from 1 of your Benched Pokemon to this Pokemon.'
-    }, {
+      text: 'Move an Energy from 1 of your Benched Pokémon to this Pokémon.',
+    },
+    {
       name: 'Hurricane',
-      cost: [ CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS ],
+      cost: [CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS],
       damage: '80',
-      text: 'Move a basic Energy from this Pokemon to 1 of your ' +
-        'Benched Pokemon.'
+      text: 'Move a basic Energy from this Pokémon to 1 of your Benched Pokémon.',
     },
   ];
 
@@ -42,7 +53,6 @@ export class Tornadus extends PokemonCard {
   public fullName: string = 'Tornadus EP';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
       const blockedFrom: CardTarget[] = [];
@@ -64,21 +74,25 @@ export class Tornadus extends PokemonCard {
         return state;
       }
 
-      return store.prompt(state, new MoveEnergyPrompt(
-        effect.player.id,
-        GameMessage.MOVE_ENERGY_TO_ACTIVE,
-        PlayerType.BOTTOM_PLAYER,
-        [ SlotType.ACTIVE, SlotType.BENCH ],
-        { superType: SuperType.ENERGY },
-        { min: 1, max: 1, allowCancel: false, blockedFrom, blockedTo }
-      ), result => {
-        const transfers = result || [];
-        transfers.forEach(transfer => {
-          const source = StateUtils.getTarget(state, player, transfer.from);
-          const target = StateUtils.getTarget(state, player, transfer.to);
-          source.moveCardTo(transfer.card, target);
-        });
-      });
+      return store.prompt(
+        state,
+        new MoveEnergyPrompt(
+          effect.player.id,
+          GameMessage.MOVE_ENERGY_TO_ACTIVE,
+          PlayerType.BOTTOM_PLAYER,
+          [SlotType.ACTIVE, SlotType.BENCH],
+          { superType: SuperType.ENERGY },
+          { min: 1, max: 1, allowCancel: false, blockedFrom, blockedTo }
+        ),
+        result => {
+          const transfers = result || [];
+          transfers.forEach(transfer => {
+            const source = StateUtils.getTarget(state, player, transfer.from);
+            const target = StateUtils.getTarget(state, player, transfer.to);
+            source.moveCardTo(transfer.card, target);
+          });
+        }
+      );
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
@@ -92,24 +106,27 @@ export class Tornadus extends PokemonCard {
         return state;
       }
 
-      return store.prompt(state, new AttachEnergyPrompt(
-        player.id,
-        GameMessage.ATTACH_ENERGY_TO_BENCH,
-        player.active,
-        PlayerType.BOTTOM_PLAYER,
-        [ SlotType.BENCH ],
-        { superType: SuperType.ENERGY, energyType: EnergyType.BASIC },
-        { allowCancel: false, min: 1, max: 1 }
-      ), transfers => {
-        transfers = transfers || [];
-        for (const transfer of transfers) {
-          const target = StateUtils.getTarget(state, player, transfer.to);
-          player.active.moveCardTo(transfer.card, target);
+      return store.prompt(
+        state,
+        new AttachEnergyPrompt(
+          player.id,
+          GameMessage.ATTACH_ENERGY_TO_BENCH,
+          player.active,
+          PlayerType.BOTTOM_PLAYER,
+          [SlotType.BENCH],
+          { superType: SuperType.ENERGY, energyType: EnergyType.BASIC },
+          { allowCancel: false, min: 1, max: 1 }
+        ),
+        transfers => {
+          transfers = transfers || [];
+          for (const transfer of transfers) {
+            const target = StateUtils.getTarget(state, player, transfer.to);
+            player.active.moveCardTo(transfer.card, target);
+          }
         }
-      });
+      );
     }
 
     return state;
   }
-
 }
