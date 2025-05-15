@@ -1,9 +1,9 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { UserInfo } from '@ptcg/common';
 import { Observable, EMPTY } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { switchMap } from 'rxjs/operators';
 
 import { AlertService } from '../shared/alert/alert.service';
@@ -11,7 +11,6 @@ import { ProfileService } from '../api/services/profile.service';
 import { SessionService } from '../shared/session/session.service';
 import { ProfilePopupService } from './profile-popup.service';
 
-@UntilDestroy()
 @Component({
   selector: 'ptcg-profile',
   templateUrl: './profile.component.html',
@@ -24,6 +23,7 @@ export class ProfileComponent implements OnInit {
   public loading: boolean;
   public userId: number;
   public owner$: Observable<boolean>;
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private alertService: AlertService,
@@ -53,7 +53,7 @@ export class ProfileComponent implements OnInit {
         this.loading = true;
         return this.profileService.getUser(userId);
       }),
-      untilDestroyed(this)
+      takeUntilDestroyed(this.destroyRef)
     )
       .subscribe({
         next: response => {

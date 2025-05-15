@@ -1,9 +1,9 @@
-import { Component, OnInit, HostListener, ElementRef } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef, inject, DestroyRef } from '@angular/core';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { UserInfo } from '@ptcg/common';
 import { Observable, interval } from 'rxjs';
 import { Router } from '@angular/router';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { switchMap, filter } from 'rxjs/operators';
 
 import { AlertService } from './shared/alert/alert.service';
@@ -14,7 +14,6 @@ import { SocketService } from './api/socket.service';
 import { TranslateService } from '@ngx-translate/core';
 import { environment } from '../environments/environment';
 
-@UntilDestroy()
 @Component({
   selector: 'ptcg-app',
   templateUrl: './app.component.html',
@@ -25,6 +24,7 @@ export class AppComponent implements OnInit {
   public isLoggedIn = false;
   public loggedUser: UserInfo | undefined;
   private authToken$: Observable<string>;
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private alertService: AlertService,
@@ -44,7 +44,7 @@ export class AppComponent implements OnInit {
   public ngOnInit() {
     // Connect to websockets after when logged in
     this.authToken$
-      .pipe(untilDestroyed(this))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(authToken => {
         this.isLoggedIn = !!authToken;
 
@@ -58,7 +58,7 @@ export class AppComponent implements OnInit {
       });
 
     this.socketService.connection.pipe(
-      untilDestroyed(this)
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: async connected => {
         if (!connected && this.isLoggedIn) {
@@ -73,7 +73,7 @@ export class AppComponent implements OnInit {
 
     // Refresh token with given interval
     interval(environment.refreshTokenInterval).pipe(
-      untilDestroyed(this),
+      takeUntilDestroyed(this.destroyRef),
       filter(() => !!this.sessionService.session.authToken),
       switchMap(() => this.loginService.refreshToken())
     ).subscribe({

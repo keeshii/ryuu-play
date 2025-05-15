@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs/operators';
 
 import { AlertService } from '../shared/alert/alert.service';
@@ -8,7 +8,6 @@ import { ApiError } from '../api/api.error';
 import { DeckListEntry } from '../api/interfaces/deck.interface';
 import { DeckService } from '../api/services/deck.service';
 
-@UntilDestroy()
 @Component({
   selector: 'ptcg-deck',
   templateUrl: './deck.component.html',
@@ -19,6 +18,7 @@ export class DeckComponent implements OnInit {
   public displayedColumns: string[] = ['name', 'cardTypes', 'formatTags', 'isValid', 'actions'];
   public decks: DeckListEntry[] = [];
   public loading = false;
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private alertService: AlertService,
@@ -34,7 +34,7 @@ export class DeckComponent implements OnInit {
     this.loading = true;
     this.deckService.getList().pipe(
       finalize(() => { this.loading = false; }),
-      untilDestroyed(this)
+      takeUntilDestroyed(this.destroyRef)
     )
       .subscribe(response => {
         this.decks = response.decks;
@@ -52,7 +52,7 @@ export class DeckComponent implements OnInit {
     this.loading = true;
     this.deckService.createDeck(name).pipe(
       finalize(() => { this.loading = false; }),
-      untilDestroyed(this)
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe(() => {
       this.refreshList();
     }, (error: ApiError) => {
@@ -67,7 +67,7 @@ export class DeckComponent implements OnInit {
     this.loading = true;
     this.deckService.deleteDeck(deckId).pipe(
       finalize(() => { this.loading = false; }),
-      untilDestroyed(this)
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe(() => {
       this.refreshList();
     }, (error: ApiError) => {
@@ -84,7 +84,7 @@ export class DeckComponent implements OnInit {
     this.loading = true;
     this.deckService.rename(deckId, name).pipe(
       finalize(() => { this.loading = false; }),
-      untilDestroyed(this)
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe(() => {
       this.refreshList();
     }, (error: ApiError) => {
@@ -101,7 +101,7 @@ export class DeckComponent implements OnInit {
     this.loading = true;
     this.deckService.duplicate(deckId, name).pipe(
       finalize(() => { this.loading = false; }),
-      untilDestroyed(this)
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe(() => {
       this.refreshList();
     }, (error: ApiError) => {

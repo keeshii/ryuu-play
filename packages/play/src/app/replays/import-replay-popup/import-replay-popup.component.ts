@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { Replay, GameWinner, Base64 } from '@ptcg/common';
 import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs/operators';
 
 import { AlertService } from '../../shared/alert/alert.service';
@@ -10,7 +10,6 @@ import { FileInput } from '../../shared/file-input/file-input.model';
 import { ReplayService } from '../../api/services/replay.service';
 import { SessionService } from '../../shared/session/session.service';
 
-@UntilDestroy()
 @Component({
   selector: 'ptcg-import-replay-popup',
   templateUrl: './import-replay-popup.component.html',
@@ -30,6 +29,7 @@ export class ImportReplayPopupComponent {
   public turnsCount: number;
   public replayWinner: string;
   private replayData: string;
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private alertService: AlertService,
@@ -91,7 +91,7 @@ export class ImportReplayPopupComponent {
     this.replayService.import(this.replayData, this.name)
       .pipe(
         finalize(() => { this.loading = false; }),
-        untilDestroyed(this)
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe({
         next: response => {

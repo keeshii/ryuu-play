@@ -1,15 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { ApiErrorEnum } from '@ptcg/common';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs/operators';
 
 import { AlertService } from '../../shared/alert/alert.service';
 import { ApiError } from '../../api/api.error';
 import { ResetPasswordService } from '../../api/services/reset-password.service';
 
-@UntilDestroy()
 @Component({
   selector: 'ptcg-reset-password',
   templateUrl: './reset-password.component.html',
@@ -20,6 +19,7 @@ export class ResetPasswordComponent {
   public loading = false;
   public email: string;
   public invalidEmail: string;
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private alertService: AlertService,
@@ -33,7 +33,7 @@ export class ResetPasswordComponent {
 
     this.resetPasswordService.sendMail(this.email).pipe(
       finalize(() => { this.loading = false; }),
-      untilDestroyed(this)
+      takeUntilDestroyed(this.destroyRef)
     )
       .subscribe({
         next: async () => {

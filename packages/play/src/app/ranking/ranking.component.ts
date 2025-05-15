@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { RankingInfo } from '@ptcg/common';
 import { Subject, of } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { delay, switchMap, takeUntil, map } from 'rxjs/operators';
 
 import { AlertService } from '../shared/alert/alert.service';
@@ -13,7 +13,6 @@ import { RankingResponse, RankingSearch } from '../api/interfaces/ranking.interf
 import { SessionService } from '../shared/session/session.service';
 import { environment } from '../../environments/environment';
 
-@UntilDestroy()
 @Component({
   selector: 'ptcg-ranking',
   templateUrl: './ranking.component.html',
@@ -33,6 +32,7 @@ export class RankingComponent implements OnInit {
 
   private rankingSearch$ = new Subject<RankingSearch>();
   private searchValue$ = new Subject<string>();
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private alertService: AlertService,
@@ -46,7 +46,7 @@ export class RankingComponent implements OnInit {
   public ngOnInit() {
 
     this.sessionService.get(session => session.loggedUserId).pipe(
-      untilDestroyed(this)
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: loggedUserId => {
         this.loggedUserId = loggedUserId;
@@ -54,12 +54,12 @@ export class RankingComponent implements OnInit {
     });
 
     this.rankingSearch$.pipe(
-      untilDestroyed(this),
+      takeUntilDestroyed(this.destroyRef),
       switchMap(search => {
         this.loading = true;
         return this.rankingService.getList(search.page, search.query).pipe(
           takeUntil(this.rankingSearch$),
-          untilDestroyed(this),
+          takeUntilDestroyed(this.destroyRef),
           map(response => [search, response] as [RankingSearch, RankingResponse])
         );
       }),
@@ -81,7 +81,7 @@ export class RankingComponent implements OnInit {
     });
 
     this.searchValue$.pipe(
-      untilDestroyed(this),
+      takeUntilDestroyed(this.destroyRef),
       switchMap(query => of(query).pipe(
         delay(300),
         takeUntil(this.rankingSearch$)

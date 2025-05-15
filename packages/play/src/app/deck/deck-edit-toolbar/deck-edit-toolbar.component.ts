@@ -1,14 +1,13 @@
-import { Component, Input, EventEmitter, Output } from '@angular/core';
+import { Component, Input, EventEmitter, Output, inject, DestroyRef } from '@angular/core';
 import { CardType, SuperType } from '@ptcg/common';
 import { MatLegacySelectChange as MatSelectChange } from '@angular/material/legacy-select';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { CardsBaseService } from '../../shared/cards/cards-base.service';
 import { Deck } from '../../api/interfaces/deck.interface';
 import { DeckEditToolbarFilter } from './deck-edit-toolbar-filter.interface';
 import { ImportDeckPopupService } from '../import-deck-popup/import-deck-popup.service';
 
-@UntilDestroy()
 @Component({
   selector: 'ptcg-deck-edit-toolbar',
   templateUrl: './deck-edit-toolbar.component.html',
@@ -29,6 +28,8 @@ export class DeckEditToolbarComponent {
   @Output() export = new EventEmitter<void>();
 
   public formatNames: string[];
+
+  private destroyRef = inject(DestroyRef);
 
   public cardTypes = [
     {value: CardType.NONE, label: 'LABEL_NONE' },
@@ -94,7 +95,7 @@ export class DeckEditToolbarComponent {
   public importFromFile() {
     const dialogRef = this.importDeckPopupService.openDialog();
     dialogRef.afterClosed()
-      .pipe(untilDestroyed(this))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: cardNames => {
           if (cardNames) {

@@ -1,15 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { ApiErrorEnum } from '@ptcg/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs/operators';
 
 import { AlertService } from '../../shared/alert/alert.service';
 import { ApiError } from '../../api/api.error';
 import { ResetPasswordService } from '../../api/services/reset-password.service';
 
-@UntilDestroy()
 @Component({
   selector: 'ptcg-set-new-password',
   templateUrl: './set-new-password.component.html',
@@ -21,6 +20,7 @@ export class SetNewPasswordComponent implements OnInit {
   public confirmPassword: string;
   public newPassword: string;
   public token: string;
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private alertService: AlertService,
@@ -31,7 +31,7 @@ export class SetNewPasswordComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.route.paramMap.pipe(untilDestroyed(this)).subscribe({
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: paramMap => {
         this.token = paramMap.get('token');
       }
@@ -42,7 +42,7 @@ export class SetNewPasswordComponent implements OnInit {
     this.loading = true;
     this.resetPasswordService.changePassword(this.token, this.newPassword).pipe(
       finalize(() => { this.loading = false; }),
-      untilDestroyed(this)
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: async () => {
         await this.alertService.alert(this.translate.instant('SET_PASSWORD_SUCCESS'));

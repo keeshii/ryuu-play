@@ -1,15 +1,14 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, inject, DestroyRef } from '@angular/core';
 import { GameInfo, GameState } from '@ptcg/common';
 import { Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { AlertService } from 'src/app/shared/alert/alert.service';
 import { GameService } from 'src/app/api/services/game.service';
 import { LocalGameState } from '../../shared/session/session.interface';
 import { SessionService } from '../../shared/session/session.service';
 
-@UntilDestroy()
 @Component({
   selector: 'ptcg-game-actions',
   templateUrl: './game-actions.component.html',
@@ -20,6 +19,7 @@ export class GameActionsComponent implements OnInit {
   @Input() game: GameInfo;
   public gameStates$: Observable<GameState[]>;
   public isJoined: boolean;
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private alertService: AlertService,
@@ -32,7 +32,7 @@ export class GameActionsComponent implements OnInit {
 
   ngOnInit() {
     this.sessionService.get(session => session.gameStates)
-      .pipe(untilDestroyed(this))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(gameStates => {
         this.isJoined = this.hasGameState(gameStates);
       });

@@ -1,6 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, inject, DestroyRef } from '@angular/core';
 import { InvitePlayerPrompt } from '@ptcg/common';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs/operators';
 
 import { ApiError } from '../../../api/api.error';
@@ -10,7 +10,6 @@ import { GameService } from '../../../api/services/game.service';
 import { SelectPopupOption } from '../../../shared/alert/select-popup/select-popup.component';
 import { LocalGameState } from '../../../shared/session/session.interface';
 
-@UntilDestroy()
 @Component({
   selector: 'ptcg-prompt-invite-player',
   templateUrl: './prompt-invite-player.component.html',
@@ -24,6 +23,7 @@ export class PromptInvitePlayerComponent implements OnInit {
   public loading = true;
   public decks: SelectPopupOption<number>[] = [];
   public deckId: number;
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private alertService: AlertService,
@@ -64,7 +64,7 @@ export class PromptInvitePlayerComponent implements OnInit {
     this.deckService.getList()
       .pipe(
         finalize(() => { this.loading = false; }),
-        untilDestroyed(this),
+        takeUntilDestroyed(this.destroyRef),
       ).
       subscribe({
         next: decks => {

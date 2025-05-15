@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { ApiErrorEnum } from '@ptcg/common';
 import { TranslateService } from '@ngx-translate/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs/operators';
 
 import { AlertService } from 'src/app/shared/alert/alert.service';
@@ -10,7 +10,6 @@ import { LoginService } from 'src/app/api/services/login.service';
 import { Router } from '@angular/router';
 import { ServerPasswordPopupService } from '../server-password-popup/server-password-popup.service';
 
-@UntilDestroy()
 @Component({
   selector: 'ptcg-register',
   templateUrl: './register.component.html',
@@ -25,6 +24,7 @@ export class RegisterComponent {
   public confirmPassword: string;
   public invalidName: string;
   public invalidEmail: string;
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private alertService: AlertService,
@@ -39,7 +39,7 @@ export class RegisterComponent {
 
     this.loginService.register(this.name, this.password, this.email, code).pipe(
       finalize(() => { this.loading = false; }),
-      untilDestroyed(this)
+      takeUntilDestroyed(this.destroyRef)
     )
       .subscribe(async () => {
         await this.alertService.alert(this.translate.instant('REGISTER_SUCCESS'));
@@ -57,7 +57,7 @@ export class RegisterComponent {
 
       case ApiErrorEnum.REGISTER_INVALID_SERVER_PASSWORD:
         this.serverPasswordPopupService.openDialog()
-          .pipe(untilDestroyed(this))
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe(code => {
             if (code !== undefined) {
               this.register(code);

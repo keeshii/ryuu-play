@@ -1,7 +1,7 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { switchMap, finalize } from 'rxjs/operators';
 
 import { ApiError } from '../../api/api.error';
@@ -14,7 +14,6 @@ import { DeckEditToolbarFilter } from '../deck-edit-toolbar/deck-edit-toolbar-fi
 import { DeckService } from '../../api/services/deck.service';
 import { FileDownloadService } from '../../shared/file-download/file-download.service';
 
-@UntilDestroy()
 @Component({
   selector: 'ptcg-deck-edit',
   templateUrl: './deck-edit.component.html',
@@ -27,6 +26,7 @@ export class DeckEditComponent implements OnInit {
   public deckItems: DeckItem[] = [];
   public toolbarFilter: DeckEditToolbarFilter;
   public DeckEditPane = DeckEditPane;
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private alertService: AlertService,
@@ -45,7 +45,7 @@ export class DeckEditComponent implements OnInit {
         const deckId = parseInt(paramMap.get('deckId'), 10);
         return this.deckService.getDeck(deckId);
       }),
-      untilDestroyed(this)
+      takeUntilDestroyed(this.destroyRef)
     )
       .subscribe(response => {
         this.loading = false;
@@ -117,7 +117,7 @@ export class DeckEditComponent implements OnInit {
     this.loading = true;
     this.deckService.saveDeck(this.deck.id, this.deck.name, items).pipe(
       finalize(() => { this.loading = false; }),
-      untilDestroyed(this)
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe(() => {
       this.alertService.toast(this.translate.instant('DECK_EDIT_SAVED'));
     }, (error: ApiError) => {

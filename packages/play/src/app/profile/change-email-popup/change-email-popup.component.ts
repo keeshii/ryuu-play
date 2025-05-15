@@ -1,8 +1,8 @@
-import { Component, Inject } from '@angular/core';
+import { Component, DestroyRef, inject, Inject } from '@angular/core';
 import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { ApiErrorEnum } from '@ptcg/common';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs/operators';
 
 import { AlertService } from '../../shared/alert/alert.service';
@@ -10,7 +10,6 @@ import { ApiError } from '../../api/api.error';
 import { ProfileService } from '../../api/services/profile.service';
 import { SessionService } from '../../shared/session/session.service';
 
-@UntilDestroy()
 @Component({
   selector: 'ptcg-change-email-popup',
   templateUrl: './change-email-popup.component.html',
@@ -23,6 +22,7 @@ export class ChangeEmailPopupComponent {
   public email: string;
 
   private userId: number;
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private alertService: AlertService,
@@ -41,7 +41,7 @@ export class ChangeEmailPopupComponent {
     this.loading = true;
     this.profileService.changeEmail(this.email).pipe(
       finalize(() => { this.loading = false; }),
-      untilDestroyed(this)
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: () => {
         this.dialogRef.close();

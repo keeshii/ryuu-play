@@ -1,16 +1,15 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, inject, DestroyRef } from '@angular/core';
 import { MatLegacySelectChange as MatSelectChange } from '@angular/material/legacy-select';
 import { MatLegacySliderChange as MatSliderChange } from '@angular/material/legacy-slider';
 import { Replay } from '@ptcg/common';
 import { Subject } from 'rxjs';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounceTime } from 'rxjs/operators';
 
 import { LocalGameState } from '../../../shared/session/session.interface';
 import { SelectPopupOption } from '../../../shared/alert/select-popup/select-popup.component';
 import { SessionService } from '../../../shared/session/session.service';
 
-@UntilDestroy()
 @Component({
   selector: 'ptcg-replay-controls',
   templateUrl: './replay-controls.component.html',
@@ -41,6 +40,7 @@ export class ReplayControlsComponent implements OnInit, OnDestroy {
   private sliderChange$ = new Subject<number>();
   private gameStateValue: LocalGameState;
   private replay: Replay;
+  private destroyRef = inject(DestroyRef);
 
   constructor(private sessionService: SessionService) { }
 
@@ -48,7 +48,7 @@ export class ReplayControlsComponent implements OnInit, OnDestroy {
     this.sliderChange$
       .pipe(
         debounceTime(300),
-        untilDestroyed(this)
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe({
         next: value => this.setState(value)

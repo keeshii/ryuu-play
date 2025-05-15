@@ -1,8 +1,8 @@
-import { Component, OnInit, Input, ElementRef, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, OnChanges, inject, DestroyRef } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, EMPTY } from 'rxjs';
 import { MessageInfo, ConversationInfo } from '@ptcg/common';
 import { TranslateService } from '@ngx-translate/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize, skip, takeUntil } from 'rxjs/operators';
 
 import { AlertService } from '../../shared/alert/alert.service';
@@ -10,7 +10,6 @@ import { ApiError } from '../../api/api.error';
 import { MessageService } from '../../api/services/message.service';
 import { SessionService } from '../../shared/session/session.service';
 
-@UntilDestroy()
 @Component({
   selector: 'ptcg-conversation',
   templateUrl: './conversation.component.html',
@@ -26,6 +25,7 @@ export class ConversationComponent implements OnInit, OnChanges {
   public lastMessage$: Observable<MessageInfo | undefined>;
   public text: string;
   private userChanged$ = new Subject<void>();
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private alertService: AlertService,
@@ -39,14 +39,14 @@ export class ConversationComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.userChanged$
-      .pipe(untilDestroyed(this))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.loadMessages(this.userId);
         this.observeLastMessage();
       });
 
     this.messages$
-      .pipe(skip(1), untilDestroyed(this))
+      .pipe(skip(1), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: messages => {
           this.scrollToBottom();
@@ -86,7 +86,7 @@ export class ConversationComponent implements OnInit, OnChanges {
     }
     this.loading = true;
     this.messageService.sendMessage(userId, text).pipe(
-      untilDestroyed(this),
+      takeUntilDestroyed(this.destroyRef),
       takeUntil(this.userChanged$),
       finalize(() => { this.loading = false; })
     ).subscribe({
@@ -104,7 +104,7 @@ export class ConversationComponent implements OnInit, OnChanges {
 
   private observeLastMessage() {
     this.lastMessage$.pipe(
-      untilDestroyed(this),
+      takeUntilDestroyed(this.destroyRef),
       takeUntil(this.userChanged$)
     ).subscribe({
       next: message => {
@@ -138,7 +138,7 @@ export class ConversationComponent implements OnInit, OnChanges {
     }
 
     this.messageService.readMessages(senderId).pipe(
-      untilDestroyed(this),
+      takeUntilDestroyed(this.destroyRef),
       takeUntil(this.userChanged$)
     ).subscribe({
       next: () => {
@@ -159,7 +159,7 @@ export class ConversationComponent implements OnInit, OnChanges {
   private loadMessages(userId: number): void {
     this.loading = true;
     this.messageService.getConversation(userId).pipe(
-      untilDestroyed(this),
+      takeUntilDestroyed(this.destroyRef),
       takeUntil(this.userChanged$),
       finalize(() => { this.loading = false; })
     ).subscribe({

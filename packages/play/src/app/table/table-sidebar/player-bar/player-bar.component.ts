@@ -1,7 +1,7 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, DestroyRef, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Player, UserInfo, ReplayPlayer, PlayerStats, State, GamePhase } from '@ptcg/common';
 import { Observable, EMPTY } from 'rxjs';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { ChooseAvatarPopupService } from '../choose-avatar-popup/choose-avatar-popup.service';
 import { GameService } from '../../../api/services/game.service';
@@ -9,7 +9,6 @@ import { LocalGameState, Session } from '../../../shared/session/session.interfa
 import { SessionService } from '../../../shared/session/session.service';
 import { UserInfoPopupService } from '../../../shared/user-info/user-info-popup/user-info-popup.service';
 
-@UntilDestroy()
 @Component({
   selector: 'ptcg-player-bar',
   templateUrl: './player-bar.component.html',
@@ -34,6 +33,7 @@ export class PlayerBarComponent implements OnChanges {
   public allowAvatarClick: boolean;
   public avatarName: string;
   public userInfo$: Observable<UserInfo | undefined> = EMPTY;
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private chooseAvatarPopupService: ChooseAvatarPopupService,
@@ -56,7 +56,7 @@ export class PlayerBarComponent implements OnChanges {
 
     const dialogRef = this.chooseAvatarPopupService.openDialog(userId, selected);
     dialogRef.afterClosed().pipe(
-      untilDestroyed(this)
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: avatarName => {
         if (avatarName !== undefined) {

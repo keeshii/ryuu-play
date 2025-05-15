@@ -1,9 +1,9 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, Inject, OnInit } from '@angular/core';
 import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { AvatarInfo } from '@ptcg/common';
 import { Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs/operators';
 
 import { AddAvatarPopupService } from '../add-avatar-popup/add-avatar-popup.service';
@@ -12,7 +12,6 @@ import { ApiError } from '../../api/api.error';
 import { AvatarService } from '../../api/services/avatar.service';
 import { SessionService } from '../../shared/session/session.service';
 
-@UntilDestroy()
 @Component({
   selector: 'ptcg-edit-avatars-popup',
   templateUrl: './edit-avatars-popup.component.html',
@@ -25,6 +24,7 @@ export class EditAvatarsPopupComponent implements OnInit {
   public defaultAvatar$: Observable<string>;
   public avatars: AvatarInfo[] = [];
   private userId: number;
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private alertService: AlertService,
@@ -44,7 +44,7 @@ export class EditAvatarsPopupComponent implements OnInit {
   public addAvatar() {
     const dialogRef = this.addAvatarPopupService.openDialog();
     dialogRef.afterClosed()
-      .pipe(untilDestroyed(this))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: avatar => {
           if (avatar) {
@@ -58,7 +58,7 @@ export class EditAvatarsPopupComponent implements OnInit {
     this.avatarService.deleteAvatar(avatarId)
       .pipe(
         finalize(() => { this.loading = false; }),
-        untilDestroyed(this)
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe({
         next: () => {
@@ -81,7 +81,7 @@ export class EditAvatarsPopupComponent implements OnInit {
     this.loading = true;
     this.avatarService.rename(avatarId, name).pipe(
       finalize(() => { this.loading = false; }),
-      untilDestroyed(this)
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: response => {
         const index = this.avatars.findIndex(a => a.id === avatarId);
@@ -103,7 +103,7 @@ export class EditAvatarsPopupComponent implements OnInit {
     this.avatarService.markAsDefault(avatar.id)
       .pipe(
         finalize(() => { this.loading = false; }),
-        untilDestroyed(this)
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe({
         error: (error: ApiError) => {
@@ -123,7 +123,7 @@ export class EditAvatarsPopupComponent implements OnInit {
     this.avatarService.getList()
       .pipe(
         finalize(() => { this.loading = false; }),
-        untilDestroyed(this)
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe({
         next: response => {

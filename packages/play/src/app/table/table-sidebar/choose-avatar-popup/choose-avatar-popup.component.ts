@@ -1,7 +1,7 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, Inject, OnInit } from '@angular/core';
 import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { AvatarInfo } from '@ptcg/common';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs/operators';
 
 import { AlertService } from '../../../shared/alert/alert.service';
@@ -9,7 +9,6 @@ import { AvatarService } from '../../../api/services/avatar.service';
 import { ApiError } from '../../../api/api.error';
 import { SessionService } from '../../../shared/session/session.service';
 
-@UntilDestroy()
 @Component({
   selector: 'ptcg-choose-avatar-popup',
   templateUrl: './choose-avatar-popup.component.html',
@@ -23,6 +22,7 @@ export class ChooseAvatarPopupComponent implements OnInit {
   private initialSelected: string;
   private userId: number;
   private defaultAvatar: string;
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private alertService: AlertService,
@@ -44,7 +44,7 @@ export class ChooseAvatarPopupComponent implements OnInit {
     this.loading = true;
     this.avatarService.getList(this.userId).pipe(
       finalize(() => { this.loading = false; }),
-      untilDestroyed(this),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: response => {
         this.avatars = response.avatars;

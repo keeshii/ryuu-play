@@ -1,7 +1,7 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, DestroyRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs/operators';
 
 import { ApiService } from '../../api/api.service';
@@ -10,7 +10,6 @@ import { LoginRememberService } from '../login-remember.service';
 import { LoginService } from 'src/app/api/services/login.service';
 import { SocketService } from '../../api/socket.service';
 
-@UntilDestroy()
 @Component({
   selector: 'ptcg-login',
   templateUrl: './login.component.html',
@@ -20,6 +19,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   public loading = false;
   private loginAborted$ = new Subject<void>();
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private apiService: ApiService,
@@ -45,7 +45,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     this.loading = true;
     this.loginService.tokenLogin(token, this.loginAborted$).pipe(
-      untilDestroyed(this),
+      takeUntilDestroyed(this.destroyRef),
       finalize(() => { this.loading = false; })
     ).subscribe({
       next: response => {

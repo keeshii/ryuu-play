@@ -1,12 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component, DestroyRef, inject, Input } from '@angular/core';
 import { UserInfo } from '@ptcg/common';
 import { Subject } from 'rxjs';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { takeUntil } from 'rxjs/operators';
 
 import { AvatarService } from '../../../api/services/avatar.service';
 
-@UntilDestroy()
 @Component({
   selector: 'ptcg-player-avatar',
   templateUrl: './player-avatar.component.html',
@@ -29,6 +28,7 @@ export class PlayerAvatarComponent {
   public avatarFile = '';
   private userValue: UserInfo | undefined;
   private name: string | undefined;
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private avatarService: AvatarService
@@ -50,7 +50,7 @@ export class PlayerAvatarComponent {
 
     this.avatarService.find(user.userId, this.name).pipe(
       takeUntil(this.nextRequest),
-      untilDestroyed(this)
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: response => {
         this.avatarFile = response.avatar.fileName;

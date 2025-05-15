@@ -1,15 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { ApiErrorEnum } from '@ptcg/common';
 import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs/operators';
 
 import { ApiError } from '../../api/api.error';
 import { AlertService } from '../../shared/alert/alert.service';
 import { ProfileService } from '../../api/services/profile.service';
 
-@UntilDestroy()
 @Component({
   selector: 'ptcg-change-password-popup',
   templateUrl: './change-password-popup.component.html',
@@ -21,6 +20,7 @@ export class ChangePasswordPopupComponent {
   public newPassword: string;
   public invalidPassword: string;
   public loading = false;
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private alertService: AlertService,
@@ -33,7 +33,7 @@ export class ChangePasswordPopupComponent {
     this.loading = true;
     this.profileService.changePassword(this.currentPassword, this.newPassword).pipe(
       finalize(() => { this.loading = false; }),
-      untilDestroyed(this)
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: () => {
         this.dialogRef.close();

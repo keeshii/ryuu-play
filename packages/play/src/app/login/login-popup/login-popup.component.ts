@@ -1,10 +1,10 @@
-import { Component, OnDestroy, Inject } from '@angular/core';
+import { Component, OnDestroy, Inject, inject, DestroyRef } from '@angular/core';
 import { ApiErrorEnum } from '@ptcg/common';
 import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs/operators';
 
 import { AlertService } from '../../shared/alert/alert.service';
@@ -14,7 +14,6 @@ import { LoginService } from '../../api/services/login.service';
 import { LoginRememberService } from '../login-remember.service';
 import { environment } from '../../../environments/environment';
 
-@UntilDestroy()
 @Component({
   selector: 'ptcg-login-popup',
   templateUrl: './login-popup.component.html',
@@ -28,6 +27,7 @@ export class LoginPopupComponent implements OnDestroy {
   public rememberMe = true;
   public allowServerChange = environment.allowServerChange;
   private loginAborted$ = new Subject<void>();
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private alertService: AlertService,
@@ -44,7 +44,7 @@ export class LoginPopupComponent implements OnDestroy {
     this.loading = true;
     this.loginService.login(this.name, this.password, this.loginAborted$).pipe(
       finalize(() => { this.loading = false; }),
-      untilDestroyed(this)
+      takeUntilDestroyed(this.destroyRef)
     )
       .subscribe({
         next: response => {

@@ -1,7 +1,7 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, inject, DestroyRef } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UserInfo } from '@ptcg/common';
 import { map } from 'rxjs/operators';
 
@@ -9,7 +9,6 @@ import { LoginPopupService } from '../../login/login-popup/login-popup.service';
 import { LoginRememberService } from '../../login/login-remember.service';
 import { SessionService } from '../../shared/session/session.service';
 
-@UntilDestroy()
 @Component({
   selector: 'ptcg-toolbar',
   templateUrl: './toolbar.component.html',
@@ -21,6 +20,7 @@ export class ToolbarComponent implements OnInit {
 
   private loggedUser$: Observable<UserInfo | undefined>;
   public loggedUser: UserInfo | undefined;
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private loginPopupService: LoginPopupService,
@@ -38,7 +38,7 @@ export class ToolbarComponent implements OnInit {
 
   public ngOnInit() {
     this.loggedUser$
-      .pipe(untilDestroyed(this))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(user => this.loggedUser = user);
   }
 

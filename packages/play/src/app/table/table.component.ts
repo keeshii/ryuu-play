@@ -1,9 +1,9 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { Player, GamePhase } from '@ptcg/common';
 import { Observable, from, EMPTY } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { withLatestFrom, switchMap, finalize } from 'rxjs/operators';
 
 import { ApiError } from '../api/api.error';
@@ -13,7 +13,6 @@ import { GameService } from '../api/services/game.service';
 import { LocalGameState } from '../shared/session/session.interface';
 import { SessionService } from '../shared/session/session.service';
 
-@UntilDestroy()
 @Component({
   selector: 'ptcg-table',
   templateUrl: './table.component.html',
@@ -30,6 +29,7 @@ export class TableComponent implements OnInit {
   public loading: boolean;
   public waiting: boolean;
   private gameId: number;
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private alertService: AlertService,
@@ -48,7 +48,7 @@ export class TableComponent implements OnInit {
     this.route.paramMap
       .pipe(
         withLatestFrom(this.gameStates$, this.clientId$),
-        untilDestroyed(this)
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(([paramMap, gameStates, clientId]) => {
         this.gameId = parseInt(paramMap.get('gameId'), 10);
@@ -58,7 +58,7 @@ export class TableComponent implements OnInit {
 
     this.gameStates$
       .pipe(
-        untilDestroyed(this),
+        takeUntilDestroyed(this.destroyRef),
         withLatestFrom(this.clientId$)
       )
       .subscribe(([gameStates, clientId]) => {
@@ -72,7 +72,7 @@ export class TableComponent implements OnInit {
     this.deckService.getList()
       .pipe(
         finalize(() => { this.loading = false; }),
-        untilDestroyed(this),
+        takeUntilDestroyed(this.destroyRef),
         switchMap(decks => {
           const formatName = this.gameState.state.rules.formatName;
 

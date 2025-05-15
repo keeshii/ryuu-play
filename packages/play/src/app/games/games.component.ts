@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { GameInfo, ClientInfo } from '@ptcg/common';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { Observable, EMPTY, from } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize, switchMap, map } from 'rxjs/operators';
 
 import { AlertService } from '../shared/alert/alert.service';
@@ -17,7 +17,6 @@ import { SessionService } from '../shared/session/session.service';
 import { UserInfoMap } from '../shared/session/session.interface';
 import { DeckListEntry } from '../api/interfaces/deck.interface';
 
-@UntilDestroy()
 @Component({
   selector: 'ptcg-games',
   templateUrl: './games.component.html',
@@ -32,6 +31,7 @@ export class GamesComponent implements OnInit {
   public loading = false;
   public clientId: number;
   public loggedUserId: number;
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private alertService: AlertService,
@@ -60,11 +60,11 @@ export class GamesComponent implements OnInit {
 
   ngOnInit() {
     this.sessionService.get(session => session.clientId)
-      .pipe(untilDestroyed(this))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(clientId => { this.clientId = clientId; });
 
     this.sessionService.get(session => session.loggedUserId)
-      .pipe(untilDestroyed(this))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(loggedUserId => { this.loggedUserId = loggedUserId; });
 
   }
@@ -83,7 +83,7 @@ export class GamesComponent implements OnInit {
     this.deckService.getList()
       .pipe(
         finalize(() => { this.loading = false; }),
-        untilDestroyed(this),
+        takeUntilDestroyed(this.destroyRef),
         switchMap(decks => {
           const options = decks.decks
             .filter(deckEntry => deckEntry.isValid);

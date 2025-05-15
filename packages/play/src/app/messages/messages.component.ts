@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConversationInfo } from '@ptcg/common';
 import { Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs/operators';
 
 import { AlertService } from '../shared/alert/alert.service';
@@ -11,7 +11,6 @@ import { ApiError } from '../api/api.error';
 import { MessageService } from '../api/services/message.service';
 import { SessionService } from '../shared/session/session.service';
 
-@UntilDestroy()
 @Component({
   selector: 'ptcg-messages',
   templateUrl: './messages.component.html',
@@ -24,6 +23,7 @@ export class MessagesComponent implements OnInit {
   public conversations$: Observable<ConversationInfo[]>;
   public userId = 0;
   public loggedUserId: number;
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private alertService: AlertService,
@@ -38,13 +38,13 @@ export class MessagesComponent implements OnInit {
 
   ngOnInit(): void {
     this.sessionService.get(session => session.loggedUserId).pipe(
-      untilDestroyed(this)
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: loggedUserId => this.loggedUserId = loggedUserId
     });
 
     this.route.paramMap.pipe(
-      untilDestroyed(this)
+      takeUntilDestroyed(this.destroyRef)
     )
     .subscribe({
       next: paramMap => {
@@ -56,7 +56,7 @@ export class MessagesComponent implements OnInit {
     });
 
     this.conversations$.pipe(
-      untilDestroyed(this)
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: conversations => {
         const exists = this.sessionService.session.users[this.userId] !== undefined;
@@ -135,7 +135,7 @@ export class MessagesComponent implements OnInit {
 
     this.loading = true;
     this.messageService.deleteMessages(userId).pipe(
-      untilDestroyed(this),
+      takeUntilDestroyed(this.destroyRef),
       finalize(() => { this.loading = false; })
     ).subscribe({
         next: () => {

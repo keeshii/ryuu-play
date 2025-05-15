@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs/operators';
 
 import { ApiError } from 'src/app/api/api.error';
@@ -11,7 +11,6 @@ import { LoginRememberService } from '../login-remember.service';
 import { SocketService } from '../../api/socket.service';
 import { environment } from '../../../environments/environment';
 
-@UntilDestroy()
 @Component({
   selector: 'ptcg-change-server-popup',
   templateUrl: './change-server-popup.component.html',
@@ -22,6 +21,7 @@ export class ChangeServerPopupComponent {
   public value: string;
   public invalidValue: string;
   public loading = false;
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private alertService: AlertService,
@@ -39,7 +39,7 @@ export class ChangeServerPopupComponent {
 
     this.loading = true;
     this.apiService.getServerInfo(newApiUrl).pipe(
-      untilDestroyed(this),
+      takeUntilDestroyed(this.destroyRef),
       finalize(() => { this.loading = false; })
     ).subscribe({
       next: response => {

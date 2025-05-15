@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs/operators';
 
 import { AlertService } from 'src/app/shared/alert/alert.service';
@@ -11,7 +11,6 @@ import { FileInput } from '../../shared/file-input/file-input.model';
 import { SessionService } from '../../shared/session/session.service';
 import { ApiErrorEnum } from '@ptcg/common';
 
-@UntilDestroy()
 @Component({
   selector: 'ptcg-add-avatar-popup',
   templateUrl: './add-avatar-popup.component.html',
@@ -26,6 +25,7 @@ export class AddAvatarPopupComponent {
   public avatarError: string;
   public maxFileSize: number;
   public imageBase64: string;
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private alertService: AlertService,
@@ -42,7 +42,7 @@ export class AddAvatarPopupComponent {
     this.avatarService.addAvatar(this.name, this.imageBase64)
       .pipe(
         finalize(() => { this.loading = false; }),
-        untilDestroyed(this)
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe({
         next: response => {
