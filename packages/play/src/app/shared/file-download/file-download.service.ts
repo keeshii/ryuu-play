@@ -16,29 +16,12 @@ export class FileDownloadService {
 
   public async downloadCordova(data: string, fileName: string): Promise<void> {
     return new Promise((resolve, reject) => {
-      const blob = new Blob([data], { type: 'text/plain' });
+      const blob = new Blob([data], { type: 'application/octet-stream' });
       const cordova = (window as any).cordova;
-      const platform = (window as any).device.platform;
-      const resolveLocalFileSystemURL = (window as any).resolveLocalFileSystemURL;
-      let storageLocation = cordova.file.externalDataDirectory;
 
-      if (platform === 'iPhone' || platform === 'iOS') {
-        storageLocation = cordova.file.documentsDirectory;
-      }
-
-      resolveLocalFileSystemURL(
-        storageLocation,
-        (dir: any) => {
-          dir.getFile(fileName, { create: true }, (file: any) => {
-            file.createWriter(
-              (fileWriter: any) => {
-                fileWriter.write(blob);
-                fileWriter.onwriteend = () => resolve();
-                fileWriter.onerror = () => reject();
-              }, (err: any) => reject()); // failed to create file
-          }, (err: any) => reject()); // // failed to open dir
-        }
-      );
+      cordova.plugins.saveDialog.saveFile(blob, fileName)
+        .then(() => resolve())
+        .catch(() => reject());
     });
   }
 
