@@ -33,3 +33,36 @@ $ptcg-prompt-padding: 24px !default;
 $ptcg-prompt-border-radius: 4px !default;
 $ptcg-prompt-max-height: 65vh !default;
 $ptcg-prompt-button-margin: 8px !default;
+
+$ptcg-navy-palette: (
+  50 : #e7eff5,
+  100 : #c3d7e5,
+  200 : #9bbdd4,
+  300 : #73a2c3,
+  400 : #558eb6,
+  500 : #377aa9,
+  600 : #3172a2,
+  700 : #2a6798,
+  800 : #235d8f,
+  900 : #164a7e,
+  A100 : #b5d7ff,
+  A200 : #82bcff,
+  A400 : #4fa1ff,
+  A700 : #3693ff,
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #000000,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
+  )
+);

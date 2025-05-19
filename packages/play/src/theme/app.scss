@@ -16,8 +16,8 @@
 @include mat.all-legacy-component-typographies();
 @include mat.legacy-core();
 
-$ptcg-primary: mat.define-palette(mat.$pink-palette);
-$ptcg-accent:  mat.define-palette(mat.$blue-palette, A200, A100, A400);
+$ptcg-primary: mat.define-palette($ptcg-navy-palette);
+$ptcg-accent:  mat.define-palette(mat.$teal-palette);
 
 // The warn palette is optional (defaults to red).
 $ptcg-warn:    mat.define-palette(mat.$deep-orange-palette);
