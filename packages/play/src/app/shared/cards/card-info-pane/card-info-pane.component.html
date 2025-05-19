@@ -6,7 +6,7 @@
 
   <div class="ptcg-card-info-text" *ngIf="!facedown && card.superType === SuperType.POKEMON">
     <div class="title">
-      <span>{{card.name}}</span>
+      <span><ptcg-card-text [value]="card.name"></ptcg-card-text></span>
       <div class="ptcg-u-spacer"></div>
       <div class="subtitle-evolves-from" *ngIf="card.evolvesFrom">
         {{ 'CARDS_EVOLVES_FROM' | translate: { name: card.evolvesFrom } }}
@@ -44,7 +44,9 @@
             {{ power.name }}
           </div>
         </div>
-        <div class="card-text">{{ power.text }}</div>
+        <div class="card-text">
+          <ptcg-card-text [value]=power.text></ptcg-card-text>
+        </div>
       </div>
     </ptcg-hover-highlight>
 
@@ -66,7 +68,7 @@
           </div>
         </div>
         <div class="card-text" *ngIf="attack.text">
-          {{ attack.text }}
+          <ptcg-card-text [value]="attack.text"></ptcg-card-text>
         </div>
       </div>
     </ptcg-hover-highlight>
@@ -129,7 +131,9 @@
           CARDS_TEXT_ON_CARD
         </div>
       </div>
-      <div class="card-text">{{ card.text }}</div>
+      <div class="card-text">
+        <ptcg-card-text [value]="card.text"></ptcg-card-text>
+      </div>
     </div>
 
   </div>
@@ -160,7 +164,9 @@
             CARDS_TEXT_ON_CARD
           </div>
         </div>
-        <div class="card-text">{{ card.text }}</div>
+        <div class="card-text">
+          <ptcg-card-text [value]="card.text"></ptcg-card-text>
+        </div>
       </div>
     </ptcg-hover-highlight>
 

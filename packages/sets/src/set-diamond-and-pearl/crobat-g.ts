@@ -70,7 +70,7 @@ export class CrobatG extends PokemonCard {
       name: 'Flash Bite',
       powerType: PowerType.POKEPOWER,
       text:
-        'Once during your turn, when you put Crobat G from your hand ' +
+        'Once during your turn, when you put Crobat GAL from your hand ' +
         'onto your Bench, you may put 1 damage counter on 1 of your ' +
         'opponent\'s Pokémon.',
     },
@@ -89,7 +89,7 @@ export class CrobatG extends PokemonCard {
 
   public set: string = 'DP';
 
-  public name: string = 'Crobat G';
+  public name: string = 'Crobat GAL';
 
   public fullName: string = 'Crobat G PL';
 

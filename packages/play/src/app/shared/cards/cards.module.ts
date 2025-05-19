@@ -12,6 +12,7 @@ import { CardInfoPopupComponent } from './card-info-popup/card-info-popup.compon
 import { CardListPaneComponent } from './card-list-pane/card-list-pane.component';
 import { CardListPopupComponent } from './card-list-popup/card-list-popup.component';
 import { CardPlaceholderDirective } from './card-placeholder/card-placeholder.directive';
+import { CardTextComponent } from './card-text/card-text.component';
 import { DropHighlightDirective } from './drop-highlight/drop-highlight.directive';
 import { EnergyComponent } from './energy/energy.component';
 import { ImageCacheModule } from '../image-cache/image-cache.module';
@@ -36,6 +37,7 @@ import { HoverHighlightComponent } from './hover-highlight/hover-highlight.compo
         CardListPaneComponent,
         CardListPopupComponent,
         CardPlaceholderDirective,
+        CardTextComponent,
         EnergyComponent,
         DropHighlightDirective,
         TrainerTypeComponent,

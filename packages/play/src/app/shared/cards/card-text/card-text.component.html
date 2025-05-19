@@ -1,0 +1,4 @@
+<span
+  *ngFor="let item of items"
+  [attr.class]="item.icon ? 'ptcg-icon ptcg-icon-' + item.icon : ''"
+>{{item.text}}</span> 
