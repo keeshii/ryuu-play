@@ -29,4 +29,10 @@ describe('CardTextComponent', () => {
       { text: '.' }
     ]);
   });
+
+  it('should decode empty value', () => {
+    component.value = undefined;
+    expect(component.items).toEqual([]);
+  });
+
 });

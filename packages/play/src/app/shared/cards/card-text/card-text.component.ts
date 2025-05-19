@@ -8,7 +8,7 @@ import { Component, Input } from '@angular/core';
 export class CardTextComponent {
   public items: { text: string, icon?: string }[] = [];
 
-  private symbolToCss = {
+  private symbolToCss: { [symbol: string]: string } = {
     'C': 'colorless',
     'G': 'grass',
     'R': 'fire',
@@ -26,9 +26,17 @@ export class CardTextComponent {
     'DELTA': 'delta',
     'GAL': 'galaxy',
     'GL': 'gl',
-    'PRISM': 'prism',
     'MEGA': 'mega',
+    'PRISM': 'prism',
+    'GX': 'gx',
     'RYUU': 'ryuu',
+  };
+
+  private pattern: RegExp;
+
+  constructor() {
+    var symbols = Object.keys(this.symbolToCss);
+    this.pattern = new RegExp('\\b(' + symbols.join('|') + ')\\b', 'g');
   }
 
   @Input() set value(value: string) {
@@ -38,11 +46,11 @@ export class CardTextComponent {
       return;
     }
 
-    const pattern = /\b([CGRWPDMNY]|SHINY|EX|BREAK|DELTA|GAL|GL|PRISM|MEGA)\b/g;
+    this.pattern.lastIndex = 0;
     let pos = 0;
     do {
-      const match = pattern.exec(value);
-      
+      const match = this.pattern.exec(value);
+
       if (match === null) {
         this.items.push({ text: value.substring(pos) });
         break;
@@ -51,7 +59,7 @@ export class CardTextComponent {
       if (match.index > pos) {
         this.items.push({ text: value.substring(pos, match.index) });
       }
-      
+
       const symbol = match[0];
       pos = match.index + symbol.length;
       this.items.push({ text: '', icon: this.symbolToCss[symbol] });
