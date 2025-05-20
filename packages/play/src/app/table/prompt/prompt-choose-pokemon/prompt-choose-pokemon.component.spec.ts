@@ -3,7 +3,6 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { ApiModule } from '../../../api/api.module';
-import { PromptComponent } from '../prompt.component';
 import { PromptChoosePokemonComponent } from './prompt-choose-pokemon.component';
 
 describe('PromptChoosePokemonComponent', () => {

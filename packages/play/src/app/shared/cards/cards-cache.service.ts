@@ -53,7 +53,7 @@ export class CardsCacheService {
     return new Observable<IDBDatabase>(subscriber => {
       const request = indexedDB.open("cards", 1);
       request.onupgradeneeded = () => {
-        let db = request.result;
+        const db = request.result;
 
         db.onversionchange = () => {
           db.close();

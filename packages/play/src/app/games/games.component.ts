@@ -12,7 +12,6 @@ import { ClientUserData } from '../api/interfaces/main.interface';
 import { CreateGamePopupComponent, CreateGamePopupResult } from './create-game-popup/create-game-popup.component';
 import { DeckService } from '../api/services/deck.service';
 import { MainService } from '../api/services/main.service';
-import { SelectPopupOption } from '../shared/alert/select-popup/select-popup.component';
 import { SessionService } from '../shared/session/session.service';
 import { UserInfoMap } from '../shared/session/session.interface';
 import { DeckListEntry } from '../api/interfaces/deck.interface';

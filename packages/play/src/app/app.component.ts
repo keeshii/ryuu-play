@@ -87,7 +87,7 @@ export class AppComponent implements OnInit {
   }
 
   @HostListener('window:resize', ['$event'])
-  onResize(event?: Event) {
+  onResize() {
     const element = this.elementRef.nativeElement;
     const toolbarHeight = 64;
     const contentHeight = element.offsetHeight - toolbarHeight;

@@ -143,7 +143,9 @@ export class GameLogsComponent {
       setTimeout(() => {
         scollablePane.scrollTop = scollablePane.scrollHeight;
       });
-    } catch (err) { }
+    } catch (err) {
+      // Ignore errors
+    }
   }
 
 }

@@ -83,20 +83,13 @@ export class DeckEditPanesComponent implements OnInit, OnDestroy {
   }
 
   private loadLibraryCards(): LibraryItem[] {
-    return this.cardsBaseService.getCards().map((card, index) => {
-      let item: LibraryItem;
-
-      const spec: SortableSpec<DeckItem, any> = {
-        ...this.deckSpec,
-        createData: () => item
-      };
-
-      item = {
+    return this.cardsBaseService.getCards().map(card => {
+      const item: LibraryItem = {
         card,
         pane: DeckEditPane.LIBRARY,
         count: 1,
         scanUrl: this.cardsBaseService.getScanUrl(card),
-        spec
+        spec: { ...this.deckSpec, createData: () => item }
       };
       return item;
     });
@@ -132,10 +125,7 @@ export class DeckEditPanesComponent implements OnInit, OnDestroy {
   }
 
   private initDropTarget(pane: DeckEditPane): [DropTarget<DraggedItem<DeckItem>, any>, Observable<boolean>]  {
-    let dropTarget: DropTarget<DraggedItem<DeckItem>, any>;
-    let highlight$: Observable<boolean>;
-
-    dropTarget = this.dnd.dropTarget(DeckCardType, {
+    const dropTarget: DropTarget<DraggedItem<DeckItem>, any> = this.dnd.dropTarget(DeckCardType, {
       canDrop: monitor => {
         const card = monitor.getItem().data;
         return card.pane !== pane;
@@ -157,7 +147,7 @@ export class DeckEditPanesComponent implements OnInit, OnDestroy {
       isOver: monitor.isOver(),
     }));
 
-    highlight$ = dropState.pipe(map(state => state.canDrop && state.isOver));
+    const highlight$: Observable<boolean> = dropState.pipe(map(state => state.canDrop && state.isOver));
 
     return [ dropTarget, highlight$ ];
   }

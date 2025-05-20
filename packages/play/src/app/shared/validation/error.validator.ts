@@ -1,6 +1,5 @@
-import { Directive, Input, Optional, Host } from '@angular/core';
-import { NG_VALIDATORS, AbstractControl, Validator, ValidationErrors, NgModel } from '@angular/forms';
-import { MatLegacyFormFieldControl as MatFormFieldControl } from '@angular/material/legacy-form-field';
+import { Directive, Input } from '@angular/core';
+import { NG_VALIDATORS, AbstractControl, Validator, ValidationErrors } from '@angular/forms';
 
 @Directive({
   selector: '[ptcgErrorValidator][ngModel]',

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Card, StateSerializer, SuperType, PokemonCard, EnergyCard, CardType,
-  TrainerCard, CardsInfo, CardManager, Format } from '@ptcg/common';
+  TrainerCard, CardsInfo, CardManager } from '@ptcg/common';
 
 import { ApiService } from '../../api/api.service';
 import { CardInfoPopupData, CardInfoPopupComponent } from './card-info-popup/card-info-popup.component';
@@ -39,14 +39,15 @@ export class CardsBaseService {
       return c1.superType - c2.superType;
     }
     switch (c1.superType) {
-      case SuperType.POKEMON:
+      case SuperType.POKEMON: {
         const p1 = c1 as PokemonCard;
         const p2 = c2 as PokemonCard;
         if (p2.cardType !== p1.cardType) {
           return p1.cardType - p2.cardType;
         }
         break;
-      case SuperType.ENERGY:
+      }
+      case SuperType.ENERGY: {
         const e1 = c1 as EnergyCard;
         const e2 = c2 as EnergyCard;
         if (e1.energyType !== e2.energyType) {
@@ -58,12 +59,14 @@ export class CardsBaseService {
           return type1 - type2;
         }
         break;
-      case SuperType.TRAINER:
+      }
+      case SuperType.TRAINER: {
         const t1 = c1 as TrainerCard;
         const t2 = c2 as TrainerCard;
         if (t1.trainerType !== t2.trainerType) {
           return t1.trainerType - t2.trainerType;
         }
+      }
     }
     return c1.fullName < c2.fullName ? -1 : 1;
   }

@@ -51,7 +51,7 @@ export class DeckEditComponent implements OnInit {
         this.loading = false;
         this.deck = response.deck;
         this.deckItems = this.loadDeckItems(response.deck.cards);
-      }, async error => {
+      }, async () => {
         await this.alertService.error(this.translate.instant('DECK_EDIT_LOADING_ERROR'));
         this.router.navigate(['/decks']);
       });

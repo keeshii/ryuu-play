@@ -77,9 +77,7 @@ export class ChooseCardsPanesComponent implements OnChanges {
       let isBlocked = blocked.includes(i);
       if (isBlocked === false) {
         for (const key in filter) {
-          if (filter.hasOwnProperty(key)) {
-            isBlocked = isBlocked || (filter as any)[key] !== (card as any)[key];
-          }
+          isBlocked = isBlocked || (filter as any)[key] !== (card as any)[key];
         }
       }
       filterMap[card.fullName] = !isBlocked;

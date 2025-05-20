@@ -6,7 +6,7 @@ import { CardsService } from './cards.service';
 import { CardsCacheService } from '../../shared/cards/cards-cache.service';
 
 class ApiServiceMock {
-  get(_url: string) { of(undefined); }
+  get() { of(undefined); }
 }
 
 class CardsCacheServiceMock {

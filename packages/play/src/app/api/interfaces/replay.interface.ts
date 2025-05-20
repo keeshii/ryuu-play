@@ -1,5 +1,5 @@
 import { Response } from './response.interface';
-import { ReplayInfo, UserInfo } from '@ptcg/common';
+import { ReplayInfo } from '@ptcg/common';
 
 export interface ReplaySearch {
   page: number;

@@ -35,7 +35,7 @@ export class CardTextComponent {
   private pattern: RegExp;
 
   constructor() {
-    var symbols = Object.keys(this.symbolToCss);
+    const symbols = Object.keys(this.symbolToCss);
     this.pattern = new RegExp('\\b(' + symbols.join('|') + ')\\b', 'g');
   }
 
@@ -48,7 +48,7 @@ export class CardTextComponent {
 
     this.pattern.lastIndex = 0;
     let pos = 0;
-    do {
+    while (pos < value.length) {
       const match = this.pattern.exec(value);
 
       if (match === null) {
@@ -63,6 +63,6 @@ export class CardTextComponent {
       const symbol = match[0];
       pos = match.index + symbol.length;
       this.items.push({ text: '', icon: this.symbolToCss[symbol] });
-    } while (true);
+    }
   }
 }

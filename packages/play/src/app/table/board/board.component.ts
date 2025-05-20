@@ -55,9 +55,7 @@ export class BoardComponent implements OnDestroy {
     for (let i = 0; i < MAX_BENCH_SIZE; i++) {
       const item = this.createBoardCardItem(PlayerType.BOTTOM_PLAYER, SlotType.BENCH, i);
       this.bottomBench.push(item);
-      let target: DropTargetType;
-      let highlight$: Observable<boolean>;
-      [target, highlight$] = this.initDropTarget(PlayerType.BOTTOM_PLAYER, SlotType.BENCH, i);
+      const [target, highlight$] = this.initDropTarget(PlayerType.BOTTOM_PLAYER, SlotType.BENCH, i);
       this.bottomBenchTarget.push(target);
       this.bottomBenchHighlight$.push(highlight$);
     }
@@ -73,10 +71,8 @@ export class BoardComponent implements OnDestroy {
   ): [DropTargetType, Observable<boolean>]  {
 
     const target = { player, slot, index };
-    let dropTarget: DropTargetType;
-    let highlight$: Observable<boolean>;
 
-    dropTarget = this.dnd.dropTarget([HandCardType, BoardCardType], {
+    const dropTarget: DropTargetType = this.dnd.dropTarget([HandCardType, BoardCardType], {
       canDrop: monitor => {
         const item = monitor.getItem();
         if (!this.gameState) {
@@ -116,7 +112,7 @@ export class BoardComponent implements OnDestroy {
       isOver: monitor.isOver({ shallow: true }),
     }));
 
-    highlight$ = dropState.pipe(map(state => state.canDrop && state.isOver));
+    const highlight$: Observable<boolean> = dropState.pipe(map(state => state.canDrop && state.isOver));
 
     return [ dropTarget, highlight$ ];
   }

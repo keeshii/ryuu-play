@@ -68,10 +68,7 @@ export class ChoosePokemonsPaneComponent implements OnDestroy {
   }
 
   private initDropTarget(item: PokemonItem): [DropTargetType, Observable<boolean>]  {
-    let dropTarget: DropTargetType;
-    let highlight$: Observable<boolean>;
-
-    dropTarget = this.dnd.dropTarget([PromptCardType], {
+    const dropTarget: DropTargetType = this.dnd.dropTarget([PromptCardType], {
       canDrop: () => {
         return item.cardList.cards.length > 0;
       },
@@ -86,7 +83,7 @@ export class ChoosePokemonsPaneComponent implements OnDestroy {
       isOver: monitor.isOver(),
     }));
 
-    highlight$ = dropState.pipe(map(state => state.canDrop && state.isOver));
+    const highlight$: Observable<boolean> = dropState.pipe(map(state => state.canDrop && state.isOver));
 
     return [ dropTarget, highlight$ ];
   }

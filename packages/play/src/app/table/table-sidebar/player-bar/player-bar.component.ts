@@ -1,5 +1,5 @@
 import { Component, DestroyRef, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { Player, UserInfo, ReplayPlayer, PlayerStats, State, GamePhase } from '@ptcg/common';
+import { Player, UserInfo, ReplayPlayer, PlayerStats } from '@ptcg/common';
 import { Observable, EMPTY } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 

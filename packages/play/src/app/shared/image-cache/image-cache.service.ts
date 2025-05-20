@@ -16,7 +16,7 @@ export interface ImgCacheConfig {
   /* size in MB that triggers cache clear on init, 0 to disable */
   cacheClearSize?: number;
   /* HTTP headers for the download requests -- e.g: headers: { 'Accept': 'application/jpg' } */
-  headers?: {};
+  headers?: { [key: string]: string };
   /* indicates whether or not cross-site Access-Control requests should be made using credentials */
   withCredentials?: boolean;
   /* enable if URIs are already encoded (skips call to sanitizeURI) */

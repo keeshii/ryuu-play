@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { Card, AttachEnergyPrompt, FilterType, CardList, AttachEnergyOptions,
+import { Card, AttachEnergyPrompt, FilterType, AttachEnergyOptions,
   PokemonCardList } from '@ptcg/common';
 
 import { GameService } from '../../../api/services/game.service';
