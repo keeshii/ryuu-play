@@ -37,8 +37,8 @@ var indexPatches = [{
 </script>
 <script src=`
 }, {
-	find: /<script src=/g,
-	replacement: '<script type="text/javascript" src='
+	find: /type="module"><\/script>/g,
+	replacement: 'type="text/javascript"></script>'
 }];
 
 var mainPatches = [{
