@@ -68,8 +68,8 @@ export class UnownR extends PokemonCard {
       useWhenInPlay: true,
       powerType: PowerType.POKEPOWER,
       text:
-        'Once during your turn, if Unown R is on your Bench, you may ' +
-        'discard Unown R and all cards attached to it. (This doesn\'t count ' +
+        'Once during your turn, if Unown !R is on your Bench, you may ' +
+        'discard Unown !R and all cards attached to it. (This doesn\'t count ' +
         'as a Knocked Out Pokémon.) Then, draw a card.',
     },
   ];
@@ -87,7 +87,7 @@ export class UnownR extends PokemonCard {
 
   public set: string = 'DP';
 
-  public name: string = 'Unown R';
+  public name: string = 'Unown !R';
 
   public fullName: string = 'Unown R PL';
 

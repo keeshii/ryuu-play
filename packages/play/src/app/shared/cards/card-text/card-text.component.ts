@@ -36,7 +36,7 @@ export class CardTextComponent {
 
   constructor() {
     const symbols = Object.keys(this.symbolToCss);
-    this.pattern = new RegExp('\\b(' + symbols.join('|') + ')\\b', 'g');
+    this.pattern = new RegExp('(\\b|!)(' + symbols.join('|') + ')\\b', 'g');
   }
 
   @Input() set value(value: string) {
@@ -48,19 +48,34 @@ export class CardTextComponent {
 
     this.pattern.lastIndex = 0;
     let pos = 0;
-    while (pos < value.length) {
+    let text = '';
+    let escapedSymbol = '';
+    while (pos < value.length + 1) {
       const match = this.pattern.exec(value);
 
       if (match === null) {
-        this.items.push({ text: value.substring(pos) });
+        text = escapedSymbol + value.substring(pos);
+        if (text !== '') {
+          this.items.push({ text });
+        }
         break;
       }
 
-      if (match.index > pos) {
-        this.items.push({ text: value.substring(pos, match.index) });
+      const symbol = match[0];
+
+      // "!" before symbol, ignore replacement
+      if (symbol[0] === '!') {
+        escapedSymbol = value.substring(pos, match.index) + symbol.substring(1);
+        pos = match.index + symbol.length;
+        continue;
       }
 
-      const symbol = match[0];
+      if (match.index > pos) {
+        text = escapedSymbol + value.substring(pos, match.index);
+        this.items.push({ text });
+        escapedSymbol = '';
+      }
+
       pos = match.index + symbol.length;
       this.items.push({ text: '', icon: this.symbolToCss[symbol] });
     }

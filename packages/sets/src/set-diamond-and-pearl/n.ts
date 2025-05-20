@@ -14,7 +14,7 @@ export class N extends TrainerCard {
 
   public set: string = 'DP';
 
-  public name: string = 'N';
+  public name: string = '!N';
 
   public fullName: string = 'N NV';
 

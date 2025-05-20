@@ -6,7 +6,7 @@
 
   <div class="ptcg-card-info-text" *ngIf="!facedown && card.superType === SuperType.POKEMON">
     <div class="title">
-      <span><ptcg-card-text [value]="card.name"></ptcg-card-text></span>
+      <ptcg-card-text [value]="card.name"></ptcg-card-text>
       <div class="ptcg-u-spacer"></div>
       <div class="subtitle-evolves-from" *ngIf="card.evolvesFrom">
         {{ 'CARDS_EVOLVES_FROM' | translate: { name: card.evolvesFrom } }}
@@ -112,7 +112,7 @@
 
   <div class="ptcg-card-info-text" *ngIf="!facedown && card.superType === SuperType.ENERGY">
     <div class="title">
-      {{card.name}}
+      <ptcg-card-text [value]="card.name"></ptcg-card-text>
     </div>
     <div class="subtitle">
       <div class="subtitle-stage" [ngSwitch]="card.energyType">
@@ -140,7 +140,7 @@
 
   <div class="ptcg-card-info-text" *ngIf="!facedown && card.superType === SuperType.TRAINER">
     <div class="title">
-      {{card.name}}
+      <ptcg-card-text [value]="card.name"></ptcg-card-text>
     </div>
     <div class="subtitle">
       <div class="subtitle-stage" [ngSwitch]="card.trainerType">
@@ -174,7 +174,7 @@
 
   <div class="ptcg-card-info-text" *ngIf="!facedown && card.superType === SuperType.NONE">
     <div class="title">
-      {{card.name}}
+      <ptcg-card-text [value]="card.name"></ptcg-card-text>
     </div>
   </div>
 
