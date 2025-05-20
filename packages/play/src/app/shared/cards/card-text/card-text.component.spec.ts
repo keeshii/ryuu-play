@@ -40,8 +40,8 @@ describe('CardTextComponent', () => {
     component.value = 'Shaymin EX';
     expect(component.items).toEqual([
       { text: 'Shaymin ' },
-      { text: '', icon: 'ex' },]
-    );
+      { text: '', icon: 'ex' }
+    ]);
   });
 
   it('should decode empty value', () => {
