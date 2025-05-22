@@ -21,6 +21,7 @@ export class CardTextComponent {
     'N': 'dragon',
     'Y': 'fairy',
     'SHINY': 'shiny',
+    'ex': 'ex2',
     'EX': 'ex',
     'BREAK': 'break',
     'DELTA': 'delta',
