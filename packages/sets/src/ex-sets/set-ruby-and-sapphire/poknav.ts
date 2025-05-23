@@ -1,11 +1,4 @@
-import {
-  Effect,
-  State,
-  StoreLike,
-  TrainerCard,
-  TrainerEffect,
-  TrainerType,
-} from '@ptcg/common';
+import { Effect, State, StoreLike, TrainerCard, TrainerEffect, TrainerType } from '@ptcg/common';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   // const player = effect.player;
@@ -24,7 +17,7 @@ export class Pokénav extends TrainerCard {
 
   public text: string =
     'Look at the top 3 cards of your deck, and choose a Basic Pokémon, Evolution card, or Energy card. Show it to ' +
-    'your opponent and put it into your hand. Put the 2 other cards back on top of your deck in any order. ';
+    'your opponent and put it into your hand. Put the 2 other cards back on top of your deck in any order.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {

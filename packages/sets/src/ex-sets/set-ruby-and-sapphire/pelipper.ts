@@ -1,12 +1,4 @@
-import {
-  AttackEffect,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Pelipper extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -24,13 +16,13 @@ export class Pelipper extends PokemonCard {
       damage: '',
       text:
         'During your next turn, Spit Up\'s base damage is 70 instead of 30, and Swallow\'s base damage is 60 instead ' +
-        'of 20. '
+        'of 20.',
     },
     {
       name: 'Spit Up',
       cost: [CardType.WATER, CardType.COLORLESS],
       damage: '30',
-      text: ''
+      text: '',
     },
     {
       name: 'Swallow',
@@ -38,17 +30,13 @@ export class Pelipper extends PokemonCard {
       damage: '20',
       text:
         'After your attack, remove from Pelipper the number of damage counters equal to the damage you did to the ' +
-        'Defending Pokémon. If Pelipper has fewer damage counters than that, remove all of them. '
+        'Defending Pokémon. If Pelipper has fewer damage counters than that, remove all of them.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.LIGHTNING }
-  ];
+  public weakness = [{ type: CardType.LIGHTNING }];
 
-  public resistance = [
-    { type: CardType.FIGHTING, value: -30 }
-  ];
+  public resistance = [{ type: CardType.FIGHTING, value: -30 }];
 
   public retreat = [CardType.COLORLESS];
 

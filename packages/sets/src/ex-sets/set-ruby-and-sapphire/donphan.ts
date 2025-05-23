@@ -1,7 +1,9 @@
 import {
   AttackEffect,
   CardType,
+  CoinFlipPrompt,
   Effect,
+  GameMessage,
   PokemonCard,
   Stage,
   State,
@@ -22,19 +24,17 @@ export class Donphan extends PokemonCard {
       name: 'Rend',
       cost: [CardType.FIGHTING, CardType.COLORLESS],
       damage: '20+',
-      text: 'If the Defending Pokémon has any damage counters on it, this attack does 20 damage plus 20 more damage.'
+      text: 'If the Defending Pokémon has any damage counters on it, this attack does 20 damage plus 20 more damage.',
     },
     {
       name: 'Double Spin',
       cost: [CardType.FIGHTING, CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS],
       damage: '60×',
-      text: 'Flip 2 coins. This attack does 60 damage times the number of heads.'
+      text: 'Flip 2 coins. This attack does 60 damage times the number of heads.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.GRASS }
-  ];
+  public weakness = [{ type: CardType.GRASS }];
 
   public retreat = [CardType.COLORLESS];
 
@@ -46,11 +46,23 @@ export class Donphan extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
+      effect.damage += effect.player.active.damage ? 20 : 0;
       return state;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+      return store.prompt(
+        state,
+        [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)],
+        results => {
+          let heads: number = 0;
+          results.forEach(r => {
+            heads += r ? 1 : 0;
+          });
+          effect.damage = 60 * heads;
+        }
+      );
     }
 
     return state;

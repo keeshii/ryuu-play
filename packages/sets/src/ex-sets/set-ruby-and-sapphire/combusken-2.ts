@@ -1,7 +1,10 @@
 import {
+  AttachEnergyEffect,
   AttackEffect,
   CardType,
+  CoinFlipPrompt,
   Effect,
+  GameMessage,
   PokemonCard,
   PowerEffect,
   PowerType,
@@ -24,8 +27,8 @@ export class Combusken2 extends PokemonCard {
       name: 'Natural Cure',
       powerType: PowerType.POKEBODY,
       text:
-        'When you attach a Fire Energy card from your hand to Combusken, remove all Special Conditions from ' +
-        'Combusken. '
+        'When you attach a R Energy card from your hand to Combusken, remove all Special Conditions from ' +
+        'Combusken.',
     },
   ];
 
@@ -34,13 +37,11 @@ export class Combusken2 extends PokemonCard {
       name: 'Lunge',
       cost: [CardType.COLORLESS, CardType.COLORLESS],
       damage: '50',
-      text: 'Flip a coin. If tails, this attack does nothing.'
+      text: 'Flip a coin. If tails, this attack does nothing.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.WATER }
-  ];
+  public weakness = [{ type: CardType.WATER }];
 
   public retreat = [CardType.COLORLESS];
 
@@ -51,12 +52,42 @@ export class Combusken2 extends PokemonCard {
   public fullName: string = 'Combusken RS-2';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
+    if (effect instanceof AttachEnergyEffect && effect.target.cards.includes(this)) {
+      const player = effect.player;
+      const pokemonCard = effect.target.getPokemonCard();
+
+      if (!effect.energyCard.provides.includes(CardType.FIRE)) {
+        return state;
+      }
+
+      // pokemon is evolved
+      if (pokemonCard !== this) {
+        return state;
+      }
+
+      // Try to reduce PowerEffect, to check if something is blocking our ability
+      try {
+        const powerEffect = new PowerEffect(player, this.powers[0], this);
+        store.reduceEffect(state, powerEffect);
+      } catch {
+        return state;
+      }
+
+      const conditions = effect.target.specialConditions.slice();
+      conditions.forEach(condition => {
+        effect.target.removeSpecialCondition(condition);
+      });
       return state;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+        if (result === false) {
+          effect.damage = 0;
+        }
+      });
     }
 
     return state;

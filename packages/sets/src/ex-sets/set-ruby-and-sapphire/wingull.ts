@@ -1,12 +1,4 @@
-import {
-  AttackEffect,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Wingull extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -20,17 +12,13 @@ export class Wingull extends PokemonCard {
       name: 'Surprise Attack',
       cost: [CardType.WATER],
       damage: '20',
-      text: 'Flip a coin. If tails, this attack does nothing.'
+      text: 'Flip a coin. If tails, this attack does nothing.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.LIGHTNING }
-  ];
+  public weakness = [{ type: CardType.LIGHTNING }];
 
-  public resistance = [
-    { type: CardType.FIGHTING, value: -30 }
-  ];
+  public resistance = [{ type: CardType.FIGHTING, value: -30 }];
 
   public retreat = [CardType.COLORLESS];
 

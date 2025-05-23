@@ -1,11 +1,4 @@
-import {
-  Effect,
-  State,
-  StoreLike,
-  TrainerCard,
-  TrainerEffect,
-  TrainerType,
-} from '@ptcg/common';
+import { Effect, State, StoreLike, TrainerCard, TrainerEffect, TrainerType } from '@ptcg/common';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   // const player = effect.player;

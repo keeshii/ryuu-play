@@ -1,13 +1,4 @@
-import {
-  AttackEffect,
-  CardTag,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardTag, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class HitmonchanEx extends PokemonCard {
   public tags = [CardTag.POKEMON_EX];
@@ -23,19 +14,17 @@ export class HitmonchanEx extends PokemonCard {
       name: 'Steady Punch',
       cost: [CardType.FIGHTING],
       damage: '10+',
-      text: 'Flip a coin. If heads, this attack does 10 damage plus 10 more damage.'
+      text: 'Flip a coin. If heads, this attack does 10 damage plus 10 more damage.',
     },
     {
       name: 'Sky Uppercut',
       cost: [CardType.FIGHTING, CardType.FIGHTING, CardType.COLORLESS],
       damage: '50',
-      text: 'This attack\'s damage is not affected by Resistance.'
+      text: 'This attack\'s damage is not affected by Resistance.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.PSYCHIC }
-  ];
+  public weakness = [{ type: CardType.PSYCHIC }];
 
   public retreat = [CardType.COLORLESS, CardType.COLORLESS];
 

@@ -1,8 +1,4 @@
-import {
-  CardType,
-  PokemonCard,
-  Stage,
-} from '@ptcg/common';
+import { CardType, PokemonCard, Stage } from '@ptcg/common';
 
 export class Taillow extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -16,23 +12,19 @@ export class Taillow extends PokemonCard {
       name: 'Peck',
       cost: [CardType.COLORLESS],
       damage: '10',
-      text: ''
+      text: '',
     },
     {
       name: 'Wing Attack',
       cost: [CardType.COLORLESS, CardType.COLORLESS],
       damage: '20',
-      text: ''
+      text: '',
     },
   ];
 
-  public weakness = [
-    { type: CardType.LIGHTNING }
-  ];
+  public weakness = [{ type: CardType.LIGHTNING }];
 
-  public resistance = [
-    { type: CardType.FIGHTING, value: -30 }
-  ];
+  public resistance = [{ type: CardType.FIGHTING, value: -30 }];
 
   public retreat = [CardType.COLORLESS];
 
@@ -41,5 +33,4 @@ export class Taillow extends PokemonCard {
   public name: string = 'Taillow';
 
   public fullName: string = 'Taillow RS';
-
 }

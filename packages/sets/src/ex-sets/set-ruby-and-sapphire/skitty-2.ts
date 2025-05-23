@@ -1,12 +1,4 @@
-import {
-  AttackEffect,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Skitty2 extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -20,19 +12,17 @@ export class Skitty2 extends PokemonCard {
       name: 'Plus Energy',
       cost: [CardType.COLORLESS],
       damage: '',
-      text: 'Attach a basic Energy card from your hand to 1 of your Pokémon.'
+      text: 'Attach a basic Energy card from your hand to 1 of your Pokémon.',
     },
     {
       name: 'Scratch',
       cost: [CardType.COLORLESS],
       damage: '10',
-      text: ''
+      text: '',
     },
   ];
 
-  public weakness = [
-    { type: CardType.FIGHTING }
-  ];
+  public weakness = [{ type: CardType.FIGHTING }];
 
   public retreat = [CardType.COLORLESS];
 

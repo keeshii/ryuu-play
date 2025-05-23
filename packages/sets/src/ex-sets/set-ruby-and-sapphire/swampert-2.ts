@@ -25,7 +25,7 @@ export class Swampert2 extends PokemonCard {
       powerType: PowerType.POKEBODY,
       text:
         'Once during your turn (before your attack), when you attach a Water Energy card from your hand to ' +
-        'Swampert, remove 1 damage counter from Swampert. '
+        'Swampert, remove 1 damage counter from Swampert.',
     },
   ];
 
@@ -36,19 +36,17 @@ export class Swampert2 extends PokemonCard {
       damage: '',
       text:
         'Choose 1 of your opponent\'s Pokémon. This attack does 20 damage to that Pokémon. (Don\'t apply Weakness and ' +
-        'Resistance for Benched Pokémon.) '
+        'Resistance for Benched Pokémon.)',
     },
     {
       name: 'Waterfall',
       cost: [CardType.WATER, CardType.COLORLESS, CardType.COLORLESS],
       damage: '50',
-      text: ''
+      text: '',
     },
   ];
 
-  public weakness = [
-    { type: CardType.LIGHTNING }
-  ];
+  public weakness = [{ type: CardType.LIGHTNING }];
 
   public retreat = [CardType.COLORLESS, CardType.COLORLESS];
 

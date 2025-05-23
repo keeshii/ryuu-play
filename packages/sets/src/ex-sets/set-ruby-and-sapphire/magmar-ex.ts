@@ -1,13 +1,4 @@
-import {
-  AttackEffect,
-  CardTag,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardTag, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class MagmarEx extends PokemonCard {
   public tags = [CardTag.POKEMON_EX];
@@ -25,19 +16,17 @@ export class MagmarEx extends PokemonCard {
       damage: '10',
       text:
         'If the Defending Pokémon tries to attack during your opponent\'s next turn, your opponent flips a coin. If ' +
-        'tails, that attack does nothing. '
+        'tails, that attack does nothing.',
     },
     {
       name: 'Super Singe',
       cost: [CardType.FIRE, CardType.FIRE, CardType.COLORLESS],
       damage: '40',
-      text: 'The Defending Pokémon is now Burned.'
+      text: 'The Defending Pokémon is now Burned.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.WATER }
-  ];
+  public weakness = [{ type: CardType.WATER }];
 
   public retreat = [CardType.COLORLESS, CardType.COLORLESS];
 

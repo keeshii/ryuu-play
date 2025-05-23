@@ -1,7 +1,4 @@
-import {
-  CardType,
-  EnergyCard,
-} from '@ptcg/common';
+import { CardType, EnergyCard } from '@ptcg/common';
 
 export class LightningEnergy extends EnergyCard {
   public provides: CardType[] = [CardType.LIGHTNING];
@@ -11,5 +8,4 @@ export class LightningEnergy extends EnergyCard {
   public name: string = 'Lightning Energy';
 
   public fullName: string = 'Lightning Energy RS';
-
 }

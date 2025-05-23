@@ -1,12 +1,4 @@
-import {
-  AttackEffect,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Marshtomp extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -22,19 +14,17 @@ export class Marshtomp extends PokemonCard {
       name: 'Bubble',
       cost: [CardType.WATER],
       damage: '10',
-      text: 'Flip a coin. If heads, the Defending Pokémon is now Paralyzed.'
+      text: 'Flip a coin. If heads, the Defending Pokémon is now Paralyzed.',
     },
     {
       name: 'Slash',
       cost: [CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS],
       damage: '40',
-      text: ''
+      text: '',
     },
   ];
 
-  public weakness = [
-    { type: CardType.LIGHTNING }
-  ];
+  public weakness = [{ type: CardType.LIGHTNING }];
 
   public retreat = [CardType.COLORLESS];
 

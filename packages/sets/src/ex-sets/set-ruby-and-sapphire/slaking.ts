@@ -23,7 +23,7 @@ export class Slaking extends PokemonCard {
     {
       name: 'Lazy',
       powerType: PowerType.POKEBODY,
-      text: 'As long as Slaking is your Active Pokémon, your opponent\'s Pokémon can\'t use any Poké-Powers.'
+      text: 'As long as Slaking is your Active Pokémon, your opponent\'s Pokémon can\'t use any Poké-Powers.',
     },
   ];
 
@@ -34,13 +34,11 @@ export class Slaking extends PokemonCard {
       damage: '100',
       text:
         'Discard a basic Energy card attached to Slaking or this attack does nothing. Slaking can\'t attack during ' +
-        'your next turn. '
+        'your next turn.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.FIGHTING }
-  ];
+  public weakness = [{ type: CardType.FIGHTING }];
 
   public retreat = [CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS];
 

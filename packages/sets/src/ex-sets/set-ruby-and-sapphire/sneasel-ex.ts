@@ -1,13 +1,4 @@
-import {
-  AttackEffect,
-  CardTag,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardTag, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class SneaselEx extends PokemonCard {
   public tags = [CardTag.POKEMON_EX];
@@ -23,7 +14,7 @@ export class SneaselEx extends PokemonCard {
       name: 'Double Scratch',
       cost: [CardType.DARK],
       damage: '10×',
-      text: 'Flip 2 coins. This attack does 10 damage times the number of heads.'
+      text: 'Flip 2 coins. This attack does 10 damage times the number of heads.',
     },
     {
       name: 'Beat Up',
@@ -31,17 +22,13 @@ export class SneaselEx extends PokemonCard {
       damage: '20×',
       text:
         'Flip a coin for each of your Pokémon in play (including Sneasel ex). This attack does 20 damage times the ' +
-        'number of heads. '
+        'number of heads.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.FIGHTING }
-  ];
+  public weakness = [{ type: CardType.FIGHTING }];
 
-  public resistance = [
-    { type: CardType.PSYCHIC, value: -30 }
-  ];
+  public resistance = [{ type: CardType.PSYCHIC, value: -30 }];
 
   public retreat = [CardType.COLORLESS];
 

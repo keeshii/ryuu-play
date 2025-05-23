@@ -1,12 +1,4 @@
-import {
-  AttackEffect,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Hariyama2 extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -22,19 +14,17 @@ export class Hariyama2 extends PokemonCard {
       name: 'Shove',
       cost: [CardType.FIGHTING, CardType.COLORLESS],
       damage: '20',
-      text: 'Flip a coin. If heads, the Defending Pokémon is now Paralyzed.'
+      text: 'Flip a coin. If heads, the Defending Pokémon is now Paralyzed.',
     },
     {
       name: 'Slap Down',
       cost: [CardType.FIGHTING, CardType.COLORLESS, CardType.COLORLESS],
       damage: '40+',
-      text: 'Flip 2 coins. This attack does 40 damage plus 10 more damage for each heads.'
+      text: 'Flip 2 coins. This attack does 40 damage plus 10 more damage for each heads.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.PSYCHIC }
-  ];
+  public weakness = [{ type: CardType.PSYCHIC }];
 
   public retreat = [CardType.COLORLESS];
 

@@ -1,12 +1,4 @@
-import {
-  AttackEffect,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Goldeen extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -20,13 +12,11 @@ export class Goldeen extends PokemonCard {
       name: 'Flail',
       cost: [CardType.COLORLESS],
       damage: '10×',
-      text: 'Does 10 damage for each damage counter on Goldeen.'
+      text: 'Does 10 damage for each damage counter on Goldeen.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.LIGHTNING }
-  ];
+  public weakness = [{ type: CardType.LIGHTNING }];
 
   public retreat = [CardType.COLORLESS];
 
@@ -38,6 +28,7 @@ export class Goldeen extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
+      effect.damage = effect.player.active.damage;
       return state;
     }
 

@@ -1,13 +1,4 @@
-import {
-  AttackEffect,
-  CardTag,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardTag, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class ScytherEx extends PokemonCard {
   public tags = [CardTag.POKEMON_EX];
@@ -25,23 +16,19 @@ export class ScytherEx extends PokemonCard {
       damage: '10',
       text:
         'Flip a coin. If heads, prevent all effects of an attack, including damage, done to Scyther ex during your ' +
-        'opponent\'s next turn. '
+        'opponent\'s next turn.',
     },
     {
       name: 'Slash',
       cost: [CardType.GRASS, CardType.GRASS, CardType.COLORLESS],
       damage: '50',
-      text: ''
+      text: '',
     },
   ];
 
-  public weakness = [
-    { type: CardType.FIRE }
-  ];
+  public weakness = [{ type: CardType.FIRE }];
 
-  public resistance = [
-    { type: CardType.FIGHTING, value: -30 }
-  ];
+  public resistance = [{ type: CardType.FIGHTING, value: -30 }];
 
   public retreat = [CardType.COLORLESS];
 

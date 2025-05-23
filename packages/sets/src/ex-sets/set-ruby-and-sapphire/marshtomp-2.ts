@@ -25,7 +25,7 @@ export class Marshtomp2 extends PokemonCard {
       powerType: PowerType.POKEBODY,
       text:
         'When you attach a Water Energy card from your hand to Marshtomp, remove all Special Conditions from ' +
-        'Marshtomp. '
+        'Marshtomp.',
     },
   ];
 
@@ -34,13 +34,11 @@ export class Marshtomp2 extends PokemonCard {
       name: 'Aqua Sonic',
       cost: [CardType.COLORLESS, CardType.COLORLESS],
       damage: '20',
-      text: 'This attack\'s damage is not affected by Resistance.'
+      text: 'This attack\'s damage is not affected by Resistance.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.LIGHTNING }
-  ];
+  public weakness = [{ type: CardType.LIGHTNING }];
 
   public retreat = [CardType.COLORLESS];
 

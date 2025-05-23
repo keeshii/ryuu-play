@@ -2,7 +2,9 @@ import {
   AttackEffect,
   CardTag,
   CardType,
+  DealDamageEffect,
   Effect,
+  HealTargetEffect,
   PokemonCard,
   Stage,
   State,
@@ -25,19 +27,17 @@ export class ChanseyEx extends PokemonCard {
       damage: '',
       text:
         'Remove 2 damage counters (1 if there is only 1) from each of your Pokémon. Remove no damage counters from ' +
-        'Chansey ex. '
+        'Chansey ex.',
     },
     {
       name: 'Double-edge',
       cost: [CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS],
       damage: '80',
-      text: 'Chansey ex does 60 damage to itself.'
+      text: 'Chansey ex does 60 damage to itself.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.FIGHTING }
-  ];
+  public weakness = [{ type: CardType.FIGHTING }];
 
   public retreat = [CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS];
 
@@ -49,11 +49,21 @@ export class ChanseyEx extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+
+      player.bench.forEach(bench => {
+        const healTargetEffect = new HealTargetEffect(effect, 20);
+        healTargetEffect.target = bench;
+        state = store.reduceEffect(state, healTargetEffect);
+      });
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+
+      const dealDamage = new DealDamageEffect(effect, 60);
+      dealDamage.target = player.active;
+      return store.reduceEffect(state, dealDamage);
     }
 
     return state;

@@ -1,12 +1,4 @@
-import {
-  AttackEffect,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Poochyena3 extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -20,17 +12,13 @@ export class Poochyena3 extends PokemonCard {
       name: 'Shadow Bind',
       cost: [CardType.DARK],
       damage: '10',
-      text: 'The Defending Pokémon can\'t retreat until the end of your opponent\'s next turn.'
+      text: 'The Defending Pokémon can\'t retreat until the end of your opponent\'s next turn.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.FIGHTING }
-  ];
+  public weakness = [{ type: CardType.FIGHTING }];
 
-  public resistance = [
-    { type: CardType.PSYCHIC, value: -30 }
-  ];
+  public resistance = [{ type: CardType.PSYCHIC, value: -30 }];
 
   public retreat = [CardType.COLORLESS];
 

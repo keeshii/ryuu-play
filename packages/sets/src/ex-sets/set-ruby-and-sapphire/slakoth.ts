@@ -1,12 +1,4 @@
-import {
-  AttackEffect,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Slakoth extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -20,19 +12,17 @@ export class Slakoth extends PokemonCard {
       name: 'Claw',
       cost: [CardType.COLORLESS],
       damage: '20',
-      text: 'Flip a coin. If tails, this attack does nothing.'
+      text: 'Flip a coin. If tails, this attack does nothing.',
     },
     {
       name: 'Slack Off',
       cost: [CardType.COLORLESS, CardType.COLORLESS],
       damage: '',
-      text: 'Remove all damage counters from Slakoth. Slakoth can\'t attack during your next turn.'
+      text: 'Remove all damage counters from Slakoth. Slakoth can\'t attack during your next turn.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.FIGHTING }
-  ];
+  public weakness = [{ type: CardType.FIGHTING }];
 
   public retreat = [CardType.COLORLESS];
 

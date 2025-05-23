@@ -1,12 +1,4 @@
-import {
-  AttackEffect,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Hariyama extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -22,19 +14,17 @@ export class Hariyama extends PokemonCard {
       name: 'Super Slap Push',
       cost: [CardType.FIGHTING],
       damage: '',
-      text: 'Does 20 damage to each Defending Pokémon.'
+      text: 'Does 20 damage to each Defending Pokémon.',
     },
     {
       name: 'Mega Throw',
       cost: [CardType.FIGHTING, CardType.COLORLESS, CardType.COLORLESS],
       damage: '40+',
-      text: 'If the Defending Pokémon is a Pokémon-ex, this attack does 40 damage plus 40 more damage.'
+      text: 'If the Defending Pokémon is a Pokémon-ex, this attack does 40 damage plus 40 more damage.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.PSYCHIC }
-  ];
+  public weakness = [{ type: CardType.PSYCHIC }];
 
   public retreat = [CardType.COLORLESS, CardType.COLORLESS];
 

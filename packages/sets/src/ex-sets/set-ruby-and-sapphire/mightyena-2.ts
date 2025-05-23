@@ -1,12 +1,4 @@
-import {
-  AttackEffect,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Mightyena2 extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -22,23 +14,19 @@ export class Mightyena2 extends PokemonCard {
       name: 'Bite',
       cost: [CardType.COLORLESS, CardType.COLORLESS],
       damage: '20',
-      text: ''
+      text: '',
     },
     {
       name: 'Ambush',
       cost: [CardType.DARK, CardType.COLORLESS, CardType.COLORLESS],
       damage: '30+',
-      text: 'Flip a coin. If heads, this attack does 30 damage plus 30 more damage.'
+      text: 'Flip a coin. If heads, this attack does 30 damage plus 30 more damage.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.FIGHTING }
-  ];
+  public weakness = [{ type: CardType.FIGHTING }];
 
-  public resistance = [
-    { type: CardType.PSYCHIC, value: -30 }
-  ];
+  public resistance = [{ type: CardType.PSYCHIC, value: -30 }];
 
   public retreat = [CardType.COLORLESS];
 

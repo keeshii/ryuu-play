@@ -1,12 +1,4 @@
-import {
-  AttackEffect,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Ralts2 extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -20,19 +12,17 @@ export class Ralts2 extends PokemonCard {
       name: 'Headbutt',
       cost: [CardType.COLORLESS],
       damage: '10',
-      text: ''
+      text: '',
     },
     {
       name: 'Hypnoblast',
       cost: [CardType.PSYCHIC, CardType.COLORLESS],
       damage: '20',
-      text: 'The Defending Pokémon is now Asleep.'
+      text: 'The Defending Pokémon is now Asleep.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.PSYCHIC }
-  ];
+  public weakness = [{ type: CardType.PSYCHIC }];
 
   public retreat = [CardType.COLORLESS];
 

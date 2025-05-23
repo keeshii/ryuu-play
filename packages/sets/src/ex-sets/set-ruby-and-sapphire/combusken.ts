@@ -1,7 +1,9 @@
 import {
   AttackEffect,
   CardType,
+  CoinFlipPrompt,
   Effect,
+  GameMessage,
   PokemonCard,
   Stage,
   State,
@@ -22,19 +24,17 @@ export class Combusken extends PokemonCard {
       name: 'Flare',
       cost: [CardType.FIRE],
       damage: '20',
-      text: ''
+      text: '',
     },
     {
       name: 'Double Kick',
       cost: [CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS],
       damage: '40×',
-      text: 'Flip 2 coins. This attack does 40 damage times the number of heads.'
+      text: 'Flip 2 coins. This attack does 40 damage times the number of heads.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.WATER }
-  ];
+  public weakness = [{ type: CardType.WATER }];
 
   public retreat = [CardType.COLORLESS];
 
@@ -46,7 +46,18 @@ export class Combusken extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+      return store.prompt(
+        state,
+        [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)],
+        results => {
+          let heads: number = 0;
+          results.forEach(r => {
+            heads += r ? 1 : 0;
+          });
+          effect.damage = 40 * heads;
+        }
+      );
     }
 
     return state;

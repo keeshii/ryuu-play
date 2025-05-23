@@ -1,12 +1,4 @@
-import {
-  AttackEffect,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Torchic extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -20,19 +12,17 @@ export class Torchic extends PokemonCard {
       name: 'Peck',
       cost: [CardType.COLORLESS],
       damage: '10',
-      text: ''
+      text: '',
     },
     {
       name: 'Fireworks',
       cost: [CardType.FIRE, CardType.COLORLESS],
       damage: '30',
-      text: 'Flip a coin. If tails, discard a Fire Energy card attached to Torchic.'
+      text: 'Flip a coin. If tails, discard a Fire Energy card attached to Torchic.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.WATER }
-  ];
+  public weakness = [{ type: CardType.WATER }];
 
   public retreat = [CardType.COLORLESS];
 

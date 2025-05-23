@@ -1,12 +1,4 @@
-import {
-  AttackEffect,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Wailmer extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -22,7 +14,7 @@ export class Wailmer extends PokemonCard {
       damage: '',
       text:
         'Remove all Special Conditions and 4 damage counters from Wailmer (all if there are less than 4). Wailmer ' +
-        'is now Asleep. '
+        'is now Asleep.',
     },
     {
       name: 'Water Gun',
@@ -30,13 +22,11 @@ export class Wailmer extends PokemonCard {
       damage: '20+',
       text:
         'This attack does 20 damage plus 10 more damage for each Water Energy attached to Wailmer but not used to ' +
-        'pay for this attack\'s Energy cost. You can\'t add more than 20 damage in this way. '
+        'pay for this attack\'s Energy cost. You can\'t add more than 20 damage in this way.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.LIGHTNING }
-  ];
+  public weakness = [{ type: CardType.LIGHTNING }];
 
   public retreat = [CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS];
 

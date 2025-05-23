@@ -1,8 +1,4 @@
-import {
-  CardType,
-  PokemonCard,
-  Stage,
-} from '@ptcg/common';
+import { CardType, PokemonCard, Stage } from '@ptcg/common';
 
 export class Treecko2 extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -16,23 +12,19 @@ export class Treecko2 extends PokemonCard {
       name: 'Tail Slap',
       cost: [CardType.COLORLESS],
       damage: '10',
-      text: ''
+      text: '',
     },
     {
       name: 'Razor Leaf',
       cost: [CardType.GRASS, CardType.COLORLESS],
       damage: '20',
-      text: ''
+      text: '',
     },
   ];
 
-  public weakness = [
-    { type: CardType.FIRE }
-  ];
+  public weakness = [{ type: CardType.FIRE }];
 
-  public resistance = [
-    { type: CardType.WATER, value: -30 }
-  ];
+  public resistance = [{ type: CardType.WATER, value: -30 }];
 
   public retreat = [CardType.COLORLESS];
 
@@ -41,5 +33,4 @@ export class Treecko2 extends PokemonCard {
   public name: string = 'Treecko';
 
   public fullName: string = 'Treecko RS-2';
-
 }

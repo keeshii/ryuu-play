@@ -1,12 +1,4 @@
-import {
-  AttackEffect,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Zigzagoon extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -20,13 +12,11 @@ export class Zigzagoon extends PokemonCard {
       name: 'Fury Swipes',
       cost: [CardType.COLORLESS],
       damage: '10×',
-      text: 'Flip 3 coins. This attack does 10 damage times the number of heads.'
+      text: 'Flip 3 coins. This attack does 10 damage times the number of heads.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.FIGHTING }
-  ];
+  public weakness = [{ type: CardType.FIGHTING }];
 
   public retreat = [CardType.COLORLESS];
 

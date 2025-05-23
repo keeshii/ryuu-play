@@ -1,13 +1,4 @@
-import {
-  AttackEffect,
-  CardTag,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardTag, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class LaprasEx extends PokemonCard {
   public tags = [CardTag.POKEMON_EX];
@@ -25,19 +16,17 @@ export class LaprasEx extends PokemonCard {
       damage: '10+',
       text:
         'Does 10 damage plus 10 more damage for each Energy attached to Lapras ex but not used to pay for this ' +
-        'attack\'s Energy cost. You can\'t add more than 20 damage in this way. '
+        'attack\'s Energy cost. You can\'t add more than 20 damage in this way.',
     },
     {
       name: 'Confuse Ray',
       cost: [CardType.WATER, CardType.WATER, CardType.COLORLESS],
       damage: '30',
-      text: 'The Defending Pokémon is now Confused.'
+      text: 'The Defending Pokémon is now Confused.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.LIGHTNING }
-  ];
+  public weakness = [{ type: CardType.LIGHTNING }];
 
   public retreat = [CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS];
 

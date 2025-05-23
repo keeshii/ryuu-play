@@ -1,12 +1,4 @@
-import {
-  AttackEffect,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Vigoroth extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -22,19 +14,17 @@ export class Vigoroth extends PokemonCard {
       name: 'Fury Swipes',
       cost: [CardType.COLORLESS, CardType.COLORLESS],
       damage: '20×',
-      text: 'Flip 3 coins. This attack does 20 damage times the number of heads.'
+      text: 'Flip 3 coins. This attack does 20 damage times the number of heads.',
     },
     {
       name: 'Rage',
       cost: [CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS],
       damage: '20+',
-      text: 'Does 20 damage plus 10 more damage for each damage counter on Vigoroth.'
+      text: 'Does 20 damage plus 10 more damage for each damage counter on Vigoroth.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.FIGHTING }
-  ];
+  public weakness = [{ type: CardType.FIGHTING }];
 
   public retreat = [CardType.COLORLESS];
 

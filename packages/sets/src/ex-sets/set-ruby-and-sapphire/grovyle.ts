@@ -1,12 +1,4 @@
-import {
-  AttackEffect,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Grovyle extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -22,7 +14,7 @@ export class Grovyle extends PokemonCard {
       name: 'Poison Breath',
       cost: [CardType.COLORLESS, CardType.COLORLESS],
       damage: '',
-      text: 'The Defending Pokémon is now Poisoned.'
+      text: 'The Defending Pokémon is now Poisoned.',
     },
     {
       name: 'Swift',
@@ -30,17 +22,13 @@ export class Grovyle extends PokemonCard {
       damage: '30',
       text:
         'This attack\'s damage isn\'t affected by Weakness, Resistance, Poké-Powers, Poké-Bodies, or any other ' +
-        'effects on the Defending Pokémon. '
+        'effects on the Defending Pokémon.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.FIRE }
-  ];
+  public weakness = [{ type: CardType.FIRE }];
 
-  public resistance = [
-    { type: CardType.WATER, value: -30 }
-  ];
+  public resistance = [{ type: CardType.WATER, value: -30 }];
 
   public retreat = [CardType.COLORLESS];
 

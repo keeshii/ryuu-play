@@ -1,8 +1,4 @@
-import {
-  CardType,
-  PokemonCard,
-  Stage,
-} from '@ptcg/common';
+import { CardType, PokemonCard, Stage } from '@ptcg/common';
 
 export class Lairon extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -18,23 +14,19 @@ export class Lairon extends PokemonCard {
       name: 'Ram',
       cost: [CardType.COLORLESS, CardType.COLORLESS],
       damage: '20',
-      text: ''
+      text: '',
     },
     {
       name: 'Metal Claw',
       cost: [CardType.METAL, CardType.COLORLESS, CardType.COLORLESS],
       damage: '40',
-      text: ''
+      text: '',
     },
   ];
 
-  public weakness = [
-    { type: CardType.FIRE }
-  ];
+  public weakness = [{ type: CardType.FIRE }];
 
-  public resistance = [
-    { type: CardType.GRASS, value: -30 }
-  ];
+  public resistance = [{ type: CardType.GRASS, value: -30 }];
 
   public retreat = [CardType.COLORLESS, CardType.COLORLESS];
 
@@ -43,5 +35,4 @@ export class Lairon extends PokemonCard {
   public name: string = 'Lairon';
 
   public fullName: string = 'Lairon RS';
-
 }

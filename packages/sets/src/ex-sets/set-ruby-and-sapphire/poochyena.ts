@@ -1,8 +1,4 @@
-import {
-  CardType,
-  PokemonCard,
-  Stage,
-} from '@ptcg/common';
+import { CardType, PokemonCard, Stage } from '@ptcg/common';
 
 export class Poochyena extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -16,17 +12,13 @@ export class Poochyena extends PokemonCard {
       name: 'Bite',
       cost: [CardType.COLORLESS],
       damage: '10',
-      text: ''
+      text: '',
     },
   ];
 
-  public weakness = [
-    { type: CardType.FIGHTING }
-  ];
+  public weakness = [{ type: CardType.FIGHTING }];
 
-  public resistance = [
-    { type: CardType.PSYCHIC, value: -30 }
-  ];
+  public resistance = [{ type: CardType.PSYCHIC, value: -30 }];
 
   public retreat = [CardType.COLORLESS];
 
@@ -35,5 +27,4 @@ export class Poochyena extends PokemonCard {
   public name: string = 'Poochyena';
 
   public fullName: string = 'Poochyena RS';
-
 }

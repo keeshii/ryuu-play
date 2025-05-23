@@ -1,12 +1,4 @@
-import {
-  AttackEffect,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Manectric2 extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -22,7 +14,7 @@ export class Manectric2 extends PokemonCard {
       name: 'Thundershock',
       cost: [CardType.COLORLESS, CardType.COLORLESS],
       damage: '20',
-      text: 'Flip a coin. If heads, the Defending Pokémon is now Paralyzed.'
+      text: 'Flip a coin. If heads, the Defending Pokémon is now Paralyzed.',
     },
     {
       name: 'Gigashock',
@@ -30,17 +22,13 @@ export class Manectric2 extends PokemonCard {
       damage: '40',
       text:
         'Does 10 damage to 2 of your opponent\'s Benched Pokémon (1 if there is only 1). (Don\'t apply Weakness and ' +
-        'Resistance for Benched Pokémon.) '
+        'Resistance for Benched Pokémon.)',
     },
   ];
 
-  public weakness = [
-    { type: CardType.FIGHTING }
-  ];
+  public weakness = [{ type: CardType.FIGHTING }];
 
-  public resistance = [
-    { type: CardType.METAL, value: -30 }
-  ];
+  public resistance = [{ type: CardType.METAL, value: -30 }];
 
   public retreat = [CardType.COLORLESS];
 

@@ -1,12 +1,4 @@
-import {
-  AttackEffect,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Kirlia extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -22,19 +14,17 @@ export class Kirlia extends PokemonCard {
       name: 'Removal Beam',
       cost: [CardType.PSYCHIC],
       damage: '10',
-      text: 'Flip a coin. If heads, discard 1 Energy card attached to the Defending Pokémon.'
+      text: 'Flip a coin. If heads, discard 1 Energy card attached to the Defending Pokémon.',
     },
     {
       name: 'Super Psy',
       cost: [CardType.PSYCHIC, CardType.COLORLESS, CardType.COLORLESS],
       damage: '50',
-      text: ''
+      text: '',
     },
   ];
 
-  public weakness = [
-    { type: CardType.PSYCHIC }
-  ];
+  public weakness = [{ type: CardType.PSYCHIC }];
 
   public retreat = [CardType.COLORLESS];
 

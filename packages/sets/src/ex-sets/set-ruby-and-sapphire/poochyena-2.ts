@@ -1,12 +1,4 @@
-import {
-  AttackEffect,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Poochyena2 extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -20,23 +12,19 @@ export class Poochyena2 extends PokemonCard {
       name: 'Knock Off',
       cost: [CardType.DARK],
       damage: '',
-      text: 'Flip a coin. If heads, choose 1 card from your opponent\'s hand without looking and discard it.'
+      text: 'Flip a coin. If heads, choose 1 card from your opponent\'s hand without looking and discard it.',
     },
     {
       name: 'Rear Kick',
       cost: [CardType.COLORLESS, CardType.COLORLESS],
       damage: '20',
-      text: ''
+      text: '',
     },
   ];
 
-  public weakness = [
-    { type: CardType.FIGHTING }
-  ];
+  public weakness = [{ type: CardType.FIGHTING }];
 
-  public resistance = [
-    { type: CardType.PSYCHIC, value: -30 }
-  ];
+  public resistance = [{ type: CardType.PSYCHIC, value: -30 }];
 
   public retreat = [CardType.COLORLESS];
 

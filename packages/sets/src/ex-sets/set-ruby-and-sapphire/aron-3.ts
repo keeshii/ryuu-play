@@ -1,8 +1,4 @@
-import {
-  CardType,
-  PokemonCard,
-  Stage,
-} from '@ptcg/common';
+import { CardType, PokemonCard, Stage } from '@ptcg/common';
 
 export class Aron3 extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -16,17 +12,13 @@ export class Aron3 extends PokemonCard {
       name: 'Gnaw',
       cost: [CardType.COLORLESS],
       damage: '10',
-      text: ''
+      text: '',
     },
   ];
 
-  public weakness = [
-    { type: CardType.FIRE }
-  ];
+  public weakness = [{ type: CardType.FIRE }];
 
-  public resistance = [
-    { type: CardType.GRASS, value: -30 }
-  ];
+  public resistance = [{ type: CardType.GRASS, value: -30 }];
 
   public retreat = [CardType.COLORLESS, CardType.COLORLESS];
 
@@ -35,5 +27,4 @@ export class Aron3 extends PokemonCard {
   public name: string = 'Aron';
 
   public fullName: string = 'Aron RS-3';
-
 }

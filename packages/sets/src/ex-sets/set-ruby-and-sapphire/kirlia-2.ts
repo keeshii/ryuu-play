@@ -1,12 +1,4 @@
-import {
-  AttackEffect,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Kirlia2 extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -22,7 +14,7 @@ export class Kirlia2 extends PokemonCard {
       name: 'Dazzle Dance',
       cost: [CardType.COLORLESS],
       damage: '',
-      text: 'Flip a coin. If heads, each Defending Pokémon is now Confused.'
+      text: 'Flip a coin. If heads, each Defending Pokémon is now Confused.',
     },
     {
       name: 'Life Drain',
@@ -30,13 +22,11 @@ export class Kirlia2 extends PokemonCard {
       damage: '',
       text:
         'Flip a coin. If heads, put damage counters on the Defending Pokémon until it is 10 HP away from being ' +
-        'Knocked Out. '
+        'Knocked Out.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.PSYCHIC }
-  ];
+  public weakness = [{ type: CardType.PSYCHIC }];
 
   public retreat = [CardType.COLORLESS];
 

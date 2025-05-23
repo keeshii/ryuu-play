@@ -1,8 +1,4 @@
-import {
-  CardType,
-  PokemonCard,
-  Stage,
-} from '@ptcg/common';
+import { CardType, PokemonCard, Stage } from '@ptcg/common';
 
 export class Makuhita extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -16,19 +12,17 @@ export class Makuhita extends PokemonCard {
       name: 'Slap Push',
       cost: [CardType.COLORLESS],
       damage: '10',
-      text: ''
+      text: '',
     },
     {
       name: 'Lunge Out',
       cost: [CardType.COLORLESS, CardType.COLORLESS],
       damage: '20',
-      text: ''
+      text: '',
     },
   ];
 
-  public weakness = [
-    { type: CardType.PSYCHIC }
-  ];
+  public weakness = [{ type: CardType.PSYCHIC }];
 
   public retreat = [CardType.COLORLESS];
 
@@ -37,5 +31,4 @@ export class Makuhita extends PokemonCard {
   public name: string = 'Makuhita';
 
   public fullName: string = 'Makuhita RS';
-
 }

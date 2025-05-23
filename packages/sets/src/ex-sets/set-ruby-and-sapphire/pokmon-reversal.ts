@@ -1,11 +1,4 @@
-import {
-  Effect,
-  State,
-  StoreLike,
-  TrainerCard,
-  TrainerEffect,
-  TrainerType,
-} from '@ptcg/common';
+import { Effect, State, StoreLike, TrainerCard, TrainerEffect, TrainerType } from '@ptcg/common';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   // const player = effect.player;
@@ -24,7 +17,7 @@ export class PokémonReversal extends TrainerCard {
 
   public text: string =
     'Flip a coin. If heads, your opponent switches 1 of his or her Active Pokémon with 1 of his or her Benched ' +
-    'Pokémon. ';
+    'Pokémon.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {

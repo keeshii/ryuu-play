@@ -1,6 +1,7 @@
 import {
   AttackEffect,
   CardType,
+  CheckProvidedEnergyEffect,
   Effect,
   PokemonCard,
   Stage,
@@ -22,19 +23,17 @@ export class Breloom extends PokemonCard {
       name: 'Headbutt',
       cost: [CardType.COLORLESS, CardType.COLORLESS],
       damage: '20',
-      text: ''
+      text: '',
     },
     {
       name: 'Battle Blast',
       cost: [CardType.GRASS, CardType.COLORLESS, CardType.COLORLESS],
       damage: '40+',
-      text: 'Does 40 damage plus 10 more damage for each Fighting Energy attached to Breloom.'
+      text: 'Does 40 damage plus 10 more damage for each Fighting Energy attached to Breloom.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.FIRE }
-  ];
+  public weakness = [{ type: CardType.FIRE }];
 
   public retreat = [CardType.COLORLESS];
 
@@ -46,9 +45,18 @@ export class Breloom extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
-    }
+      const player = effect.player;
 
+      const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);
+      state = store.reduceEffect(state, checkProvidedEnergy);
+
+      for (const energyMap of checkProvidedEnergy.energyMap) {
+        const energy = energyMap.provides.filter(t => t === CardType.FIGHTING || t === CardType.ANY);
+        if (energy.length > 0) {
+          effect.damage += 10 * energy.length;
+        }
+      }
+    }
     return state;
   }
 }

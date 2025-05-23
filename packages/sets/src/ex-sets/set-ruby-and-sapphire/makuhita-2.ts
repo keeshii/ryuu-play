@@ -1,12 +1,4 @@
-import {
-  AttackEffect,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Makuhita2 extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -20,19 +12,17 @@ export class Makuhita2 extends PokemonCard {
       name: 'Fling',
       cost: [CardType.COLORLESS],
       damage: '',
-      text: 'Your opponent switches the Defending Pokémon with 1 of his or her Benched Pokémon.'
+      text: 'Your opponent switches the Defending Pokémon with 1 of his or her Benched Pokémon.',
     },
     {
       name: 'Low Kick',
       cost: [CardType.FIGHTING, CardType.COLORLESS],
       damage: '30',
-      text: ''
+      text: '',
     },
   ];
 
-  public weakness = [
-    { type: CardType.PSYCHIC }
-  ];
+  public weakness = [{ type: CardType.PSYCHIC }];
 
   public retreat = [CardType.COLORLESS];
 

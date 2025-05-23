@@ -1,12 +1,4 @@
-import {
-  AttackEffect,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Makuhita3 extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -20,13 +12,11 @@ export class Makuhita3 extends PokemonCard {
       name: 'Fake Out',
       cost: [CardType.FIGHTING],
       damage: '10',
-      text: 'Flip a coin. If heads, the Defending Pokémon is now Paralyzed.'
+      text: 'Flip a coin. If heads, the Defending Pokémon is now Paralyzed.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.PSYCHIC }
-  ];
+  public weakness = [{ type: CardType.PSYCHIC }];
 
   public retreat = [CardType.COLORLESS];
 

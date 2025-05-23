@@ -1,12 +1,4 @@
-import {
-  AttackEffect,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Phanpy extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -20,7 +12,7 @@ export class Phanpy extends PokemonCard {
       name: 'Stampede',
       cost: [CardType.COLORLESS],
       damage: '10',
-      text: ''
+      text: '',
     },
     {
       name: 'Trembler',
@@ -28,13 +20,11 @@ export class Phanpy extends PokemonCard {
       damage: '',
       text:
         'Flip a coin. If heads, this attack does 10 damage to each Defending Pokémon, and each Defending Pokémon is ' +
-        'now Paralyzed. '
+        'now Paralyzed.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.GRASS }
-  ];
+  public weakness = [{ type: CardType.GRASS }];
 
   public retreat = [CardType.COLORLESS];
 

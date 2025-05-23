@@ -1,12 +1,4 @@
-import {
-  AttackEffect,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Manectric extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -24,23 +16,19 @@ export class Manectric extends PokemonCard {
       damage: '10',
       text:
         'Search your deck for a Lightning Energy card and attach it to 1 of your Pokémon. Shuffle your deck ' +
-        'afterward. '
+        'afterward.',
     },
     {
       name: 'Thunder Jolt',
       cost: [CardType.LIGHTNING, CardType.LIGHTNING, CardType.COLORLESS],
       damage: '50',
-      text: 'Flip a coin. If tails, Manectric does 10 damage to itself.'
+      text: 'Flip a coin. If tails, Manectric does 10 damage to itself.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.FIGHTING }
-  ];
+  public weakness = [{ type: CardType.FIGHTING }];
 
-  public resistance = [
-    { type: CardType.METAL, value: -30 }
-  ];
+  public resistance = [{ type: CardType.METAL, value: -30 }];
 
   public retreat = [CardType.COLORLESS];
 

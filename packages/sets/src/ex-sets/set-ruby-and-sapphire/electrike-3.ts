@@ -1,8 +1,12 @@
 import {
+  AddSpecialConditionsEffect,
   AttackEffect,
   CardType,
+  CoinFlipPrompt,
   Effect,
+  GameMessage,
   PokemonCard,
+  SpecialCondition,
   Stage,
   State,
   StoreLike,
@@ -20,23 +24,19 @@ export class Electrike3 extends PokemonCard {
       name: 'Super Thunder Wave',
       cost: [CardType.COLORLESS],
       damage: '',
-      text: 'Flip a coin. If heads, each Defending Pokémon is now Paralyzed.'
+      text: 'Flip a coin. If heads, each Defending Pokémon is now Paralyzed.',
     },
     {
       name: 'Tackle',
       cost: [CardType.COLORLESS, CardType.COLORLESS],
       damage: '20',
-      text: ''
+      text: '',
     },
   ];
 
-  public weakness = [
-    { type: CardType.FIGHTING }
-  ];
+  public weakness = [{ type: CardType.FIGHTING }];
 
-  public resistance = [
-    { type: CardType.METAL, value: -30 }
-  ];
+  public resistance = [{ type: CardType.METAL, value: -30 }];
 
   public retreat = [CardType.COLORLESS];
 
@@ -48,7 +48,14 @@ export class Electrike3 extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+        if (result === true) {
+          const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.PARALYZED]);
+          store.reduceEffect(state, specialConditionEffect);
+        }
+      });
     }
 
     return state;

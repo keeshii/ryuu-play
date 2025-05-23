@@ -1,12 +1,4 @@
-import {
-  AttackEffect,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Weezing extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -22,7 +14,7 @@ export class Weezing extends PokemonCard {
       name: 'Confusion Gas',
       cost: [CardType.GRASS],
       damage: '10',
-      text: 'The Defending Pokémon is now Confused.'
+      text: 'The Defending Pokémon is now Confused.',
     },
     {
       name: 'Poison Smog',
@@ -30,13 +22,11 @@ export class Weezing extends PokemonCard {
       damage: '',
       text:
         'Each Defending Pokémon is now Poisoned. Does 10 damage to each of your opponent\'s Benched Pokémon. (Don\'t ' +
-        'apply Weakness and Resistance for Benched Pokémon.) '
+        'apply Weakness and Resistance for Benched Pokémon.)',
     },
   ];
 
-  public weakness = [
-    { type: CardType.PSYCHIC }
-  ];
+  public weakness = [{ type: CardType.PSYCHIC }];
 
   public retreat = [CardType.COLORLESS, CardType.COLORLESS];
 

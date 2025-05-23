@@ -1,10 +1,16 @@
 import {
   AttackEffect,
   CardType,
+  CoinFlipPrompt,
+  DealDamageEffect,
   Effect,
+  EnergyCard,
+  EnergyType,
+  GameMessage,
   PokemonCard,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -20,23 +26,19 @@ export class Electrike extends PokemonCard {
       name: 'Charge',
       cost: [CardType.LIGHTNING],
       damage: '',
-      text: 'Attach a Lightning Energy card from your discard pile to Electrike.'
+      text: 'Attach a L Energy card from your discard pile to Electrike.',
     },
     {
       name: 'Thunder Jolt',
       cost: [CardType.LIGHTNING, CardType.COLORLESS],
       damage: '30',
-      text: 'Flip a coin. If tails, Electrike does 10 damage to itself.'
+      text: 'Flip a coin. If tails, Electrike does 10 damage to itself.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.FIGHTING }
-  ];
+  public weakness = [{ type: CardType.FIGHTING }];
 
-  public resistance = [
-    { type: CardType.METAL, value: -30 }
-  ];
+  public resistance = [{ type: CardType.METAL, value: -30 }];
 
   public retreat = [CardType.COLORLESS];
 
@@ -48,11 +50,32 @@ export class Electrike extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+
+      const cardList = StateUtils.findCardList(state, this);
+      if (cardList === undefined) {
+        return state;
+      }
+
+      const energyCard = player.discard.cards.find(
+        c => c instanceof EnergyCard && c.energyType === EnergyType.BASIC && c.provides.includes(CardType.LIGHTNING)
+      );
+
+      if (energyCard) {
+        player.deck.moveCardTo(energyCard, cardList);
+      }
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+        if (result === false) {
+          const dealDamage = new DealDamageEffect(effect, 10);
+          dealDamage.target = player.active;
+          return store.reduceEffect(state, dealDamage);
+        }
+      });
     }
 
     return state;

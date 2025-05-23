@@ -1,12 +1,4 @@
-import {
-  AttackEffect,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Lairon2 extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -24,23 +16,19 @@ export class Lairon2 extends PokemonCard {
       damage: '20',
       text:
         'Does 10 damage to each Benched Pokémon (both yours and your opponent\'s). (Don\'t apply Weakness and ' +
-        'Resistance for Benched Pokémon.) '
+        'Resistance for Benched Pokémon.)',
     },
     {
       name: 'One-Two Strike',
       cost: [CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS],
       damage: '30+',
-      text: 'Flip 2 coins. This attack does 30 damage plus 20 more damage for each heads.'
+      text: 'Flip 2 coins. This attack does 30 damage plus 20 more damage for each heads.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.FIRE }
-  ];
+  public weakness = [{ type: CardType.FIRE }];
 
-  public resistance = [
-    { type: CardType.GRASS, value: -30 }
-  ];
+  public resistance = [{ type: CardType.GRASS, value: -30 }];
 
   public retreat = [CardType.COLORLESS, CardType.COLORLESS];
 

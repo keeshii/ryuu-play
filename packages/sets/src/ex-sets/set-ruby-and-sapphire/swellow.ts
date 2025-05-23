@@ -1,13 +1,4 @@
-import {
-  CardType,
-  Effect,
-  PokemonCard,
-  PowerEffect,
-  PowerType,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { CardType, Effect, PokemonCard, PowerEffect, PowerType, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Swellow extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -25,7 +16,7 @@ export class Swellow extends PokemonCard {
       text:
         'Once during your turn (before your attack), if Swellow is your Active Pokémon, you may switch 1 of the ' +
         'Defending Pokémon with 1 of your opponent\'s Benched Pokémon. Your opponent picks the Benched Pokémon to ' +
-        'switch. This power can\'t be used if Swellow is affected by a Special Condition. '
+        'switch. This power can\'t be used if Swellow is affected by a Special Condition.',
     },
   ];
 
@@ -34,17 +25,13 @@ export class Swellow extends PokemonCard {
       name: 'Wing Attack',
       cost: [CardType.COLORLESS, CardType.COLORLESS],
       damage: '30',
-      text: ''
+      text: '',
     },
   ];
 
-  public weakness = [
-    { type: CardType.LIGHTNING }
-  ];
+  public weakness = [{ type: CardType.LIGHTNING }];
 
-  public resistance = [
-    { type: CardType.FIGHTING, value: -30 }
-  ];
+  public resistance = [{ type: CardType.FIGHTING, value: -30 }];
 
   public retreat = [];
 

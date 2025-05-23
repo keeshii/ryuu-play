@@ -25,7 +25,7 @@ export class Sharpedo extends PokemonCard {
       powerType: PowerType.POKEBODY,
       text:
         'If Sharpedo is your Active Pokémon and is damaged by an opponent\'s attack (even if Sharpedo is Knocked ' +
-        'Out), put 2 damage counters on the Attacking Pokémon. '
+        'Out), put 2 damage counters on the Attacking Pokémon.',
     },
   ];
 
@@ -36,13 +36,11 @@ export class Sharpedo extends PokemonCard {
       damage: '40+',
       text:
         'You may discard a Darkness Energy card attached to Sharpedo. If you do, this attack does 40 damage plus 30 ' +
-        'more damage. '
+        'more damage.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.LIGHTNING }
-  ];
+  public weakness = [{ type: CardType.LIGHTNING }];
 
   public retreat = [CardType.COLORLESS];
 

@@ -1,11 +1,4 @@
-import {
-  Effect,
-  State,
-  StoreLike,
-  TrainerCard,
-  TrainerEffect,
-  TrainerType,
-} from '@ptcg/common';
+import { Effect, State, StoreLike, TrainerCard, TrainerEffect, TrainerType } from '@ptcg/common';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   // const player = effect.player;
@@ -24,7 +17,7 @@ export class OranBerry extends TrainerCard {
 
   public text: string =
     'At any time between turns, if the Pokémon this card is attached to has at least 2 damage counters on it, ' +
-    'remove 2 damage counters from it. Then discard Oran Berry. ';
+    'remove 2 damage counters from it. Then discard Oran Berry.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {

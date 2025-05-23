@@ -1,12 +1,4 @@
-import {
-  AttackEffect,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Sceptile extends PokemonCard {
   public stage: Stage = Stage.STAGE_2;
@@ -26,23 +18,19 @@ export class Sceptile extends PokemonCard {
         'If 1 Energy is attached to Sceptile, the Defending Pokémon is now Asleep. If 2 Energy is attached to ' +
         'Sceptile, the Defending Pokémon is now Poisoned. If 3 Energy is attached to Sceptile, the Defending ' +
         'Pokémon is now Asleep and Poisoned. If 4 or more Energy is attached to Sceptile, the Defending Pokémon is ' +
-        'now Asleep, Burned, and Poisoned. '
+        'now Asleep, Burned, and Poisoned.',
     },
     {
       name: 'Solarbeam',
       cost: [CardType.GRASS, CardType.GRASS, CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS],
       damage: '70',
-      text: ''
+      text: '',
     },
   ];
 
-  public weakness = [
-    { type: CardType.FIRE }
-  ];
+  public weakness = [{ type: CardType.FIRE }];
 
-  public resistance = [
-    { type: CardType.WATER, value: -30 }
-  ];
+  public resistance = [{ type: CardType.WATER, value: -30 }];
 
   public retreat = [CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS];
 

@@ -1,12 +1,4 @@
-import {
-  AttackEffect,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Shroomish extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -20,17 +12,13 @@ export class Shroomish extends PokemonCard {
       name: 'Sleep Powder',
       cost: [CardType.COLORLESS],
       damage: '10',
-      text: 'The Defending Pokémon is now Asleep.'
+      text: 'The Defending Pokémon is now Asleep.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.FIRE }
-  ];
+  public weakness = [{ type: CardType.FIRE }];
 
-  public resistance = [
-    { type: CardType.WATER, value: -30 }
-  ];
+  public resistance = [{ type: CardType.WATER, value: -30 }];
 
   public retreat = [CardType.COLORLESS];
 

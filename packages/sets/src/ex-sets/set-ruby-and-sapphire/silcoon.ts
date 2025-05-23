@@ -25,7 +25,7 @@ export class Silcoon extends PokemonCard {
       powerType: PowerType.POKEBODY,
       text:
         'During your opponent\'s turn, if Silcoon would be damaged by an opponent\'s attack (after applying Weakness ' +
-        'and Resistance), flip a coin. If heads, reduce that damage by 30. '
+        'and Resistance), flip a coin. If heads, reduce that damage by 30.',
     },
   ];
 
@@ -34,13 +34,11 @@ export class Silcoon extends PokemonCard {
       name: 'Gooey Thread',
       cost: [CardType.GRASS],
       damage: '10',
-      text: 'The Defending Pokémon can\'t retreat until the end of your opponent\'s next turn.'
+      text: 'The Defending Pokémon can\'t retreat until the end of your opponent\'s next turn.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.FIRE }
-  ];
+  public weakness = [{ type: CardType.FIRE }];
 
   public retreat = [CardType.COLORLESS, CardType.COLORLESS];
 

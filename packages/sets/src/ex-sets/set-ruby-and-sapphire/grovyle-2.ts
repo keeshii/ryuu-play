@@ -1,13 +1,4 @@
-import {
-  CardType,
-  Effect,
-  PokemonCard,
-  PowerEffect,
-  PowerType,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { CardType, Effect, PokemonCard, PowerEffect, PowerType, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Grovyle2 extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -22,8 +13,7 @@ export class Grovyle2 extends PokemonCard {
     {
       name: 'Natural Cure',
       powerType: PowerType.POKEBODY,
-      text:
-        'When you attach a Grass Energy card from your hand to Grovyle, remove all Special Conditions from Grovyle. '
+      text: 'When you attach a Grass Energy card from your hand to Grovyle, remove all Special Conditions from Grovyle.',
     },
   ];
 
@@ -32,17 +22,13 @@ export class Grovyle2 extends PokemonCard {
       name: 'Slash',
       cost: [CardType.COLORLESS, CardType.COLORLESS],
       damage: '20',
-      text: ''
+      text: '',
     },
   ];
 
-  public weakness = [
-    { type: CardType.FIRE }
-  ];
+  public weakness = [{ type: CardType.FIRE }];
 
-  public resistance = [
-    { type: CardType.WATER, value: -30 }
-  ];
+  public resistance = [{ type: CardType.WATER, value: -30 }];
 
   public retreat = [CardType.COLORLESS];
 

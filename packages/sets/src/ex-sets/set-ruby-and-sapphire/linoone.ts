@@ -1,12 +1,4 @@
-import {
-  AttackEffect,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Linoone extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -22,19 +14,17 @@ export class Linoone extends PokemonCard {
       name: 'Seek Out',
       cost: [CardType.COLORLESS],
       damage: '',
-      text: 'Search your deck for up to 2 cards and put them into your hand. Shuffle your deck afterward.'
+      text: 'Search your deck for up to 2 cards and put them into your hand. Shuffle your deck afterward.',
     },
     {
       name: 'Continuous Headbutt',
       cost: [CardType.COLORLESS, CardType.COLORLESS],
       damage: '40×',
-      text: 'Flip a coin until you get tails. This attack does 40 damage times the number of heads.'
+      text: 'Flip a coin until you get tails. This attack does 40 damage times the number of heads.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.FIGHTING }
-  ];
+  public weakness = [{ type: CardType.FIGHTING }];
 
   public retreat = [CardType.COLORLESS];
 

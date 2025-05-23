@@ -1,11 +1,4 @@
-import {
-  Effect,
-  State,
-  StoreLike,
-  TrainerCard,
-  TrainerEffect,
-  TrainerType,
-} from '@ptcg/common';
+import { Effect, State, StoreLike, TrainerCard, TrainerEffect, TrainerType } from '@ptcg/common';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   // const player = effect.player;
@@ -24,7 +17,7 @@ export class PokéBall extends TrainerCard {
 
   public text: string =
     'Flip a coin. If heads, search your deck for a Basic Pokémon or Evolution card, show it to your opponent and ' +
-    'put it into your hand. Shuffle your deck afterward. ';
+    'put it into your hand. Shuffle your deck afterward.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {

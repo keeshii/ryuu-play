@@ -25,7 +25,7 @@ export class Swampert extends PokemonCard {
       powerType: PowerType.POKEPOWER,
       text:
         'Once during your turn (before your attack), you may attach a Water Energy card from your hand to your ' +
-        'Active Pokémon. This power can\'t be used if Swampert is affected by a Special Condition. '
+        'Active Pokémon. This power can\'t be used if Swampert is affected by a Special Condition.',
     },
   ];
 
@@ -34,13 +34,11 @@ export class Swampert extends PokemonCard {
       name: 'Hypno Splash',
       cost: [CardType.WATER, CardType.WATER, CardType.COLORLESS, CardType.COLORLESS],
       damage: '50',
-      text: 'The Defending Pokémon is now Asleep.'
+      text: 'The Defending Pokémon is now Asleep.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.LIGHTNING }
-  ];
+  public weakness = [{ type: CardType.LIGHTNING }];
 
   public retreat = [CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS];
 

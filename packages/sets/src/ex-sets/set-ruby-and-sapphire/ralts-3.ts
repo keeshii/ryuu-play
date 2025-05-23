@@ -1,12 +1,4 @@
-import {
-  AttackEffect,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Ralts3 extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -20,7 +12,7 @@ export class Ralts3 extends PokemonCard {
       name: 'Pound',
       cost: [CardType.COLORLESS],
       damage: '10',
-      text: ''
+      text: '',
     },
     {
       name: 'Link Blast',
@@ -28,13 +20,11 @@ export class Ralts3 extends PokemonCard {
       damage: '40',
       text:
         'If Ralts and the Defending Pokémon have a different amount of Energy attached to them, this attack\'s base ' +
-        'damage is 10 instead of 40. '
+        'damage is 10 instead of 40.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.PSYCHIC }
-  ];
+  public weakness = [{ type: CardType.PSYCHIC }];
 
   public retreat = [CardType.COLORLESS];
 

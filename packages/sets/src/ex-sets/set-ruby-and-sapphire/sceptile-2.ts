@@ -26,7 +26,7 @@ export class Sceptile2 extends PokemonCard {
       text:
         'As often as you like during your turn (before your attack), move a Grass Energy card attached to 1 of your ' +
         'Pokémon to another of your Pokémon. This power can\'t be used if Sceptile is affected by a Special ' +
-        'Condition. '
+        'Condition.',
     },
   ];
 
@@ -35,17 +35,13 @@ export class Sceptile2 extends PokemonCard {
       name: 'Tail Rap',
       cost: [CardType.GRASS, CardType.COLORLESS, CardType.COLORLESS],
       damage: '50×',
-      text: 'Flip 2 coins. This attack does 50 damage times the number of heads.'
+      text: 'Flip 2 coins. This attack does 50 damage times the number of heads.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.FIRE }
-  ];
+  public weakness = [{ type: CardType.FIRE }];
 
-  public resistance = [
-    { type: CardType.WATER, value: -30 }
-  ];
+  public resistance = [{ type: CardType.WATER, value: -30 }];
 
   public retreat = [CardType.COLORLESS, CardType.COLORLESS, CardType.COLORLESS];
 

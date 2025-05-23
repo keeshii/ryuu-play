@@ -1,12 +1,4 @@
-import {
-  AttackEffect,
-  CardType,
-  Effect,
-  PokemonCard,
-  Stage,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Wurmple extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -22,19 +14,17 @@ export class Wurmple extends PokemonCard {
       damage: '',
       text:
         'Search your deck for Silcoon and Beautifly, or Cascoon and Dustox cards. Show 1 card or both cards of a ' +
-        'pair to your opponent and put them into your hand. Shuffle your deck afterward. '
+        'pair to your opponent and put them into your hand. Shuffle your deck afterward.',
     },
     {
       name: 'Poison Barb',
       cost: [CardType.GRASS],
       damage: '',
-      text: 'The Defending Pokémon is now Poisoned.'
+      text: 'The Defending Pokémon is now Poisoned.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.FIRE }
-  ];
+  public weakness = [{ type: CardType.FIRE }];
 
   public retreat = [CardType.COLORLESS];
 

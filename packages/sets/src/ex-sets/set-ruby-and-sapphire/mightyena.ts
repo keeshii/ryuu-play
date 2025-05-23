@@ -25,7 +25,7 @@ export class Mightyena extends PokemonCard {
       powerType: PowerType.POKEBODY,
       text:
         'As long as Mightyena is your Active Pokémon, any damage done to your Pokémon by an opponent\'s attack is ' +
-        'reduced by 10 (before applying Weakness and Resistance). '
+        'reduced by 10 (before applying Weakness and Resistance).',
     },
   ];
 
@@ -34,17 +34,13 @@ export class Mightyena extends PokemonCard {
       name: 'Shakedown',
       cost: [CardType.DARK, CardType.COLORLESS, CardType.COLORLESS],
       damage: '40',
-      text: 'Flip a coin. If heads, choose 1 card from your opponent\'s hand without looking and discard it.'
+      text: 'Flip a coin. If heads, choose 1 card from your opponent\'s hand without looking and discard it.',
     },
   ];
 
-  public weakness = [
-    { type: CardType.FIGHTING }
-  ];
+  public weakness = [{ type: CardType.FIGHTING }];
 
-  public resistance = [
-    { type: CardType.PSYCHIC, value: -30 }
-  ];
+  public resistance = [{ type: CardType.PSYCHIC, value: -30 }];
 
   public retreat = [CardType.COLORLESS];
 
