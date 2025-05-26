@@ -1,4 +1,56 @@
-import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
+import {
+  AttackEffect,
+  Card,
+  CardType,
+  ChooseCardsPrompt,
+  CoinFlipPrompt,
+  Effect,
+  GameMessage,
+  PokemonCard,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
+
+function* useKnockOff(next: Function, store: StoreLike, state: State, effect: AttackEffect): IterableIterator<State> {
+  const player = effect.player;
+  const opponent = StateUtils.getOpponent(state, player);
+
+  // Opponent has no cards in the hand
+  if (opponent.hand.cards.length === 0) {
+    return state;
+  }
+
+  let flipResult = false;
+  yield store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
+    flipResult = result;
+    next();
+  });
+
+  if (!flipResult) {
+    return state;
+  }
+
+  let cards: Card[] = [];
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_DISCARD,
+      opponent.hand,
+      {},
+      { min: 1, max: 1, allowCancel: false, isSecret: true }
+    ),
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
+
+  opponent.hand.moveCardsTo(cards, opponent.discard);
+  return state;
+}
 
 export class Poochyena2 extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -36,7 +88,8 @@ export class Poochyena2 extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const generator = useKnockOff(() => generator.next(), store, state, effect);
+      return generator.next().value;
     }
 
     return state;

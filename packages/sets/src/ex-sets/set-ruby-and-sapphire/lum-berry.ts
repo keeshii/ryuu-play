@@ -1,10 +1,4 @@
-import { Effect, State, StoreLike, TrainerCard, TrainerEffect, TrainerType } from '@ptcg/common';
-
-function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
-  // const player = effect.player;
-  // const opponent = StateUtils.getOpponent(state, player);
-  return state;
-}
+import { BetweenTurnsEffect, Effect, State, StateUtils, StoreLike, TrainerCard, TrainerType } from '@ptcg/common';
 
 export class LumBerry extends TrainerCard {
   public trainerType: TrainerType = TrainerType.TOOL;
@@ -20,9 +14,19 @@ export class LumBerry extends TrainerCard {
     'remove all of them. Then discard Lum Berry.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof TrainerEffect && effect.trainerCard === this) {
-      const generator = playCard(() => generator.next(), store, state, effect);
-      return generator.next().value;
+    if (effect instanceof BetweenTurnsEffect) {
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      [player, opponent].forEach(p => {
+        if (p.active.tool === this && p.active.specialConditions.length > 0) {
+          const conditions = p.active.specialConditions.slice();
+          conditions.forEach(condition => {
+            p.active.removeSpecialCondition(condition);
+          });
+          p.active.moveCardTo(this, p.discard);
+        }
+      });
     }
 
     return state;

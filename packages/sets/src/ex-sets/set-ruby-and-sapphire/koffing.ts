@@ -1,4 +1,4 @@
-import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
+import { AttackEffect, CardType, DealDamageEffect, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Koffing extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -34,7 +34,11 @@ export class Koffing extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+
+      const dealDamage = new DealDamageEffect(effect, 10);
+      dealDamage.target = player.active;
+      return store.reduceEffect(state, dealDamage);
     }
 
     return state;

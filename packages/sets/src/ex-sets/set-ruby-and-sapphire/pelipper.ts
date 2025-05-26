@@ -1,4 +1,17 @@
-import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
+import {
+  AfterDamageEffect,
+  AttackEffect,
+  CardType,
+  Effect,
+  EndTurnEffect,
+  HealTargetEffect,
+  PlayerType,
+  PokemonCard,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Pelipper extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -46,13 +59,41 @@ export class Pelipper extends PokemonCard {
 
   public fullName: string = 'Pelipper RS';
 
+  public readonly STOCKPILE_MARKER = 'STOCKPILE_MARKER';
+
+  public readonly CLEAR_STOCKPILE_MARKER = 'CLEAR_STOCKPILE_MARKER';
+
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+      player.active.marker.addMarker(this.STOCKPILE_MARKER, this);
+      opponent.marker.addMarker(this.CLEAR_STOCKPILE_MARKER, this);
     }
 
-    if (effect instanceof AttackEffect && effect.attack === this.attacks[2]) {
-      return state;
+    if (effect instanceof AttackEffect && effect.player.active.marker.hasMarker(this.STOCKPILE_MARKER, this)) {
+      if (effect.attack === this.attacks[1]) {
+        effect.damage = 70;
+      }
+      if (effect.attack === this.attacks[2]) {
+        effect.damage = 60;
+      }
+    }
+
+    if (effect instanceof AfterDamageEffect && effect.attack === this.attacks[2]) {
+      const player = effect.player;
+      const healEffect = new HealTargetEffect(effect.attackEffect, effect.damage);
+      healEffect.target = player.active;
+      return store.reduceEffect(state, healEffect);
+    }
+
+    if (effect instanceof EndTurnEffect && effect.player.marker.hasMarker(this.CLEAR_STOCKPILE_MARKER, this)) {
+      effect.player.marker.removeMarker(this.CLEAR_STOCKPILE_MARKER, this);
+
+      const opponent = StateUtils.getOpponent(state, effect.player);
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, cardList => {
+        cardList.marker.removeMarker(this.STOCKPILE_MARKER, this);
+      });
     }
 
     return state;

@@ -1,4 +1,69 @@
-import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
+import {
+  AttackEffect,
+  Card,
+  CardType,
+  ChooseCardsPrompt,
+  CoinFlipPrompt,
+  Effect,
+  GameMessage,
+  PokemonCard,
+  ShuffleDeckPrompt,
+  Stage,
+  State,
+  StoreLike,
+} from '@ptcg/common';
+
+function* useSeekOut(next: Function, store: StoreLike, state: State, effect: AttackEffect): IterableIterator<State> {
+  const player = effect.player;
+
+  if (player.deck.cards.length === 0) {
+    return state;
+  }
+
+  let cards: Card[] = [];
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_HAND,
+      player.deck,
+      {},
+      { min: 0, max: 2, allowCancel: true }
+    ),
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
+
+  player.deck.moveCardsTo(cards, player.hand);
+
+  return store.prompt(state, new ShuffleDeckPrompt(player.id), order => {
+    player.deck.applyOrder(order);
+  });
+}
+
+function* useContinuousHeadbutt(
+  next: Function,
+  store: StoreLike,
+  state: State,
+  effect: AttackEffect
+): IterableIterator<State> {
+  const player = effect.player;
+
+  let flipResult = false;
+  let heads = 0;
+  do {
+    yield store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
+      flipResult = result;
+      heads += flipResult ? 1 : 0;
+      next();
+    });
+  } while (flipResult);
+
+  effect.damage = heads * 40;
+  return state;
+}
 
 export class Linoone extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -36,11 +101,13 @@ export class Linoone extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const generator = useSeekOut(() => generator.next(), store, state, effect);
+      return generator.next().value;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const generator = useContinuousHeadbutt(() => generator.next(), store, state, effect);
+      return generator.next().value;
     }
 
     return state;

@@ -1,17 +1,56 @@
 import {
   AttackEffect,
+  Card,
   CardType,
   ChooseCardsPrompt,
   Effect,
   EnergyType,
   GameMessage,
   PokemonCard,
+  ShuffleDeckPrompt,
   Stage,
   State,
   StateUtils,
   StoreLike,
   SuperType,
 } from '@ptcg/common';
+
+function* useFlameCharge(next: Function, store: StoreLike, state: State, self: Pignite, effect: AttackEffect): IterableIterator<State> {
+  const player = effect.player;
+
+  const cardList = StateUtils.findCardList(state, self);
+  if (cardList === undefined) {
+    return state;
+  }
+
+  let cards: Card[] = [];
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_ATTACH,
+      player.deck,
+      {
+        superType: SuperType.ENERGY,
+        energyType: EnergyType.BASIC,
+        name: 'Fire Energy',
+      },
+      { min: 1, max: 1, allowCancel: true }
+    ),
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
+
+  if (cards.length > 0) {
+    player.deck.moveCardsTo(cards, cardList);
+  }
+
+  return store.prompt(state, new ShuffleDeckPrompt(player.id), order => {
+    player.deck.applyOrder(order);
+  });
+}
 
 export class Pignite extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -49,33 +88,8 @@ export class Pignite extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      const player = effect.player;
-
-      const cardList = StateUtils.findCardList(state, this);
-      if (cardList === undefined) {
-        return state;
-      }
-
-      return store.prompt(
-        state,
-        new ChooseCardsPrompt(
-          player.id,
-          GameMessage.CHOOSE_CARD_TO_ATTACH,
-          player.deck,
-          {
-            superType: SuperType.ENERGY,
-            energyType: EnergyType.BASIC,
-            name: 'Fire Energy',
-          },
-          { min: 1, max: 1, allowCancel: true }
-        ),
-        cards => {
-          cards = cards || [];
-          if (cards.length > 0) {
-            player.deck.moveCardsTo(cards, cardList);
-          }
-        }
-      );
+      const generator = useFlameCharge(() => generator.next(), store, state, this, effect);
+      return generator.next().value;
     }
 
     return state;

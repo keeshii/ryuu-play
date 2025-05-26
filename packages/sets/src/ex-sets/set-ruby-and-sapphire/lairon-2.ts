@@ -1,4 +1,16 @@
-import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
+import {
+  AttackEffect,
+  CardType,
+  CoinFlipPrompt,
+  Effect,
+  GameMessage,
+  PokemonCard,
+  PutDamageEffect,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Lairon2 extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -40,11 +52,39 @@ export class Lairon2 extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      player.bench.forEach(benched => {
+        if (benched.cards.length > 0) {
+          const dealDamage = new PutDamageEffect(effect, 10);
+          dealDamage.target = benched;
+          store.reduceEffect(state, dealDamage);
+        }
+      });
+
+      opponent.bench.forEach(benched => {
+        if (benched.cards.length > 0) {
+          const dealDamage = new PutDamageEffect(effect, 10);
+          dealDamage.target = benched;
+          store.reduceEffect(state, dealDamage);
+        }
+      });
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+      return store.prompt(
+        state,
+        [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)],
+        results => {
+          let heads: number = 0;
+          results.forEach(r => {
+            heads += r ? 1 : 0;
+          });
+          effect.damage += 20 * heads;
+        }
+      );
     }
 
     return state;

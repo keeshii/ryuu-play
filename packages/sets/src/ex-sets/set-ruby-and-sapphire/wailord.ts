@@ -1,4 +1,4 @@
-import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
+import { AttackEffect, CardType, DealDamageEffect, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
 
 export class Wailord extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -36,7 +36,11 @@ export class Wailord extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+
+      const dealDamage = new DealDamageEffect(effect, 20);
+      dealDamage.target = player.active;
+      return store.reduceEffect(state, dealDamage);
     }
 
     return state;

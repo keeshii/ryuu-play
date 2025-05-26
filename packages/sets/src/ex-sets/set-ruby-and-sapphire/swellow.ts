@@ -1,4 +1,22 @@
-import { CardType, Effect, PokemonCard, PowerEffect, PowerType, Stage, State, StoreLike } from '@ptcg/common';
+import {
+  CardType,
+  ChoosePokemonPrompt,
+  Effect,
+  EndTurnEffect,
+  GameError,
+  GameMessage,
+  PlayerType,
+  PlayPokemonEffect,
+  PokemonCard,
+  PokemonCardList,
+  PowerEffect,
+  PowerType,
+  SlotType,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Swellow extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -41,9 +59,51 @@ export class Swellow extends PokemonCard {
 
   public fullName: string = 'Swellow RS';
 
+  public readonly DRIVE_OFF_MARKER = 'DRIVE_OFF_MARKER';
+
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
+    if (effect instanceof PlayPokemonEffect && effect.pokemonCard === this) {
+      const player = effect.player;
+      player.marker.removeMarker(this.DRIVE_OFF_MARKER, this);
       return state;
+    }
+
+    if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+      const cardList = StateUtils.findCardList(state, this) as PokemonCardList;
+
+      if (cardList.specialConditions.length > 0) {
+        throw new GameError(GameMessage.CANNOT_USE_POWER);
+      }
+      const hasBench = opponent.bench.some(b => b.cards.length > 0);
+      if (hasBench === false) {
+        throw new GameError(GameMessage.CANNOT_USE_POWER);
+      }
+      if (player.marker.hasMarker(this.DRIVE_OFF_MARKER, this)) {
+        throw new GameError(GameMessage.POWER_ALREADY_USED);
+      }
+
+      return store.prompt(
+        state,
+        new ChoosePokemonPrompt(
+          opponent.id,
+          GameMessage.CHOOSE_POKEMON_TO_SWITCH,
+          PlayerType.BOTTOM_PLAYER,
+          [SlotType.BENCH],
+          { allowCancel: false }
+        ),
+        targets => {
+          player.marker.addMarker(this.DRIVE_OFF_MARKER, this);
+          if (targets && targets.length > 0) {
+            opponent.switchPokemon(targets[0]);
+          }
+        }
+      );
+    }
+
+    if (effect instanceof EndTurnEffect) {
+      effect.player.marker.removeMarker(this.DRIVE_OFF_MARKER, this);
     }
 
     return state;

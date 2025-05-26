@@ -1,12 +1,20 @@
 import {
+  AfterDamageEffect,
   AttackEffect,
+  Card,
   CardType,
+  CheckProvidedEnergyEffect,
+  ChooseEnergyPrompt,
+  DiscardCardsEffect,
   Effect,
+  GameMessage,
+  GamePhase,
   PokemonCard,
   PowerEffect,
   PowerType,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -35,7 +43,7 @@ export class Sharpedo extends PokemonCard {
       cost: [CardType.WATER, CardType.COLORLESS, CardType.COLORLESS],
       damage: '40+',
       text:
-        'You may discard a Darkness Energy card attached to Sharpedo. If you do, this attack does 40 damage plus 30 ' +
+        'You may discard a D Energy card attached to Sharpedo. If you do, this attack does 40 damage plus 30 ' +
         'more damage.',
     },
   ];
@@ -51,12 +59,55 @@ export class Sharpedo extends PokemonCard {
   public fullName: string = 'Sharpedo RS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
-      return state;
+    if (effect instanceof AfterDamageEffect && effect.target.tool === this) {
+      const player = effect.player;
+      const targetPlayer = StateUtils.findOwner(state, effect.target);
+      const pokemonCard = effect.target.getPokemonCard();
+
+      if (effect.damage <= 0 || player === targetPlayer || targetPlayer.active !== effect.target) {
+        return state;
+      }
+
+      if (pokemonCard !== this || state.phase !== GamePhase.ATTACK) {
+        return state;
+      }
+
+      // Try to reduce PowerEffect, to check if something is blocking our ability
+      try {
+        const powerEffect = new PowerEffect(player, this.powers[0], this);
+        store.reduceEffect(state, powerEffect);
+      } catch {
+        return state;
+      }
+
+      effect.source.damage += 20;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+
+      const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);
+      state = store.reduceEffect(state, checkProvidedEnergy);
+
+      state = store.prompt(
+        state,
+        new ChooseEnergyPrompt(
+          player.id,
+          GameMessage.CHOOSE_ENERGIES_TO_DISCARD,
+          checkProvidedEnergy.energyMap,
+          [CardType.DARK],
+          { allowCancel: true }
+        ),
+        energy => {
+          const cards: Card[] = (energy || []).map(e => e.card);
+          if (cards.length > 0) {
+            effect.damage += 30;
+            const discardEnergy = new DiscardCardsEffect(effect, cards);
+            discardEnergy.target = player.active;
+            return store.reduceEffect(state, discardEnergy);
+          }
+        }
+      );
     }
 
     return state;

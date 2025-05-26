@@ -1,14 +1,76 @@
 import {
   AttackEffect,
+  Card,
+  CardTarget,
   CardType,
+  CheckProvidedEnergyEffect,
+  CoinFlipPrompt,
   Effect,
+  GameMessage,
+  MoveEnergyPrompt,
+  PlayerType,
   PokemonCard,
   PowerEffect,
   PowerType,
+  SlotType,
   Stage,
   State,
+  StateUtils,
   StoreLike,
+  SuperType,
 } from '@ptcg/common';
+
+function* useEnergyTrans(next: Function, store: StoreLike, state: State, effect: PowerEffect): IterableIterator<State> {
+  const player = effect.player;
+
+  const blockedMap: { source: CardTarget; blocked: number[] }[] = [];
+  player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card, target) => {
+    const checkProvidedEnergy = new CheckProvidedEnergyEffect(player, cardList);
+    store.reduceEffect(state, checkProvidedEnergy);
+    const blockedCards: Card[] = [];
+
+    checkProvidedEnergy.energyMap.forEach(em => {
+      if (!em.provides.includes(CardType.GRASS) && !em.provides.includes(CardType.ANY)) {
+        blockedCards.push(em.card);
+      }
+    });
+
+    const blocked: number[] = [];
+    blockedCards.forEach(bc => {
+      const index = cardList.cards.indexOf(bc);
+      if (index !== -1 && !blocked.includes(index)) {
+        blocked.push(index);
+      }
+    });
+
+    if (blocked.length !== 0) {
+      blockedMap.push({ source: target, blocked });
+    }
+  });
+
+  return store.prompt(
+    state,
+    new MoveEnergyPrompt(
+      effect.player.id,
+      GameMessage.MOVE_ENERGY_CARDS,
+      PlayerType.BOTTOM_PLAYER,
+      [SlotType.ACTIVE, SlotType.BENCH],
+      { superType: SuperType.ENERGY },
+      { allowCancel: true, blockedMap }
+    ),
+    transfers => {
+      if (transfers === null) {
+        return;
+      }
+
+      for (const transfer of transfers) {
+        const source = StateUtils.getTarget(state, player, transfer.from);
+        const target = StateUtils.getTarget(state, player, transfer.to);
+        source.moveCardTo(transfer.card, target);
+      }
+    }
+  );
+}
 
 export class Sceptile2 extends PokemonCard {
   public stage: Stage = Stage.STAGE_2;
@@ -24,7 +86,7 @@ export class Sceptile2 extends PokemonCard {
       name: 'Energy Trans',
       powerType: PowerType.POKEPOWER,
       text:
-        'As often as you like during your turn (before your attack), move a Grass Energy card attached to 1 of your ' +
+        'As often as you like during your turn (before your attack), move a G Energy card attached to 1 of your ' +
         'Pokémon to another of your Pokémon. This power can\'t be used if Sceptile is affected by a Special ' +
         'Condition.',
     },
@@ -53,11 +115,23 @@ export class Sceptile2 extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
-      return state;
+      const generator = useEnergyTrans(() => generator.next(), store, state, effect);
+      return generator.next().value;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+      return store.prompt(
+        state,
+        [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)],
+        results => {
+          let heads: number = 0;
+          results.forEach(r => {
+            heads += r ? 1 : 0;
+          });
+          effect.damage = 50 * heads;
+        }
+      );
     }
 
     return state;

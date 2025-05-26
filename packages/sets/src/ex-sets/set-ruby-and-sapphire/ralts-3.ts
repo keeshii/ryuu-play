@@ -1,4 +1,14 @@
-import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
+import {
+  AttackEffect,
+  CardType,
+  CheckProvidedEnergyEffect,
+  Effect,
+  PokemonCard,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Ralts3 extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -36,7 +46,20 @@ export class Ralts3 extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      const checkProvidedEnergyPlayer = new CheckProvidedEnergyEffect(player);
+      state = store.reduceEffect(state, checkProvidedEnergyPlayer);
+      const playerEnergy = checkProvidedEnergyPlayer.energyMap.reduce((left, p) => left + p.provides.length, 0);
+
+      const checkProvidedEnergyOpponent = new CheckProvidedEnergyEffect(opponent);
+      state = store.reduceEffect(state, checkProvidedEnergyOpponent);
+      const opponentEnergy = checkProvidedEnergyPlayer.energyMap.reduce((left, p) => left + p.provides.length, 0);
+
+      if (playerEnergy !== opponentEnergy) {
+        effect.damage = 10;
+      }
     }
 
     return state;

@@ -1,4 +1,21 @@
-import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
+import {
+  AddSpecialConditionsEffect,
+  AttackEffect,
+  CardType,
+  ChoosePokemonPrompt,
+  CoinFlipPrompt,
+  Effect,
+  GameMessage,
+  PlayerType,
+  PokemonCard,
+  PutDamageEffect,
+  SlotType,
+  SpecialCondition,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Manectric2 extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -40,11 +57,46 @@ export class Manectric2 extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+        if (result === true) {
+          const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.PARALYZED]);
+          store.reduceEffect(state, specialConditionEffect);
+        }
+      });
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      const benched = opponent.bench.reduce((left, b) => left + (b.cards.length ? 1 : 0), 0);
+      if (benched === 0) {
+        return state;
+      }
+      const count = Math.min(2, benched);
+
+      return store.prompt(
+        state,
+        new ChoosePokemonPrompt(
+          player.id,
+          GameMessage.CHOOSE_POKEMON_TO_DAMAGE,
+          PlayerType.TOP_PLAYER,
+          [SlotType.BENCH],
+          { min: count, max: count, allowCancel: false }
+        ),
+        targets => {
+          if (!targets || targets.length === 0) {
+            return;
+          }
+          targets.forEach(target => {
+            const damageEffect = new PutDamageEffect(effect, 10);
+            damageEffect.target = target;
+            store.reduceEffect(state, damageEffect);
+          });
+        }
+      );
     }
 
     return state;

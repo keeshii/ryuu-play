@@ -47,6 +47,16 @@ export class PokemonCardList extends CardList {
     return pokemons[0].stage === Stage.BASIC;
   }
 
+  public isEvolved(): boolean {
+    const pokemons = this.getPokemons();
+    if (pokemons.length === 0) {
+      return false;
+    }
+    return pokemons.length > 1
+      || pokemons[0].stage === Stage.STAGE_1
+      || pokemons[0].stage === Stage.STAGE_2;
+  }
+
   clearEffects(): void {
     this.marker.markers = [];
     this.specialConditions = [];

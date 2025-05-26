@@ -6,6 +6,7 @@ import {
   Effect,
   GameError,
   GameMessage,
+  ShuffleDeckPrompt,
   State,
   StoreLike,
   TrainerCard,
@@ -35,7 +36,7 @@ function* playCard(
   // We will discard this card after prompt confirmation
   effect.preventDefault = true;
 
-  // prepare card list without Junk Arm
+  // prepare card list without Computer Search
   const handTemp = new CardList();
   handTemp.cards = player.hand.cards.filter(c => c !== self);
 
@@ -78,7 +79,10 @@ function* playCard(
   );
 
   player.deck.moveCardsTo(cards, player.hand);
-  return state;
+
+  return store.prompt(state, new ShuffleDeckPrompt(player.id), order => {
+    player.deck.applyOrder(order);
+  });
 }
 
 export class ComputerSearch extends TrainerCard {

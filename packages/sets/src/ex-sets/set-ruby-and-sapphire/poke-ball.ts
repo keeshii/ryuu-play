@@ -1,8 +1,8 @@
 import {
   Card,
   ChooseCardsPrompt,
+  CoinFlipPrompt,
   Effect,
-  EnergyType,
   GameError,
   GameMessage,
   ShowCardsPrompt,
@@ -19,20 +19,30 @@ import {
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
   const opponent = StateUtils.getOpponent(state, player);
+  let cards: Card[] = [];
 
   if (player.deck.cards.length === 0) {
     throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
   }
 
-  let cards: Card[] = [];
+  let flipResult = false;
+  yield store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+    flipResult = result;
+    next();
+  });
+
+  if (!flipResult) {
+    return state;
+  }
+
   yield store.prompt(
     state,
     new ChooseCardsPrompt(
       player.id,
       GameMessage.CHOOSE_CARD_TO_HAND,
       player.deck,
-      { superType: SuperType.ENERGY, energyType: EnergyType.BASIC } as any,
-      { min: 0, max: 3, allowCancel: true, differentTypes: true }
+      { superType: SuperType.POKEMON },
+      { min: 1, max: 1, allowCancel: true }
     ),
     selected => {
       cards = selected || [];
@@ -53,18 +63,18 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   });
 }
 
-export class LadyOuting extends TrainerCard {
-  public trainerType: TrainerType = TrainerType.SUPPORTER;
+export class PokeBall extends TrainerCard {
+  public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'RS';
 
-  public name: string = 'Lady Outing';
+  public name: string = 'Poké Ball';
 
-  public fullName: string = 'Lady Outing RS';
+  public fullName: string = 'Poké Ball RS';
 
   public text: string =
-    'Search your deck for up to 3 different types of basic Energy cards, show them to your opponent, and put them ' +
-    'into your hand. Shuffle your deck afterward.';
+    'Flip a coin. If heads, search your deck for a Basic Pokémon or Evolution card, show it to your opponent and ' +
+    'put it into your hand. Shuffle your deck afterward.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {

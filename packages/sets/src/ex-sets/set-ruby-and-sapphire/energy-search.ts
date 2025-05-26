@@ -21,6 +21,10 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   const opponent = StateUtils.getOpponent(state, player);
   let cards: Card[] | null = [];
 
+  if (player.deck.cards.length === 0) {
+    throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
+  }
+
   yield store.prompt(
     state,
     new ChooseCardsPrompt(
@@ -31,14 +35,10 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
       { min: 1, max: 1, allowCancel: true }
     ),
     selected => {
-      cards = selected;
+      cards = selected || [];
       next();
     }
   );
-
-  if (cards === null) {
-    return state;
-  }
 
   player.deck.moveCardsTo(cards, player.hand);
 

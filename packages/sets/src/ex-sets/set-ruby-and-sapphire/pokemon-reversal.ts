@@ -1,12 +1,13 @@
 import {
   ChoosePokemonPrompt,
+  CoinFlipPrompt,
   Effect,
   GameError,
   GameMessage,
   PlayerType,
-  PokemonCardList,
   SlotType,
   State,
+  StateUtils,
   StoreLike,
   TrainerCard,
   TrainerEffect,
@@ -15,52 +16,52 @@ import {
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
-  const hasBench = player.bench.some(b => b.cards.length > 0);
+  const opponent = StateUtils.getOpponent(state, player);
 
+  const hasBench = opponent.bench.some(b => b.cards.length > 0);
   if (hasBench === false) {
     throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
   }
 
-  // Do not discard the card yet
-  effect.preventDefault = true;
+  let flipResult = false;
+  yield store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+    flipResult = result;
+    next();
+  });
 
-  let targets: PokemonCardList[] = [];
-  yield store.prompt(
-    state,
-    new ChoosePokemonPrompt(
-      player.id,
-      GameMessage.CHOOSE_POKEMON_TO_SWITCH,
-      PlayerType.BOTTOM_PLAYER,
-      [SlotType.BENCH],
-      { allowCancel: true }
-    ),
-    results => {
-      targets = results || [];
-      next();
-    }
-  );
-
-  if (targets.length === 0) {
+  if (!flipResult) {
     return state;
   }
 
-  // Discard trainer only when user selected a Pokemon
-  player.hand.moveCardTo(effect.trainerCard, player.discard);
-
-  player.switchPokemon(targets[0]);
-  return state;
+  return store.prompt(
+    state,
+    new ChoosePokemonPrompt(
+      opponent.id,
+      GameMessage.CHOOSE_POKEMON_TO_SWITCH,
+      PlayerType.BOTTOM_PLAYER,
+      [SlotType.BENCH],
+      { allowCancel: false }
+    ),
+    targets => {
+      if (targets && targets.length > 0) {
+        opponent.switchPokemon(targets[0]);
+      }
+    }
+  );
 }
 
-export class Switch extends TrainerCard {
+export class PokemonReversal extends TrainerCard {
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'RS';
 
-  public name: string = 'Switch';
+  public name: string = 'Pokémon Reversal';
 
-  public fullName: string = 'Switch RS';
+  public fullName: string = 'Pokémon Reversal RS';
 
-  public text: string = 'Switch 1 of your Active Pokémon with 1 of your Benched Pokémon.';
+  public text: string =
+    'Flip a coin. If heads, your opponent switches 1 of his or her Active Pokémon with 1 of his or her Benched ' +
+    'Pokémon.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {

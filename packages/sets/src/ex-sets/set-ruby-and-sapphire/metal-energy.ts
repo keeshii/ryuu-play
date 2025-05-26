@@ -1,4 +1,13 @@
-import { CardType, Effect, EnergyCard, EnergyType, State, StoreLike } from '@ptcg/common';
+import {
+  CardType,
+  CheckPokemonTypeEffect,
+  Effect,
+  EnergyCard,
+  EnergyType,
+  PutDamageEffect,
+  State,
+  StoreLike,
+} from '@ptcg/common';
 
 export class MetalEnergy extends EnergyCard {
   public provides: CardType[] = [CardType.COLORLESS];
@@ -17,6 +26,16 @@ export class MetalEnergy extends EnergyCard {
     'Metal Energy provides Metal Energy. (Doesn\'t count as a basic Energy card.)';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    if (effect instanceof PutDamageEffect) {
+      if (effect.target.cards.includes(this)) {
+        const checkPokemonType = new CheckPokemonTypeEffect(effect.target);
+        store.reduceEffect(state, checkPokemonType);
+        if (checkPokemonType.cardTypes.includes(CardType.METAL)) {
+          effect.damage -= 10;
+        }
+      }
+    }
+
     return state;
   }
 }

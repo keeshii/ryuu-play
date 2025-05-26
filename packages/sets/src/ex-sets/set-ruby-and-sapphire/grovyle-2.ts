@@ -1,4 +1,15 @@
-import { CardType, Effect, PokemonCard, PowerEffect, PowerType, Stage, State, StoreLike } from '@ptcg/common';
+import {
+  AttachEnergyEffect,
+  CardType,
+  Effect,
+  EnergyType,
+  PokemonCard,
+  PowerEffect,
+  PowerType,
+  Stage,
+  State,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Grovyle2 extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -13,7 +24,7 @@ export class Grovyle2 extends PokemonCard {
     {
       name: 'Natural Cure',
       powerType: PowerType.POKEBODY,
-      text: 'When you attach a Grass Energy card from your hand to Grovyle, remove all Special Conditions from Grovyle.',
+      text: 'When you attach a G Energy card from your hand to Grovyle, remove all Special Conditions from Grovyle.',
     },
   ];
 
@@ -39,8 +50,32 @@ export class Grovyle2 extends PokemonCard {
   public fullName: string = 'Grovyle RS-2';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
-      return state;
+    if (effect instanceof AttachEnergyEffect && effect.target.cards.includes(this)) {
+      const player = effect.player;
+      const energyCard = effect.energyCard;
+      if (energyCard.energyType !== EnergyType.BASIC || !energyCard.provides.includes(CardType.GRASS)) {
+        return state;
+      }
+      if (effect.target.specialConditions.length === 0) {
+        return state;
+      }
+      const pokemonCard = effect.target.getPokemonCard();
+      if (pokemonCard !== this) {
+        return state;
+      }
+
+      // Try to reduce PowerEffect, to check if something is blocking our ability
+      try {
+        const powerEffect = new PowerEffect(player, this.powers[0], this);
+        store.reduceEffect(state, powerEffect);
+      } catch {
+        return state;
+      }
+
+      const conditions = effect.target.specialConditions.slice();
+      conditions.forEach(condition => {
+        effect.target.removeSpecialCondition(condition);
+      });
     }
 
     return state;

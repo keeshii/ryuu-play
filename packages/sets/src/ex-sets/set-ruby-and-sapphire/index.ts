@@ -65,9 +65,9 @@ import { Numel } from './numel';
 import { OranBerry } from './oran-berry';
 import { Pelipper } from './pelipper';
 import { Phanpy } from './phanpy';
-import { PokéBall } from './pok-ball';
-import { PokémonReversal } from './pokmon-reversal';
-import { Pokénav } from './poknav';
+import { PokeBall } from './poke-ball';
+import { PokemonReversal } from './pokemon-reversal';
+import { Pokenav } from './pokenav';
 import { Poochyena } from './poochyena';
 import { Poochyena2 } from './poochyena-2';
 import { Poochyena3 } from './poochyena-3';
@@ -176,9 +176,9 @@ export const setRubyAndSapphire: Card[] = [
   new OranBerry(),
   new Pelipper(),
   new Phanpy(),
-  new PokéBall(),
-  new PokémonReversal(),
-  new Pokénav(),
+  new PokeBall(),
+  new PokemonReversal(),
+  new Pokenav(),
   new Poochyena(),
   new Poochyena2(),
   new Poochyena3(),

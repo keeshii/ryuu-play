@@ -1,4 +1,14 @@
-import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
+import {
+  AttackEffect,
+  CardTag,
+  CardType,
+  Effect,
+  PokemonCard,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Hariyama extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -36,11 +46,18 @@ export class Hariyama extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
+      effect.damage = 20;
       return state;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      const defending = opponent.active.getPokemonCard();
+      if (defending && defending.tags.includes(CardTag.POKEMON_EX)) {
+        effect.damage += 60;
+      }
     }
 
     return state;

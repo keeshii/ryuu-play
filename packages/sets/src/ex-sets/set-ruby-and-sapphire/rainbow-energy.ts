@@ -1,4 +1,13 @@
-import { CardType, Effect, EnergyCard, EnergyType, State, StoreLike } from '@ptcg/common';
+import {
+  AttachEnergyEffect,
+  CardType,
+  CheckProvidedEnergyEffect,
+  Effect,
+  EnergyCard,
+  EnergyType,
+  State,
+  StoreLike,
+} from '@ptcg/common';
 
 export class RainbowEnergy extends EnergyCard {
   public provides: CardType[] = [CardType.COLORLESS];
@@ -17,6 +26,12 @@ export class RainbowEnergy extends EnergyCard {
     'this card from your hand to 1 of your Pokémon, put 1 damage counter on that Pokémon.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    if (effect instanceof CheckProvidedEnergyEffect && effect.source.cards.includes(this)) {
+      effect.energyMap.push({ card: this, provides: [CardType.ANY] });
+    }
+    if (effect instanceof AttachEnergyEffect && effect.energyCard === this) {
+      effect.target.damage += 10;
+    }
     return state;
   }
 }

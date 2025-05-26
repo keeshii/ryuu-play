@@ -1,4 +1,16 @@
-import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
+import {
+  AddSpecialConditionsEffect,
+  AfterDamageEffect,
+  AttackEffect,
+  CardType,
+  Effect,
+  PokemonCard,
+  SpecialCondition,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Grovyle extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -40,11 +52,20 @@ export class Grovyle extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const specialCondition = new AddSpecialConditionsEffect(effect, [SpecialCondition.POISONED]);
+      store.reduceEffect(state, specialCondition);
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+      const damage = 30;
+
+      effect.damage = 0;
+
+      opponent.active.damage += damage;
+      const afterDamage = new AfterDamageEffect(effect, damage);
+      state = store.reduceEffect(state, afterDamage);
     }
 
     return state;

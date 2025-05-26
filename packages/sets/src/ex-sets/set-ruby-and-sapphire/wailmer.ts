@@ -1,4 +1,16 @@
-import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
+import {
+  AttackEffect,
+  CardType,
+  CheckAttackCostEffect,
+  CheckProvidedEnergyEffect,
+  Effect,
+  HealTargetEffect,
+  PokemonCard,
+  RemoveSpecialConditionsEffect,
+  Stage,
+  State,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Wailmer extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -38,11 +50,32 @@ export class Wailmer extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
+      const player = effect.player;
+
+      const conditions = player.active.specialConditions.slice();
+      const removeSpecialConditionEffect = new RemoveSpecialConditionsEffect(effect, conditions);
+      removeSpecialConditionEffect.target = player.active;
+      store.reduceEffect(state, removeSpecialConditionEffect);
+
+      const healEffect = new HealTargetEffect(effect, 40);
+      healEffect.target = player.active;
+      store.reduceEffect(state, healEffect);
+
       return state;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+
+      const checkAttackCost = new CheckAttackCostEffect(player, effect.attack);
+      state = store.reduceEffect(state, checkAttackCost);
+      const attackCost = checkAttackCost.cost.length;
+
+      const checkProvidedEnergyEffect = new CheckProvidedEnergyEffect(player);
+      store.reduceEffect(state, checkProvidedEnergyEffect);
+      const energyCount = checkProvidedEnergyEffect.energyMap.reduce((left, p) => left + p.provides.length, 0);
+
+      effect.damage += Math.min(Math.max(0, energyCount - attackCost), 2) * 10;
     }
 
     return state;

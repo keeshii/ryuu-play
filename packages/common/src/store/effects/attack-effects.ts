@@ -5,6 +5,7 @@ import { Effect } from './effect';
 import { Player } from '../state/player';
 import { PokemonCardList } from '../state/pokemon-card-list';
 import { SpecialCondition } from '../card/card-types';
+import { CardList } from '../state/card-list';
 
 export enum AttackEffects {
   APPLY_WEAKNESS_EFFECT = 'APPLY_WEAKNESS_EFFECT',
@@ -13,6 +14,7 @@ export enum AttackEffects {
   AFTER_DAMAGE_EFFECT = 'AFTER_DAMAGE_EFFECT',
   PUT_COUNTERS_EFFECT = 'PUT_COUNTERS_EFFECT',
   DISCARD_CARD_EFFECT = 'DISCARD_CARD_EFFECT',
+  MOVE_CARD_EFFECT = 'MOVE_CARD_EFFECT',
   ADD_MARKER_EFFECT = 'ADD_MARKER_EFFECT',
   ADD_SPECIAL_CONDITIONS_EFFECT = 'ADD_SPECIAL_CONDITIONS_EFFECT'
 }
@@ -100,6 +102,19 @@ export class DiscardCardsEffect extends AbstractAttackEffect implements Effect {
   constructor(base: AttackEffect, energyCards: Card[]) {
     super(base);
     this.cards = energyCards;
+  }
+}
+
+export class MoveCardsEffect extends AbstractAttackEffect implements Effect {
+  readonly type: string = AttackEffects.MOVE_CARD_EFFECT;
+  public preventDefault = false;
+  public cards: Card[];
+  public destination: CardList;
+
+  constructor(base: AttackEffect, energyCards: Card[], destination: CardList) {
+    super(base);
+    this.cards = energyCards;
+    this.destination = destination;
   }
 }
 

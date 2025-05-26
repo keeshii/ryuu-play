@@ -1,4 +1,21 @@
-import { AttackEffect, CardTag, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
+import {
+  AttachEnergyEffect,
+  AttachEnergyPrompt,
+  AttackEffect,
+  CardTag,
+  CardType,
+  Effect,
+  EnergyCard,
+  GameMessage,
+  PlayerType,
+  PokemonCard,
+  SlotType,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+  SuperType,
+} from '@ptcg/common';
 
 export class MewtwoEx extends PokemonCard {
   public tags = [CardTag.POKEMON_EX];
@@ -36,7 +53,36 @@ export class MewtwoEx extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+
+      const cardList = StateUtils.findCardList(state, this);
+      if (cardList === undefined) {
+        return state;
+      }
+
+      return store.prompt(
+        state,
+        new AttachEnergyPrompt(
+          player.id,
+          GameMessage.ATTACH_ENERGY_CARDS,
+          player.discard,
+          PlayerType.BOTTOM_PLAYER,
+          [SlotType.ACTIVE],
+          {
+            superType: SuperType.ENERGY,
+          },
+          { min: 1, max: 2, allowCancel: true }
+        ),
+        transfers => {
+          transfers = transfers || [];
+          for (const transfer of transfers) {
+            const target = StateUtils.getTarget(state, player, transfer.to);
+            const energyCard = transfer.card as EnergyCard;
+            const attachEnergyEffect = new AttachEnergyEffect(player, energyCard, target);
+            store.reduceEffect(state, attachEnergyEffect);
+          }
+        }
+      );
     }
 
     return state;

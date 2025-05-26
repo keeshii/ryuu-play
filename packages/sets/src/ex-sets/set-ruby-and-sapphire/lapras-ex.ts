@@ -1,4 +1,17 @@
-import { AttackEffect, CardTag, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
+import {
+  AddSpecialConditionsEffect,
+  AttackEffect,
+  CardTag,
+  CardType,
+  CheckAttackCostEffect,
+  CheckProvidedEnergyEffect,
+  Effect,
+  PokemonCard,
+  SpecialCondition,
+  Stage,
+  State,
+  StoreLike,
+} from '@ptcg/common';
 
 export class LaprasEx extends PokemonCard {
   public tags = [CardTag.POKEMON_EX];
@@ -38,11 +51,22 @@ export class LaprasEx extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+
+      const checkAttackCost = new CheckAttackCostEffect(player, effect.attack);
+      state = store.reduceEffect(state, checkAttackCost);
+      const attackCost = checkAttackCost.cost.length;
+
+      const checkProvidedEnergyEffect = new CheckProvidedEnergyEffect(player);
+      store.reduceEffect(state, checkProvidedEnergyEffect);
+      const energyCount = checkProvidedEnergyEffect.energyMap.reduce((left, p) => left + p.provides.length, 0);
+
+      effect.damage += Math.min(Math.max(0, energyCount - attackCost), 2) * 10;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.CONFUSED]);
+      store.reduceEffect(state, specialConditionEffect);
     }
 
     return state;

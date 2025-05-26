@@ -1,4 +1,15 @@
-import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
+import {
+  AddSpecialConditionsEffect,
+  AttackEffect,
+  CardType,
+  CheckProvidedEnergyEffect,
+  Effect,
+  PokemonCard,
+  SpecialCondition,
+  Stage,
+  State,
+  StoreLike,
+} from '@ptcg/common';
 
 export class Sceptile extends PokemonCard {
   public stage: Stage = Stage.STAGE_2;
@@ -42,6 +53,31 @@ export class Sceptile extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
+      const player = effect.player;
+
+      const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);
+      state = store.reduceEffect(state, checkProvidedEnergy);
+      const energyCount = checkProvidedEnergy.energyMap.reduce((left, p) => left + p.provides.length, 0);
+
+      switch (energyCount) {
+        case 0:
+          break;
+        case 1:
+          store.reduceEffect(state, new AddSpecialConditionsEffect(effect, [SpecialCondition.ASLEEP]));
+          break;
+        case 2:
+          store.reduceEffect(state, new AddSpecialConditionsEffect(effect, [SpecialCondition.POISONED]));
+          break;
+        case 3:
+          store.reduceEffect(state, new AddSpecialConditionsEffect(effect, [SpecialCondition.ASLEEP]));
+          store.reduceEffect(state, new AddSpecialConditionsEffect(effect, [SpecialCondition.POISONED]));
+          break;
+        default:
+          store.reduceEffect(state, new AddSpecialConditionsEffect(effect, [SpecialCondition.ASLEEP]));
+          store.reduceEffect(state, new AddSpecialConditionsEffect(effect, [SpecialCondition.POISONED]));
+          store.reduceEffect(state, new AddSpecialConditionsEffect(effect, [SpecialCondition.BURNED]));
+      }
+
       return state;
     }
 

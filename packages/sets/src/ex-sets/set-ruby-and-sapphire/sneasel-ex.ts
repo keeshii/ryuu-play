@@ -1,4 +1,16 @@
-import { AttackEffect, CardTag, CardType, Effect, PokemonCard, Stage, State, StoreLike } from '@ptcg/common';
+import {
+  AttackEffect,
+  CardTag,
+  CardType,
+  CoinFlipPrompt,
+  Effect,
+  GameMessage,
+  PlayerType,
+  PokemonCard,
+  Stage,
+  State,
+  StoreLike,
+} from '@ptcg/common';
 
 export class SneaselEx extends PokemonCard {
   public tags = [CardTag.POKEMON_EX];
@@ -40,11 +52,35 @@ export class SneaselEx extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+      return store.prompt(
+        state,
+        [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)],
+        results => {
+          let heads: number = 0;
+          results.forEach(r => {
+            heads += r ? 1 : 0;
+          });
+          effect.damage = 10 * heads;
+        }
+      );
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+
+      const coinFlipPrompts: CoinFlipPrompt[] = [];
+      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, cardList => {
+        coinFlipPrompts.push(new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP));
+      });
+
+      return store.prompt(state, coinFlipPrompts, results => {
+        let heads: number = 0;
+        results.forEach(r => {
+          heads += r ? 1 : 0;
+        });
+        effect.damage = 20 * heads;
+      });
     }
 
     return state;

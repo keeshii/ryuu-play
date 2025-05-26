@@ -43,11 +43,9 @@ function* usePsychicRestore(
       allowCancel: true,
     }),
     order => {
-      if (order === null) {
-        return state;
+      if (order !== null) {
+        target.applyOrder(order);
       }
-
-      target.applyOrder(order);
       target.moveTo(player.deck);
     }
   );

@@ -1,4 +1,5 @@
 import {
+  AttachEnergyEffect,
   AttackEffect,
   CardType,
   Effect,
@@ -24,7 +25,7 @@ export class Marshtomp2 extends PokemonCard {
       name: 'Natural Cure',
       powerType: PowerType.POKEBODY,
       text:
-        'When you attach a Water Energy card from your hand to Marshtomp, remove all Special Conditions from ' +
+        'When you attach a W Energy card from your hand to Marshtomp, remove all Special Conditions from ' +
         'Marshtomp.',
     },
   ];
@@ -49,12 +50,36 @@ export class Marshtomp2 extends PokemonCard {
   public fullName: string = 'Marshtomp RS-2';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
+    if (effect instanceof AttachEnergyEffect && effect.target.cards.includes(this)) {
+      const player = effect.player;
+      const pokemonCard = effect.target.getPokemonCard();
+
+      if (!effect.energyCard.provides.includes(CardType.WATER)) {
+        return state;
+      }
+
+      // pokemon is evolved
+      if (pokemonCard !== this) {
+        return state;
+      }
+
+      // Try to reduce PowerEffect, to check if something is blocking our ability
+      try {
+        const powerEffect = new PowerEffect(player, this.powers[0], this);
+        store.reduceEffect(state, powerEffect);
+      } catch {
+        return state;
+      }
+
+      const conditions = effect.target.specialConditions.slice();
+      conditions.forEach(condition => {
+        effect.target.removeSpecialCondition(condition);
+      });
       return state;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      effect.ignoreResistance = true;
     }
 
     return state;

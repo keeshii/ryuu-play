@@ -1,10 +1,10 @@
 import {
   AttackEffect,
   Card,
+  CardList,
   CardType,
   CheckProvidedEnergyEffect,
   ChooseCardsPrompt,
-  ConfirmPrompt,
   Effect,
   GameError,
   GameMessage,
@@ -50,19 +50,30 @@ function* useEnergyDraw(next: Function, store: StoreLike, state: State, effect: 
 
   target.moveCardsTo(cards, player.discard);
 
-  const cardsToDraw = Math.min(3, player.deck.cards.length);
+  const deckTop = new CardList();
+  deckTop.cards = player.deck.top(3);
 
   // Nothing to draw
-  if (cardsToDraw === 0) {
+  if (deckTop.cards.length === 0) {
     return state;
   }
 
-  // TODO: Add possibility to choose, how many cards to draw
-  return store.prompt(state, new ConfirmPrompt(effect.player.id, GameMessage.WANT_TO_DRAW_CARDS), result => {
-    if (result) {
-      player.deck.moveTo(player.hand, cardsToDraw);
+  // Draw up to 3 cards.
+  // Reconsider different prompt, so it not confuse user, that he can select cards not from the top
+  return store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_HAND,
+      deckTop,
+      {},
+      { min: 0, max: deckTop.cards.length, allowCancel: true, isSecret: true }
+    ),
+    selected => {
+      cards = selected || [];
+      player.deck.moveTo(player.hand, cards.length);
     }
-  });
+  );
 }
 
 export class Delcatty extends PokemonCard {
