@@ -25,6 +25,7 @@ export class LumBerry extends TrainerCard {
             p.active.removeSpecialCondition(condition);
           });
           p.active.moveCardTo(this, p.discard);
+          p.active.tool = undefined;
         }
       });
     }

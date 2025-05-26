@@ -38,6 +38,7 @@ export class Swampert extends PokemonCard {
     {
       name: 'Water Call',
       powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
       text:
         'Once during your turn (before your attack), you may attach a W Energy card from your hand to your ' +
         'Active Pokémon. This power can\'t be used if Swampert is affected by a Special Condition.',

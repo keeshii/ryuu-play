@@ -92,6 +92,7 @@ export class Gardevoir extends PokemonCard {
     {
       name: 'Psy Shadow',
       powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
       text:
         'Once during your turn (before your attack), you may search your deck for a P Energy card and attach ' +
         'it to 1 of your Pokémon. Put 2 damage counters on that Pokémon. Shuffle your deck afterward. This power ' +

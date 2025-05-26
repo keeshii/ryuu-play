@@ -31,6 +31,7 @@ export class Swellow extends PokemonCard {
     {
       name: 'Drive Off',
       powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
       text:
         'Once during your turn (before your attack), if Swellow is your Active Pokémon, you may switch 1 of the ' +
         'Defending Pokémon with 1 of your opponent\'s Benched Pokémon. Your opponent picks the Benched Pokémon to ' +

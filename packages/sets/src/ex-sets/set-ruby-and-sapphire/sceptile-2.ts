@@ -85,6 +85,7 @@ export class Sceptile2 extends PokemonCard {
     {
       name: 'Energy Trans',
       powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
       text:
         'As often as you like during your turn (before your attack), move a G Energy card attached to 1 of your ' +
         'Pokémon to another of your Pokémon. This power can\'t be used if Sceptile is affected by a Special ' +

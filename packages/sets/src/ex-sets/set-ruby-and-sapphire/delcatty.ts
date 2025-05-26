@@ -33,7 +33,7 @@ function* useEnergyDraw(next: Function, store: StoreLike, state: State, effect: 
     new ChooseCardsPrompt(
       player.id,
       GameMessage.CHOOSE_CARD_TO_DISCARD,
-      target,
+      player.hand,
       { superType: SuperType.ENERGY },
       { min: 1, max: 1, allowCancel: true }
     ),
@@ -89,6 +89,7 @@ export class Delcatty extends PokemonCard {
     {
       name: 'Energy Draw',
       powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
       text:
         'Once during your turn (before your attack), you may discard 1 Energy card from your hand. Then draw up to ' +
         '3 cards from your deck. This power can\'t be used if Delcatty is affected by a Special Condition.',

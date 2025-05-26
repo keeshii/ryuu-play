@@ -22,6 +22,7 @@ export class OranBerry extends TrainerCard {
         if (p.active.tool === this && p.active.damage >= 20) {
           p.active.damage -= 20;
           p.active.moveCardTo(this, p.discard);
+          p.active.tool = undefined;
         }
       });
     }
