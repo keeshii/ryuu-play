@@ -56,7 +56,7 @@ export class Hariyama extends PokemonCard {
 
       const defending = opponent.active.getPokemonCard();
       if (defending && defending.tags.includes(CardTag.POKEMON_EX)) {
-        effect.damage += 60;
+        effect.damage += 40;
       }
     }
 

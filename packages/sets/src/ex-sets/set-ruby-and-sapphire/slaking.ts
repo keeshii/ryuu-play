@@ -115,7 +115,7 @@ export class Slaking extends PokemonCard {
           player.id,
           GameMessage.CHOOSE_CARD_TO_DISCARD,
           player.active,
-          { superType: SuperType.ENERGY, stage: Stage.BASIC },
+          { superType: SuperType.ENERGY, energyType: EnergyType.BASIC },
           { min: 1, max: 1, allowCancel: false }
         ),
         cards => {

@@ -1,4 +1,4 @@
-import { BetweenTurnsEffect, Effect, State, StateUtils, StoreLike, TrainerCard, TrainerType } from '@ptcg/common';
+import { BetweenTurnsEffect, Effect, PlayerType, State, StateUtils, StoreLike, TrainerCard, TrainerType } from '@ptcg/common';
 
 export class OranBerry extends TrainerCard {
   public trainerType: TrainerType = TrainerType.TOOL;
@@ -18,11 +18,19 @@ export class OranBerry extends TrainerCard {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
 
-      [player, opponent].forEach(p => {
-        if (p.active.tool === this && p.active.damage >= 20) {
-          p.active.damage -= 20;
-          p.active.moveCardTo(this, p.discard);
-          p.active.tool = undefined;
+      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, cardList => {
+        if (cardList.tool === this && cardList.damage >= 20) {
+          cardList.damage -= 20;
+          cardList.moveCardTo(this, player.discard);
+          cardList.tool = undefined;
+        }
+      });
+
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, cardList => {
+        if (cardList.tool === this && cardList.damage >= 20) {
+          cardList.damage -= 20;
+          cardList.moveCardTo(this, opponent.discard);
+          cardList.tool = undefined;
         }
       });
     }

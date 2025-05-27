@@ -56,10 +56,9 @@ function* useSignsOfEvolution(
 
     // Sort cards alphabetically by its name
     cards.sort((c1, c2) => (c1.name === c2.name ? 0 : c1.name < c2.name ? -1 : 1));
-  } while (
-    cards.length <= 1 ||
-    (cards[0].name === 'Beautifly' && cards[1].name === 'Silcoon') ||
-    (cards[0].name === 'Cascoon' && cards[1].name === 'Dustox')
+  } while (cards.length === 2
+    && (cards[0].name !== 'Beautifly' || cards[1].name !== 'Silcoon')
+    && (cards[0].name !== 'Cascoon' || cards[1].name !== 'Dustox')
   );
 
   if (cards.length > 0) {

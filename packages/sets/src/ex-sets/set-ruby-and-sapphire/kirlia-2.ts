@@ -7,7 +7,7 @@ import {
   Effect,
   GameMessage,
   PokemonCard,
-  PutDamageEffect,
+  PutCountersEffect,
   SpecialCondition,
   Stage,
   State,
@@ -67,15 +67,18 @@ export class Kirlia2 extends PokemonCard {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
 
-      const checkHpEffect = new CheckHpEffect(opponent, opponent.active);
-      store.reduceEffect(state, checkHpEffect);
-      const damage = Math.min(0, checkHpEffect.hp - opponent.active.damage - 10);
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+        if (result === true) {
+          const checkHpEffect = new CheckHpEffect(opponent, opponent.active);
+          store.reduceEffect(state, checkHpEffect);
+          const damage = Math.max(0, checkHpEffect.hp - opponent.active.damage - 10);
 
-      if (damage > 0) {
-        const damageEffect = new PutDamageEffect(effect, 10);
-        damageEffect.target = opponent.active;
-        store.reduceEffect(state, damageEffect);
-      }
+          if (damage > 0) {
+            const damageEffect = new PutCountersEffect(effect, damage);
+            store.reduceEffect(state, damageEffect);
+          }
+        }
+      });
     }
 
     return state;

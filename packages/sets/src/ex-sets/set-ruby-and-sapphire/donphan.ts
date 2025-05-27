@@ -7,6 +7,7 @@ import {
   PokemonCard,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -46,7 +47,9 @@ export class Donphan extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      effect.damage += effect.player.active.damage ? 20 : 0;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+      effect.damage += opponent.active.damage ? 20 : 0;
       return state;
     }
 

@@ -66,13 +66,8 @@ export class Carvanha extends PokemonCard {
         return state;
       }
 
-      // pokemon is evolved
-      if (effect.target.getPokemonCard() !== this) {
-        return state;
-      }
-
-      // Not an attack
-      if (state.phase !== GamePhase.ATTACK) {
+      // Pokemon is evolved, Not an attack
+      if (effect.target.getPokemonCard() !== this || state.phase !== GamePhase.ATTACK) {
         return state;
       }
 

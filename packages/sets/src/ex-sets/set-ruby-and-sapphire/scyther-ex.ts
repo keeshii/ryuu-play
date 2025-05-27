@@ -3,8 +3,10 @@ import {
   AttackEffect,
   CardTag,
   CardType,
+  CoinFlipPrompt,
   Effect,
   EndTurnEffect,
+  GameMessage,
   PlayerType,
   PokemonCard,
   Stage,
@@ -59,8 +61,13 @@ export class ScytherEx extends PokemonCard {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
-      player.active.marker.addMarker(this.AGILITY_MARKER, this);
-      opponent.marker.addMarker(this.CLEAR_AGILITY_MARKER, this);
+
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+        if (result === true) {
+          player.active.marker.addMarker(this.AGILITY_MARKER, this);
+          opponent.marker.addMarker(this.CLEAR_AGILITY_MARKER, this);
+        }
+      });
     }
 
     if (effect instanceof AbstractAttackEffect && effect.target.marker.hasMarker(this.AGILITY_MARKER)) {

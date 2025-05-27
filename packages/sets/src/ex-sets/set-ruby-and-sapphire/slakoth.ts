@@ -49,6 +49,10 @@ export class Slakoth extends PokemonCard {
   public readonly SLACK_OFF_2_MARKER = 'CRITICAL_MOVE_2_MARKER';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    if (effect instanceof AttackEffect && effect.player.active.marker.hasMarker(this.SLACK_OFF_1_MARKER, this)) {
+      throw new GameError(GameMessage.BLOCKED_BY_EFFECT);
+    }
+
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
 
@@ -59,6 +63,13 @@ export class Slakoth extends PokemonCard {
       });
     }
 
+    if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
+      const player = effect.player;
+      player.active.marker.addMarker(this.SLACK_OFF_1_MARKER, this);
+      player.active.marker.addMarker(this.SLACK_OFF_2_MARKER, this);
+      player.active.damage = 0;
+    }
+
     if (effect instanceof EndTurnEffect) {
       const marker = effect.player.active.marker;
       if (marker.hasMarker(this.SLACK_OFF_2_MARKER, this)) {
@@ -66,17 +77,6 @@ export class Slakoth extends PokemonCard {
       } else if (marker.hasMarker(this.SLACK_OFF_1_MARKER, this)) {
         marker.removeMarker(this.SLACK_OFF_1_MARKER);
       }
-    }
-
-    if (effect instanceof AttackEffect && effect.player.active.marker.hasMarker(this.SLACK_OFF_1_MARKER, this)) {
-      throw new GameError(GameMessage.BLOCKED_BY_EFFECT);
-    }
-
-    if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      const player = effect.player;
-      player.active.marker.addMarker(this.SLACK_OFF_1_MARKER, this);
-      player.active.marker.addMarker(this.SLACK_OFF_2_MARKER, this);
-      player.active.damage = 0;
     }
 
     return state;

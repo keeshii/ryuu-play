@@ -29,7 +29,7 @@ export class Breloom extends PokemonCard {
       name: 'Battle Blast',
       cost: [CardType.GRASS, CardType.COLORLESS, CardType.COLORLESS],
       damage: '40+',
-      text: 'Does 40 damage plus 10 more damage for each Fighting Energy attached to Breloom.',
+      text: 'Does 40 damage plus 10 more damage for each F Energy attached to Breloom.',
     },
   ];
 

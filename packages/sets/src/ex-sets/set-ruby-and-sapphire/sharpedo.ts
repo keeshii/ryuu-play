@@ -59,16 +59,17 @@ export class Sharpedo extends PokemonCard {
   public fullName: string = 'Sharpedo RS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof AfterDamageEffect && effect.target.tool === this) {
+    if (effect instanceof AfterDamageEffect && effect.target.cards.includes(this)) {
       const player = effect.player;
       const targetPlayer = StateUtils.findOwner(state, effect.target);
-      const pokemonCard = effect.target.getPokemonCard();
 
+      // No damage, or damage done by itself, or Carvanha is not active
       if (effect.damage <= 0 || player === targetPlayer || targetPlayer.active !== effect.target) {
         return state;
       }
 
-      if (pokemonCard !== this || state.phase !== GamePhase.ATTACK) {
+      // Pokemon is evolved, Not an attack
+      if (effect.target.getPokemonCard() !== this || state.phase !== GamePhase.ATTACK) {
         return state;
       }
 
@@ -104,7 +105,7 @@ export class Sharpedo extends PokemonCard {
             effect.damage += 30;
             const discardEnergy = new DiscardCardsEffect(effect, cards);
             discardEnergy.target = player.active;
-            return store.reduceEffect(state, discardEnergy);
+            store.reduceEffect(state, discardEnergy);
           }
         }
       );
