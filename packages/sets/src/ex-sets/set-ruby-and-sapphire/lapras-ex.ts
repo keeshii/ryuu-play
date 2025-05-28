@@ -10,6 +10,7 @@ import {
   SpecialCondition,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -55,13 +56,14 @@ export class LaprasEx extends PokemonCard {
 
       const checkAttackCost = new CheckAttackCostEffect(player, effect.attack);
       state = store.reduceEffect(state, checkAttackCost);
-      const attackCost = checkAttackCost.cost.length;
+      const attackCost = checkAttackCost.cost;
 
       const checkProvidedEnergyEffect = new CheckProvidedEnergyEffect(player);
       store.reduceEffect(state, checkProvidedEnergyEffect);
-      const energyCount = checkProvidedEnergyEffect.energyMap.reduce((left, p) => left + p.provides.length, 0);
+      const provided =  checkProvidedEnergyEffect.energyMap;
+      const energyCount = StateUtils.countAdditionalEnergy(provided, attackCost);
 
-      effect.damage += Math.min(Math.max(0, energyCount - attackCost), 2) * 10;
+      effect.damage += Math.min(energyCount, 2) * 10;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {

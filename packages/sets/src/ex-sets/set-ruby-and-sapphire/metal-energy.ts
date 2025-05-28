@@ -10,7 +10,7 @@ import {
 } from '@ptcg/common';
 
 export class MetalEnergy extends EnergyCard {
-  public provides: CardType[] = [CardType.COLORLESS];
+  public provides: CardType[] = [CardType.METAL];
 
   public energyType = EnergyType.SPECIAL;
 

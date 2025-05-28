@@ -74,6 +74,16 @@ export class StateUtils {
     return true;
   }
 
+  public static countAdditionalEnergy(energy: EnergyMap[], cost: CardType[], energyType = CardType.COLORLESS): number {
+    let additional = 0;
+    const tempCost = [...cost, energyType];
+    while (StateUtils.checkEnoughEnergy(energy, tempCost)) {
+      additional += 1;
+      tempCost.push(energyType);
+    }
+    return additional;
+  }
+
   public static getOpponent(state: State, player: Player): Player {
     const opponent = state.players.find(p => p.id !== player.id);
     if (opponent === undefined) {

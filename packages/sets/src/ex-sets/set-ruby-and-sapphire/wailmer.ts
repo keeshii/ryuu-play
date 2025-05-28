@@ -9,6 +9,7 @@ import {
   RemoveSpecialConditionsEffect,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -33,7 +34,7 @@ export class Wailmer extends PokemonCard {
       cost: [CardType.WATER, CardType.COLORLESS],
       damage: '20+',
       text:
-        'This attack does 20 damage plus 10 more damage for each Water Energy attached to Wailmer but not used to ' +
+        'This attack does 20 damage plus 10 more damage for each W Energy attached to Wailmer but not used to ' +
         'pay for this attack\'s Energy cost. You can\'t add more than 20 damage in this way.',
     },
   ];
@@ -69,13 +70,14 @@ export class Wailmer extends PokemonCard {
 
       const checkAttackCost = new CheckAttackCostEffect(player, effect.attack);
       state = store.reduceEffect(state, checkAttackCost);
-      const attackCost = checkAttackCost.cost.length;
+      const attackCost = checkAttackCost.cost;
 
       const checkProvidedEnergyEffect = new CheckProvidedEnergyEffect(player);
       store.reduceEffect(state, checkProvidedEnergyEffect);
-      const energyCount = checkProvidedEnergyEffect.energyMap.reduce((left, p) => left + p.provides.length, 0);
+      const provided =  checkProvidedEnergyEffect.energyMap;
+      const energyCount = StateUtils.countAdditionalEnergy(provided, attackCost, CardType.WATER);
 
-      effect.damage += Math.min(Math.max(0, energyCount - attackCost), 2) * 10;
+      effect.damage += Math.min(energyCount, 2) * 10;
     }
 
     return state;

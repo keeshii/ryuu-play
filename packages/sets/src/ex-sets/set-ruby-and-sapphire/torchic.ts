@@ -66,7 +66,7 @@ export class Torchic extends PokemonCard {
       name: 'Fireworks',
       cost: [CardType.FIRE, CardType.COLORLESS],
       damage: '30',
-      text: 'Flip a coin. If tails, discard a F Energy card attached to Torchic.',
+      text: 'Flip a coin. If tails, discard a R Energy card attached to Torchic.',
     },
   ];
 

@@ -5,11 +5,9 @@ import {
   Effect,
   EndTurnEffect,
   HealTargetEffect,
-  PlayerType,
   PokemonCard,
   Stage,
   State,
-  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -59,19 +57,20 @@ export class Pelipper extends PokemonCard {
 
   public fullName: string = 'Pelipper RS';
 
-  public readonly STOCKPILE_MARKER = 'STOCKPILE_MARKER';
+  public readonly STOCKPILE_1_MARKER = 'STOCKPILE_1_MARKER';
 
-  public readonly CLEAR_STOCKPILE_MARKER = 'CLEAR_STOCKPILE_MARKER';
+  public readonly STOCKPILE_2_MARKER = 'STOCKPILE_2_MARKER';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
-      const opponent = StateUtils.getOpponent(state, player);
-      player.active.marker.addMarker(this.STOCKPILE_MARKER, this);
-      opponent.marker.addMarker(this.CLEAR_STOCKPILE_MARKER, this);
+      player.active.marker.addMarker(this.STOCKPILE_1_MARKER, this);
+      player.active.marker.addMarker(this.STOCKPILE_2_MARKER, this);
+      player.active.damage = 0;
+      return state;
     }
 
-    if (effect instanceof AttackEffect && effect.player.active.marker.hasMarker(this.STOCKPILE_MARKER, this)) {
+    if (effect instanceof AttackEffect && effect.player.active.marker.hasMarker(this.STOCKPILE_1_MARKER, this)) {
       if (effect.attack === this.attacks[1]) {
         effect.damage = 70;
       }
@@ -87,13 +86,13 @@ export class Pelipper extends PokemonCard {
       return store.reduceEffect(state, healEffect);
     }
 
-    if (effect instanceof EndTurnEffect && effect.player.marker.hasMarker(this.CLEAR_STOCKPILE_MARKER, this)) {
-      effect.player.marker.removeMarker(this.CLEAR_STOCKPILE_MARKER, this);
-
-      const opponent = StateUtils.getOpponent(state, effect.player);
-      opponent.forEachPokemon(PlayerType.TOP_PLAYER, cardList => {
-        cardList.marker.removeMarker(this.STOCKPILE_MARKER, this);
-      });
+    if (effect instanceof EndTurnEffect) {
+      const marker = effect.player.active.marker;
+      if (marker.hasMarker(this.STOCKPILE_2_MARKER, this)) {
+        marker.removeMarker(this.STOCKPILE_2_MARKER);
+      } else if (marker.hasMarker(this.STOCKPILE_1_MARKER, this)) {
+        marker.removeMarker(this.STOCKPILE_1_MARKER);
+      }
     }
 
     return state;

@@ -29,7 +29,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   player.deck.moveTo(deckTop, 3);
 
   const blocked: number[] = [];
-  player.deck.cards.forEach((card, index) => {
+  deckTop.cards.forEach((card, index) => {
     if (!(card instanceof PokemonCard) && !(card instanceof EnergyCard)) {
       blocked.push(index);
     }

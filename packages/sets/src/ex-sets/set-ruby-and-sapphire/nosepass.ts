@@ -40,6 +40,7 @@ function* useInvisibleHand(
     ),
     selected => {
       cards = selected || [];
+      next();
     }
   );
 
@@ -47,33 +48,6 @@ function* useInvisibleHand(
 
   return store.prompt(state, new ShuffleDeckPrompt(player.id), order => {
     player.deck.applyOrder(order);
-  });
-}
-
-function* useRepulsion(next: Function, store: StoreLike, state: State, effect: AttackEffect): IterableIterator<State> {
-  const player = effect.player;
-  const opponent = StateUtils.getOpponent(state, player);
-
-  const hasBenched = opponent.bench.some(b => b.cards.length > 0);
-  if (!hasBenched) {
-    return state;
-  }
-
-  let flipResult = false;
-  yield store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
-    flipResult = result;
-  });
-
-  if (!flipResult) {
-    return state;
-  }
-
-  const moveCardsEffect = new MoveCardsEffect(effect, opponent.active.cards, opponent.deck);
-  store.reduceEffect(state, moveCardsEffect);
-  opponent.active.clearEffects();
-
-  return store.prompt(state, new ShuffleDeckPrompt(opponent.id), order => {
-    opponent.deck.applyOrder(order);
   });
 }
 
@@ -121,8 +95,23 @@ export class Nosepass extends PokemonCard {
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      const generator = useRepulsion(() => generator.next(), store, state, effect);
-      return generator.next().value;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      const hasBenched = opponent.bench.some(b => b.cards.length > 0);
+      if (!hasBenched) {
+        return state;
+      }
+
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+        if (result) {
+          const moveCardsEffect = new MoveCardsEffect(effect, opponent.active.cards, opponent.hand);
+          store.reduceEffect(state, moveCardsEffect);
+          if (!moveCardsEffect.preventDefault) {
+            opponent.active.clearEffects();
+          }
+        }
+      });
     }
 
     return state;

@@ -68,7 +68,7 @@ export class Seaking extends PokemonCard {
           player.id,
           GameMessage.CHOOSE_POKEMON_TO_DAMAGE,
           PlayerType.TOP_PLAYER,
-          [SlotType.BENCH],
+          [SlotType.ACTIVE, SlotType.BENCH],
           { allowCancel: false }
         ),
         targets => {

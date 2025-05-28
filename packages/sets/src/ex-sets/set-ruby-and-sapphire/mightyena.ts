@@ -4,6 +4,7 @@ import {
   CardType,
   ChooseCardsPrompt,
   CoinFlipPrompt,
+  DealDamageEffect,
   Effect,
   GameMessage,
   GamePhase,
@@ -56,6 +57,38 @@ function* useShakedown(next: Function, store: StoreLike, state: State, effect: A
   return state;
 }
 
+// Reduce damage by 10 (before weakness and resistance)
+function useIntimidatinMane(
+  effect: DealDamageEffect | PutDamageEffect,
+  store: StoreLike,
+  state: State,
+  self: Mightyena
+): State {
+  const player = effect.player;
+  const opponent = StateUtils.getOpponent(state, player);
+
+  // It's not an attack
+  if (state.phase !== GamePhase.ATTACK) {
+    return state;
+  }
+
+  // Mightyena is not Active Pokemon
+  if (opponent.active.getPokemonCard() !== self) {
+    return state;
+  }
+
+  // Try to reduce PowerEffect, to check if something is blocking our ability
+  try {
+    const powerEffect = new PowerEffect(player, self.powers[0], self);
+    store.reduceEffect(state, powerEffect);
+  } catch {
+    return state;
+  }
+
+  effect.damage = Math.max(0, effect.damage - 10);
+  return state;
+}
+
 export class Mightyena extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
 
@@ -97,36 +130,24 @@ export class Mightyena extends PokemonCard {
   public fullName: string = 'Mightyena RS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    // Reduce damage by 20
-    if (effect instanceof PutDamageEffect && effect.target.cards.includes(this)) {
-      const pokemonCard = effect.target.getPokemonCard();
+    // For Defending Pokemon use DealDamageEffect (before Weakness and Resistance)
+    if (effect instanceof DealDamageEffect) {
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
 
-      // It's not this pokemon card
-      if (pokemonCard !== this) {
-        return state;
+      if (effect.target === opponent.active) {
+        return useIntimidatinMane(effect, store, state, this);
       }
+    }
 
-      // It's not an attack
-      if (state.phase !== GamePhase.ATTACK) {
-        return state;
+    // For Benched Pokemon use PutDamageEffect
+    if (effect instanceof PutDamageEffect) {
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      if (opponent.bench.includes(effect.target)) {
+        return useIntimidatinMane(effect, store, state, this);
       }
-
-      const player = StateUtils.findOwner(state, effect.target);
-
-      // Not active pokemon
-      if (player.active !== effect.target) {
-        return state;
-      }
-
-      // Try to reduce PowerEffect, to check if something is blocking our ability
-      try {
-        const powerEffect = new PowerEffect(player, this.powers[0], this);
-        store.reduceEffect(state, powerEffect);
-      } catch {
-        return state;
-      }
-
-      effect.damage = Math.max(0, effect.damage - 10);
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {

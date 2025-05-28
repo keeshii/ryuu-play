@@ -10,7 +10,6 @@ import {
   PokemonCard,
   Stage,
   State,
-  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -52,18 +51,14 @@ export class Electrike extends PokemonCard {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
 
-      const cardList = StateUtils.findCardList(state, this);
-      if (cardList === undefined) {
-        return state;
-      }
-
       const energyCard = player.discard.cards.find(
         c => c instanceof EnergyCard && c.energyType === EnergyType.BASIC && c.provides.includes(CardType.LIGHTNING)
       );
 
       if (energyCard) {
-        player.deck.moveCardTo(energyCard, cardList);
+        player.discard.moveCardTo(energyCard, player.active);
       }
+      return state;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {

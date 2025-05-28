@@ -90,13 +90,14 @@ export class Delcatty2 extends PokemonCard {
 
       const checkAttackCost = new CheckAttackCostEffect(player, effect.attack);
       state = store.reduceEffect(state, checkAttackCost);
-      const attackCost = checkAttackCost.cost.length;
+      const attackCost = checkAttackCost.cost;
 
       const checkProvidedEnergyEffect = new CheckProvidedEnergyEffect(player);
       store.reduceEffect(state, checkProvidedEnergyEffect);
-      const energyCount = checkProvidedEnergyEffect.energyMap.reduce((left, p) => left + p.provides.length, 0);
+      const provided =  checkProvidedEnergyEffect.energyMap;
+      const energyCount = StateUtils.countAdditionalEnergy(provided, attackCost);
 
-      effect.damage += Math.max(0, (energyCount - attackCost) * 10);
+      effect.damage += energyCount * 10;
     }
 
     return state;

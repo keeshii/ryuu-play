@@ -23,25 +23,26 @@ const { baseSets, exSets, standardSets } = require('@ptcg/sets');
 
 const cardManager = CardManager.getInstance();
 
-// Not implemented yet
-/*
-cardManager.defineFormat('Base Sets', [
-  baseSets.setBase
+cardManager.defineFormat('Standard', [
+  standardSets.setDiamondAndPearl,
+  standardSets.setOp9,
+  standardSets.setHgss,
+  standardSets.setBlackAndWhite,
+  standardSets.setBlackAndWhite2,
+  standardSets.setBlackAndWhite3,
+  standardSets.setBlackAndWhite4,
+  standardSets.setSwordAndShield
 ]);
 
 cardManager.defineFormat('EX Sets', [
   exSets.setRubyAndSapphire
 ]);
-*/
 
-cardManager.defineSet(standardSets.setDiamondAndPearl);
-cardManager.defineSet(standardSets.setOp9);
-cardManager.defineSet(standardSets.setHgss);
-cardManager.defineSet(standardSets.setBlackAndWhite);
-cardManager.defineSet(standardSets.setBlackAndWhite2);
-cardManager.defineSet(standardSets.setBlackAndWhite3);
-cardManager.defineSet(standardSets.setBlackAndWhite4);
-cardManager.defineSet(standardSets.setSwordAndShield);
+
+// Not implemented yet
+// cardManager.defineFormat('Base Sets', [
+//   baseSets.setBase
+// ]);
 
 // Define bots
 const botManager = BotManager.getInstance();

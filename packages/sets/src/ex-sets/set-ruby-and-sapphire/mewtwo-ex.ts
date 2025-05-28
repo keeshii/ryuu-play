@@ -1,11 +1,9 @@
 import {
-  AttachEnergyEffect,
   AttachEnergyPrompt,
   AttackEffect,
   CardTag,
   CardType,
   Effect,
-  EnergyCard,
   GameMessage,
   PlayerType,
   PokemonCard,
@@ -77,9 +75,7 @@ export class MewtwoEx extends PokemonCard {
           transfers = transfers || [];
           for (const transfer of transfers) {
             const target = StateUtils.getTarget(state, player, transfer.to);
-            const energyCard = transfer.card as EnergyCard;
-            const attachEnergyEffect = new AttachEnergyEffect(player, energyCard, target);
-            store.reduceEffect(state, attachEnergyEffect);
+            player.discard.moveCardTo(transfer.card, target);
           }
         }
       );

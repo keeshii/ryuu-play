@@ -11,7 +11,7 @@ import {
 } from '@ptcg/common';
 
 export class DarknessEnergy extends EnergyCard {
-  public provides: CardType[] = [CardType.COLORLESS];
+  public provides: CardType[] = [CardType.DARK];
 
   public energyType = EnergyType.SPECIAL;
 

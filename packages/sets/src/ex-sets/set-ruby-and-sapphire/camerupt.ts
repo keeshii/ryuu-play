@@ -7,6 +7,7 @@ import {
   Effect,
   EnergyCard,
   EnergyType,
+  GameError,
   GameMessage,
   PlayerType,
   PokemonCard,
@@ -100,8 +101,7 @@ export class Camerupt extends PokemonCard {
       });
 
       if (basicEnergyCards < 2) {
-        effect.preventDefault = true;
-        return state;
+        throw new GameError(GameMessage.NOT_ENOUGH_ENERGY);
       }
 
       return store.prompt(
@@ -111,14 +111,10 @@ export class Camerupt extends PokemonCard {
           GameMessage.CHOOSE_CARD_TO_DISCARD,
           player.active,
           { superType: SuperType.ENERGY, energyType: EnergyType.BASIC },
-          { min: 2, max: 2, allowCancel: true }
+          { min: 2, max: 2, allowCancel: false }
         ),
         cards => {
           cards = cards || [];
-          if (cards.length < 2) {
-            effect.preventDefault = true;
-            return;
-          }
           const discardEnergy = new DiscardCardsEffect(effect, cards);
           discardEnergy.target = player.active;
           store.reduceEffect(state, discardEnergy);

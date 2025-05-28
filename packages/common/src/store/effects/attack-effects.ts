@@ -99,9 +99,9 @@ export class DiscardCardsEffect extends AbstractAttackEffect implements Effect {
   public preventDefault = false;
   public cards: Card[];
 
-  constructor(base: AttackEffect, energyCards: Card[]) {
+  constructor(base: AttackEffect, cards: Card[]) {
     super(base);
-    this.cards = energyCards;
+    this.cards = cards.slice();
   }
 }
 
@@ -111,9 +111,9 @@ export class MoveCardsEffect extends AbstractAttackEffect implements Effect {
   public cards: Card[];
   public destination: CardList;
 
-  constructor(base: AttackEffect, energyCards: Card[], destination: CardList) {
+  constructor(base: AttackEffect, cards: Card[], destination: CardList) {
     super(base);
-    this.cards = energyCards;
+    this.cards = cards.slice();
     this.destination = destination;
   }
 }
