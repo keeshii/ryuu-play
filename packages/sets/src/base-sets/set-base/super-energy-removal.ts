@@ -24,7 +24,7 @@ export class SuperEnergyRemoval extends TrainerCard {
 
   public text: string =
     'Discard 1 Energy card attached to 1 of your Pokémon in order to choose 1 of your opponent\'s Pokémon and up to ' +
-    '2 Energy cards attached to it. Discard those Energy cards. ';
+    '2 Energy cards attached to it. Discard those Energy cards.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {

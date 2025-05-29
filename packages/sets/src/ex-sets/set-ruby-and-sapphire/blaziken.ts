@@ -81,7 +81,7 @@ export class Blaziken extends PokemonCard {
       const cardList = StateUtils.findCardList(state, this) as PokemonCardList;
 
       if (cardList.specialConditions.length > 0) {
-        throw new GameError(GameMessage.BLOCKED_BY_SPECIAL_CONDITION);
+        throw new GameError(GameMessage.CANNOT_USE_POWER);
       }
       const hasBench = player.bench.some(b => b.cards.length > 0);
       if (!hasBench) {

@@ -3,6 +3,7 @@ import {
   CardType,
   Effect,
   PokemonCard,
+  PutDamageEffect,
   Stage,
   State,
   StoreLike,
@@ -52,7 +53,15 @@ export class Dugtrio extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+
+      player.bench.forEach(benched => {
+        if (benched.cards.length > 0) {
+          const dealDamage = new PutDamageEffect(effect, 10);
+          dealDamage.target = benched;
+          store.reduceEffect(state, dealDamage);
+        }
+      });
     }
 
     return state;

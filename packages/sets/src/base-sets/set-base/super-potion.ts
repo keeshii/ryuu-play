@@ -24,7 +24,7 @@ export class SuperPotion extends TrainerCard {
 
   public text: string =
     'Discard 1 Energy card attached to your own Pokémon in order to remove up to 4 damage counters from that ' +
-    'Pokémon. ';
+    'Pokémon.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {

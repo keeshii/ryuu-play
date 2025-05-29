@@ -24,7 +24,7 @@ export class PokmonCenter extends TrainerCard {
 
   public text: string =
     'Remove all damage counters from all of your own Pokémon with damage counters on them, then discard all Energy ' +
-    'cards attached to those Pokémon. ';
+    'cards attached to those Pokémon.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {

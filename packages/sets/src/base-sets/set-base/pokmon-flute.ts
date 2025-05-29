@@ -24,7 +24,7 @@ export class PokmonFlute extends TrainerCard {
 
   public text: string =
     'Choose 1 Basic Pokémon card from your opponent\'s discard pile and put it onto his or her Bench. (You can\'t ' +
-    'play Pokémon Flute if your opponent\'s Bench is full.) ';
+    'play Pokémon Flute if your opponent\'s Bench is full.)';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {

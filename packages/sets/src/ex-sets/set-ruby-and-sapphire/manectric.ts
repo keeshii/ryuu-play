@@ -1,6 +1,8 @@
 import {
+  AttachEnergyPrompt,
   AttackEffect,
   Card,
+  CardList,
   CardType,
   ChooseCardsPrompt,
   CoinFlipPrompt,
@@ -8,8 +10,10 @@ import {
   Effect,
   EnergyType,
   GameMessage,
+  PlayerType,
   PokemonCard,
   ShuffleDeckPrompt,
+  SlotType,
   Stage,
   State,
   StateUtils,
@@ -21,17 +25,11 @@ function* useAttractCurrent(
   next: Function,
   store: StoreLike,
   state: State,
-  self: Manectric,
   effect: AttackEffect
 ): IterableIterator<State> {
   const player = effect.player;
 
-  const cardList = StateUtils.findCardList(state, self);
-  if (cardList === undefined) {
-    return state;
-  }
-
-  const cards: Card[] = [];
+  let cards: Card[] = [];
   yield store.prompt(
     state,
     new ChooseCardsPrompt(
@@ -45,14 +43,40 @@ function* useAttractCurrent(
       },
       { min: 1, max: 1, allowCancel: true }
     ),
-    cards => {
-      cards = cards || [];
+    selected => {
+      cards = selected || [];
       next();
     }
   );
 
   if (cards.length > 0) {
+    const cardList = new CardList();
     player.deck.moveCardsTo(cards, cardList);
+    
+    yield store.prompt(
+      state,
+      new AttachEnergyPrompt(
+        player.id,
+        GameMessage.ATTACH_ENERGY_CARDS,
+        cardList,
+        PlayerType.BOTTOM_PLAYER,
+        [SlotType.ACTIVE, SlotType.BENCH],
+        {
+          superType: SuperType.ENERGY,
+          energyType: EnergyType.BASIC,
+          name: 'Lightning Energy',
+        },
+        { allowCancel: false, min: 1, max: 1 }
+      ),
+      transfers => {
+        transfers = transfers || [];
+        for (const transfer of transfers) {
+          const target = StateUtils.getTarget(state, player, transfer.to);
+          cardList.moveCardTo(transfer.card, target);
+        }
+        next();
+      }
+    );
   }
 
   return store.prompt(state, new ShuffleDeckPrompt(player.id), order => {
@@ -75,7 +99,7 @@ export class Manectric extends PokemonCard {
       cost: [CardType.COLORLESS],
       damage: '10',
       text:
-        'Search your deck for a L Energy card and attach it to 1 of your Pokémon. Shuffle your deck ' + 'afterward.',
+        'Search your deck for a L Energy card and attach it to 1 of your Pokémon. Shuffle your deck afterward.',
     },
     {
       name: 'Thunder Jolt',
@@ -99,7 +123,7 @@ export class Manectric extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      const generator = useAttractCurrent(() => generator.next(), store, state, this, effect);
+      const generator = useAttractCurrent(() => generator.next(), store, state, effect);
       return generator.next().value;
     }
 

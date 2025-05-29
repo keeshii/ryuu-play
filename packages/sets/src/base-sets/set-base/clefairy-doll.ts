@@ -8,8 +8,7 @@ import {
 } from '@ptcg/common';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
-  // const player = effect.player;
-  // const opponent = StateUtils.getOpponent(state, player);
+  // TODO - not implemented
   return state;
 }
 
@@ -26,7 +25,7 @@ export class ClefairyDoll extends TrainerCard {
     'Play Clefairy Doll as if it were a Basic Pokémon. While in play, Clefairy Doll counts a a Pokémon (instead of ' +
     'a Trainer card). Clefairy Doll has no attacks, can\'t retreat, and can\'t be Asleep, Confused, Paralyzed, or ' +
     'Poisoned. If Clefairy Doll is Knocked Out, it doesn\'t count as a Knocked Out Pokémon. At any time during your ' +
-    'turn before your attack, you may discard Clefairy Doll. ';
+    'turn before your attack, you may discard Clefairy Doll.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {

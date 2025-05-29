@@ -1,10 +1,18 @@
 import {
+  AddSpecialConditionsEffect,
   AttackEffect,
   CardType,
+  CoinFlipPrompt,
   Effect,
+  EndTurnEffect,
+  GameMessage,
+  GamePhase,
+  KnockOutEffect,
   PokemonCard,
+  SpecialCondition,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -43,14 +51,53 @@ export class Gastly extends PokemonCard {
   public name: string = 'Gastly';
 
   public fullName: string = 'Gastly BS';
+  
+  public readonly DESTINY_BOND_1_MARKER = 'DESTINY_BOND_1_MARKER';
+
+  public readonly DESTINY_BOND_2_MARKER = 'DESTINY_BOND_2_MARKER';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+        if (result === true) {
+          const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.ASLEEP]);
+          store.reduceEffect(state, specialConditionEffect);
+        }
+      });
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+      player.active.marker.addMarker(this.DESTINY_BOND_1_MARKER, this);
+      player.active.marker.addMarker(this.DESTINY_BOND_2_MARKER, this);
+      player.active.damage = 0;
+    }
+
+    if (effect instanceof EndTurnEffect) {
+      const marker = effect.player.active.marker;
+      if (marker.hasMarker(this.DESTINY_BOND_2_MARKER, this)) {
+        marker.removeMarker(this.DESTINY_BOND_2_MARKER);
+      } else if (marker.hasMarker(this.DESTINY_BOND_1_MARKER, this)) {
+        marker.removeMarker(this.DESTINY_BOND_1_MARKER);
+      }
+    }
+
+    if (effect instanceof KnockOutEffect && effect.target.marker.hasMarker(this.DESTINY_BOND_1_MARKER, this)) {
+      const player = effect.player;
+      const targetPlayer = StateUtils.findOwner(state, effect.target);
+
+      if (state.phase !== GamePhase.ATTACK) {
+        return state;
+      }
+
+      if (player === targetPlayer) {
+        return state;
+      }
+
+      const knockOutEffect = new KnockOutEffect(player, player.active);
+      store.reduceEffect(state, knockOutEffect);
     }
 
     return state;

@@ -1,7 +1,10 @@
 import {
   AttackEffect,
   CardType,
+  CoinFlipPrompt,
+  DealDamageEffect,
   Effect,
+  GameMessage,
   PokemonCard,
   PowerEffect,
   PowerType,
@@ -23,6 +26,7 @@ export class Electrode extends PokemonCard {
     {
       name: 'Buzzap',
       powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
       text:
         'At any time during your turn (before your attack), you may Knock Out Electrode and attach it to 1 of your ' +
         'other Pokémon. If you do, choose a type of Energy. Electrode is now an Energy card (instead of a Pokémon) ' +
@@ -54,11 +58,20 @@ export class Electrode extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
+      // TODO - not implemented
       return state;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+        if (result === false) {
+          const dealDamage = new DealDamageEffect(effect, 10);
+          dealDamage.target = player.active;
+          store.reduceEffect(state, dealDamage);
+        }
+      });
     }
 
     return state;

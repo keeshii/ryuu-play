@@ -24,7 +24,7 @@ export class PokmonTrader extends TrainerCard {
 
   public text: string =
     'Trade 1 of the Basic Pokémon or Evolution cards in your hand for 1 of the Basic Pokémon or Evolution cards ' +
-    'from your deck. Show both cards to your opponent. Shuffle your deck afterward. ';
+    'from your deck. Show both cards to your opponent. Shuffle your deck afterward.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {

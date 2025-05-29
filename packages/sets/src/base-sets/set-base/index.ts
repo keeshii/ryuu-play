@@ -11,8 +11,8 @@ import { Chansey } from './chansey';
 import { Charizard } from './charizard';
 import { Charmander } from './charmander';
 import { Charmeleon } from './charmeleon';
-import { Clefairy } from './clefairy';
-import { ClefairyDoll } from './clefairy-doll';
+// import { Clefairy } from './clefairy';
+// import { ClefairyDoll } from './clefairy-doll';
 import { ComputerSearch } from './computer-search';
 import { Defender } from './defender';
 import { DevolutionSpray } from './devolution-spray';
@@ -25,7 +25,7 @@ import { Dratini } from './dratini';
 import { Drowzee } from './drowzee';
 import { Dugtrio } from './dugtrio';
 import { Electabuzz } from './electabuzz';
-import { Electrode } from './electrode';
+// import { Electrode } from './electrode';
 import { EnergyRemoval } from './energy-removal';
 import { EnergyRetrieval } from './energy-retrieval';
 import { Farfetchd } from './farfetchd';
@@ -115,8 +115,8 @@ export const setBase: Card[] = [
   new Charizard(),
   new Charmander(),
   new Charmeleon(),
-  new Clefairy(),
-  new ClefairyDoll(),
+  // new Clefairy(),
+  // new ClefairyDoll(),
   new ComputerSearch(),
   new Defender(),
   new DevolutionSpray(),
@@ -129,7 +129,7 @@ export const setBase: Card[] = [
   new Drowzee(),
   new Dugtrio(),
   new Electabuzz(),
-  new Electrode(),
+  // new Electrode(),
   new EnergyRemoval(),
   new EnergyRetrieval(),
   new Farfetchd(),

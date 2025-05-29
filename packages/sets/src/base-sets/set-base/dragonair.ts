@@ -1,11 +1,18 @@
 import {
   AttackEffect,
   CardType,
+  ChooseCardsPrompt,
+  CoinFlipPrompt,
+  DiscardCardsEffect,
   Effect,
+  EnergyCard,
+  GameMessage,
   PokemonCard,
   Stage,
   State,
+  StateUtils,
   StoreLike,
+  SuperType,
 } from '@ptcg/common';
 
 export class Dragonair extends PokemonCard {
@@ -46,11 +53,44 @@ export class Dragonair extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+      return store.prompt(
+        state,
+        [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)],
+        results => {
+          let heads: number = 0;
+          results.forEach(r => {
+            heads += r ? 1 : 0;
+          });
+          effect.damage = 30 * heads;
+        }
+      );
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      // Defending Pokemon has no energy cards attached
+      if (!opponent.active.cards.some(c => c instanceof EnergyCard)) {
+        return state;
+      }
+
+      return store.prompt(
+        state,
+        new ChooseCardsPrompt(
+          player.id,
+          GameMessage.CHOOSE_CARD_TO_DISCARD,
+          opponent.active,
+          { superType: SuperType.ENERGY },
+          { min: 1, max: 1, allowCancel: false }
+        ),
+        selected => {
+          const cards = selected || [];
+          const discardEnergy = new DiscardCardsEffect(effect, cards);
+          return store.reduceEffect(state, discardEnergy);
+        }
+      );
     }
 
     return state;

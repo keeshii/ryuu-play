@@ -1,14 +1,66 @@
 import {
+  AddSpecialConditionsEffect,
   AttackEffect,
   CardType,
+  CheckHpEffect,
+  CoinFlipPrompt,
+  DamageMap,
   Effect,
+  GameMessage,
+  MoveDamagePrompt,
+  PlayerType,
   PokemonCard,
   PowerEffect,
   PowerType,
+  SlotType,
+  SpecialCondition,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
+
+function* useDamageSwap(
+  next: Function,
+  store: StoreLike,
+  state: State,
+  effect: PowerEffect
+): IterableIterator<State> {
+  const player = effect.player;
+
+  const maxAllowedDamage: DamageMap[] = [];
+  player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card, target) => {
+    const checkHpEffect = new CheckHpEffect(player, cardList);
+    store.reduceEffect(state, checkHpEffect);
+    maxAllowedDamage.push({ target, damage: checkHpEffect.hp - 10 });
+  });
+
+  return store.prompt(
+    state,
+    new MoveDamagePrompt(
+      effect.player.id,
+      GameMessage.MOVE_DAMAGE,
+      PlayerType.BOTTOM_PLAYER,
+      [SlotType.ACTIVE, SlotType.BENCH],
+      maxAllowedDamage,
+      { allowCancel: true }
+    ),
+    transfers => {
+      if (transfers === null) {
+        return;
+      }
+
+      for (const transfer of transfers) {
+        const source = StateUtils.getTarget(state, player, transfer.from);
+        const target = StateUtils.getTarget(state, player, transfer.to);
+        if (source.damage >= 10) {
+          source.damage -= 10;
+          target.damage += 10;
+        }
+      }
+    }
+  );
+}
 
 export class Alakazam extends PokemonCard {
   public stage: Stage = Stage.STAGE_2;
@@ -23,6 +75,7 @@ export class Alakazam extends PokemonCard {
     {
       name: 'Damage Swap',
       powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
       text:
         'As often as you like during your turn (before your attack), you may move 1 damage counter from 1 of your ' +
         'Pokémon to another as long as you don\'t Knock Out that Pokémon. This power can\'t be used if Alakazam is ' +
@@ -53,11 +106,19 @@ export class Alakazam extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
-      return state;
+      const generator = useDamageSwap(() => generator.next(), store, state, effect);
+      return generator.next().value;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+        if (result === true) {
+          const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.CONFUSED]);
+          store.reduceEffect(state, specialConditionEffect);
+        }
+      });
     }
 
     return state;

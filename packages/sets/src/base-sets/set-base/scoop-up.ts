@@ -24,7 +24,7 @@ export class ScoopUp extends TrainerCard {
 
   public text: string =
     'Choose 1 of your Pokémon in play and return its Basic Pokémon card to your hand. (Discard all cards attached ' +
-    'to that card.) ';
+    'to that card.)';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {

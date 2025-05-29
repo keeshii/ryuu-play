@@ -1,14 +1,7 @@
-import {
-  CardType,
-  Effect,
-  EnergyCard,
-  EnergyType,
-  State,
-  StoreLike,
-} from '@ptcg/common';
+import { CardType, EnergyCard, EnergyType } from '@ptcg/common';
 
 export class DoubleColorlessEnergy extends EnergyCard {
-  public provides: CardType[] = [CardType.COLORLESS];
+  public provides: CardType[] = [CardType.COLORLESS, CardType.COLORLESS];
 
   public energyType = EnergyType.SPECIAL;
 
@@ -20,7 +13,4 @@ export class DoubleColorlessEnergy extends EnergyCard {
 
   public text: string = 'Provides ColorlessColorless energy. Doesn\'t count as a basic Energy card.';
 
-  public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    return state;
-  }
 }

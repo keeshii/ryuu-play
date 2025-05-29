@@ -1,7 +1,11 @@
 import {
   AttackEffect,
   CardType,
+  CoinFlipPrompt,
   Effect,
+  GameError,
+  GameMessage,
+  PlayPokemonEffect,
   PokemonCard,
   Stage,
   State,
@@ -48,9 +52,28 @@ export class Farfetchd extends PokemonCard {
 
   public fullName: string = 'Farfetch\'d BS';
 
+  public readonly LEEK_SLAP_MARKER = 'LEEK_SLAP_MARKER';
+
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    if (effect instanceof PlayPokemonEffect && effect.pokemonCard === this) {
+      const player = effect.player;
+      player.marker.removeMarker(this.LEEK_SLAP_MARKER, this);
+    }
+
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+
+      if (player.marker.hasMarker(this.LEEK_SLAP_MARKER, this)) {
+        throw new GameError(GameMessage.BLOCKED_BY_EFFECT);
+      }
+
+      player.marker.addMarker(this.LEEK_SLAP_MARKER, this);
+
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+        if (result === false) {
+          effect.damage = 0;
+        }
+      });
     }
 
     return state;

@@ -24,7 +24,7 @@ export class PokmonBreeder extends TrainerCard {
 
   public text: string =
     'Put a Stage 2 Evolution card from your hand on the matching Basic Pokémon. You can only play this card when ' +
-    'you would be allowed to evolve that Pokémon anyway. ';
+    'you would be allowed to evolve that Pokémon anyway.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {

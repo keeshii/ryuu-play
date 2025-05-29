@@ -70,7 +70,7 @@ export class ScytherEx extends PokemonCard {
       });
     }
 
-    if (effect instanceof AbstractAttackEffect && effect.target.marker.hasMarker(this.AGILITY_MARKER)) {
+    if (effect instanceof AbstractAttackEffect && effect.target.marker.hasMarker(this.AGILITY_MARKER, this)) {
       effect.preventDefault = true;
       return state;
     }

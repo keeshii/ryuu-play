@@ -9,6 +9,7 @@ import {
   GameError,
   GameMessage,
   PokemonCard,
+  PokemonCardList,
   PowerEffect,
   PowerType,
   Stage,
@@ -18,8 +19,13 @@ import {
   SuperType,
 } from '@ptcg/common';
 
-function* useEnergyDraw(next: Function, store: StoreLike, state: State, effect: PowerEffect): IterableIterator<State> {
+function* useEnergyDraw(next: Function, store: StoreLike, state: State, self: Delcatty, effect: PowerEffect): IterableIterator<State> {
   const player = effect.player;
+
+  const cardList = StateUtils.findCardList(state, self) as PokemonCardList;
+  if (cardList.specialConditions.length > 0) {
+    throw new GameError(GameMessage.CANNOT_USE_POWER);
+  }
 
   const hasEnergyCardInHand = player.hand.cards.some(c => c.superType === SuperType.ENERGY);
   if (!hasEnergyCardInHand) {
@@ -117,7 +123,7 @@ export class Delcatty extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
-      const generator = useEnergyDraw(() => generator.next(), store, state, effect);
+      const generator = useEnergyDraw(() => generator.next(), store, state, this, effect);
       return generator.next().value;
     }
 

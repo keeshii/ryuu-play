@@ -1,10 +1,15 @@
 import {
+  AddSpecialConditionsEffect,
   AttackEffect,
   CardType,
   Effect,
+  GameError,
+  GameMessage,
   PokemonCard,
+  SpecialCondition,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -46,11 +51,17 @@ export class Haunter extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.ASLEEP]);
+      store.reduceEffect(state, specialConditionEffect);
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+      
+      if (!opponent.active.specialConditions.includes(SpecialCondition.ASLEEP)) {
+        throw new GameError(GameMessage.BLOCKED_BY_SPECIAL_CONDITION);
+      }
     }
 
     return state;
