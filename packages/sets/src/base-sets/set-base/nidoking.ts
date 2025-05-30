@@ -1,8 +1,13 @@
 import {
+  AddSpecialConditionsEffect,
   AttackEffect,
   CardType,
+  CoinFlipPrompt,
+  DealDamageEffect,
   Effect,
+  GameMessage,
   PokemonCard,
+  SpecialCondition,
   Stage,
   State,
   StoreLike,
@@ -50,11 +55,23 @@ export class Nidoking extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+        if (result === true) {
+          effect.damage += 10;
+        } else {
+          const dealDamage = new DealDamageEffect(effect, 10);
+          dealDamage.target = player.active;
+          store.reduceEffect(state, dealDamage);
+        }
+      });
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const specialCondition = new AddSpecialConditionsEffect(effect, [SpecialCondition.POISONED]);
+      specialCondition.poisonDamage = 20;
+      return store.reduceEffect(state, specialCondition);
     }
 
     return state;

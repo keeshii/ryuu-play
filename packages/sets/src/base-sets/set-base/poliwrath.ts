@@ -1,11 +1,19 @@
 import {
   AttackEffect,
   CardType,
+  CheckAttackCostEffect,
+  CheckProvidedEnergyEffect,
+  ChooseCardsPrompt,
+  DiscardCardsEffect,
   Effect,
+  EnergyCard,
+  GameMessage,
   PokemonCard,
   Stage,
   State,
+  StateUtils,
   StoreLike,
+  SuperType,
 } from '@ptcg/common';
 
 export class Poliwrath extends PokemonCard {
@@ -48,11 +56,44 @@ export class Poliwrath extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+
+      const checkAttackCost = new CheckAttackCostEffect(player, effect.attack);
+      state = store.reduceEffect(state, checkAttackCost);
+      const attackCost = checkAttackCost.cost;
+
+      const checkProvidedEnergyEffect = new CheckProvidedEnergyEffect(player);
+      store.reduceEffect(state, checkProvidedEnergyEffect);
+      const provided =  checkProvidedEnergyEffect.energyMap;
+      const energyCount = StateUtils.countAdditionalEnergy(provided, attackCost, CardType.WATER);
+
+      effect.damage += Math.min(energyCount, 2) * 10;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      // Defending Pokemon has no energy cards attached
+      if (!opponent.active.cards.some(c => c instanceof EnergyCard)) {
+        return state;
+      }
+
+      return store.prompt(
+        state,
+        new ChooseCardsPrompt(
+          player.id,
+          GameMessage.CHOOSE_CARD_TO_DISCARD,
+          opponent.active,
+          { superType: SuperType.ENERGY },
+          { min: 1, max: 1, allowCancel: false }
+        ),
+        selected => {
+          const cards = selected || [];
+          const discardEnergy = new DiscardCardsEffect(effect, cards);
+          return store.reduceEffect(state, discardEnergy);
+        }
+      );
     }
 
     return state;

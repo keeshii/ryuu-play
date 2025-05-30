@@ -33,7 +33,7 @@ export class Defender extends TrainerCard {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
       const player = effect.player;
 
-      // Do not discard the card yet
+      // Do not discard the card, it will be attached
       effect.preventDefault = true;
 
       return store.prompt(

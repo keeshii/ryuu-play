@@ -1,7 +1,10 @@
 import {
   AttackEffect,
   CardType,
+  CoinFlipPrompt,
+  DealDamageEffect,
   Effect,
+  GameMessage,
   PokemonCard,
   Stage,
   State,
@@ -44,7 +47,15 @@ export class Pikachu extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+        if (result === false) {
+          const dealDamage = new DealDamageEffect(effect, 10);
+          dealDamage.target = player.active;
+          store.reduceEffect(state, dealDamage);
+        }
+      });
     }
 
     return state;

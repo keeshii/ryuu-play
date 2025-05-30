@@ -1,5 +1,8 @@
 import {
   Effect,
+  EnergyCard,
+  HealEffect,
+  PlayerType,
   State,
   StoreLike,
   TrainerCard,
@@ -7,13 +10,7 @@ import {
   TrainerType,
 } from '@ptcg/common';
 
-function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
-  // const player = effect.player;
-  // const opponent = StateUtils.getOpponent(state, player);
-  return state;
-}
-
-export class PokmonCenter extends TrainerCard {
+export class PokemonCenter extends TrainerCard {
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public set: string = 'BS';
@@ -28,8 +25,18 @@ export class PokmonCenter extends TrainerCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
-      const generator = playCard(() => generator.next(), store, state, effect);
-      return generator.next().value;
+      const player = effect.player;
+
+      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, cardList => {
+        if (cardList.damage > 0) {
+          const damage = cardList.damage;
+          const healEffect = new HealEffect(player, cardList, damage);
+          state = store.reduceEffect(state, healEffect);
+
+          const cards = cardList.cards.filter(c => c instanceof EnergyCard);
+          cardList.moveCardsTo(cards, player.discard);
+        }
+      });
     }
 
     return state;

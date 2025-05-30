@@ -6,10 +6,12 @@ import {
   CoinFlipPrompt,
   DamageMap,
   Effect,
+  GameError,
   GameMessage,
   MoveDamagePrompt,
   PlayerType,
   PokemonCard,
+  PokemonCardList,
   PowerEffect,
   PowerType,
   SlotType,
@@ -19,48 +21,6 @@ import {
   StateUtils,
   StoreLike,
 } from '@ptcg/common';
-
-function* useDamageSwap(
-  next: Function,
-  store: StoreLike,
-  state: State,
-  effect: PowerEffect
-): IterableIterator<State> {
-  const player = effect.player;
-
-  const maxAllowedDamage: DamageMap[] = [];
-  player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card, target) => {
-    const checkHpEffect = new CheckHpEffect(player, cardList);
-    store.reduceEffect(state, checkHpEffect);
-    maxAllowedDamage.push({ target, damage: checkHpEffect.hp - 10 });
-  });
-
-  return store.prompt(
-    state,
-    new MoveDamagePrompt(
-      effect.player.id,
-      GameMessage.MOVE_DAMAGE,
-      PlayerType.BOTTOM_PLAYER,
-      [SlotType.ACTIVE, SlotType.BENCH],
-      maxAllowedDamage,
-      { allowCancel: true }
-    ),
-    transfers => {
-      if (transfers === null) {
-        return;
-      }
-
-      for (const transfer of transfers) {
-        const source = StateUtils.getTarget(state, player, transfer.from);
-        const target = StateUtils.getTarget(state, player, transfer.to);
-        if (source.damage >= 10) {
-          source.damage -= 10;
-          target.damage += 10;
-        }
-      }
-    }
-  );
-}
 
 export class Alakazam extends PokemonCard {
   public stage: Stage = Stage.STAGE_2;
@@ -106,8 +66,46 @@ export class Alakazam extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
-      const generator = useDamageSwap(() => generator.next(), store, state, effect);
-      return generator.next().value;
+      const player = effect.player;
+      const cardList = StateUtils.findCardList(state, this) as PokemonCardList;
+
+      if (cardList.specialConditions.includes(SpecialCondition.ASLEEP)
+        || cardList.specialConditions.includes(SpecialCondition.CONFUSED)
+        || cardList.specialConditions.includes(SpecialCondition.PARALYZED)) {
+        throw new GameError(GameMessage.CANNOT_USE_POWER);
+      }
+
+      const maxAllowedDamage: DamageMap[] = [];
+      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card, target) => {
+        const checkHpEffect = new CheckHpEffect(player, cardList);
+        store.reduceEffect(state, checkHpEffect);
+        maxAllowedDamage.push({ target, damage: checkHpEffect.hp - 10 });
+      });
+
+      return store.prompt(
+        state,
+        new MoveDamagePrompt(
+          effect.player.id,
+          GameMessage.MOVE_DAMAGE,
+          PlayerType.BOTTOM_PLAYER,
+          [SlotType.ACTIVE, SlotType.BENCH],
+          maxAllowedDamage,
+          { allowCancel: true }
+        ),
+        transfers => {
+          if (transfers === null) {
+            return;
+          }
+          for (const transfer of transfers) {
+            const source = StateUtils.getTarget(state, player, transfer.from);
+            const target = StateUtils.getTarget(state, player, transfer.to);
+            if (source.damage >= 10) {
+              source.damage -= 10;
+              target.damage += 10;
+            }
+          }
+        }
+      );
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {

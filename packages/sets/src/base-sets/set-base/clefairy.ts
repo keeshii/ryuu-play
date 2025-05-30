@@ -2,6 +2,7 @@ import {
   AddSpecialConditionsEffect,
   AttackEffect,
   CardType,
+  ChooseAttackPrompt,
   CoinFlipPrompt,
   Effect,
   GameMessage,
@@ -9,6 +10,7 @@ import {
   SpecialCondition,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -66,8 +68,40 @@ export class Clefairy extends PokemonCard {
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      // TODO - not implemented
-      return state;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      // Choose an opponent's Pokemon attack
+      const pokemonCard = opponent.active.getPokemonCard();
+      if (pokemonCard === undefined || pokemonCard.attacks.length === 0) {
+        return state;
+      }
+
+      // Don't allow to copy "Metronome" or "Foul Play" as it may cause infinitive loop for AI player
+      const bannedAttacks: string[] = [this.attacks[1].name, 'Foul Play'];
+      const blocked: { index: number, attack: string }[] = [];
+      for (const attack of pokemonCard.attacks) {
+        if (bannedAttacks.includes(attack.name)) {
+          blocked.push({ index: 0, attack: attack.name });
+        }
+      }
+
+      return store.prompt(
+        state,
+        new ChooseAttackPrompt(player.id, GameMessage.CHOOSE_ATTACK_TO_COPY, [pokemonCard], {
+          allowCancel: true,
+          blocked,
+        }),
+        attack => {
+          if (attack !== null) {
+            const attackEffect = new AttackEffect(player, opponent, attack);
+            store.reduceEffect(state, attackEffect);
+            store.waitPrompt(state, () => {
+              effect.damage = attackEffect.damage;
+            });
+          }
+        }
+      );
     }
 
     return state;

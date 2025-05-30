@@ -44,6 +44,7 @@ export class Magikarp extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
+      effect.damage = effect.player.active.damage;
       return state;
     }
 

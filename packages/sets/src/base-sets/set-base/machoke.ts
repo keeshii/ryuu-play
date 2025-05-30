@@ -1,6 +1,7 @@
 import {
   AttackEffect,
   CardType,
+  DealDamageEffect,
   Effect,
   PokemonCard,
   Stage,
@@ -46,11 +47,16 @@ export class Machoke extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
+      effect.damage -= Math.min(50, effect.player.active.damage);
       return state;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+
+      const dealDamage = new DealDamageEffect(effect, 20);
+      dealDamage.target = player.active;
+      store.reduceEffect(state, dealDamage);
     }
 
     return state;

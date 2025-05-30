@@ -1,7 +1,8 @@
 import {
-  DealDamageEffect,
   Effect,
   EndTurnEffect,
+  PlayerType,
+  PutDamageEffect,
   State,
   StoreLike,
   TrainerCard,
@@ -23,23 +24,31 @@ export class Pluspower extends TrainerCard {
     'does damage to the Defending Pokémon (after applying Weakness and Resistance), the attack does 10 more damage ' +
     'to the Defending Pokémon.';
 
-  private readonly PLUS_POWER_MARKER = 'PLUS_POWER_MARKER';
-
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
       const player = effect.player;
-      player.marker.addMarker(this.PLUS_POWER_MARKER, this);
+
+      // There is an errata for PlusPower, that it is not attached anymore,
+      // but this is card implementation of the old behaviour
+
+      // Do not discard the card, it will be attached
+      effect.preventDefault = true;
+      player.hand.moveCardTo(effect.trainerCard, player.active);
+
     }
 
-    if (effect instanceof DealDamageEffect) {
-      const marker = effect.player.marker;
-      if (marker.hasMarker(this.PLUS_POWER_MARKER, this) && effect.damage > 0) {
-        effect.damage += 10;
-      }
+    if (effect instanceof PutDamageEffect && effect.source.cards.includes(this)) {
+      effect.damage += 10; // After weakness and resistance
+      return state;
     }
 
     if (effect instanceof EndTurnEffect) {
-      effect.player.marker.removeMarker(this.PLUS_POWER_MARKER, this);
+      const player = effect.player;
+      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, cardList => {
+        if (cardList.cards.includes(this)) {
+          cardList.moveCardTo(this, player.discard);
+        }
+      });
     }
 
     return state;

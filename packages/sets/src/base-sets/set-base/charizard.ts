@@ -14,6 +14,7 @@ import {
   PokemonCardList,
   PowerEffect,
   PowerType,
+  SpecialCondition,
   Stage,
   State,
   StateUtils,
@@ -74,7 +75,9 @@ export class Charizard extends PokemonCard {
       const player = effect.player;
       const cardList = StateUtils.findCardList(state, this) as PokemonCardList;
       
-      if (cardList.specialConditions.length > 0) {
+      if (cardList.specialConditions.includes(SpecialCondition.ASLEEP)
+        || cardList.specialConditions.includes(SpecialCondition.CONFUSED)
+        || cardList.specialConditions.includes(SpecialCondition.PARALYZED)) {
         throw new GameError(GameMessage.CANNOT_USE_POWER);
       }
 

@@ -11,7 +11,7 @@ import { Chansey } from './chansey';
 import { Charizard } from './charizard';
 import { Charmander } from './charmander';
 import { Charmeleon } from './charmeleon';
-// import { Clefairy } from './clefairy';
+import { Clefairy } from './clefairy';
 // import { ClefairyDoll } from './clefairy-doll';
 import { ComputerSearch } from './computer-search';
 import { Defender } from './defender';
@@ -67,11 +67,11 @@ import { Pidgeotto } from './pidgeotto';
 import { Pidgey } from './pidgey';
 import { Pikachu } from './pikachu';
 import { Pluspower } from './pluspower';
-import { Pokdex } from './pokdex';
-import { PokmonBreeder } from './pokmon-breeder';
-import { PokmonCenter } from './pokmon-center';
-import { PokmonFlute } from './pokmon-flute';
-import { PokmonTrader } from './pokmon-trader';
+import { Pokedex } from './pokedex';
+import { PokemonBreeder } from './pokemon-breeder';
+import { PokemonCenter } from './pokemon-center';
+import { PokemonFlute } from './pokemon-flute';
+import { PokemonTrader } from './pokemon-trader';
 import { Poliwag } from './poliwag';
 import { Poliwhirl } from './poliwhirl';
 import { Poliwrath } from './poliwrath';
@@ -115,7 +115,7 @@ export const setBase: Card[] = [
   new Charizard(),
   new Charmander(),
   new Charmeleon(),
-  // new Clefairy(),
+  new Clefairy(),
   // new ClefairyDoll(),
   new ComputerSearch(),
   new Defender(),
@@ -171,11 +171,11 @@ export const setBase: Card[] = [
   new Pidgey(),
   new Pikachu(),
   new Pluspower(),
-  new Pokdex(),
-  new PokmonBreeder(),
-  new PokmonCenter(),
-  new PokmonFlute(),
-  new PokmonTrader(),
+  new Pokedex(),
+  new PokemonBreeder(),
+  new PokemonCenter(),
+  new PokemonFlute(),
+  new PokemonTrader(),
   new Poliwag(),
   new Poliwhirl(),
   new Poliwrath(),
