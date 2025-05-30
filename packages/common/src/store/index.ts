@@ -50,6 +50,7 @@ export * from './state/rules';
 export * from './state/state-log';
 export * from './state/state';
 
+export * from './requirement';
 export * from './state-utils';
 export * from './store-handler';
 export * from './store-like';
