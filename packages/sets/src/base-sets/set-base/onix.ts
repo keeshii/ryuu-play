@@ -32,7 +32,7 @@ export class Onix extends PokemonCard {
       damage: '',
       text:
         'During your opponent\'s next turn, whenever 30 or less damage is done to Onix (after applying Weakness and ' +
-        'Resistance), prevent that damage. (Any other effects of attacks still happen.) '
+        'Resistance), prevent that damage. (Any other effects of attacks still happen.)'
     },
   ];
 

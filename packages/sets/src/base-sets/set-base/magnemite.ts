@@ -35,7 +35,7 @@ export class Magnemite extends PokemonCard {
       damage: '40',
       text:
         'Does 10 damage to each Pokémon on each player\'s Bench. (Don\'t apply Weakness and Resistance for Benched ' +
-        'Pokémon.) Magnemite does 40 damage to itself. '
+        'Pokémon.) Magnemite does 40 damage to itself.'
     },
   ];
 

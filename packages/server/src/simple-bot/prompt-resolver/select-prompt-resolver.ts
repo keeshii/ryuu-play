@@ -14,7 +14,7 @@ export class SelectPromptResolver extends PromptResolver {
   }
 
   private handleDiscardAllEnergiesPrompt(state: State, player: Player, prompt: SelectPrompt): number | undefined {
-    const values = [ GameMessage.ALL_FIRE_ENERGIES, GameMessage.ALL_LIGHTNING_ENERGIES ];
+    const values = [ GameMessage.TYPE_FIRE, GameMessage.TYPE_LIGHTNING ];
 
     // Different kind of the select message
     if (prompt.message !== GameMessage.CHOOSE_ENERGIES_TO_DISCARD

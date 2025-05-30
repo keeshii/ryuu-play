@@ -33,7 +33,7 @@ export class Electabuzz extends PokemonCard {
       damage: '30+',
       text:
         'Flip a coin. If heads, this attack does 30 damage plus 10 more damage; if tails, this attack does 30 ' +
-        'damage plus Electabuzz does 10 damage to itself. '
+        'damage plus Electabuzz does 10 damage to itself.'
     },
   ];
 

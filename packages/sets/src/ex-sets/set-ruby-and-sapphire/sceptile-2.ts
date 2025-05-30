@@ -6,10 +6,12 @@ import {
   CheckProvidedEnergyEffect,
   CoinFlipPrompt,
   Effect,
+  GameError,
   GameMessage,
   MoveEnergyPrompt,
   PlayerType,
   PokemonCard,
+  PokemonCardList,
   PowerEffect,
   PowerType,
   SlotType,
@@ -20,8 +22,13 @@ import {
   SuperType,
 } from '@ptcg/common';
 
-function* useEnergyTrans(next: Function, store: StoreLike, state: State, effect: PowerEffect): IterableIterator<State> {
+function* useEnergyTrans(next: Function, store: StoreLike, state: State, self: Sceptile2, effect: PowerEffect): IterableIterator<State> {
   const player = effect.player;
+  const cardList = StateUtils.findCardList(state, self) as PokemonCardList;
+
+  if (cardList.specialConditions.length > 0) {
+    throw new GameError(GameMessage.CANNOT_USE_POWER);
+  }
 
   const blockedMap: { source: CardTarget; blocked: number[] }[] = [];
   player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card, target) => {
@@ -116,7 +123,7 @@ export class Sceptile2 extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
-      const generator = useEnergyTrans(() => generator.next(), store, state, effect);
+      const generator = useEnergyTrans(() => generator.next(), store, state, this, effect);
       return generator.next().value;
     }
 

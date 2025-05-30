@@ -31,7 +31,7 @@ export class Dugtrio extends PokemonCard {
       damage: '70',
       text:
         'Does 10 damage to each of your own Benched Pokémon. (Don\'t apply Weakness and Resistance for Benched ' +
-        'Pokémon.) '
+        'Pokémon.)'
     },
   ];
 

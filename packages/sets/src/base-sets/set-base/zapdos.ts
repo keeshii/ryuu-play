@@ -1,7 +1,12 @@
 import {
   AttackEffect,
   CardType,
+  CoinFlipPrompt,
+  DealDamageEffect,
+  DiscardCardsEffect,
   Effect,
+  EnergyCard,
+  GameMessage,
   PokemonCard,
   Stage,
   State,
@@ -44,11 +49,23 @@ export class Zapdos extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+        if (result === false) {
+          const dealDamage = new DealDamageEffect(effect, 30);
+          dealDamage.target = player.active;
+          store.reduceEffect(state, dealDamage);
+        }
+      });
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+      const cards = player.active.cards.filter(c => c instanceof EnergyCard);
+      const discardEnergy = new DiscardCardsEffect(effect, cards);
+      discardEnergy.target = player.active;
+      store.reduceEffect(state, discardEnergy);
     }
 
     return state;

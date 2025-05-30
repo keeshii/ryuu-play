@@ -1,17 +1,15 @@
 import {
+  ChoosePokemonPrompt,
   Effect,
+  GameMessage,
+  PlayerType,
+  SlotType,
   State,
   StoreLike,
   TrainerCard,
   TrainerEffect,
   TrainerType,
 } from '@ptcg/common';
-
-function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
-  // const player = effect.player;
-  // const opponent = StateUtils.getOpponent(state, player);
-  return state;
-}
 
 export class ScoopUp extends TrainerCard {
   public trainerType: TrainerType = TrainerType.ITEM;
@@ -28,8 +26,29 @@ export class ScoopUp extends TrainerCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
-      const generator = playCard(() => generator.next(), store, state, effect);
-      return generator.next().value;
+      const player = effect.player;
+
+      return store.prompt(
+        state,
+        new ChoosePokemonPrompt(
+          player.id,
+          GameMessage.CHOOSE_POKEMON_TO_PICK_UP,
+          PlayerType.BOTTOM_PLAYER,
+          [SlotType.ACTIVE, SlotType.BENCH],
+          { allowCancel: false }
+        ),
+        result => {
+          const cardList = result[0];
+          const pokemonCards = cardList.getPokemons();
+
+          if (pokemonCards.length > 0) {
+            cardList.moveCardTo(pokemonCards[0], player.hand);
+          }
+
+          cardList.moveTo(player.discard);
+          cardList.clearEffects();
+        }
+      );
     }
 
     return state;

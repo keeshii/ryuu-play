@@ -33,7 +33,7 @@ export class Kakuna extends PokemonCard {
       damage: '',
       text:
         'Flip a coin. If heads, prevent all damage done to Kakuna during your opponent\'s next turn. (Any other ' +
-        'effects of attacks still happen.) '
+        'effects of attacks still happen.)'
     },
     {
       name: 'Poisonpowder',

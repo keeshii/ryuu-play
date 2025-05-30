@@ -31,7 +31,7 @@ export class Poliwhirl extends PokemonCard {
       damage: '',
       text:
         'Choose 1 of the Defending Pokémon\'s attacks. That Pokémon can\'t use that attack during your opponent\'s ' +
-        'next turn. '
+        'next turn.'
     },
     {
       name: 'Doubleslap',

@@ -41,7 +41,7 @@ export class Blastoise extends PokemonCard {
       text:
         'As often as you like during your turn (before your attack), you may attach 1 W Energy card to 1 of ' +
         'your W Pokémon. (This doesn\'t use up your 1 Energy card attachment for the turn.) This power can\'t be ' +
-        'used if Blastoise is Asleep, Confused, or Paralyzed. '
+        'used if Blastoise is Asleep, Confused, or Paralyzed.'
     },
   ];
 
@@ -52,7 +52,7 @@ export class Blastoise extends PokemonCard {
       damage: '40+',
       text:
         'Does 40 damage plus 10 more damage for each W Energy attached to Blastoise but not used to pay for ' +
-        'this attack\'s Energy cost. Extra W Energy after the 2nd doesn\'t count. '
+        'this attack\'s Energy cost. Extra W Energy after the 2nd doesn\'t count.'
     },
   ];
 

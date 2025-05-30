@@ -31,7 +31,7 @@ export class Machamp extends PokemonCard {
       text:
         'Whenever your opponent\'s attack damages Machamp (even if Machamp is Knocked Out), this power does 10 ' +
         'damage to the attacking Pokémon. (Don\'t apply Weakness and Resistance.) This power can\'t be used if ' +
-        'Machamp is Asleep, Confused, or Paralyzed when your opponent attacks. '
+        'Machamp is Asleep, Confused, or Paralyzed when your opponent attacks.'
     },
   ];
 

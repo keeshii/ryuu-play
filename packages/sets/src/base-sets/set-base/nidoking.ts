@@ -29,7 +29,7 @@ export class Nidoking extends PokemonCard {
       damage: '30+',
       text:
         'Flip a coin. If heads, this attack does 30 damage plus 10 more damage; if tails, this attack does 30 ' +
-        'damage and Nidoking does 10 damage to itself. '
+        'damage and Nidoking does 10 damage to itself.'
     },
     {
       name: 'Toxic',
@@ -37,7 +37,7 @@ export class Nidoking extends PokemonCard {
       damage: '20',
       text:
         'The Defending Pokémon is now Poisoned. It now takes 20 Poison damage instead of 10 after each player\'s ' +
-        'turn (even if it was already Poisoned). '
+        'turn (even if it was already Poisoned).'
     },
   ];
 

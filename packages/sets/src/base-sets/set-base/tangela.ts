@@ -1,8 +1,12 @@
 import {
+  AddSpecialConditionsEffect,
   AttackEffect,
   CardType,
+  CoinFlipPrompt,
   Effect,
+  GameMessage,
   PokemonCard,
+  SpecialCondition,
   Stage,
   State,
   StoreLike,
@@ -44,11 +48,19 @@ export class Tangela extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+        if (result === true) {
+          const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.PARALYZED]);
+          store.reduceEffect(state, specialConditionEffect);
+        }
+      });
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.POISONED]);
+      store.reduceEffect(state, specialConditionEffect);
     }
 
     return state;

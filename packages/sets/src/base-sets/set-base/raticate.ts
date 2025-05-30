@@ -1,10 +1,12 @@
 import {
   AttackEffect,
   CardType,
+  CheckHpEffect,
   Effect,
   PokemonCard,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -30,7 +32,7 @@ export class Raticate extends PokemonCard {
       damage: '',
       text:
         'Does damage to the Defending Pokémon equal to half the Defending Pokémon\'s remaining HP (rounded up to the ' +
-        'nearest 10). '
+        'nearest 10).'
     },
   ];
 
@@ -52,7 +54,14 @@ export class Raticate extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      const checkHpEffect = new CheckHpEffect(player, opponent.active);
+      store.reduceEffect(state, checkHpEffect);
+      const hp = checkHpEffect.hp - opponent.active.damage;
+
+      effect.damage = Math.ceil(hp / 20) * 10;
     }
 
     return state;

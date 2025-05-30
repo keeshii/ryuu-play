@@ -27,7 +27,7 @@ export class Pidgey extends PokemonCard {
       damage: '10',
       text:
         'If your opponent has any Benched Pokémon, he or she chooses 1 of them and switches it with the Defending ' +
-        'Pokémon. (Do the damage before switching the Pokémon.) '
+        'Pokémon. (Do the damage before switching the Pokémon.)'
     },
   ];
 

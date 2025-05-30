@@ -77,7 +77,7 @@ export class RayquazaEx extends PokemonCard {
         new SelectPrompt(
           player.id,
           GameMessage.CHOOSE_ENERGIES_TO_DISCARD,
-          [GameMessage.ALL_FIRE_ENERGIES, GameMessage.ALL_LIGHTNING_ENERGIES],
+          [GameMessage.TYPE_FIRE, GameMessage.TYPE_LIGHTNING],
           { allowCancel: false }
         ),
         choice => {

@@ -40,7 +40,7 @@ export class Mewtwo extends PokemonCard {
       damage: '',
       text:
         'Discard 1 Psychic Energy card attached to Mewtwo in order to prevent all effects of attacks, including ' +
-        'damage, done to Mewtwo during your opponent\'s next turn. '
+        'damage, done to Mewtwo during your opponent\'s next turn.'
     },
   ];
 

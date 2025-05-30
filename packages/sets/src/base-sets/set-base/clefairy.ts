@@ -35,7 +35,7 @@ export class Clefairy extends PokemonCard {
       text:
         'Choose 1 of the Defending Pokémon\'s attacks. Metronome copies that attack except for its Energy costs and ' +
         'anything else required in order to use that attack, such as discarding Energy cards. (No matter what type ' +
-        'the Defending Pokémon is, Clefairy\'s type is still Colorless.) '
+        'the Defending Pokémon is, Clefairy\'s type is still Colorless.)'
     },
   ];
 

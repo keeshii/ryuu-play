@@ -1,15 +1,122 @@
 import {
+  Card,
+  CardTarget,
+  ChooseCardsPrompt,
+  ChoosePokemonPrompt,
   Effect,
+  GameError,
+  GameMessage,
+  PlayerType,
+  PokemonCardList,
+  SlotType,
   State,
+  StateUtils,
   StoreLike,
+  SuperType,
   TrainerCard,
   TrainerEffect,
   TrainerType,
 } from '@ptcg/common';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
-  // const player = effect.player;
-  // const opponent = StateUtils.getOpponent(state, player);
+  const player = effect.player;
+  const opponent = StateUtils.getOpponent(state, player);
+
+  let playerHasEnergy = false;
+  const blocked: CardTarget[] = [];
+  player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card, target) => {
+    if (cardList.cards.some(c => c.superType === SuperType.ENERGY)) {
+      playerHasEnergy = true;
+    } else {
+      blocked.push(target);
+    }
+  });
+
+  let opponentHasEnergy = false;
+  const blocked2: CardTarget[] = [];
+  opponent.forEachPokemon(PlayerType.TOP_PLAYER, (cardList, card, target) => {
+    if (cardList.cards.some(c => c.superType === SuperType.ENERGY)) {
+      opponentHasEnergy = true;
+    } else {
+      blocked2.push(target);
+    }
+  });
+
+  if (!playerHasEnergy || !opponentHasEnergy) {
+    throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
+  }
+
+  // We will discard this card after prompt confirmation
+  effect.preventDefault = true;
+  
+  let targets: PokemonCardList[] = [];
+  yield store.prompt(state, new ChoosePokemonPrompt(
+    player.id,
+    GameMessage.CHOOSE_POKEMON_TO_DISCARD_CARDS,
+    PlayerType.BOTTOM_PLAYER,
+    [ SlotType.ACTIVE, SlotType.BENCH ],
+    { allowCancel: true, blocked }
+  ), results => {
+    targets = results || [];
+    next();
+  });
+  
+  if (targets.length === 0) {
+    return state;
+  }
+  const playerTarget = targets[0];
+
+  let playerCards: Card[] = [];
+  yield store.prompt(state, new ChooseCardsPrompt(
+    player.id,
+    GameMessage.CHOOSE_CARD_TO_DISCARD,
+    playerTarget,
+    { superType: SuperType.ENERGY },
+    { min: 1, max: 1, allowCancel: true }
+  ), selected => {
+    playerCards = selected || [];
+    next();
+  });
+
+  if (playerCards.length === 0) {
+    return state;
+  }
+
+  yield store.prompt(state, new ChoosePokemonPrompt(
+    player.id,
+    GameMessage.CHOOSE_POKEMON_TO_DISCARD_CARDS,
+    PlayerType.TOP_PLAYER,
+    [ SlotType.ACTIVE, SlotType.BENCH ],
+    { allowCancel: true, blocked: blocked2 }
+  ), results => {
+    targets = results || [];
+    next();
+  });
+
+  if (targets.length === 0) {
+    return state;
+  }
+  const opponentTarget = targets[0];
+
+  let opponentCards: Card[] = [];
+  yield store.prompt(state, new ChooseCardsPrompt(
+    player.id,
+    GameMessage.CHOOSE_CARD_TO_DISCARD,
+    opponentTarget,
+    { superType: SuperType.ENERGY },
+    { min: 1, max: 2, allowCancel: false }
+  ), selected => {
+    opponentCards = selected || [];
+    next();
+  });
+
+  if (opponentCards.length === 0) {
+    return state;
+  }
+
+  playerTarget.moveCardsTo(playerCards, player.discard);
+  opponentTarget.moveCardsTo(opponentCards, opponent.discard);
+  player.hand.moveCardTo(effect.trainerCard, player.discard);
   return state;
 }
 

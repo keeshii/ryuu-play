@@ -37,7 +37,7 @@ export class Magneton extends PokemonCard {
       damage: '80',
       text:
         'Does 20 damage to each Pokémon on each player\'s Bench. (Don\'t apply Weakness and Resistance for Benched ' +
-        'Pokémon.) Magneton does 80 damage to itself. '
+        'Pokémon.) Magneton does 80 damage to itself.'
     },
   ];
 
