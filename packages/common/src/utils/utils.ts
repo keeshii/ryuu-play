@@ -97,3 +97,16 @@ export function generateId<T extends {id: number}[]>(array: T): number {
 
   return id;
 }
+
+export function match<T>(self: T, query: Partial<T>): boolean {
+  for (const key in query) {
+    if (Object.prototype.hasOwnProperty.call(query, key)) {
+      const value: any = (self as any)[key];
+      const expected: any = (query as any)[key];
+      if (!deepCompare(value, expected)) {
+        return false;
+      }
+    }
+  }
+  return true;
+}

@@ -7,3 +7,4 @@ export * from './utils';
 export * from './api-error';
 export * from './game-error';
 export * from './game-message';
+export * from './test-utils';
