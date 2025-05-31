@@ -27,6 +27,7 @@ import { playerStateReducer} from './reducers/player-state-reducer';
 import { retreatReducer } from './effect-reducers/retreat-effect';
 import { setupPhaseReducer } from './reducers/setup-reducer';
 import { abortGameReducer } from './reducers/abort-game-reducer';
+import { resolveEffect } from './resolve-effect';
 
 interface PromptItem {
   ids: number[],
@@ -89,6 +90,8 @@ export class Store implements StoreLike {
     if (effect.preventDefault === true) {
       return state;
     }
+
+    state = resolveEffect(this, state, effect);
 
     state = gamePhaseReducer(this, state, effect);
     state = playEnergyReducer(this, state, effect);
