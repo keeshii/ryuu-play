@@ -13,7 +13,7 @@ export type SelectPokemonArgs = {
   playerType?: PlayerType;
   slots?: SlotType[];
   is?: Partial<PokemonCard>;
-  contains?: FilterType;
+  with?: FilterType;
 }
 
 export function getValidPokemonTargets(
@@ -23,7 +23,7 @@ export function getValidPokemonTargets(
     playerType = PlayerType.ANY,
     slots = [SlotType.ACTIVE, SlotType.BENCH],
     is = {},
-    contains = {},
+    with: with_ = {},
   }: SelectPokemonArgs,
 ): {
   matches: PokemonCardList[];
@@ -40,7 +40,7 @@ export function getValidPokemonTargets(
   const blocked: CardTarget[] = [];
   function check(candidate: PokemonCardList, player: Player, slot: SlotType, index: number) {
     const pokemon = candidate.getPokemonCard()!;
-    if (match(pokemon, is) && candidate.filter(contains).length > 0) {
+    if (match(pokemon, is) && candidate.filter(with_).length > 0) {
       matches.push(candidate);
     } else {
       blocked.push({player: player.id, slot, index });
