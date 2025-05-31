@@ -88,7 +88,11 @@ export class Charizard extends PokemonCard {
       return state;
     }
 
-    if (effect instanceof CheckProvidedEnergyEffect && effect.source.marker.hasMarker(this.ENERGY_BURN_MARKER, this)) {
+    if (effect instanceof CheckProvidedEnergyEffect && effect.source.cards.includes(this)) {
+      if (!effect.player.marker.hasMarker(this.ENERGY_BURN_MARKER, this)) {
+        return state;
+      }
+
       effect.energyMap.forEach(item => {
         item.provides = item.provides.map(p => CardType.FIRE);
       });

@@ -3,9 +3,11 @@ import {
   AttackEffect,
   AttackEffects,
   CardType,
+  CoinFlipPrompt,
   DealDamageEffect,
   Effect,
   EndTurnEffect,
+  GameMessage,
   PlayerType,
   PokemonCard,
   Stage,
@@ -76,12 +78,17 @@ export class Chansey extends PokemonCard {
 
       return state;
     }
-    
+
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
-      player.active.marker.addMarker(this.SCRUNCH_MARKER, this);
-      opponent.marker.addMarker(this.CLEAR_SCRUNCH_MARKER, this);
+
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+        if (result === true) {
+          player.active.marker.addMarker(this.SCRUNCH_MARKER, this);
+          opponent.marker.addMarker(this.CLEAR_SCRUNCH_MARKER, this);
+        }
+      });
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {

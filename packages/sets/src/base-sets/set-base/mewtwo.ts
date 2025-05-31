@@ -1,19 +1,16 @@
 import {
   AbstractAttackEffect,
-  AddSpecialConditionsEffect,
   AttackEffect,
   Card,
   CardType,
   CheckProvidedEnergyEffect,
   ChooseEnergyPrompt,
-  CoinFlipPrompt,
   DiscardCardsEffect,
   Effect,
   EndTurnEffect,
   GameMessage,
   PlayerType,
   PokemonCard,
-  SpecialCondition,
   Stage,
   State,
   StateUtils,
@@ -85,7 +82,7 @@ export class Mewtwo extends PokemonCard {
       const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);
       state = store.reduceEffect(state, checkProvidedEnergy);
 
-      state = store.prompt(
+      return store.prompt(
         state,
         new ChooseEnergyPrompt(
           player.id,
@@ -104,17 +101,6 @@ export class Mewtwo extends PokemonCard {
           opponent.marker.addMarker(this.CLEAR_BARRIER_MARKER, this);
         }
       );
-    }
-
-    if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      const player = effect.player;
-
-      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
-        if (result === true) {
-          const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.POISONED]);
-          store.reduceEffect(state, specialConditionEffect);
-        }
-      });
     }
 
     if (effect instanceof EndTurnEffect && effect.player.marker.hasMarker(this.CLEAR_BARRIER_MARKER, this)) {

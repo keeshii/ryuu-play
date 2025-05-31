@@ -38,7 +38,9 @@ export class Pluspower extends TrainerCard {
     }
 
     if (effect instanceof PutDamageEffect && effect.source.cards.includes(this)) {
-      effect.damage += 10; // After weakness and resistance
+      if (effect.damage > 0) {
+        effect.damage += 10; // After weakness and resistance
+      }
       return state;
     }
 

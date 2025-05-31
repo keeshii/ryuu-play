@@ -2,6 +2,7 @@ import {
   AttackEffect,
   CardType,
   ChoosePokemonPrompt,
+  DealDamageEffect,
   Effect,
   GameMessage,
   PlayerType,
@@ -68,6 +69,11 @@ export class Pidgey extends PokemonCard {
         ),
         targets => {
           if (targets && targets.length > 0) {
+            const dealDamage = new DealDamageEffect(effect, effect.damage);
+            dealDamage.target = opponent.active;
+            store.reduceEffect(state, dealDamage);
+            effect.damage = 0;
+
             opponent.switchPokemon(targets[0]);
           }
         }

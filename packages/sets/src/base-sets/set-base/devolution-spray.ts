@@ -60,10 +60,10 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 
   const cardList = targets[0];
   const evolutionCards: Card[] = cardList.getPokemons().slice(1);
-  const blockedCards: number[] = [];
-  cardList.cards.forEach(card => {
+  const blocked2: number[] = [];
+  cardList.cards.forEach((card, index) => {
     if (!evolutionCards.includes(card)) {
-      blockedCards.push(index);
+      blocked2.push(index);
     }
   });
 
@@ -75,7 +75,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
       GameMessage.CHOOSE_CARD_TO_DISCARD,
       cardList,
       { superType: SuperType.POKEMON },
-      { min: 1, max: 1, allowCancel: true, blocked: blockedCards }
+      { min: 1, max: 1, allowCancel: true, blocked: blocked2 }
     ),
     selected => {
       cards = selected || [];

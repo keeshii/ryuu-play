@@ -28,7 +28,7 @@ export class Bill extends TrainerCard {
         throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
       }
 
-      player.deck.moveTo(player.hand, 3);
+      player.deck.moveTo(player.hand, 2);
     }
 
     return state;
