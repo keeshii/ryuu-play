@@ -1,14 +1,21 @@
 import {
   AddSpecialConditionsEffect,
+  AfterDamageEffect,
   AttackEffect,
+  Card,
   CardType,
+  CheckHpEffect,
+  CheckProvidedEnergyEffect,
+  ChooseEnergyPrompt,
   CoinFlipPrompt,
+  DiscardCardsEffect,
   Effect,
   EndTurnEffect,
   GameMessage,
   GamePhase,
-  KnockOutEffect,
+  PlayerType,
   PokemonCard,
+  PutCountersEffect,
   SpecialCondition,
   Stage,
   State,
@@ -51,12 +58,41 @@ export class Gastly extends PokemonCard {
   public name: string = 'Gastly';
 
   public fullName: string = 'Gastly BS';
-  
-  public readonly DESTINY_BOND_1_MARKER = 'DESTINY_BOND_1_MARKER';
 
-  public readonly DESTINY_BOND_2_MARKER = 'DESTINY_BOND_2_MARKER';
+  public readonly DESTINY_BOND_MARKER = 'DESTINY_BOND_MARKER';
+
+  public readonly CLEAR_DESTINY_BOND_MARKER = 'CLEAR_DESTINY_BOND_MARKER';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+
+    if (effect instanceof AfterDamageEffect && effect.target.marker.hasMarker(this.DESTINY_BOND_MARKER, this)) {
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      if (state.phase !== GamePhase.ATTACK) {
+        return state;
+      }
+
+      if (opponent.active !== effect.target) {
+        return state;
+      }
+
+      const checkHpEffect1 = new CheckHpEffect(player, effect.target);
+      store.reduceEffect(state, checkHpEffect1);
+
+      // Check if Pokemon is KO by comparing HP and damage
+      if (checkHpEffect1.hp <= effect.target.damage) {
+        const checkHpEffect2 = new CheckHpEffect(player, player.active);
+        store.reduceEffect(state, checkHpEffect2);
+        const hpLeft = Math.max(0, checkHpEffect2.hp - player.active.damage);
+
+        // Put Counters equal to HP left (Knock Out)
+        const putCountersEffect = new PutCountersEffect(effect.attackEffect, hpLeft);
+        putCountersEffect.target = player.active;
+        store.reduceEffect(state, putCountersEffect);
+      }
+    }
+
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
 
@@ -70,34 +106,39 @@ export class Gastly extends PokemonCard {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
       const player = effect.player;
-      player.active.marker.addMarker(this.DESTINY_BOND_1_MARKER, this);
-      player.active.marker.addMarker(this.DESTINY_BOND_2_MARKER, this);
-      player.active.damage = 0;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);
+      state = store.reduceEffect(state, checkProvidedEnergy);
+
+      return store.prompt(
+        state,
+        new ChooseEnergyPrompt(
+          player.id,
+          GameMessage.CHOOSE_ENERGIES_TO_DISCARD,
+          checkProvidedEnergy.energyMap,
+          [CardType.PSYCHIC],
+          { allowCancel: false }
+        ),
+        energy => {
+          const cards: Card[] = (energy || []).map(e => e.card);
+          const discardEnergy = new DiscardCardsEffect(effect, cards);
+          discardEnergy.target = player.active;
+          store.reduceEffect(state, discardEnergy);
+
+          player.active.marker.addMarker(this.DESTINY_BOND_MARKER, this);
+          opponent.marker.addMarker(this.CLEAR_DESTINY_BOND_MARKER, this);
+        }
+      );
     }
 
-    if (effect instanceof EndTurnEffect) {
-      const marker = effect.player.active.marker;
-      if (marker.hasMarker(this.DESTINY_BOND_2_MARKER, this)) {
-        marker.removeMarker(this.DESTINY_BOND_2_MARKER);
-      } else if (marker.hasMarker(this.DESTINY_BOND_1_MARKER, this)) {
-        marker.removeMarker(this.DESTINY_BOND_1_MARKER);
-      }
-    }
+    if (effect instanceof EndTurnEffect && effect.player.marker.hasMarker(this.CLEAR_DESTINY_BOND_MARKER, this)) {
+      effect.player.marker.removeMarker(this.CLEAR_DESTINY_BOND_MARKER, this);
 
-    if (effect instanceof KnockOutEffect && effect.target.marker.hasMarker(this.DESTINY_BOND_1_MARKER, this)) {
-      const player = effect.player;
-      const targetPlayer = StateUtils.findOwner(state, effect.target);
-
-      if (state.phase !== GamePhase.ATTACK) {
-        return state;
-      }
-
-      if (player === targetPlayer) {
-        return state;
-      }
-
-      const knockOutEffect = new KnockOutEffect(player, player.active);
-      store.reduceEffect(state, knockOutEffect);
+      const opponent = StateUtils.getOpponent(state, effect.player);
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, cardList => {
+        cardList.marker.removeMarker(this.DESTINY_BOND_MARKER, this);
+      });
     }
 
     return state;

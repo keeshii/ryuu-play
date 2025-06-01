@@ -4,6 +4,7 @@ import {
   PlayerType,
   PutDamageEffect,
   State,
+  StateUtils,
   StoreLike,
   TrainerCard,
   TrainerEffect,
@@ -38,7 +39,10 @@ export class Pluspower extends TrainerCard {
     }
 
     if (effect instanceof PutDamageEffect && effect.source.cards.includes(this)) {
-      if (effect.damage > 0) {
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      if (effect.target === opponent.active && effect.damage > 0) {
         effect.damage += 10; // After weakness and resistance
       }
       return state;

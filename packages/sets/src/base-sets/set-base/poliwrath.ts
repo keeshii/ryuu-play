@@ -31,8 +31,8 @@ export class Poliwrath extends PokemonCard {
       cost: [CardType.WATER, CardType.WATER, CardType.COLORLESS],
       damage: '30+',
       text:
-        'Does 30 damage plus 10 more damage for each Water Energy attached to Poliwrath but not used to pay for ' +
-        'this attack\'s Energy cost. Extra Water Energy after the 2nd doesn\'t count.'
+        'Does 30 damage plus 10 more damage for each W Energy attached to Poliwrath but not used to pay for ' +
+        'this attack\'s Energy cost. Extra W Energy after the 2nd doesn\'t count.'
     },
     {
       name: 'Whirlpool',

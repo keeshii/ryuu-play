@@ -5,6 +5,7 @@ import {
   ChooseAttackPrompt,
   CoinFlipPrompt,
   Effect,
+  GameLog,
   GameMessage,
   PokemonCard,
   SpecialCondition,
@@ -94,6 +95,7 @@ export class Clefairy extends PokemonCard {
         }),
         attack => {
           if (attack !== null) {
+            store.log(state, GameLog.LOG_PLAYER_COPIES_ATTACK, { name: player.name, attack: attack.name });
             const attackEffect = new AttackEffect(player, opponent, attack);
             store.reduceEffect(state, attackEffect);
             store.waitPrompt(state, () => {

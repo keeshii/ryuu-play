@@ -36,7 +36,7 @@ export class NidoranMale extends PokemonCard {
 
   public name: string = 'Nidoran ♂';
 
-  public fullName: string = 'Nidoran ♂ BS';
+  public fullName: string = 'Nidoran M BS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {

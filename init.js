@@ -38,11 +38,9 @@ cardManager.defineFormat('EX Sets', [
   exSets.setRubyAndSapphire
 ]);
 
-
-// Not implemented yet
-// cardManager.defineFormat('Base Sets', [
-//   baseSets.setBase
-// ]);
+cardManager.defineFormat('Base Sets', [
+  baseSets.setBase
+]);
 
 // Define bots
 const botManager = BotManager.getInstance();

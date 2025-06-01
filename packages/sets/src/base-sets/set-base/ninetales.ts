@@ -37,7 +37,7 @@ export class Ninetales extends PokemonCard {
       name: 'Fire Blast',
       cost: [CardType.FIRE, CardType.FIRE, CardType.FIRE, CardType.FIRE],
       damage: '80',
-      text: 'Discard 1 Fire Energy card attached to Ninetales in order to use this attack.'
+      text: 'Discard 1 R Energy card attached to Ninetales in order to use this attack.'
     },
   ];
 

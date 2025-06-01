@@ -40,9 +40,9 @@ export class GustOfWind extends TrainerCard {
       return store.prompt(
         state,
         new ChoosePokemonPrompt(
-          opponent.id,
+          player.id,
           GameMessage.CHOOSE_POKEMON_TO_SWITCH,
-          PlayerType.BOTTOM_PLAYER,
+          PlayerType.TOP_PLAYER,
           [SlotType.BENCH],
           { allowCancel: true }
         ),

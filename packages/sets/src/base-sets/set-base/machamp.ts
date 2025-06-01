@@ -87,7 +87,7 @@ export class Machamp extends PokemonCard {
         return state;
       }
 
-      effect.source.damage += 20;
+      effect.source.damage += 10;
     }
 
     return state;
