@@ -36,10 +36,10 @@ export function resolveEffect(store: StoreLike, state: State, effect: Effect, fa
     const source = effect.trainerCard;
     let generator: Generator<State, State> = function*(){throw new Error();}();
     const next = () => generator.next();
-    const act = new Resolver(effect, state, source, store, next, fail);
+    const resolver = new Resolver(effect, state, source, store, next, fail);
     generator = function*() {
       try {
-        yield* source.onPlay(act);
+        yield* source.onPlay(resolver);
       } catch (error) {
         if (error === ActionCanceled) {
           return state;
@@ -136,49 +136,49 @@ export class Resolver {
 
 class ResolveForPlayer {
   constructor(
-    public readonly act: Resolver,
+    public readonly resolver: Resolver,
     public readonly player: Player,
   ) {}
 
   public draws(count: number): State {
     this.player.deck.moveTo(this.player.hand, count);
-    return this.act.state;
+    return this.resolver.state;
   }
 
   public drawsUntil(count: number): State {
-    const cardsInHand = this.player.hand.cards.filter(card => card !== this.act.effectSource);
+    const cardsInHand = this.player.hand.cards.filter(card => card !== this.resolver.effectSource);
     const cardsToDraw = Math.max(0, count - cardsInHand.length);
     this.player.deck.moveTo(this.player.hand, cardsToDraw);
-    return this.act.state;
+    return this.resolver.state;
   }
 
   public discards(count: number, like?: Partial<Card>): ResolveMoveToZone;
   public discards({atLeast, atMost, like} : SelectCardArgs): ResolveMoveToZone;
   public discards(countOrArgs: number | SelectCardArgs, like?: Partial<Card>): ResolveMoveToZone {
     if (typeof countOrArgs === 'number') {
-      return new ResolveMoveToZone(this.act, this.player, SlotType.DISCARD, this.player.discard, { atLeast: countOrArgs, atMost: countOrArgs, like });
+      return new ResolveMoveToZone(this.resolver, this.player, this.player.discard, { atLeast: countOrArgs, atMost: countOrArgs, like });
     }
-    return new ResolveMoveToZone(this.act, this.player, SlotType.DISCARD, this.player.discard, countOrArgs);
+    return new ResolveMoveToZone(this.resolver, this.player, this.player.discard, countOrArgs);
   }
 
   public movesToHand(count: number, like?: Partial<Card>): ResolveMoveToZone;
   public movesToHand({atLeast, atMost, like} : SelectCardArgs): ResolveMoveToZone;
   public movesToHand(countOrArgs: number | SelectCardArgs, like?: Partial<Card>): ResolveMoveToZone {
     if (typeof countOrArgs === 'number') {
-      return new ResolveMoveToZone(this.act, this.player, SlotType.HAND, this.player.hand, { atLeast: countOrArgs, atMost: countOrArgs, like });
+      return new ResolveMoveToZone(this.resolver, this.player, this.player.hand, { atLeast: countOrArgs, atMost: countOrArgs, like });
     }
-    return new ResolveMoveToZone(this.act, this.player, SlotType.HAND, this.player.hand, countOrArgs);
+    return new ResolveMoveToZone(this.resolver, this.player, this.player.hand, countOrArgs);
   }
 
   public *flipsCoin(): Generator<State, boolean> {
     let coinResult: boolean = false;
-    yield this.act.store.prompt(
-      this.act.state,
+    yield this.resolver.store.prompt(
+      this.resolver.state,
       new CoinFlipPrompt(this.player.id, GameMessage.COIN_FLIP),
       result => {
-        this.act.allowCancel = false;
+        this.resolver.allowCancel = false;
         coinResult = result;
-        this.act.next();
+        this.resolver.next();
       }
     );
     return coinResult;
@@ -186,7 +186,7 @@ class ResolveForPlayer {
 
   public choosesPokemon(targetRequirement: SelectPokemonArgs, options: Partial<ChoosePokemonOptions> = {}) {
     return new ResolvePokemonCardList(
-      this.act,
+      this.resolver,
       this.player,
       targetRequirement
     );
@@ -195,7 +195,7 @@ class ResolveForPlayer {
 
 class ResolveMoveToZone {
   constructor(
-    public readonly act: Resolver,
+    public readonly resolver: Resolver,
     public readonly player: Player,
     public readonly slotType: SlotType, 
     public readonly to: CardList,
@@ -204,26 +204,26 @@ class ResolveMoveToZone {
 
   public *fromHand(): Generator<State, State> {
     const gameMessage = GameMessage.CHOOSE_CARD_TO_DISCARD;
-    return yield* this.act.choosesAndMoves(this.player, this.player.hand, this.to, gameMessage, this.args.like, {min: this.args.atLeast, max: this.args.atMost});
+    return yield* this.resolver.choosesAndMoves(this.player, this.player.hand, this.to, gameMessage, this.args.like, {min: this.args.atLeast, max: this.args.atMost});
   }
 
   public *fromDeck(): Generator<State, State> {
     const gameMessage = GameMessage.CHOOSE_CARD_TO_HAND;
-    const newState = yield* this.act.choosesAndMoves(this.player, this.player.deck, this.to, gameMessage, this.args.like, {min: this.args.atLeast, max: this.args.atMost});
-    return this.act.store.prompt(newState, new ShuffleDeckPrompt(this.player.id), order => {
+    const newState = yield* this.resolver.choosesAndMoves(this.player, this.player.deck, this.to, gameMessage, this.args.like, {min: this.args.atLeast, max: this.args.atMost});
+    return this.resolver.store.prompt(newState, new ShuffleDeckPrompt(this.player.id), order => {
       this.player.deck.applyOrder(order);
     });
   }
 
   public *fromDiscard(): Generator<State, State> {
     const gameMessage = GameMessage.CHOOSE_CARD_TO_HAND;
-    return yield* this.act.choosesAndMoves(this.player, this.player.discard, this.to, gameMessage, this.args.like, {min: this.args.atLeast, max: this.args.atMost});
+    return yield* this.resolver.choosesAndMoves(this.player, this.player.discard, this.to, gameMessage, this.args.like, {min: this.args.atLeast, max: this.args.atMost});
   }
 }
 
 class ResolvePokemonCardList {
   constructor(
-    public readonly act: Resolver,
+    public readonly resolver: Resolver,
     public readonly player: Player,
     public readonly pokemonRequirements: SelectPokemonArgs,
   ) {}
@@ -239,21 +239,21 @@ class ResolvePokemonCardList {
     } else {
       ({ atLeast, atMost, like = {} } = countOrArgs);
     }
-    const { blocked } = getValidPokemonTargets(this.act.state, this.player, this.pokemonRequirements);
+    const { blocked } = getValidPokemonTargets(this.resolver.state, this.player, this.pokemonRequirements);
     let chosenPokemon: PokemonCardList[] = [];
-    yield this.act.store.prompt(
-      this.act.state,
+    yield this.resolver.store.prompt(
+      this.resolver.state,
       new ChoosePokemonPrompt(
         this.player.id,
         GameMessage.CHOOSE_POKEMON_TO_DISCARD_CARDS,
         this.pokemonRequirements.playerType || PlayerType.ANY,
         this.pokemonRequirements.slots || [SlotType.ACTIVE, SlotType.BENCH],
-        { allowCancel: this.act.allowCancel, blocked }
+        { allowCancel: this.resolver.allowCancel, blocked }
       ),
       selected => {
-        this.act.allowCancel = false;
+        this.resolver.allowCancel = false;
         chosenPokemon = selected || [];
-        this.act.next();
+        this.resolver.next();
       }
     );
 
@@ -261,7 +261,7 @@ class ResolvePokemonCardList {
       throw ActionCanceled;
     }
 
-    const opponent = StateUtils.getOpponent(this.act.state, this.player);
+    const opponent = StateUtils.getOpponent(this.resolver.state, this.player);
     let chosenPokemonController = opponent;
     this.player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, pokemonCard, target) => {
       if(cardList === chosenPokemon[0]) {
@@ -270,8 +270,8 @@ class ResolvePokemonCardList {
     });
 
     let cards: Card[] = [];
-    yield this.act.store.prompt(
-      this.act.state,
+    yield this.resolver.store.prompt(
+      this.resolver.state,
       new ChooseCardsPrompt(
         this.player.id,
         GameMessage.CHOOSE_CARD_TO_DISCARD,
@@ -281,12 +281,12 @@ class ResolvePokemonCardList {
       ),
       selected => {
         cards = selected;
-        this.act.next();
+        this.resolver.next();
       }
     );
 
     chosenPokemon[0].moveCardsTo(cards, chosenPokemonController.discard);
-    return this.act.state;
+    return this.resolver.state;
   }
 }
 
