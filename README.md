@@ -1,5 +1,7 @@
 # RyuuPlay
 
+![logo](packages/cordova/res/mipmap-xxxhdpi/ic_launcher_round.png)
+
 [![Strider](https://strider.kuro.ryuu.eu/keeshii/ryuu-play/badge?branch=master)](https://strider.kuro.ryuu.eu/keeshii/ryuu-play/)
 [![Matrix](https://matrix.to/img/matrix-badge.svg)](https://matrix.to/#/#ryuu-play:matrix.org)
 
