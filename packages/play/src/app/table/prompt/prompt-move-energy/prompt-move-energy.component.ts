@@ -70,7 +70,7 @@ export class PromptMoveEnergyComponent implements OnChanges {
     this.pokemonData.unselectAll();
     item.selected = true;
     this.selectedItem = item;
-    this.blocked = this.buildBlocked(item);
+    this.updateBlocked(item);
   }
 
   public onCardDrop([item, card]: [PokemonItem, Card]) {
@@ -92,6 +92,7 @@ export class PromptMoveEnergyComponent implements OnChanges {
     this.moveCard(result.from, result.to, card);
     this.appendMoveResult(result);
     this.updateIsInvalid(this.results);
+    this.updateBlocked(this.selectedItem);
   }
 
   public reset() {
@@ -100,6 +101,9 @@ export class PromptMoveEnergyComponent implements OnChanges {
     });
     this.results = [];
     this.updateIsInvalid(this.results);
+    if (this.selectedItem !== undefined) {
+      this.updateBlocked(this.selectedItem);
+    }
   }
 
   private moveCard(from: PokemonItem, to: PokemonItem, card: Card) {
@@ -139,14 +143,14 @@ export class PromptMoveEnergyComponent implements OnChanges {
     this.isInvalid = isInvalid;
   }
 
-  private buildBlocked(item: PokemonItem) {
+  private updateBlocked(item: PokemonItem) {
     const blocked: number[] = [];
     item.cardList.cards.forEach((c, index) => {
       if (this.blockedCardList.includes(c)) {
         blocked.push(index);
       }
     });
-    return blocked;
+    this.blocked = blocked;
   }
 
   private buildBlockedCardList(
