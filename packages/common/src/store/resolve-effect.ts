@@ -17,6 +17,8 @@ import { CardList } from './state/card-list';
 import { Player } from './state/player';
 import { PokemonCardList } from './state/pokemon-card-list';
 import { getValidPokemonTargets, SelectPokemonArgs } from './target-utils';
+import { ShowCardsPrompt } from './prompts/show-cards-prompt';
+import { match } from '../utils';
 
 // SelectArgs defines the criteria for selecting cards from a zone.
 type SelectCardArgs = {atLeast?: number, atMost?: number, like?: FilterType}
@@ -97,12 +99,33 @@ export class Resolver {
 
   public *choosesAndMoves(player: Player, from: CardList, to: CardList, message: GameMessage, query: FilterType = {}, args?: Partial<ChooseCardsOptions>): Generator<State, State> {
     const min = args?.min || 1;
-    if (choices.length < min) {
-      throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
+
+    let choices: Card[] = from.cards;
+    const blocked: number[] = [];
+
+    if (from === player.deck) {
+      // If we're selecting from the deck, we need to display every card in the deck, but block invalid choices.
+      from.cards.forEach((card, index) => {
+        if (!match(card, query)) {
+          blocked.push(index);
+        }
+      });
+    } else {
+      // Otherwise, we only show the cards that match the query.
+      choices = from.filter(query).filter(card => !this.excluded.includes(card));
+      if (choices.length < min) {
+        throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
+      }
     }
 
     const choiceList = new CardList();
     choiceList.cards = choices;
+
+    // If we're looking at the deck or prizes, information has been gained.
+    // This can't be cancelled.
+    if (from === player.deck || player.prizes.includes(from)) {
+      this.allowCancel = false;
+    }
 
     let chosenCards: Card[] = [];
     yield this.store.prompt(
@@ -112,22 +135,45 @@ export class Resolver {
         message,  
         choiceList,
         query,
-        { ...args, allowCancel: this.allowCancel },
+        { ...args, allowCancel: this.allowCancel, blocked },
       ),
       selected => {
         chosenCards = selected || [];
-        this.allowCancel = false;
-        this.excluded.push(...chosenCards); // prevent choosing the same card again
+        // prevent choosing the same card again in a subsequent prompt.
+        // this is most relevant for cards that both discard and retrieve cards from the discard.
+        this.excluded.push(...chosenCards);
         this.next();
       }
     );
 
     // Operation canceled by the user
-    if (chosenCards.length === 0) {
+    if (chosenCards.length === 0 && this.allowCancel) {
       throw ActionCanceled;
     }
 
+    // Cards have moved zones, future prompts will not be able to cancel.
+    this.allowCancel = false;
+
+    // If moving from deck to hand and the search had conditions, reveal the chosen cards to the oppoenent.
+    if (chosenCards.length > 0 && from === player.deck && to === player.hand && Object.keys(query).length > 0) {
+      const opponent = StateUtils.getOpponent(this.state, player);
+      yield this.store.prompt(
+        this.state,
+        new ShowCardsPrompt(
+          opponent.id,
+          GameMessage.CARDS_SHOWED_BY_THE_OPPONENT,
+          chosenCards
+        ),
+        () => this.next()
+      );
+    }
+
     from.moveCardsTo(chosenCards, to);
+    if (to === player.deck) {
+      return this.store.prompt(this.state, new ShuffleDeckPrompt(player.id), order => {
+        player.deck.applyOrder(order);
+      });
+    }
     return this.state;
   }
 }
@@ -168,6 +214,19 @@ class ResolveForPlayer {
     return new ResolveMoveToZone(this.resolver, this.player, this.player.hand, countOrArgs);
   }
 
+  public shufflesIntoDeck(count: number, like?: FilterType): ResolveMoveToZone;
+  public shufflesIntoDeck({atLeast, atMost, like} : SelectCardArgs): ResolveMoveToZone;
+  public shufflesIntoDeck(countOrArgs: number | SelectCardArgs, like?: FilterType): ResolveMoveToZone {
+    if (typeof countOrArgs === 'number') {
+      return new ResolveMoveToZone(this.resolver, this.player, this.player.hand, { atLeast: countOrArgs, atMost: countOrArgs, like });
+    }
+    return new ResolveMoveToZone(this.resolver, this.player, this.player.hand, countOrArgs);
+  }
+
+  public shufflesHandIntoDeck(): void {
+    this.player.hand.moveTo(this.player.deck);
+  }
+
   public *flipsCoin(): Generator<State, boolean> {
     let coinResult: boolean = false;
     yield this.resolver.store.prompt(
@@ -195,7 +254,6 @@ class ResolveMoveToZone {
   constructor(
     public readonly resolver: Resolver,
     public readonly player: Player,
-    public readonly slotType: SlotType, 
     public readonly to: CardList,
     public readonly args: SelectCardArgs,
   ) {}
