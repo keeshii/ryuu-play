@@ -81,9 +81,10 @@ class TestHarnessPlayer {
     return resolveEffect(this.harness.store, this.harness.state, effect, throwError);
   }
 
-  public getsPrompt({withText, withOptions} : {
+  public getsPrompt({withText, withOptions, withCards} : {
     withText?: GameMessage,
     withOptions?: any,
+    withCards?: Card[],
   }) {
     const prompts = this.harness.state.prompts;
     const prompt = prompts.find(p => p.result === undefined);
@@ -100,6 +101,14 @@ class TestHarnessPlayer {
     }
     if (prompt.playerId !== this.player.id) {
       throw new Error(`Expected prompt for player ${this.player.id} but found for player ${prompt.playerId}.`);
+    }
+    if (withCards !== undefined) {
+      const actualCards : Card[] = (prompt as any).cards.cards;
+      const choicesMatch = actualCards.length === withCards.length &&
+        actualCards.every((card, index) => card === withCards[index]);
+      if (!choicesMatch) {
+        throw new Error(`Expected prompt with choices matching ${JSON.stringify(withCards.map(v => v.fullName))} but found ${JSON.stringify(actualCards.map(v => v.fullName))}.`);
+      }
     }
     return new TestHarnessPrompt(this.harness, prompt);
   }
