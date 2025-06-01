@@ -12,6 +12,8 @@ import { TestUtils } from '@ptcg/common';
 import { CrushingHammer } from './crushing-hammer';
 import { Emolga } from './emolga';
 import { WaterEnergy } from '../set-diamond-and-pearl/water-energy';
+import { Empoleon } from './empoleon';
+import { LevelBall } from './level-ball';
 
 describe('Bianca', () => {
 
@@ -216,5 +218,65 @@ describe('Crushing Hammer', () => {
     player.flipsCoinAndGetsTails();
     require.noPrompts();
     require.player.discard.contains([crushingHammer]);
+  });
+});
+
+describe('Level Ball', () => {
+  it('shows all cards in the deck, but blocks invalid targets', () => {
+    const levelBall = new LevelBall();
+    const validTarget = new Emolga(); // 70 HP
+    const invalidPokemonTarget = new Empoleon(); // 140 HP
+    const invalidNonPokemonTarget = new WaterEnergy();
+    const deck: CardList = new CardList([validTarget, invalidPokemonTarget, invalidNonPokemonTarget]);
+    const hand: CardList = new CardList([levelBall]);
+    const harness = new TestUtils.TestHarness({player: { hand, deck }});
+
+    const { require, players: [player] } = harness;
+    player.playsTrainer(levelBall);
+
+    player.getsPrompt({
+      withText: GameMessage.CHOOSE_CARD_TO_HAND,
+      withOptions: {
+        allowCancel: false,
+        blocked: [1, 2],
+      },
+      withCards: [validTarget, invalidPokemonTarget, invalidNonPokemonTarget],
+    }).andChooses([validTarget]);
+
+    player.getsPrompt({
+      withText: GameMessage.CARDS_SHOWED_BY_THE_OPPONENT,
+      withCards: [validTarget],
+    }).andChooses(true);
+    player.shufflesDeck();
+
+    require.player.hand.contains([validTarget]);
+    require.player.discard.contains([levelBall]);    
+  });
+
+  it('can fail to find', () => {
+    const levelBall = new LevelBall();
+    const validTarget = new Emolga(); // 70 HP
+    const invalidPokemonTarget = new Empoleon(); // 140 HP
+    const invalidNonPokemonTarget = new WaterEnergy();
+    const deck: CardList = new CardList([validTarget, invalidPokemonTarget, invalidNonPokemonTarget]);
+    const hand: CardList = new CardList([levelBall]);
+    const harness = new TestUtils.TestHarness({player: { hand, deck }});
+
+    const { require, players: [player] } = harness;
+    player.playsTrainer(levelBall);
+
+    player.getsPrompt({
+      withText: GameMessage.CHOOSE_CARD_TO_HAND,
+      withOptions: {
+        allowCancel: false,
+        blocked: [1, 2],
+      },
+      withCards: [validTarget, invalidPokemonTarget, invalidNonPokemonTarget],
+    }).andChooses([]);
+
+    // It's not possible to cancel the action, since the player has looked at their draw pile.
+    // But the player is always allowed to fail to find a card, even if a valid target exists.
+    // The Level Ball has finished resolving and should be in the discard now.
+    require.player.discard.contains([levelBall]);
   });
 });
