@@ -2,7 +2,7 @@ import { Card } from '../card/card';
 import { CardManager } from '../../game/cards/card-manager';
 import { GameError } from '../../game-error';
 import { GameMessage } from '../../game-message';
-import { match } from '../../utils';
+import { Filter, match } from '../../utils';
 
 export class CardList {
 
@@ -75,11 +75,11 @@ export class CardList {
     return this.cards.slice(0, count);
   }
 
-  public filter(query: Partial<Card>): Card[] {
+  public filter(query: Filter<Card>): Card[] {
     return this.cards.filter(c => match(c, query));
   }
 
-  public count(query: Partial<Card>): number {
+  public count(query: Filter<Card>): number {
     return this.filter(query).length;
   }
 

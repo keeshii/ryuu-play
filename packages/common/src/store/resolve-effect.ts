@@ -95,9 +95,7 @@ export class Resolver {
     return new ResolveForPlayer(this, StateUtils.getOpponent(this.state, this.effect.player));
   }
 
-  public *choosesAndMoves(player: Player, from: CardList, to: CardList, message: GameMessage, query?: FilterType, args?: Partial<ChooseCardsOptions>): Generator<State, State> {
-    query = query || {};
-    const choices = from.filter(query).filter(card => !this.excluded.includes(card));
+  public *choosesAndMoves(player: Player, from: CardList, to: CardList, message: GameMessage, query: FilterType = {}, args?: Partial<ChooseCardsOptions>): Generator<State, State> {
     const min = args?.min || 1;
     if (choices.length < min) {
       throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
@@ -152,18 +150,18 @@ class ResolveForPlayer {
     return this.resolver.state;
   }
 
-  public discards(count: number, like?: Partial<Card>): ResolveMoveToZone;
+  public discards(count: number, like?: FilterType): ResolveMoveToZone;
   public discards({atLeast, atMost, like} : SelectCardArgs): ResolveMoveToZone;
-  public discards(countOrArgs: number | SelectCardArgs, like?: Partial<Card>): ResolveMoveToZone {
+  public discards(countOrArgs: number | SelectCardArgs, like?: FilterType): ResolveMoveToZone {
     if (typeof countOrArgs === 'number') {
       return new ResolveMoveToZone(this.resolver, this.player, this.player.discard, { atLeast: countOrArgs, atMost: countOrArgs, like });
     }
     return new ResolveMoveToZone(this.resolver, this.player, this.player.discard, countOrArgs);
   }
 
-  public movesToHand(count: number, like?: Partial<Card>): ResolveMoveToZone;
+  public movesToHand(count: number, like?: FilterType): ResolveMoveToZone;
   public movesToHand({atLeast, atMost, like} : SelectCardArgs): ResolveMoveToZone;
-  public movesToHand(countOrArgs: number | SelectCardArgs, like?: Partial<Card>): ResolveMoveToZone {
+  public movesToHand(countOrArgs: number | SelectCardArgs, like?: FilterType): ResolveMoveToZone {
     if (typeof countOrArgs === 'number') {
       return new ResolveMoveToZone(this.resolver, this.player, this.player.hand, { atLeast: countOrArgs, atMost: countOrArgs, like });
     }
@@ -228,7 +226,7 @@ class ResolvePokemonCardList {
     public readonly pokemonRequirements: SelectPokemonArgs,
   ) {}
 
-  public andDiscards(count: number, like?: Partial<Card>): Generator<State, State>;
+  public andDiscards(count: number, like?: FilterType): Generator<State, State>;
   public andDiscards({atLeast, atMost, like} : SelectCardArgs): Generator<State, State>;
   public *andDiscards(countOrArgs: number | SelectCardArgs, like: FilterType = {}): Generator<State, State> {
     let atLeast: number | undefined;

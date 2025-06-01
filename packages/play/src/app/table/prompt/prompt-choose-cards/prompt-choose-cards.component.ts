@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ChooseCardsPrompt, CardList, Card } from '@ptcg/common';
+import { ChooseCardsPrompt, CardList, Card, Filter } from '@ptcg/common';
 
 import { GameService } from '../../../api/services/game.service';
 import { LocalGameState } from '../../../shared/session/session.interface';
@@ -34,7 +34,7 @@ export class PromptChooseCardsComponent {
   public allowedCancel: boolean;
   public promptId: number;
   public message: string;
-  public filter: Partial<Card>;
+  public filter: Filter<Card>;
   public blocked: number[];
   public isInvalid = false;
   public isSecret: boolean;

@@ -3,8 +3,9 @@ import { CardList } from './state/card-list';
 import { Player } from './state/player';
 import { StateUtils } from './state-utils';
 import { State } from './state/state';
-import { match } from '../utils/utils';
+import { Filter, match } from '../utils/utils';
 import { PokemonCard } from './card/pokemon-card';
+import { FilterType } from './prompts/choose-cards-prompt';
 
 export class Require {
 
@@ -80,9 +81,9 @@ class RequireZone {
   }
 
   public contains(cards: Card[]): void;
-  public contains(count: number, like?: Partial<Card>): void;
-  public contains({atLeast, atMost, like}: {atLeast?: number, atMost?: number, like?: Partial<Card>}): void;
-  public contains(arg0: Card[] | number | {atLeast?: number, atMost?: number, like?: Partial<Card>}, like?: Partial<Card>): void {
+  public contains(count: number, like?: FilterType): void;
+  public contains({atLeast, atMost, like}: {atLeast?: number, atMost?: number, like?: FilterType}): void;
+  public contains(arg0: Card[] | number | {atLeast?: number, atMost?: number, like?: FilterType}, like?: FilterType): void {
     if (typeof arg0 === 'number') {
       const atLeast = arg0;
       const atMost = arg0;
@@ -129,8 +130,8 @@ class RequirePlayer {
   public hasPokemon({ atLeast, atMost, like = {}, with: with_ = {}}: {
     atLeast?: number,
     atMost?: number,
-    like?: Partial<PokemonCard>
-    with?: Partial<Card>
+    like?: Filter<PokemonCard>
+    with?: FilterType
   }) {
     const slots = [this.player.active, ...this.player.bench];
     const matchedSlots = slots.filter(
