@@ -6,10 +6,12 @@ import {
   Effect,
   EnergyCard,
   EnergyType,
+  FilterType,
   GameError,
   GameMessage,
   PlayerType,
   PokemonCardList,
+  Resolver,
   SlotType,
   State,
   StateUtils,
@@ -98,6 +100,18 @@ export class EnhancedHammer extends TrainerCard {
   public fullName: string = 'Enhanced Hammer DEX';
 
   public text: string = 'Discard a Special Energy attached to 1 of your opponent\'s Pokémon.';
+
+  override *onPlay({ require, player, store, state }: Resolver): Generator<State> {
+    require.opponent.hasPokemon({
+      with: FilterType.SPECIAL_ENERGY,
+    });
+    yield* player.choosesPokemon({
+      playerType: PlayerType.TOP_PLAYER,
+      with: FilterType.SPECIAL_ENERGY,
+    }).andDiscards({
+      like: FilterType.SPECIAL_ENERGY,
+    });
+  }
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
