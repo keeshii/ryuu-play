@@ -11,13 +11,13 @@ export class Require {
   public readonly activePlayer: Player;
   public readonly state: State;
   public readonly effectSource?: Card;
-  public readonly fail: (message: string) => void;
+  public readonly fail: (message?: string) => void;
 
   constructor({activePlayer, state, effectSource, fail}: {
     activePlayer: Player,
     state: State,
     effectSource?: Card,
-    fail: (message: string) => void,
+    fail: (message?: string) => void,
   }) {
     this.activePlayer = activePlayer;
     this.state = state;
@@ -33,7 +33,7 @@ export class Require {
     return new RequirePlayer(this, StateUtils.getOpponent(this.state, this.activePlayer), 'opponent');
   }
 
-  public check(condition: boolean, message: string) {
+  public check(condition: boolean, message?: string) {
     if(!condition) {
       this.fail(message);
     }

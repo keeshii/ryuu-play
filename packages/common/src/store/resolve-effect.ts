@@ -31,7 +31,7 @@ const ActionCanceled = {};
 
 // The most important function in this package.
 // It resolves the effect of a card, waiting for all prompts to resolve before moving the card to the appropriate zone.
-export function resolveEffect(store: StoreLike, state: State, effect: Effect, fail: (message: string) => void = throwCantPlay): State {
+export function resolveEffect(store: StoreLike, state: State, effect: Effect, fail: (message?: string) => void = throwCantPlay): State {
   if (effect instanceof TrainerEffect) {
     const source = effect.trainerCard;
     let generator: Generator<State, State> = function*(){throw new Error();}();
@@ -60,7 +60,7 @@ export function resolveEffect(store: StoreLike, state: State, effect: Effect, fa
   return state;
 }
 
-function throwCantPlay(message: string) {
+function throwCantPlay(message?: string) {
   throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
 }
 
@@ -71,7 +71,7 @@ export class Resolver {
     public readonly effectSource: Card,
     public readonly store: StoreLike,
     public readonly next: Function,
-    public readonly fail: (message: string) => void,
+    public readonly fail: (message?: string) => void,
   ) {
     this.require = new Require({
       activePlayer: this.state.players[0],

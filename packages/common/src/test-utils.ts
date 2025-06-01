@@ -3,7 +3,7 @@ import { GamePhase, Player, Prompt, Require, resolveEffect, ResolvePromptAction,
 import { Card } from './store/card/card';
 import { match } from './utils';
 
-function throwError(message: string): never {
+function throwError(message?: string): never {
   throw new Error(message);
 }
 
