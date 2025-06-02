@@ -395,6 +395,7 @@
     "LOG_HURTS_ITSELF": "Attacking Pokemon hurts itself.",
     "LOG_INVITATION_NOT_ACCEPTED": "{{name}} has not accepted the invitation.",
     "LOG_PLAYER_ATTACHES_CARD": "{{name}} attaches a {{card}} to the {{pokemon}}.",
+    "LOG_PLAYER_CHANGES_TYPE_TO": "{{name}} changes type to {{message}}",
     "LOG_PLAYER_COPIES_ATTACK": "{{name}} copies attack {{attack}}.",
     "LOG_PLAYER_DRAWS_CARD": "{{name}} draws a card.",
     "LOG_PLAYER_ENDS_TURN": "{{name}} ends the turn.",

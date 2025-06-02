@@ -42,7 +42,7 @@ export class Gastly extends PokemonCard {
       cost: [CardType.PSYCHIC, CardType.COLORLESS],
       damage: '',
       text:
-        'Discard 1 Psychic Energy card attached to Gastly in order to use this attack. If a Pokémon Knocks Out ' +
+        'Discard 1 P Energy card attached to Gastly in order to use this attack. If a Pokémon Knocks Out ' +
         'Gastly during your opponent\'s next turn, Knock Out that Pokémon.'
     },
   ];

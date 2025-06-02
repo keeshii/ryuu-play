@@ -15,6 +15,7 @@ import {
   State,
   StateUtils,
   StoreLike,
+  SuperType,
 } from '@ptcg/common';
 
 export class Mewtwo extends PokemonCard {
@@ -36,7 +37,7 @@ export class Mewtwo extends PokemonCard {
       cost: [CardType.PSYCHIC, CardType.PSYCHIC],
       damage: '',
       text:
-        'Discard 1 Psychic Energy card attached to Mewtwo in order to prevent all effects of attacks, including ' +
+        'Discard 1 P Energy card attached to Mewtwo in order to prevent all effects of attacks, including ' +
         'damage, done to Mewtwo during your opponent\'s next turn.'
     },
   ];
@@ -68,11 +69,14 @@ export class Mewtwo extends PokemonCard {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
 
-      const providedEnergy = new CheckProvidedEnergyEffect(opponent);
-      store.reduceEffect(state, providedEnergy);
-      const energyCount = providedEnergy.energyMap.reduce((left, p) => left + p.provides.length, 0);
+      let energyCards = 0;
+      opponent.active.cards.forEach(card => {
+        if (card.superType === SuperType.ENERGY) {
+          energyCards += 1;
+        }
+      });
 
-      effect.damage += energyCount * 10;
+      effect.damage += energyCards * 10;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {

@@ -1,4 +1,5 @@
 import { Component, Input, ElementRef } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { StateLog, StateLogParam } from '@ptcg/common';
 
 import { GameService } from '../../../api/services/game.service';
@@ -44,7 +45,8 @@ export class GameLogsComponent {
   constructor(
     private elementRef: ElementRef<HTMLElement>,
     private gameService: GameService,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private translate: TranslateService
   ) { }
 
   public clearLogs() {
@@ -111,6 +113,11 @@ export class GameLogsComponent {
     const client = this.sessionService.session.clients.find(c => c.clientId === log.client);
     const user = client ? this.sessionService.session.users[client.userId] : undefined;
     const playerIndex = this.state.state.players.findIndex(p => p.id === log.client);
+
+    // translate log messages
+    if (log.params.message) {
+      log.params.message = this.translate.instant('GAME_MESSAGES.' + log.params.message);
+    }
 
     if (user !== undefined) {
       name = user.name;

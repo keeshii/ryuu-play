@@ -48,13 +48,13 @@
 
   ptcg-game-logs {
     .ptcg-system {
-      color: mat.get-color-from-palette($accent);
+      color: mat.get-color-from-palette($warn);
     }
     .ptcg-player1 {
       color: mat.get-color-from-palette($primary);
     }
     .ptcg-player2 {
-      color: mat.get-color-from-palette($warn);
+      color: mat.get-color-from-palette($accent);
     }
     .ptcg-spectator {
       color: mat.get-color-from-palette($foreground, hint-text);

@@ -3,6 +3,7 @@ import {
   CardType,
   CheckPokemonStatsEffect,
   Effect,
+  GameLog,
   GameMessage,
   PokemonCard,
   PokemonCardList,
@@ -140,6 +141,8 @@ export class Porygon extends PokemonCard {
             return;
           }
           const value = promptOptions[choice].value;
+          const message = promptOptions[choice].message;
+          store.log(state, GameLog.LOG_PLAYER_CHANGES_TYPE_TO, { name: player.name, message });
           removeMarkersByName(this.WEAKNESS_CHANGE_MARKER, opponent.active);
           opponent.active.marker.addMarker(this.WEAKNESS_CHANGE_MARKER + value, this);
         }
@@ -167,6 +170,8 @@ export class Porygon extends PokemonCard {
             return;
           }
           const value = promptOptions[choice].value;
+          const message = promptOptions[choice].message;
+          store.log(state, GameLog.LOG_PLAYER_CHANGES_TYPE_TO, { name: player.name, message });
           removeMarkersByName(this.RESISTANCE_CHANGE_MARKER, player.active);
           player.active.marker.addMarker(this.RESISTANCE_CHANGE_MARKER + value, this);
         }

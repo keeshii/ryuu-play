@@ -4,6 +4,7 @@ import {
   Effect,
   GameError,
   GameMessage,
+  PokemonCard,
   PokemonCardList,
   Stage,
   State,
@@ -32,9 +33,13 @@ export class PokemonFlute extends TrainerCard {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
-      const slots: PokemonCardList[] = player.bench.filter(b => b.cards.length === 0);
+      const slots: PokemonCardList[] = opponent.bench.filter(b => b.cards.length === 0);
 
       if (slots.length === 0) {
+        throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
+      }
+
+      if (!opponent.discard.cards.some(c => c instanceof PokemonCard && c.stage === Stage.BASIC)) {
         throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
       }
 
@@ -52,7 +57,7 @@ export class PokemonFlute extends TrainerCard {
         cards = selected || [];
         if (cards.length > 0) {
           cards.forEach((card, index) => {
-            player.deck.moveCardTo(card, slots[index]);
+            opponent.discard.moveCardTo(card, slots[index]);
             slots[index].pokemonPlayedTurn = state.turn;
           });
 
