@@ -2,26 +2,28 @@ import { Card } from '../card/card';
 import { CardManager } from '../../game/cards/card-manager';
 import { GameError } from '../../game-error';
 import { GameMessage } from '../../game-message';
+import { Filter, match } from '../../utils';
 
 export class CardList {
 
-  public cards: Card[] = [];
+  public constructor(
+    public cards: Card[] = []
+  ) {}
 
   public isPublic: boolean = false;
 
   public isSecret: boolean = false;
 
   public static fromList(names: string[]): CardList {
-    const cardList = new CardList();
     const cardManager = CardManager.getInstance();
-    cardList.cards = names.map(cardName => {
+    const cards = names.map(cardName => {
       const card = cardManager.getCardByName(cardName);
       if (card === undefined) {
         throw new GameError(GameMessage.UNKNOWN_CARD, cardName);
       }
       return card;
     });
-    return cardList;
+    return new CardList(cards);
   }
 
   public applyOrder(order: number[]) {
@@ -73,22 +75,11 @@ export class CardList {
     return this.cards.slice(0, count);
   }
 
-  public filter(query: Partial<Card>): Card[] {
-    return this.cards.filter(c => {
-      for (const key in query) {
-        if (Object.prototype.hasOwnProperty.call(query, key)) {
-          const value: any = (c as any)[key];
-          const expected: any = (query as any)[key];
-          if (value !== expected) {
-            return false;
-          }
-        }
-      }
-      return true;
-    });
+  public filter(query: Filter<Card>): Card[] {
+    return this.cards.filter(c => match(c, query));
   }
 
-  public count(query: Partial<Card>): number {
+  public count(query: Filter<Card>): number {
     return this.filter(query).length;
   }
 

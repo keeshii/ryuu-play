@@ -1,12 +1,8 @@
 import {
-  Effect,
-  GameError,
-  GameMessage,
   State,
-  StoreLike,
   TrainerCard,
-  TrainerEffect,
   TrainerType,
+  Resolver,
 } from '@ptcg/common';
 
 export class Bianca extends TrainerCard {
@@ -20,19 +16,9 @@ export class Bianca extends TrainerCard {
 
   public text: string = 'Draw cards until you have 6 cards in your hand.';
 
-  public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof TrainerEffect && effect.trainerCard === this) {
-      const player = effect.player;
-      const cards = player.hand.cards.filter(c => c !== this);
-      const cardsToDraw = Math.max(0, 6 - cards.length);
-
-      if (cardsToDraw === 0 || player.deck.cards.length === 0) {
-        throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
-      }
-
-      player.deck.moveTo(player.hand, cardsToDraw);
-    }
-
-    return state;
+  override *onPlay({require, player}: Resolver): Generator<State> {
+    require.player.deck.isNotEmpty();
+    require.player.hand.contains({atMost: 5});
+    player.drawsUntil(6);
   }
 }

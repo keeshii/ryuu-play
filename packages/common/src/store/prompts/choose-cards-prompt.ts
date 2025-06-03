@@ -5,7 +5,8 @@ import { GameMessage } from '../../game-message';
 import { Prompt } from './prompt';
 import { PokemonCard } from '../card/pokemon-card';
 import { TrainerCard } from '../card/trainer-card';
-import { CardType, SuperType } from '../card/card-types';
+import { CardType, EnergyType, Stage, SuperType, TrainerType } from '../card/card-types';
+import { Filter } from '../../utils';
 
 export const ChooseCardsPromptType = 'Choose cards';
 
@@ -21,7 +22,7 @@ export interface ChooseCardsOptions {
   maxTrainers: number | undefined;
 }
 
-export type FilterType = Partial<PokemonCard | TrainerCard | EnergyCard>;
+export type FilterType = Filter<PokemonCard | TrainerCard | EnergyCard>;
 
 export class ChooseCardsPrompt extends Prompt<Card[]> {
 
@@ -123,5 +124,17 @@ export class ChooseCardsPrompt extends Prompt<Card[]> {
     }
     return true;
   }
-
 }
+
+export const FilterType: Record<any, FilterType> = {
+  ENERGY : { superType: SuperType.ENERGY },
+  BASIC_ENERGY: { superType: SuperType.ENERGY, energyType: EnergyType.BASIC },
+  SPECIAL_ENERGY: { superType: SuperType.ENERGY, energyType: EnergyType.SPECIAL },
+  POKEMON: { superType: SuperType.POKEMON },
+  BASIC_POKEMON: { superType: SuperType.POKEMON, stage: Stage.BASIC },
+  TRAINER: { superType: SuperType.TRAINER },
+  ITEM: { superType: SuperType.TRAINER, trainerType: TrainerType.ITEM },
+  SUPPORTER: { superType: SuperType.TRAINER, trainerType: TrainerType.SUPPORTER },
+  STADIUM: { superType: SuperType.TRAINER, trainerType: TrainerType.STADIUM },
+  TOOL: { superType: SuperType.TRAINER, trainerType: TrainerType.TOOL },
+};

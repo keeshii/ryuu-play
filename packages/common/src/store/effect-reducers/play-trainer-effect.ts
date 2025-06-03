@@ -6,8 +6,6 @@ import { Effect } from '../effects/effect';
 import { State } from '../state/state';
 import { StoreLike } from '../store-like';
 import { StateUtils } from '../state-utils';
-import { TrainerType } from '../card/card-types';
-
 
 export function playTrainerReducer(store: StoreLike, state: State, effect: Effect): State {
 
@@ -73,16 +71,6 @@ export function playTrainerReducer(store: StoreLike, state: State, effect: Effec
       name: effect.player.name,
       card: effect.trainerCard.name
     });
-    return state;
-  }
-
-  // Process trainer effect
-  if (effect instanceof TrainerEffect) {
-    if (effect.player.hand.cards.includes(effect.trainerCard)) {
-      const isSupporter = effect.trainerCard.trainerType === TrainerType.SUPPORTER;
-      const target = isSupporter ? effect.player.supporter : effect.player.discard;
-      effect.player.hand.moveCardTo(effect.trainerCard, target);
-    }
     return state;
   }
 

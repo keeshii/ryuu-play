@@ -2,6 +2,7 @@ import {
   Effect,
   GameError,
   GameMessage,
+  Resolver,
   ShuffleDeckPrompt,
   State,
   StateUtils,
@@ -23,6 +24,19 @@ export class Colress extends TrainerCard {
   public text: string =
     'Shuffle your hand into your deck. Then, draw a number of cards equal ' +
     'to the number of Benched Pokémon (both yours and your opponent\'s).';
+
+  override *onPlay({ require, player, state }: Resolver): Generator<State> {
+    require.check(
+      (player.player.hand.cards.length > 0) ||
+      (player.player.deck.cards.length > 0),
+    );
+    let benchCount = 0;
+    for (const player of state.players) {
+      player.bench.forEach(b => (benchCount += b.cards.length > 0 ? 1 : 0));
+    }
+    player.shufflesHandIntoDeck();
+    return player.draws(benchCount);
+  }
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {

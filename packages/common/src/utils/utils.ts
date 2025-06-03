@@ -97,3 +97,26 @@ export function generateId<T extends {id: number}[]>(array: T): number {
 
   return id;
 }
+
+export type Filter<T> = {
+  [K in keyof T]?: T[K] | ((value: T[K]) => boolean);
+};
+
+export function match<T>(self: T, query: Filter<T>): boolean {
+  for (const key in query) {
+    if (Object.prototype.hasOwnProperty.call(query, key)) {
+      const value: any = (self as any)[key];
+      const expected: any = (query as any)[key];
+      if (typeof expected === 'function') {
+        if (!expected(value)) {
+          return false;
+        }
+      } else {
+        if (!deepCompare(value, expected)) {
+          return false;
+        }
+      }
+    }
+  }
+  return true;
+}
