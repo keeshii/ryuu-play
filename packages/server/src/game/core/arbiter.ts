@@ -42,11 +42,9 @@ export class Arbiter {
       order.push(i);
     }
 
-    for (let i = 0; i < len; i++) {
-      const position = Math.min(len - 1, Math.round(Math.random() * len));
-      const tmp = order[i];
-      order[i] = order[position];
-      order[position] = tmp;
+    for (let i = len-1; i > 0; i--) {
+      const position = Math.floor(Math.random() * (i+1));
+      [order[i], order[position]] = [order[position], order[i]];
     }
 
     return order;
