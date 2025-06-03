@@ -43,7 +43,7 @@ export class Arbiter {
     }
 
     for (let i = len-1; i > 0; i--) {
-      const position = Math.floor(Math.random() * i);
+      const position = Math.floor(Math.random() * (i+1));
       [order[i], order[position]] = [order[position], order[i]];
     }
 
