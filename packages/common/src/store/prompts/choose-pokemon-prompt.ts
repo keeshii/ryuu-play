@@ -1,10 +1,10 @@
 import { Prompt } from './prompt';
 import { PlayerType, SlotType, CardTarget } from '../actions/play-card-action';
-import { PokemonCardList } from '../state/pokemon-card-list';
 import { State } from '../state/state';
 import { GameError } from '../../game-error';
 import { GameMessage } from '../../game-message';
 import { StateUtils } from '../state-utils';
+import { PokemonSlot } from '../state/pokemon-slot';
 
 export const ChoosePokemonPromptType = 'Choose pokemon';
 
@@ -15,7 +15,7 @@ export interface ChoosePokemonOptions {
   blocked: CardTarget[];
 }
 
-export class ChoosePokemonPrompt extends Prompt<PokemonCardList[]> {
+export class ChoosePokemonPrompt extends Prompt<PokemonSlot[]> {
 
   readonly type: string = ChoosePokemonPromptType;
 
@@ -39,7 +39,7 @@ export class ChoosePokemonPrompt extends Prompt<PokemonCardList[]> {
     }, options);
   }
 
-  public decode(result: CardTarget[] | null, state: State): PokemonCardList[] | null {
+  public decode(result: CardTarget[] | null, state: State): PokemonSlot[] | null {
     if (result === null) {
       return result;  // operation cancelled
     }
@@ -54,14 +54,14 @@ export class ChoosePokemonPrompt extends Prompt<PokemonCardList[]> {
     });
   }
 
-  public validate(result: PokemonCardList[] | null, state: State): boolean {
+  public validate(result: PokemonSlot[] | null, state: State): boolean {
     if (result === null) {
       return this.options.allowCancel;
     }
     if (result.length < this.options.min || result.length > this.options.max) {
       return false;
     }
-    if (result.some(cardList => cardList.cards.length === 0)) {
+    if (result.some(cardList => cardList.pokemons.cards.length === 0)) {
       return false;
     }
     const player = state.players.find(p => p.id === this.playerId);

@@ -3,9 +3,9 @@ import { AttackEffect } from './game-effects';
 import { Card } from '../card/card';
 import { Effect } from './effect';
 import { Player } from '../state/player';
-import { PokemonCardList } from '../state/pokemon-card-list';
 import { SpecialCondition } from '../card/card-types';
 import { CardList } from '../state/card-list';
+import { PokemonSlot } from '../state/pokemon-slot';
 
 export enum AttackEffects {
   APPLY_WEAKNESS_EFFECT = 'APPLY_WEAKNESS_EFFECT',
@@ -24,8 +24,8 @@ export abstract class AbstractAttackEffect {
   public attack: Attack;
   public player: Player;
   public opponent: Player;
-  public target: PokemonCardList;
-  public source: PokemonCardList;
+  public target: PokemonSlot;
+  public source: PokemonSlot;
 
   constructor(base: AttackEffect) {
     this.attackEffect = base;

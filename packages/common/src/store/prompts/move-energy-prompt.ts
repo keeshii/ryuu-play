@@ -63,8 +63,8 @@ export class MoveEnergyPrompt extends Prompt<CardTransfer[]> {
     }
     const transfers: CardTransfer[] = [];
     result.forEach(t => {
-      const cardList = StateUtils.getTarget(state, player, t.from);
-      const card = cardList.cards[t.index];
+      const pokemonSlot = StateUtils.getTarget(state, player, t.from);
+      const card = pokemonSlot.energies.cards[t.index];
       transfers.push({ from: t.from, to: t.to, card });
     });
     return transfers;

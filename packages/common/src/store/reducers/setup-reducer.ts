@@ -15,21 +15,21 @@ import { State, GamePhase, GameWinner } from '../state/state';
 import { GameError } from '../../game-error';
 import { GameMessage, GameLog } from '../../game-message';
 import { PlayerType } from '../actions/play-card-action';
-import { PokemonCardList } from '../state/pokemon-card-list';
 import { StoreLike } from '../store-like';
 import { SuperType, Stage } from '../card/card-types';
 import { WhoBeginsEffect } from '../effects/game-phase-effects';
 import { endGame } from '../effect-reducers/check-effect';
 import { initNextTurn } from '../effect-reducers/game-phase-effect';
+import { PokemonSlot } from '../state/pokemon-slot';
 
 
 function putStartingPokemonsAndPrizes(player: Player, cards: Card[]): void {
   if (cards.length === 0) {
     return;
   }
-  player.hand.moveCardTo(cards[0], player.active);
+  player.hand.moveCardTo(cards[0], player.active.pokemons);
   for (let i = 1; i < cards.length; i++) {
-    player.hand.moveCardTo(cards[i], player.bench[i - 1]);
+    player.hand.moveCardTo(cards[i], player.bench[i - 1].pokemons);
   }
   for (let i = 0; i < 6; i++) {
     player.deck.moveTo(player.prizes[i], 1);
@@ -142,12 +142,16 @@ function createPlayer(id: number, name: string): Player {
 
   // Empty bench, places for 5 pokemons
   for (let i = 0; i < 5; i++) {
-    const bench = new PokemonCardList();
-    bench.isPublic = true;
+    const bench = new PokemonSlot();
+    bench.pokemons.isPublic = true;
+    bench.energies.isPublic = true;
+    bench.trainers.isPublic = true;
     player.bench.push(bench);
   }
 
-  player.active.isPublic = true;
+  player.active.pokemons.isPublic = true;
+  player.active.energies.isPublic = true;
+  player.active.trainers.isPublic = true;
   player.discard.isPublic = true;
   player.stadium.isPublic = true;
   player.supporter.isPublic = true;

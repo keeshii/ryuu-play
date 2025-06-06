@@ -9,6 +9,9 @@ import { PutDamageEffect, DealDamageEffect, DiscardCardsEffect,
   PutCountersEffect, MoveCardsEffect } from '../effects/attack-effects';
 import { HealEffect } from '../effects/game-effects';
 import { StateUtils } from '../state-utils';
+import { PokemonCard } from '../card/pokemon-card';
+import { EnergyCard } from '../card/energy-card';
+import { TrainerCard } from '../card/trainer-card';
 
 export function attackReducer(store: StoreLike, state: State, effect: Effect): State {
 
@@ -60,7 +63,9 @@ export function attackReducer(store: StoreLike, state: State, effect: Effect): S
     const target = effect.target;
     const cards = effect.cards;
     const owner = StateUtils.findOwner(state, target);
-    target.moveCardsTo(cards, owner.discard);
+    target.pokemons.moveCardsTo(cards as PokemonCard[], owner.discard);
+    target.energies.moveCardsTo(cards as EnergyCard[], owner.discard);
+    target.trainers.moveCardsTo(cards as TrainerCard[], owner.discard);
     return state;
   }
 
@@ -71,7 +76,9 @@ export function attackReducer(store: StoreLike, state: State, effect: Effect): S
     if (owner !== StateUtils.findOwner(state, effect.destination)) {
       throw new GameError(GameMessage.ILLEGAL_ACTION);
     }
-    target.moveCardsTo(cards, effect.destination);
+    target.pokemons.moveCardsTo(cards as PokemonCard[], effect.destination);
+    target.energies.moveCardsTo(cards as EnergyCard[], effect.destination);
+    target.trainers.moveCardsTo(cards as TrainerCard[], effect.destination);
     return state;
   }
 

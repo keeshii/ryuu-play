@@ -8,6 +8,7 @@ import { RetreatEffect } from '../effects/game-effects';
 import { StateUtils } from '../state-utils';
 import { CheckRetreatCostEffect, CheckProvidedEnergyEffect } from '../effects/check-effects';
 import { SpecialCondition } from '../card/card-types';
+import { EnergyCard } from '../card/energy-card';
 
 
 function retreatPokemon(store: StoreLike, state: State, effect: RetreatEffect) {
@@ -33,7 +34,7 @@ export function retreatReducer(store: StoreLike, state: State, effect: Effect): 
   if (effect instanceof RetreatEffect) {
     const player = effect.player;
 
-    if (player.bench[effect.benchIndex].cards.length === 0) {
+    if (player.bench[effect.benchIndex].pokemons.cards.length === 0) {
       throw new GameError(GameMessage.INVALID_TARGET);
     }
 
@@ -77,8 +78,8 @@ export function retreatReducer(store: StoreLike, state: State, effect: Effect): 
         return;
       }
 
-      const cards = energy.map(e => e.card);
-      player.active.moveCardsTo(cards, player.discard);
+      const cards = energy.map(e => e.card) as EnergyCard[];
+      player.active.energies.moveCardsTo(cards, player.discard);
       retreatPokemon(store, state, effect);
     });
   }

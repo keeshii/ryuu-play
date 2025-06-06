@@ -3,9 +3,9 @@ import { CardManager } from '../../game/cards/card-manager';
 import { GameError } from '../../game-error';
 import { GameMessage } from '../../game-message';
 
-export class CardList {
+export class CardList<T extends Card = Card> {
 
-  public cards: Card[] = [];
+  public cards: T[] = [];
 
   public isPublic: boolean = false;
 
@@ -54,7 +54,7 @@ export class CardList {
     destination.cards.push(...cards);
   }
 
-  public moveCardsTo(cards: Card[], destination: CardList): void {
+  public moveCardsTo(cards: T[], destination: CardList): void {
     for (let i = 0; i < cards.length; i++) {
       const index = this.cards.indexOf(cards[i]);
       if (index !== -1) {
@@ -64,16 +64,16 @@ export class CardList {
     }
   }
 
-  public moveCardTo(card: Card, destination: CardList): void {
+  public moveCardTo(card: T, destination: CardList): void {
     this.moveCardsTo([card], destination);
   }
 
-  public top(count: number = 1): Card[] {
+  public top(count: number = 1): T[] {
     count = Math.min(count, this.cards.length);
     return this.cards.slice(0, count);
   }
 
-  public filter(query: Partial<Card>): Card[] {
+  public filter(query: Partial<T>): T[] {
     return this.cards.filter(c => {
       for (const key in query) {
         if (Object.prototype.hasOwnProperty.call(query, key)) {
@@ -88,7 +88,7 @@ export class CardList {
     });
   }
 
-  public count(query: Partial<Card>): number {
+  public count(query: Partial<T>): number {
     return this.filter(query).length;
   }
 

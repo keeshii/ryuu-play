@@ -15,6 +15,7 @@ import { PathBuilder } from './path-builder';
 import { deepIterate, deepClone } from '../utils';
 import { JsonPatch } from './json-patch';
 import { JsonDiff } from './json-patch.interface';
+import { PokemonSlot } from '../store/state/pokemon-slot';
 
 export class StateSerializer {
 
@@ -27,6 +28,7 @@ export class StateSerializer {
       new GenericSerializer(Rules, 'Rules'),
       new GenericSerializer(Player, 'Player'),
       new GenericSerializer(Marker, 'Marker'),
+      new GenericSerializer(PokemonSlot, 'PokemonSlot'),
       new CardSerializer(),
       new CardListSerializer(),
       new StateLogSerializer(),

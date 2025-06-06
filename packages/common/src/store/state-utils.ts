@@ -6,8 +6,8 @@ import { GameError } from '../game-error';
 import { GameMessage } from '../game-message';
 import { State } from './state/state';
 import { Player } from './state/player';
-import { PokemonCardList } from './state/pokemon-card-list';
 import { EnergyMap } from './prompts/choose-energy-prompt';
+import { PokemonSlot } from './state/pokemon-slot';
 
 export class StateUtils {
   public static checkEnoughEnergy(energy: EnergyMap[], cost: CardType[]): boolean {
@@ -92,7 +92,7 @@ export class StateUtils {
     return opponent;
   }
 
-  public static getTarget(state: State, player: Player, target: CardTarget): PokemonCardList {
+  public static getTarget(state: State, player: Player, target: CardTarget): PokemonSlot {
     if (target.player === PlayerType.TOP_PLAYER) {
       player = StateUtils.getOpponent(state, player);
     }
@@ -111,13 +111,15 @@ export class StateUtils {
   public static findCardList(state: State, card: Card): CardList {
     const cardLists: CardList[] = [];
     for (const player of state.players) {
-      cardLists.push(player.active);
+      cardLists.push(player.active.pokemons);
+      cardLists.push(player.active.energies);
+      cardLists.push(player.active.trainers);
       cardLists.push(player.deck);
       cardLists.push(player.discard);
       cardLists.push(player.hand);
       cardLists.push(player.stadium);
       cardLists.push(player.supporter);
-      player.bench.forEach(item => cardLists.push(item));
+      player.bench.forEach(item => cardLists.push(item.pokemons, item.energies, item.trainers));
       player.prizes.forEach(item => cardLists.push(item));
     }
     const cardList = cardLists.find(c => c.cards.includes(card));
@@ -127,18 +129,37 @@ export class StateUtils {
     return cardList;
   }
 
-  public static findOwner(state: State, cardList: CardList): Player {
+  public static findPokemonSlot(state: State, card: Card): PokemonSlot | undefined {
+    const cardLists: { pokemonSlot: PokemonSlot, cardList: CardList }[] = [];
     for (const player of state.players) {
-      const cardLists: CardList[] = [];
+      cardLists.push({ pokemonSlot: player.active, cardList: player.active.pokemons });
+      cardLists.push({ pokemonSlot: player.active, cardList: player.active.energies });
+      cardLists.push({ pokemonSlot: player.active, cardList: player.active.trainers });
+      player.bench.forEach(item => cardLists.push(
+        { pokemonSlot: item, cardList: item.pokemons },
+        { pokemonSlot: item, cardList: item.energies },
+        { pokemonSlot: item, cardList: item.trainers }
+      ));
+    }
+    const cardList = cardLists.find(c => c.cardList.cards.includes(card));
+    return cardList ? cardList.pokemonSlot : undefined;
+  }
+
+  public static findOwner(state: State, cardListOrSlot: CardList | PokemonSlot): Player {
+    for (const player of state.players) {
+      const cardLists: (CardList | PokemonSlot)[] = [];
       cardLists.push(player.active);
+      cardLists.push(player.active.pokemons);
+      cardLists.push(player.active.energies);
+      cardLists.push(player.active.trainers);
       cardLists.push(player.deck);
       cardLists.push(player.discard);
       cardLists.push(player.hand);
       cardLists.push(player.stadium);
       cardLists.push(player.supporter);
-      player.bench.forEach(item => cardLists.push(item));
+      player.bench.forEach(item => cardLists.push(item, item.pokemons, item.energies, item.trainers));
       player.prizes.forEach(item => cardLists.push(item));
-      if (cardLists.includes(cardList)) {
+      if (cardLists.includes(cardListOrSlot)) {
         return player;
       }
     }

@@ -1,8 +1,8 @@
 import { CardList } from './card-list';
 import { CardTarget, PlayerType, SlotType } from '../actions/play-card-action';
 import { PokemonCard } from '../card/pokemon-card';
-import { PokemonCardList } from './pokemon-card-list';
 import { Marker } from './card-marker';
+import { PokemonSlot } from './pokemon-slot';
 
 export class Player {
 
@@ -20,9 +20,9 @@ export class Player {
 
   supporter: CardList = new CardList();
 
-  active: PokemonCardList = new PokemonCardList();
+  active: PokemonSlot = new PokemonSlot();
 
-  bench: PokemonCardList[] = [];
+  bench: PokemonSlot[] = [];
 
   prizes: CardList[] = [];
 
@@ -44,7 +44,7 @@ export class Player {
 
   forEachPokemon(
     player: PlayerType,
-    handler: (cardList: PokemonCardList, pokemonCard: PokemonCard, target: CardTarget) => void
+    handler: (pokemonSlot: PokemonSlot, pokemonCard: PokemonCard, target: CardTarget) => void
   ): void {
     let pokemonCard = this.active.getPokemonCard();
     let target: CardTarget;
@@ -63,7 +63,7 @@ export class Player {
     }
   }
 
-  switchPokemon(target: PokemonCardList) {
+  switchPokemon(target: PokemonSlot) {
     const benchIndex = this.bench.indexOf(target);
     if (benchIndex !== -1) {
       this.active.clearEffects();
