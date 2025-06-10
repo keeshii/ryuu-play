@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { PutDamagePrompt, CardTarget, DamageMap, PokemonCardList } from '@ptcg/common';
+import { PutDamagePrompt, CardTarget, DamageMap, PokemonSlot } from '@ptcg/common';
 
 import { GameService } from '../../../api/services/game.service';
 import { LocalGameState } from '../../../shared/session/session.interface';
@@ -65,8 +65,8 @@ export class PromptPutDamageComponent implements OnChanges {
   public removeDamage() {
     this.damage += 10;
     const item = this.selectedItem;
-    item.cardList = Object.assign(new PokemonCardList(), item.cardList);
-    item.cardList.damage -= 10;
+    item.pokemonSlot = Object.assign(new PokemonSlot(), item.pokemonSlot);
+    item.pokemonSlot.damage -= 10;
     this.updateButtonDisable();
     this.updateIsInvalid();
   }
@@ -74,8 +74,8 @@ export class PromptPutDamageComponent implements OnChanges {
   public addDamage() {
     this.damage -= 10;
     const item = this.selectedItem;
-    item.cardList = Object.assign(new PokemonCardList(), item.cardList);
-    item.cardList.damage += 10;
+    item.pokemonSlot = Object.assign(new PokemonSlot(), item.pokemonSlot);
+    item.pokemonSlot.damage += 10;
     this.updateButtonDisable();
     this.updateIsInvalid();
   }
@@ -90,9 +90,9 @@ export class PromptPutDamageComponent implements OnChanges {
             && i.target.slot === item.target.slot
             && i.target.index === item.target.index;
         });
-        if (initial !== undefined && initial.damage !== item.cardList.damage) {
-          item.cardList = Object.assign(new PokemonCardList(), item.cardList);
-          item.cardList.damage = initial.damage;
+        if (initial !== undefined && initial.damage !== item.pokemonSlot.damage) {
+          item.pokemonSlot = Object.assign(new PokemonSlot(), item.pokemonSlot);
+          item.pokemonSlot.damage = initial.damage;
         }
       }
     }
@@ -108,7 +108,7 @@ export class PromptPutDamageComponent implements OnChanges {
     }
 
     const target = this.selectedItem.target;
-    const cardList = this.selectedItem.cardList;
+    const pokemonSlot = this.selectedItem.pokemonSlot;
     const damageMap = this.maxDamageMap.find(d => {
       return d.target.player === target.player
         && d.target.slot === target.slot
@@ -125,10 +125,10 @@ export class PromptPutDamageComponent implements OnChanges {
     let isAddDisabled = false;
     let isRemoveDisabled = false;
 
-    if (initial !== undefined && cardList.damage <= initial.damage) {
+    if (initial !== undefined && pokemonSlot.damage <= initial.damage) {
       isRemoveDisabled = true;
     }
-    if (this.damage === 0 || cardList.damage >= allowedDamage) {
+    if (this.damage === 0 || pokemonSlot.damage >= allowedDamage) {
       isAddDisabled = true;
     }
 
@@ -150,7 +150,7 @@ export class PromptPutDamageComponent implements OnChanges {
         });
 
         if (initial !== undefined) {
-          const damage = item.cardList.damage - initial.damage;
+          const damage = item.pokemonSlot.damage - initial.damage;
           if (damage >= 0) {
             results.push({ target: item.target, damage });
           }
@@ -189,8 +189,8 @@ export class PromptPutDamageComponent implements OnChanges {
       const pokemonRows = this.pokemonData.getRows();
       for (const row of pokemonRows) {
         for (const item of row.items) {
-          if (item.cardList.cards.length > 0) {
-            const damageItem = { target: item.target, damage: item.cardList.damage };
+          if (item.pokemonSlot.pokemons.cards.length > 0) {
+            const damageItem = { target: item.target, damage: item.pokemonSlot.damage };
             this.initialDamageMap.push(damageItem);
           }
         }

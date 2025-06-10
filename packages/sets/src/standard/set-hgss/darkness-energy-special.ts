@@ -30,7 +30,7 @@ export class DarknessEnergySpecial extends EnergyCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof DealDamageEffect) {
-      if (effect.source.cards.includes(this)) {
+      if (effect.source.energies.cards.includes(this)) {
         const player = effect.player;
         const opponent = StateUtils.getOpponent(state, player);
         if (effect.target !== opponent.active) {

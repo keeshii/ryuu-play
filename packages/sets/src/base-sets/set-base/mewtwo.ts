@@ -15,7 +15,6 @@ import {
   State,
   StateUtils,
   StoreLike,
-  SuperType,
 } from '@ptcg/common';
 
 export class Mewtwo extends PokemonCard {
@@ -70,12 +69,7 @@ export class Mewtwo extends PokemonCard {
       const opponent = StateUtils.getOpponent(state, player);
 
       let energyCards = 0;
-      opponent.active.cards.forEach(card => {
-        if (card.superType === SuperType.ENERGY) {
-          energyCards += 1;
-        }
-      });
-
+      energyCards = opponent.active.energies.cards.length;
       effect.damage += energyCards * 10;
     }
 
@@ -111,8 +105,8 @@ export class Mewtwo extends PokemonCard {
       effect.player.marker.removeMarker(this.CLEAR_BARRIER_MARKER, this);
 
       const opponent = StateUtils.getOpponent(state, effect.player);
-      opponent.forEachPokemon(PlayerType.TOP_PLAYER, cardList => {
-        cardList.marker.removeMarker(this.BARRIER_MARKER, this);
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, pokemonSlot => {
+        pokemonSlot.marker.removeMarker(this.BARRIER_MARKER, this);
       });
     }
 

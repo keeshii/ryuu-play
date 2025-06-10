@@ -3,15 +3,13 @@ import {
   ChooseCardsPrompt,
   ChoosePokemonPrompt,
   Effect,
-  EnergyCard,
   GameError,
   GameMessage,
   PlayerType,
-  PokemonCardList,
+  PokemonSlot,
   SlotType,
   State,
   StoreLike,
-  SuperType,
   TrainerCard,
   TrainerEffect,
   TrainerType,
@@ -19,7 +17,7 @@ import {
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
-  const hasBench = player.bench.some(b => b.cards.length > 0);
+  const hasBench = player.bench.some(b => b.pokemons.cards.length > 0);
 
   if (hasBench === false) {
     throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
@@ -28,7 +26,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   // Do not discard the card yet
   effect.preventDefault = true;
 
-  let targets: PokemonCardList[] = [];
+  let targets: PokemonSlot[] = [];
   yield store.prompt(
     state,
     new ChoosePokemonPrompt(
@@ -49,7 +47,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   }
 
   const target = targets[0];
-  const hasEnergies = player.active.cards.some(c => c instanceof EnergyCard);
+  const hasEnergies = player.active.energies.cards.length !== 0;
 
   if (hasEnergies) {
     yield store.prompt(
@@ -57,13 +55,13 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
       new ChooseCardsPrompt(
         player.id,
         GameMessage.ATTACH_ENERGY_TO_BENCH,
-        player.active,
-        { superType: SuperType.ENERGY },
+        player.active.energies,
+        { },
         { allowCancel: false, min: 0 }
       ),
       selected => {
         selected = selected || [];
-        player.active.moveCardsTo(selected, target);
+        player.active.moveCardsTo(selected, target.energies);
         next();
       }
     );

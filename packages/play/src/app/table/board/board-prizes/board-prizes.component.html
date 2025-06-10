@@ -4,7 +4,7 @@
     <ptcg-board-card
       *ngFor="let cardList of prizes"
       (click)="onPrizeClick(cardList)"
-      [cardList]="cardList"
+      [value]="cardList"
       [owner]="isOwner">
     </ptcg-board-card>
   </div>

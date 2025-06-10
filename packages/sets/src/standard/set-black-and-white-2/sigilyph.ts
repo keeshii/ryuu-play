@@ -61,7 +61,7 @@ export class Sigilyph extends PokemonCard {
     }
 
     // Prevent damage from Pokemon-EX
-    if (effect instanceof AbstractAttackEffect && effect.target.cards.includes(this)) {
+    if (effect instanceof AbstractAttackEffect && effect.target.pokemons.cards.includes(this)) {
       const pokemonCard = effect.target.getPokemonCard();
       const sourceCard = effect.source.getPokemonCard();
 

@@ -6,7 +6,7 @@ import {
   GameError,
   GameMessage,
   PokemonCard,
-  PokemonCardList,
+  PokemonSlot,
   Stage,
   State,
   StateUtils,
@@ -24,7 +24,7 @@ function* useStadium(
   effect: UseStadiumEffect
 ): IterableIterator<State> {
   const player = effect.player;
-  const slots: PokemonCardList[] = player.bench.filter(b => b.cards.length === 0);
+  const slots: PokemonSlot[] = player.bench.filter(b => b.pokemons.cards.length === 0);
   const hasRestored = player.hand.cards.some(c => {
     return c instanceof PokemonCard && c.stage === Stage.RESTORED;
   });
@@ -64,7 +64,7 @@ function* useStadium(
   }
 
   cards.forEach((card, index) => {
-    player.hand.moveCardTo(card, slots[index]);
+    player.hand.moveCardTo(card, slots[index].pokemons);
     slots[index].pokemonPlayedTurn = state.turn;
   });
 

@@ -12,7 +12,7 @@ export class HandScore extends SimpleScore {
     const player = this.getPlayer(state, playerId);
     const scores = this.options.scores.hand;
 
-    const isBenchEmpty = player.bench.every(b => b.cards.length === 0);
+    const isBenchEmpty = player.bench.every(b => b.pokemons.cards.length === 0);
 
     const pokemonsToEvolve: string[] = [];
     player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card, target) => {

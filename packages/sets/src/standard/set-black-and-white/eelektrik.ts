@@ -70,7 +70,7 @@ export class Eelektrik extends PokemonCard {
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
       const player = effect.player;
 
-      const hasBench = player.bench.some(b => b.cards.length > 0);
+      const hasBench = player.bench.some(b => b.pokemons.cards.length > 0);
       if (!hasBench) {
         throw new GameError(GameMessage.CANNOT_USE_POWER);
       }
@@ -108,7 +108,7 @@ export class Eelektrik extends PokemonCard {
           player.marker.addMarker(this.DYNAMOTOR_MAREKER, this);
           for (const transfer of transfers) {
             const target = StateUtils.getTarget(state, player, transfer.to);
-            player.discard.moveCardTo(transfer.card, target);
+            player.discard.moveCardTo(transfer.card, target.energies);
           }
         }
       );

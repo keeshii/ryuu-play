@@ -27,7 +27,7 @@ export class RainbowEnergy extends EnergyCard {
     'on that Pokémon.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof CheckProvidedEnergyEffect && effect.source.cards.includes(this)) {
+    if (effect instanceof CheckProvidedEnergyEffect && effect.source.energies.cards.includes(this)) {
       effect.energyMap.push({ card: this, provides: [CardType.ANY] });
     }
     if (effect instanceof AttachEnergyEffect && effect.energyCard === this) {

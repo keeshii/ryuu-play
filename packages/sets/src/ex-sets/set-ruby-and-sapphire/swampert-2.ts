@@ -73,7 +73,7 @@ export class Swampert2 extends PokemonCard {
       player.marker.removeMarker(this.NATURAL_REMEDY_MARKER, this);
     }
 
-    if (effect instanceof AttachEnergyEffect && effect.target.cards.includes(this)) {
+    if (effect instanceof AttachEnergyEffect && effect.target.pokemons.cards.includes(this)) {
       const player = effect.player;
       const pokemonCard = effect.target.getPokemonCard();
 

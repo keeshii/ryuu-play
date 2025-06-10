@@ -56,7 +56,7 @@ export class Electrike extends PokemonCard {
       );
 
       if (energyCard) {
-        player.discard.moveCardTo(energyCard, player.active);
+        player.discard.moveCardTo(energyCard, player.active.energies);
       }
       return state;
     }

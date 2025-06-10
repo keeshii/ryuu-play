@@ -98,14 +98,19 @@ export class Nosepass extends PokemonCard {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
 
-      const hasBenched = opponent.bench.some(b => b.cards.length > 0);
+      const hasBenched = opponent.bench.some(b => b.pokemons.cards.length > 0);
       if (!hasBenched) {
         return state;
       }
 
       return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
         if (result) {
-          const moveCardsEffect = new MoveCardsEffect(effect, opponent.active.cards, opponent.hand);
+          const defendingCards = [
+            ...opponent.active.pokemons.cards,
+            ...opponent.active.energies.cards,
+            ...opponent.active.trainers.cards,
+          ];
+          const moveCardsEffect = new MoveCardsEffect(effect, defendingCards, opponent.hand);
           store.reduceEffect(state, moveCardsEffect);
           if (!moveCardsEffect.preventDefault) {
             opponent.active.clearEffects();

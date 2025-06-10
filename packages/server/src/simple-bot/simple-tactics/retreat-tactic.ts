@@ -12,7 +12,7 @@ export class RetreatTactic extends SimpleTactic {
     let bestScore = this.getStateScore(state, player.id);
     let retreatAction: RetreatAction | undefined;
     player.bench.forEach((bench, index) => {
-      if (bench.cards.length === 0) {
+      if (bench.pokemons.cards.length === 0) {
         return;
       }
 

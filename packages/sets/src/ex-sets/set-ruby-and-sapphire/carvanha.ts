@@ -57,7 +57,7 @@ export class Carvanha extends PokemonCard {
   public readonly BIG_BITE_MARKER = 'BIG_BITE_MARKER';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof AfterDamageEffect && effect.target.cards.includes(this)) {
+    if (effect instanceof AfterDamageEffect && effect.target.pokemons.cards.includes(this)) {
       const player = effect.player;
       const targetPlayer = StateUtils.findOwner(state, effect.target);
 

@@ -67,7 +67,7 @@ export class Gallade extends PokemonCard {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
-      const opponentHasBenched = opponent.bench.some(b => b.cards.length > 0);
+      const opponentHasBenched = opponent.bench.some(b => b.pokemons.cards.length > 0);
       if (!opponentHasBenched) {
         return state;
       }

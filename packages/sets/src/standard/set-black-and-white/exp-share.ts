@@ -1,13 +1,14 @@
 import {
   AttachEnergyPrompt,
+  CardList,
   CardTarget,
   Effect,
+  EnergyCard,
   EnergyType,
   GameMessage,
   GamePhase,
   KnockOutEffect,
   PlayerType,
-  PokemonCardList,
   SlotType,
   State,
   StateUtils,
@@ -50,11 +51,11 @@ export class ExpShare extends TrainerCard {
 
       let expShareCount = 0;
       const blockedTo: CardTarget[] = [];
-      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card, target) => {
-        if (cardList === effect.target) {
+      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (pokemonSlot, card, target) => {
+        if (pokemonSlot === effect.target) {
           return;
         }
-        if (cardList.tool instanceof ExpShare) {
+        if (pokemonSlot.trainers.cards.some(t => t instanceof ExpShare)) {
           expShareCount++;
         } else {
           blockedTo.push(target);
@@ -70,8 +71,8 @@ export class ExpShare extends TrainerCard {
 
       // Make copy of the active pokemon cards,
       // because they will be transfered to discard shortly
-      const activeCopy = new PokemonCardList();
-      activeCopy.cards = player.active.cards.slice();
+      const activeCopy = new CardList<EnergyCard>();
+      activeCopy.cards = player.active.energies.cards.slice();
 
       state = store.prompt(
         state,
@@ -95,7 +96,7 @@ export class ExpShare extends TrainerCard {
           active.marker.removeMarker(this.EXP_SHARE_MARKER);
           for (const transfer of transfers) {
             const target = StateUtils.getTarget(state, player, transfer.to);
-            player.discard.moveCardTo(transfer.card, target);
+            player.discard.moveCardTo(transfer.card, target.energies);
           }
         }
       );

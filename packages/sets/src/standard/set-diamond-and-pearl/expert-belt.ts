@@ -26,18 +26,18 @@ export class ExpertBelt extends TrainerCard {
     'attached to is Knocked Out, your opponent takes 1 more Prize card.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof CheckHpEffect && effect.target.cards.includes(this)) {
+    if (effect instanceof CheckHpEffect && effect.target.trainers.cards.includes(this)) {
       effect.hp += 20;
     }
 
-    if (effect instanceof DealDamageEffect && effect.source.cards.includes(this)) {
+    if (effect instanceof DealDamageEffect && effect.source.trainers.cards.includes(this)) {
       const opponent = StateUtils.getOpponent(state, effect.player);
       if (effect.damage > 0 && effect.target === opponent.active) {
         effect.damage += 20;
       }
     }
 
-    if (effect instanceof KnockOutEffect && effect.target.cards.includes(this)) {
+    if (effect instanceof KnockOutEffect && effect.target.trainers.cards.includes(this)) {
       effect.prizeCount += 1;
     }
 

@@ -57,7 +57,7 @@ export class Ninetales extends PokemonCard {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
-      const hasBench = opponent.bench.some(b => b.cards.length > 0);
+      const hasBench = opponent.bench.some(b => b.pokemons.cards.length > 0);
 
       if (hasBench === false) {
         return state;

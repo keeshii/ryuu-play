@@ -16,12 +16,12 @@ export function playPokemonReducer(store: StoreLike, state: State, effect: Effec
     const stage = effect.pokemonCard.stage;
     const isBasic = stage === Stage.BASIC;
 
-    if (isBasic && effect.target.cards.length === 0) {
+    if (isBasic && effect.target.pokemons.cards.length === 0) {
       store.log(state, GameLog.LOG_PLAYER_PLAYS_BASIC_POKEMON, {
         name: effect.player.name,
         card: effect.pokemonCard.name
       });
-      effect.player.hand.moveCardTo(effect.pokemonCard, effect.target);
+      effect.player.hand.moveCardTo(effect.pokemonCard, effect.target.pokemons);
       effect.target.pokemonPlayedTurn = state.turn;
       return state;
     }

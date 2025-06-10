@@ -11,7 +11,7 @@ import {
   GameMessage,
   PlayerType,
   PokemonCard,
-  PokemonCardList,
+  PokemonSlot,
   SlotType,
   Stage,
   State,
@@ -71,7 +71,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   // We will discard this card after prompt confirmation
   effect.preventDefault = true;
 
-  let targets: PokemonCardList[] = [];
+  let targets: PokemonSlot[] = [];
   yield store.prompt(
     state,
     new ChoosePokemonPrompt(

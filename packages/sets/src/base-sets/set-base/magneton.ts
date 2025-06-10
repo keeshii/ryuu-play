@@ -70,7 +70,7 @@ export class Magneton extends PokemonCard {
       const opponent = StateUtils.getOpponent(state, player);
 
       player.bench.forEach(benched => {
-        if (benched.cards.length > 0) {
+        if (benched.pokemons.cards.length > 0) {
           const dealDamage = new PutDamageEffect(effect, 20);
           dealDamage.target = benched;
           store.reduceEffect(state, dealDamage);
@@ -78,7 +78,7 @@ export class Magneton extends PokemonCard {
       });
 
       opponent.bench.forEach(benched => {
-        if (benched.cards.length > 0) {
+        if (benched.pokemons.cards.length > 0) {
           const dealDamage = new PutDamageEffect(effect, 20);
           dealDamage.target = benched;
           store.reduceEffect(state, dealDamage);

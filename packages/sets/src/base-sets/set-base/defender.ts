@@ -5,7 +5,7 @@ import {
   EndTurnEffect,
   GameMessage,
   PlayerType,
-  PokemonCardList,
+  PokemonSlot,
   SlotType,
   State,
   StateUtils,
@@ -46,17 +46,17 @@ export class Defender extends TrainerCard {
           { allowCancel: true }
         ),
         results => {
-          const targets: PokemonCardList[] = results || [];
+          const targets: PokemonSlot[] = results || [];
           if (targets.length === 0) {
             // Cancelled by user
             return state;
           }
-          player.hand.moveCardTo(effect.trainerCard, targets[0]);
+          player.hand.moveCardTo(effect.trainerCard, targets[0].trainers);
         }
       );
     }
 
-    if (effect instanceof DealDamageEffect && effect.target.cards.includes(this)) {
+    if (effect instanceof DealDamageEffect && effect.target.trainers.cards.includes(this)) {
       effect.damage -= 20;
       return state;
     }
@@ -64,9 +64,9 @@ export class Defender extends TrainerCard {
     if (effect instanceof EndTurnEffect) {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
-      opponent.forEachPokemon(PlayerType.TOP_PLAYER, cardList => {
-        if (cardList.cards.includes(this)) {
-          cardList.moveCardTo(this, opponent.discard);
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, pokemonSlot => {
+        if (pokemonSlot.trainers.cards.includes(this)) {
+          pokemonSlot.trainers.moveCardTo(this, opponent.discard);
         }
       });
     }

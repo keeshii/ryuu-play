@@ -15,7 +15,6 @@ import {
   PlayerType,
   PlayPokemonEffect,
   PokemonCard,
-  PokemonCardList,
   PowerEffect,
   PowerType,
   PutDamageEffect,
@@ -78,12 +77,12 @@ export class Blaziken extends PokemonCard {
 
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
       const player = effect.player;
-      const cardList = StateUtils.findCardList(state, this) as PokemonCardList;
+      const pokemonSlot = StateUtils.findPokemonSlot(state, this);
 
-      if (cardList.specialConditions.length > 0) {
+      if (!pokemonSlot || pokemonSlot.specialConditions.length > 0) {
         throw new GameError(GameMessage.CANNOT_USE_POWER);
       }
-      const hasBench = player.bench.some(b => b.cards.length > 0);
+      const hasBench = player.bench.some(b => b.pokemons.cards.length > 0);
       if (!hasBench) {
         throw new GameError(GameMessage.CANNOT_USE_POWER);
       }
@@ -121,7 +120,7 @@ export class Blaziken extends PokemonCard {
           player.marker.addMarker(this.FIRESTARTER_MARKER, this);
           for (const transfer of transfers) {
             const target = StateUtils.getTarget(state, player, transfer.to);
-            player.discard.moveCardTo(transfer.card, target);
+            player.discard.moveCardTo(transfer.card, target.energies);
           }
         }
       );
@@ -153,7 +152,7 @@ export class Blaziken extends PokemonCard {
             store.reduceEffect(state, discardEnergy);
 
             opponent.bench.forEach(benched => {
-              if (benched.cards.length > 0) {
+              if (benched.pokemons.cards.length > 0) {
                 const dealDamage = new PutDamageEffect(effect, 10);
                 dealDamage.target = benched;
                 state = store.reduceEffect(state, dealDamage);

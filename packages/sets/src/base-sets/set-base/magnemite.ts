@@ -68,7 +68,7 @@ export class Magnemite extends PokemonCard {
       const opponent = StateUtils.getOpponent(state, player);
 
       player.bench.forEach(benched => {
-        if (benched.cards.length > 0) {
+        if (benched.pokemons.cards.length > 0) {
           const dealDamage = new PutDamageEffect(effect, 10);
           dealDamage.target = benched;
           store.reduceEffect(state, dealDamage);
@@ -76,7 +76,7 @@ export class Magnemite extends PokemonCard {
       });
 
       opponent.bench.forEach(benched => {
-        if (benched.cards.length > 0) {
+        if (benched.pokemons.cards.length > 0) {
           const dealDamage = new PutDamageEffect(effect, 10);
           dealDamage.target = benched;
           store.reduceEffect(state, dealDamage);

@@ -1,7 +1,6 @@
 import {
   CardTransfer,
   Effect,
-  EnergyCard,
   EnergyType,
   GameError,
   GameMessage,
@@ -11,7 +10,6 @@ import {
   State,
   StateUtils,
   StoreLike,
-  SuperType,
   TrainerCard,
   TrainerEffect,
   TrainerType,
@@ -23,10 +21,10 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   // Player has no Basic Energy in the discard pile
   let hasBasicEnergy = false;
   let pokemonCount = 0;
-  player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card) => {
+  player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (pokemonSlot, card) => {
     pokemonCount += 1;
-    const basicEnergyAttached = cardList.cards.some(c => {
-      return c instanceof EnergyCard && c.energyType === EnergyType.BASIC;
+    const basicEnergyAttached = pokemonSlot.energies.cards.some(c => {
+      return c.energyType === EnergyType.BASIC;
     });
     hasBasicEnergy = hasBasicEnergy || basicEnergyAttached;
   });
@@ -46,7 +44,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
       GameMessage.MOVE_ENERGY_CARDS,
       PlayerType.BOTTOM_PLAYER,
       [SlotType.ACTIVE, SlotType.BENCH],
-      { superType: SuperType.ENERGY, energyType: EnergyType.BASIC },
+      { energyType: EnergyType.BASIC },
       { min: 1, max: 1, allowCancel: true }
     ),
     result => {
@@ -66,7 +64,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   transfers.forEach(transfer => {
     const source = StateUtils.getTarget(state, player, transfer.from);
     const target = StateUtils.getTarget(state, player, transfer.to);
-    source.moveCardTo(transfer.card, target);
+    source.moveCardTo(transfer.card, target.energies);
   });
 
   return state;

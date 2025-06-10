@@ -5,7 +5,6 @@ import {
   DealDamageEffect,
   DiscardCardsEffect,
   Effect,
-  EnergyCard,
   GameMessage,
   PokemonCard,
   Stage,
@@ -62,7 +61,7 @@ export class Zapdos extends PokemonCard {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
       const player = effect.player;
-      const cards = player.active.cards.filter(c => c instanceof EnergyCard);
+      const cards = player.active.energies.cards.slice();
       const discardEnergy = new DiscardCardsEffect(effect, cards);
       discardEnergy.target = player.active;
       store.reduceEffect(state, discardEnergy);

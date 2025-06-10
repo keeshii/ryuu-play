@@ -79,7 +79,7 @@ export class Delcatty2 extends PokemonCard {
 
           for (const transfer of transfers) {
             const target = StateUtils.getTarget(state, player, transfer.to);
-            player.discard.moveCardTo(transfer.card, target);
+            player.discard.moveCardTo(transfer.card, target.energies);
           }
         }
       );

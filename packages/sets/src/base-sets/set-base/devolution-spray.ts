@@ -1,5 +1,4 @@
 import {
-  Card,
   CardTarget,
   ChooseCardsPrompt,
   ChoosePokemonPrompt,
@@ -7,7 +6,8 @@ import {
   GameError,
   GameMessage,
   PlayerType,
-  PokemonCardList,
+  PokemonCard,
+  PokemonSlot,
   SlotType,
   State,
   StoreLike,
@@ -37,7 +37,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   // Do not discard the card yet
   effect.preventDefault = true;
 
-  let targets: PokemonCardList[] = [];
+  let targets: PokemonSlot[] = [];
   yield store.prompt(
     state,
     new ChoosePokemonPrompt(
@@ -58,27 +58,27 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     return state;
   }
 
-  const cardList = targets[0];
-  const evolutionCards: Card[] = cardList.getPokemons().slice(1);
+  const pokemonSlot = targets[0];
+  const evolutionCards: PokemonCard[] = pokemonSlot.getPokemons().slice(1);
   const blocked2: number[] = [];
-  cardList.cards.forEach((card, index) => {
+  pokemonSlot.pokemons.cards.forEach((card, index) => {
     if (!evolutionCards.includes(card)) {
       blocked2.push(index);
     }
   });
 
-  let cards: Card[] = [];
+  let cards: PokemonCard[] = [];
   yield store.prompt(
     state,
     new ChooseCardsPrompt(
       player.id,
       GameMessage.CHOOSE_CARD_TO_DISCARD,
-      cardList,
+      pokemonSlot.pokemons,
       { superType: SuperType.POKEMON },
       { min: 1, max: 1, allowCancel: true, blocked: blocked2 }
     ),
     selected => {
-      cards = selected || [];
+      cards = (selected || []) as PokemonCard[];
       next();
     }
   );
@@ -95,8 +95,8 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   player.hand.moveCardTo(effect.trainerCard, player.discard);
 
   // Discard Evolution cards
-  cardList.moveCardsTo(cards, player.discard);
-  cardList.clearEffects();
+  pokemonSlot.pokemons.moveCardsTo(cards, player.discard);
+  pokemonSlot.clearEffects();
 
   return state;
 }

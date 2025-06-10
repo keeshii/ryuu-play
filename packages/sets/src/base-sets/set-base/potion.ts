@@ -6,7 +6,7 @@ import {
   GameMessage,
   HealEffect,
   PlayerType,
-  PokemonCardList,
+  PokemonSlot,
   SlotType,
   State,
   StoreLike,
@@ -35,7 +35,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   // Do not discard the card yet
   effect.preventDefault = true;
 
-  let targets: PokemonCardList[] = [];
+  let targets: PokemonSlot[] = [];
   yield store.prompt(
     state,
     new ChoosePokemonPrompt(

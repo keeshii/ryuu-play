@@ -1,21 +1,20 @@
 import { Action } from '../actions/action';
 import { AttachEnergyEffect, PlayPokemonEffect, PlayStadiumEffect,
   PlaySupporterEffect, AttachPokemonToolEffect, PlayItemEffect } from '../effects/play-card-effects';
-import { CardList } from '../state/card-list';
 import { EnergyCard } from '../card/energy-card';
 import { GameError } from '../../game-error';
 import { GameMessage } from '../../game-message';
 import { PlayCardAction, PlayerType, SlotType, CardTarget } from '../actions/play-card-action';
 import { PokemonCard } from '../card/pokemon-card';
-import { PokemonCardList } from '../state/pokemon-card-list';
 import { State, GamePhase } from '../state/state';
 import { StoreLike } from '../store-like';
 import { TrainerCard } from '../card/trainer-card';
 import { TrainerType } from '../card/card-types';
 import { Effect } from '../effects/effect';
 import { StateUtils } from '../state-utils';
+import { PokemonSlot } from '../state/pokemon-slot';
 
-function findCardList(state: State, target: CardTarget): CardList | undefined {
+function findPokemonSlot(state: State, target: CardTarget): PokemonSlot | undefined {
   const player = target.player === PlayerType.BOTTOM_PLAYER
     ? state.players[state.activePlayer]
     : state.players[state.activePlayer ? 0 : 1];
@@ -45,8 +44,8 @@ export function playCardReducer(store: StoreLike, state: State, action: Action):
       }
 
       if (handCard instanceof EnergyCard) {
-        const target = findCardList(state, action.target);
-        if (!(target instanceof PokemonCardList) || target.cards.length === 0) {
+        const target = findPokemonSlot(state, action.target);
+        if (!(target instanceof PokemonSlot) || target.pokemons.cards.length === 0) {
           throw new GameError(GameMessage.INVALID_TARGET);
         }
         if (player.energyPlayedTurn === state.turn) {
@@ -59,8 +58,8 @@ export function playCardReducer(store: StoreLike, state: State, action: Action):
       }
 
       if (handCard instanceof PokemonCard) {
-        const target = findCardList(state, action.target);
-        if (!(target instanceof PokemonCardList)) {
+        const target = findPokemonSlot(state, action.target);
+        if (!(target instanceof PokemonSlot)) {
           throw new GameError(GameMessage.INVALID_TARGET);
         }
 
@@ -69,7 +68,7 @@ export function playCardReducer(store: StoreLike, state: State, action: Action):
       }
 
       if (handCard instanceof TrainerCard) {
-        const target = findCardList(state, action.target);
+        const target = findPokemonSlot(state, action.target);
         let effect: Effect;
         switch (handCard.trainerType) {
           case TrainerType.SUPPORTER:
@@ -94,7 +93,7 @@ export function playCardReducer(store: StoreLike, state: State, action: Action):
             break;
           }
           case TrainerType.TOOL:
-            if (!(target instanceof PokemonCardList)) {
+            if (!(target instanceof PokemonSlot)) {
               throw new GameError(GameMessage.INVALID_TARGET);
             }
             effect = new AttachPokemonToolEffect(player, handCard, target);

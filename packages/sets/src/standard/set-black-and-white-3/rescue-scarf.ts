@@ -27,7 +27,7 @@ export class RescueScarf extends TrainerCard {
   public readonly RESCUE_SCARF_MAREKER = 'RESCUE_SCARF_MAREKER';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof KnockOutEffect && effect.target.cards.includes(this)) {
+    if (effect instanceof KnockOutEffect && effect.target.trainers.cards.includes(this)) {
       const player = effect.player;
 
       // Do not activate between turns, or when it's not opponents turn.

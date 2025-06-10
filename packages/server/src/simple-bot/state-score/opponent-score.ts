@@ -1,4 +1,4 @@
-import { State, StateUtils, EnergyCard, PlayerType } from '@ptcg/common';
+import { State, StateUtils, PlayerType } from '@ptcg/common';
 import { SimpleScore } from './score';
 
 
@@ -18,21 +18,25 @@ export class OpponentScore extends SimpleScore {
     score += scores.hand * opponent.hand.cards.length;
 
     // bonus if opponent's bench is empty
-    const isBenchEmpty = opponent.bench.every(b => b.cards.length === 0);
+    const isBenchEmpty = opponent.bench.every(b => b.pokemons.cards.length === 0);
     if (isBenchEmpty) {
       score += scores.emptyBench;
     }
 
     // Opponent's active has no attached energy
-    const noActiveEnergy = opponent.active.cards.every(c => !(c instanceof EnergyCard));
+    const noActiveEnergy = opponent.active.energies.cards.length === 0;
     if (noActiveEnergy) {
       score += scores.noActiveEnergy;
     }
 
-    opponent.forEachPokemon(PlayerType.TOP_PLAYER, cardList => {
-      const energies = cardList.cards.filter(c => c instanceof EnergyCard);
+    opponent.forEachPokemon(PlayerType.TOP_PLAYER, pokemonSlot => {
+      const energies = pokemonSlot.energies.cards;
       score += scores.energy * energies.length;
-      score += scores.board * cardList.cards.length;
+      score += scores.board * (
+        pokemonSlot.pokemons.cards.length
+        + pokemonSlot.energies.cards.length
+        + pokemonSlot.trainers.cards.length
+      );
     });
 
     return score;

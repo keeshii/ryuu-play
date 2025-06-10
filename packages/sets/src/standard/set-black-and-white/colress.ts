@@ -35,8 +35,8 @@ export class Colress extends TrainerCard {
       }
 
       let benchCount = 0;
-      player.bench.forEach(b => (benchCount += b.cards.length > 0 ? 1 : 0));
-      opponent.bench.forEach(b => (benchCount += b.cards.length > 0 ? 1 : 0));
+      player.bench.forEach(b => (benchCount += b.pokemons.cards.length > 0 ? 1 : 0));
+      opponent.bench.forEach(b => (benchCount += b.pokemons.cards.length > 0 ? 1 : 0));
 
       player.hand.moveCardsTo(cards, player.deck);
 

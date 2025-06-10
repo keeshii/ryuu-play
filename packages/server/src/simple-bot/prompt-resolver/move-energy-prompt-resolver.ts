@@ -1,24 +1,24 @@
 import { Player, State, Action, ResolvePromptAction, Prompt, StateUtils,
-  PlayerType, CardList, Card, CardTarget, MoveEnergyPrompt, CardTransfer } from '@ptcg/common';
+  PlayerType, CardList, Card, CardTarget, MoveEnergyPrompt, CardTransfer, EnergyCard } from '@ptcg/common';
 import { PromptResolver } from './prompt-resolver';
 import { deepClone } from '@ptcg/common';
 
 interface TransferItem {
   fromItem: FromItem;
-  toCardList: CardList;
+  toCardList: CardList<EnergyCard>;
   to: CardTarget;
   score: number;
 }
 
 interface TargetList {
-  cardList: CardList;
+  cardList: CardList<EnergyCard>;
   target: CardTarget;
 }
 
 interface FromItem {
-  fromCardList: CardList;
+  fromCardList: CardList<EnergyCard>;
   from: CardTarget;
-  card: Card;
+  card: EnergyCard;
   cardIndex: number;
 }
 
@@ -99,8 +99,8 @@ export class MoveEnergyPromptResolver extends PromptResolver {
     }
 
     return items.map(item => {
-      const cardList = StateUtils.getTarget(state, player, item.fromItem.from);
-      const card = cardList.cards[item.fromItem.cardIndex];
+      const pokemonSlot = StateUtils.getTarget(state, player, item.fromItem.from);
+      const card = pokemonSlot.energies.cards[item.fromItem.cardIndex];
       return {
         from: item.fromItem.from,
         to: item.to,
@@ -143,7 +143,7 @@ export class MoveEnergyPromptResolver extends PromptResolver {
           && b.source.index === fromTarget.target.index;
       });
       const blocked = blockedMap ? blockedMap.blocked : [];
-      const cardList = new CardList();
+      const cardList = new CardList<EnergyCard>();
       fromTarget.cardList.cards.forEach((card, index) => {
         if (!blocked.includes(index)) {
           cardList.cards.push(card);
@@ -172,21 +172,21 @@ export class MoveEnergyPromptResolver extends PromptResolver {
     const hasPlayer = [PlayerType.BOTTOM_PLAYER, PlayerType.ANY].includes(prompt.playerType);
     let results: TargetList[] = [];
     if (hasOpponent) {
-      opponent.forEachPokemon(PlayerType.TOP_PLAYER, (cardList, card, target) => {
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, (pokemonSlot, card, target) => {
         if (prompt.slots.includes(target.slot)) {
-          results.push({ target, cardList });
+          results.push({ target, cardList: pokemonSlot.energies });
         }
       });
     }
     if (hasPlayer) {
-      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card, target) => {
+      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (pokemonSlot, card, target) => {
         if (prompt.slots.includes(target.slot)) {
-          results.push({ target, cardList });
+          results.push({ target, cardList: pokemonSlot.energies });
         }
       });
     }
 
-    const blockedList: CardList[] = blocked.map(b => StateUtils.getTarget(state, player, b));
+    const blockedList: CardList<EnergyCard>[] = blocked.map(b => StateUtils.getTarget(state, player, b).energies);
     results = results.filter(i => !blockedList.includes(i.cardList));
     return results;
   }

@@ -75,7 +75,7 @@ export class MewtwoEx extends PokemonCard {
           transfers = transfers || [];
           for (const transfer of transfers) {
             const target = StateUtils.getTarget(state, player, transfer.to);
-            player.discard.moveCardTo(transfer.card, target);
+            player.discard.moveCardTo(transfer.card, target.energies);
           }
         }
       );

@@ -9,7 +9,7 @@ import {
   GameError,
   GameMessage,
   PokemonCard,
-  PokemonCardList,
+  PokemonSlot,
   PowerEffect,
   PowerType,
   ShowCardsPrompt,
@@ -30,7 +30,7 @@ function* useBabyEvolution(
 ): IterableIterator<State> {
   const player = effect.player;
   const cardList = StateUtils.findCardList(state, self);
-  if (!(cardList instanceof PokemonCardList)) {
+  if (!(cardList instanceof PokemonSlot)) {
     throw new GameError(GameMessage.CANNOT_USE_POWER);
   }
   const hasPikachu = player.hand.cards.some(c => c.name === 'Pikachu');

@@ -4,7 +4,7 @@ import {
   GameError,
   GameMessage,
   PokemonCard,
-  PokemonCardList,
+  PokemonSlot,
   Stage,
   State,
   StoreLike,
@@ -16,7 +16,7 @@ import {
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
-  const slots: PokemonCardList[] = player.bench.filter(b => b.cards.length === 0);
+  const slots: PokemonSlot[] = player.bench.filter(b => b.pokemons.cards.length === 0);
 
   // Player has no empty bench slot
   if (slots.length === 0) {
@@ -45,7 +45,8 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
         // Discard trainer only when user selected a Pokemon
         player.hand.moveCardTo(effect.trainerCard, player.discard);
         // Recover discarded Pokemon
-        player.discard.moveCardsTo(selected, slots[0]);
+        player.discard.moveCardsTo(selected, slots[0].pokemons);
+        slots[0].pokemonPlayedTurn = state.turn;
       }
     }
   );

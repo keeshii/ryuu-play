@@ -6,8 +6,8 @@ export class EvolveTactic extends SimpleTactic {
   public useTactic(state: State, player: Player): Action | undefined {
     const pokemons: {card: PokemonCard, target: CardTarget}[] = [];
 
-    player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card, target) => {
-      if (cardList.pokemonPlayedTurn !== state.turn) {
+    player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (pokemonSlot, card, target) => {
+      if (pokemonSlot.pokemonPlayedTurn !== state.turn) {
         pokemons.push({ card, target });
       }
     });

@@ -5,10 +5,10 @@
       [dropTarget]="item.target"
       ptcgDropHighlight="outside"
       [ptcgDropHighlightVisible]="item.pokemonItem.selected || (item.highlight$ | async)"
-      [cardList]="item.pokemonItem.cardList"
+      [value]="item.pokemonItem.pokemonSlot"
       (cardClick)="onCardClick(item.pokemonItem)">
       <button mat-mini-fab color="accent" class="ptcg-card-button"
-        *ngIf="item.pokemonItem.cardList.cards.length > 0"
+        *ngIf="item.pokemonItem.pokemonSlot.pokemons.cards.length > 0"
         (click)="onBadgeClick($event, item.pokemonItem)">
         <mat-icon>search</mat-icon>
       </button>

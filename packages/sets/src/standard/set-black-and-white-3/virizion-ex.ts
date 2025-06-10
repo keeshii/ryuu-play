@@ -34,7 +34,7 @@ function* useEmeraldSlash(
     return state;
   }
 
-  const hasBenched = player.bench.some(b => b.cards.length > 0);
+  const hasBenched = player.bench.some(b => b.pokemons.cards.length > 0);
   if (!hasBenched) {
     return state;
   }
@@ -70,7 +70,7 @@ function* useEmeraldSlash(
           return;
         }
         const target = targets[0];
-        player.deck.moveCardsTo(cards, target);
+        player.deck.moveCardsTo(cards, target.energies);
         next();
       }
     );

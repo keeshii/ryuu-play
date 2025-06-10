@@ -20,7 +20,6 @@ import {
   State,
   StateUtils,
   StoreLike,
-  SuperType,
   UseAttackEffect,
 } from '@ptcg/common';
 
@@ -106,7 +105,7 @@ export class MewEx extends PokemonCard {
           GameMessage.MOVE_ENERGY_CARDS,
           PlayerType.BOTTOM_PLAYER,
           [SlotType.ACTIVE, SlotType.BENCH],
-          { superType: SuperType.ENERGY },
+          { },
           { allowCancel: true }
         ),
         transfers => {
@@ -117,7 +116,7 @@ export class MewEx extends PokemonCard {
           for (const transfer of transfers) {
             const source = StateUtils.getTarget(state, player, transfer.from);
             const target = StateUtils.getTarget(state, player, transfer.to);
-            source.moveCardTo(transfer.card, target);
+            source.moveCardTo(transfer.card, target.energies);
           }
         }
       );
@@ -142,10 +141,10 @@ export class MewEx extends PokemonCard {
 
     const pokemonCards: PokemonCard[] = [];
     const blocked: { index: number; attack: string }[] = [];
-    opponent.forEachPokemon(PlayerType.TOP_PLAYER, (cardList, card) => {
+    opponent.forEachPokemon(PlayerType.TOP_PLAYER, (pokemonSlot, card) => {
       this.checkAttack(state, store, player, card, energyMap, pokemonCards, blocked);
     });
-    player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card) => {
+    player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (pokemonSlot, card) => {
       this.checkAttack(state, store, player, card, energyMap, pokemonCards, blocked);
     });
 

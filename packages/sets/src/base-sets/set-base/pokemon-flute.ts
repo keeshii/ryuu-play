@@ -5,7 +5,7 @@ import {
   GameError,
   GameMessage,
   PokemonCard,
-  PokemonCardList,
+  PokemonSlot,
   Stage,
   State,
   StateUtils,
@@ -33,7 +33,7 @@ export class PokemonFlute extends TrainerCard {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
-      const slots: PokemonCardList[] = opponent.bench.filter(b => b.cards.length === 0);
+      const slots: PokemonSlot[] = opponent.bench.filter(b => b.pokemons.cards.length === 0);
 
       if (slots.length === 0) {
         throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
@@ -57,7 +57,7 @@ export class PokemonFlute extends TrainerCard {
         cards = selected || [];
         if (cards.length > 0) {
           cards.forEach((card, index) => {
-            opponent.discard.moveCardTo(card, slots[index]);
+            opponent.discard.moveCardTo(card, slots[index].pokemons);
             slots[index].pokemonPlayedTurn = state.turn;
           });
 

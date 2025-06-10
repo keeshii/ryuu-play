@@ -47,7 +47,7 @@ export class MysteryEnergy extends EnergyCard {
     }
 
     // Provide energy when attached to Psychic Pokemon
-    if (effect instanceof CheckProvidedEnergyEffect && effect.source.cards.includes(this)) {
+    if (effect instanceof CheckProvidedEnergyEffect && effect.source.energies.cards.includes(this)) {
       const checkPokemonType = new CheckPokemonTypeEffect(effect.source);
       store.reduceEffect(state, checkPokemonType);
       if (checkPokemonType.cardTypes.includes(CardType.PSYCHIC)) {
@@ -59,14 +59,14 @@ export class MysteryEnergy extends EnergyCard {
     // Discard card when not attached to Psychic Pokemon
     if (effect instanceof CheckTableStateEffect) {
       state.players.forEach(player => {
-        player.forEachPokemon(PlayerType.BOTTOM_PLAYER, cardList => {
-          if (!cardList.cards.includes(this)) {
+        player.forEachPokemon(PlayerType.BOTTOM_PLAYER, pokemonSlot => {
+          if (!pokemonSlot.energies.cards.includes(this)) {
             return;
           }
-          const checkPokemonType = new CheckPokemonTypeEffect(cardList);
+          const checkPokemonType = new CheckPokemonTypeEffect(pokemonSlot);
           store.reduceEffect(state, checkPokemonType);
           if (!checkPokemonType.cardTypes.includes(CardType.PSYCHIC)) {
-            cardList.moveCardTo(this, player.discard);
+            pokemonSlot.moveCardTo(this, player.discard);
           }
         });
       });
@@ -75,7 +75,7 @@ export class MysteryEnergy extends EnergyCard {
 
     if (effect instanceof CheckRetreatCostEffect) {
       const player = effect.player;
-      if (player.active.cards.includes(this)) {
+      if (player.active.energies.cards.includes(this)) {
         for (let i = 0; i < 2; i++) {
           const index = effect.cost.indexOf(CardType.COLORLESS);
           if (index !== -1) {

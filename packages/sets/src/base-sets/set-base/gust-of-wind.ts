@@ -29,7 +29,7 @@ export class GustOfWind extends TrainerCard {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
 
-      const hasBench = opponent.bench.some(b => b.cards.length > 0);
+      const hasBench = opponent.bench.some(b => b.pokemons.cards.length > 0);
       if (hasBench === false) {
         throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
       }

@@ -48,7 +48,7 @@ export class Zubat extends PokemonCard {
   public fullName: string = 'Zubat PLS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof CheckRetreatCostEffect && effect.player.active.cards.includes(this)) {
+    if (effect instanceof CheckRetreatCostEffect && effect.player.active.pokemons.cards.includes(this)) {
       const player = effect.player;
       const pokemonCard = player.active.getPokemonCard();
 

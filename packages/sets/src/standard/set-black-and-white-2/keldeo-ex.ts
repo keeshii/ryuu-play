@@ -10,7 +10,7 @@ import {
   PlayerType,
   PlayPokemonEffect,
   PokemonCard,
-  PokemonCardList,
+  PokemonSlot,
   PowerEffect,
   PowerType,
   SlotType,
@@ -69,7 +69,7 @@ export class KeldeoEx extends PokemonCard {
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
       const player = effect.player;
 
-      let bench: PokemonCardList | undefined;
+      let bench: PokemonSlot | undefined;
       player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card, target) => {
         if (card === this && target.slot === SlotType.BENCH) {
           bench = cardList;

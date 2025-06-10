@@ -4,12 +4,12 @@ import {
   CardType,
   CheckProvidedEnergyEffect,
   Effect,
+  EnergyCard,
   GameError,
   GameMessage,
   MoveEnergyPrompt,
   PlayerType,
   PokemonCard,
-  PokemonCardList,
   PowerEffect,
   PowerType,
   SlotType,
@@ -23,17 +23,18 @@ import {
 
 function* useEnergyTrans(next: Function, store: StoreLike, state: State, self: Venusaur, effect: PowerEffect): IterableIterator<State> {
   const player = effect.player;
-  const cardList = StateUtils.findCardList(state, self) as PokemonCardList;
+  const pokemonSlot = StateUtils.findPokemonSlot(state, self);
 
-  if (cardList.specialConditions.includes(SpecialCondition.ASLEEP)
-    || cardList.specialConditions.includes(SpecialCondition.CONFUSED)
-    || cardList.specialConditions.includes(SpecialCondition.PARALYZED)) {
+  if (pokemonSlot === undefined
+    || pokemonSlot.specialConditions.includes(SpecialCondition.ASLEEP)
+    || pokemonSlot.specialConditions.includes(SpecialCondition.CONFUSED)
+    || pokemonSlot.specialConditions.includes(SpecialCondition.PARALYZED)) {
     throw new GameError(GameMessage.CANNOT_USE_POWER);
   }
 
   const blockedMap: { source: CardTarget; blocked: number[] }[] = [];
-  player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card, target) => {
-    const checkProvidedEnergy = new CheckProvidedEnergyEffect(player, cardList);
+  player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (slot, card, target) => {
+    const checkProvidedEnergy = new CheckProvidedEnergyEffect(player, slot);
     store.reduceEffect(state, checkProvidedEnergy);
     const blockedCards: Card[] = [];
 
@@ -45,7 +46,7 @@ function* useEnergyTrans(next: Function, store: StoreLike, state: State, self: V
 
     const blocked: number[] = [];
     blockedCards.forEach(bc => {
-      const index = cardList.cards.indexOf(bc);
+      const index = slot.energies.cards.indexOf(bc as EnergyCard);
       if (index !== -1 && !blocked.includes(index)) {
         blocked.push(index);
       }
@@ -74,7 +75,7 @@ function* useEnergyTrans(next: Function, store: StoreLike, state: State, self: V
       for (const transfer of transfers) {
         const source = StateUtils.getTarget(state, player, transfer.from);
         const target = StateUtils.getTarget(state, player, transfer.to);
-        source.moveCardTo(transfer.card, target);
+        source.moveCardTo(transfer.card, target.energies);
       }
     }
   );

@@ -5,7 +5,7 @@ import {
   GameMessage,
   HealEffect,
   PlayerType,
-  PokemonCardList,
+  PokemonSlot,
   State,
   StateUtils,
   StoreLike,
@@ -31,7 +31,7 @@ export class RoughSeas extends TrainerCard {
     if (effect instanceof UseStadiumEffect && StateUtils.getStadiumCard(state) === this) {
       const player = effect.player;
 
-      const targets: PokemonCardList[] = [];
+      const targets: PokemonSlot[] = [];
       player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card, target) => {
         if ([CardType.WATER, CardType.LIGHTNING].includes(card.cardType) && cardList.damage > 0) {
           targets.push(cardList);

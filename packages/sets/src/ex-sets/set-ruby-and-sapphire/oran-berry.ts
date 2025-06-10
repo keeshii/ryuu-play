@@ -18,19 +18,17 @@ export class OranBerry extends TrainerCard {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
 
-      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, cardList => {
-        if (cardList.tool === this && cardList.damage >= 20) {
-          cardList.damage -= 20;
-          cardList.moveCardTo(this, player.discard);
-          cardList.tool = undefined;
+      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, pokemonSlot => {
+        if (pokemonSlot.trainers.cards.includes(this) && pokemonSlot.damage >= 20) {
+          pokemonSlot.damage -= 20;
+          pokemonSlot.moveCardTo(this, player.discard);
         }
       });
 
-      opponent.forEachPokemon(PlayerType.TOP_PLAYER, cardList => {
-        if (cardList.tool === this && cardList.damage >= 20) {
-          cardList.damage -= 20;
-          cardList.moveCardTo(this, opponent.discard);
-          cardList.tool = undefined;
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, pokemonSlot => {
+        if (pokemonSlot.trainers.cards.includes(this) && pokemonSlot.damage >= 20) {
+          pokemonSlot.damage -= 20;
+          pokemonSlot.moveCardTo(this, opponent.discard);
         }
       });
     }

@@ -42,7 +42,7 @@ function* useAscension(next: Function, store: StoreLike, state: State, effect: A
 
   if (cards.length > 0) {
     // Evolve Pokemon
-    player.deck.moveCardsTo(cards, player.active);
+    player.deck.moveCardsTo(cards, player.active.pokemons);
     player.active.clearEffects();
     player.active.pokemonPlayedTurn = state.turn;
   }

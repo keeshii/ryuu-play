@@ -53,7 +53,7 @@ export class Donphan extends PokemonCard {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
 
-      const hasBenched = player.bench.some(b => b.cards.length > 0);
+      const hasBenched = player.bench.some(b => b.pokemons.cards.length > 0);
       if (!hasBenched) {
         return state;
       }

@@ -65,7 +65,7 @@ export class SeismitoadEx extends PokemonCard {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
       const player = effect.player;
-      const benched = player.bench.reduce((left, b) => left + (b.cards.length ? 1 : 0), 0);
+      const benched = player.bench.reduce((left, b) => left + (b.pokemons.cards.length ? 1 : 0), 0);
 
       if (benched === 0) {
         return state;

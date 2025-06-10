@@ -57,7 +57,7 @@ export class Seaking extends PokemonCard {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
 
-      const hasBenched = opponent.bench.some(b => b.cards.length > 0);
+      const hasBenched = opponent.bench.some(b => b.pokemons.cards.length > 0);
       if (!hasBenched) {
         return state;
       }

@@ -52,7 +52,7 @@ export class Kyurem extends PokemonCard {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
       const opponent = effect.opponent;
-      const benched = opponent.bench.filter(b => b.cards.length > 0);
+      const benched = opponent.bench.filter(b => b.pokemons.cards.length > 0);
 
       const activeDamageEffect = new DealDamageEffect(effect, 30);
       store.reduceEffect(state, activeDamageEffect);

@@ -17,7 +17,7 @@ export class PrismEnergy extends EnergyCard {
     'only 1 Energy at a time.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof CheckProvidedEnergyEffect && effect.source.cards.includes(this) && effect.source.isBasic()) {
+    if (effect instanceof CheckProvidedEnergyEffect && effect.source.energies.cards.includes(this) && effect.source.isBasic()) {
       effect.energyMap.push({ card: this, provides: [CardType.ANY] });
     }
     return state;

@@ -1,7 +1,7 @@
-import { State, PlayerType, SlotType, PokemonCardList, CardTarget, Card } from '@ptcg/common';
+import { State, PlayerType, SlotType, PokemonSlot, CardTarget, Card } from '@ptcg/common';
 
 export interface PokemonItem {
-  cardList: PokemonCardList;
+  pokemonSlot: PokemonSlot;
   selected: boolean;
   target: CardTarget;
 }
@@ -30,14 +30,22 @@ export class PokemonData {
     this.rows = this.buildPokemonRows(state, playerId, playerType, slots);
   }
 
-  private buildRow(cardLists: PokemonCardList[], player: PlayerType, slot: SlotType): PokemonRow {
+  private buildRow(pokemonSlots: PokemonSlot[], player: PlayerType, slot: SlotType): PokemonRow {
     const target = { player, slot, index: 0 };
-    const items = cardLists.map((cardList, index) => (
-      {cardList, selected: false, target: {...target, index}}
+    const items = pokemonSlots.map((pokemonSlot, index) => (
+      {pokemonSlot, selected: false, target: {...target, index}}
     ));
-    items.forEach(item => item.cardList.cards.forEach((card, index) => {
-      this.cardIndexes.push({card, index});
-    }));
+    items.forEach(item => {
+      item.pokemonSlot.pokemons.cards.forEach((card, index) => {
+        this.cardIndexes.push({card, index});
+      });
+      item.pokemonSlot.energies.cards.forEach((card, index) => {
+        this.cardIndexes.push({card, index});
+      });
+      item.pokemonSlot.trainers.cards.forEach((card, index) => {
+        this.cardIndexes.push({card, index});
+      });
+    });
     return { items, playerType: player };
   }
 

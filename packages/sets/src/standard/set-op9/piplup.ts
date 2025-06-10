@@ -91,7 +91,7 @@ export class Piplup extends PokemonCard {
 
       if (isBuizelInPlay) {
         opponent.bench.forEach(benched => {
-          if (benched.cards.length > 0) {
+          if (benched.pokemons.cards.length > 0) {
             const dealDamage = new PutDamageEffect(effect, 10);
             dealDamage.target = benched;
             return store.reduceEffect(state, dealDamage);

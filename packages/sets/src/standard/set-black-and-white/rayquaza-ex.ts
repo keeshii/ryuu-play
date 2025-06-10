@@ -61,7 +61,7 @@ export class RayquazaEx extends PokemonCard {
       const temp = new CardList();
       player.deck.moveTo(temp, 3);
       const energyCards = temp.cards.filter(c => c instanceof EnergyCard);
-      temp.moveCardsTo(energyCards, player.active);
+      temp.moveCardsTo(energyCards, player.active.energies);
       temp.moveTo(player.discard);
       return state;
     }

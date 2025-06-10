@@ -11,7 +11,7 @@ import {
   GameError,
   GameMessage,
   PokemonCard,
-  PokemonCardList,
+  PokemonSlot,
   PowerEffect,
   PowerType,
   Stage,
@@ -34,7 +34,7 @@ function* useRebirth(
     throw new GameError(GameMessage.CANNOT_USE_POWER);
   }
 
-  const slots: PokemonCardList[] = player.bench.filter(b => b.cards.length === 0);
+  const slots: PokemonSlot[] = player.bench.filter(b => b.pokemons.cards.length === 0);
   if (slots.length === 0) {
     throw new GameError(GameMessage.CANNOT_USE_POWER);
   }
@@ -56,7 +56,7 @@ function* useRebirth(
     return state;
   }
 
-  player.discard.moveCardTo(self, slots[0]);
+  player.discard.moveCardTo(self, slots[0].pokemons);
 
   let basicEnergies = 0;
   const typeMap: { [key: number]: boolean } = {};
@@ -86,7 +86,7 @@ function* useRebirth(
     ),
     selected => {
       const cards = selected || [];
-      player.discard.moveCardsTo(cards, slots[0]);
+      player.discard.moveCardsTo(cards, slots[0].energies);
     }
   );
 }
@@ -142,8 +142,8 @@ export class HoOhEx extends PokemonCard {
 
       let basicEnergies = 0;
       const typeMap: { [key: number]: boolean } = {};
-      player.active.cards.forEach(c => {
-        if (c instanceof EnergyCard && c.energyType === EnergyType.BASIC) {
+      player.active.energies.cards.forEach(c => {
+        if (c.energyType === EnergyType.BASIC) {
           const cardType = c.provides[0];
           if (typeMap[cardType] === undefined) {
             basicEnergies += 1;

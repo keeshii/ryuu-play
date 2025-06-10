@@ -45,7 +45,7 @@ export * from './prompts/shuffle-prompt';
 export * from './state/card-list';
 export * from './state/card-marker';
 export * from './state/player';
-export * from './state/pokemon-card-list';
+export * from './state/pokemon-slot';
 export * from './state/rules';
 export * from './state/state-log';
 export * from './state/state';

@@ -1,10 +1,10 @@
-import { Player, State, Action, ResolvePromptAction, Prompt, PokemonCardList,
+import { Player, State, Action, ResolvePromptAction, Prompt, PokemonSlot,
   PlayerType, SlotType, StateUtils, GameMessage } from '@ptcg/common';
 import { PromptResolver } from './prompt-resolver';
 import { ChoosePokemonPrompt } from '@ptcg/common';
 
 interface PlayerCardList {
-  cardList: PokemonCardList;
+  pokemonSlot: PokemonSlot;
   player: PlayerType;
 }
 
@@ -18,14 +18,14 @@ export class ChoosePokemonPromptResolver extends PromptResolver {
     }
   }
 
-  private getPromptResult(prompt: ChoosePokemonPrompt, pokemons: PlayerCardList[]): PokemonCardList[] | null {
+  private getPromptResult(prompt: ChoosePokemonPrompt, pokemons: PlayerCardList[]): PokemonSlot[] | null {
     const items = pokemons.map(item => {
       const score = this.getPokemonScoreForPrompt(prompt, item);
-      return { cardList: item.cardList, score };
+      return { pokemonSlot: item.pokemonSlot, score };
     });
     items.sort((a, b) => b.score - a.score);
 
-    const result: PokemonCardList[] = [];
+    const result: PokemonSlot[] = [];
     const min = prompt.options.min;
     const max = prompt.options.max;
     let score = 0;
@@ -35,7 +35,7 @@ export class ChoosePokemonPromptResolver extends PromptResolver {
       if (item === undefined) {
         break;
       }
-      result.push(item.cardList);
+      result.push(item.pokemonSlot);
       score += item.score;
 
       if (result.length >= max) {
@@ -55,7 +55,7 @@ export class ChoosePokemonPromptResolver extends PromptResolver {
   }
 
   private getPokemonScoreForPrompt(prompt: ChoosePokemonPrompt, item: PlayerCardList): number {
-    let score = this.stateScore.getPokemonScore(item.cardList);
+    let score = this.stateScore.getPokemonScore(item.pokemonSlot);
 
     if (item.player === PlayerType.TOP_PLAYER) {
       score = -score;
@@ -89,24 +89,24 @@ export class ChoosePokemonPromptResolver extends PromptResolver {
 
     let result: PlayerCardList[] = [];
     if (hasOpponent && hasBench) {
-      opponent.bench.filter(b => b.cards.length).forEach(b => {
-        result.push({ cardList: b, player: PlayerType.TOP_PLAYER });
+      opponent.bench.filter(b => b.pokemons.cards.length).forEach(b => {
+        result.push({ pokemonSlot: b, player: PlayerType.TOP_PLAYER });
       });
     }
     if (hasOpponent && hasActive) {
-      result.push({ cardList: opponent.active, player: PlayerType.TOP_PLAYER });
+      result.push({ pokemonSlot: opponent.active, player: PlayerType.TOP_PLAYER });
     }
     if (hasPlayer && hasActive) {
-      result.push({ cardList: player.active, player: PlayerType.BOTTOM_PLAYER });
+      result.push({ pokemonSlot: player.active, player: PlayerType.BOTTOM_PLAYER });
     }
     if (hasPlayer && hasBench) {
-      player.bench.filter(b => b.cards.length).forEach(b => {
-        result.push({ cardList: b, player: PlayerType.BOTTOM_PLAYER });
+      player.bench.filter(b => b.pokemons.cards.length).forEach(b => {
+        result.push({ pokemonSlot: b, player: PlayerType.BOTTOM_PLAYER });
       });
     }
 
     const blocked = prompt.options.blocked.map(b => StateUtils.getTarget(state, player, b));
-    result = result.filter(r => !blocked.includes(r.cardList));
+    result = result.filter(r => !blocked.includes(r.pokemonSlot));
     return result;
   }
 

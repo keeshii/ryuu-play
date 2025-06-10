@@ -60,7 +60,7 @@ export class Dustox extends PokemonCard {
   public fullName: string = 'Dustox RS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof AbstractAttackEffect && effect.target.cards.includes(this)) {
+    if (effect instanceof AbstractAttackEffect && effect.target.pokemons.cards.includes(this)) {
       const player = effect.player;
 
       // pokemon is evolved

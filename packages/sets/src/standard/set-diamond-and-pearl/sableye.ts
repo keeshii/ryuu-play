@@ -81,7 +81,7 @@ export class Sableye extends PokemonCard {
       if (opponentCard && opponentCard.powers.some(p => p.name === 'Overeager')) {
         return state;
       }
-      if (cardList === player.active) {
+      if (cardList === player.active.pokemons) {
         store.log(state, GameLog.LOG_STARTS_BECAUSE_OF_ABILITY, {
           name: player.name,
           ability: this.powers[0].name,

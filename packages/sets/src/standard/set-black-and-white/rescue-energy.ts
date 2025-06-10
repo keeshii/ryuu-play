@@ -30,7 +30,7 @@ export class RescueEnergy extends EnergyCard {
     'your hand. (Discard all cards attached to that Pokémon.)';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof KnockOutEffect && effect.target.cards.includes(this)) {
+    if (effect instanceof KnockOutEffect && effect.target.energies.cards.includes(this)) {
       const player = effect.player;
 
       // Do not activate between turns, or when it's not opponents turn.

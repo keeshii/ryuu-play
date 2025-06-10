@@ -1,6 +1,6 @@
 import { AttachEnergyPrompt, CardAssign } from '@ptcg/common';
 import { Player, State, Action, ResolvePromptAction, Prompt, StateUtils,
-  PokemonCardList, PlayerType, CardList, Card, CardTarget } from '@ptcg/common';
+  PokemonSlot, PlayerType, CardList, Card, CardTarget } from '@ptcg/common';
 import { PromptResolver } from './prompt-resolver';
 import { deepClone } from '@ptcg/common';
 
@@ -69,24 +69,24 @@ export class AttachEnergyPromptResolver extends PromptResolver {
     const hasOpponent = [PlayerType.TOP_PLAYER, PlayerType.ANY].includes(prompt.playerType);
     const hasPlayer = [PlayerType.BOTTOM_PLAYER, PlayerType.ANY].includes(prompt.playerType);
 
-    let results: {target: CardTarget, cardList: PokemonCardList, score: number}[] = [];
+    let results: {target: CardTarget, pokemonSlot: PokemonSlot, score: number}[] = [];
     if (hasOpponent) {
-      opponent.forEachPokemon(PlayerType.TOP_PLAYER, (cardList, card, target) => {
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, (pokemonSlot, card, target) => {
         if (prompt.slots.includes(target.slot)) {
-          results.push({ target, cardList, score: 0 });
+          results.push({ target, pokemonSlot, score: 0 });
         }
       });
     }
     if (hasPlayer) {
-      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card, target) => {
+      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (pokemonSlot, card, target) => {
         if (prompt.slots.includes(target.slot)) {
-          results.push({ target, cardList, score: 0 });
+          results.push({ target, pokemonSlot, score: 0 });
         }
       });
     }
 
     const blocked = prompt.options.blockedTo.map(b => StateUtils.getTarget(state, player, b));
-    results = results.filter(i => !blocked.includes(i.cardList));
+    results = results.filter(i => !blocked.includes(i.pokemonSlot));
 
     if (results.length === 0) {
       return;
@@ -94,15 +94,15 @@ export class AttachEnergyPromptResolver extends PromptResolver {
 
     // evaluate results
     for (const result of results) {
-      cardList.moveCardTo(card, result.cardList);
+      cardList.moveCardTo(card, result.pokemonSlot.energies);
       result.score = this.getStateScore(state, player.id);
-      result.cardList.moveCardTo(card, cardList);
+      result.pokemonSlot.moveCardTo(card, cardList);
     }
 
     results.sort((a, b) => b.score - a.score);
 
     const result = results[0];
-    cardList.moveCardTo(card, result.cardList);
+    cardList.moveCardTo(card, result.pokemonSlot.energies);
 
     return { value: [{ to: result.target, card }], score: result.score };
   }

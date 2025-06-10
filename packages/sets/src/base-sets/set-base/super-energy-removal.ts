@@ -7,12 +7,11 @@ import {
   GameError,
   GameMessage,
   PlayerType,
-  PokemonCardList,
+  PokemonSlot,
   SlotType,
   State,
   StateUtils,
   StoreLike,
-  SuperType,
   TrainerCard,
   TrainerEffect,
   TrainerType,
@@ -24,8 +23,8 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 
   let playerHasEnergy = false;
   const blocked: CardTarget[] = [];
-  player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card, target) => {
-    if (cardList.cards.some(c => c.superType === SuperType.ENERGY)) {
+  player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (pokemonSlot, card, target) => {
+    if (pokemonSlot.energies.cards.length > 0) {
       playerHasEnergy = true;
     } else {
       blocked.push(target);
@@ -34,8 +33,8 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 
   let opponentHasEnergy = false;
   const blocked2: CardTarget[] = [];
-  opponent.forEachPokemon(PlayerType.TOP_PLAYER, (cardList, card, target) => {
-    if (cardList.cards.some(c => c.superType === SuperType.ENERGY)) {
+  opponent.forEachPokemon(PlayerType.TOP_PLAYER, (pokemonSlot, card, target) => {
+    if (pokemonSlot.energies.cards.length > 0) {
       opponentHasEnergy = true;
     } else {
       blocked2.push(target);
@@ -49,7 +48,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   // We will discard this card after prompt confirmation
   effect.preventDefault = true;
   
-  let targets: PokemonCardList[] = [];
+  let targets: PokemonSlot[] = [];
   yield store.prompt(state, new ChoosePokemonPrompt(
     player.id,
     GameMessage.CHOOSE_POKEMON_TO_DISCARD_CARDS,
@@ -70,8 +69,8 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
     GameMessage.CHOOSE_CARD_TO_DISCARD,
-    playerTarget,
-    { superType: SuperType.ENERGY },
+    playerTarget.energies,
+    { },
     { min: 1, max: 1, allowCancel: true }
   ), selected => {
     playerCards = selected || [];
@@ -102,8 +101,8 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   yield store.prompt(state, new ChooseCardsPrompt(
     player.id,
     GameMessage.CHOOSE_CARD_TO_DISCARD,
-    opponentTarget,
-    { superType: SuperType.ENERGY },
+    opponentTarget.energies,
+    { },
     { min: 1, max: 2, allowCancel: false }
   ), selected => {
     opponentCards = selected || [];

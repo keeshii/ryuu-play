@@ -1,4 +1,3 @@
-import { Card } from '../card/card';
 import { GameError } from '../../game-error';
 import { GameMessage } from '../../game-message';
 import { Prompt } from './prompt';
@@ -6,6 +5,7 @@ import { PlayerType, SlotType, CardTarget } from '../actions/play-card-action';
 import { State } from '../state/state';
 import { StateUtils } from '../state-utils';
 import { FilterType } from './choose-cards-prompt';
+import { EnergyCard } from '../card/energy-card';
 
 export const MoveEnergyPromptType = 'Move energy';
 
@@ -14,7 +14,7 @@ export type MoveEnergyResultType = {from: CardTarget, to: CardTarget, index: num
 export interface CardTransfer {
   from: CardTarget;
   to: CardTarget;
-  card: Card;
+  card: EnergyCard;
 }
 
 export interface MoveEnergyOptions {
@@ -63,8 +63,8 @@ export class MoveEnergyPrompt extends Prompt<CardTransfer[]> {
     }
     const transfers: CardTransfer[] = [];
     result.forEach(t => {
-      const cardList = StateUtils.getTarget(state, player, t.from);
-      const card = cardList.cards[t.index];
+      const pokemonSlot = StateUtils.getTarget(state, player, t.from);
+      const card = pokemonSlot.energies.cards[t.index];
       transfers.push({ from: t.from, to: t.to, card });
     });
     return transfers;

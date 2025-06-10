@@ -23,7 +23,7 @@ function* useWhirlwind(next: Function, store: StoreLike, state: State, effect: A
   const player = effect.player;
   const opponent = StateUtils.getOpponent(state, player);
 
-  const opponentHasBenched = opponent.bench.some(b => b.cards.length > 0);
+  const opponentHasBenched = opponent.bench.some(b => b.pokemons.cards.length > 0);
   if (!opponentHasBenched) {
     return state;
   }
@@ -100,7 +100,7 @@ export class Beautifly extends PokemonCard {
     }
 
     // Prevent damage from Pokemon-EX
-    if (effect instanceof PutDamageEffect && effect.target.cards.includes(this)) {
+    if (effect instanceof PutDamageEffect && effect.target.pokemons.cards.includes(this)) {
       const pokemonCard = effect.target.getPokemonCard();
       const sourceCard = effect.source.getPokemonCard();
 

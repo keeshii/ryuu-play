@@ -8,7 +8,7 @@ import {
   HealTargetEffect,
   PlayerType,
   PokemonCard,
-  PokemonCardList,
+  PokemonSlot,
   PowerEffect,
   PowerType,
   SpecialCondition,
@@ -66,12 +66,12 @@ export class Beautifly extends PokemonCard {
       const opponent = StateUtils.getOpponent(state, player);
 
       let isBeautiflyInPlay = false;
-      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card) => {
+      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (pokemonSlot, card) => {
         if (card === this) {
           isBeautiflyInPlay = true;
         }
       });
-      opponent.forEachPokemon(PlayerType.TOP_PLAYER, (cardList, card) => {
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, (pokemonSlot, card) => {
         if (card === this) {
           isBeautiflyInPlay = true;
         }
@@ -106,7 +106,7 @@ export class Beautifly extends PokemonCard {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
       const player = effect.player;
-      const targets: PokemonCardList[] = [];
+      const targets: PokemonSlot[] = [];
 
       player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card, target) => {
         if (cardList.damage > 0) {

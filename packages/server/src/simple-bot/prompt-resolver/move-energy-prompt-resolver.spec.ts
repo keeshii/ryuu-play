@@ -1,5 +1,5 @@
 import { CardType, SuperType, State, Player, ResolvePromptAction, GameMessage,
-  PokemonCardList, MoveEnergyPrompt, PlayerType, SlotType, CardTransfer,
+  PokemonSlot, MoveEnergyPrompt, PlayerType, SlotType, CardTransfer,
   PokemonCard, EnergyCard } from '@ptcg/common';
 import { MoveEnergyPromptResolver } from './move-energy-prompt-resolver';
 import {
@@ -33,14 +33,14 @@ describe('MoveEnergyPromptResolver', () => {
   let player: Player;
   let opponent: Player;
 
-  function createSlot(): PokemonCardList {
-    const slot = new PokemonCardList();
-    slot.cards = [ new TestPokemon() ];
+  function createSlot(): PokemonSlot {
+    const slot = new PokemonSlot();
+    slot.pokemons.cards = [ new TestPokemon() ];
     return slot;
   }
 
-  function setRetreatCost(cardList: PokemonCardList, cost: CardType[]): void {
-    const pokemonCard = cardList.cards[0] as PokemonCard;
+  function setRetreatCost(cardList: PokemonSlot, cost: CardType[]): void {
+    const pokemonCard = cardList.pokemons.cards[0] as PokemonCard;
     pokemonCard.retreat = cost;
   }
 
@@ -83,7 +83,7 @@ describe('MoveEnergyPromptResolver', () => {
   it('Should move card to Bench, because we can\'t cancel it', () => {
     // given
     const fire = new TestEnergy('fire', [ CardType.FIRE ]);
-    player.active.cards.push(fire);
+    player.active.energies.cards.push(fire);
     setRetreatCost(player.active, [ CardType.COLORLESS ]);
     prompt.options.min = 1;
     prompt.options.max = 1;
@@ -107,7 +107,7 @@ describe('MoveEnergyPromptResolver', () => {
   it('Should return null, moving energy to Bench gives negative score', () => {
     // given
     const fire = new TestEnergy('fire', [ CardType.FIRE ]);
-    player.active.cards.push(fire);
+    player.active.energies.cards.push(fire);
     setRetreatCost(player.active, [ CardType.COLORLESS ]);
     prompt.options.min = 1;
     prompt.options.max = 1;
@@ -124,7 +124,7 @@ describe('MoveEnergyPromptResolver', () => {
   it('Should move energy to Active', () => {
     // given
     const fire = new TestEnergy('fire', [ CardType.FIRE ]);
-    player.bench[0].cards.push(fire);
+    player.bench[0].energies.cards.push(fire);
     setRetreatCost(player.active, [ CardType.COLORLESS ]);
 
     prompt.options.min = 1;
@@ -149,8 +149,8 @@ describe('MoveEnergyPromptResolver', () => {
     // given
     const fire = new TestEnergy('fire', [ CardType.FIRE ]);
     const water = new TestEnergy('water', [ CardType.WATER ]);
-    player.bench[0].cards.push(fire);
-    player.bench[1].cards.push(water);
+    player.bench[0].energies.cards.push(fire);
+    player.bench[1].energies.cards.push(water);
     setRetreatCost(player.active, [ CardType.COLORLESS, CardType.COLORLESS ]);
 
     // when
@@ -177,9 +177,9 @@ describe('MoveEnergyPromptResolver', () => {
     const fire = new TestEnergy('fire', [ CardType.FIRE ]);
     const water = new TestEnergy('water', [ CardType.WATER ]);
     const psychic = new TestEnergy('psychic', [ CardType.PSYCHIC ]);
-    player.bench[0].cards.push(fire);
-    player.bench[1].cards.push(water);
-    player.bench[2].cards.push(psychic);
+    player.bench[0].energies.cards.push(fire);
+    player.bench[1].energies.cards.push(water);
+    player.bench[2].energies.cards.push(psychic);
     setRetreatCost(player.active, [ CardType.COLORLESS, CardType.COLORLESS ]);
     setRetreatCost(player.bench[2], [ CardType.COLORLESS ]);
 
@@ -206,8 +206,8 @@ describe('MoveEnergyPromptResolver', () => {
     // given
     const fire = new TestEnergy('fire', [ CardType.FIRE ]);
     const water = new TestEnergy('water', [ CardType.WATER ]);
-    player.bench[0].cards.push(fire);
-    player.bench[1].cards.push(water);
+    player.bench[0].energies.cards.push(fire);
+    player.bench[1].energies.cards.push(water);
     setRetreatCost(player.active, [ CardType.COLORLESS, CardType.COLORLESS ]);
     prompt.options.blockedFrom = [{ player: PlayerType.BOTTOM_PLAYER, slot: SlotType.BENCH, index: 1 }];
 
@@ -229,12 +229,12 @@ describe('MoveEnergyPromptResolver', () => {
     // given
     const fire = new TestEnergy('fire', [ CardType.FIRE ]);
     const water = new TestEnergy('water', [ CardType.WATER ]);
-    player.bench[0].cards.push(fire);
-    player.bench[1].cards.push(water);
+    player.bench[0].energies.cards.push(fire);
+    player.bench[1].energies.cards.push(water);
     setRetreatCost(player.active, [ CardType.COLORLESS, CardType.COLORLESS ]);
     prompt.options.blockedMap = [{
       source: { player: PlayerType.BOTTOM_PLAYER, slot: SlotType.BENCH, index: 1 },
-      blocked: [ 1 ]
+      blocked: [ 0 ]
     }];
 
     // when
@@ -254,7 +254,7 @@ describe('MoveEnergyPromptResolver', () => {
   it('Should move energy of the opponent', () => {
     // given
     const fire = new TestEnergy('fire', [ CardType.FIRE ]);
-    opponent.bench[0].cards.push(fire);
+    opponent.bench[0].energies.cards.push(fire);
     setRetreatCost(opponent.active, [ CardType.COLORLESS ]);
     prompt.playerType = PlayerType.TOP_PLAYER;
 

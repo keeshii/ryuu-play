@@ -4,16 +4,14 @@ import {
   ChooseCardsPrompt,
   ChoosePokemonPrompt,
   Effect,
-  EnergyCard,
   GameError,
   GameMessage,
   HealEffect,
   PlayerType,
-  PokemonCardList,
+  PokemonSlot,
   SlotType,
   State,
   StoreLike,
-  SuperType,
   TrainerCard,
   TrainerEffect,
   TrainerType,
@@ -24,8 +22,8 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 
   const blocked: CardTarget[] = [];
   let hasPokemonWithDamage: boolean = false;
-  player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card, target) => {
-    if (cardList.damage === 0 || !cardList.cards.some(c => c instanceof EnergyCard)) {
+  player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (pokemonSlot, card, target) => {
+    if (pokemonSlot.damage === 0 || pokemonSlot.energies.cards.length > 0) {
       blocked.push(target);
     } else {
       hasPokemonWithDamage = true;
@@ -39,7 +37,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   // Do not discard the card yet
   effect.preventDefault = true;
 
-  let targets: PokemonCardList[] = [];
+  let targets: PokemonSlot[] = [];
   yield store.prompt(
     state,
     new ChoosePokemonPrompt(
@@ -66,8 +64,8 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     new ChooseCardsPrompt(
       player.id,
       GameMessage.CHOOSE_CARD_TO_DISCARD,
-      target,
-      { superType: SuperType.ENERGY },
+      target.energies,
+      { },
       { min: 1, max: 1, allowCancel: true }
     ),
     selected => {

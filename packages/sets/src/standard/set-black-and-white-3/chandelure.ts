@@ -74,7 +74,7 @@ export class Chandelure extends PokemonCard {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
 
-      if (!player.active.cards.includes(this)) {
+      if (!player.active.pokemons.cards.includes(this)) {
         throw new GameError(GameMessage.CANNOT_USE_POWER);
       }
 

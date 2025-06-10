@@ -1,4 +1,4 @@
-import { Action, Player, State, PokemonCardList, CardTarget, PlayerType,
+import { Action, Player, State, PokemonSlot, CardTarget, PlayerType,
   SlotType, GameError, GameMessage, Prompt, ResolvePromptAction } from '@ptcg/common';
 import { Simulator } from '@ptcg/common';
 import { SimpleBotOptions } from '../simple-bot-options';
@@ -16,7 +16,7 @@ export abstract class SimpleTactic {
 
   public abstract useTactic(state: State, player: Player): Action | undefined;
 
-  protected getCardTarget(player: Player, state: State, target: PokemonCardList): CardTarget {
+  protected getCardTarget(player: Player, state: State, target: PokemonSlot): CardTarget {
     if (target === player.active) {
       return { player: PlayerType.BOTTOM_PLAYER, slot: SlotType.ACTIVE, index: 0 };
     }

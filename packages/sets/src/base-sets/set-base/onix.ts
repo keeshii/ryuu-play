@@ -72,8 +72,8 @@ export class Onix extends PokemonCard {
       effect.player.marker.removeMarker(this.CLEAR_HARDEN_MARKER, this);
 
       const opponent = StateUtils.getOpponent(state, effect.player);
-      opponent.forEachPokemon(PlayerType.TOP_PLAYER, cardList => {
-        cardList.marker.removeMarker(this.HARDEN_MARKER, this);
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, pokemonSlot => {
+        pokemonSlot.marker.removeMarker(this.HARDEN_MARKER, this);
       });
     }
 

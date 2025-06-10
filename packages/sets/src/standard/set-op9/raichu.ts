@@ -5,7 +5,7 @@ import {
   Effect,
   GameMessage,
   PokemonCard,
-  PokemonCardList,
+  PokemonSlot,
   Stage,
   State,
   StateUtils,
@@ -66,7 +66,7 @@ export class Raichu extends PokemonCard {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
       const cardList = StateUtils.findCardList(state, this);
-      if (!(cardList instanceof PokemonCardList)) {
+      if (!(cardList instanceof PokemonSlot)) {
         return state;
       }
       if (cardList.pokemonPlayedTurn === state.turn) {

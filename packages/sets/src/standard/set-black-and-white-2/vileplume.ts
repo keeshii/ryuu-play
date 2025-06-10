@@ -75,12 +75,12 @@ export class Vileplume extends PokemonCard {
       const opponent = StateUtils.getOpponent(state, player);
 
       let isVileplumeInPlay = false;
-      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card) => {
+      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (pokemonSlot, card) => {
         if (card === this) {
           isVileplumeInPlay = true;
         }
       });
-      opponent.forEachPokemon(PlayerType.TOP_PLAYER, (cardList, card) => {
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, (pokemonSlot, card) => {
         if (card === this) {
           isVileplumeInPlay = true;
         }

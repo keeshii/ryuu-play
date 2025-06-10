@@ -7,7 +7,7 @@ import {
   Effect,
   GameMessage,
   PokemonCard,
-  PokemonCardList,
+  PokemonSlot,
   PowerEffect,
   PowerType,
   PutDamageEffect,
@@ -29,7 +29,7 @@ function* usePlayground(next: Function, store: StoreLike, state: State, effect: 
   store.reduceEffect(state, specialCondition);
 
   // Player
-  let slots: PokemonCardList[] = player.bench.filter(b => b.cards.length === 0);
+  let slots: PokemonSlot[] = player.bench.filter(b => b.pokemons.cards.length === 0);
   let max = slots.length;
 
   let cards: Card[] = [];
@@ -53,12 +53,12 @@ function* usePlayground(next: Function, store: StoreLike, state: State, effect: 
   }
 
   cards.forEach((card, index) => {
-    player.deck.moveCardTo(card, slots[index]);
+    player.deck.moveCardTo(card, slots[index].pokemons);
     slots[index].pokemonPlayedTurn = state.turn;
   });
 
   // Opponent
-  slots = opponent.bench.filter(b => b.cards.length === 0);
+  slots = opponent.bench.filter(b => b.pokemons.cards.length === 0);
   max = slots.length;
 
   yield store.prompt(
@@ -81,7 +81,7 @@ function* usePlayground(next: Function, store: StoreLike, state: State, effect: 
   }
 
   cards.forEach((card, index) => {
-    opponent.deck.moveCardTo(card, slots[index]);
+    opponent.deck.moveCardTo(card, slots[index].pokemons);
     slots[index].pokemonPlayedTurn = state.turn;
   });
 
@@ -142,7 +142,7 @@ export class Pichu extends PokemonCard {
 
     // Sweet Sleeping Face
     if (effect instanceof PutDamageEffect) {
-      if (effect.target.cards.includes(this)) {
+      if (effect.target.pokemons.cards.includes(this)) {
         const pokemonCard = effect.target.getPokemonCard();
         const isAsleep = effect.target.specialConditions.includes(SpecialCondition.ASLEEP);
         if (pokemonCard === this && isAsleep) {

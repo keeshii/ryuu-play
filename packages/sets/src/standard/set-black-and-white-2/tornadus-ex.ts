@@ -7,21 +7,19 @@ import {
   CoinFlipPrompt,
   DiscardCardsEffect,
   Effect,
-  EnergyCard,
   GameMessage,
   PokemonCard,
   Stage,
   State,
   StateUtils,
   StoreLike,
-  SuperType,
 } from '@ptcg/common';
 
 function* usePowerBlast(next: Function, store: StoreLike, state: State, effect: AttackEffect): IterableIterator<State> {
   const player = effect.player;
 
   // Active Pokemon has no energy cards attached
-  if (!player.active.cards.some(c => c instanceof EnergyCard)) {
+  if (player.active.energies.cards.length === 0) {
     return state;
   }
 
@@ -41,8 +39,8 @@ function* usePowerBlast(next: Function, store: StoreLike, state: State, effect: 
     new ChooseCardsPrompt(
       player.id,
       GameMessage.CHOOSE_CARD_TO_DISCARD,
-      player.active,
-      { superType: SuperType.ENERGY },
+      player.active.energies,
+      { },
       { min: 1, max: 1, allowCancel: false }
     ),
     selected => {

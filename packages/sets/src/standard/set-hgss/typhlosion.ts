@@ -14,7 +14,6 @@ import {
   PlayerType,
   PlayPokemonEffect,
   PokemonCard,
-  PokemonCardList,
   PowerEffect,
   PowerType,
   SlotType,
@@ -37,13 +36,13 @@ function* useFlareDestroy(
   const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);
   state = store.reduceEffect(state, checkProvidedEnergy);
 
-  if (player.active.cards.some(c => c instanceof EnergyCard)) {
+  if (player.active.energies.cards.length > 0) {
     yield store.prompt(
       state,
       new ChooseCardsPrompt(
         player.id,
         GameMessage.CHOOSE_ENERGIES_TO_DISCARD,
-        player.active,
+        player.active.energies,
         { superType: SuperType.ENERGY },
         { min: 1, max: 1, allowCancel: false }
       ),
@@ -58,13 +57,13 @@ function* useFlareDestroy(
   }
 
   // Defending Pokemon has no energy cards attached
-  if (opponent.active.cards.some(c => c instanceof EnergyCard)) {
+  if (opponent.active.energies.cards.length > 0) {
     yield store.prompt(
       state,
       new ChooseCardsPrompt(
         player.id,
         GameMessage.CHOOSE_ENERGIES_TO_DISCARD,
-        opponent.active,
+        opponent.active.energies,
         { superType: SuperType.ENERGY },
         { min: 1, max: 1, allowCancel: false }
       ),
@@ -139,9 +138,9 @@ export class Typhlosion extends PokemonCard {
 
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
       const player = effect.player;
-      const cardList = StateUtils.findCardList(state, this) as PokemonCardList;
+      const pokemonSlot = StateUtils.findPokemonSlot(state, this);
 
-      if (cardList.specialConditions.length > 0) {
+      if (!pokemonSlot || pokemonSlot.specialConditions.length > 0) {
         throw new GameError(GameMessage.CANNOT_USE_POWER);
       }
       const hasEnergyInDiscard = player.discard.cards.some(c => {
@@ -178,7 +177,7 @@ export class Typhlosion extends PokemonCard {
           player.marker.addMarker(this.AFTERBURNER_MARKER, this);
           for (const transfer of transfers) {
             const target = StateUtils.getTarget(state, player, transfer.to);
-            player.discard.moveCardTo(transfer.card, target);
+            player.discard.moveCardTo(transfer.card, target.energies);
             target.damage += 10;
           }
         }

@@ -9,7 +9,6 @@ import {
   GameError,
   GameMessage,
   PokemonCard,
-  PokemonCardList,
   PowerEffect,
   PowerType,
   Stage,
@@ -22,8 +21,8 @@ import {
 function* useEnergyDraw(next: Function, store: StoreLike, state: State, self: Delcatty, effect: PowerEffect): IterableIterator<State> {
   const player = effect.player;
 
-  const cardList = StateUtils.findCardList(state, self) as PokemonCardList;
-  if (cardList.specialConditions.length > 0) {
+  const pokemonSlot = StateUtils.findPokemonSlot(state, self);
+  if (!pokemonSlot || pokemonSlot.specialConditions.length > 0) {
     throw new GameError(GameMessage.CANNOT_USE_POWER);
   }
 

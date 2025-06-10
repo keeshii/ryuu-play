@@ -70,7 +70,7 @@ export class ChoosePokemonsPaneComponent implements OnDestroy {
   private initDropTarget(item: PokemonItem): [DropTargetType, Observable<boolean>]  {
     const dropTarget: DropTargetType = this.dnd.dropTarget([PromptCardType], {
       canDrop: () => {
-        return item.cardList.cards.length > 0;
+        return item.pokemonSlot.pokemons.cards.length > 0;
       },
       drop: monitor => {
         const card = monitor.getItem().data.card;
@@ -94,9 +94,9 @@ export class ChoosePokemonsPaneComponent implements OnDestroy {
 
   public onBadgeClick(event: MouseEvent, item: PokemonItem) {
     event.stopPropagation();
-    const cardList = item.cardList;
-    const card = cardList.getPokemonCard();
-    this.cardsBaseService.showCardInfo({ card, cardList });
+    const pokemonSlot = item.pokemonSlot;
+    const card = pokemonSlot.getPokemonCard();
+    this.cardsBaseService.showCardInfo({ card, cardList: pokemonSlot.pokemons });
   }
 
   ngOnDestroy() {

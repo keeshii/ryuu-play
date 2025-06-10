@@ -16,7 +16,7 @@ export class Eviolite extends TrainerCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof PutDamageEffect) {
-      if (effect.target.tool === this && effect.target.isBasic()) {
+      if (effect.target.trainers.cards.includes(this) && effect.target.isBasic()) {
         effect.damage -= 20;
       }
     }

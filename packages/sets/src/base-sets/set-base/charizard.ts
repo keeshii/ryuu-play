@@ -7,11 +7,9 @@ import {
   DiscardCardsEffect,
   Effect,
   EndTurnEffect,
-  EnergyCard,
   GameError,
   GameMessage,
   PokemonCard,
-  PokemonCardList,
   PowerEffect,
   PowerType,
   SpecialCondition,
@@ -19,7 +17,6 @@ import {
   State,
   StateUtils,
   StoreLike,
-  SuperType,
 } from '@ptcg/common';
 
 export class Charizard extends PokemonCard {
@@ -73,11 +70,12 @@ export class Charizard extends PokemonCard {
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
       const player = effect.player;
-      const cardList = StateUtils.findCardList(state, this) as PokemonCardList;
+      const pokemonSlot = StateUtils.findPokemonSlot(state, this);
       
-      if (cardList.specialConditions.includes(SpecialCondition.ASLEEP)
-        || cardList.specialConditions.includes(SpecialCondition.CONFUSED)
-        || cardList.specialConditions.includes(SpecialCondition.PARALYZED)) {
+      if (pokemonSlot === undefined
+        || pokemonSlot.specialConditions.includes(SpecialCondition.ASLEEP)
+        || pokemonSlot.specialConditions.includes(SpecialCondition.CONFUSED)
+        || pokemonSlot.specialConditions.includes(SpecialCondition.PARALYZED)) {
         throw new GameError(GameMessage.CANNOT_USE_POWER);
       }
 
@@ -88,7 +86,7 @@ export class Charizard extends PokemonCard {
       return state;
     }
 
-    if (effect instanceof CheckProvidedEnergyEffect && effect.source.cards.includes(this)) {
+    if (effect instanceof CheckProvidedEnergyEffect && effect.source.pokemons.cards.includes(this)) {
       if (!effect.player.marker.hasMarker(this.ENERGY_BURN_MARKER, this)) {
         return state;
       }
@@ -96,8 +94,8 @@ export class Charizard extends PokemonCard {
       effect.energyMap.forEach(item => {
         item.provides = item.provides.map(p => CardType.FIRE);
       });
-      effect.source.cards.forEach(c => {
-        if (c instanceof EnergyCard && !effect.energyMap.some(e => e.card === c)) {
+      effect.source.energies.cards.forEach(c => {
+        if (!effect.energyMap.some(e => e.card === c)) {
           effect.energyMap.push({ card: c, provides: c.provides.map(p => CardType.FIRE) });
         }
       });
@@ -106,13 +104,7 @@ export class Charizard extends PokemonCard {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
 
-      let energyCards = 0;
-      player.active.cards.forEach(card => {
-        if (card.superType === SuperType.ENERGY) {
-          energyCards += 1;
-        }
-      });
- 
+      const energyCards = player.active.energies.cards.length;
       if (energyCards === 0) {
         return state;
       }
@@ -123,8 +115,8 @@ export class Charizard extends PokemonCard {
         new ChooseCardsPrompt(
           player.id,
           GameMessage.CHOOSE_CARD_TO_DISCARD,
-          player.active,
-          { superType: SuperType.ENERGY },
+          player.active.energies,
+          { },
           { min: max, max, allowCancel: false }
         ),
         selected => {

@@ -3,7 +3,6 @@ import {
   CardType,
   DiscardCardsEffect,
   Effect,
-  EnergyCard,
   PokemonCard,
   Stage,
   State,
@@ -49,14 +48,14 @@ export class Raichu extends PokemonCard {
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
-      const benched = player.bench.reduce((left, b) => left + (b.cards.length ? 1 : 0), 0);
+      const benched = player.bench.reduce((left, b) => left + (b.pokemons.cards.length ? 1 : 0), 0);
       effect.damage = benched * 20;
       return state;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
       const player = effect.player;
-      const cards = player.active.cards.filter(c => c instanceof EnergyCard);
+      const cards = player.active.energies.cards.slice();
       const discardEnergy = new DiscardCardsEffect(effect, cards);
       discardEnergy.target = player.active;
       return store.reduceEffect(state, discardEnergy);

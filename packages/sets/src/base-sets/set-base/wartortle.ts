@@ -92,8 +92,8 @@ export class Wartortle extends PokemonCard {
       effect.player.marker.removeMarker(this.CLEAR_WITHDRAW_MARKER, this);
 
       const opponent = StateUtils.getOpponent(state, effect.player);
-      opponent.forEachPokemon(PlayerType.TOP_PLAYER, cardList => {
-        cardList.marker.removeMarker(this.WITHDRAW_MARKER, this);
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, pokemonSlot => {
+        pokemonSlot.marker.removeMarker(this.WITHDRAW_MARKER, this);
       });
     }
 

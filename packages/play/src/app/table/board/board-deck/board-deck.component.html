@@ -1,15 +1,15 @@
 <div class="ptcg-board-deck">
 
   <ptcg-board-card
-    (cardClick)="onDiscardClick($event)"
-    [cardList]="discard"
+    (cardClick)="onDiscardClick($event.card)"
+    [value]="discard"
     [owner]="isOwner"
     showCardCount="true">
   </ptcg-board-card>
 
   <ptcg-board-card
     (click)="onDeckClick()"
-    [cardList]="deck"
+    [value]="deck"
     [owner]="isOwner"
     showCardCount="true">
   </ptcg-board-card>

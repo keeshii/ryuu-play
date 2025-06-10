@@ -2,12 +2,11 @@ import {
   CardTarget,
   ChoosePokemonPrompt,
   Effect,
-  EnergyCard,
   GameError,
   GameMessage,
   HealEffect,
   PlayerType,
-  PokemonCardList,
+  PokemonSlot,
   SlotType,
   State,
   StoreLike,
@@ -36,7 +35,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   // Do not discard the card yet
   effect.preventDefault = true;
 
-  let targets: PokemonCardList[] = [];
+  let targets: PokemonSlot[] = [];
   yield store.prompt(
     state,
     new ChoosePokemonPrompt(
@@ -64,8 +63,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     const healEffect = new HealEffect(player, target, target.damage);
     store.reduceEffect(state, healEffect);
     // Discard its energy cards
-    const cards = target.cards.filter(c => c instanceof EnergyCard);
-    target.moveCardsTo(cards, player.discard);
+    target.energies.moveTo(player.discard);
   });
 
   return state;

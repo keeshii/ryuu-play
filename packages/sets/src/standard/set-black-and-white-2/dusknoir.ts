@@ -27,8 +27,8 @@ function* useSinisterHand(
   const opponent = StateUtils.getOpponent(state, player);
 
   const maxAllowedDamage: DamageMap[] = [];
-  opponent.forEachPokemon(PlayerType.TOP_PLAYER, (cardList, card, target) => {
-    const checkHpEffect = new CheckHpEffect(opponent, cardList);
+  opponent.forEachPokemon(PlayerType.TOP_PLAYER, (pokemonSlot, card, target) => {
+    const checkHpEffect = new CheckHpEffect(opponent, pokemonSlot);
     store.reduceEffect(state, checkHpEffect);
     maxAllowedDamage.push({ target, damage: checkHpEffect.hp });
   });

@@ -1,5 +1,5 @@
 import { State, Player, ResolvePromptAction, GameMessage, ChoosePokemonPrompt,
-  PokemonCard, PokemonCardList, PlayerType, SlotType } from '@ptcg/common';
+  PokemonCard, PokemonSlot, PlayerType, SlotType } from '@ptcg/common';
 import { ChoosePokemonPromptResolver } from './choose-pokemon-prompt-resolver';
 import {
   allSimpleTactics,
@@ -26,14 +26,14 @@ describe('ChoosePokemonPromptResolver', () => {
   let player: Player;
   let opponent: Player;
 
-  function createSlot(): PokemonCardList {
-    const slot = new PokemonCardList();
-    slot.cards = [ new TestPokemon('Test') ];
+  function createSlot(): PokemonSlot {
+    const slot = new PokemonSlot();
+    slot.pokemons.cards = [ new TestPokemon('Test') ];
     return slot;
   }
 
-  function setHp(cardList: PokemonCardList, hp: number): void {
-    const pokemonCard = cardList.cards[0] as PokemonCard;
+  function setHp(cardList: PokemonSlot, hp: number): void {
+    const pokemonCard = cardList.pokemons.cards[0] as PokemonCard;
     pokemonCard.hp = hp;
   }
 
@@ -89,7 +89,7 @@ describe('ChoosePokemonPromptResolver', () => {
 
     // when
     const action = resolver.resolvePrompt(state, player, prompt) as ResolvePromptAction;
-    const result: PokemonCardList[] = action.result;
+    const result: PokemonSlot[] = action.result;
 
     // then
     expect(action instanceof ResolvePromptAction).toBeTruthy();
@@ -106,7 +106,7 @@ describe('ChoosePokemonPromptResolver', () => {
 
     // when
     const action = resolver.resolvePrompt(state, player, prompt) as ResolvePromptAction;
-    const result: PokemonCardList[] = action.result;
+    const result: PokemonSlot[] = action.result;
 
     // then
     expect(action instanceof ResolvePromptAction).toBeTruthy();
@@ -123,7 +123,7 @@ describe('ChoosePokemonPromptResolver', () => {
 
     // when
     const action = resolver.resolvePrompt(state, player, prompt) as ResolvePromptAction;
-    const result: PokemonCardList[] = action.result;
+    const result: PokemonSlot[] = action.result;
 
     // then
     expect(action instanceof ResolvePromptAction).toBeTruthy();
@@ -142,7 +142,7 @@ describe('ChoosePokemonPromptResolver', () => {
 
     // when
     const action = resolver.resolvePrompt(state, player, prompt) as ResolvePromptAction;
-    const result: PokemonCardList[] = action.result;
+    const result: PokemonSlot[] = action.result;
 
     // then
     expect(action instanceof ResolvePromptAction).toBeTruthy();
@@ -175,7 +175,7 @@ describe('ChoosePokemonPromptResolver', () => {
 
     // when
     const action = resolver.resolvePrompt(state, player, prompt) as ResolvePromptAction;
-    const result: PokemonCardList[] = action.result;
+    const result: PokemonSlot[] = action.result;
 
     // then
     expect(action instanceof ResolvePromptAction).toBeTruthy();

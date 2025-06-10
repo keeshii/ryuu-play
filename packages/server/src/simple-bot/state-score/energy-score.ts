@@ -1,4 +1,4 @@
-import { State, PokemonCardList, CardType, EnergyCard, PlayerType } from '@ptcg/common';
+import { State, PokemonSlot, CardType, PlayerType } from '@ptcg/common';
 import { SimpleScore } from './score';
 
 export class EnergyScore extends SimpleScore {
@@ -59,16 +59,14 @@ export class EnergyScore extends SimpleScore {
   }
 
 
-  private getMissingEnergies(cardList: PokemonCardList, cost: CardType[]): CardType[] {
+  private getMissingEnergies(pokemonSlot: PokemonSlot, cost: CardType[]): CardType[] {
     if (cost.length === 0) {
       return [];
     }
 
     const provided: CardType[] = [];
-    cardList.cards.forEach(card => {
-      if (card instanceof EnergyCard) {
-        card.provides.forEach(energy => provided.push(energy));
-      }
+    pokemonSlot.energies.cards.forEach(card => {
+      card.provides.forEach(energy => provided.push(energy));
     });
 
     const missing: CardType[] = [];

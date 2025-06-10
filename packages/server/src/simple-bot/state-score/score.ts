@@ -1,4 +1,4 @@
-import { State, GameError, GameMessage, Player, PokemonCardList } from '@ptcg/common';
+import { State, GameError, GameMessage, Player, PokemonSlot } from '@ptcg/common';
 import { SimpleBotOptions, PokemonScores } from '../simple-bot-options';
 
 export abstract class SimpleScore {
@@ -15,8 +15,8 @@ export abstract class SimpleScore {
     return player;
   }
 
-  protected getPokemonScoreBy(scores: PokemonScores, cardList: PokemonCardList): number {
-    const card = cardList.getPokemonCard();
+  protected getPokemonScoreBy(scores: PokemonScores, pokemonSlot: PokemonSlot): number {
+    const card = pokemonSlot.getPokemonCard();
 
     if (card === undefined) {
       return 0;

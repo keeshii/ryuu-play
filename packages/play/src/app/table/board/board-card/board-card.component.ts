@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { PokemonCardList, Card, CardList, SuperType, SpecialCondition } from '@ptcg/common';
+import { PokemonSlot, Card, CardList, SpecialCondition } from '@ptcg/common';
 
 const MAX_ENERGY_CARDS = 4;
 
@@ -11,9 +11,11 @@ const MAX_ENERGY_CARDS = 4;
 export class BoardCardComponent {
 
   @Input() showCardCount = false;
-  @Output() cardClick = new EventEmitter<Card>();
+  @Output() cardClick = new EventEmitter<{card: Card, cardList: CardList}>();
 
-  @Input() set cardList(value: CardList | PokemonCardList) {
+  @Input() set value(value: CardList | PokemonSlot) {
+    this.pokemonSlot = undefined;
+    this.cardList = undefined;
     this.mainCard = undefined;
     this.energyCards = [];
     this.trainerCard = undefined;
@@ -23,19 +25,27 @@ export class BoardCardComponent {
     this.specialConditions = [];
     this.isFaceDown = false;
 
-    this.isEmpty = !value || !value.cards.length;
+    if (value instanceof CardList) {
+      this.cardList = value;
+    }
+    if (value instanceof PokemonSlot) {
+      this.pokemonSlot = value;
+      this.cardList = value.pokemons;
+    }
+
+    this.isEmpty = !this.cardList || !this.cardList.cards.length;
     if (this.isEmpty) {
       return;
     }
 
-    const cards: Card[] = value.cards;
+    const cards: Card[] = this.cardList.cards;
     this.cardCount = cards.length;
-    this.isSecret = value.isSecret;
-    this.isPublic = value.isPublic;
-    this.isFaceDown = value.isSecret || (!value.isPublic && !this.isOwner);
+    this.isSecret = this.cardList.isSecret;
+    this.isPublic = this.cardList.isPublic;
+    this.isFaceDown = this.cardList.isSecret || (!this.cardList.isPublic && !this.isOwner);
 
     // Pokemon slot, init energies, tool, special conditions, etc.
-    if (value instanceof PokemonCardList) {
+    if (value instanceof PokemonSlot) {
       this.initPokemonCardList(value);
       return;
     }
@@ -63,6 +73,8 @@ export class BoardCardComponent {
 
   @Input() isFaceDown = false;
 
+  public pokemonSlot: PokemonSlot;
+  public cardList: CardList;
   public isEmpty = true;
   public mainCard: Card;
   public moreEnergies = 0;
@@ -79,28 +91,25 @@ export class BoardCardComponent {
 
   constructor() { }
 
-  private initPokemonCardList(cardList: PokemonCardList) {
-    this.damage = cardList.damage;
-    this.specialConditions = cardList.specialConditions;
-    this.trainerCard = undefined;
-    this.mainCard = cardList.getPokemonCard();
-    this.trainerCard = cardList.tool;
+  private initPokemonCardList(pokemonSlot: PokemonSlot) {
+    this.damage = pokemonSlot.damage;
+    this.specialConditions = pokemonSlot.specialConditions;
+    this.mainCard = pokemonSlot.getPokemonCard();
+    if (pokemonSlot.trainers.cards.length > 0) {
+      this.trainerCard = pokemonSlot.trainers.cards[0];
+    }
 
-    for (const card of cardList.cards) {
-      switch (card.superType) {
-      case SuperType.ENERGY:
-        if (this.energyCards.length < MAX_ENERGY_CARDS) {
-          this.energyCards.push(card);
-        } else {
-          this.moreEnergies++;
-        }
-        break;
+    for (const card of pokemonSlot.energies.cards) {
+      if (this.energyCards.length < MAX_ENERGY_CARDS) {
+        this.energyCards.push(card);
+      } else {
+        this.moreEnergies++;
       }
     }
   }
 
-  public onCardClick(card: Card) {
-    this.cardClick.next(card);
+  public onCardClick(card: Card, cardList: CardList) {
+    this.cardClick.next({ card, cardList });
   }
 
 }

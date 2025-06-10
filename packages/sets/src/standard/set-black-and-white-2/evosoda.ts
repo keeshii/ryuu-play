@@ -9,7 +9,7 @@ import {
   GameMessage,
   PlayerType,
   PokemonCard,
-  PokemonCardList,
+  PokemonSlot,
   SlotType,
   Stage,
   State,
@@ -90,7 +90,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     }
   });
 
-  let targets: PokemonCardList[] = [];
+  let targets: PokemonSlot[] = [];
   yield store.prompt(
     state,
     new ChoosePokemonPrompt(
@@ -115,7 +115,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   }
 
   // Evolve Pokemon
-  player.deck.moveCardTo(evolution, targets[0]);
+  player.deck.moveCardTo(evolution, targets[0].pokemons);
   targets[0].clearEffects();
   targets[0].pokemonPlayedTurn = state.turn;
 

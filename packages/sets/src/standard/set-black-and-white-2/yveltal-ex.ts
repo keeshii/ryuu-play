@@ -13,7 +13,6 @@ import {
   State,
   StateUtils,
   StoreLike,
-  SuperType,
 } from '@ptcg/common';
 
 export class YveltalEx extends PokemonCard {
@@ -70,7 +69,7 @@ export class YveltalEx extends PokemonCard {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
       const player = effect.player;
-      const hasBench = player.bench.some(b => b.cards.length > 0);
+      const hasBench = player.bench.some(b => b.pokemons.cards.length > 0);
 
       if (hasBench === false) {
         return state;
@@ -81,17 +80,17 @@ export class YveltalEx extends PokemonCard {
         new AttachEnergyPrompt(
           player.id,
           GameMessage.ATTACH_ENERGY_TO_BENCH,
-          player.active,
+          player.active.energies,
           PlayerType.BOTTOM_PLAYER,
           [SlotType.BENCH],
-          { superType: SuperType.ENERGY },
+          { },
           { allowCancel: false, min: 1, max: 1 }
         ),
         transfers => {
           transfers = transfers || [];
           for (const transfer of transfers) {
             const target = StateUtils.getTarget(state, player, transfer.to);
-            player.active.moveCardTo(transfer.card, target);
+            player.active.moveCardTo(transfer.card, target.energies);
           }
         }
       );

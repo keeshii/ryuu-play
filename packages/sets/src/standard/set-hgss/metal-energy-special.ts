@@ -29,7 +29,7 @@ export class MetalEnergySpecial extends EnergyCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof PutDamageEffect) {
-      if (effect.target.cards.includes(this)) {
+      if (effect.target.energies.cards.includes(this)) {
         const checkPokemonType = new CheckPokemonTypeEffect(effect.target);
         store.reduceEffect(state, checkPokemonType);
         if (checkPokemonType.cardTypes.includes(CardType.METAL)) {

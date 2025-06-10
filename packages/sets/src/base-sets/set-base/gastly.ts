@@ -136,8 +136,8 @@ export class Gastly extends PokemonCard {
       effect.player.marker.removeMarker(this.CLEAR_DESTINY_BOND_MARKER, this);
 
       const opponent = StateUtils.getOpponent(state, effect.player);
-      opponent.forEachPokemon(PlayerType.TOP_PLAYER, cardList => {
-        cardList.marker.removeMarker(this.DESTINY_BOND_MARKER, this);
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, pokemonSlot => {
+        pokemonSlot.marker.removeMarker(this.DESTINY_BOND_MARKER, this);
       });
     }
 

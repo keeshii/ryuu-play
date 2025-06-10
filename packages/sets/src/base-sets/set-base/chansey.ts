@@ -103,8 +103,8 @@ export class Chansey extends PokemonCard {
       effect.player.marker.removeMarker(this.CLEAR_SCRUNCH_MARKER, this);
 
       const opponent = StateUtils.getOpponent(state, effect.player);
-      opponent.forEachPokemon(PlayerType.TOP_PLAYER, cardList => {
-        cardList.marker.removeMarker(this.SCRUNCH_MARKER, this);
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, pokemonSlot => {
+        pokemonSlot.marker.removeMarker(this.SCRUNCH_MARKER, this);
       });
     }
 

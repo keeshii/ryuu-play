@@ -1,10 +1,12 @@
 import { CardList } from './card-list';
 import { Marker } from './card-marker';
-import { SpecialCondition, Stage, SuperType } from '../card/card-types';
+import { SpecialCondition, Stage, TrainerType } from '../card/card-types';
+import { EnergyCard } from '../card/energy-card';
 import { PokemonCard } from '../card/pokemon-card';
+import { TrainerCard } from '../card/trainer-card';
 import { Card } from '../card/card';
 
-export class PokemonCardList extends CardList {
+export class PokemonSlot {
 
   public damage: number = 0;
 
@@ -18,18 +20,18 @@ export class PokemonCardList extends CardList {
 
   public pokemonPlayedTurn: number = 0;
 
-  // Some pokemon cards can be attached as a tool,
-  // we must remember, which card acts as a pokemon tool.
-  public tool: Card | undefined;
+  public pokemons: CardList<PokemonCard> = new CardList<PokemonCard>();
+  
+  public energies: CardList<EnergyCard> = new CardList<EnergyCard>();
+
+  public trainers: CardList<TrainerCard> = new CardList<TrainerCard>();
 
   public getPokemons(): PokemonCard[] {
-    const result: PokemonCard[] = [];
-    for (const card of this.cards) {
-      if (card.superType === SuperType.POKEMON && card !== this.tool) {
-        result.push(card as PokemonCard);
-      }
-    }
-    return result;
+    return this.pokemons.cards;
+  }
+
+  public getTools(): TrainerCard[] {
+    return this.trainers.cards.filter(t => t.trainerType === TrainerType.TOOL);
   }
 
   public getPokemonCard(): PokemonCard | undefined {
@@ -57,16 +59,29 @@ export class PokemonCardList extends CardList {
       || pokemons[0].stage === Stage.STAGE_2;
   }
 
+  public moveTo(destination: CardList): void {
+    this.pokemons.moveTo(destination);
+    this.energies.moveTo(destination);
+    this.trainers.moveTo(destination);
+  }
+
+  public moveCardsTo(cards: Card[], destination: CardList): void {
+    this.pokemons.moveCardsTo(cards as PokemonCard[], destination);
+    this.energies.moveCardsTo(cards as EnergyCard[], destination);
+    this.trainers.moveCardsTo(cards as TrainerCard[], destination);
+  }
+
+  public moveCardTo(card: Card, destination: CardList): void {
+    this.moveCardsTo([card], destination);
+  }
+
   clearEffects(): void {
     this.marker.markers = [];
     this.specialConditions = [];
     this.poisonDamage = 10;
     this.burnDamage = 20;
-    if (this.cards.length === 0) {
+    if (this.pokemons.cards.length === 0) {
       this.damage = 0;
-    }
-    if (this.tool && !this.cards.includes(this.tool)) {
-      this.tool = undefined;
     }
   }
 

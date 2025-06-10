@@ -36,7 +36,7 @@ export class ArchiesAceInTheHole extends TrainerCard {
         return c instanceof PokemonCard && c.cardType === CardType.WATER;
       });
 
-      const slot = player.bench.find(b => b.cards.length === 0);
+      const slot = player.bench.find(b => b.pokemons.cards.length === 0);
       const hasEffect = (hasPokemon && slot) || player.deck.cards.length > 0;
 
       if (cards.length !== 0 || !hasEffect) {
@@ -61,7 +61,7 @@ export class ArchiesAceInTheHole extends TrainerCard {
         ),
         selected => {
           const cards = selected || [];
-          player.discard.moveCardsTo(cards, slot);
+          player.discard.moveCardsTo(cards, slot.pokemons);
           slot.pokemonPlayedTurn = state.turn;
           player.deck.moveTo(player.hand, 5);
         }

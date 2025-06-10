@@ -26,7 +26,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   // Don't allow to play both blowers,
   // when opponen has an empty bench
   const benchCount = opponent.bench.reduce((sum, b) => {
-    return sum + (b.cards.length > 0 ? 1 : 0);
+    return sum + (b.pokemons.cards.length > 0 ? 1 : 0);
   }, 0);
 
   let playTwoCards = false;

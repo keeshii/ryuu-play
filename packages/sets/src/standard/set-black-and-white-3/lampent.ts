@@ -22,10 +22,10 @@ function* useCursedDrop(next: Function, store: StoreLike, state: State, effect: 
 
   const maxAllowedDamage: DamageMap[] = [];
   let damageLeft = 0;
-  opponent.forEachPokemon(PlayerType.TOP_PLAYER, (cardList, card, target) => {
-    const checkHpEffect = new CheckHpEffect(opponent, cardList);
+  opponent.forEachPokemon(PlayerType.TOP_PLAYER, (pokemonSlot, card, target) => {
+    const checkHpEffect = new CheckHpEffect(opponent, pokemonSlot);
     store.reduceEffect(state, checkHpEffect);
-    damageLeft += checkHpEffect.hp - cardList.damage;
+    damageLeft += checkHpEffect.hp - pokemonSlot.damage;
     maxAllowedDamage.push({ target, damage: checkHpEffect.hp });
   });
 

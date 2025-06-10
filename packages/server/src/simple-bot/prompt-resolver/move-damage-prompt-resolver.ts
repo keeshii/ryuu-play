@@ -17,7 +17,7 @@ export class MoveDamagePromptResolver extends PutDamagePromptResolver {
     const toItems = this.getTargets(state, prompt, prompt.options.blockedTo);
 
     fromItems.reverse();
-    fromItems = fromItems.filter(i => i.cardList.damage);
+    fromItems = fromItems.filter(i => i.pokemonSlot.damage);
 
     const result: DamageTransfer[] = [];
     let score = 0;
@@ -50,11 +50,11 @@ export class MoveDamagePromptResolver extends PutDamagePromptResolver {
         break;
       }
 
-      if (toItem.cardList === fromItem.cardList) {
+      if (toItem.pokemonSlot === fromItem.pokemonSlot) {
         toIndex += 1;
       }
 
-      if (toItem.cardList !== fromItem.cardList) {
+      if (toItem.pokemonSlot !== fromItem.pokemonSlot) {
         fromItem.damage -= 10;
         toItem.damage += 10;
         score += toItem.score - fromItem.score;

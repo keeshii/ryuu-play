@@ -4,7 +4,6 @@ import {
   GameError,
   GameMessage,
   PokemonCard,
-  PokemonCardList,
   PowerEffect,
   PowerType,
   Stage,
@@ -54,10 +53,14 @@ export class Unown extends PokemonCard {
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
       const player = effect.player;
-      const cardList = StateUtils.findCardList(state, this);
+      const pokemonSlot = StateUtils.findPokemonSlot(state, this);
+
+      if (pokemonSlot === undefined) {
+        throw new GameError(GameMessage.CANNOT_USE_POWER);
+      }
 
       // check if UnownR is on player's Bench
-      const benchIndex = player.bench.indexOf(cardList as PokemonCardList);
+      const benchIndex = player.bench.indexOf(pokemonSlot);
       if (benchIndex === -1) {
         throw new GameError(GameMessage.CANNOT_USE_POWER);
       }

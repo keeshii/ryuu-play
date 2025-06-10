@@ -21,7 +21,7 @@ export function playEnergyReducer(store: StoreLike, state: State, effect: Effect
       card: effect.energyCard.name,
       pokemon: pokemonCard.name
     });
-    effect.player.hand.moveCardTo(effect.energyCard, effect.target);
+    effect.player.hand.moveCardTo(effect.energyCard, effect.target.energies);
     return state;
   }
 

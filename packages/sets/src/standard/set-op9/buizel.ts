@@ -8,7 +8,6 @@ import {
   DiscardCardsEffect,
   Effect,
   EndTurnEffect,
-  EnergyCard,
   GameMessage,
   PlayerType,
   PokemonCard,
@@ -16,7 +15,6 @@ import {
   State,
   StateUtils,
   StoreLike,
-  SuperType,
 } from '@ptcg/common';
 
 function* useWhirlpool(next: Function, store: StoreLike, state: State, effect: AttackEffect): IterableIterator<State> {
@@ -24,7 +22,7 @@ function* useWhirlpool(next: Function, store: StoreLike, state: State, effect: A
   const opponent = StateUtils.getOpponent(state, player);
 
   // Defending Pokemon has no energy cards attached
-  if (!opponent.active.cards.some(c => c instanceof EnergyCard)) {
+  if (opponent.active.energies.cards.length === 0) {
     return state;
   }
 
@@ -44,8 +42,8 @@ function* useWhirlpool(next: Function, store: StoreLike, state: State, effect: A
     new ChooseCardsPrompt(
       player.id,
       GameMessage.CHOOSE_CARD_TO_DISCARD,
-      opponent.active,
-      { superType: SuperType.ENERGY },
+      opponent.active.energies,
+      { },
       { min: 1, max: 1, allowCancel: false }
     ),
     selected => {
@@ -140,8 +138,8 @@ export class Buizel extends PokemonCard {
       effect.player.marker.removeMarker(this.CLEAR_SUPER_FAST_MARKER, this);
 
       const opponent = StateUtils.getOpponent(state, effect.player);
-      opponent.forEachPokemon(PlayerType.TOP_PLAYER, cardList => {
-        cardList.marker.removeMarker(this.SUPER_FAST_MARKER, this);
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, pokemonSlot => {
+        pokemonSlot.marker.removeMarker(this.SUPER_FAST_MARKER, this);
       });
     }
 

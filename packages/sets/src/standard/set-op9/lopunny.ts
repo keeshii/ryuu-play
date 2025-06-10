@@ -60,7 +60,7 @@ export class Lopunny extends PokemonCard {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
 
-      const hasBench = opponent.bench.some(b => b.cards.length > 0);
+      const hasBench = opponent.bench.some(b => b.pokemons.cards.length > 0);
       if (!hasBench) {
         return state;
       }

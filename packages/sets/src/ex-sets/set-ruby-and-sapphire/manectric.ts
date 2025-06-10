@@ -72,7 +72,7 @@ function* useAttractCurrent(
         transfers = transfers || [];
         for (const transfer of transfers) {
           const target = StateUtils.getTarget(state, player, transfer.to);
-          cardList.moveCardTo(transfer.card, target);
+          cardList.moveCardTo(transfer.card, target.energies);
         }
         next();
       }

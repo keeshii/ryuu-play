@@ -1,6 +1,5 @@
 import {
   Effect,
-  EnergyCard,
   HealEffect,
   PlayerType,
   State,
@@ -27,14 +26,13 @@ export class PokemonCenter extends TrainerCard {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
       const player = effect.player;
 
-      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, cardList => {
-        if (cardList.damage > 0) {
-          const damage = cardList.damage;
-          const healEffect = new HealEffect(player, cardList, damage);
+      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, pokemonSlot => {
+        if (pokemonSlot.damage > 0) {
+          const damage = pokemonSlot.damage;
+          const healEffect = new HealEffect(player, pokemonSlot, damage);
           state = store.reduceEffect(state, healEffect);
 
-          const cards = cardList.cards.filter(c => c instanceof EnergyCard);
-          cardList.moveCardsTo(cards, player.discard);
+          pokemonSlot.energies.moveTo(player.discard);
         }
       });
     }

@@ -25,12 +25,12 @@ export class AttachEnergyTactic extends SimpleTactic {
     const energyScore = new EnergyScore(this.options);
     const baseScore = energyScore.getScore(state, player.id);
     const targets: { target: CardTarget, card: Card, score: number }[] = [];
-    player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, pokemon, target) => {
+    player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (pokemonSlot, pokemon, target) => {
 
       for (const card of energies) {
-        cardList.cards.push(card);
+        pokemonSlot.energies.cards.push(card);
         const score = energyScore.getScore(state, player.id);
-        cardList.cards.pop();
+        pokemonSlot.energies.cards.pop();
         if (score > baseScore) {
           targets.push({ target, score, card });
         }

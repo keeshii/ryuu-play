@@ -65,7 +65,7 @@ export class Pidgeotto extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     // Remember damage done to Pidgeotto by the opponent's attacks
-    if (effect instanceof AfterDamageEffect && effect.target.cards.includes(this)) {
+    if (effect instanceof AfterDamageEffect && effect.target.pokemons.cards.includes(this)) {
       const player = effect.player;
       const targetPlayer = StateUtils.findOwner(state, effect.target);
 
@@ -87,7 +87,7 @@ export class Pidgeotto extends PokemonCard {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
-      const hasBench = opponent.bench.some(b => b.cards.length > 0);
+      const hasBench = opponent.bench.some(b => b.pokemons.cards.length > 0);
 
       if (hasBench === false) {
         return state;

@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { DamageTransfer, MoveDamagePrompt, CardTarget, DamageMap, PokemonCardList } from '@ptcg/common';
+import { DamageTransfer, MoveDamagePrompt, CardTarget, DamageMap, PokemonSlot } from '@ptcg/common';
 
 import { GameService } from '../../../api/services/game.service';
 import { LocalGameState } from '../../../shared/session/session.interface';
@@ -68,8 +68,8 @@ export class PromptMoveDamageComponent implements OnChanges {
   public removeDamage() {
     this.damage += 10;
     const item = this.selectedItem;
-    item.cardList = Object.assign(new PokemonCardList(), item.cardList);
-    item.cardList.damage -= 10;
+    item.pokemonSlot = Object.assign(new PokemonSlot(), item.pokemonSlot);
+    item.pokemonSlot.damage -= 10;
     this.updateButtonDisable();
     this.updateIsInvalid();
   }
@@ -77,8 +77,8 @@ export class PromptMoveDamageComponent implements OnChanges {
   public addDamage() {
     this.damage -= 10;
     const item = this.selectedItem;
-    item.cardList = Object.assign(new PokemonCardList(), item.cardList);
-    item.cardList.damage += 10;
+    item.pokemonSlot = Object.assign(new PokemonSlot(), item.pokemonSlot);
+    item.pokemonSlot.damage += 10;
     this.updateButtonDisable();
     this.updateIsInvalid();
   }
@@ -93,9 +93,9 @@ export class PromptMoveDamageComponent implements OnChanges {
             && i.target.slot === item.target.slot
             && i.target.index === item.target.index;
         });
-        if (initial !== undefined && initial.damage !== item.cardList.damage) {
-          item.cardList = Object.assign(new PokemonCardList(), item.cardList);
-          item.cardList.damage = initial.damage;
+        if (initial !== undefined && initial.damage !== item.pokemonSlot.damage) {
+          item.pokemonSlot = Object.assign(new PokemonSlot(), item.pokemonSlot);
+          item.pokemonSlot.damage = initial.damage;
         }
       }
     }
@@ -111,7 +111,7 @@ export class PromptMoveDamageComponent implements OnChanges {
     }
 
     const target = this.selectedItem.target;
-    const cardList = this.selectedItem.cardList;
+    const cardList = this.selectedItem.pokemonSlot;
     const damageMap = this.maxDamageMap.find(d => {
       return d.target.player === target.player
         && d.target.slot === target.slot
@@ -161,10 +161,10 @@ export class PromptMoveDamageComponent implements OnChanges {
         });
 
         if (initial !== undefined) {
-          for (let i = initial.damage; i > item.cardList.damage; i -= 10) {
+          for (let i = initial.damage; i > item.pokemonSlot.damage; i -= 10) {
             fromItems.push(item);
           }
-          for (let i = initial.damage; i < item.cardList.damage; i += 10) {
+          for (let i = initial.damage; i < item.pokemonSlot.damage; i += 10) {
             toItems.push(item);
           }
         }
@@ -216,8 +216,8 @@ export class PromptMoveDamageComponent implements OnChanges {
       const pokemonRows = this.pokemonData.getRows();
       for (const row of pokemonRows) {
         for (const item of row.items) {
-          if (item.cardList.cards.length > 0) {
-            const damageItem = { target: item.target, damage: item.cardList.damage };
+          if (item.pokemonSlot.pokemons.cards.length > 0) {
+            const damageItem = { target: item.target, damage: item.pokemonSlot.damage };
             this.initialDamageMap.push(damageItem);
           }
         }

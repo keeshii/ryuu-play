@@ -85,8 +85,8 @@ export class Gabite extends PokemonCard {
       effect.player.marker.removeMarker(this.CLEAR_BURROW_MARKER, this);
 
       const opponent = StateUtils.getOpponent(state, effect.player);
-      opponent.forEachPokemon(PlayerType.TOP_PLAYER, cardList => {
-        cardList.marker.removeMarker(this.BURROW_MARKER, this);
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, pokemonSlot => {
+        pokemonSlot.marker.removeMarker(this.BURROW_MARKER, this);
       });
     }
 

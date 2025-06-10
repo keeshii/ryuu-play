@@ -57,7 +57,7 @@ export class Shuckle extends PokemonCard {
   public readonly CLEAR_SHELL_STUNNER_MAREKER = 'CLEAR_SHELL_STUNNER_MAREKER';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof AttachEnergyEffect && effect.target.cards.includes(this)) {
+    if (effect instanceof AttachEnergyEffect && effect.target.pokemons.cards.includes(this)) {
       const player = effect.player;
       const pokemonCard = effect.target.getPokemonCard();
 
@@ -100,8 +100,8 @@ export class Shuckle extends PokemonCard {
       effect.player.marker.removeMarker(this.CLEAR_SHELL_STUNNER_MAREKER, this);
 
       const opponent = StateUtils.getOpponent(state, effect.player);
-      opponent.forEachPokemon(PlayerType.TOP_PLAYER, cardList => {
-        cardList.marker.removeMarker(this.SHELL_STUNNER_MAREKER, this);
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, pokemonSlot => {
+        pokemonSlot.marker.removeMarker(this.SHELL_STUNNER_MAREKER, this);
       });
     }
 

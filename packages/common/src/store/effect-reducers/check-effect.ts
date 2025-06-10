@@ -1,7 +1,6 @@
 import { State, GamePhase, GameWinner } from '../state/state';
 import { StoreLike } from '../store-like';
 import { CheckHpEffect, CheckProvidedEnergyEffect, CheckTableStateEffect } from '../effects/check-effects';
-import { PokemonCardList } from '../state/pokemon-card-list';
 import { ChoosePokemonPrompt } from '../prompts/choose-pokemon-prompt';
 import { GameError } from '../../game-error';
 import { GameMessage, GameLog } from '../../game-message';
@@ -11,10 +10,11 @@ import { PlayerType, SlotType } from '../actions/play-card-action';
 import { KnockOutEffect } from '../effects/game-effects';
 import { Effect } from '../effects/effect';
 import { EnergyCard } from '../card/energy-card';
+import { PokemonSlot } from '../state/pokemon-slot';
 
 interface PokemonItem {
   playerNum: number;
-  cardList: PokemonCardList;
+  pokemonSlot: PokemonSlot;
 }
 
 function findKoPokemons(store: StoreLike, state: State): PokemonItem[] {
@@ -22,12 +22,12 @@ function findKoPokemons(store: StoreLike, state: State): PokemonItem[] {
 
   for (let i = 0; i < state.players.length; i++) {
     const player = state.players[i];
-    player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card, target) => {
-      const checkHpEffect = new CheckHpEffect(player, cardList);
+    player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (pokemonSlot, card, target) => {
+      const checkHpEffect = new CheckHpEffect(player, pokemonSlot);
       store.reduceEffect(state, checkHpEffect);
 
-      if (cardList.damage >= checkHpEffect.hp) {
-        pokemons.push({ playerNum: i, cardList });
+      if (pokemonSlot.damage >= checkHpEffect.hp) {
+        pokemons.push({ playerNum: i, pokemonSlot });
       }
     });
   }
@@ -39,8 +39,10 @@ function handleBenchSizeChange(store: StoreLike, state: State, benchSize: number
   state.players.forEach(player => {
     // Add empty slots if bench is smaller
     while (player.bench.length < benchSize) {
-      const bench = new PokemonCardList();
-      bench.isPublic = true;
+      const bench = new PokemonSlot();
+      bench.pokemons.isPublic = true;
+      bench.energies.isPublic = true;
+      bench.trainers.isPublic = true;
       player.bench.push(bench);
     }
 
@@ -49,10 +51,10 @@ function handleBenchSizeChange(store: StoreLike, state: State, benchSize: number
     }
 
     // Remove empty slots, starting from the right side
-    const empty: PokemonCardList[] = [];
+    const empty: PokemonSlot[] = [];
     for (let index = player.bench.length - 1; index >= 0; index--) {
       const bench = player.bench[index];
-      const isEmpty = bench.cards.length === 0;
+      const isEmpty = bench.pokemons.cards.length === 0;
       if (player.bench.length - empty.length > benchSize && isEmpty) {
         empty.push(bench);
       }
@@ -83,7 +85,9 @@ function handleBenchSizeChange(store: StoreLike, state: State, benchSize: number
       // Discard all empty slots and selected Pokemons
       for (let i = player.bench.length - 1; i >= 0; i--) {
         if (selected.includes(player.bench[i])) {
-          player.bench[i].moveTo(player.discard);
+          player.bench[i].pokemons.moveTo(player.discard);
+          player.bench[i].energies.moveTo(player.discard);
+          player.bench[i].trainers.moveTo(player.discard);
           player.bench.splice(i, 1);
         }
       }
@@ -98,8 +102,8 @@ function chooseActivePokemons(state: State): ChoosePokemonPrompt[] {
   const prompts: ChoosePokemonPrompt[] = [];
 
   for (const player of state.players) {
-    const hasActive = player.active.cards.length > 0;
-    const hasBenched = player.bench.some(bench => bench.cards.length > 0);
+    const hasActive = player.active.pokemons.cards.length > 0;
+    const hasBenched = player.bench.some(bench => bench.pokemons.cards.length > 0);
     if (!hasActive && hasBenched) {
       const choose = new ChoosePokemonPrompt(
         player.id,
@@ -181,7 +185,7 @@ function checkWinner(
   for (let i = 0; i < state.players.length; i++) {
     const player = state.players[i];
     // Player has no active Pokemon, opponent wins.
-    if (player.active.cards.length === 0) {
+    if (player.active.pokemons.cards.length === 0) {
       store.log(state, GameLog.LOG_PLAYER_NO_ACTIVE_POKEMON, { name: player.name });
       points[i === 0 ? 1 : 0]++;
     }
@@ -230,26 +234,32 @@ function handlePrompts(
     throw new GameError(GameMessage.ILLEGAL_ACTION);
   }
 
-  return store.prompt(state, prompt, (result) => {
-    if (prompt instanceof ChoosePrizePrompt) {
+  if (prompt instanceof ChoosePrizePrompt) {
+    return store.prompt(state, prompt, (result) => {
       const prizes: CardList[] = result;
       prizes.forEach(prize => prize.moveTo(player.hand));
       handlePrompts(store, state, prompts, onComplete);
-    } else if (prompt instanceof ChoosePokemonPrompt) {
-      const selectedPokemon = result as PokemonCardList[];
+    });
+  }
+
+  if (prompt instanceof ChoosePokemonPrompt) {
+    return store.prompt(state, prompt, (result) => {
+      const selectedPokemon = result;
       if (selectedPokemon.length !== 1) {
         throw new GameError(GameMessage.ILLEGAL_ACTION);
       }
       const benchIndex = player.bench.indexOf(selectedPokemon[0]);
-      if (benchIndex === -1 || player.active.cards.length > 0) {
+      if (benchIndex === -1 || player.active.pokemons.cards.length > 0) {
         throw new GameError(GameMessage.ILLEGAL_ACTION);
       }
       const temp = player.active;
       player.active = player.bench[benchIndex];
       player.bench[benchIndex] = temp;
       handlePrompts(store, state, prompts, onComplete);
-    }
-  });
+    });
+  }
+
+  throw new GameError(GameMessage.INVALID_GAME_STATE);
 }
 
 function* executeCheckState(next: Function, store: StoreLike, state: State,
@@ -270,7 +280,7 @@ function* executeCheckState(next: Function, store: StoreLike, state: State,
   const pokemonsToDiscard = findKoPokemons(store, state);
   for (const item of pokemonsToDiscard) {
     const player = state.players[item.playerNum];
-    const knockOutEffect = new KnockOutEffect(player, item.cardList);
+    const knockOutEffect = new KnockOutEffect(player, item.pokemonSlot);
     state = store.reduceEffect(state, knockOutEffect);
 
     if (store.hasPrompts()) {
@@ -320,7 +330,7 @@ export function checkStateReducer(store: StoreLike, state: State, effect: Effect
 
 
   if (effect instanceof CheckProvidedEnergyEffect) {
-    effect.source.cards.forEach(c => {
+    effect.source.energies.cards.forEach(c => {
       if (c instanceof EnergyCard && !effect.energyMap.some(e => e.card === c)) {
         effect.energyMap.push({ card: c, provides: c.provides });
       }

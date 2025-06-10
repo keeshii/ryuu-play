@@ -12,7 +12,6 @@ import {
   GameMessage,
   PlayerType,
   PokemonCard,
-  PokemonCardList,
   PowerEffect,
   PowerType,
   SlotType,
@@ -71,11 +70,12 @@ export class Blastoise extends PokemonCard {
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
       const player = effect.player;
-      const cardList = StateUtils.findCardList(state, this) as PokemonCardList;
+      const pokemonSlot = StateUtils.findPokemonSlot(state, this);
       
-      if (cardList.specialConditions.includes(SpecialCondition.ASLEEP)
-        || cardList.specialConditions.includes(SpecialCondition.CONFUSED)
-        || cardList.specialConditions.includes(SpecialCondition.PARALYZED)) {
+      if (pokemonSlot === undefined
+        || pokemonSlot.specialConditions.includes(SpecialCondition.ASLEEP)
+        || pokemonSlot.specialConditions.includes(SpecialCondition.CONFUSED)
+        || pokemonSlot.specialConditions.includes(SpecialCondition.PARALYZED)) {
         throw new GameError(GameMessage.CANNOT_USE_POWER);
       }
 

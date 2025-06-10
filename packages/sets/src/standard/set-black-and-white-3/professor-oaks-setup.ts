@@ -4,7 +4,7 @@ import {
   Effect,
   GameError,
   GameMessage,
-  PokemonCardList,
+  PokemonSlot,
   ShuffleDeckPrompt,
   Stage,
   State,
@@ -17,7 +17,7 @@ import {
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
-  const slots: PokemonCardList[] = player.bench.filter(b => b.cards.length === 0);
+  const slots: PokemonSlot[] = player.bench.filter(b => b.pokemons.cards.length === 0);
   const max = Math.min(slots.length, 3);
 
   if (player.deck.cards.length === 0) {
@@ -41,7 +41,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   );
 
   cards.forEach((card, index) => {
-    player.deck.moveCardTo(card, slots[index]);
+    player.deck.moveCardTo(card, slots[index].pokemons);
     slots[index].pokemonPlayedTurn = state.turn;
   });
 

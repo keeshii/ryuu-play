@@ -82,7 +82,7 @@ export class Pyroar extends PokemonCard {
       );
     }
 
-    if (effect instanceof PutDamageEffect && effect.target.cards.includes(this)) {
+    if (effect instanceof PutDamageEffect && effect.target.pokemons.cards.includes(this)) {
       const pokemonCard = effect.target.getPokemonCard();
 
       // It's not this pokemon card

@@ -22,7 +22,7 @@ function* useAquaJet(next: Function, store: StoreLike, state: State, effect: Att
   const opponent = StateUtils.getOpponent(state, player);
 
   // Opponent doesn't have benched pokemon
-  const hasBenched = opponent.bench.some(b => b.cards.length > 0);
+  const hasBenched = opponent.bench.some(b => b.pokemons.cards.length > 0);
   if (!hasBenched) {
     return state;
   }
@@ -129,8 +129,8 @@ export class Floatzel extends PokemonCard {
       effect.player.marker.removeMarker(this.CLEAR_AGILITY_MARKER, this);
 
       const opponent = StateUtils.getOpponent(state, effect.player);
-      opponent.forEachPokemon(PlayerType.TOP_PLAYER, cardList => {
-        cardList.marker.removeMarker(this.AGILITY_MARKER, this);
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, pokemonSlot => {
+        pokemonSlot.marker.removeMarker(this.AGILITY_MARKER, this);
       });
     }
 

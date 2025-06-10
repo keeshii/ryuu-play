@@ -9,7 +9,6 @@ import {
   GameMessage,
   PlayPokemonEffect,
   PokemonCard,
-  PokemonCardList,
   PowerEffect,
   PowerType,
   Stage,
@@ -73,12 +72,12 @@ export class Smeargle extends PokemonCard {
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
-      const cardList = StateUtils.findCardList(state, this) as PokemonCardList;
+      const pokemonSlot = StateUtils.findPokemonSlot(state, this);
 
-      if (cardList.specialConditions.length > 0) {
+      if (pokemonSlot !== player.active) {
         throw new GameError(GameMessage.CANNOT_USE_POWER);
       }
-      if (cardList !== player.active) {
+      if (pokemonSlot.specialConditions.length > 0) {
         throw new GameError(GameMessage.CANNOT_USE_POWER);
       }
       if (player.marker.hasMarker(this.PORTRAIT_MARKER, this)) {

@@ -6,14 +6,13 @@ import {
   PlayerType,
   PlayPokemonEffect,
   PokemonCard,
-  PokemonCardList,
+  PokemonSlot,
   PowerEffect,
   PowerType,
   SlotType,
   Stage,
   State,
   StoreLike,
-  SuperType,
 } from '@ptcg/common';
 
 function* useReturn(
@@ -33,7 +32,7 @@ function* useReturn(
     return state;
   }
 
-  let targets: PokemonCardList[] = [];
+  let targets: PokemonSlot[] = [];
   yield store.prompt(
     state,
     new ChoosePokemonPrompt(
@@ -53,8 +52,7 @@ function* useReturn(
     return state;
   }
 
-  const energyCards = targets[0].cards.filter(c => c.superType === SuperType.ENERGY);
-  targets[0].moveCardsTo(energyCards, player.hand);
+  targets[0].energies.moveTo(player.hand);
   return state;
 }
 

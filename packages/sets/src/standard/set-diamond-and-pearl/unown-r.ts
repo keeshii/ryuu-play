@@ -8,7 +8,6 @@ import {
   MoveEnergyPrompt,
   PlayerType,
   PokemonCard,
-  PokemonCardList,
   PowerEffect,
   PowerType,
   SlotType,
@@ -16,7 +15,6 @@ import {
   State,
   StateUtils,
   StoreLike,
-  SuperType,
 } from '@ptcg/common';
 
 function* useHiddenPower(
@@ -34,7 +32,7 @@ function* useHiddenPower(
       GameMessage.MOVE_ENERGY_CARDS,
       PlayerType.BOTTOM_PLAYER,
       [SlotType.ACTIVE, SlotType.BENCH],
-      { superType: SuperType.ENERGY, energyType: EnergyType.BASIC },
+      { energyType: EnergyType.BASIC },
       { allowCancel: true }
     ),
     transfers => {
@@ -45,7 +43,7 @@ function* useHiddenPower(
       for (const transfer of transfers) {
         const source = StateUtils.getTarget(state, player, transfer.from);
         const target = StateUtils.getTarget(state, player, transfer.to);
-        source.moveCardTo(transfer.card, target);
+        source.moveCardTo(transfer.card, target.energies);
       }
     }
   );
@@ -94,10 +92,13 @@ export class UnownR extends PokemonCard {
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
       const player = effect.player;
-      const cardList = StateUtils.findCardList(state, this);
+      const pokemonSlot = StateUtils.findPokemonSlot(state, this);
 
       // check if UnownR is on player's Bench
-      const benchIndex = player.bench.indexOf(cardList as PokemonCardList);
+      if (pokemonSlot === undefined) {
+        throw new GameError(GameMessage.CANNOT_USE_POWER);
+      }
+      const benchIndex = player.bench.indexOf(pokemonSlot);
       if (benchIndex === -1) {
         throw new GameError(GameMessage.CANNOT_USE_POWER);
       }

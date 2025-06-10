@@ -1,4 +1,4 @@
-import { State, Player, ResolvePromptAction, GameMessage, PokemonCardList,
+import { State, Player, ResolvePromptAction, GameMessage, PokemonSlot,
   MoveDamagePrompt, PlayerType, SlotType, PokemonCard, DamageMap, DamageTransfer} from '@ptcg/common';
 import { MoveDamagePromptResolver } from './move-damage-prompt-resolver';
 import {
@@ -22,14 +22,14 @@ describe('MoveDamagePromptResolver', () => {
   let player: Player;
   let opponent: Player;
 
-  function createSlot(): PokemonCardList {
-    const slot = new PokemonCardList();
-    slot.cards = [ new TestPokemon() ];
+  function createSlot(): PokemonSlot {
+    const slot = new PokemonSlot();
+    slot.pokemons.cards = [ new TestPokemon() ];
     return slot;
   }
 
-  function setHp(cardList: PokemonCardList, hp: number): void {
-    const pokemonCard = cardList.cards[0] as PokemonCard;
+  function setHp(cardList: PokemonSlot, hp: number): void {
+    const pokemonCard = cardList.pokemons.cards[0] as PokemonCard;
     pokemonCard.hp = hp;
   }
 

@@ -6,7 +6,7 @@ import {
   GameLog,
   GameMessage,
   PokemonCard,
-  PokemonCardList,
+  PokemonSlot,
   SelectPrompt,
   Stage,
   State,
@@ -41,7 +41,7 @@ const promptOptions: { message: GameMessage, value: string }[] = [
   { message: GameMessage.TYPE_FAIRY, value: 'Y' },
 ];
 
-function getMarkerType(self: Porygon, markerType: string, target: PokemonCardList): CardType | undefined {
+function getMarkerType(self: Porygon, markerType: string, target: PokemonSlot): CardType | undefined {
   const marker = target.marker.markers.find(c => c.name.startsWith(markerType) && c.source === self);
   if (!marker) {
     return;
@@ -53,7 +53,7 @@ function getMarkerType(self: Porygon, markerType: string, target: PokemonCardLis
   return cardType;
 }
 
-function removeMarkersByName(markerType: string, target: PokemonCardList): void {
+function removeMarkersByName(markerType: string, target: PokemonSlot): void {
   const markers = target.marker.markers.filter(c => c.name.startsWith(markerType));
   for (const marker of markers) {
     target.marker.removeMarker(marker.name, marker.source);

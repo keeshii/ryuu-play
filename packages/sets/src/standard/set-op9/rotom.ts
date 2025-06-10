@@ -8,7 +8,7 @@ import {
   GameMessage,
   PlayerType,
   PokemonCard,
-  PokemonCardList,
+  PokemonSlot,
   PowerEffect,
   PowerType,
   ShowCardsPrompt,
@@ -69,7 +69,7 @@ export class Rotom extends PokemonCard {
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
       const player = effect.player;
       const cardList = StateUtils.findCardList(state, this);
-      if (!(cardList instanceof PokemonCardList)) {
+      if (!(cardList instanceof PokemonSlot)) {
         return state;
       }
       if (cardList.marker.hasMarker(this.TYPE_SHIFT_MARKER, this)) {

@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { Card, MoveEnergyPrompt, CardTarget, FilterType, PokemonCardList } from '@ptcg/common';
+import { Card, MoveEnergyPrompt, CardTarget, FilterType, PokemonSlot, EnergyCard } from '@ptcg/common';
 
 import { GameService } from '../../../api/services/game.service';
 import { LocalGameState } from '../../../shared/session/session.interface';
@@ -8,7 +8,7 @@ import { PokemonData, PokemonItem } from '../choose-pokemons-pane/pokemon-data';
 interface MoveEnergyResult {
   from: PokemonItem;
   to: PokemonItem;
-  card: Card;
+  card: EnergyCard;
 }
 
 @Component({
@@ -73,14 +73,14 @@ export class PromptMoveEnergyComponent implements OnChanges {
     this.updateBlocked(item);
   }
 
-  public onCardDrop([item, card]: [PokemonItem, Card]) {
+  public onCardDrop([item, card]: [PokemonItem, EnergyCard]) {
     if (item === this.selectedItem) {
       return;
     }
     if (this.pokemonData.matchesTarget(item, this.blockedTo)) {
       return;
     }
-    const index = this.selectedItem.cardList.cards.indexOf(card);
+    const index = this.selectedItem.pokemonSlot.energies.cards.indexOf(card);
     if (index === -1) {
       return;
     }
@@ -106,16 +106,16 @@ export class PromptMoveEnergyComponent implements OnChanges {
     }
   }
 
-  private moveCard(from: PokemonItem, to: PokemonItem, card: Card) {
-    from.cardList = Object.assign(new PokemonCardList(), from.cardList);
-    from.cardList.cards = [...from.cardList.cards];
+  private moveCard(from: PokemonItem, to: PokemonItem, card: EnergyCard) {
+    from.pokemonSlot = Object.assign(new PokemonSlot(), from.pokemonSlot);
+    from.pokemonSlot.energies.cards = [...from.pokemonSlot.energies.cards];
 
-    to.cardList = Object.assign(new PokemonCardList(), to.cardList);
-    to.cardList.cards = [...to.cardList.cards];
+    to.pokemonSlot = Object.assign(new PokemonSlot(), to.pokemonSlot);
+    to.pokemonSlot.energies.cards = [...to.pokemonSlot.energies.cards];
 
-    const index = from.cardList.cards.indexOf(card);
-    from.cardList.cards.splice(index, 1);
-    to.cardList.cards.push(card);
+    const index = from.pokemonSlot.energies.cards.indexOf(card);
+    from.pokemonSlot.energies.cards.splice(index, 1);
+    to.pokemonSlot.energies.cards.push(card);
   }
 
   private appendMoveResult(result: MoveEnergyResult) {
@@ -145,7 +145,7 @@ export class PromptMoveEnergyComponent implements OnChanges {
 
   private updateBlocked(item: PokemonItem) {
     const blocked: number[] = [];
-    item.cardList.cards.forEach((c, index) => {
+    item.pokemonSlot.energies.cards.forEach((c, index) => {
       if (this.blockedCardList.includes(c)) {
         blocked.push(index);
       }
@@ -169,7 +169,7 @@ export class PromptMoveEnergyComponent implements OnChanges {
 
         if (blockedItem !== undefined) {
           blockedItem.blocked.forEach(b => {
-            cards.push(item.cardList.cards[b]);
+            cards.push(item.pokemonSlot.energies.cards[b]);
           });
         }
 

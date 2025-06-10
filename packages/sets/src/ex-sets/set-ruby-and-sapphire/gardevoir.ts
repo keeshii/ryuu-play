@@ -12,7 +12,6 @@ import {
   PlayerType,
   PlayPokemonEffect,
   PokemonCard,
-  PokemonCardList,
   PowerEffect,
   PowerType,
   ShuffleDeckPrompt,
@@ -32,9 +31,9 @@ function* usePsyShadow(
   effect: PowerEffect
 ): IterableIterator<State> {
   const player = effect.player;
-  const cardList = StateUtils.findCardList(state, self) as PokemonCardList;
+  const pokemonSlot = StateUtils.findPokemonSlot(state, self);
 
-  if (cardList.specialConditions.length > 0) {
+  if (!pokemonSlot || pokemonSlot.specialConditions.length > 0) {
     throw new GameError(GameMessage.CANNOT_USE_POWER);
   }
   if (player.deck.cards.length === 0) {
@@ -70,7 +69,7 @@ function* usePsyShadow(
 
   for (const transfer of transfers) {
     const target = StateUtils.getTarget(state, player, transfer.to);
-    player.discard.moveCardTo(transfer.card, target);
+    player.discard.moveCardTo(transfer.card, target.energies);
     target.damage += 20;
   }
 

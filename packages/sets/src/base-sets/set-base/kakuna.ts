@@ -105,8 +105,8 @@ export class Kakuna extends PokemonCard {
       effect.player.marker.removeMarker(this.CLEAR_STIFFEN_MARKER, this);
 
       const opponent = StateUtils.getOpponent(state, effect.player);
-      opponent.forEachPokemon(PlayerType.TOP_PLAYER, cardList => {
-        cardList.marker.removeMarker(this.STIFFEN_MARKER, this);
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, pokemonSlot => {
+        pokemonSlot.marker.removeMarker(this.STIFFEN_MARKER, this);
       });
     }
 

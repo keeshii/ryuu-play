@@ -1,5 +1,5 @@
 import { Player, State, Action, ResolvePromptAction, Prompt, CardTarget,
-  CardList, PlayerType, StateUtils, DamageMap, PokemonCardList, MoveDamagePrompt } from '@ptcg/common';
+  PlayerType, StateUtils, DamageMap, PokemonSlot, MoveDamagePrompt } from '@ptcg/common';
 import { PromptResolver } from './prompt-resolver';
 import { PutDamagePrompt } from '@ptcg/common';
 
@@ -7,7 +7,7 @@ export type DamagePromptResolverType = PutDamagePrompt | MoveDamagePrompt;
 
 export interface DamagePromptResolverTarget {
   target: CardTarget;
-  cardList: PokemonCardList;
+  pokemonSlot: PokemonSlot;
   damage: number;
   hp: number;
   score: number;
@@ -68,40 +68,40 @@ export class PutDamagePromptResolver extends PromptResolver {
     const hasPlayer = [PlayerType.BOTTOM_PLAYER, PlayerType.ANY].includes(prompt.playerType);
     let results: DamagePromptResolverTarget[] = [];
     if (hasOpponent) {
-      opponent.forEachPokemon(PlayerType.TOP_PLAYER, (cardList, card, target) => {
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, (pokemonSlot, card, target) => {
         const maxAllowedDamage = prompt.maxAllowedDamage.find(d => {
           return d.target.player === target.player
             && d.target.slot === target.slot
             && d.target.index === target.index;
         });
         const hp = maxAllowedDamage ? maxAllowedDamage.damage : 0;
-        const damage = cardList.damage;
-        const score = this.stateScore.getPokemonScore(cardList);
+        const damage = pokemonSlot.damage;
+        const score = this.stateScore.getPokemonScore(pokemonSlot);
 
         if (hp > 0 && prompt.slots.includes(target.slot)) {
-          results.push({ target, cardList, damage, hp, score });
+          results.push({ target, pokemonSlot, damage, hp, score });
         }
       });
     }
     if (hasPlayer) {
-      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card, target) => {
+      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (pokemonSlot, card, target) => {
         const maxHp = prompt.maxAllowedDamage.find(d => {
           return d.target.player === target.player
             && d.target.slot === target.slot
             && d.target.index === target.index;
         });
-        const hp = maxHp ? maxHp.damage - cardList.damage : 0;
-        const damage = cardList.damage;
-        const score = -this.stateScore.getPokemonScore(cardList);
+        const hp = maxHp ? maxHp.damage - pokemonSlot.damage : 0;
+        const damage = pokemonSlot.damage;
+        const score = -this.stateScore.getPokemonScore(pokemonSlot);
 
         if (hp > 0 && prompt.slots.includes(target.slot)) {
-          results.push({ target, cardList, damage, hp, score });
+          results.push({ target, pokemonSlot, damage, hp, score });
         }
       });
     }
 
-    const blockedList: CardList[] = blocked.map(b => StateUtils.getTarget(state, player, b));
-    results = results.filter(i => !blockedList.includes(i.cardList));
+    const blockedList: PokemonSlot[] = blocked.map(b => StateUtils.getTarget(state, player, b));
+    results = results.filter(i => !blockedList.includes(i.pokemonSlot));
     results.sort((a, b) => b.score - a.score);
     return results;
   }

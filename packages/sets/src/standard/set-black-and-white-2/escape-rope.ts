@@ -4,7 +4,7 @@ import {
   GameError,
   GameMessage,
   PlayerType,
-  PokemonCardList,
+  PokemonSlot,
   SlotType,
   State,
   StateUtils,
@@ -18,14 +18,14 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   const player = effect.player;
   const opponent = StateUtils.getOpponent(state, player);
 
-  const playerHasBench = player.bench.some(b => b.cards.length > 0);
-  const opponentHasBench = opponent.bench.some(b => b.cards.length > 0);
+  const playerHasBench = player.bench.some(b => b.pokemons.cards.length > 0);
+  const opponentHasBench = opponent.bench.some(b => b.pokemons.cards.length > 0);
 
   if (!playerHasBench && !opponentHasBench) {
     throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
   }
 
-  let targets: PokemonCardList[] = [];
+  let targets: PokemonSlot[] = [];
   if (opponentHasBench) {
     yield store.prompt(
       state,

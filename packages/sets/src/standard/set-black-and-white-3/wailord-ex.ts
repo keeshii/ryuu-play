@@ -60,7 +60,7 @@ export class WailordEx extends PokemonCard {
       return state;
     }
 
-    if (effect instanceof AttachEnergyEffect && effect.target.cards.includes(this)) {
+    if (effect instanceof AttachEnergyEffect && effect.target.pokemons.cards.includes(this)) {
       const player = effect.player;
       if (effect.target.specialConditions.length === 0) {
         return state;

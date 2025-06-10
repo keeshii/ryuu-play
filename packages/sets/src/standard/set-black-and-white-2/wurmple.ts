@@ -6,7 +6,7 @@ import {
   Effect,
   GameMessage,
   PokemonCard,
-  PokemonCardList,
+  PokemonSlot,
   ShuffleDeckPrompt,
   Stage,
   State,
@@ -16,7 +16,7 @@ import {
 
 function* useFlock(next: Function, store: StoreLike, state: State, effect: AttackEffect): IterableIterator<State> {
   const player = effect.player;
-  const slots: PokemonCardList[] = player.bench.filter(b => b.cards.length === 0);
+  const slots: PokemonSlot[] = player.bench.filter(b => b.pokemons.cards.length === 0);
   const max = Math.min(slots.length, 1);
 
   let cards: Card[] = [];
@@ -40,7 +40,7 @@ function* useFlock(next: Function, store: StoreLike, state: State, effect: Attac
   }
 
   cards.forEach((card, index) => {
-    player.deck.moveCardTo(card, slots[index]);
+    player.deck.moveCardTo(card, slots[index].pokemons);
     slots[index].pokemonPlayedTurn = state.turn;
   });
 

@@ -4,7 +4,6 @@ import {
   CardTarget,
   CardType,
   Effect,
-  EnergyCard,
   EnergyType,
   GameMessage,
   MoveEnergyPrompt,
@@ -59,13 +58,13 @@ export class Tornadus extends PokemonCard {
       const blockedTo: CardTarget[] = [];
 
       let hasEnergyOnBench = false;
-      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card, target) => {
-        if (cardList === player.active) {
+      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (pokemonSlot, card, target) => {
+        if (pokemonSlot === player.active) {
           blockedFrom.push(target);
           return;
         }
         blockedTo.push(target);
-        if (cardList.cards.some(c => c instanceof EnergyCard)) {
+        if (pokemonSlot.energies.cards.length > 0) {
           hasEnergyOnBench = true;
         }
       });
@@ -81,7 +80,7 @@ export class Tornadus extends PokemonCard {
           GameMessage.MOVE_ENERGY_TO_ACTIVE,
           PlayerType.BOTTOM_PLAYER,
           [SlotType.ACTIVE, SlotType.BENCH],
-          { superType: SuperType.ENERGY },
+          { },
           { min: 1, max: 1, allowCancel: false, blockedFrom, blockedTo }
         ),
         result => {
@@ -89,7 +88,7 @@ export class Tornadus extends PokemonCard {
           transfers.forEach(transfer => {
             const source = StateUtils.getTarget(state, player, transfer.from);
             const target = StateUtils.getTarget(state, player, transfer.to);
-            source.moveCardTo(transfer.card, target);
+            source.moveCardTo(transfer.card, target.energies);
           });
         }
       );
@@ -97,10 +96,8 @@ export class Tornadus extends PokemonCard {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
       const player = effect.player;
-      const hasBench = player.bench.some(b => b.cards.length > 0);
-      const hasBasicEnergy = player.active.cards.some(c => {
-        return c instanceof EnergyCard && c.energyType === EnergyType.BASIC;
-      });
+      const hasBench = player.bench.some(b => b.pokemons.cards.length > 0);
+      const hasBasicEnergy = player.active.energies.cards.some(c => c.energyType === EnergyType.BASIC);
 
       if (hasBench === false || hasBasicEnergy === false) {
         return state;
@@ -111,7 +108,7 @@ export class Tornadus extends PokemonCard {
         new AttachEnergyPrompt(
           player.id,
           GameMessage.ATTACH_ENERGY_TO_BENCH,
-          player.active,
+          player.active.energies,
           PlayerType.BOTTOM_PLAYER,
           [SlotType.BENCH],
           { superType: SuperType.ENERGY, energyType: EnergyType.BASIC },
@@ -121,7 +118,7 @@ export class Tornadus extends PokemonCard {
           transfers = transfers || [];
           for (const transfer of transfers) {
             const target = StateUtils.getTarget(state, player, transfer.to);
-            player.active.moveCardTo(transfer.card, target);
+            player.active.moveCardTo(transfer.card, target.energies);
           }
         }
       );

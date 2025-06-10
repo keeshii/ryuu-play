@@ -8,7 +8,7 @@ export class PlayBasicTactic extends SimpleTactic {
       .find(c => c instanceof PokemonCard && c.stage === Stage.BASIC);
 
     const emptyBenchSlot = player.bench
-      .find(b => b.cards.length === 0);
+      .find(b => b.pokemons.cards.length === 0);
 
     if (basicPokemon && emptyBenchSlot) {
       return new PlayCardAction(

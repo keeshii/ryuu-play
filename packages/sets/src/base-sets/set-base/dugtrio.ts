@@ -56,7 +56,7 @@ export class Dugtrio extends PokemonCard {
       const player = effect.player;
 
       player.bench.forEach(benched => {
-        if (benched.cards.length > 0) {
+        if (benched.pokemons.cards.length > 0) {
           const dealDamage = new PutDamageEffect(effect, 10);
           dealDamage.target = benched;
           store.reduceEffect(state, dealDamage);

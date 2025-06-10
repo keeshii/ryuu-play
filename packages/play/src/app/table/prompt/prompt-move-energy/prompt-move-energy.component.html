@@ -16,7 +16,7 @@
   </ptcg-choose-pokemons-pane>
 
   <ptcg-choose-cards-panes
-    [cards]="selectedItem ? selectedItem.cardList.cards : []"
+    [cards]="selectedItem ? selectedItem.pokemonSlot.energies.cards : []"
     [filter]="filter"
     [blocked]="blocked"
     [singlePaneMode]="true">

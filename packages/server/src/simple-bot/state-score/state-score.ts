@@ -1,4 +1,4 @@
-import { State, PokemonCardList, Card } from '@ptcg/common';
+import { State, Card, PokemonSlot } from '@ptcg/common';
 import { SimpleScore } from './score';
 import { SimpleBotOptions } from '../simple-bot-options';
 import { HandScore } from './hand-score';
@@ -82,8 +82,8 @@ export class StateScore extends SimpleScore {
     return afterScore - baseScore;
   }
 
-  public getPokemonScore(cardList: PokemonCardList): number {
-    return this.getPokemonScoreBy(this.options.scores.active, cardList);
+  public getPokemonScore(pokemonSlot: PokemonSlot): number {
+    return this.getPokemonScoreBy(this.options.scores.active, pokemonSlot);
   }
 
 }

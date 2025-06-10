@@ -2,8 +2,8 @@ import { Attack, Power } from '../card/pokemon-types';
 import { Effect } from './effect';
 import { Player } from '../state/player';
 import { PokemonCard } from '../card/pokemon-card';
-import { PokemonCardList } from '../state/pokemon-card-list';
 import { Card } from '../card/card';
+import { PokemonSlot } from '../state/pokemon-slot';
 
 export enum GameEffects {
   RETREAT_EFFECT = 'RETREAT_EFFECT',
@@ -105,10 +105,10 @@ export class KnockOutEffect implements Effect {
   readonly type: string = GameEffects.KNOCK_OUT_EFFECT;
   public preventDefault = false;
   public player: Player;
-  public target: PokemonCardList;
+  public target: PokemonSlot;
   public prizeCount: number;
 
-  constructor(player: Player, target: PokemonCardList) {
+  constructor(player: Player, target: PokemonSlot) {
     this.player = player;
     this.target = target;
     this.prizeCount = 1;
@@ -119,10 +119,10 @@ export class HealEffect implements Effect {
   readonly type: string = GameEffects.HEAL_EFFECT;
   public preventDefault = false;
   public player: Player;
-  public target: PokemonCardList;
+  public target: PokemonSlot;
   public damage: number;
 
-  constructor(player: Player, target: PokemonCardList, damage: number) {
+  constructor(player: Player, target: PokemonSlot, damage: number) {
     this.player = player;
     this.target = target;
     this.damage = damage;
@@ -133,10 +133,10 @@ export class EvolveEffect implements Effect {
   readonly type: string = GameEffects.EVOLVE_EFFECT;
   public preventDefault = false;
   public player: Player;
-  public target: PokemonCardList;
+  public target: PokemonSlot;
   public pokemonCard: PokemonCard;
 
-  constructor(player: Player, target: PokemonCardList, pokemonCard: PokemonCard) {
+  constructor(player: Player, target: PokemonSlot, pokemonCard: PokemonCard) {
     this.player = player;
     this.target = target;
     this.pokemonCard = pokemonCard;

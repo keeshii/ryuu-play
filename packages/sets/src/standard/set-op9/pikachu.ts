@@ -6,7 +6,6 @@ import {
   Effect,
   EndTurnEffect,
   PokemonCard,
-  PokemonCardList,
   SpecialCondition,
   Stage,
   State,
@@ -61,11 +60,11 @@ export class Pikachu extends PokemonCard {
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      const cardList = StateUtils.findCardList(state, this);
-      if (!(cardList instanceof PokemonCardList)) {
+      const pokemonSlot = StateUtils.findPokemonSlot(state, this);
+      if (pokemonSlot === undefined) {
         return state;
       }
-      if (cardList.pokemonPlayedTurn === state.turn && !cardList.isBasic()) {
+      if (pokemonSlot.pokemonPlayedTurn === state.turn && !pokemonSlot.isBasic()) {
         const specialCondition = new AddSpecialConditionsEffect(effect, [SpecialCondition.PARALYZED]);
         store.reduceEffect(state, specialCondition);
       }

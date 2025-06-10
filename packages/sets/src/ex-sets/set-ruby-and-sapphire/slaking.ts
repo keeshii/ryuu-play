@@ -5,7 +5,6 @@ import {
   DiscardCardsEffect,
   Effect,
   EndTurnEffect,
-  EnergyCard,
   EnergyType,
   GameError,
   GameMessage,
@@ -16,7 +15,6 @@ import {
   State,
   StateUtils,
   StoreLike,
-  SuperType,
 } from '@ptcg/common';
 
 export class Slaking extends PokemonCard {
@@ -68,7 +66,7 @@ export class Slaking extends PokemonCard {
       const slakingPlayer = StateUtils.findOwner(state, slakingCardList);
 
       // Not active Pokemon
-      if (slakingPlayer.active !== slakingCardList) {
+      if (slakingPlayer.active.pokemons !== slakingCardList) {
         return state;
       }
 
@@ -105,7 +103,7 @@ export class Slaking extends PokemonCard {
       const player = effect.player;
 
       // No basic energy card attached
-      if (!player.active.cards.some(c => c instanceof EnergyCard && c.energyType === EnergyType.BASIC)) {
+      if (!player.active.energies.cards.some(c => c.energyType === EnergyType.BASIC)) {
         throw new GameError(GameMessage.NOT_ENOUGH_ENERGY);
       }
 
@@ -114,8 +112,8 @@ export class Slaking extends PokemonCard {
         new ChooseCardsPrompt(
           player.id,
           GameMessage.CHOOSE_CARD_TO_DISCARD,
-          player.active,
-          { superType: SuperType.ENERGY, energyType: EnergyType.BASIC },
+          player.active.energies,
+          { energyType: EnergyType.BASIC },
           { min: 1, max: 1, allowCancel: false }
         ),
         cards => {

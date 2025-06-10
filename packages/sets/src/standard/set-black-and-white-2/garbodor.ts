@@ -62,13 +62,13 @@ export class Garbodor extends PokemonCard {
       const opponent = StateUtils.getOpponent(state, player);
 
       let isGarbodorWithToolInPlay = false;
-      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card) => {
-        if (card === this && cardList.tool !== undefined) {
+      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (pokemonSlot, card) => {
+        if (card === this && pokemonSlot.getTools().length > 0) {
           isGarbodorWithToolInPlay = true;
         }
       });
-      opponent.forEachPokemon(PlayerType.TOP_PLAYER, (cardList, card) => {
-        if (card === this && cardList.tool !== undefined) {
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, (pokemonSlot, card) => {
+        if (card === this && pokemonSlot.getTools().length > 0) {
           isGarbodorWithToolInPlay = true;
         }
       });

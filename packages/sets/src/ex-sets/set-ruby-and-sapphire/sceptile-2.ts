@@ -6,12 +6,12 @@ import {
   CheckProvidedEnergyEffect,
   CoinFlipPrompt,
   Effect,
+  EnergyCard,
   GameError,
   GameMessage,
   MoveEnergyPrompt,
   PlayerType,
   PokemonCard,
-  PokemonCardList,
   PowerEffect,
   PowerType,
   SlotType,
@@ -19,20 +19,19 @@ import {
   State,
   StateUtils,
   StoreLike,
-  SuperType,
 } from '@ptcg/common';
 
 function* useEnergyTrans(next: Function, store: StoreLike, state: State, self: Sceptile2, effect: PowerEffect): IterableIterator<State> {
   const player = effect.player;
-  const cardList = StateUtils.findCardList(state, self) as PokemonCardList;
+  const pokemonSlot = StateUtils.findPokemonSlot(state, self);
 
-  if (cardList.specialConditions.length > 0) {
+  if (!pokemonSlot || pokemonSlot.specialConditions.length > 0) {
     throw new GameError(GameMessage.CANNOT_USE_POWER);
   }
 
   const blockedMap: { source: CardTarget; blocked: number[] }[] = [];
-  player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card, target) => {
-    const checkProvidedEnergy = new CheckProvidedEnergyEffect(player, cardList);
+  player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (slot, card, target) => {
+    const checkProvidedEnergy = new CheckProvidedEnergyEffect(player, slot);
     store.reduceEffect(state, checkProvidedEnergy);
     const blockedCards: Card[] = [];
 
@@ -44,7 +43,7 @@ function* useEnergyTrans(next: Function, store: StoreLike, state: State, self: S
 
     const blocked: number[] = [];
     blockedCards.forEach(bc => {
-      const index = cardList.cards.indexOf(bc);
+      const index = slot.energies.cards.indexOf(bc as EnergyCard);
       if (index !== -1 && !blocked.includes(index)) {
         blocked.push(index);
       }
@@ -62,7 +61,7 @@ function* useEnergyTrans(next: Function, store: StoreLike, state: State, self: S
       GameMessage.MOVE_ENERGY_CARDS,
       PlayerType.BOTTOM_PLAYER,
       [SlotType.ACTIVE, SlotType.BENCH],
-      { superType: SuperType.ENERGY },
+      { },
       { allowCancel: true, blockedMap }
     ),
     transfers => {
@@ -73,7 +72,7 @@ function* useEnergyTrans(next: Function, store: StoreLike, state: State, self: S
       for (const transfer of transfers) {
         const source = StateUtils.getTarget(state, player, transfer.from);
         const target = StateUtils.getTarget(state, player, transfer.to);
-        source.moveCardTo(transfer.card, target);
+        source.moveCardTo(transfer.card, target.energies);
       }
     }
   );

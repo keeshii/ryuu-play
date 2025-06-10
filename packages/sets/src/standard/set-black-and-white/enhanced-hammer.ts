@@ -4,17 +4,15 @@ import {
   ChooseCardsPrompt,
   ChoosePokemonPrompt,
   Effect,
-  EnergyCard,
   EnergyType,
   GameError,
   GameMessage,
   PlayerType,
-  PokemonCardList,
+  PokemonSlot,
   SlotType,
   State,
   StateUtils,
   StoreLike,
-  SuperType,
   TrainerCard,
   TrainerEffect,
   TrainerType,
@@ -26,8 +24,8 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 
   let hasPokemonWithEnergy = false;
   const blocked: CardTarget[] = [];
-  opponent.forEachPokemon(PlayerType.TOP_PLAYER, (cardList, card, target) => {
-    if (cardList.cards.some(c => c instanceof EnergyCard && c.energyType === EnergyType.SPECIAL)) {
+  opponent.forEachPokemon(PlayerType.TOP_PLAYER, (pokemonSlot, card, target) => {
+    if (pokemonSlot.energies.cards.some(c => c.energyType === EnergyType.SPECIAL)) {
       hasPokemonWithEnergy = true;
     } else {
       blocked.push(target);
@@ -41,7 +39,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   // We will discard this card after prompt confirmation
   effect.preventDefault = true;
 
-  let targets: PokemonCardList[] = [];
+  let targets: PokemonSlot[] = [];
   yield store.prompt(
     state,
     new ChoosePokemonPrompt(
@@ -68,8 +66,8 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     new ChooseCardsPrompt(
       player.id,
       GameMessage.CHOOSE_CARD_TO_DISCARD,
-      target,
-      { superType: SuperType.ENERGY, energyType: EnergyType.SPECIAL },
+      target.energies,
+      { energyType: EnergyType.SPECIAL },
       { min: 1, max: 1, allowCancel: true }
     ),
     selected => {

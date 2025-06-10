@@ -5,7 +5,7 @@ import {
   Effect,
   GameError,
   GameMessage,
-  PokemonCardList,
+  PokemonSlot,
   ShuffleDeckPrompt,
   Stage,
   State,
@@ -23,7 +23,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
   }
 
-  const slots: PokemonCardList[] = player.bench.filter(b => b.cards.length === 0);
+  const slots: PokemonSlot[] = player.bench.filter(b => b.pokemons.cards.length === 0);
   const max = Math.min(slots.length, 1);
 
   const start = player.deck.cards.length < 7 ? 0 : player.deck.cards.length - 7;
@@ -53,7 +53,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   }
 
   cards.forEach((card, index) => {
-    player.deck.moveCardTo(card, slots[index]);
+    player.deck.moveCardTo(card, slots[index].pokemons);
     slots[index].pokemonPlayedTurn = state.turn;
   });
 

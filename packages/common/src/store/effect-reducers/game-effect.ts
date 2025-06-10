@@ -115,7 +115,9 @@ export function gameReducer(store: StoreLike, state: State, effect: Effect): Sta
       }
 
       store.log(state, GameLog.LOG_POKEMON_KO, { name: card.name });
-      effect.target.moveTo(effect.player.discard);
+      effect.target.pokemons.moveTo(effect.player.discard);
+      effect.target.energies.moveTo(effect.player.discard);
+      effect.target.trainers.moveTo(effect.player.discard);
       effect.target.clearEffects();
     }
   }
@@ -169,7 +171,7 @@ export function gameReducer(store: StoreLike, state: State, effect: Effect): Sta
       pokemon: pokemonCard.name,
       card: effect.pokemonCard.name
     });
-    effect.player.hand.moveCardTo(effect.pokemonCard, effect.target);
+    effect.player.hand.moveCardTo(effect.pokemonCard, effect.target.pokemons);
     effect.target.pokemonPlayedTurn = state.turn;
     effect.target.clearEffects();
   }

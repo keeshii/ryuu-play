@@ -2,9 +2,8 @@ import { Effect } from './effect';
 import { EnergyCard } from '../card/energy-card';
 import { Player } from '../state/player';
 import { PokemonCard } from '../card/pokemon-card';
-import { PokemonCardList } from '../state/pokemon-card-list';
 import { TrainerCard } from '../card/trainer-card';
-import {CardList} from '../state/card-list';
+import { PokemonSlot } from '../state/pokemon-slot';
 
 export enum PlayCardEffects {
   ATTACH_ENERGY_EFFECT = 'ATTACH_ENERGY_EFFECT',
@@ -21,9 +20,9 @@ export class AttachEnergyEffect implements Effect {
   public preventDefault = false;
   public player: Player;
   public energyCard: EnergyCard;
-  public target: PokemonCardList;
+  public target: PokemonSlot;
 
-  constructor(player: Player, energyCard: EnergyCard, target: PokemonCardList) {
+  constructor(player: Player, energyCard: EnergyCard, target: PokemonSlot) {
     this.player = player;
     this.energyCard = energyCard;
     this.target = target;
@@ -35,9 +34,9 @@ export class PlayPokemonEffect implements Effect {
   public preventDefault = false;
   public player: Player;
   public pokemonCard: PokemonCard;
-  public target: PokemonCardList;
+  public target: PokemonSlot;
 
-  constructor(player: Player, pokemonCard: PokemonCard, target: PokemonCardList) {
+  constructor(player: Player, pokemonCard: PokemonCard, target: PokemonSlot) {
     this.player = player;
     this.pokemonCard = pokemonCard;
     this.target = target;
@@ -49,9 +48,9 @@ export class PlaySupporterEffect implements Effect {
   public preventDefault = false;
   public player: Player;
   public trainerCard: TrainerCard;
-  public target: CardList | undefined;
+  public target: PokemonSlot | undefined;
 
-  constructor(player: Player, trainerCard: TrainerCard, target?: CardList) {
+  constructor(player: Player, trainerCard: TrainerCard, target?: PokemonSlot) {
     this.player = player;
     this.trainerCard = trainerCard;
     this.target = target;
@@ -75,9 +74,9 @@ export class AttachPokemonToolEffect implements Effect {
   public preventDefault = false;
   public player: Player;
   public trainerCard: TrainerCard;
-  public target: PokemonCardList;
+  public target: PokemonSlot;
 
-  constructor(player: Player, trainerCard: TrainerCard, target: PokemonCardList) {
+  constructor(player: Player, trainerCard: TrainerCard, target: PokemonSlot) {
     this.player = player;
     this.trainerCard = trainerCard;
     this.target = target;
@@ -89,9 +88,9 @@ export class PlayItemEffect implements Effect {
   public preventDefault = false;
   public player: Player;
   public trainerCard: TrainerCard;
-  public target: CardList | undefined;
+  public target: PokemonSlot | undefined;
 
-  constructor(player: Player, trainerCard: TrainerCard, target?: CardList) {
+  constructor(player: Player, trainerCard: TrainerCard, target?: PokemonSlot) {
     this.player = player;
     this.trainerCard = trainerCard;
     this.target = target;
@@ -103,9 +102,9 @@ export class TrainerEffect implements Effect {
   public preventDefault = false;
   public player: Player;
   public trainerCard: TrainerCard;
-  public target: CardList | undefined;
+  public target: PokemonSlot | undefined;
 
-  constructor(player: Player, trainerCard: TrainerCard, target?: CardList) {
+  constructor(player: Player, trainerCard: TrainerCard, target?: PokemonSlot) {
     this.player = player;
     this.trainerCard = trainerCard;
     this.target = target;

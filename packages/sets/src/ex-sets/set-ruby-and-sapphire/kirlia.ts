@@ -6,14 +6,12 @@ import {
   CoinFlipPrompt,
   DiscardCardsEffect,
   Effect,
-  EnergyCard,
   GameMessage,
   PokemonCard,
   Stage,
   State,
   StateUtils,
   StoreLike,
-  SuperType,
 } from '@ptcg/common';
 
 function* useRemovalBeam(
@@ -26,7 +24,7 @@ function* useRemovalBeam(
   const opponent = StateUtils.getOpponent(state, player);
 
   // Defending Pokemon has no energy cards attached
-  if (!opponent.active.cards.some(c => c instanceof EnergyCard)) {
+  if (opponent.active.energies.cards.length === 0) {
     return state;
   }
 
@@ -45,8 +43,8 @@ function* useRemovalBeam(
     new ChooseCardsPrompt(
       player.id,
       GameMessage.CHOOSE_CARD_TO_DISCARD,
-      opponent.active,
-      { superType: SuperType.ENERGY },
+      opponent.active.energies,
+      { },
       { min: 1, max: 1, allowCancel: false }
     ),
     selected => {

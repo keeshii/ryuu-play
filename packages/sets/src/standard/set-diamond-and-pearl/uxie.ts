@@ -1,5 +1,6 @@
 import {
   AttackEffect,
+  CardList,
   CardType,
   ConfirmPrompt,
   Effect,
@@ -37,16 +38,19 @@ function* usePsychicRestore(
     return state;
   }
 
+  const cardList = new CardList();
+  target.moveTo(cardList);
+
   return store.prompt(
     state,
-    new OrderCardsPrompt(player.id, GameMessage.CHOOSE_CARDS_ORDER, target, {
+    new OrderCardsPrompt(player.id, GameMessage.CHOOSE_CARDS_ORDER, cardList, {
       allowCancel: true,
     }),
     order => {
       if (order !== null) {
-        target.applyOrder(order);
+        cardList.applyOrder(order);
       }
-      target.moveTo(player.deck);
+      cardList.moveTo(player.deck);
     }
   );
 }

@@ -75,8 +75,8 @@ export class Aron2 extends PokemonCard {
       effect.player.marker.removeMarker(this.CLEAR_TEARY_EYES_MARKER, this);
 
       const opponent = StateUtils.getOpponent(state, effect.player);
-      opponent.forEachPokemon(PlayerType.TOP_PLAYER, cardList => {
-        cardList.marker.removeMarker(this.TEARY_EYES_MARKER, this);
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, pokemonSlot => {
+        pokemonSlot.marker.removeMarker(this.TEARY_EYES_MARKER, this);
       });
     }
 

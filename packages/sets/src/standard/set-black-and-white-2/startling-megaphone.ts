@@ -3,7 +3,7 @@ import {
   GameError,
   GameMessage,
   PlayerType,
-  PokemonCardList,
+  PokemonSlot,
   State,
   StateUtils,
   StoreLike,
@@ -28,10 +28,10 @@ export class StartlingMegaphone extends TrainerCard {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
 
-      const pokemonsWithTool: PokemonCardList[] = [];
-      opponent.forEachPokemon(PlayerType.TOP_PLAYER, (cardList, card, target) => {
-        if (cardList.tool !== undefined) {
-          pokemonsWithTool.push(cardList);
+      const pokemonsWithTool: PokemonSlot[] = [];
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, (pokemonSlot, card, target) => {
+        if (pokemonSlot.trainers.cards.some(t => t.trainerType === TrainerType.TOOL)) {
+          pokemonsWithTool.push(pokemonSlot);
         }
       });
 
@@ -40,10 +40,8 @@ export class StartlingMegaphone extends TrainerCard {
       }
 
       pokemonsWithTool.forEach(target => {
-        if (target.tool !== undefined) {
-          target.moveCardTo(target.tool, opponent.discard);
-          target.tool = undefined;
-        }
+        const tools = target.getTools();
+        target.moveCardsTo(tools, opponent.discard);
       });
     }
 

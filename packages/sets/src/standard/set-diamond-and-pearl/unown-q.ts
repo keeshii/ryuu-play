@@ -8,7 +8,6 @@ import {
   GameMessage,
   PlayerType,
   PokemonCard,
-  PokemonCardList,
   PowerEffect,
   PowerType,
   SlotType,
@@ -16,6 +15,8 @@ import {
   State,
   StateUtils,
   StoreLike,
+  TrainerCard,
+  TrainerType,
 } from '@ptcg/common';
 
 function* usePower(
@@ -26,10 +27,13 @@ function* usePower(
   effect: PowerEffect
 ): IterableIterator<State> {
   const player = effect.player;
-  const cardList = StateUtils.findCardList(state, self);
+  const pokemonSlot = StateUtils.findPokemonSlot(state, self);
 
   // check if UnownQ is on player's Bench
-  const benchIndex = player.bench.indexOf(cardList as PokemonCardList);
+  if (pokemonSlot === undefined) {
+    throw new GameError(GameMessage.CANNOT_USE_POWER);
+  }
+  const benchIndex = player.bench.indexOf(pokemonSlot);
   if (benchIndex === -1) {
     throw new GameError(GameMessage.CANNOT_USE_POWER);
   }
@@ -42,7 +46,7 @@ function* usePower(
   let hasPokemonWithoutTool = false;
   const blocked: CardTarget[] = [];
   player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card, target) => {
-    if (cardList.tool === undefined && card !== self) {
+    if (cardList.getTools().length === 0 && card !== self) {
       hasPokemonWithoutTool = true;
     } else {
       blocked.push(target);
@@ -66,8 +70,7 @@ function* usePower(
     targets => {
       if (targets && targets.length > 0) {
         // Attach Unown Q as a Pokemon Tool
-        player.bench[benchIndex].moveCardTo(pokemonCard, targets[0]);
-        targets[0].tool = pokemonCard;
+        player.bench[benchIndex].moveCardTo(pokemonCard, targets[0].trainers);
 
         // Discard other cards
         player.bench[benchIndex].moveTo(player.discard);
@@ -77,7 +80,8 @@ function* usePower(
   );
 }
 
-export class UnownQ extends PokemonCard {
+export class UnownQ extends PokemonCard implements TrainerCard {
+
   public stage: Stage = Stage.BASIC;
 
   public cardType: CardType = CardType.PSYCHIC;
@@ -110,6 +114,10 @@ export class UnownQ extends PokemonCard {
     },
   ];
 
+  public text =  '';  // Not displayed anywhere
+
+  public trainerType = TrainerType.TOOL;
+
   public set: string = 'DP';
 
   public name: string = 'Unown Q';
@@ -122,7 +130,7 @@ export class UnownQ extends PokemonCard {
       return generator.next().value;
     }
 
-    if (effect instanceof CheckRetreatCostEffect && effect.player.active.tool === this) {
+    if (effect instanceof CheckRetreatCostEffect && effect.player.active.trainers.cards.includes(this)) {
       const index = effect.cost.indexOf(CardType.COLORLESS);
       if (index !== -1) {
         effect.cost.splice(index, 1);

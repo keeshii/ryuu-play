@@ -34,11 +34,11 @@ export class Pluspower extends TrainerCard {
 
       // Do not discard the card, it will be attached
       effect.preventDefault = true;
-      player.hand.moveCardTo(effect.trainerCard, player.active);
+      player.hand.moveCardTo(effect.trainerCard, player.active.trainers);
 
     }
 
-    if (effect instanceof PutDamageEffect && effect.source.cards.includes(this)) {
+    if (effect instanceof PutDamageEffect && effect.source.trainers.cards.includes(this)) {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
 
@@ -50,9 +50,9 @@ export class Pluspower extends TrainerCard {
 
     if (effect instanceof EndTurnEffect) {
       const player = effect.player;
-      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, cardList => {
-        if (cardList.cards.includes(this)) {
-          cardList.moveCardTo(this, player.discard);
+      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, pokemonSlot => {
+        if (pokemonSlot.trainers.cards.includes(this)) {
+          pokemonSlot.trainers.moveCardTo(this, player.discard);
         }
       });
     }

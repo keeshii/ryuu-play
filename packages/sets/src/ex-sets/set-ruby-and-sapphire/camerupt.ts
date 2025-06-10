@@ -5,7 +5,6 @@ import {
   ChoosePokemonPrompt,
   DiscardCardsEffect,
   Effect,
-  EnergyCard,
   EnergyType,
   GameError,
   GameMessage,
@@ -17,7 +16,6 @@ import {
   State,
   StateUtils,
   StoreLike,
-  SuperType,
 } from '@ptcg/common';
 
 export class Camerupt extends PokemonCard {
@@ -62,7 +60,7 @@ export class Camerupt extends PokemonCard {
       const opponent = StateUtils.getOpponent(state, player);
 
       // Opponent doesn't have benched pokemon
-      const hasBenched = opponent.bench.some(b => b.cards.length > 0);
+      const hasBenched = opponent.bench.some(b => b.pokemons.cards.length > 0);
       if (!hasBenched) {
         return state;
       }
@@ -94,8 +92,8 @@ export class Camerupt extends PokemonCard {
 
       // Player has no Basic Energy attached
       let basicEnergyCards = 0;
-      player.active.cards.forEach(c => {
-        if (c instanceof EnergyCard && c.energyType === EnergyType.BASIC) {
+      player.active.energies.cards.forEach(c => {
+        if (c.energyType === EnergyType.BASIC) {
           basicEnergyCards++;
         }
       });
@@ -109,8 +107,8 @@ export class Camerupt extends PokemonCard {
         new ChooseCardsPrompt(
           player.id,
           GameMessage.CHOOSE_CARD_TO_DISCARD,
-          player.active,
-          { superType: SuperType.ENERGY, energyType: EnergyType.BASIC },
+          player.active.energies,
+          { energyType: EnergyType.BASIC },
           { min: 2, max: 2, allowCancel: false }
         ),
         cards => {

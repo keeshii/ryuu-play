@@ -10,7 +10,6 @@ import {
   PlayerType,
   PlayPokemonEffect,
   PokemonCard,
-  PokemonCardList,
   PowerEffect,
   PowerType,
   PutDamageEffect,
@@ -19,7 +18,6 @@ import {
   State,
   StateUtils,
   StoreLike,
-  SuperType,
 } from '@ptcg/common';
 
 export class Celebi extends PokemonCard {
@@ -77,12 +75,12 @@ export class Celebi extends PokemonCard {
 
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
       const player = effect.player;
-      const cardList = StateUtils.findCardList(state, this) as PokemonCardList;
+      const pokemonSlot = StateUtils.findPokemonSlot(state, this);
 
-      if (cardList.specialConditions.length > 0) {
+      if (pokemonSlot !== player.active) {
         throw new GameError(GameMessage.CANNOT_USE_POWER);
       }
-      if (cardList !== player.active) {
+      if (pokemonSlot.specialConditions.length > 0) {
         throw new GameError(GameMessage.CANNOT_USE_POWER);
       }
       const hasEnergyInHand = player.hand.cards.some(c => {
@@ -103,7 +101,7 @@ export class Celebi extends PokemonCard {
           player.hand,
           PlayerType.BOTTOM_PLAYER,
           [SlotType.ACTIVE, SlotType.BENCH],
-          { superType: SuperType.ENERGY, name: 'Grass Energy' },
+          { name: 'Grass Energy' },
           { allowCancel: true, min: 1, max: 1 }
         ),
         transfers => {
@@ -115,7 +113,7 @@ export class Celebi extends PokemonCard {
           player.marker.addMarker(this.FOREST_BREATH_MARKER, this);
           for (const transfer of transfers) {
             const target = StateUtils.getTarget(state, player, transfer.to);
-            player.hand.moveCardTo(transfer.card, target);
+            player.hand.moveCardTo(transfer.card, target.energies);
           }
         }
       );
@@ -146,8 +144,8 @@ export class Celebi extends PokemonCard {
       if (effect.player.marker.hasMarker(this.CLEAR_TIME_CIRCLE_MARKER, this)) {
         effect.player.marker.removeMarker(this.CLEAR_TIME_CIRCLE_MARKER, this);
         const opponent = StateUtils.getOpponent(state, effect.player);
-        opponent.forEachPokemon(PlayerType.TOP_PLAYER, cardList => {
-          cardList.marker.removeMarker(this.TIME_CIRCLE_MARKER, this);
+        opponent.forEachPokemon(PlayerType.TOP_PLAYER, pokemonSlot => {
+          pokemonSlot.marker.removeMarker(this.TIME_CIRCLE_MARKER, this);
         });
       }
     }

@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { Card, AttachEnergyPrompt, FilterType, AttachEnergyOptions,
-  PokemonCardList } from '@ptcg/common';
+  PokemonSlot, EnergyCard} from '@ptcg/common';
 
 import { GameService } from '../../../api/services/game.service';
 import { LocalGameState } from '../../../shared/session/session.interface';
@@ -57,7 +57,7 @@ export class PromptAttachEnergyComponent implements OnChanges {
     this.gameService.resolvePrompt(gameId, id, results);
   }
 
-  public onCardDrop([item, card]: [PokemonItem, Card]) {
+  public onCardDrop([item, card]: [PokemonItem, EnergyCard]) {
     if (this.pokemonData.matchesTarget(item, this.options.blockedTo)) {
       return;
     }
@@ -92,23 +92,23 @@ export class PromptAttachEnergyComponent implements OnChanges {
   public reset() {
     this.results.forEach(r => {
       const item = r.to;
-      item.cardList = Object.assign(new PokemonCardList(), item.cardList);
-      item.cardList.cards = item.cardList.cards.filter(c => c !== r.card);
+      item.pokemonSlot = Object.assign(new PokemonSlot(), item.pokemonSlot);
+      item.pokemonSlot.energies.cards = item.pokemonSlot.energies.cards.filter(c => c !== r.card);
     });
     this.cardListCards = [ ...this.initialCards ];
     this.results = [];
     this.updateIsInvalid(this.results);
   }
 
-  private moveCard(to: PokemonItem, card: Card) {
+  private moveCard(to: PokemonItem, card: EnergyCard) {
     this.cardListCards = [...this.cardListCards];
 
-    to.cardList = Object.assign(new PokemonCardList(), to.cardList);
-    to.cardList.cards = [...to.cardList.cards];
+    to.pokemonSlot = Object.assign(new PokemonSlot(), to.pokemonSlot);
+    to.pokemonSlot.energies.cards = [...to.pokemonSlot.energies.cards];
 
     const index = this.cardListCards.indexOf(card);
     this.cardListCards.splice(index, 1);
-    to.cardList.cards.push(card);
+    to.pokemonSlot.energies.cards.push(card);
   }
 
   private updateIsInvalid(results: AttachEnergyResult[]) {

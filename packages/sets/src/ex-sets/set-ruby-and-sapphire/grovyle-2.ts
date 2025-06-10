@@ -50,7 +50,7 @@ export class Grovyle2 extends PokemonCard {
   public fullName: string = 'Grovyle RS-2';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof AttachEnergyEffect && effect.target.cards.includes(this)) {
+    if (effect instanceof AttachEnergyEffect && effect.target.pokemons.cards.includes(this)) {
       const player = effect.player;
       const energyCard = effect.energyCard;
       if (energyCard.energyType !== EnergyType.BASIC || !energyCard.provides.includes(CardType.GRASS)) {

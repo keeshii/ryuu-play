@@ -10,7 +10,6 @@ import {
   PlayerType,
   PlayPokemonEffect,
   PokemonCard,
-  PokemonCardList,
   PowerEffect,
   PowerType,
   PutDamageEffect,
@@ -75,9 +74,9 @@ export class Hypno extends PokemonCard {
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
-      const cardList = StateUtils.findCardList(state, this) as PokemonCardList;
+      const pokemonSlot = StateUtils.findPokemonSlot(state, this);
 
-      if (cardList.specialConditions.length > 0) {
+      if (!pokemonSlot || pokemonSlot.specialConditions.length > 0) {
         throw new GameError(GameMessage.CANNOT_USE_POWER);
       }
       if (player.marker.hasMarker(this.SLEEP_PENDULUM_MAREKER, this)) {
@@ -102,7 +101,7 @@ export class Hypno extends PokemonCard {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
 
-      const hasBenched = opponent.bench.some(b => b.cards.length > 0);
+      const hasBenched = opponent.bench.some(b => b.pokemons.cards.length > 0);
       if (!hasBenched) {
         return state;
       }

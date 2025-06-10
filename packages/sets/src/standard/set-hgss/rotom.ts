@@ -1,17 +1,16 @@
 import {
   AttackEffect,
   CardType,
+  CheckProvidedEnergyEffect,
   ChoosePokemonPrompt,
   ChoosePrizePrompt,
   Effect,
   EndTurnEffect,
-  EnergyCard,
   GameError,
   GameMessage,
   PlayerType,
   PlayPokemonEffect,
   PokemonCard,
-  PokemonCardList,
   PowerEffect,
   PowerType,
   PutDamageEffect,
@@ -75,9 +74,9 @@ export class Rotom extends PokemonCard {
 
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
       const player = effect.player;
-      const cardList = StateUtils.findCardList(state, this) as PokemonCardList;
+      const pokemonSlot = StateUtils.findPokemonSlot(state, this);
 
-      if (cardList.specialConditions.length > 0) {
+      if (!pokemonSlot || pokemonSlot.specialConditions.length > 0) {
         throw new GameError(GameMessage.CANNOT_USE_POWER);
       }
       if (player.marker.hasMarker(this.MISCHIEVOUS_TRICK_MAREKER, this)) {
@@ -105,6 +104,7 @@ export class Rotom extends PokemonCard {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
 
       state = store.prompt(
         state,
@@ -119,12 +119,12 @@ export class Rotom extends PokemonCard {
           if (!targets || targets.length === 0) {
             return;
           }
-          let damage = 0;
-          targets[0].cards.forEach(c => {
-            if (c instanceof EnergyCard) {
-              damage += 20 * c.provides.length;
-            }
-          });
+          
+          const checkProvidedEnergyEffect = new CheckProvidedEnergyEffect(opponent, targets[0]);
+          store.reduceEffect(state, checkProvidedEnergyEffect);
+          const energyCount = checkProvidedEnergyEffect.energyMap.reduce((left, p) => left + p.provides.length, 0);
+          const damage = 20 * energyCount;
+
           const damageEffect = new PutDamageEffect(effect, damage);
           damageEffect.target = targets[0];
           store.reduceEffect(state, damageEffect);

@@ -6,7 +6,7 @@ import {
   GameError,
   GameMessage,
   PokemonCard,
-  PokemonCardList,
+  PokemonSlot,
   PowerEffect,
   PowerType,
   Stage,
@@ -70,7 +70,7 @@ export class Wobbuffet extends PokemonCard {
       let cardTypes = [effect.card.cardType];
 
       const cardList = StateUtils.findCardList(state, effect.card);
-      if (cardList instanceof PokemonCardList) {
+      if (cardList instanceof PokemonSlot) {
         const checkPokemonType = new CheckPokemonTypeEffect(cardList);
         store.reduceEffect(state, checkPokemonType);
         cardTypes = checkPokemonType.cardTypes;

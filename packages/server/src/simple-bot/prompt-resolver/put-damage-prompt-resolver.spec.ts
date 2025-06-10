@@ -1,4 +1,4 @@
-import { State, Player, ResolvePromptAction, GameMessage, PokemonCardList,
+import { State, Player, ResolvePromptAction, GameMessage, PokemonSlot,
   PutDamagePrompt, PlayerType, SlotType, PokemonCard, DamageMap} from '@ptcg/common';
 import { PutDamagePromptResolver } from './put-damage-prompt-resolver';
 import {
@@ -22,9 +22,9 @@ describe('PutDamagePromptResolver', () => {
   let player: Player;
   let opponent: Player;
 
-  function createSlot(): PokemonCardList {
-    const slot = new PokemonCardList();
-    slot.cards = [ new TestPokemon() ];
+  function createSlot(): PokemonSlot {
+    const slot = new PokemonSlot();
+    slot.pokemons.cards = [ new TestPokemon() ];
     return slot;
   }
 

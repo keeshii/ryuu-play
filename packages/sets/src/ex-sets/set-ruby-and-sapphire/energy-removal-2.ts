@@ -8,12 +8,11 @@ import {
   GameError,
   GameMessage,
   PlayerType,
-  PokemonCardList,
+  PokemonSlot,
   SlotType,
   State,
   StateUtils,
   StoreLike,
-  SuperType,
   TrainerCard,
   TrainerEffect,
   TrainerType,
@@ -25,8 +24,8 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 
   let hasPokemonWithEnergy = false;
   const blocked: CardTarget[] = [];
-  opponent.forEachPokemon(PlayerType.TOP_PLAYER, (cardList, card, target) => {
-    if (cardList.cards.some(c => c.superType === SuperType.ENERGY)) {
+  opponent.forEachPokemon(PlayerType.TOP_PLAYER, (pokemonSlot, card, target) => {
+    if (pokemonSlot.energies.cards.length > 0) {
       hasPokemonWithEnergy = true;
     } else {
       blocked.push(target);
@@ -47,7 +46,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     return state;
   }
 
-  let targets: PokemonCardList[] = [];
+  let targets: PokemonSlot[] = [];
   yield store.prompt(
     state,
     new ChoosePokemonPrompt(
@@ -74,8 +73,8 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     new ChooseCardsPrompt(
       player.id,
       GameMessage.CHOOSE_CARD_TO_DISCARD,
-      target,
-      { superType: SuperType.ENERGY },
+      target.energies,
+      { },
       { min: 1, max: 1, allowCancel: false }
     ),
     selected => {

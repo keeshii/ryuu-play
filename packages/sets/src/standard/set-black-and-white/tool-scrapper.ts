@@ -5,7 +5,7 @@ import {
   GameError,
   GameMessage,
   PlayerType,
-  PokemonCardList,
+  PokemonSlot,
   SlotType,
   State,
   StateUtils,
@@ -21,15 +21,15 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 
   let pokemonsWithTool = 0;
   const blocked: CardTarget[] = [];
-  player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card, target) => {
-    if (cardList.tool !== undefined) {
+  player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (pokemonSlot, card, target) => {
+    if (pokemonSlot.trainers.cards.some(t => t.trainerType === TrainerType.TOOL)) {
       pokemonsWithTool += 1;
     } else {
       blocked.push(target);
     }
   });
-  opponent.forEachPokemon(PlayerType.TOP_PLAYER, (cardList, card, target) => {
-    if (cardList.tool !== undefined) {
+  opponent.forEachPokemon(PlayerType.TOP_PLAYER, (pokemonSlot, card, target) => {
+    if (pokemonSlot.trainers.cards.some(t => t.trainerType === TrainerType.TOOL)) {
       pokemonsWithTool += 1;
     } else {
       blocked.push(target);
@@ -44,7 +44,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   effect.preventDefault = true;
 
   const max = Math.min(2, pokemonsWithTool);
-  let targets: PokemonCardList[] = [];
+  let targets: PokemonSlot[] = [];
   yield store.prompt(
     state,
     new ChoosePokemonPrompt(
@@ -69,10 +69,8 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
 
   targets.forEach(target => {
     const owner = StateUtils.findOwner(state, target);
-    if (target.tool !== undefined) {
-      target.moveCardTo(target.tool, owner.discard);
-      target.tool = undefined;
-    }
+    const tools = target.getTools();
+    target.moveCardsTo(tools, owner.discard);
   });
 
   return state;

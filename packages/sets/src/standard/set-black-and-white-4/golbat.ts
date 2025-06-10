@@ -94,12 +94,12 @@ export class Golbat extends PokemonCard {
       const opponent = StateUtils.getOpponent(state, player);
       effect.damage = 10;
 
-      opponent.forEachPokemon(PlayerType.TOP_PLAYER, (cardList, card) => {
-        if (cardList === opponent.active) {
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, (pokemonSlot, card) => {
+        if (pokemonSlot === opponent.active) {
           return;
         }
         const damageEffect = new PutDamageEffect(effect, 10);
-        damageEffect.target = cardList;
+        damageEffect.target = pokemonSlot;
         store.reduceEffect(state, damageEffect);
       });
     }

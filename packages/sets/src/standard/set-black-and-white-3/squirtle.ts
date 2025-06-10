@@ -79,7 +79,7 @@ export class Squirtle extends PokemonCard {
       }
 
       // Target is this Squirtle
-      if (effect.target.cards.includes(this) && effect.target.getPokemonCard() === this) {
+      if (effect.target.pokemons.cards.includes(this) && effect.target.getPokemonCard() === this) {
         // Try to reduce PowerEffect, to check if something is blocking our ability
         try {
           const powerEffect = new PowerEffect(player, this.powers[0], this);

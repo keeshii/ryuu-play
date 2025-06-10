@@ -19,13 +19,12 @@ export class LumBerry extends TrainerCard {
       const opponent = StateUtils.getOpponent(state, player);
 
       [player, opponent].forEach(p => {
-        if (p.active.tool === this && p.active.specialConditions.length > 0) {
+        if (p.active.trainers.cards.includes(this) && p.active.specialConditions.length > 0) {
           const conditions = p.active.specialConditions.slice();
           conditions.forEach(condition => {
             p.active.removeSpecialCondition(condition);
           });
           p.active.moveCardTo(this, p.discard);
-          p.active.tool = undefined;
         }
       });
     }

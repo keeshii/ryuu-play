@@ -59,7 +59,7 @@ export class Tyrogue extends PokemonCard {
     }
 
     if (effect instanceof PutDamageEffect) {
-      if (effect.target.cards.includes(this)) {
+      if (effect.target.pokemons.cards.includes(this)) {
         const pokemonCard = effect.target.getPokemonCard();
         const isAsleep = effect.target.specialConditions.includes(SpecialCondition.ASLEEP);
         if (pokemonCard === this && isAsleep) {

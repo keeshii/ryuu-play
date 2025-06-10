@@ -52,7 +52,7 @@ export class Combusken2 extends PokemonCard {
   public fullName: string = 'Combusken RS-2';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof AttachEnergyEffect && effect.target.cards.includes(this)) {
+    if (effect instanceof AttachEnergyEffect && effect.target.pokemons.cards.includes(this)) {
       const player = effect.player;
       const pokemonCard = effect.target.getPokemonCard();
 

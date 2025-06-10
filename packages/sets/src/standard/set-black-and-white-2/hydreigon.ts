@@ -7,6 +7,7 @@ import {
   ChooseEnergyPrompt,
   DiscardCardsEffect,
   Effect,
+  EnergyCard,
   GameMessage,
   MoveEnergyPrompt,
   PlayerType,
@@ -18,15 +19,14 @@ import {
   State,
   StateUtils,
   StoreLike,
-  SuperType,
 } from '@ptcg/common';
 
 function* useDarkTrance(next: Function, store: StoreLike, state: State, effect: PowerEffect): IterableIterator<State> {
   const player = effect.player;
 
   const blockedMap: { source: CardTarget; blocked: number[] }[] = [];
-  player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card, target) => {
-    const checkProvidedEnergy = new CheckProvidedEnergyEffect(player, cardList);
+  player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (pokemonSlot, card, target) => {
+    const checkProvidedEnergy = new CheckProvidedEnergyEffect(player, pokemonSlot);
     store.reduceEffect(state, checkProvidedEnergy);
     const blockedCards: Card[] = [];
 
@@ -38,7 +38,7 @@ function* useDarkTrance(next: Function, store: StoreLike, state: State, effect: 
 
     const blocked: number[] = [];
     blockedCards.forEach(bc => {
-      const index = cardList.cards.indexOf(bc);
+      const index = pokemonSlot.energies.cards.indexOf(bc as EnergyCard);
       if (index !== -1 && !blocked.includes(index)) {
         blocked.push(index);
       }
@@ -56,7 +56,7 @@ function* useDarkTrance(next: Function, store: StoreLike, state: State, effect: 
       GameMessage.MOVE_ENERGY_CARDS,
       PlayerType.BOTTOM_PLAYER,
       [SlotType.ACTIVE, SlotType.BENCH],
-      { superType: SuperType.ENERGY },
+      { },
       { allowCancel: true, blockedMap }
     ),
     transfers => {
@@ -67,7 +67,7 @@ function* useDarkTrance(next: Function, store: StoreLike, state: State, effect: 
       for (const transfer of transfers) {
         const source = StateUtils.getTarget(state, player, transfer.from);
         const target = StateUtils.getTarget(state, player, transfer.to);
-        source.moveCardTo(transfer.card, target);
+        source.moveCardTo(transfer.card, target.energies);
       }
     }
   );

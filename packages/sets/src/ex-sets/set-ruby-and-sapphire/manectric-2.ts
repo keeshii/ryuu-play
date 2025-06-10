@@ -71,7 +71,7 @@ export class Manectric2 extends PokemonCard {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
 
-      const benched = opponent.bench.reduce((left, b) => left + (b.cards.length ? 1 : 0), 0);
+      const benched = opponent.bench.reduce((left, b) => left + (b.pokemons.cards.length ? 1 : 0), 0);
       if (benched === 0) {
         return state;
       }

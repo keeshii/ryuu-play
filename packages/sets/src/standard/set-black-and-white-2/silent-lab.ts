@@ -2,7 +2,7 @@ import {
   Effect,
   GameError,
   GameMessage,
-  PokemonCardList,
+  PokemonSlot,
   PowerEffect,
   Stage,
   State,
@@ -30,7 +30,7 @@ export class SilentLab extends TrainerCard {
       const pokemonCard = effect.card;
       const cardList = StateUtils.findCardList(state, pokemonCard);
 
-      const isBasic = cardList instanceof PokemonCardList ? cardList.isBasic() : pokemonCard.stage === Stage.BASIC;
+      const isBasic = cardList instanceof PokemonSlot ? cardList.isBasic() : pokemonCard.stage === Stage.BASIC;
 
       if (isBasic) {
         throw new GameError(GameMessage.BLOCKED_BY_EFFECT);

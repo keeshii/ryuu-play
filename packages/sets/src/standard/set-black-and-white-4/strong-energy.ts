@@ -49,7 +49,7 @@ export class StrongEnergy extends EnergyCard {
     }
 
     // Provide energy when attached to Fighting Pokemon
-    if (effect instanceof CheckProvidedEnergyEffect && effect.source.cards.includes(this)) {
+    if (effect instanceof CheckProvidedEnergyEffect && effect.source.energies.cards.includes(this)) {
       const checkPokemonType = new CheckPokemonTypeEffect(effect.source);
       store.reduceEffect(state, checkPokemonType);
       if (checkPokemonType.cardTypes.includes(CardType.FIGHTING)) {
@@ -61,21 +61,21 @@ export class StrongEnergy extends EnergyCard {
     // Discard card when not attached to Fighting Pokemon
     if (effect instanceof CheckTableStateEffect) {
       state.players.forEach(player => {
-        player.forEachPokemon(PlayerType.BOTTOM_PLAYER, cardList => {
-          if (!cardList.cards.includes(this)) {
+        player.forEachPokemon(PlayerType.BOTTOM_PLAYER, pokemonSlot => {
+          if (!pokemonSlot.energies.cards.includes(this)) {
             return;
           }
-          const checkPokemonType = new CheckPokemonTypeEffect(cardList);
+          const checkPokemonType = new CheckPokemonTypeEffect(pokemonSlot);
           store.reduceEffect(state, checkPokemonType);
           if (!checkPokemonType.cardTypes.includes(CardType.FIGHTING)) {
-            cardList.moveCardTo(this, player.discard);
+            pokemonSlot.moveCardTo(this, player.discard);
           }
         });
       });
       return state;
     }
 
-    if (effect instanceof DealDamageEffect && effect.source.cards.includes(this)) {
+    if (effect instanceof DealDamageEffect && effect.source.energies.cards.includes(this)) {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
       if (effect.target !== opponent.active) {

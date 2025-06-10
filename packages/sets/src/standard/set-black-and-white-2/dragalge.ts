@@ -77,7 +77,7 @@ export class Dragalge extends PokemonCard {
       }
 
       let isDragalgeInPlay = false;
-      opponent.forEachPokemon(PlayerType.TOP_PLAYER, (cardList, card) => {
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, (pokemonSlot, card) => {
         if (card === this) {
           isDragalgeInPlay = true;
         }

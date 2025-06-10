@@ -2,14 +2,13 @@ import {
   AttackEffect,
   CardType,
   Effect,
-  EnergyCard,
   GameMessage,
   HealTargetEffect,
   MoveEnergyPrompt,
   PlayerType,
   PlayPokemonEffect,
   PokemonCard,
-  PokemonCardList,
+  PokemonSlot,
   PowerEffect,
   PowerType,
   SlotType,
@@ -17,7 +16,6 @@ import {
   State,
   StateUtils,
   StoreLike,
-  SuperType,
 } from '@ptcg/common';
 
 export class Shaymin extends PokemonCard {
@@ -78,7 +76,7 @@ export class Shaymin extends PokemonCard {
           GameMessage.MOVE_ENERGY_CARDS,
           PlayerType.BOTTOM_PLAYER,
           [SlotType.ACTIVE, SlotType.BENCH],
-          { superType: SuperType.ENERGY },
+          { },
           { allowCancel: true }
         ),
         transfers => {
@@ -89,7 +87,7 @@ export class Shaymin extends PokemonCard {
           for (const transfer of transfers) {
             const source = StateUtils.getTarget(state, player, transfer.from);
             const target = StateUtils.getTarget(state, player, transfer.to);
-            source.moveCardTo(transfer.card, target);
+            source.moveCardTo(transfer.card, target.energies);
           }
         }
       );
@@ -97,12 +95,12 @@ export class Shaymin extends PokemonCard {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
-      const targets: PokemonCardList[] = [];
+      const targets: PokemonSlot[] = [];
 
-      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card) => {
-        const hasEnergy = cardList.cards.some(c => c instanceof EnergyCard);
-        if (hasEnergy && cardList.damage > 0) {
-          targets.push(cardList);
+      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (pokemonSlot, card) => {
+        const hasEnergy = pokemonSlot.energies.cards.length > 0;
+        if (hasEnergy && pokemonSlot.damage > 0) {
+          targets.push(pokemonSlot);
         }
       });
 

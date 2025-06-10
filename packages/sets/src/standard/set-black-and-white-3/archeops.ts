@@ -61,7 +61,7 @@ export class Archeops extends PokemonCard {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
 
-      const benched = opponent.bench.reduce((left, b) => left + (b.cards.length ? 1 : 0), 0);
+      const benched = opponent.bench.reduce((left, b) => left + (b.pokemons.cards.length ? 1 : 0), 0);
       if (benched === 0) {
         return state;
       }
@@ -94,12 +94,12 @@ export class Archeops extends PokemonCard {
       const opponent = StateUtils.getOpponent(state, player);
 
       let isArcheopsInPlay = false;
-      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card) => {
+      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (pokemonSlot, card) => {
         if (card === this) {
           isArcheopsInPlay = true;
         }
       });
-      opponent.forEachPokemon(PlayerType.TOP_PLAYER, (cardList, card) => {
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, (pokemonSlot, card) => {
         if (card === this) {
           isArcheopsInPlay = true;
         }
