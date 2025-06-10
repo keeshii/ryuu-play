@@ -1,6 +1,6 @@
 {
   "name": "@ptcg/common",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Common library of the ptcg game system.",
   "main": "./dist/cjs/index.js",
   "types": "./dist/cjs/index.d.ts",
