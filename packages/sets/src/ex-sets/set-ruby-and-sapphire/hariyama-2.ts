@@ -17,7 +17,7 @@ export class Hariyama2 extends PokemonCard {
 
   public evolvesFrom = 'Makuhita';
 
-  public cardType: CardType = CardType.FIGHTING;
+  public cardTypes: CardType[] = [CardType.FIGHTING];
 
   public hp: number = 80;
 

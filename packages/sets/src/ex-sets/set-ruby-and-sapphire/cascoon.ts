@@ -24,7 +24,7 @@ export class Cascoon extends PokemonCard {
 
   public evolvesFrom = 'Wurmple';
 
-  public cardType: CardType = CardType.GRASS;
+  public cardTypes: CardType[] = [CardType.GRASS];
 
   public hp: number = 70;
 

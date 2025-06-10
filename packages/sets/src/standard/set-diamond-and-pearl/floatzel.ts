@@ -58,7 +58,7 @@ export class Floatzel extends PokemonCard {
 
   public evolvesFrom: string = 'Buizel';
 
-  public cardType: CardType = CardType.WATER;
+  public cardTypes: CardType[] = [CardType.WATER];
 
   public hp: number = 80;
 

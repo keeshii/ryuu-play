@@ -14,7 +14,7 @@ import {
 export class Jynx extends PokemonCard {
   public stage: Stage = Stage.BASIC;
 
-  public cardType: CardType = CardType.PSYCHIC;
+  public cardTypes: CardType[] = [CardType.PSYCHIC];
 
   public hp: number = 70;
 

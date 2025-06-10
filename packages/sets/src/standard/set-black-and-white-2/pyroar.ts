@@ -23,7 +23,7 @@ export class Pyroar extends PokemonCard {
 
   public evolvesFrom = 'Litleo';
 
-  public cardType: CardType = CardType.FIRE;
+  public cardTypes: CardType[] = [CardType.FIRE];
 
   public hp: number = 110;
 

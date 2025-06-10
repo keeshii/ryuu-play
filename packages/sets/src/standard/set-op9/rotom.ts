@@ -8,7 +8,6 @@ import {
   GameMessage,
   PlayerType,
   PokemonCard,
-  PokemonSlot,
   PowerEffect,
   PowerType,
   ShowCardsPrompt,
@@ -22,7 +21,7 @@ import {
 export class Rotom extends PokemonCard {
   public stage: Stage = Stage.BASIC;
 
-  public cardType: CardType = CardType.LIGHTNING;
+  public cardTypes: CardType[] = [CardType.LIGHTNING];
 
   public hp: number = 70;
 
@@ -68,15 +67,15 @@ export class Rotom extends PokemonCard {
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
       const player = effect.player;
-      const cardList = StateUtils.findCardList(state, this);
-      if (!(cardList instanceof PokemonSlot)) {
+      const pokemonSlot = StateUtils.findPokemonSlot(state, this);
+      if (!pokemonSlot) {
         return state;
       }
-      if (cardList.marker.hasMarker(this.TYPE_SHIFT_MARKER, this)) {
+      if (pokemonSlot.marker.hasMarker(this.TYPE_SHIFT_MARKER, this)) {
         throw new GameError(GameMessage.POWER_ALREADY_USED);
       }
       player.marker.addMarker(this.CLEAR_TYPE_SHIFT_MARKER, this);
-      cardList.marker.addMarker(this.TYPE_SHIFT_MARKER, this);
+      pokemonSlot.marker.addMarker(this.TYPE_SHIFT_MARKER, this);
       return state;
     }
 

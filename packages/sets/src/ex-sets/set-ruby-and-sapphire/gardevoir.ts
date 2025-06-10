@@ -83,7 +83,7 @@ export class Gardevoir extends PokemonCard {
 
   public evolvesFrom = 'Kirlia';
 
-  public cardType: CardType = CardType.PSYCHIC;
+  public cardTypes: CardType[] = [CardType.PSYCHIC];
 
   public hp: number = 100;
 

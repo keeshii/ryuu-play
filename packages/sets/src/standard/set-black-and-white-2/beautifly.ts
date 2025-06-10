@@ -62,7 +62,7 @@ export class Beautifly extends PokemonCard {
 
   public evolvesFrom = 'Silcoon';
 
-  public cardType: CardType = CardType.GRASS;
+  public cardTypes: CardType[] = [CardType.GRASS];
 
   public hp: number = 130;
 

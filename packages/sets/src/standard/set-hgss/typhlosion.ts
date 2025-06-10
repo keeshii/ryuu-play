@@ -84,7 +84,7 @@ export class Typhlosion extends PokemonCard {
 
   public evolvesFrom = 'Quilava';
 
-  public cardType: CardType = CardType.FIRE;
+  public cardTypes: CardType[] = [CardType.FIRE];
 
   public hp: number = 140;
 

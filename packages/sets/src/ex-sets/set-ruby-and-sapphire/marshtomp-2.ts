@@ -16,7 +16,7 @@ export class Marshtomp2 extends PokemonCard {
 
   public evolvesFrom = 'Mudkip';
 
-  public cardType: CardType = CardType.WATER;
+  public cardTypes: CardType[] = [CardType.WATER];
 
   public hp: number = 80;
 

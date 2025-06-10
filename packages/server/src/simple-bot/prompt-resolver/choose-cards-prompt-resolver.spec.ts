@@ -93,13 +93,13 @@ describe('ChooseCardsPromptResolver', () => {
   it('Should choose cards with different types', () => {
     // given
     const w = new TestCard('w');
-    w.cardType = CardType.WATER;
+    w.cardTypes = [CardType.WATER];
     const r = new TestCard('r');
-    r.cardType = CardType.FIRE;
+    r.cardTypes = [CardType.FIRE];
     const p = new TestCard('p');
-    p.cardType = CardType.PSYCHIC;
+    p.cardTypes = [CardType.PSYCHIC];
     const p2 = new TestCard('p2');
-    p2.cardType = CardType.PSYCHIC;
+    p2.cardTypes = [CardType.PSYCHIC];
 
     const cards = [ w, p, p2, r ];
     player.deck.cards = cards;

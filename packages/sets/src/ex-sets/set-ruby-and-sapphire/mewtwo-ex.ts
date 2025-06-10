@@ -20,7 +20,7 @@ export class MewtwoEx extends PokemonCard {
 
   public stage: Stage = Stage.BASIC;
 
-  public cardType: CardType = CardType.PSYCHIC;
+  public cardTypes: CardType[] = [CardType.PSYCHIC];
 
   public hp: number = 100;
 
@@ -53,8 +53,7 @@ export class MewtwoEx extends PokemonCard {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
 
-      const cardList = StateUtils.findCardList(state, this);
-      if (cardList === undefined) {
+      if (!player.discard.cards.some(c => c.superType === SuperType.ENERGY)) {
         return state;
       }
 

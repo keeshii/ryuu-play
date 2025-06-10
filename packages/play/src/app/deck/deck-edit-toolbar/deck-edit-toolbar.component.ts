@@ -32,7 +32,6 @@ export class DeckEditToolbarComponent {
   private destroyRef = inject(DestroyRef);
 
   public cardTypes = [
-    {value: CardType.NONE, label: 'LABEL_NONE' },
     {value: CardType.COLORLESS, label: 'LABEL_COLORLESS' },
     {value: CardType.GRASS, label: 'LABEL_GRASS' },
     {value: CardType.FIGHTING, label: 'LABEL_FIGHTING' },

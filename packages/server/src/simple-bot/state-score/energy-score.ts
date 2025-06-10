@@ -75,7 +75,6 @@ export class EnergyScore extends SimpleScore {
     cost.forEach(costType => {
       switch (costType) {
         case CardType.ANY:
-        case CardType.NONE:
           break;
         case CardType.COLORLESS:
           colorless += 1;

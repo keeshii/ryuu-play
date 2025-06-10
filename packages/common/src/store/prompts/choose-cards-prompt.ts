@@ -72,11 +72,13 @@ export class ChooseCardsPrompt extends Prompt<Card[]> {
     if (this.options.differentTypes) {
       const typeMap: {[key: number]: boolean} = {};
       for (const card of result) {
-        const cardType = ChooseCardsPrompt.getCardType(card);
-        if (typeMap[cardType] === true) {
-          return false;
-        } else {
-          typeMap[cardType] = true;
+        const cardTypes = ChooseCardsPrompt.getCardTypes(card);
+        for (const cardType of cardTypes) {
+          if (typeMap[cardType] === true) {
+            return false;
+          } else {
+            typeMap[cardType] = true;
+          }
         }
       }
     }
@@ -101,21 +103,26 @@ export class ChooseCardsPrompt extends Prompt<Card[]> {
     });
   }
 
-  public static getCardType(card: Card): CardType {
+  public static getCardTypes(card: Card): CardType[] {
     if (card.superType === SuperType.ENERGY) {
       const energyCard = card as EnergyCard;
-      return energyCard.provides.length > 0 ? energyCard.provides[0] : CardType.NONE;
+      return energyCard.provides;
     }
     if (card.superType === SuperType.POKEMON) {
       const pokemonCard = card as PokemonCard;
-      return pokemonCard.cardType;
+      return pokemonCard.cardTypes;
     }
-    return CardType.NONE;
+    return [];
   }
 
   private matchesFilter(card: Card): boolean {
     for (const key in this.filter) {
       if (Object.prototype.hasOwnProperty.call(this.filter, key)) {
+        if (key === 'cardTypes') {
+          const cardTypes: CardType[] = (card as PokemonCard).cardTypes || [];
+          const filterValue: CardType[] = ((this.filter as PokemonCard).cardTypes) || [];
+          return filterValue.every(cardType => cardTypes.includes(cardType));
+        }
         if ((this.filter as any)[key] !== (card as any)[key]) {
           return false;
         }

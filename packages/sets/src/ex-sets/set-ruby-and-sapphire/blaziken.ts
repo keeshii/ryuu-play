@@ -31,7 +31,7 @@ export class Blaziken extends PokemonCard {
 
   public evolvesFrom = 'Combusken';
 
-  public cardType: CardType = CardType.FIRE;
+  public cardTypes: CardType[] = [CardType.FIRE];
 
   public hp: number = 100;
 

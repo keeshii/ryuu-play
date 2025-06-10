@@ -14,7 +14,7 @@ export class Breloom extends PokemonCard {
 
   public evolvesFrom = 'Shroomish';
 
-  public cardType: CardType = CardType.GRASS;
+  public cardTypes: CardType[] = [CardType.GRASS];
 
   public hp: number = 70;
 

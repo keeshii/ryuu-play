@@ -16,7 +16,7 @@ export class Pelipper extends PokemonCard {
 
   public evolvesFrom = 'Wingull';
 
-  public cardType: CardType = CardType.WATER;
+  public cardTypes: CardType[] = [CardType.WATER];
 
   public hp: number = 70;
 

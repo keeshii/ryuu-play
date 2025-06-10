@@ -51,7 +51,7 @@ function* useFireWorks(next: Function, store: StoreLike, state: State, effect: A
 export class Torchic extends PokemonCard {
   public stage: Stage = Stage.BASIC;
 
-  public cardType: CardType = CardType.FIRE;
+  public cardTypes: CardType[] = [CardType.FIRE];
 
   public hp: number = 40;
 

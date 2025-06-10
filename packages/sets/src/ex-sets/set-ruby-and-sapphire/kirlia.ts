@@ -60,7 +60,7 @@ export class Kirlia extends PokemonCard {
 
   public evolvesFrom = 'Ralts';
 
-  public cardType: CardType = CardType.PSYCHIC;
+  public cardTypes: CardType[] = [CardType.PSYCHIC];
 
   public hp: number = 70;
 

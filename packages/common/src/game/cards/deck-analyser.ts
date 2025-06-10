@@ -62,17 +62,19 @@ export class DeckAnalyser {
 
     for (let i = 0; i < this.cards.length; i++) {
       const card = this.cards[i];
-      let cardType = CardType.NONE;
+      let cardType: CardType;
 
       if (card instanceof PokemonCard) {
-        cardType = card.cardType;
-        if (cardType !== CardType.NONE && cardTypes.indexOf(cardType) === -1) {
-          cardTypes.push(cardType);
+        for (let j = 0; j < card.cardTypes.length; j++) {
+          cardType = card.cardTypes[j];
+          if (cardTypes.indexOf(cardType) === -1) {
+            cardTypes.push(cardType);
+          }
         }
       } else if (card instanceof EnergyCard) {
         for (let j = 0; j < card.provides.length; j++) {
           cardType = card.provides[j];
-          if (cardType !== CardType.NONE && cardTypes.indexOf(cardType) === -1) {
+          if (cardTypes.indexOf(cardType) === -1) {
             cardTypes.push(cardType);
           }
         }

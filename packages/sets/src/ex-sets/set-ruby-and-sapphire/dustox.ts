@@ -20,7 +20,7 @@ export class Dustox extends PokemonCard {
 
   public evolvesFrom = 'Cascoon';
 
-  public cardType: CardType = CardType.GRASS;
+  public cardTypes: CardType[] = [CardType.GRASS];
 
   public hp: number = 90;
 

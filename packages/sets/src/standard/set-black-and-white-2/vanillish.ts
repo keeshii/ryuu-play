@@ -17,7 +17,7 @@ export class Vanillish extends PokemonCard {
 
   public evolvesFrom = 'Vanillite';
 
-  public cardType: CardType = CardType.WATER;
+  public cardTypes: CardType[] = [CardType.WATER];
 
   public hp: number = 80;
 

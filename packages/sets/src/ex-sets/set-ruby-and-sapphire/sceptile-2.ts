@@ -83,7 +83,7 @@ export class Sceptile2 extends PokemonCard {
 
   public evolvesFrom = 'Grovyle';
 
-  public cardType: CardType = CardType.GRASS;
+  public cardTypes: CardType[] = [CardType.GRASS];
 
   public hp: number = 100;
 

@@ -15,7 +15,7 @@ export class Mightyena2 extends PokemonCard {
 
   public evolvesFrom = 'Poochyena';
 
-  public cardType: CardType = CardType.DARK;
+  public cardTypes: CardType[] = [CardType.DARK];
 
   public hp: number = 70;
 

@@ -6,7 +6,6 @@ import {
   GameError,
   GameMessage,
   PokemonCard,
-  PokemonSlot,
   PowerEffect,
   PowerType,
   Stage,
@@ -18,7 +17,7 @@ import {
 export class Wobbuffet extends PokemonCard {
   public stage: Stage = Stage.BASIC;
 
-  public cardType: CardType = CardType.PSYCHIC;
+  public cardTypes: CardType[] = [CardType.PSYCHIC];
 
   public hp: number = 110;
 
@@ -67,11 +66,11 @@ export class Wobbuffet extends PokemonCard {
         return state;
       }
 
-      let cardTypes = [effect.card.cardType];
+      let cardTypes = effect.card.cardTypes;
 
-      const cardList = StateUtils.findCardList(state, effect.card);
-      if (cardList instanceof PokemonSlot) {
-        const checkPokemonType = new CheckPokemonTypeEffect(cardList);
+      const pokemonSlot = StateUtils.findPokemonSlot(state, effect.card);
+      if (pokemonSlot !== undefined) {
+        const checkPokemonType = new CheckPokemonTypeEffect(pokemonSlot);
         store.reduceEffect(state, checkPokemonType);
         cardTypes = checkPokemonType.cardTypes;
       }

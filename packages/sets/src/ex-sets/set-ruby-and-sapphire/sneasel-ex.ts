@@ -17,7 +17,7 @@ export class SneaselEx extends PokemonCard {
 
   public stage: Stage = Stage.BASIC;
 
-  public cardType: CardType = CardType.DARK;
+  public cardTypes: CardType[] = [CardType.DARK];
 
   public hp: number = 80;
 

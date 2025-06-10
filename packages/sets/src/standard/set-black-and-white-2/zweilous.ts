@@ -58,7 +58,7 @@ export class Zweilous extends PokemonCard {
 
   public evolvesFrom = 'Deino';
 
-  public cardType: CardType = CardType.DRAGON;
+  public cardTypes: CardType[] = [CardType.DRAGON];
 
   public hp: number = 80;
 

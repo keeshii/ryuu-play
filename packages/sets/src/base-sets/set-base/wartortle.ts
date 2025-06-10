@@ -20,7 +20,7 @@ export class Wartortle extends PokemonCard {
 
   public evolvesFrom = 'Squirtle';
 
-  public cardType: CardType = CardType.WATER;
+  public cardTypes: CardType[] = [CardType.WATER];
 
   public hp: number = 70;
 

@@ -18,7 +18,7 @@ export class Haunter extends PokemonCard {
 
   public evolvesFrom = 'Gastly';
 
-  public cardType: CardType = CardType.PSYCHIC;
+  public cardTypes: CardType[] = [CardType.PSYCHIC];
 
   public hp: number = 60;
 

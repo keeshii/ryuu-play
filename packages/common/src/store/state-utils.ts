@@ -27,7 +27,6 @@ export class StateUtils {
     cost.forEach(costType => {
       switch (costType) {
         case CardType.ANY:
-        case CardType.NONE:
           break;
         case CardType.COLORLESS:
           colorless += 1;

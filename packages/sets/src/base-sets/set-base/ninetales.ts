@@ -22,7 +22,7 @@ export class Ninetales extends PokemonCard {
 
   public evolvesFrom = 'Vulpix';
 
-  public cardType: CardType = CardType.FIRE;
+  public cardTypes: CardType[] = [CardType.FIRE];
 
   public hp: number = 80;
 

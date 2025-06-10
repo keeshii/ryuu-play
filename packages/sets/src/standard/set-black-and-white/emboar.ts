@@ -24,7 +24,7 @@ export class Emboar extends PokemonCard {
 
   public evolvesFrom = 'Pignite';
 
-  public cardType: CardType = CardType.FIRE;
+  public cardTypes: CardType[] = [CardType.FIRE];
 
   public hp: number = 150;
 

@@ -55,7 +55,7 @@ function* useAscension(next: Function, store: StoreLike, state: State, effect: A
 export class Zorua2 extends PokemonCard {
   public stage: Stage = Stage.BASIC;
 
-  public cardType: CardType = CardType.DARK;
+  public cardTypes: CardType[] = [CardType.DARK];
 
   public hp: number = 50;
 

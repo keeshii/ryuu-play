@@ -18,7 +18,7 @@ export class Combusken2 extends PokemonCard {
 
   public evolvesFrom = 'Torchic';
 
-  public cardType: CardType = CardType.FIRE;
+  public cardTypes: CardType[] = [CardType.FIRE];
 
   public hp: number = 80;
 

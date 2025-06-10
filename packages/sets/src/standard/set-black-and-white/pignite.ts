@@ -17,9 +17,13 @@ import {
 
 function* useFlameCharge(next: Function, store: StoreLike, state: State, self: Pignite, effect: AttackEffect): IterableIterator<State> {
   const player = effect.player;
+  const pokemonSlot = StateUtils.findPokemonSlot(state, self);
 
-  const cardList = StateUtils.findCardList(state, self);
-  if (cardList === undefined) {
+  if (!pokemonSlot) {
+    return state;
+  }
+
+  if (player.deck.cards.length === 0) {
     return state;
   }
 
@@ -44,7 +48,7 @@ function* useFlameCharge(next: Function, store: StoreLike, state: State, self: P
   );
 
   if (cards.length > 0) {
-    player.deck.moveCardsTo(cards, cardList);
+    player.deck.moveCardsTo(cards, pokemonSlot.energies);
   }
 
   return store.prompt(state, new ShuffleDeckPrompt(player.id), order => {
@@ -57,7 +61,7 @@ export class Pignite extends PokemonCard {
 
   public evolvesFrom = 'Tepig';
 
-  public cardType: CardType = CardType.FIRE;
+  public cardTypes: CardType[] = [CardType.FIRE];
 
   public hp: number = 100;
 

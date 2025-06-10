@@ -23,7 +23,7 @@ export class Camerupt extends PokemonCard {
 
   public evolvesFrom = 'Numel';
 
-  public cardType: CardType = CardType.FIRE;
+  public cardTypes: CardType[] = [CardType.FIRE];
 
   public hp: number = 90;
 

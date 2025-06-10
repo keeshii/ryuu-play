@@ -7,7 +7,7 @@ export abstract class PokemonCard extends Card {
 
   public superType: SuperType = SuperType.POKEMON;
 
-  public cardType: CardType = CardType.NONE;
+  public cardTypes: CardType[] = [];
 
   public pokemonType: PokemonType = PokemonType.NORMAL;
 

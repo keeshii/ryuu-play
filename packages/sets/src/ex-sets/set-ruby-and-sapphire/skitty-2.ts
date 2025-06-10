@@ -20,7 +20,7 @@ import {
 export class Skitty2 extends PokemonCard {
   public stage: Stage = Stage.BASIC;
 
-  public cardType: CardType = CardType.COLORLESS;
+  public cardTypes: CardType[] = [CardType.COLORLESS];
 
   public hp: number = 40;
 
@@ -52,11 +52,6 @@ export class Skitty2 extends PokemonCard {
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
-
-      const cardList = StateUtils.findCardList(state, this);
-      if (cardList === undefined) {
-        return state;
-      }
 
       if (!player.hand.cards.some(c => c instanceof EnergyCard && c.energyType === EnergyType.BASIC)) {
         return state;

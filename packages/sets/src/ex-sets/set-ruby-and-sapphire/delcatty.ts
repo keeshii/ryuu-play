@@ -31,7 +31,6 @@ function* useEnergyDraw(next: Function, store: StoreLike, state: State, self: De
     throw new GameError(GameMessage.CANNOT_USE_POWER);
   }
 
-  const target = StateUtils.findCardList(state, effect.card);
   let cards: Card[] = [];
   yield store.prompt(
     state,
@@ -53,7 +52,7 @@ function* useEnergyDraw(next: Function, store: StoreLike, state: State, self: De
     return state;
   }
 
-  target.moveCardsTo(cards, player.discard);
+  player.hand.moveCardsTo(cards, player.discard);
 
   const deckTop = new CardList();
   deckTop.cards = player.deck.top(3);
@@ -86,7 +85,7 @@ export class Delcatty extends PokemonCard {
 
   public evolvesFrom = 'Skitty';
 
-  public cardType: CardType = CardType.COLORLESS;
+  public cardTypes: CardType[] = [CardType.COLORLESS];
 
   public hp: number = 70;
 

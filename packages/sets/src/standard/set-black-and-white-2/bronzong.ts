@@ -24,7 +24,7 @@ export class Bronzong extends PokemonCard {
 
   public evolvesFrom = 'Bronzor';
 
-  public cardType: CardType = CardType.METAL;
+  public cardTypes: CardType[] = [CardType.METAL];
 
   public hp: number = 90;
 

@@ -70,7 +70,7 @@ export class CheckPokemonTypeEffect implements Effect {
   constructor(target: PokemonSlot) {
     this.target = target;
     const pokemonCard = target.getPokemonCard();
-    this.cardTypes = pokemonCard ? [ pokemonCard.cardType ] : [];
+    this.cardTypes = pokemonCard ? pokemonCard.cardTypes : [];
   }
 }
 

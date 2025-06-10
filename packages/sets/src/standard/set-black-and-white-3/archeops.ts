@@ -23,7 +23,7 @@ export class Archeops extends PokemonCard {
 
   public evolvesFrom = 'Archen';
 
-  public cardType: CardType = CardType.FIGHTING;
+  public cardTypes: CardType[] = [CardType.FIGHTING];
 
   public hp: number = 130;
 

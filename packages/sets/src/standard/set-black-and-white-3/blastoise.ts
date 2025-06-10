@@ -26,7 +26,7 @@ export class Blastoise extends PokemonCard {
 
   public evolvesFrom = 'Wartortle';
 
-  public cardType: CardType = CardType.WATER;
+  public cardTypes: CardType[] = [CardType.WATER];
 
   public hp: number = 140;
 

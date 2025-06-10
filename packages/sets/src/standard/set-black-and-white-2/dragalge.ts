@@ -23,7 +23,7 @@ export class Dragalge extends PokemonCard {
 
   public evolvesFrom = 'Skrelp';
 
-  public cardType: CardType = CardType.DRAGON;
+  public cardTypes: CardType[] = [CardType.DRAGON];
 
   public hp: number = 100;
 

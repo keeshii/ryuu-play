@@ -55,7 +55,7 @@ function* useKnockOff(next: Function, store: StoreLike, state: State, effect: At
 export class Poochyena2 extends PokemonCard {
   public stage: Stage = Stage.BASIC;
 
-  public cardType: CardType = CardType.DARK;
+  public cardTypes: CardType[] = [CardType.DARK];
 
   public hp: number = 50;
 

@@ -9,7 +9,6 @@ import {
   GameError,
   GameMessage,
   PokemonCard,
-  PokemonSlot,
   PowerEffect,
   PowerType,
   ShowCardsPrompt,
@@ -29,8 +28,8 @@ function* useBabyEvolution(
   effect: PowerEffect
 ): IterableIterator<State> {
   const player = effect.player;
-  const cardList = StateUtils.findCardList(state, self);
-  if (!(cardList instanceof PokemonSlot)) {
+  const pokemonSlot = StateUtils.findPokemonSlot(state, self);
+  if (!pokemonSlot) {
     throw new GameError(GameMessage.CANNOT_USE_POWER);
   }
   const hasPikachu = player.hand.cards.some(c => c.name === 'Pikachu');
@@ -53,10 +52,10 @@ function* useBabyEvolution(
 
       if (cards.length > 0) {
         const pokemonCard = cards[0] as PokemonCard;
-        const evolveEffect = new EvolveEffect(player, cardList, pokemonCard);
+        const evolveEffect = new EvolveEffect(player, pokemonSlot, pokemonCard);
         store.reduceEffect(state, evolveEffect);
 
-        cardList.damage = 0;
+        pokemonSlot.damage = 0;
       }
     }
   );
@@ -117,7 +116,7 @@ function* useFindAFriend(
 export class Pichu extends PokemonCard {
   public stage: Stage = Stage.BASIC;
 
-  public cardType: CardType = CardType.LIGHTNING;
+  public cardTypes: CardType[] = [CardType.LIGHTNING];
 
   public hp: number = 40;
 

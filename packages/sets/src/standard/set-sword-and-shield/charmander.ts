@@ -3,7 +3,7 @@ import { AttackEffect, CardType, Effect, PokemonCard, Stage, State, StoreLike } 
 export class Charmander extends PokemonCard {
   public stage: Stage = Stage.BASIC;
 
-  public cardType: CardType = CardType.FIRE;
+  public cardTypes: CardType[] = [CardType.FIRE];
 
   public hp: number = 70;
 

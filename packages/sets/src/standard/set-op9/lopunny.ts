@@ -19,7 +19,7 @@ export class Lopunny extends PokemonCard {
 
   public evolvesFrom: string = 'Buneary';
 
-  public cardType: CardType = CardType.COLORLESS;
+  public cardTypes: CardType[] = [CardType.COLORLESS];
 
   public hp: number = 80;
 

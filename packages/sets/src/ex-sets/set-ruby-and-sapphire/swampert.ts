@@ -29,7 +29,7 @@ export class Swampert extends PokemonCard {
 
   public evolvesFrom = 'Marshtomp';
 
-  public cardType: CardType = CardType.WATER;
+  public cardTypes: CardType[] = [CardType.WATER];
 
   public hp: number = 110;
 

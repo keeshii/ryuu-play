@@ -5,7 +5,7 @@ export class Lairon extends PokemonCard {
 
   public evolvesFrom = 'Aron';
 
-  public cardType: CardType = CardType.METAL;
+  public cardTypes: CardType[] = [CardType.METAL];
 
   public hp: number = 70;
 

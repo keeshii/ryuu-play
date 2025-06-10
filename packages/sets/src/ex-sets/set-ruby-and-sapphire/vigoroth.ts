@@ -15,7 +15,7 @@ export class Vigoroth extends PokemonCard {
 
   public evolvesFrom = 'Slakoth';
 
-  public cardType: CardType = CardType.COLORLESS;
+  public cardTypes: CardType[] = [CardType.COLORLESS];
 
   public hp: number = 70;
 

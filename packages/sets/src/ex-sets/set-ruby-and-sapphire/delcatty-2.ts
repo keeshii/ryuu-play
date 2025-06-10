@@ -21,7 +21,7 @@ export class Delcatty2 extends PokemonCard {
 
   public evolvesFrom = 'Skitty';
 
-  public cardType: CardType = CardType.COLORLESS;
+  public cardTypes: CardType[] = [CardType.COLORLESS];
 
   public hp: number = 80;
 

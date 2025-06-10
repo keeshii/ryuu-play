@@ -5,7 +5,6 @@ import {
   Effect,
   GameMessage,
   PokemonCard,
-  PokemonSlot,
   Stage,
   State,
   StateUtils,
@@ -17,7 +16,7 @@ export class Raichu extends PokemonCard {
 
   public evolvesFrom = 'Pikachu';
 
-  public cardType: CardType = CardType.LIGHTNING;
+  public cardTypes: CardType[] = [CardType.LIGHTNING];
 
   public hp: number = 90;
 
@@ -65,11 +64,11 @@ export class Raichu extends PokemonCard {
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      const cardList = StateUtils.findCardList(state, this);
-      if (!(cardList instanceof PokemonSlot)) {
+      const pokemonSlot = StateUtils.findPokemonSlot(state, this);
+      if (!pokemonSlot) {
         return state;
       }
-      if (cardList.pokemonPlayedTurn === state.turn) {
+      if (pokemonSlot.pokemonPlayedTurn === state.turn) {
         effect.damage += 40;
       }
     }

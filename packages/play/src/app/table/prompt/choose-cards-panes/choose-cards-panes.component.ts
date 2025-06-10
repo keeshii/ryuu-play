@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
-import { Card } from '@ptcg/common';
+import { Card, CardType, PokemonCard } from '@ptcg/common';
 import { DraggedItem } from '@ng-dnd/sortable';
 
 import { CardsBaseService } from '../../../shared/cards/cards-base.service';
@@ -77,7 +77,13 @@ export class ChooseCardsPanesComponent implements OnChanges {
       let isBlocked = blocked.includes(i);
       if (isBlocked === false) {
         for (const key in filter) {
-          isBlocked = isBlocked || (filter as any)[key] !== (card as any)[key];
+          if (key === 'cardTypes') {
+            const cardTypes: CardType[] = (card as PokemonCard).cardTypes || [];
+            const filterValue: CardType[] = ((this.filter as PokemonCard).cardTypes) || [];
+            isBlocked = isBlocked || !filterValue.every(cardType => cardTypes.includes(cardType));
+          } else {
+            isBlocked = isBlocked || (filter as any)[key] !== (card as any)[key];
+          }
         }
       }
       filterMap[card.fullName] = !isBlocked;

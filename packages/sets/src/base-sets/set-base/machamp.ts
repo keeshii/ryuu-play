@@ -20,7 +20,7 @@ export class Machamp extends PokemonCard {
 
   public evolvesFrom = 'Machoke';
 
-  public cardType: CardType = CardType.FIGHTING;
+  public cardTypes: CardType[] = [CardType.FIGHTING];
 
   public hp: number = 100;
 

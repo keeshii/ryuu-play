@@ -18,7 +18,7 @@ export class Quilava extends PokemonCard {
 
   public evolvesFrom = 'Cyndaquil';
 
-  public cardType: CardType = CardType.FIRE;
+  public cardTypes: CardType[] = [CardType.FIRE];
 
   public hp: number = 80;
 

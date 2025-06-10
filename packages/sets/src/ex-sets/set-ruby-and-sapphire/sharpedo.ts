@@ -23,7 +23,7 @@ export class Sharpedo extends PokemonCard {
 
   public evolvesFrom = 'Carvanha';
 
-  public cardType: CardType = CardType.WATER;
+  public cardTypes: CardType[] = [CardType.WATER];
 
   public hp: number = 70;
 

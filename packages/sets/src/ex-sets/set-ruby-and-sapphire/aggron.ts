@@ -15,7 +15,7 @@ export class Aggron extends PokemonCard {
 
   public evolvesFrom = 'Lairon';
 
-  public cardType: CardType = CardType.METAL;
+  public cardTypes: CardType[] = [CardType.METAL];
 
   public hp: number = 110;
 

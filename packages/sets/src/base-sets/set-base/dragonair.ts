@@ -18,7 +18,7 @@ export class Dragonair extends PokemonCard {
 
   public evolvesFrom = 'Dratini';
 
-  public cardType: CardType = CardType.COLORLESS;
+  public cardTypes: CardType[] = [CardType.COLORLESS];
 
   public hp: number = 80;
 

@@ -17,7 +17,7 @@ export class Grovyle extends PokemonCard {
 
   public evolvesFrom = 'Treecko';
 
-  public cardType: CardType = CardType.GRASS;
+  public cardTypes: CardType[] = [CardType.GRASS];
 
   public hp: number = 70;
 

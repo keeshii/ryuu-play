@@ -64,7 +64,7 @@ export class Roserade extends PokemonCard {
 
   evolvesFrom = 'Roselia';
 
-  public cardType: CardType = CardType.GRASS;
+  public cardTypes: CardType[] = [CardType.GRASS];
 
   public hp: number = 90;
 

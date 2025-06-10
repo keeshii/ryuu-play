@@ -3,7 +3,7 @@ import { CardType, PokemonCard, Stage } from '@ptcg/common';
 export class Poochyena extends PokemonCard {
   public stage: Stage = Stage.BASIC;
 
-  public cardType: CardType = CardType.DARK;
+  public cardTypes: CardType[] = [CardType.DARK];
 
   public hp: number = 40;
 

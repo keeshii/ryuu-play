@@ -2,7 +2,6 @@ import {
   Effect,
   GameError,
   GameMessage,
-  PokemonSlot,
   PowerEffect,
   Stage,
   State,
@@ -28,9 +27,9 @@ export class SilentLab extends TrainerCard {
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof PowerEffect && StateUtils.getStadiumCard(state) === this) {
       const pokemonCard = effect.card;
-      const cardList = StateUtils.findCardList(state, pokemonCard);
+      const pokemonSlot = StateUtils.findPokemonSlot(state, pokemonCard);
 
-      const isBasic = cardList instanceof PokemonSlot ? cardList.isBasic() : pokemonCard.stage === Stage.BASIC;
+      const isBasic = pokemonSlot ? pokemonSlot.isBasic() : pokemonCard.stage === Stage.BASIC;
 
       if (isBasic) {
         throw new GameError(GameMessage.BLOCKED_BY_EFFECT);

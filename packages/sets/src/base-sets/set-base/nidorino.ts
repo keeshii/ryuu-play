@@ -15,7 +15,7 @@ export class Nidorino extends PokemonCard {
 
   public evolvesFrom = 'Nidoran ♂';
 
-  public cardType: CardType = CardType.GRASS;
+  public cardTypes: CardType[] = [CardType.GRASS];
 
   public hp: number = 60;
 

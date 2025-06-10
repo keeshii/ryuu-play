@@ -3,7 +3,7 @@ import { AttackEffect, CardType, DealDamageEffect, Effect, PokemonCard, Stage, S
 export class Zekrom extends PokemonCard {
   public stage: Stage = Stage.BASIC;
 
-  public cardType: CardType = CardType.LIGHTNING;
+  public cardTypes: CardType[] = [CardType.LIGHTNING];
 
   public hp: number = 130;
 

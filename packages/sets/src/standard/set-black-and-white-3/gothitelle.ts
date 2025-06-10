@@ -20,7 +20,7 @@ export class Gothitelle extends PokemonCard {
 
   public evolvesFrom = 'Gothorita';
 
-  public cardType: CardType = CardType.PSYCHIC;
+  public cardTypes: CardType[] = [CardType.PSYCHIC];
 
   public hp: number = 130;
 

@@ -22,7 +22,7 @@ export class Manectric2 extends PokemonCard {
 
   public evolvesFrom = 'Electrike';
 
-  public cardType: CardType = CardType.LIGHTNING;
+  public cardTypes: CardType[] = [CardType.LIGHTNING];
 
   public hp: number = 70;
 

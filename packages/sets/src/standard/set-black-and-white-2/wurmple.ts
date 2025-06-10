@@ -52,7 +52,7 @@ function* useFlock(next: Function, store: StoreLike, state: State, effect: Attac
 export class Wurmple extends PokemonCard {
   public stage: Stage = Stage.BASIC;
 
-  public cardType: CardType = CardType.GRASS;
+  public cardTypes: CardType[] = [CardType.GRASS];
 
   public hp: number = 60;
 

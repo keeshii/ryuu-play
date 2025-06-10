@@ -78,7 +78,7 @@ export class Gloom extends PokemonCard {
 
   public evolvesFrom = 'Oddish';
 
-  public cardType: CardType = CardType.GRASS;
+  public cardTypes: CardType[] = [CardType.GRASS];
 
   public hp: number = 80;
 

@@ -32,7 +32,7 @@ function* playCard(
   player.deck.cards.forEach((c, index) => {
     if (c instanceof TrainerCard && c.trainerType === TrainerType.ITEM) {
       trainers += 1;
-    } else if (c instanceof PokemonCard && c.cardType === CardType.FIGHTING) {
+    } else if (c instanceof PokemonCard && c.cardTypes.includes(CardType.FIGHTING)) {
       pokemons += 1;
     } else {
       blocked.push(index);
