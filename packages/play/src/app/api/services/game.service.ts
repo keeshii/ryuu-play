@@ -141,6 +141,11 @@ export class GameService {
       .subscribe(() => {}, (error: ApiError) => this.handleError(error));
   }
 
+  public trainer(gameId: number, cardName: string, target: CardTarget) {
+    this.socketService.emit('game:action:trainer', { gameId, cardName, target })
+      .subscribe(() => {}, (error: ApiError) => this.handleError(error));
+  }
+
   public play(gameId: number, deck: string[]) {
     this.socketService.emit('game:action:play', { gameId, deck })
       .subscribe(() => {}, (error: ApiError) => this.handleError(error));

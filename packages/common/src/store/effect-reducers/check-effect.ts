@@ -1,6 +1,11 @@
 import { State, GamePhase, GameWinner } from '../state/state';
 import { StoreLike } from '../store-like';
-import { CheckHpEffect, CheckProvidedEnergyEffect, CheckTableStateEffect } from '../effects/check-effects';
+import {
+  AfterCheckProvidedEnergyEffect,
+  CheckHpEffect,
+  CheckProvidedEnergyEffect,
+  CheckTableStateEffect
+} from '../effects/check-effects';
 import { ChoosePokemonPrompt } from '../prompts/choose-pokemon-prompt';
 import { GameError } from '../../game-error';
 import { GameMessage, GameLog } from '../../game-message';
@@ -9,7 +14,6 @@ import { CardList } from '../state/card-list';
 import { PlayerType, SlotType } from '../actions/play-card-action';
 import { KnockOutEffect } from '../effects/game-effects';
 import { Effect } from '../effects/effect';
-import { EnergyCard } from '../card/energy-card';
 import { PokemonSlot } from '../state/pokemon-slot';
 
 interface PokemonItem {
@@ -328,14 +332,10 @@ export function checkState(store: StoreLike, state: State, onComplete?: () => vo
 
 export function checkStateReducer(store: StoreLike, state: State, effect: Effect): State {
 
-
+  // Effect for cards that remap one energy type to an another (see Charizard BS)
   if (effect instanceof CheckProvidedEnergyEffect) {
-    effect.source.energies.cards.forEach(c => {
-      if (c instanceof EnergyCard && !effect.energyMap.some(e => e.card === c)) {
-        effect.energyMap.push({ card: c, provides: c.provides });
-      }
-    });
-    return state;
+    const afterCheckProvidedEnergy = new AfterCheckProvidedEnergyEffect(effect);
+    return store.reduceEffect(state, afterCheckProvidedEnergy);
   }
 
   return state;

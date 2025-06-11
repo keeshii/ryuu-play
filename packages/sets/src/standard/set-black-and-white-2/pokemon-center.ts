@@ -27,6 +27,8 @@ export class PokemonCenter extends TrainerCard {
   public text: string =
     'Once during each player\'s turn, that player may heal 20 damage from 1 of his or her Benched Pokémon.';
 
+  public useWhenInPlay = true;
+
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof UseStadiumEffect && StateUtils.getStadiumCard(state) === this) {
       const player = effect.player;

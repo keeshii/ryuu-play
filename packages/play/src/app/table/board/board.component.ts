@@ -267,7 +267,7 @@ export class BoardComponent implements OnDestroy {
     const slot = SlotType.ACTIVE;
     const target: CardTarget = { player, slot, index: 0 };
 
-    const options = { enableAbility: { useWhenInPlay: true }, enableAttack: true };
+    const options = { enableAbility: { useWhenInPlay: true }, enableAttack: true, enableTrainer: true };
     this.cardsBaseService.showCardInfo({ card, cardList, options })
       .then(result => {
         if (!result) {
@@ -282,6 +282,10 @@ export class BoardComponent implements OnDestroy {
         // Use attack from the card
         } else if (result.attack) {
           this.gameService.attack(gameId, result.attack);
+
+        // Use trainer in play (attached to the Pokemon)
+        } else if (result.trainer) {
+          this.gameService.trainer(gameId, result.card.name, target);
         }
       });
   }
@@ -298,7 +302,7 @@ export class BoardComponent implements OnDestroy {
     const slot = SlotType.BENCH;
     const target: CardTarget = { player, slot, index };
 
-    const options = { enableAbility: { useWhenInPlay: true }, enableAttack: false };
+    const options = { enableAbility: { useWhenInPlay: true }, enableAttack: false, enableTrainer: true };
     this.cardsBaseService.showCardInfo({ card, cardList, options })
       .then(result => {
         if (!result) {
@@ -308,6 +312,10 @@ export class BoardComponent implements OnDestroy {
         // Use ability from the card
         if (result.ability) {
           this.gameService.ability(this.gameState.gameId, result.ability, target);
+
+        // Use trainer in play (attached to the Pokemon)
+        } else if (result.trainer) {
+          this.gameService.trainer(this.gameState.gameId, result.card.name, target);
         }
       });
   }

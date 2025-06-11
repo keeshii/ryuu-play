@@ -1,8 +1,8 @@
-import { Card } from '../card/card';
 import { CardType } from '../card/card-types';
 import { GameMessage } from '../../game-message';
 import { Prompt } from './prompt';
 import { StateUtils } from '../state-utils';
+import { EnergyCard } from '../card/energy-card';
 
 export const ChooseEnergyPromptType = 'Choose energy';
 
@@ -10,7 +10,7 @@ export interface ChooseEnergyOptions {
   allowCancel: boolean;
 }
 
-export type EnergyMap = { card: Card, provides: CardType[] }
+export type EnergyMap = { card: EnergyCard, provides: CardType[] }
 
 export class ChooseEnergyPrompt extends Prompt<EnergyMap[]> {
 

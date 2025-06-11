@@ -100,6 +100,8 @@ export class GiantHearth extends TrainerCard {
     '2 R Energy cards, reveals them, and puts them into their hand. ' +
     'Then, that player shuffles their deck.';
 
+  public useWhenInPlay = true;
+
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof UseStadiumEffect && StateUtils.getStadiumCard(state) === this) {
       const generator = useStadium(() => generator.next(), store, state, effect);

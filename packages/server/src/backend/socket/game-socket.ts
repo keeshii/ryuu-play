@@ -1,7 +1,7 @@
 import { AddPlayerAction, AppendLogAction, Action, PassTurnAction,
   ReorderHandAction, ReorderBenchAction, PlayCardAction, CardTarget,
   RetreatAction, AttackAction, UseAbilityAction, StateSerializer,
-  UseStadiumAction, GameLog} from '@ptcg/common';
+  UseStadiumAction, GameLog, UseTrainerInPlayAction} from '@ptcg/common';
 import { Base64 } from '@ptcg/common';
 import { ChangeAvatarAction } from '@ptcg/common';
 import { Client } from '../../game/client/client.interface';
@@ -38,6 +38,7 @@ export class GameSocket {
     this.socket.addListener('game:action:ability', this.ability.bind(this));
     this.socket.addListener('game:action:attack', this.attack.bind(this));
     this.socket.addListener('game:action:stadium', this.stadium.bind(this));
+    this.socket.addListener('game:action:trainer', this.trainer.bind(this));
     this.socket.addListener('game:action:play', this.playGame.bind(this));
     this.socket.addListener('game:action:playCard', this.playCard.bind(this));
     this.socket.addListener('game:action:resolvePrompt', this.resolvePrompt.bind(this));
@@ -127,6 +128,11 @@ export class GameSocket {
 
   private stadium(params: {gameId: number}, response: Response<void>) {
     const action = new UseStadiumAction(this.client.id);
+    this.dispatch(params.gameId, action, response);
+  }
+
+  private trainer(params: {gameId: number, cardName: string, target: CardTarget}, response: Response<void>) {
+    const action = new UseTrainerInPlayAction(this.client.id, params.target, params.cardName);
     this.dispatch(params.gameId, action, response);
   }
 

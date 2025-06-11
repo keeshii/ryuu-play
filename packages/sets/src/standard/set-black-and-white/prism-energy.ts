@@ -18,7 +18,11 @@ export class PrismEnergy extends EnergyCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof CheckProvidedEnergyEffect && effect.source.energies.cards.includes(this) && effect.source.isBasic()) {
-      effect.energyMap.push({ card: this, provides: [CardType.ANY] });
+      effect.energyMap.forEach(item => {
+        if (item.card === this) {
+          item.provides = [CardType.ANY];
+        }
+      });
     }
     return state;
   }

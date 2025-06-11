@@ -85,6 +85,8 @@ export class TwistMountain extends TrainerCard {
     'If heads, the player puts a Restored Pokémon from his or her hand ' +
     'onto his or her Bench.';
 
+  public useWhenInPlay = true;
+
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof UseStadiumEffect && StateUtils.getStadiumCard(state) === this) {
       const generator = useStadium(() => generator.next(), store, state, effect);

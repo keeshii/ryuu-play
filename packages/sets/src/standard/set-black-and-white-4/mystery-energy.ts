@@ -51,7 +51,11 @@ export class MysteryEnergy extends EnergyCard {
       const checkPokemonType = new CheckPokemonTypeEffect(effect.source);
       store.reduceEffect(state, checkPokemonType);
       if (checkPokemonType.cardTypes.includes(CardType.PSYCHIC)) {
-        effect.energyMap.push({ card: this, provides: [CardType.PSYCHIC] });
+        effect.energyMap.forEach(item => {
+          if (item.card === this) {
+            item.provides = [CardType.PSYCHIC];
+          }
+        });
       }
       return state;
     }

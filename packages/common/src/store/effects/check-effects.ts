@@ -13,6 +13,7 @@ export enum CheckEffects {
   CHECK_RETREAT_COST_EFFECT = 'CHECK_RETREAT_COST_EFFECT',
   CHECK_ATTACK_COST_EFFECT = 'CHECK_ATTACK_COST_EFFECT',
   CHECK_ENOUGH_ENERGY_EFFECT = 'CHECK_ENOUGH_ENERGY_EFFECT',
+  AFTER_CHECK_ENOUGH_ENERGY_EFFECT = 'AFTER_CHECK_ENOUGH_ENERGY_EFFECT',
   CHECK_POKEMON_PLAYED_TURN_EFFECT = 'CHECK_POKEMON_PLAYED_TURN_EFFECT',
   CHECK_TABLE_STATE_EFFECT = 'CHECK_TABLE_STATE_EFFECT'
 }
@@ -111,6 +112,23 @@ export class CheckProvidedEnergyEffect implements Effect {
   constructor(player: Player, source?: PokemonSlot) {
     this.player = player;
     this.source = source === undefined ? player.active : source;
+    this.source.energies.cards.forEach(c => {
+      this.energyMap.push({ card: c, provides: c.provides });
+    });
+  }
+}
+
+export class AfterCheckProvidedEnergyEffect implements Effect {
+  readonly type: string = CheckEffects.AFTER_CHECK_ENOUGH_ENERGY_EFFECT;
+  public preventDefault = false;
+  public player: Player;
+  public source: PokemonSlot;
+  public energyMap: EnergyMap[] = [];
+
+  constructor(base: CheckProvidedEnergyEffect) {
+    this.player = base.player;
+    this.source = base.source;
+    this.energyMap = base.energyMap;
   }
 }
 

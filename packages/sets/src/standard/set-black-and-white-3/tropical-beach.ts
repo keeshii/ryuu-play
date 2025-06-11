@@ -26,6 +26,8 @@ export class TropicalBeach extends TrainerCard {
     'until he or she has 7 cards in his or her hand. If he or she does, ' +
     'that player\'s turn ends.';
 
+  public useWhenInPlay = true;
+
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof UseStadiumEffect && StateUtils.getStadiumCard(state) === this) {
       const player = effect.player;

@@ -28,7 +28,11 @@ export class RainbowEnergy extends EnergyCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof CheckProvidedEnergyEffect && effect.source.energies.cards.includes(this)) {
-      effect.energyMap.push({ card: this, provides: [CardType.ANY] });
+      effect.energyMap.forEach(item => {
+        if (item.card === this) {
+          item.provides = [CardType.ANY];
+        }
+      });
     }
     if (effect instanceof AttachEnergyEffect && effect.energyCard === this) {
       effect.target.damage += 10;

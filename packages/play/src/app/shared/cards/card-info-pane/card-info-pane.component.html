@@ -156,8 +156,8 @@
     </div>
 
     <ptcg-hover-highlight
-      (click)="options.enableTrainer && clickAction({trainer: true})"
-      [enabled]="options.enableTrainer">
+      (click)="options.enableTrainer && card.useWhenInPlay && clickAction({trainer: true})"
+      [enabled]="options.enableTrainer && card.useWhenInPlay">
       <div class="power" *ngIf="card.text">
         <div class="power-header">
           <div class="power-name" translate>

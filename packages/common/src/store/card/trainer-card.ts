@@ -9,4 +9,6 @@ export abstract class TrainerCard extends Card {
   public trainerType: TrainerType = TrainerType.ITEM;
 
   public text: string = '';
+
+  public useWhenInPlay: boolean = false;
 }

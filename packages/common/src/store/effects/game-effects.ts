@@ -4,11 +4,13 @@ import { Player } from '../state/player';
 import { PokemonCard } from '../card/pokemon-card';
 import { Card } from '../card/card';
 import { PokemonSlot } from '../state/pokemon-slot';
+import { TrainerCard } from '../card/trainer-card';
 
 export enum GameEffects {
   RETREAT_EFFECT = 'RETREAT_EFFECT',
   USE_ATTACK_EFFECT = 'USE_ATTACK_EFFECT',
   USE_STADIUM_EFFECT = 'USE_STADIUM_EFFECT',
+  USE_TRAINER_IN_PLAY_EFFECT = 'USE_TRAINER_IN_PLAY_EFFECT',
   USE_POWER_EFFECT = 'USE_POWER_EFFECT',
   POWER_EFFECT = 'POWER_EFFECT',
   ATTACK_EFFECT = 'ATTACK_EFFECT',
@@ -78,6 +80,20 @@ export class UseStadiumEffect implements Effect {
   constructor(player: Player, stadium: Card) {
     this.player = player;
     this.stadium = stadium;
+  }
+}
+
+export class UseTrainerInPlayEffect implements Effect {
+  readonly type: string = GameEffects.USE_TRAINER_IN_PLAY_EFFECT;
+  public preventDefault = false;
+  public player: Player;
+  public target: PokemonSlot;
+  public trainerCard: TrainerCard;
+
+  constructor(player: Player, target: PokemonSlot, trainerCard: TrainerCard) {
+    this.player = player;
+    this.target = target;
+    this.trainerCard = trainerCard;
   }
 }
 

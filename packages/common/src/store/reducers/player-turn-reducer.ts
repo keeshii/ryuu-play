@@ -1,14 +1,28 @@
 import { Action } from '../actions/action';
-import { PassTurnAction, RetreatAction, AttackAction, UseAbilityAction, UseStadiumAction } from '../actions/game-actions';
+import {
+  PassTurnAction,
+  RetreatAction,
+  AttackAction,
+  UseAbilityAction,
+  UseStadiumAction,
+  UseTrainerInPlayAction
+} from '../actions/game-actions';
 import { State, GamePhase } from '../state/state';
 import { StoreLike } from '../store-like';
 import { GameError } from '../../game-error';
 import { GameMessage } from '../../game-message';
-import { RetreatEffect, UseAttackEffect, UsePowerEffect, UseStadiumEffect } from '../effects/game-effects';
+import {
+  RetreatEffect,
+  UseAttackEffect,
+  UsePowerEffect,
+  UseStadiumEffect,
+  UseTrainerInPlayEffect
+} from '../effects/game-effects';
 import { EndTurnEffect } from '../effects/game-phase-effects';
 import { StateUtils } from '../state-utils';
-import {SlotType} from '../actions/play-card-action';
-import {PokemonCard} from '../card/pokemon-card';
+import { SlotType } from '../actions/play-card-action';
+import { PokemonCard } from '../card/pokemon-card';
+import { TrainerCard } from '../card/trainer-card';
 
 export function playerTurnReducer(store: StoreLike, state: State, action: Action): State {
 
@@ -121,6 +135,30 @@ export function playerTurnReducer(store: StoreLike, state: State, action: Action
       return state;
     }
 
+    if (action instanceof UseTrainerInPlayAction) {
+      const player = state.players[state.activePlayer];
+      const slot = action.target.slot;
+
+      if (player === undefined || player.id !== action.clientId) {
+        throw new GameError(GameMessage.NOT_YOUR_TURN);
+      }
+
+      if (slot !== SlotType.ACTIVE && slot !== SlotType.BENCH) {
+        throw new GameError(GameMessage.INVALID_TARGET);
+      }
+
+      const target = StateUtils.getTarget(state, player, action.target);
+      const cards = [...target.pokemons.cards, ...target.energies.cards, ...target.trainers.cards];
+      const trainerCard = cards.find(c => c instanceof TrainerCard && c.name === action.cardName) as TrainerCard;
+
+      if (trainerCard === undefined || !trainerCard.useWhenInPlay) {
+        throw new GameError(GameMessage.UNKNOWN_POWER);
+      }
+
+      state = store.reduceEffect(state, new UseTrainerInPlayEffect(player, target, trainerCard));
+      return state;
+    }
+
     if (action instanceof UseStadiumAction) {
       const player = state.players[state.activePlayer];
 
@@ -132,9 +170,13 @@ export function playerTurnReducer(store: StoreLike, state: State, action: Action
         throw new GameError(GameMessage.STADIUM_ALREADY_USED);
       }
 
-      const stadium = StateUtils.getStadiumCard(state);
+      const stadium = StateUtils.getStadiumCard(state) as TrainerCard;
       if (stadium === undefined) {
         throw new GameError(GameMessage.NO_STADIUM_IN_PLAY);
+      }
+
+      if (!stadium.useWhenInPlay) {
+        throw new GameError(GameMessage.CANNOT_USE_STADIUM);
       }
 
       state = store.reduceEffect(state, new UseStadiumEffect(player, stadium));

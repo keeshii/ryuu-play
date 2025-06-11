@@ -96,6 +96,8 @@ export class ViridianForest extends TrainerCard {
     'Energy card, reveals it, and puts it into their hand. Then, that ' +
     'player shuffles their deck.';
 
+  public useWhenInPlay = true;
+
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof UseStadiumEffect && StateUtils.getStadiumCard(state) === this) {
       const generator = useStadium(() => generator.next(), store, state, effect);

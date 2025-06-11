@@ -28,6 +28,8 @@ export class ScorchedEarth extends TrainerCard {
     'a R or F Energy card from his or her hand. If that player does so, ' +
     'he or she draws 2 cards.';
 
+  public useWhenInPlay = true;
+
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof UseStadiumEffect && StateUtils.getStadiumCard(state) === this) {
       const player = effect.player;

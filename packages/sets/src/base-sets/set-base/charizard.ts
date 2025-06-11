@@ -1,8 +1,8 @@
 import {
+  AfterCheckProvidedEnergyEffect,
   AttackEffect,
   Card,
   CardType,
-  CheckProvidedEnergyEffect,
   ChooseCardsPrompt,
   DiscardCardsEffect,
   Effect,
@@ -86,18 +86,13 @@ export class Charizard extends PokemonCard {
       return state;
     }
 
-    if (effect instanceof CheckProvidedEnergyEffect && effect.source.pokemons.cards.includes(this)) {
+    if (effect instanceof AfterCheckProvidedEnergyEffect && effect.source.pokemons.cards.includes(this)) {
       if (!effect.player.marker.hasMarker(this.ENERGY_BURN_MARKER, this)) {
         return state;
       }
 
       effect.energyMap.forEach(item => {
         item.provides = item.provides.map(p => CardType.FIRE);
-      });
-      effect.source.energies.cards.forEach(c => {
-        if (!effect.energyMap.some(e => e.card === c)) {
-          effect.energyMap.push({ card: c, provides: c.provides.map(p => CardType.FIRE) });
-        }
       });
     }
 

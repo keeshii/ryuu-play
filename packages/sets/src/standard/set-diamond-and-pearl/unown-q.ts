@@ -118,6 +118,8 @@ export class UnownQ extends PokemonCard implements TrainerCard {
 
   public trainerType = TrainerType.TOOL;
 
+  public useWhenInPlay = false;
+
   public set: string = 'DP';
 
   public name: string = 'Unown Q';
