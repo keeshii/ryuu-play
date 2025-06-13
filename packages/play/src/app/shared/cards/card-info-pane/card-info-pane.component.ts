@@ -58,8 +58,8 @@ export class CardInfoPaneComponent implements OnChanges {
 
   private buildEnabledAbilities(): {[name: string]: boolean} {
     const enabledAbilities: {[name: string]: boolean} = {};
-    if (this.card && this.card.superType === SuperType.POKEMON) {
-      const pokemonCard = this.card as PokemonCard;
+    const pokemonCard = this.card as PokemonCard;
+    if (pokemonCard && pokemonCard.powers instanceof Array) {
       pokemonCard.powers.forEach(power => {
         if ((this.options.enableAbility.useWhenInPlay && power.useWhenInPlay)
           || (this.options.enableAbility.useFromDiscard && power.useFromDiscard)

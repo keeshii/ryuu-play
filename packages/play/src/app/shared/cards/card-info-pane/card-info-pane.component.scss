@@ -42,6 +42,11 @@
   margin-right: math.div(map-get($padding, small), 2);
 }
 
+.subtitle-card-type {
+  display: flex;
+  flex-direction: row;
+}
+
 .attack, .power {
   margin: map-get($padding, small) 0;
   padding: map-get($padding, small);

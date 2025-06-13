@@ -4,15 +4,21 @@
       (click)="showCardImage(card, facedown)"></ptcg-card>
   </div>
 
-  <div class="ptcg-card-info-text" *ngIf="!facedown && card.superType === SuperType.POKEMON">
-    <div class="title">
+  <div class="ptcg-card-info-text" *ngIf="!facedown">
+
+    <div class="title" *ngIf="card.superType === SuperType.POKEMON">
       <ptcg-card-text [value]="card.name"></ptcg-card-text>
       <div class="ptcg-u-spacer"></div>
       <div class="subtitle-evolves-from" *ngIf="card.evolvesFrom">
         {{ 'CARDS_EVOLVES_FROM' | translate: { name: card.evolvesFrom } }}
       </div>
     </div>
-    <div class="subtitle">
+
+    <div class="title" *ngIf="card.superType === SuperType.ENERGY || card.superType === SuperType.TRAINER">
+      <ptcg-card-text [value]="card.name"></ptcg-card-text>
+    </div>
+
+    <div class="subtitle" *ngIf="card.superType === SuperType.POKEMON">
       <div class="subtitle-stage" [ngSwitch]="card.stage">
         <span *ngSwitchCase="Stage.BASIC" translate>CARDS_BASIC</span>
         <span *ngSwitchCase="Stage.RESTORED" translate>CARDS_RESTORED</span>
@@ -28,6 +34,61 @@
         <ptcg-energy [type]="cardType" *ngFor="let cardType of card.cardTypes"></ptcg-energy>
       </div>
     </div>
+
+    <div class="subtitle" *ngIf="card.superType === SuperType.ENERGY">
+      <div class="subtitle-stage" [ngSwitch]="card.energyType">
+        <span *ngSwitchCase="EnergyType.BASIC" translate>CARDS_BASIC_ENERGY</span>
+        <span *ngSwitchCase="EnergyType.SPECIAL" translate>CARDS_SPECIAL_ENERGY</span>
+      </div>
+      <div class="ptcg-u-spacer"></div>
+      <div class="subtitle-card-type">
+        <ptcg-trainer-type></ptcg-trainer-type>
+      </div>
+    </div>
+
+    <div class="subtitle" *ngIf="card.superType === SuperType.TRAINER">
+      <div class="subtitle-hp" *ngIf="card.hp">
+        <span class="subtitle-hp-unit" translate>CARDS_HP</span>
+        <span class="subtitle-hp-value">{{card.hp}}</span>
+      </div>
+      <div class="ptcg-u-spacer"></div>
+      <div class="subtitle-stage" [ngSwitch]="card.trainerType">
+        <span *ngSwitchDefaultCase translate>CARDS_ITEM</span>
+        <span *ngSwitchCase="TrainerType.SUPPORTER" translate>CARDS_SUPPORTER</span>
+        <span *ngSwitchCase="TrainerType.STADIUM" translate>CARDS_STADIUM</span>
+        <span *ngSwitchCase="TrainerType.TOOL" translate>CARDS_POKEMON_TOOL</span>
+      </div>
+      <div class="ptcg-u-spacer"></div>
+      <div class="subtitle-card-type">
+        <ptcg-trainer-type [type]="card.trainerType"></ptcg-trainer-type>
+      </div>
+    </div>
+
+    <div class="power" *ngIf="card.text && card.superType === SuperType.ENERGY">
+      <div class="power-header">
+        <div class="power-name" translate>
+          CARDS_TEXT_ON_CARD
+        </div>
+      </div>
+      <div class="card-text">
+        <ptcg-card-text [value]="card.text"></ptcg-card-text>
+      </div>
+    </div>
+
+    <ptcg-hover-highlight *ngIf="card.superType === SuperType.TRAINER"
+      (click)="options.enableTrainer && card.useWhenInPlay && clickAction({trainer: true})"
+      [enabled]="options.enableTrainer && card.useWhenInPlay">
+      <div class="power" *ngIf="card.text">
+        <div class="power-header">
+          <div class="power-name" translate>
+            CARDS_TEXT_ON_CARD
+          </div>
+        </div>
+        <div class="card-text">
+          <ptcg-card-text [value]="card.text"></ptcg-card-text>
+        </div>
+      </div>
+    </ptcg-hover-highlight>
 
     <ptcg-hover-highlight *ngFor="let power of card.powers"
       (click)="enabledAbilities[power.name] && clickAction({ability: power.name})"
@@ -73,7 +134,7 @@
       </div>
     </ptcg-hover-highlight>
 
-    <div class="stats">
+    <div class="stats" *ngIf="card.superType === SuperType.POKEMON">
       <div class="stats-item">
         <div class="stats-item-header" translate>CARDS_WEAKNESS</div>
         <div class="stats-item-value" *ngFor="let weakness of card.weakness">
@@ -108,74 +169,6 @@
       </div>
     </div>
 
-  </div>
-
-  <div class="ptcg-card-info-text" *ngIf="!facedown && card.superType === SuperType.ENERGY">
-    <div class="title">
-      <ptcg-card-text [value]="card.name"></ptcg-card-text>
-    </div>
-    <div class="subtitle">
-      <div class="subtitle-stage" [ngSwitch]="card.energyType">
-        <span *ngSwitchCase="EnergyType.BASIC" translate>CARDS_BASIC_ENERGY</span>
-        <span *ngSwitchCase="EnergyType.SPECIAL" translate>CARDS_SPECIAL_ENERGY</span>
-      </div>
-      <div class="ptcg-u-spacer"></div>
-      <div class="subtitle-card-type">
-        <ptcg-trainer-type></ptcg-trainer-type>
-      </div>
-    </div>
-
-    <div class="power" *ngIf="card.text">
-      <div class="power-header">
-        <div class="power-name" translate>
-          CARDS_TEXT_ON_CARD
-        </div>
-      </div>
-      <div class="card-text">
-        <ptcg-card-text [value]="card.text"></ptcg-card-text>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="ptcg-card-info-text" *ngIf="!facedown && card.superType === SuperType.TRAINER">
-    <div class="title">
-      <ptcg-card-text [value]="card.name"></ptcg-card-text>
-    </div>
-    <div class="subtitle">
-      <div class="subtitle-stage" [ngSwitch]="card.trainerType">
-        <span *ngSwitchDefaultCase translate>CARDS_ITEM</span>
-        <span *ngSwitchCase="TrainerType.SUPPORTER" translate>CARDS_SUPPORTER</span>
-        <span *ngSwitchCase="TrainerType.STADIUM" translate>CARDS_STADIUM</span>
-        <span *ngSwitchCase="TrainerType.TOOL" translate>CARDS_POKEMON_TOOL</span>
-      </div>
-      <div class="ptcg-u-spacer"></div>
-      <div class="subtitle-card-type">
-        <ptcg-trainer-type [type]="card.trainerType"></ptcg-trainer-type>
-      </div>
-    </div>
-
-    <ptcg-hover-highlight
-      (click)="options.enableTrainer && card.useWhenInPlay && clickAction({trainer: true})"
-      [enabled]="options.enableTrainer && card.useWhenInPlay">
-      <div class="power" *ngIf="card.text">
-        <div class="power-header">
-          <div class="power-name" translate>
-            CARDS_TEXT_ON_CARD
-          </div>
-        </div>
-        <div class="card-text">
-          <ptcg-card-text [value]="card.text"></ptcg-card-text>
-        </div>
-      </div>
-    </ptcg-hover-highlight>
-
-  </div>
-
-  <div class="ptcg-card-info-text" *ngIf="!facedown && card.superType === SuperType.NONE">
-    <div class="title">
-      <ptcg-card-text [value]="card.name"></ptcg-card-text>
-    </div>
   </div>
 
   <div class="ptcg-card-info-text" *ngIf="facedown">
