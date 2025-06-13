@@ -29,7 +29,7 @@ export class Kadabra extends PokemonCard {
       cost: [CardType.PSYCHIC, CardType.PSYCHIC],
       damage: '',
       text:
-        'Discard 1 Psychic Energy card attached to Kadabra in order to use this attack. Remove all damage counters ' +
+        'Discard 1 P Energy card attached to Kadabra in order to use this attack. Remove all damage counters ' +
         'from Kadabra.'
     },
     {

@@ -35,11 +35,14 @@ cardManager.defineFormat('Standard', [
 ]);
 
 cardManager.defineFormat('EX Sets', [
-  exSets.setRubyAndSapphire
+  exSets.setRubyAndSapphire,
+  // exSets.setSandstorm, // Not implemented yet
 ]);
 
 cardManager.defineFormat('Base Sets', [
-  baseSets.setBase
+  baseSets.setBase,
+  // baseSets.setJungle, // Not implemented yet
+  // baseSets.setFossil,  // Not implemented yet
 ]);
 
 // Define bots

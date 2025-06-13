@@ -6,8 +6,10 @@ import {
   CheckProvidedEnergyEffect,
   ChooseCardsPrompt,
   Effect,
+  EndTurnEffect,
   GameError,
   GameMessage,
+  PlayPokemonEffect,
   PokemonCard,
   PowerEffect,
   PowerType,
@@ -31,6 +33,10 @@ function* useEnergyDraw(next: Function, store: StoreLike, state: State, self: De
     throw new GameError(GameMessage.CANNOT_USE_POWER);
   }
 
+  if (player.marker.hasMarker(self.ENERGY_DRAW_MARKER, self)) {
+    throw new GameError(GameMessage.POWER_ALREADY_USED);
+  }
+
   let cards: Card[] = [];
   yield store.prompt(
     state,
@@ -52,6 +58,7 @@ function* useEnergyDraw(next: Function, store: StoreLike, state: State, self: De
     return state;
   }
 
+  player.marker.addMarker(self.ENERGY_DRAW_MARKER, self);
   player.hand.moveCardsTo(cards, player.discard);
 
   const deckTop = new CardList();
@@ -119,7 +126,14 @@ export class Delcatty extends PokemonCard {
 
   public fullName: string = 'Delcatty RS';
 
+  public readonly ENERGY_DRAW_MARKER = 'ENERGY_DRAW_MARKER';
+
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    if (effect instanceof PlayPokemonEffect && effect.pokemonCard === this) {
+      const player = effect.player;
+      player.marker.removeMarker(this.ENERGY_DRAW_MARKER, this);
+    }
+
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
       const generator = useEnergyDraw(() => generator.next(), store, state, this, effect);
       return generator.next().value;
@@ -131,6 +145,10 @@ export class Delcatty extends PokemonCard {
       store.reduceEffect(state, checkProvidedEnergyEffect);
       const energyCount = checkProvidedEnergyEffect.energyMap.reduce((left, p) => left + p.provides.length, 0);
       effect.damage = energyCount * 10;
+    }
+
+    if (effect instanceof EndTurnEffect) {
+      effect.player.marker.removeMarker(this.ENERGY_DRAW_MARKER, this);
     }
 
     return state;

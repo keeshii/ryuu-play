@@ -11,6 +11,6 @@ export class DoubleColorlessEnergy extends EnergyCard {
 
   public fullName: string = 'Double Colorless Energy BS';
 
-  public text: string = 'Provides ColorlessColorless energy. Doesn\'t count as a basic Energy card.';
+  public text: string = 'Provides C C energy. Doesn\'t count as a basic Energy card.';
 
 }
