@@ -6,12 +6,7 @@ import {
   TrainerEffect,
   TrainerType,
 } from '@ptcg/common';
-
-function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
-  // const player = effect.player;
-  // const opponent = StateUtils.getOpponent(state, player);
-  return state;
-}
+import { commonTrainers } from '../../common';
 
 export class PokeBall extends TrainerCard {
   public trainerType: TrainerType = TrainerType.ITEM;
@@ -27,9 +22,10 @@ export class PokeBall extends TrainerCard {
     'your opponent, then put it into your hand. Shuffle your deck afterward.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    const pokeBall = commonTrainers.pokeBall(this, store, state, effect);
+
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
-      const generator = playCard(() => generator.next(), store, state, effect);
-      return generator.next().value;
+      return pokeBall.playCard(effect);
     }
 
     return state;

@@ -1,8 +1,14 @@
 import {
   AttackEffect,
   CardType,
+  CheckProvidedEnergyEffect,
+  ChoosePokemonPrompt,
+  CoinFlipPrompt,
   Effect,
+  GameMessage,
+  PlayerType,
   PokemonCard,
+  SlotType,
   Stage,
   State,
   StoreLike,
@@ -48,11 +54,55 @@ export class Exeggutor extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+
+      const hasBenched = player.bench.some(b => b.pokemons.cards.length > 0);
+      if (!hasBenched) {
+        return state;
+      }
+
+      return store.prompt(
+        state,
+        new ChoosePokemonPrompt(
+          player.id,
+          GameMessage.CHOOSE_NEW_ACTIVE_POKEMON,
+          PlayerType.BOTTOM_PLAYER,
+          [SlotType.BENCH],
+          { allowCancel: false }
+        ),
+        selected => {
+          if (!selected || selected.length === 0) {
+            return state;
+          }
+          const target = selected[0];
+          player.switchPokemon(target);
+        }
+      );
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+      
+      const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);
+      state = store.reduceEffect(state, checkProvidedEnergy);
+      const energyCount = checkProvidedEnergy.energyMap.reduce((left, p) => left + p.provides.length, 0);
+
+      const coinFlipPrompts: CoinFlipPrompt[] = [];
+      for (let i = 0; i < energyCount; i++) {
+        coinFlipPrompts.push(new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP));
+      }
+
+      return store.prompt(
+        state,
+        coinFlipPrompts,
+        results => {
+          let heads: number = 0;
+          results.forEach(r => {
+            heads += r ? 1 : 0;
+          });
+          effect.damage = 20 * heads;
+        }
+      );
     }
 
     return state;

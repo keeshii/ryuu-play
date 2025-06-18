@@ -1,12 +1,19 @@
 import {
   AttackEffect,
   CardType,
+  CoinFlipPrompt,
   Effect,
+  GameError,
+  GameMessage,
   PokemonCard,
   Stage,
   State,
+  StateUtils,
   StoreLike,
+  UseAttackEffect,
 } from '@ptcg/common';
+
+import { commonMarkers } from '../../common';
 
 export class Eevee extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -51,12 +58,41 @@ export class Eevee extends PokemonCard {
   public fullName: string = 'Eevee JU';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+
+    const opponentNextTurn = commonMarkers.duringOpponentNextTurn(this, store, state, effect);
+
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+        if (result === true) {
+          opponentNextTurn.setMarker(effect, player.active);
+          opponentNextTurn.setMarker(effect, opponent.active);
+        }
+      });
     }
 
+    if (effect instanceof UseAttackEffect && opponentNextTurn.hasMarker(effect, effect.player.active)) {
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      if (!opponentNextTurn.hasMarker(effect, opponent.active)) {
+        return state;
+      }
+
+      throw new GameError(GameMessage.BLOCKED_BY_EFFECT);
+    }
+
+
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+        if (result === true) {
+          effect.damage += 20;
+        }
+      });
     }
 
     return state;

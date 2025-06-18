@@ -1,10 +1,14 @@
 import {
   AttackEffect,
   CardType,
+  CheckPokemonTypeEffect,
   Effect,
   PokemonCard,
+  PokemonSlot,
+  PutDamageEffect,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -48,7 +52,30 @@ export class Electrode extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      const checkPokemonType = new CheckPokemonTypeEffect(opponent.active);
+      store.reduceEffect(state, checkPokemonType);
+      const cardTypes = checkPokemonType.cardTypes;
+
+      const pokemonSlots: PokemonSlot[] = [...player.bench, ...opponent.bench];
+
+      pokemonSlots
+        .filter(slot => slot.pokemons.cards.length > 0)
+        .forEach(slot => {
+          const checkBenchPokemonType = new CheckPokemonTypeEffect(slot);
+          store.reduceEffect(state, checkBenchPokemonType);
+
+          const shareTheSameType = checkBenchPokemonType.cardTypes.some(
+            cardType => cardType !== CardType.COLORLESS && cardTypes.includes(cardType));
+
+          if (shareTheSameType) {
+            const dealDamage = new PutDamageEffect(effect, 10);
+            dealDamage.target = slot;
+            store.reduceEffect(state, dealDamage);
+          }
+        });
     }
 
     return state;

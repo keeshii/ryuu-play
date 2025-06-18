@@ -1,12 +1,19 @@
 import {
   AttackEffect,
   CardType,
+  ChoosePokemonPrompt,
+  CoinFlipPrompt,
   Effect,
+  GameMessage,
+  PlayerType,
   PokemonCard,
+  SlotType,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
+import { commonAttacks } from '../../common';
 
 export class Victreebel extends PokemonCard {
   public stage: Stage = Stage.STAGE_2;
@@ -45,12 +52,43 @@ export class Victreebel extends PokemonCard {
   public fullName: string = 'Victreebel JU';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+
+    const cantRetreat = commonAttacks.cantRetreat(this, store, state, effect);
+
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+      const hasBench = opponent.bench.some(b => b.pokemons.cards.length > 0);
+
+      if (hasBench === false) {
+        return state;
+      }
+
+      return store.prompt(
+        state,
+        new ChoosePokemonPrompt(
+          player.id,
+          GameMessage.CHOOSE_POKEMON_TO_SWITCH,
+          PlayerType.TOP_PLAYER,
+          [SlotType.BENCH],
+          { allowCancel: false }
+        ),
+        targets => {
+          if (targets && targets.length > 0) {
+            opponent.switchPokemon(targets[0]);
+          }
+        }
+      );
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+        if (result === true) {
+          cantRetreat.use(effect);
+        }
+      });
     }
 
     return state;

@@ -8,6 +8,8 @@ import {
   StoreLike,
 } from '@ptcg/common';
 
+import { commonMarkers } from '../../common';
+
 export class Scyther extends PokemonCard {
   public stage: Stage = Stage.BASIC;
 
@@ -47,8 +49,16 @@ export class Scyther extends PokemonCard {
   public fullName: string = 'Scyther JU';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    
+    const yourNextTurn = commonMarkers.duringYourNextTurn(this, store, state, effect);
+    
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
+      yourNextTurn.setMarker(effect);
       return state;
+    }
+
+    if (effect instanceof AttackEffect && effect.attack === this.attacks[1] && yourNextTurn.hasMarker(effect)) {
+      effect.damage = 60;
     }
 
     return state;

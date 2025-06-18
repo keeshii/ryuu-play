@@ -28,32 +28,7 @@ import {
   StoreLike,
 } from '@ptcg/common';
 
-const VALUE_TO_TYPE: { [key: string]: CardType } = {
-  'C': CardType.COLORLESS,
-  'G': CardType.GRASS,
-  'R': CardType.FIRE,
-  'F': CardType.FIGHTING,
-  'P': CardType.PSYCHIC,
-  'W': CardType.WATER,
-  'L': CardType.LIGHTNING,
-  'M': CardType.METAL,
-  'D': CardType.DARK,
-  'N': CardType.DRAGON,
-  'Y': CardType.FAIRY
-};
-
-const promptOptions: { message: GameMessage, value: string }[] = [
-  { message: GameMessage.TYPE_GRASS, value: 'G' },
-  { message: GameMessage.TYPE_FIRE, value: 'R' },
-  { message: GameMessage.TYPE_FIGHTING, value: 'F' },
-  { message: GameMessage.TYPE_PSYCHIC, value: 'P' },
-  { message: GameMessage.TYPE_WATER, value: 'W' },
-  { message: GameMessage.TYPE_LIGHTNING, value: 'L' },
-  { message: GameMessage.TYPE_METAL, value: 'M' },
-  { message: GameMessage.TYPE_DARK, value: 'D' },
-  { message: GameMessage.TYPE_DRAGON, value: 'N' },
-  { message: GameMessage.TYPE_FAIRY, value: 'Y' },
-];
+import { changeType } from '../../common/markers';
 
 function* useBuzzap(next: Function, store: StoreLike, state: State, self: Electrode, effect: PowerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -93,7 +68,7 @@ function* useBuzzap(next: Function, store: StoreLike, state: State, self: Electr
     new SelectPrompt(
       player.id,
       GameMessage.CHOOSE_CARD_TYPE,
-      promptOptions.map(p => p.message),
+      changeType.PROMPT_OPTIONS.map(p => p.message),
       { allowCancel: true }
     ),
     result => {
@@ -144,8 +119,8 @@ function* useBuzzap(next: Function, store: StoreLike, state: State, self: Electr
   const cardList = StateUtils.findCardList(state, self);
   cardList.moveCardTo(self, target.energies);
 
-  const value = promptOptions[choice].value;
-  const message = promptOptions[choice].message;
+  const value = changeType.PROMPT_OPTIONS[choice].value;
+  const message = changeType.PROMPT_OPTIONS[choice].message;
   store.log(state, GameLog.LOG_PLAYER_CHANGES_TYPE_TO, { name: player.name, message });
 
   // Remove old markers
@@ -228,7 +203,7 @@ export class Electrode extends PokemonCard implements EnergyCard {
       if (!marker) {
         return state;
       }
-      const cardType: CardType = VALUE_TO_TYPE[marker.name.slice(-1)];
+      const cardType: CardType = changeType.VALUE_TO_TYPE[marker.name.slice(-1)];
       if (!cardType) {
         return state;
       }

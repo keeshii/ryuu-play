@@ -2,8 +2,6 @@ import {
   AfterDamageEffect,
   CardType,
   Effect,
-  GameError,
-  GameMessage,
   GamePhase,
   PokemonCard,
   PowerEffect,
@@ -64,12 +62,12 @@ export class Machamp extends PokemonCard {
       if (target.specialConditions.includes(SpecialCondition.ASLEEP)
         || target.specialConditions.includes(SpecialCondition.CONFUSED)
         || target.specialConditions.includes(SpecialCondition.PARALYZED)) {
-        throw new GameError(GameMessage.CANNOT_USE_POWER);
+        return state;
       }
 
       const targetPlayer = StateUtils.findOwner(state, target);
 
-      // No damage, or damage done by itself, or Carvanha is not active
+      // No damage, or damage done by itself, or Machamp is not active
       if (effect.damage <= 0 || player === targetPlayer || targetPlayer.active !== target) {
         return state;
       }

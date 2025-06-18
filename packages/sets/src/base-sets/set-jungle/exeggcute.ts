@@ -1,8 +1,12 @@
 import {
+  AddSpecialConditionsEffect,
+  AfterDamageEffect,
   AttackEffect,
   CardType,
   Effect,
+  HealTargetEffect,
   PokemonCard,
+  SpecialCondition,
   Stage,
   State,
   StoreLike,
@@ -44,11 +48,15 @@ export class Exeggcute extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.ASLEEP]);
+      store.reduceEffect(state, specialConditionEffect);
     }
 
-    if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+    if (effect instanceof AfterDamageEffect && effect.attack === this.attacks[1] && effect.damage > 0) {
+      const player = effect.player;
+      const healEffect = new HealTargetEffect(effect.attackEffect, 10);
+      healEffect.target = player.active;
+      store.reduceEffect(state, healEffect);
     }
 
     return state;

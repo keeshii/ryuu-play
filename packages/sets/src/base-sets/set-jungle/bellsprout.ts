@@ -7,6 +7,7 @@ import {
   State,
   StoreLike,
 } from '@ptcg/common';
+import { commonAttacks } from '../../common';
 
 export class Bellsprout extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -45,8 +46,10 @@ export class Bellsprout extends PokemonCard {
   public fullName: string = 'Bellsprout JU';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    const callForFamily = commonAttacks.callForFamily(this, store, state, effect);
+
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      return callForFamily.use(effect, { name: 'Bellsprout' });
     }
 
     return state;

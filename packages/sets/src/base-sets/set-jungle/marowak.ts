@@ -1,12 +1,16 @@
 import {
   AttackEffect,
   CardType,
+  CoinFlipPrompt,
   Effect,
+  GameMessage,
   PokemonCard,
   Stage,
   State,
   StoreLike,
 } from '@ptcg/common';
+import { commonAttacks } from '../../common';
+
 
 export class Marowak extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -51,12 +55,26 @@ export class Marowak extends PokemonCard {
   public fullName: string = 'Marowak JU';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+
+    const callForFamily = commonAttacks.callForFamily(this, store, state, effect);
+
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+      return store.prompt(
+        state,
+        [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)],
+        results => {
+          let heads: number = 0;
+          results.forEach(r => {
+            heads += r ? 1 : 0;
+          });
+          effect.damage = 30 * heads;
+        }
+      );
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      return callForFamily.use(effect, { cardTypes: [CardType.FIGHTING] });
     }
 
     return state;

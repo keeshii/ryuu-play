@@ -1,8 +1,10 @@
 import {
+  AddSpecialConditionsEffect,
   AttackEffect,
   CardType,
   Effect,
   PokemonCard,
+  SpecialCondition,
   Stage,
   State,
   StoreLike,
@@ -48,7 +50,8 @@ export class Jigglypuff extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.ASLEEP]);
+      store.reduceEffect(state, specialConditionEffect);
     }
 
     return state;

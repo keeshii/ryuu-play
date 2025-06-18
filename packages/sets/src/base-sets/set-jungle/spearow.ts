@@ -8,6 +8,8 @@ import {
   StoreLike,
 } from '@ptcg/common';
 
+import { commonAttacks } from '../../common';
+
 export class Spearow extends PokemonCard {
   public stage: Stage = Stage.BASIC;
 
@@ -48,8 +50,11 @@ export class Spearow extends PokemonCard {
   public fullName: string = 'Spearow JU';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+
+    const mirrorMove = commonAttacks.mirrorMove(this, store, state, effect);
+
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      return mirrorMove.use(effect);
     }
 
     return state;

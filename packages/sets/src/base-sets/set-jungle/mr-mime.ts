@@ -2,11 +2,15 @@ import {
   AttackEffect,
   CardType,
   Effect,
+  GamePhase,
   PokemonCard,
   PowerEffect,
   PowerType,
+  PutDamageEffect,
+  SpecialCondition,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -50,12 +54,39 @@ export class MrMime extends PokemonCard {
   public fullName: string = 'Mr. Mime JU';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
+    if (effect instanceof PutDamageEffect && effect.target.pokemons.cards.includes(this)) {
+      const player = effect.player;
+      const target = effect.target;
+
+      if (target.specialConditions.includes(SpecialCondition.ASLEEP)
+        || target.specialConditions.includes(SpecialCondition.CONFUSED)
+        || target.specialConditions.includes(SpecialCondition.PARALYZED)) {
+        return state;
+      }
+
+      // Pokemon is evolved, Not an attack
+      if (target.getPokemonCard() !== this || state.phase !== GamePhase.ATTACK) {
+        return state;
+      }
+
+      // Try to reduce PowerEffect, to check if something is blocking our ability
+      try {
+        const powerEffect = new PowerEffect(player, this.powers[0], this);
+        store.reduceEffect(state, powerEffect);
+      } catch {
+        return state;
+      }
+
+      if (effect.damage >= 30) {
+        effect.preventDefault = true;
+      }
       return state;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+      effect.damage += opponent.active.damage;
     }
 
     return state;

@@ -3,10 +3,14 @@ import {
   CardType,
   Effect,
   PokemonCard,
+  PutDamageEffect,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
+
+import { commonMarkers } from '../../common';
 
 export class Cubone extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -49,11 +53,26 @@ export class Cubone extends PokemonCard {
   public fullName: string = 'Cubone JU';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+
+    const opponentNextTurn = commonMarkers.duringOpponentNextTurn(this, store, state, effect);
+
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+      opponentNextTurn.setMarker(effect, player.active);
+      opponentNextTurn.setMarker(effect, opponent.active);
+      return state;
+    }
+
+    if (effect instanceof PutDamageEffect
+      && opponentNextTurn.hasMarker(effect, effect.player.active)
+      && opponentNextTurn.hasMarker(effect, effect.target)) {
+      effect.damage = Math.max(0, effect.damage - 20);
       return state;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
+      effect.damage += effect.player.active.damage;
       return state;
     }
 

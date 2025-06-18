@@ -1,12 +1,17 @@
 import {
+  AbstractAttackEffect,
   AttackEffect,
   CardType,
+  CoinFlipPrompt,
   Effect,
+  GameMessage,
   PokemonCard,
   Stage,
   State,
   StoreLike,
 } from '@ptcg/common';
+
+import { commonMarkers } from '../../common';
 
 export class Rapidash extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -49,11 +54,31 @@ export class Rapidash extends PokemonCard {
   public fullName: string = 'Rapidash JU';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+
+    const opponentNextTurn = commonMarkers.duringOpponentNextTurn(this, store, state, effect);
+
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+        if (result === true) {
+          effect.damage += 10;
+        }
+      });
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
+      const player = effect.player;
+
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+        if (result === true) {
+          opponentNextTurn.setMarker(effect, player.active);
+        }
+      });
+    }
+
+    if (effect instanceof AbstractAttackEffect && opponentNextTurn.hasMarker(effect, effect.target)) {
+      effect.preventDefault = true;
       return state;
     }
 

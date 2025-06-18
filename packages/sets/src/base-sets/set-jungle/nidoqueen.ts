@@ -2,6 +2,7 @@ import {
   AttackEffect,
   CardType,
   Effect,
+  PlayerType,
   PokemonCard,
   Stage,
   State,
@@ -46,7 +47,16 @@ export class Nidoqueen extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+
+      let nidokingsInPlay = 0;
+      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (pokemonSlot, pokemonCard) => {
+        if (pokemonCard.name === 'Nidoking') {
+          nidokingsInPlay++;
+        }
+      });
+
+      effect.damage += 20 * nidokingsInPlay;
     }
 
     return state;

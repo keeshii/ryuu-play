@@ -1,12 +1,71 @@
 import {
   AttackEffect,
+  Card,
   CardType,
+  ChooseCardsPrompt,
+  CoinFlipPrompt,
   Effect,
+  GameMessage,
   PokemonCard,
+  PokemonSlot,
+  ShuffleDeckPrompt,
   Stage,
   State,
   StoreLike,
 } from '@ptcg/common';
+
+function* useCallForFamily(
+  next: Function,
+  store: StoreLike,
+  state: State,
+  effect: AttackEffect
+): IterableIterator<State> {
+  const player = effect.player;
+  const slots: PokemonSlot[] = player.bench.filter(b => b.pokemons.cards.length === 0);
+  const max = Math.min(slots.length, 1);
+
+  if (player.deck.cards.length === 0) {
+    return state;
+  }
+
+  const blocked: number[] = [];
+  player.deck.cards.forEach((c, index) => {
+    const isBasicPokemon = c instanceof PokemonCard && c.stage === Stage.BASIC;
+    const isNidoran = c.name === 'Nidoran ♂' || c.name === 'Nidoran ♀';
+    if (!isBasicPokemon || !isNidoran) {
+      blocked.push(index);
+    }
+  });
+
+  let cards: Card[] = [];
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_PUT_ONTO_BENCH,
+      player.deck,
+      { },
+      { min: 0, max, allowCancel: true, blocked }
+    ),
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
+
+  if (cards.length > slots.length) {
+    cards.length = slots.length;
+  }
+
+  cards.forEach((card, index) => {
+    player.deck.moveCardTo(card, slots[index].pokemons);
+    slots[index].pokemonPlayedTurn = state.turn;
+  });
+
+  return store.prompt(state, new ShuffleDeckPrompt(player.id), order => {
+    player.deck.applyOrder(order);
+  });
+}
 
 export class Nidoran extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -46,11 +105,27 @@ export class Nidoran extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+      return store.prompt(
+        state,
+        [
+          new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP),
+          new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP),
+          new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)
+        ],
+        results => {
+          let heads: number = 0;
+          results.forEach(r => {
+            heads += r ? 1 : 0;
+          });
+          effect.damage = 10 * heads;
+        }
+      );
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const generator = useCallForFamily(() => generator.next(), store, state, effect);
+      return generator.next().value;
     }
 
     return state;

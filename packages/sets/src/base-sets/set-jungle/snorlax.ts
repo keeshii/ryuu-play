@@ -1,12 +1,18 @@
 import {
+  AddSpecialConditionsEffect,
   AttackEffect,
   CardType,
+  CheckTableStateEffect,
+  CoinFlipPrompt,
   Effect,
+  GameMessage,
   PokemonCard,
   PowerEffect,
   PowerType,
+  SpecialCondition,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -53,12 +59,40 @@ export class Snorlax extends PokemonCard {
   public fullName: string = 'Snorlax JU';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
-      return state;
+    if (effect instanceof CheckTableStateEffect) {
+      const pokemonSlot = StateUtils.findPokemonSlot(state, this);
+      if (!pokemonSlot) {
+        return state;
+      }
+
+      const player = StateUtils.findOwner(state, pokemonSlot);
+      if (player.active !== pokemonSlot || pokemonSlot.specialConditions.length === 0) {
+        return state;
+      }
+
+      // Try to reduce PowerEffect, to check if something is blocking our ability
+      try {
+        const powerEffect = new PowerEffect(player, this.powers[0], this);
+        store.reduceEffect(state, powerEffect);
+      } catch {
+        return state;
+      }
+
+      const conditions = player.active.specialConditions.slice();
+      conditions.forEach(condition => {
+        player.active.removeSpecialCondition(condition);
+      });
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+        if (result === true) {
+          const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.PARALYZED]);
+          store.reduceEffect(state, specialConditionEffect);
+        }
+      });
     }
 
     return state;

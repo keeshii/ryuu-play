@@ -1,10 +1,15 @@
 import {
   AttackEffect,
   CardType,
+  CheckAttackCostEffect,
+  CheckProvidedEnergyEffect,
+  CoinFlipPrompt,
   Effect,
+  GameMessage,
   PokemonCard,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -50,11 +55,28 @@ export class Vaporeon extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+        if (result === true) {
+          effect.damage += 20;
+        }
+      });
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+
+      const checkAttackCost = new CheckAttackCostEffect(player, effect.attack);
+      state = store.reduceEffect(state, checkAttackCost);
+      const attackCost = checkAttackCost.cost;
+
+      const checkProvidedEnergyEffect = new CheckProvidedEnergyEffect(player);
+      store.reduceEffect(state, checkProvidedEnergyEffect);
+      const provided =  checkProvidedEnergyEffect.energyMap;
+      const energyCount = StateUtils.countAdditionalEnergy(provided, attackCost, CardType.WATER);
+
+      effect.damage += Math.min(energyCount, 2) * 10;
     }
 
     return state;

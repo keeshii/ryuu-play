@@ -1,9 +1,10 @@
 import {
   AttackEffect,
   CardType,
+  CheckRetreatCostEffect,
   Effect,
+  PlayerType,
   PokemonCard,
-  PowerEffect,
   PowerType,
   Stage,
   State,
@@ -53,11 +54,28 @@ export class Dodrio extends PokemonCard {
   public fullName: string = 'Dodrio JU';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
-      return state;
+    if (effect instanceof CheckRetreatCostEffect) {
+      const player = effect.player;
+
+      let hasDodrioOnBench = false;
+      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (pokemonSlot, pokemonCard) => {
+        if (pokemonSlot !== player.active && pokemonCard === this) {
+          hasDodrioOnBench = true;
+        }
+      });
+
+      if (!hasDodrioOnBench) {
+        return state;
+      }
+
+      const index = effect.cost.indexOf(CardType.COLORLESS);
+      if (index !== -1) {
+        effect.cost.splice(index, 1);
+      }
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
+      effect.damage += effect.player.active.damage;
       return state;
     }
 

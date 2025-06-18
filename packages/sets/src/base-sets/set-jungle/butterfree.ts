@@ -1,10 +1,18 @@
 import {
+  AfterDamageEffect,
   AttackEffect,
   CardType,
+  ChoosePokemonPrompt,
+  DealDamageEffect,
   Effect,
+  GameMessage,
+  HealTargetEffect,
+  PlayerType,
   PokemonCard,
+  SlotType,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -54,11 +62,42 @@ export class Butterfree extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+      const hasBench = opponent.bench.some(b => b.pokemons.cards.length > 0);
+
+      if (hasBench === false) {
+        return state;
+      }
+
+      return store.prompt(
+        state,
+        new ChoosePokemonPrompt(
+          opponent.id,
+          GameMessage.CHOOSE_POKEMON_TO_SWITCH,
+          PlayerType.BOTTOM_PLAYER,
+          [SlotType.BENCH],
+          { allowCancel: false }
+        ),
+        targets => {
+          if (targets && targets.length > 0) {
+            const dealDamage = new DealDamageEffect(effect, effect.damage);
+            dealDamage.target = opponent.active;
+            store.reduceEffect(state, dealDamage);
+            effect.damage = 0;
+
+            opponent.switchPokemon(targets[0]);
+          }
+        }
+      );
     }
 
-    if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+    if (effect instanceof AfterDamageEffect && effect.attack === this.attacks[1]) {
+      const player = effect.player;
+      const damage = Math.ceil(effect.damage / 20) * 10;
+      const healEffect = new HealTargetEffect(effect.attackEffect, damage);
+      healEffect.target = player.active;
+      store.reduceEffect(state, healEffect);
     }
 
     return state;
