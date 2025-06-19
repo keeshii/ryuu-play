@@ -28,7 +28,7 @@ export const cantRetreat: CommonAttack = function(
     if (effect instanceof RetreatEffect) {
       const player = effect.player;
 
-      const hasMarker = player.active.marker.hasMarker(CANT_RETREAT_MARKER);
+      const hasMarker = player.active.marker.hasMarker(CANT_RETREAT_MARKER, self);
       if (!hasMarker) {
         return state;
       }

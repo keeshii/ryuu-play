@@ -13,7 +13,7 @@ import {
   StoreLike,
 } from '@ptcg/common';
 
-import { changeType } from '../../common/markers';
+import { changeType } from '../../common';
 
 export class Porygon extends PokemonCard {
   public stage: Stage = Stage.BASIC;

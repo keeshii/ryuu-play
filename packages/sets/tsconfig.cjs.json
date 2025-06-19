@@ -1,12 +1,10 @@
 {
   "extends": "./tsconfig",
   "compilerOptions": {
-    "module": "es2015",
-    "outDir": "dist/esm",
-    "moduleResolution": "nodenext"
+    "outDir": "dist/cjs"
   },
   "include": [
-    "src/index.ts"
+    "src/**/*.ts"
   ],
   "exclude": [
     "tests/**/*.ts"

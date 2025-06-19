@@ -161,6 +161,7 @@ export class Mankey extends PokemonCard {
     {
       name: 'Peek',
       powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
       text:
         'Once during your turn (before your attack), you may look at one of the following: the top card of either ' +
         'player\'s deck, a random card from your opponent\'s hand, or one of either player\'s Prizes. This power can\'t ' +

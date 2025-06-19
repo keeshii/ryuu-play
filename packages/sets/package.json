@@ -16,10 +16,10 @@
   },
   "scripts": {
     "lint": "eslint -c .eslintrc.js --ext .ts src",
-    "compile": "tsc && tsc -p tsconfig.esm.json",
+    "compile": "tsc -p tsconfig.cjs.json && tsc -p tsconfig.esm.json",
     "build": "npm run lint && npm run test && npm run compile",
-    "test": "echo \"Info: no tests specified for this package\"",
-    "coverage": "npm test"
+    "test": "nyc -e \".ts\" -x \"tests/**/*.ts\" jasmine-ts \"tests/**/*.spec.ts\"",
+    "coverage": "npm test && nyc report -r html"
   },
   "author": "",
   "license": "MIT",
@@ -27,9 +27,14 @@
     "@ptcg/common": "*"
   },
   "devDependencies": {
+    "@types/jasmine": "~4.3.0",
+    "@types/node": "^18.19.87",
     "@typescript-eslint/eslint-plugin": "^8.31.1",
     "@typescript-eslint/parser": "^8.31.1",
     "eslint": "^8.31.1",
+    "jasmine": "^3.9.0",
+    "jasmine-ts": "~0.4.0",
+    "ts-node": "^10.9.2",
     "typescript": "~4.9.5"
   }
 }

@@ -21,13 +21,13 @@ export const duringYourNextTurn: CommonMarker = function (
   }
 
   return {
-    setMarker: (effect) => {
-      const player = effect.player;
+    setMarker: playerEffect => {
+      const player = playerEffect.player;
       player.active.marker.addMarker(NEXT_TURN_1_MARKER, self);
       player.active.marker.addMarker(NEXT_TURN_2_MARKER, self);
     },
-    hasMarker: (effect) => {
-      const player = effect.player;
+    hasMarker: playerEffect => {
+      const player = playerEffect.player;
       return player.active.marker.hasMarker(NEXT_TURN_1_MARKER, self);
     }
   };

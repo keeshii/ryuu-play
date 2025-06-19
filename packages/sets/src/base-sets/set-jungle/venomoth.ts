@@ -22,7 +22,7 @@ import {
   StoreLike,
 } from '@ptcg/common';
 
-import { changeType } from '../../common/markers';
+import { changeType } from '../../common';
 
 function* useShift(next: Function, store: StoreLike, state: State, self: Venomoth, effect: PowerEffect): IterableIterator<State> {
   const player = effect.player;
@@ -97,6 +97,7 @@ export class Venomoth extends PokemonCard {
     {
       name: 'Shift',
       powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
       text:
         'Once during your turn (before your attack), you may change the type of Venomoth to the type of any other ' +
         'Pokémon in play other than C. This power can\'t be used if Venomoth is Asleep, Confused, or Paralyzed.'

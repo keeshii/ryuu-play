@@ -95,6 +95,7 @@ export class Vileplume extends PokemonCard {
     {
       name: 'Heal',
       powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
       text:
         'Once during your turn (before your attack), you may flip a coin. If heads, remove 1 damage counter from 1 ' +
         'of your Pokémon. This power can\'t be used if Vileplume is Asleep, Confused, or Paralyzed.'

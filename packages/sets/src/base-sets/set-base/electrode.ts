@@ -28,7 +28,7 @@ import {
   StoreLike,
 } from '@ptcg/common';
 
-import { changeType } from '../../common/markers';
+import { changeType } from '../../common';
 
 function* useBuzzap(next: Function, store: StoreLike, state: State, self: Electrode, effect: PowerEffect): IterableIterator<State> {
   const player = effect.player;

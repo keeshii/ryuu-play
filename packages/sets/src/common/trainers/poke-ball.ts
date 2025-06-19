@@ -72,8 +72,8 @@ export const pokeBall: CommonTrainer = function(
   effect: Effect
 ) {
   return {
-    playCard: () => {
-      const generator = playCard(() => generator.next(), store, state, effect as TrainerEffect);
+    playCard: trainerEffect => {
+      const generator = playCard(() => generator.next(), store, state, trainerEffect);
       return generator.next().value;
     }
   };

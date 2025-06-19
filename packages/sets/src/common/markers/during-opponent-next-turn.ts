@@ -28,13 +28,13 @@ export const duringOpponentNextTurn: CommonMarker<[PokemonSlot]> = function (
   }
 
   return {
-    setMarker: (effect, pokemonSlot) => {
-      const player = effect.player;
+    setMarker: (playerEffect, pokemonSlot) => {
+      const player = playerEffect.player;
       const opponent = StateUtils.getOpponent(state, player);
       pokemonSlot.marker.addMarker(OPPONENT_TURN_MARKER, self);
       opponent.marker.addMarker(CLEAR_OPPONENT_TURN_MARKER, self);
     },
-    hasMarker: (effect, target) => {
+    hasMarker: (playerEffect, target) => {
       return target.marker.hasMarker(OPPONENT_TURN_MARKER, self);
     }
   };
