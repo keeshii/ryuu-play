@@ -61,7 +61,9 @@
 .ptcg-icon-gl4:before { content: '\e815'; }
 .ptcg-icon-m:before { content: '\e816'; }
 .ptcg-icon-mega:before { content: '\e817'; }
-.ptcg-icon-plus:before { content: '\e818'; }
+.ptcg-icon-female:before { content: '\e818'; }
 .ptcg-icon-prism:before { content: '\e819'; }
 .ptcg-icon-gx:before { content: '\e81a'; }
-.ptcg-icon-ryuu:before { content: '\e81b'; }
+.ptcg-icon-male:before { content: '\e81b'; }
+.ptcg-icon-rainbow:before { content: '\e81c'; }
+.ptcg-icon-ryuu:before { content: '\e81d'; }

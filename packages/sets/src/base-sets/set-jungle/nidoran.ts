@@ -31,7 +31,7 @@ function* useCallForFamily(
   const blocked: number[] = [];
   player.deck.cards.forEach((c, index) => {
     const isBasicPokemon = c instanceof PokemonCard && c.stage === Stage.BASIC;
-    const isNidoran = c.name === 'Nidoran ♂' || c.name === 'Nidoran ♀';
+    const isNidoran = c.name === 'Nidoran Male' || c.name === 'Nidoran Female';
     if (!isBasicPokemon || !isNidoran) {
       blocked.push(index);
     }
@@ -86,7 +86,7 @@ export class Nidoran extends PokemonCard {
       cost: [CardType.GRASS, CardType.GRASS],
       damage: '',
       text:
-        'Search your deck for a Basic Pokémon named Nidoran ♂ or Nidoran ♀ and put it onto your Bench. Shuffle your ' +
+        'Search your deck for a Basic Pokémon named Nidoran Male or Nidoran Female and put it onto your Bench. Shuffle your ' +
         'deck afterward. (You can\'t use this attack if your Bench is full.)'
     },
   ];
@@ -99,7 +99,7 @@ export class Nidoran extends PokemonCard {
 
   public set: string = 'JU';
 
-  public name: string = 'Nidoran ♀';
+  public name: string = 'Nidoran Female';
 
   public fullName: string = 'Nidoran F JU';
 

@@ -2,6 +2,7 @@ import {
   AttackEffect,
   CardType,
   Effect,
+  GamePhase,
   PokemonCard,
   PutDamageEffect,
   Stage,
@@ -66,7 +67,9 @@ export class Cubone extends PokemonCard {
 
     if (effect instanceof PutDamageEffect
       && opponentNextTurn.hasMarker(effect, effect.player.active)
-      && opponentNextTurn.hasMarker(effect, effect.target)) {
+      && opponentNextTurn.hasMarker(effect, effect.target)
+      && effect.target.pokemons.cards.includes(this)
+      && state.phase === GamePhase.ATTACK) {
       effect.damage = Math.max(0, effect.damage - 20);
       return state;
     }

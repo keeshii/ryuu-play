@@ -13,7 +13,7 @@ import {
 export class Nidorino extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
 
-  public evolvesFrom = 'Nidoran ♂';
+  public evolvesFrom = 'Nidoran Male';
 
   public cardTypes: CardType[] = [CardType.GRASS];
 

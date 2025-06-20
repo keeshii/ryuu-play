@@ -30,6 +30,9 @@ export class CardTextComponent {
     'MEGA': 'mega',
     'PRISM': 'prism',
     'GX': 'gx',
+    'Male': 'male',
+    'Female': 'female',
+    'RAINBOW': 'rainbow',
     'RYUU': 'ryuu',
   };
 

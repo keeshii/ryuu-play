@@ -34,7 +34,7 @@ export class NidoranMale extends PokemonCard {
 
   public set: string = 'BS';
 
-  public name: string = 'Nidoran ♂';
+  public name: string = 'Nidoran Male';
 
   public fullName: string = 'Nidoran M BS';
 

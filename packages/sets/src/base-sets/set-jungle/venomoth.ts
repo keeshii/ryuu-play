@@ -100,7 +100,7 @@ export class Venomoth extends PokemonCard {
       useWhenInPlay: true,
       text:
         'Once during your turn (before your attack), you may change the type of Venomoth to the type of any other ' +
-        'Pokémon in play other than C. This power can\'t be used if Venomoth is Asleep, Confused, or Paralyzed.'
+        'Pokémon in play other than Colorless. This power can\'t be used if Venomoth is Asleep, Confused, or Paralyzed.'
     },
   ];
 
