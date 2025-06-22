@@ -1,11 +1,16 @@
 import {
   CardType,
   Effect,
+  EvolveEffect,
+  GameError,
+  GameMessage,
   PokemonCard,
   PowerEffect,
   PowerType,
+  SpecialCondition,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -54,8 +59,32 @@ export class Aerodactyl extends PokemonCard {
   public fullName: string = 'Aerodactyl FO';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
-      return state;
+
+    if (effect instanceof EvolveEffect) {
+      const player = effect.player;
+      const pokemonSlot = StateUtils.findPokemonSlot(state, this);
+
+      if (pokemonSlot === undefined
+        || pokemonSlot.specialConditions.includes(SpecialCondition.ASLEEP)
+        || pokemonSlot.specialConditions.includes(SpecialCondition.CONFUSED)
+        || pokemonSlot.specialConditions.includes(SpecialCondition.PARALYZED)) {
+        return state;
+      }
+
+      // Is Aerodactyl in play
+      if (pokemonSlot.getPokemonCard() !== this) {
+        return state;
+      }
+
+      // Try to reduce PowerEffect, to check if something is blocking our ability
+      try {
+        const powerEffect = new PowerEffect(player, this.powers[0], this);
+        store.reduceEffect(state, powerEffect);
+      } catch {
+        return state;
+      }
+
+      throw new GameError(GameMessage.BLOCKED_BY_ABILITY);
     }
 
     return state;

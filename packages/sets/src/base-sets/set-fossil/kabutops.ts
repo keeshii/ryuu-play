@@ -1,7 +1,8 @@
 import {
-  AttackEffect,
+  AfterDamageEffect,
   CardType,
   Effect,
+  HealTargetEffect,
   PokemonCard,
   Stage,
   State,
@@ -48,8 +49,13 @@ export class Kabutops extends PokemonCard {
   public fullName: string = 'Kabutops FO';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+
+    if (effect instanceof AfterDamageEffect && effect.attack === this.attacks[1]) {
+      const player = effect.player;
+      const damage = Math.ceil(effect.damage / 20) * 10;
+      const healEffect = new HealTargetEffect(effect.attackEffect, damage);
+      healEffect.target = player.active;
+      store.reduceEffect(state, healEffect);
     }
 
     return state;

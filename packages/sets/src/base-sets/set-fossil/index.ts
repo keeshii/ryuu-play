@@ -3,7 +3,7 @@ import { Aerodactyl } from './aerodactyl';
 import { Arbok } from './arbok';
 import { Articuno } from './articuno';
 import { Cloyster } from './cloyster';
-import { Ditto } from './ditto';
+// import { Ditto } from './ditto';
 import { Dragonite } from './dragonite';
 import { Ekans } from './ekans';
 import { EnergySearch } from './energy-search';
@@ -52,7 +52,7 @@ export const setFossil: Card[] = [
   new Arbok(),
   new Articuno(),
   new Cloyster(),
-  new Ditto(),
+  // new Ditto(),
   new Dragonite(),
   new Ekans(),
   new EnergySearch(),

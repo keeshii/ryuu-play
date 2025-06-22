@@ -1,8 +1,6 @@
 import {
-  AbstractAttackEffect,
   AddSpecialConditionsEffect,
   AttackEffect,
-  AttackEffects,
   CardType,
   CoinFlipPrompt,
   Effect,
@@ -10,6 +8,7 @@ import {
   GameMessage,
   PlayerType,
   PokemonCard,
+  PutDamageEffect,
   SpecialCondition,
   Stage,
   State,
@@ -60,21 +59,8 @@ export class Kakuna extends PokemonCard {
   public readonly CLEAR_STIFFEN_MARKER = 'CLEAR_STIFFEN_MARKER';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof AbstractAttackEffect && effect.target.marker.hasMarker(this.STIFFEN_MARKER, this)) {
-
-      // Block effects that inflict damage
-      const damageEffects: string[] = [
-        AttackEffects.APPLY_WEAKNESS_EFFECT,
-        AttackEffects.DEAL_DAMAGE_EFFECT,
-        AttackEffects.PUT_DAMAGE_EFFECT,
-        AttackEffects.AFTER_DAMAGE_EFFECT,
-        // AttackEffects.PUT_COUNTERS_EFFECT, <-- This is not damage
-      ];
-
-      if (damageEffects.includes(effect.type)) {
-        effect.preventDefault = true;
-      }
-
+    if (effect instanceof PutDamageEffect && effect.target.marker.hasMarker(this.STIFFEN_MARKER, this)) {
+      effect.preventDefault = true;
       return state;
     }
     

@@ -46,6 +46,7 @@ export class Ditto extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
+      // TODO
       return state;
     }
 

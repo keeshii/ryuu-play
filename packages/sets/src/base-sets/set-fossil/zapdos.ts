@@ -1,10 +1,17 @@
 import {
   AttackEffect,
   CardType,
+  CoinFlipPrompt,
+  DealDamageEffect,
   Effect,
+  GameMessage,
+  PlayerType,
   PokemonCard,
+  PokemonSlot,
+  PutDamageEffect,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -41,7 +48,40 @@ export class Zapdos extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      const coinFlipPrompts: CoinFlipPrompt[] = [];
+      const targets: PokemonSlot[] = [];
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, pokemonSlot => {
+        if (pokemonSlot !== opponent.active) {
+          coinFlipPrompts.push(new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP));
+          targets.push(pokemonSlot);
+        }
+      });
+
+      if (targets.length === 0) {
+        return state;
+      }
+
+      return store.prompt(state, coinFlipPrompts, results => {
+        let damage = 0;
+        results.forEach((r, index) => {
+          if (r === true) {
+            const damageEffect = new PutDamageEffect(effect, 20);
+            damageEffect.target = targets[index];
+            store.reduceEffect(state, damageEffect);
+          } else {
+            damage += 10;
+          }
+        });
+
+        if (damage > 0) {
+          const dealDamage = new DealDamageEffect(effect, damage);
+          dealDamage.target = player.active;
+          store.reduceEffect(state, dealDamage);
+        }
+      });
     }
 
     return state;

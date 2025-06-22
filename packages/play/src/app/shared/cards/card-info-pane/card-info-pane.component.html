@@ -51,7 +51,6 @@
         <span class="subtitle-hp-unit" translate>CARDS_HP</span>
         <span class="subtitle-hp-value">{{card.hp}}</span>
       </div>
-      <div class="ptcg-u-spacer"></div>
       <div class="subtitle-stage" [ngSwitch]="card.trainerType">
         <span *ngSwitchDefaultCase translate>CARDS_ITEM</span>
         <span *ngSwitchCase="TrainerType.SUPPORTER" translate>CARDS_SUPPORTER</span>

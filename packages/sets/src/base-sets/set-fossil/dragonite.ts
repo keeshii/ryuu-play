@@ -1,14 +1,21 @@
 import {
   AttackEffect,
   CardType,
+  CoinFlipPrompt,
   Effect,
+  GameError,
+  GameMessage,
+  PlayerType,
   PokemonCard,
+  PokemonSlot,
   PowerEffect,
   PowerType,
+  SlotType,
   Stage,
   State,
   StoreLike,
 } from '@ptcg/common';
+import { commonMarkers } from '../../common';
 
 export class Dragonite extends PokemonCard {
   public stage: Stage = Stage.STAGE_2;
@@ -23,6 +30,7 @@ export class Dragonite extends PokemonCard {
     {
       name: 'Step In',
       powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
       text:
         'Once during your turn (before your attack), if Dragonite is on your Bench, you may switch it with your ' +
         'Active Pokémon.'
@@ -51,12 +59,44 @@ export class Dragonite extends PokemonCard {
   public fullName: string = 'Dragonite FO';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    const powerUseOnce = commonMarkers.powerUseOnce(this, store, state, effect);
+
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
+      const player = effect.player;
+
+      let bench: PokemonSlot | undefined;
+      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (pokemonSlot, card, target) => {
+        if (card === this && target.slot === SlotType.BENCH) {
+          bench = pokemonSlot;
+        }
+      });
+
+      if (bench === undefined) {
+        throw new GameError(GameMessage.CANNOT_USE_POWER);
+      }
+
+      if (powerUseOnce.hasMarker(effect)) {
+        throw new GameError(GameMessage.POWER_ALREADY_USED);
+      }
+
+      powerUseOnce.setMarker(effect);
+      player.switchPokemon(bench);
       return state;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+      return store.prompt(
+        state,
+        [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)],
+        results => {
+          let heads: number = 0;
+          results.forEach(r => {
+            heads += r ? 1 : 0;
+          });
+          effect.damage = 40 * heads;
+        }
+      );
     }
 
     return state;

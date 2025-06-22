@@ -8,6 +8,8 @@ import {
   StoreLike,
 } from '@ptcg/common';
 
+import { commonAttacks } from '../../common';
+
 export class Krabby extends PokemonCard {
   public stage: Stage = Stage.BASIC;
 
@@ -45,8 +47,10 @@ export class Krabby extends PokemonCard {
   public fullName: string = 'Krabby FO';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    const callForFamily = commonAttacks.callForFamily(this, store, state, effect);
+
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      return callForFamily.use(effect, { name: 'Krabby' });
     }
 
     return state;

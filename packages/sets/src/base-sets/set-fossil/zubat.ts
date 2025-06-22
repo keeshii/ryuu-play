@@ -1,8 +1,14 @@
 import {
+  AddSpecialConditionsEffect,
+  AfterDamageEffect,
   AttackEffect,
   CardType,
+  CoinFlipPrompt,
   Effect,
+  GameMessage,
+  HealTargetEffect,
   PokemonCard,
+  SpecialCondition,
   Stage,
   State,
   StoreLike,
@@ -50,11 +56,21 @@ export class Zubat extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+        if (result === true) {
+          const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.CONFUSED]);
+          store.reduceEffect(state, specialConditionEffect);
+        }
+      });
     }
 
-    if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+    if (effect instanceof AfterDamageEffect && effect.attack === this.attacks[1]) {
+      const player = effect.player;
+      const healEffect = new HealTargetEffect(effect.attackEffect, effect.damage);
+      healEffect.target = player.active;
+      store.reduceEffect(state, healEffect);
     }
 
     return state;

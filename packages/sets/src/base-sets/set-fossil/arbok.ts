@@ -1,12 +1,18 @@
 import {
+  AddSpecialConditionsEffect,
   AttackEffect,
   CardType,
+  CoinFlipPrompt,
   Effect,
+  GameMessage,
   PokemonCard,
+  SpecialCondition,
   Stage,
   State,
   StoreLike,
 } from '@ptcg/common';
+
+import { commonAttacks } from '../../common';
 
 export class Arbok extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -47,12 +53,21 @@ export class Arbok extends PokemonCard {
   public fullName: string = 'Arbok FO';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    
+    const opponentSwichesDamageFirst = commonAttacks.opponentSwichesDamageFirst(this, store, state, effect);
+    
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+        if (result === true) {
+          opponentSwichesDamageFirst.use(effect);
+        }
+      });
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.POISONED]);
+      store.reduceEffect(state, specialConditionEffect);
     }
 
     return state;

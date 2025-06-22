@@ -8,6 +8,8 @@ import {
   StoreLike,
 } from '@ptcg/common';
 
+import { commonAttacks } from '../../common';
+
 export class Horsea extends PokemonCard {
   public stage: Stage = Stage.BASIC;
 
@@ -39,8 +41,10 @@ export class Horsea extends PokemonCard {
   public fullName: string = 'Horsea FO';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    const smokescreen = commonAttacks.smokescreen(this, store, state, effect);
+
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      return smokescreen.use(effect);
     }
 
     return state;

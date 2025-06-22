@@ -1,7 +1,8 @@
 import {
-  AttackEffect,
+  AfterDamageEffect,
   CardType,
   Effect,
+  HealTargetEffect,
   PokemonCard,
   Stage,
   State,
@@ -51,8 +52,12 @@ export class Golbat extends PokemonCard {
   public fullName: string = 'Golbat FO';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+
+    if (effect instanceof AfterDamageEffect && effect.attack === this.attacks[1]) {
+      const player = effect.player;
+      const healEffect = new HealTargetEffect(effect.attackEffect, effect.damage);
+      healEffect.target = player.active;
+      store.reduceEffect(state, healEffect);
     }
 
     return state;

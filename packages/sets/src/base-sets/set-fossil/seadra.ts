@@ -1,12 +1,17 @@
 import {
+  AbstractAttackEffect,
   AttackEffect,
   CardType,
+  CoinFlipPrompt,
   Effect,
+  GameMessage,
   PokemonCard,
   Stage,
   State,
   StoreLike,
 } from '@ptcg/common';
+
+import { commonAttacks, commonMarkers } from '../../common';
 
 export class Seadra extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -49,12 +54,26 @@ export class Seadra extends PokemonCard {
   public fullName: string = 'Seadra FO';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
+    const additionalEnergyDamage = commonAttacks.additionalEnergyDamage(this, store, state, effect);
+    const opponentNextTurn = commonMarkers.duringOpponentNextTurn(this, store, state, effect);
+
+    if (effect instanceof AbstractAttackEffect && opponentNextTurn.hasMarker(effect, effect.target)) {
+      effect.preventDefault = true;
       return state;
     }
 
+    if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
+      return additionalEnergyDamage.use(effect, CardType.WATER, 10, 2);
+    }
+
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+        if (result === true) {
+          opponentNextTurn.setMarker(effect, player.active);
+        }
+      });
     }
 
     return state;

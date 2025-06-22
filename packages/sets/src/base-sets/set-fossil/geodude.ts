@@ -1,12 +1,36 @@
 import {
   AttackEffect,
   CardType,
+  CoinFlipPrompt,
   Effect,
+  GameMessage,
   PokemonCard,
   Stage,
   State,
   StoreLike,
 } from '@ptcg/common';
+
+function* useStoneBarrage(
+  next: Function,
+  store: StoreLike,
+  state: State,
+  effect: AttackEffect
+): IterableIterator<State> {
+  const player = effect.player;
+
+  let flipResult = false;
+  let heads = 0;
+  do {
+    yield store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
+      flipResult = result;
+      heads += flipResult ? 1 : 0;
+      next();
+    });
+  } while (flipResult);
+
+  effect.damage = heads * 10;
+  return state;
+}
 
 export class Geodude extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -38,7 +62,8 @@ export class Geodude extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const generator = useStoneBarrage(() => generator.next(), store, state, effect);
+      return generator.next().value;
     }
 
     return state;

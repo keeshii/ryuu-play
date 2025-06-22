@@ -3,10 +3,13 @@ import {
   CardType,
   Effect,
   PokemonCard,
+  PutDamageEffect,
   Stage,
   State,
   StoreLike,
 } from '@ptcg/common';
+
+import { commonMarkers } from '../../common';
 
 export class Graveler extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -47,7 +50,18 @@ export class Graveler extends PokemonCard {
   public fullName: string = 'Graveler FO';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+
+    const opponentNextTurn = commonMarkers.duringOpponentNextTurn(this, store, state, effect);
+
+    if (effect instanceof PutDamageEffect && opponentNextTurn.hasMarker(effect, effect.target)) {
+      if (effect.damage <= 30) {
+        effect.preventDefault = true;
+      }
+      return state;
+    }
+
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
+      opponentNextTurn.setMarker(effect, effect.player.active);
       return state;
     }
 

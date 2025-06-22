@@ -1,18 +1,14 @@
 import {
   AttackEffect,
   CardType,
-  ChoosePokemonPrompt,
-  DealDamageEffect,
   Effect,
-  GameMessage,
-  PlayerType,
   PokemonCard,
-  SlotType,
   Stage,
   State,
-  StateUtils,
   StoreLike,
 } from '@ptcg/common';
+
+import { commonAttacks } from '../../common';
 
 export class Pidgey extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -49,37 +45,11 @@ export class Pidgey extends PokemonCard {
   public fullName: string = 'Pidgey BS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    const opponentSwichesDamageFirst = commonAttacks.opponentSwichesDamageFirst(this, store, state, effect);
+
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      const player = effect.player;
-      const opponent = StateUtils.getOpponent(state, player);
-      const hasBench = opponent.bench.some(b => b.pokemons.cards.length > 0);
-
-      if (hasBench === false) {
-        return state;
-      }
-
-      return store.prompt(
-        state,
-        new ChoosePokemonPrompt(
-          opponent.id,
-          GameMessage.CHOOSE_POKEMON_TO_SWITCH,
-          PlayerType.BOTTOM_PLAYER,
-          [SlotType.BENCH],
-          { allowCancel: false }
-        ),
-        targets => {
-          if (targets && targets.length > 0) {
-            const dealDamage = new DealDamageEffect(effect, effect.damage);
-            dealDamage.target = opponent.active;
-            store.reduceEffect(state, dealDamage);
-            effect.damage = 0;
-
-            opponent.switchPokemon(targets[0]);
-          }
-        }
-      );
+      opponentSwichesDamageFirst.use(effect);
     }
-
 
     return state;
   }

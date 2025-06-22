@@ -1,12 +1,16 @@
 import {
   AttackEffect,
   CardType,
+  CoinFlipPrompt,
   Effect,
+  GameMessage,
   PokemonCard,
   Stage,
   State,
   StoreLike,
 } from '@ptcg/common';
+
+import { commonAttacks } from '../../common';
 
 export class Omastar extends PokemonCard {
   public stage: Stage = Stage.STAGE_2;
@@ -47,12 +51,25 @@ export class Omastar extends PokemonCard {
   public fullName: string = 'Omastar FO';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    const additionalEnergyDamage = commonAttacks.additionalEnergyDamage(this, store, state, effect);
+    
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      return additionalEnergyDamage.use(effect, CardType.WATER, 10, 2);
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+      return store.prompt(
+        state,
+        [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)],
+        results => {
+          let heads: number = 0;
+          results.forEach(r => {
+            heads += r ? 1 : 0;
+          });
+          effect.damage = 30 * heads;
+        }
+      );
     }
 
     return state;

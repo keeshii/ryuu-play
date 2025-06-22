@@ -1,12 +1,19 @@
 import {
+  AddSpecialConditionsEffect,
   AttackEffect,
   CardType,
+  CoinFlipPrompt,
   Effect,
+  GameMessage,
   PokemonCard,
+  PutDamageEffect,
+  SpecialCondition,
   Stage,
   State,
   StoreLike,
 } from '@ptcg/common';
+
+import { commonMarkers } from '../../common';
 
 export class Shellder extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -45,12 +52,32 @@ export class Shellder extends PokemonCard {
   public fullName: string = 'Shellder FO';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
+
+    const opponentNextTurn = commonMarkers.duringOpponentNextTurn(this, store, state, effect);
+
+    if (effect instanceof PutDamageEffect && opponentNextTurn.hasMarker(effect, effect.target)) {
+      effect.preventDefault = true;
       return state;
     }
 
+    if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
+      const player = effect.player;
+
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+        if (result === true) {
+          const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.CONFUSED]);
+          store.reduceEffect(state, specialConditionEffect);
+        }
+      });
+    }
+
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+        if (result === true) {
+          opponentNextTurn.setMarker(effect, effect.player.active);
+        }
+      });
     }
 
     return state;

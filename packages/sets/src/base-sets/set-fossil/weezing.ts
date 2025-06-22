@@ -1,10 +1,17 @@
 import {
+  AddSpecialConditionsEffect,
   AttackEffect,
   CardType,
+  CoinFlipPrompt,
+  DealDamageEffect,
   Effect,
+  GameMessage,
   PokemonCard,
+  PutDamageEffect,
+  SpecialCondition,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -48,11 +55,32 @@ export class Weezing extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+        if (result === true) {
+          const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.POISONED]);
+          store.reduceEffect(state, specialConditionEffect);
+        }
+      });
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+      const bench = [...opponent.bench, ...player.bench];
+
+      bench.forEach(benched => {
+        if (benched.pokemons.cards.length > 0) {
+          const dealDamage = new PutDamageEffect(effect, 10);
+          dealDamage.target = benched;
+          store.reduceEffect(state, dealDamage);
+        }
+      });
+
+      const dealDamage = new DealDamageEffect(effect, 60);
+      dealDamage.target = player.active;
+      store.reduceEffect(state, dealDamage);
     }
 
     return state;

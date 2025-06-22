@@ -73,6 +73,7 @@ export class ClefairyDoll extends TrainerCard implements PokemonCard {
       // Don't discard this card, put it into play instead
       effect.preventDefault = true;
       player.hand.moveCardTo(this, pokemonSlot.pokemons);
+      pokemonSlot.pokemonPlayedTurn = state.turn;
       return state;
     }
 
