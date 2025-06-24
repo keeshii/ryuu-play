@@ -1,4 +1,4 @@
-import { AttachEnergyPrompt, CardAssign } from '@ptcg/common';
+import { AttachEnergyPrompt, CardAssign, FilterUtils } from '@ptcg/common';
 import { Player, State, Action, ResolvePromptAction, Prompt, StateUtils,
   PokemonSlot, PlayerType, CardList, Card, CardTarget } from '@ptcg/common';
 import { PromptResolver } from './prompt-resolver';
@@ -56,7 +56,7 @@ export class AttachEnergyPromptResolver extends PromptResolver {
       return !prompt.options.blocked.includes(index);
     });
 
-    cardList.cards = cardList.filter(prompt.filter);
+    cardList.cards = FilterUtils.filter(cardList.cards, prompt.filter);
     return cardList;
   }
 

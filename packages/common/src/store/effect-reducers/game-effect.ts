@@ -113,6 +113,11 @@ export function gameReducer(store: StoreLike, state: State, effect: Effect): Sta
       if (card.tags.includes(CardTag.POKEMON_EX)) {
         effect.prizeCount += 1;
       }
+      
+      // Fossil rule
+      if (card.tags.includes(CardTag.FOSSIL) && state.rules.noPrizeForFossil) {
+        effect.prizeCount = 0;
+      }
 
       store.log(state, GameLog.LOG_POKEMON_KO, { name: card.name });
       effect.target.moveTo(effect.player.discard);

@@ -1,5 +1,5 @@
 import { Card } from './card';
-import { SuperType, Stage, PokemonType, CardType } from './card-types';
+import { SuperType, Stage, CardType } from './card-types';
 import { Attack, Weakness, Resistance, Power } from './pokemon-types';
 
 
@@ -8,8 +8,6 @@ export abstract class PokemonCard extends Card {
   public superType: SuperType = SuperType.POKEMON;
 
   public cardTypes: CardType[] = [];
-
-  public pokemonType: PokemonType = PokemonType.NORMAL;
 
   public evolvesFrom: string = '';
 

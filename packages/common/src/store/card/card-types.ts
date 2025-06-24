@@ -4,7 +4,8 @@ export enum CardTag {
   POKEMON_EX = 'EX',
   POKEMON_GX = 'GX',
   POKEMON_LV_X = 'LV_X',
-  ACE_SPEC = 'ACE_SPEC'
+  ACE_SPEC = 'ACE_SPEC',
+  FOSSIL = 'FOSSIL'
 }
 
 export enum SuperType {
@@ -24,12 +25,6 @@ export enum TrainerType {
   SUPPORTER,
   STADIUM,
   TOOL,
-}
-
-export enum PokemonType {
-  NORMAL,
-  EX,
-  LEGEND,
 }
 
 export enum Stage {

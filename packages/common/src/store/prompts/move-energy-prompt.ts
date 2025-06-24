@@ -4,12 +4,12 @@ import { Prompt } from './prompt';
 import { PlayerType, SlotType, CardTarget } from '../actions/play-card-action';
 import { State } from '../state/state';
 import { StateUtils } from '../state-utils';
-import { FilterType } from './choose-cards-prompt';
 import { EnergyCard } from '../card/energy-card';
+import { FilterUtils, FilterType } from '../card/filter-utils';
 
 export const MoveEnergyPromptType = 'Move energy';
 
-export type MoveEnergyResultType = {from: CardTarget, to: CardTarget, index: number}[];
+export type MoveEnergyResultType = { from: CardTarget, to: CardTarget, index: number }[];
 
 export interface CardTransfer {
   from: CardTarget;
@@ -74,6 +74,12 @@ export class MoveEnergyPrompt extends Prompt<CardTransfer[]> {
     if (result === null) {
       return this.options.allowCancel;  // operation cancelled
     }
+
+    // Check if attached cards are not blocked by filter
+    if (!result.every(r => FilterUtils.match(r.card, this.filter))) {
+      return false;
+    }
+
     return result.every(r => r.card !== undefined);
   }
 

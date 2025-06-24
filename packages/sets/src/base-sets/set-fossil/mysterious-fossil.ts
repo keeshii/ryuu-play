@@ -1,14 +1,14 @@
 import {
   Attack,
+  CardTag,
   CardType,
   CheckTableStateEffect,
   ConfirmPrompt,
   Effect,
   GameError,
   GameMessage,
-  KnockOutEffect,
+  PlayPokemonEffect,
   PokemonCard,
-  PokemonType,
   Power,
   Resistance,
   RetreatEffect,
@@ -23,9 +23,10 @@ import {
   Weakness,
 } from '@ptcg/common';
 
-
 export class MysteriousFossil extends TrainerCard implements PokemonCard {
   public trainerType: TrainerType = TrainerType.ITEM;
+
+  public tags = [CardTag.FOSSIL];
 
   public set: string = 'FO';
 
@@ -47,19 +48,17 @@ export class MysteriousFossil extends TrainerCard implements PokemonCard {
   public powers: Power[] = [];
 
   public resistance: Resistance[] = [];
-  
+
   public weakness: Weakness[] = [];
-  
+
   public hp = 10;
 
   public retreat: CardType[] = [];
-  
+
   public stage: Stage = Stage.BASIC;
-  
+
   public evolvesFrom = '';
-  
-  public pokemonType = PokemonType.NORMAL;
-  
+
   public cardTypes: CardType[] = [CardType.COLORLESS];
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
@@ -73,8 +72,10 @@ export class MysteriousFossil extends TrainerCard implements PokemonCard {
 
       // Don't discard this card, put it into play instead
       effect.preventDefault = true;
-      player.hand.moveCardTo(this, pokemonSlot.pokemons);
-      pokemonSlot.pokemonPlayedTurn = state.turn;
+
+      // Play this card as Pokemon
+      const playPokemonEffect = new PlayPokemonEffect(player, this, pokemonSlot);
+      store.reduceEffect(state, playPokemonEffect);
       return state;
     }
 
@@ -112,15 +113,6 @@ export class MysteriousFossil extends TrainerCard implements PokemonCard {
           });
         }
       });
-      return state;
-    }
-
-    // Block KO and taking prize cards (even with Expert Belt, etc)
-    if (effect instanceof KnockOutEffect && effect.target.getPokemonCard() === this) {
-      effect.preventDefault = true;
-      const pokemonSlot = effect.target;
-      pokemonSlot.moveTo(effect.player.discard);
-      pokemonSlot.clearEffects();
       return state;
     }
 

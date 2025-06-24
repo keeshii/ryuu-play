@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
-import { Card, CardType, PokemonCard } from '@ptcg/common';
+import { Card, FilterType, FilterUtils } from '@ptcg/common';
 import { DraggedItem } from '@ng-dnd/sortable';
 
 import { CardsBaseService } from '../../../shared/cards/cards-base.service';
@@ -18,7 +18,7 @@ export class ChooseCardsPanesComponent implements OnChanges {
   public readonly bottomListId = 'CHOOSE_CARDS_BOTTOM_LIST';
 
   @Input() cards: Card[];
-  @Input() filter: Partial<Card> = {};
+  @Input() filter: FilterType = {};
   @Input() blocked: number[] = [];
   @Input() cardbackMap: {[index: number]: boolean} = {};
   @Input() singlePaneMode = false;
@@ -70,22 +70,12 @@ export class ChooseCardsPanesComponent implements OnChanges {
     return sortable;
   }
 
-  private buildFilterMap(cards: Card[], filter: Partial<Card>, blocked: number[]) {
+  private buildFilterMap(cards: Card[], filter: FilterType, blocked: number[]) {
     const filterMap: {[fullName: string]: boolean} = {};
     for (let i = 0; i < cards.length; i++) {
       const card = cards[i];
-      let isBlocked = blocked.includes(i);
-      if (isBlocked === false) {
-        for (const key in filter) {
-          if (key === 'cardTypes') {
-            const cardTypes: CardType[] = (card as PokemonCard).cardTypes || [];
-            const filterValue: CardType[] = ((this.filter as PokemonCard).cardTypes) || [];
-            isBlocked = isBlocked || !filterValue.every(cardType => cardTypes.includes(cardType));
-          } else {
-            isBlocked = isBlocked || (filter as any)[key] !== (card as any)[key];
-          }
-        }
-      }
+      console.log(card, filter, FilterUtils.match(card, filter));
+      const isBlocked = blocked.includes(i) || !FilterUtils.match(card, filter);
       filterMap[card.fullName] = !isBlocked;
     }
     return filterMap;

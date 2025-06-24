@@ -7,8 +7,8 @@ import {
   GameError,
   GameMessage,
   KnockOutEffect,
+  PlayPokemonEffect,
   PokemonCard,
-  PokemonType,
   Power,
   Resistance,
   RetreatEffect,
@@ -46,19 +46,17 @@ export class ClefairyDoll extends TrainerCard implements PokemonCard {
   public powers: Power[] = [];
 
   public resistance: Resistance[] = [];
-  
+
   public weakness: Weakness[] = [];
-  
+
   public hp = 10;
 
   public retreat: CardType[] = [];
-  
+
   public stage: Stage = Stage.BASIC;
-  
+
   public evolvesFrom = '';
-  
-  public pokemonType = PokemonType.NORMAL;
-  
+
   public cardTypes: CardType[] = [CardType.COLORLESS];
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
@@ -72,8 +70,10 @@ export class ClefairyDoll extends TrainerCard implements PokemonCard {
 
       // Don't discard this card, put it into play instead
       effect.preventDefault = true;
-      player.hand.moveCardTo(this, pokemonSlot.pokemons);
-      pokemonSlot.pokemonPlayedTurn = state.turn;
+
+      // Play this card as Pokemon
+      const playPokemonEffect = new PlayPokemonEffect(player, this, pokemonSlot);
+      store.reduceEffect(state, playPokemonEffect);
       return state;
     }
 

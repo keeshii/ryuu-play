@@ -4,8 +4,8 @@ import { EnergyCard } from '../card/energy-card';
 import { GameMessage } from '../../game-message';
 import { Prompt } from './prompt';
 import { PokemonCard } from '../card/pokemon-card';
-import { TrainerCard } from '../card/trainer-card';
 import { CardType, SuperType } from '../card/card-types';
+import { FilterUtils, FilterType } from '../card/filter-utils';
 
 export const ChooseCardsPromptType = 'Choose cards';
 
@@ -20,8 +20,6 @@ export interface ChooseCardsOptions {
   maxEnergies: number | undefined;
   maxTrainers: number | undefined;
 }
-
-export type FilterType = Partial<PokemonCard | TrainerCard | EnergyCard>;
 
 export class ChooseCardsPrompt extends Prompt<Card[]> {
 
@@ -99,7 +97,7 @@ export class ChooseCardsPrompt extends Prompt<Card[]> {
     const blocked = this.options.blocked;
     return result.every(r => {
       const index = this.cards.cards.indexOf(r);
-      return index !== -1 && !blocked.includes(index) && this.matchesFilter(r);
+      return index !== -1 && !blocked.includes(index) && FilterUtils.match(r, this.filter);
     });
   }
 
@@ -113,22 +111,6 @@ export class ChooseCardsPrompt extends Prompt<Card[]> {
       return pokemonCard.cardTypes;
     }
     return [];
-  }
-
-  private matchesFilter(card: Card): boolean {
-    for (const key in this.filter) {
-      if (Object.prototype.hasOwnProperty.call(this.filter, key)) {
-        if (key === 'cardTypes') {
-          const cardTypes: CardType[] = (card as PokemonCard).cardTypes || [];
-          const filterValue: CardType[] = ((this.filter as PokemonCard).cardTypes) || [];
-          return filterValue.every(cardType => cardTypes.includes(cardType));
-        }
-        if ((this.filter as any)[key] !== (card as any)[key]) {
-          return false;
-        }
-      }
-    }
-    return true;
   }
 
 }

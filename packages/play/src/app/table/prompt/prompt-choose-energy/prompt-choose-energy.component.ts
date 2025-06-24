@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ChooseEnergyPrompt, CardList, Card, SuperType, CardType, StateUtils,
-  EnergyMap } from '@ptcg/common';
+import { ChooseEnergyPrompt, CardList, CardType, StateUtils, EnergyMap, FilterType } from '@ptcg/common';
 
 import { GameService } from '../../../api/services/game.service';
 import { LocalGameState } from '../../../shared/session/session.interface';
@@ -17,7 +16,7 @@ export class PromptChooseEnergyComponent {
     cardList.cards = prompt.energy.map(map => map.card);
     this.cards = cardList;
     this.energy = prompt.energy;
-    this.filter = { superType: SuperType.ENERGY };
+    this.filter = {};
     this.allowedCancel = prompt.options.allowCancel;
     this.message = prompt.message;
     this.promptId = prompt.id;
@@ -30,7 +29,7 @@ export class PromptChooseEnergyComponent {
   public allowedCancel: boolean;
   public promptId: number;
   public message: string;
-  public filter: Partial<Card>;
+  public filter: FilterType;
   public isInvalid = false;
   private energy: EnergyMap[] = [];
   private cost: CardType[];

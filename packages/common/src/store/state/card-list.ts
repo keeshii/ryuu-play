@@ -68,28 +68,33 @@ export class CardList<T extends Card = Card> {
     this.moveCardsTo([card], destination);
   }
 
+  public moveToTop(destination: CardList, count?: number): void {
+    if (count === undefined) {
+      count = this.cards.length;
+    }
+
+    count = Math.min(count, this.cards.length);
+    const cards = this.cards.splice(0, count);
+    destination.cards.unshift(...cards);
+  }
+
+  public moveCardsToTop(cards: T[], destination: CardList): void {
+    for (let i = cards.length - 1; i >= 0; i--) {
+      const index = this.cards.indexOf(cards[i]);
+      if (index !== -1) {
+        const card = this.cards.splice(index, 1);
+        destination.cards.unshift(card[0]);
+      }
+    }
+  }
+
+  public moveCardToTop(card: T, destination: CardList): void {
+    this.moveCardsTo([card], destination);
+  }
+
   public top(count: number = 1): T[] {
     count = Math.min(count, this.cards.length);
     return this.cards.slice(0, count);
-  }
-
-  public filter(query: Partial<T>): T[] {
-    return this.cards.filter(c => {
-      for (const key in query) {
-        if (Object.prototype.hasOwnProperty.call(query, key)) {
-          const value: any = (c as any)[key];
-          const expected: any = (query as any)[key];
-          if (value !== expected) {
-            return false;
-          }
-        }
-      }
-      return true;
-    });
-  }
-
-  public count(query: Partial<T>): number {
-    return this.filter(query).length;
   }
 
 }

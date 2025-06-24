@@ -5,7 +5,7 @@ import { Prompt } from './prompt';
 import { PlayerType, SlotType, CardTarget } from '../actions/play-card-action';
 import { State } from '../state/state';
 import { CardList } from '../state/card-list';
-import { FilterType } from './choose-cards-prompt';
+import { FilterUtils, FilterType } from '../card/filter-utils';
 
 export const AttachEnergyPromptType = 'Attach energy';
 
@@ -77,6 +77,15 @@ export class AttachEnergyPrompt extends Prompt<CardAssign[]> {
       return this.options.allowCancel;  // operation cancelled
     }
     if (result.length < this.options.min || result.length > this.options.max) {
+      return false;
+    }
+
+    // Check if attached cards are not blocked
+    const blocked = this.options.blocked;
+    if (!result.every(r => {
+      const index = this.cardList.cards.indexOf(r.card);
+      return index !== -1 && !blocked.includes(index) && FilterUtils.match(r.card, this.filter);
+    })) {
       return false;
     }
 

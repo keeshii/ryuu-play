@@ -1,4 +1,4 @@
-import { Player, State, Action, ResolvePromptAction, Prompt, Card, CardList } from '@ptcg/common';
+import { Player, State, Action, ResolvePromptAction, Prompt, Card, CardList, FilterUtils } from '@ptcg/common';
 import { PromptResolver } from './prompt-resolver';
 import { ChooseCardsPrompt } from '@ptcg/common';
 
@@ -44,7 +44,7 @@ export class ChooseCardsPromptResolver extends PromptResolver {
       return !prompt.options.blocked.includes(index);
     });
 
-    const cards = cardList.filter(prompt.filter).map(card => {
+    const cards = FilterUtils.filter(cardList.cards, prompt.filter).map(card => {
       const score = this.stateScore.getCardScore(state, prompt.playerId, card);
       return { card, score };
     });

@@ -1,5 +1,6 @@
 import { Player, State, Action, ResolvePromptAction, Prompt, StateUtils,
-  PlayerType, CardList, Card, CardTarget, MoveEnergyPrompt, CardTransfer, EnergyCard } from '@ptcg/common';
+  PlayerType, CardList, Card, CardTarget, MoveEnergyPrompt, CardTransfer,
+  EnergyCard, FilterUtils } from '@ptcg/common';
 import { PromptResolver } from './prompt-resolver';
 import { deepClone } from '@ptcg/common';
 
@@ -149,7 +150,7 @@ export class MoveEnergyPromptResolver extends PromptResolver {
           cardList.cards.push(card);
         }
       });
-      cardList.cards = cardList.filter(prompt.filter);
+      cardList.cards = FilterUtils.filter(cardList.cards, prompt.filter);
       cardList.cards.forEach(card => {
         fromCardItems.push({
           fromCardList: fromTarget.cardList,

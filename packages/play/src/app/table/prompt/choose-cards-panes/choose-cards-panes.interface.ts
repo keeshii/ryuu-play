@@ -1,5 +1,5 @@
 import { SortableSpec } from '@ng-dnd/sortable';
-import { CardList, Card } from '@ptcg/common';
+import { CardList, FilterType } from '@ptcg/common';
 
 import { PromptItem } from '../prompt-card-item.interface';
 
@@ -11,5 +11,5 @@ export interface ChooseCardsSortable {
 
 export interface ChooseCardsOptions {
   cards: CardList;
-  filter: Partial<Card>;
+  filter: FilterType;
 }

@@ -70,14 +70,20 @@ export const callForFamily: CommonAttack<[FilterType]> = function(
 ) {
 
   return {
-    use: (attackEffect: AttackEffect, filter: FilterType) => {
-      const filterType = { superType: SuperType.POKEMON, stage: Stage.BASIC, ...filter };
+    use: (attackEffect: AttackEffect, filterType: FilterType) => {
+      if (!(filterType instanceof Array)) {
+        filterType = [filterType];
+      }
       const generator = useCallForFamily(
         () => generator.next(),
         store,
         state,
         effect as AttackEffect,
-        filterType
+        filterType.map(filter => ({
+          ...filter,
+          superType: SuperType.POKEMON,
+          stage: Stage.BASIC,
+        }))
       );
       return generator.next().value;
     }

@@ -9,6 +9,7 @@ export * from './actions/play-card-action';
 export * from './actions/reorder-actions';
 export * from './actions/resolve-prompt-action';
 
+export * from './card/filter-utils';
 export * from './card/card-types';
 export * from './card/card';
 export * from './card/energy-card';

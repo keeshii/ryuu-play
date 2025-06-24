@@ -75,6 +75,22 @@ export class PokemonSlot {
     this.moveCardsTo([card], destination);
   }
 
+  public moveToTop(destination: CardList): void {
+    this.trainers.moveToTop(destination);
+    this.energies.moveToTop(destination);
+    this.pokemons.moveToTop(destination);
+  }
+
+  public moveCardsToTop(cards: Card[], destination: CardList): void {
+    this.trainers.moveCardsToTop(cards as TrainerCard[], destination);
+    this.energies.moveCardsToTop(cards as EnergyCard[], destination);
+    this.pokemons.moveCardsToTop(cards as PokemonCard[], destination);
+  }
+
+  public moveCardToTop(card: Card, destination: CardList): void {
+    this.moveCardsToTop([card], destination);
+  }
+
   clearEffects(): void {
     this.marker.markers = [];
     this.specialConditions = [];
