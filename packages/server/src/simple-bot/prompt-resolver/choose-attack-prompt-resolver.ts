@@ -1,4 +1,4 @@
-import { Player, State, Action, ResolvePromptAction, Prompt, Attack, GamePhase} from '@ptcg/common';
+import { Player, State, Action, ResolvePromptAction, Prompt, Attack, GamePhase, Power } from '@ptcg/common';
 import { PromptResolver } from './prompt-resolver';
 import { ChooseAttackPrompt } from '@ptcg/common';
 
@@ -7,7 +7,18 @@ export class ChooseAttackPromptResolver extends PromptResolver {
 
   public resolvePrompt(state: State, player: Player, prompt: Prompt<any>): Action | undefined {
     if (prompt instanceof ChooseAttackPrompt) {
-      const result: Attack | null = this.buildAttackToChoose(state, prompt);
+      let result: Attack | Power | null = null;
+
+      if (prompt.options.enableAttack) {
+        result = this.buildAttackToChoose(state, prompt);
+      }
+
+      // Attacks not available, so let's choose an ability (if possible)
+      if (result === null) {
+        result = this.buildAbilityToChoose(state, prompt);
+      }
+
+      // const result: Attack | null = this.buildAttackToChoose(state, prompt);
       return new ResolvePromptAction(prompt.id, result);
     }
   }
@@ -18,12 +29,12 @@ export class ChooseAttackPromptResolver extends PromptResolver {
     // Foul Play is banned, because when Zoroark meet's another Zoroak
     // they would copy theirs attacks in the infinite loop.
     const banned: string[] = state.phase === GamePhase.ATTACK
-      ? ['Foul Play'] : [];
+      ? ['Foul Play', 'Metronome'] : [];
 
     prompt.cards.forEach((card, index) => {
       card.attacks.forEach(attack => {
         const isBlocked = prompt.options.blocked.some(b => {
-          return b.index === index && b.attack === attack.name;
+          return b.index === index && b.name === attack.name;
         });
         if (!isBlocked && !banned.includes(attack.name)) {
           attacks.push(attack);
@@ -41,6 +52,38 @@ export class ChooseAttackPromptResolver extends PromptResolver {
     });
 
     return attacks.length > 0 ? attacks[0] : null;
+  }
+
+  private buildAbilityToChoose(state: State, prompt: ChooseAttackPrompt): Power | null {
+    const powers: Power[] = [];
+
+    prompt.cards.forEach((card, index) => {
+      const cardPowers: Power[] = [];
+
+      if (prompt.options.enableAbility.useWhenInPlay) {
+        cardPowers.push(...card.powers.filter(p => p.useWhenInPlay));
+      }
+      if (prompt.options.enableAbility.useFromHand) {
+        cardPowers.push(...card.powers.filter(p => p.useFromHand));
+      }
+      if (prompt.options.enableAbility.useFromDiscard) {
+        cardPowers.push(...card.powers.filter(p => p.useFromDiscard));
+      }
+
+      cardPowers.forEach(power => {
+        const isBlocked = prompt.options.blocked.some(b => {
+          return b.index === index && b.name === power.name;
+        });
+        if (!isBlocked) {
+          powers.push(power);
+        }
+      });
+    });
+
+    // Prefer powers with longer text ;)
+    powers.sort((a, b) => b.text.length - a.text.length);
+
+    return powers.length > 0 ? powers[0] : null;
   }
 
 }

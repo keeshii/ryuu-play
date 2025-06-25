@@ -1,5 +1,5 @@
 import { State, Player, ResolvePromptAction, GameMessage, ChooseAttackPrompt,
-  PokemonCard, CardType, Attack } from '@ptcg/common';
+  PokemonCard, CardType, Attack, PowerType } from '@ptcg/common';
 import { ChooseAttackPromptResolver } from './choose-attack-prompt-resolver';
 import {
   allSimpleTactics,
@@ -93,7 +93,7 @@ describe('ChooseAttackPromptResolver', () => {
       cost: [],
       text: ''
     }];
-    prompt.options.blocked = [{ index: 0, attack: 'Attack 1' }];
+    prompt.options.blocked = [{ index: 0, name: 'Attack 1' }];
 
     // when
     const action = resolver.resolvePrompt(state, player, prompt) as ResolvePromptAction;
@@ -117,7 +117,7 @@ describe('ChooseAttackPromptResolver', () => {
       cost: [],
       text: ''
     }];
-    prompt.options.blocked = [{ index: 0, attack: 'Attack 1' }];
+    prompt.options.blocked = [{ index: 0, name: 'Attack 1' }];
 
     // when
     const action = resolver.resolvePrompt(state, player, prompt) as ResolvePromptAction;
@@ -126,4 +126,170 @@ describe('ChooseAttackPromptResolver', () => {
     expect(action instanceof ResolvePromptAction).toBeTruthy();
     expect(action.result).toBeNull();
   });
+
+  it('Should prefer attacks over powers', () => {
+    // given
+    prompt.cards[0].powers = [{
+      powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
+      name: 'Power 1',
+      text: 'text'
+    }];
+    prompt.cards[0].attacks = [{
+      name: 'Attack 1',
+      damage: '10',
+      cost: [],
+      text: ''
+    }];
+
+    prompt.options.enableAbility.useWhenInPlay = true;
+
+    // when
+    const action = resolver.resolvePrompt(state, player, prompt) as ResolvePromptAction;
+    const result: Attack = action.result;
+
+    // then
+    expect(action instanceof ResolvePromptAction).toBeTruthy();
+    expect(result).toEqual({
+      name: 'Attack 1',
+      damage: '10',
+      cost: [],
+      text: ''
+    });
+  });
+
+  it('Should choose power, when no attacks available', () => {
+    // given
+    prompt.cards[0].powers = [{
+      powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
+      name: 'Power 1',
+      text: 'text'
+    }];
+    prompt.cards[0].attacks = [{
+      name: 'Attack 1',
+      damage: '10',
+      cost: [],
+      text: ''
+    }];
+
+    prompt.options.enableAttack = false;
+    prompt.options.enableAbility.useWhenInPlay = true;
+
+    // when
+    const action = resolver.resolvePrompt(state, player, prompt) as ResolvePromptAction;
+    const result: Attack = action.result;
+
+    // then
+    expect(action instanceof ResolvePromptAction).toBeTruthy();
+    expect(result).toEqual({
+      powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
+      name: 'Power 1',
+      text: 'text'
+    });
+  });
+
+  it('Should choose power with longest text', () => {
+    // given
+    prompt.cards[0].powers = [{
+      powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
+      name: 'Power 1',
+      text: 'Long text'
+    }, {
+      powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
+      name: 'Power 2',
+      text: 'Very long text'
+    }, {
+      powerType: PowerType.POKEPOWER,
+      useFromDiscard: true,
+      name: 'Power 3',
+      text: 'text'
+    }];
+
+    prompt.options.enableAbility.useWhenInPlay = true;
+
+    // when
+    const action = resolver.resolvePrompt(state, player, prompt) as ResolvePromptAction;
+    const result: Attack = action.result;
+
+    // then
+    expect(action instanceof ResolvePromptAction).toBeTruthy();
+    expect(result).toEqual({
+      powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
+      name: 'Power 2',
+      text: 'Very long text'
+    });
+  });
+
+  it('Should not choose blocked power', () => {
+    // given
+    prompt.cards[0].powers = [{
+      powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
+      name: 'Power 1',
+      text: ''
+    }, {
+      powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
+      name: 'Power 2',
+      text: ''
+    }];
+
+    prompt.options.enableAbility.useWhenInPlay = true;
+    prompt.options.blocked.push({ index: 0, name: 'Power 2' });
+
+    // when
+    const action = resolver.resolvePrompt(state, player, prompt) as ResolvePromptAction;
+    const result: Attack = action.result;
+
+    // then
+    expect(action instanceof ResolvePromptAction).toBeTruthy();
+    expect(result).toEqual({
+      powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
+      name: 'Power 1',
+      text: ''
+    });
+  });
+
+  it('Should choose power triggered from valid source', () => {
+    // given
+    prompt.cards[0].powers = [{
+      powerType: PowerType.POKEPOWER,
+      useFromHand: false,
+      name: 'Power 1',
+      text: ''
+    }, {
+      powerType: PowerType.POKEPOWER,
+      useFromDiscard: true,
+      name: 'Power 2',
+      text: ''
+    }, {
+      powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
+      name: 'Power 5',
+      text: ''
+    }];
+
+    prompt.options.enableAbility.useFromHand = true;
+    prompt.options.enableAbility.useFromDiscard = true;
+
+    // when
+    const action = resolver.resolvePrompt(state, player, prompt) as ResolvePromptAction;
+    const result: Attack = action.result;
+
+    // then
+    expect(action instanceof ResolvePromptAction).toBeTruthy();
+    expect(result).toEqual({
+      powerType: PowerType.POKEPOWER,
+      useFromDiscard: true,
+      name: 'Power 2',
+      text: ''
+    });
+  });
+
 });

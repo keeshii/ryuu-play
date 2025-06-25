@@ -43,24 +43,36 @@ export class PromptChooseAttackComponent {
       return;
     }
 
-    const options = { enableAttack: true };
+    const enableAttack = this.prompt.options.enableAttack;
+    const enableAbility = this.prompt.options.enableAbility
+
+    const options = {
+      enableAttack,
+      enableAbility: {
+        useWhenInPlay: !!enableAbility.useWhenInPlay,
+        useFromHand: !!enableAbility.useFromHand,
+        useFromDiscard: !!enableAbility.useFromDiscard
+      }
+    };
+
     this.cardsBaseService.showCardInfo({ card, options })
       .then(result => {
-        if (!result || !result.attack) {
+        const name = result ? (result.ability || result.attack) : undefined;
+        if (!name) {
           return;
         }
+
         const gameId = this.gameState.gameId;
         const id = this.prompt.id;
-        const attack = result.attack;
 
         const blocked = this.prompt.options.blocked;
-        if (blocked.some(b => b.index === index && b.attack === attack)) {
+        if (blocked.some(b => b.index === index && b.name === name)) {
           const message = 'GAME_MESSAGES.' + this.prompt.options.blockedMessage;
           this.alertService.toast(this.translate.instant(message));
           return;
         }
 
-        this.gameService.resolvePrompt(gameId, id, { index, attack });
+        this.gameService.resolvePrompt(gameId, id, { index, name });
       });
   }
 

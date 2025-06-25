@@ -1,4 +1,5 @@
 import {
+  Attack,
   AttackEffect,
   CardTag,
   CardType,
@@ -86,8 +87,9 @@ export class MewEx extends PokemonCard {
           allowCancel: true,
           blocked,
         }),
-        attack => {
-          if (attack !== null) {
+        result => {
+          if (result !== null) {
+            const attack = result as Attack;
             const useAttackEffect = new UseAttackEffect(player, attack);
             store.reduceEffect(state, useAttackEffect);
           }
@@ -131,7 +133,7 @@ export class MewEx extends PokemonCard {
     player: Player
   ): {
     pokemonCards: PokemonCard[];
-    blocked: { index: number; attack: string }[];
+    blocked: { index: number; name: string }[];
   } {
     const opponent = StateUtils.getOpponent(state, player);
 
@@ -140,7 +142,7 @@ export class MewEx extends PokemonCard {
     const energyMap = checkProvidedEnergyEffect.energyMap;
 
     const pokemonCards: PokemonCard[] = [];
-    const blocked: { index: number; attack: string }[] = [];
+    const blocked: { index: number; name: string }[] = [];
     opponent.forEachPokemon(PlayerType.TOP_PLAYER, (pokemonSlot, card) => {
       this.checkAttack(state, store, player, card, energyMap, pokemonCards, blocked);
     });
@@ -158,7 +160,7 @@ export class MewEx extends PokemonCard {
     card: PokemonCard,
     energyMap: EnergyMap[],
     pokemonCards: PokemonCard[],
-    blocked: { index: number; attack: string }[]
+    blocked: { index: number; name: string }[]
   ) {
     // No need to include Mew Ex to the list
     if (card instanceof MewEx) {
@@ -173,7 +175,7 @@ export class MewEx extends PokemonCard {
     pokemonCards.push(card);
     card.attacks.forEach(attack => {
       if (!attacks.includes(attack)) {
-        blocked.push({ index, attack: attack.name });
+        blocked.push({ index, name: attack.name });
       }
     });
   }
