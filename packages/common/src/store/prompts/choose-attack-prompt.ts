@@ -82,7 +82,7 @@ export class ChooseAttackPrompt extends Prompt<Attack | Power> {
     return attackOrPower;
   }
 
-  public validate(result: Attack | null): boolean {
+  public validate(result: Attack | Power | null): boolean {
     if (result === null) {
       return this.options.allowCancel;  // operation cancelled
     }
@@ -90,8 +90,8 @@ export class ChooseAttackPrompt extends Prompt<Attack | Power> {
     const blocked = this.options.blocked.map(b => {
       const card = this.cards[b.index];
       if (card) {
-        const items = [...card.powers, ...card.attacks];
-        return items.find(a => a.name === b.name);
+        return card.powers.find(a => a.name === b.name)
+          || card.attacks.find(a => a.name === b.name);
       }
     });
 
@@ -99,7 +99,8 @@ export class ChooseAttackPrompt extends Prompt<Attack | Power> {
       return false;
     }
 
-    return this.cards.some(c => c.attacks.includes(result));
+    return this.cards.some(c => c.powers.includes(result as Power)
+      || c.attacks.includes(result as Attack));
   }
 
 }

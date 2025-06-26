@@ -1,5 +1,5 @@
 import { State, Player, ResolvePromptAction, GameMessage, ChooseAttackPrompt,
-  PokemonCard, CardType, Attack, PowerType } from '@ptcg/common';
+  PokemonCard, CardType, Attack, PowerType, Power } from '@ptcg/common';
 import { ChooseAttackPromptResolver } from './choose-attack-prompt-resolver';
 import {
   allSimpleTactics,
@@ -178,7 +178,7 @@ describe('ChooseAttackPromptResolver', () => {
 
     // when
     const action = resolver.resolvePrompt(state, player, prompt) as ResolvePromptAction;
-    const result: Attack = action.result;
+    const result: Power = action.result;
 
     // then
     expect(action instanceof ResolvePromptAction).toBeTruthy();
@@ -213,7 +213,7 @@ describe('ChooseAttackPromptResolver', () => {
 
     // when
     const action = resolver.resolvePrompt(state, player, prompt) as ResolvePromptAction;
-    const result: Attack = action.result;
+    const result: Power = action.result;
 
     // then
     expect(action instanceof ResolvePromptAction).toBeTruthy();
@@ -244,7 +244,7 @@ describe('ChooseAttackPromptResolver', () => {
 
     // when
     const action = resolver.resolvePrompt(state, player, prompt) as ResolvePromptAction;
-    const result: Attack = action.result;
+    const result: Power = action.result;
 
     // then
     expect(action instanceof ResolvePromptAction).toBeTruthy();
@@ -280,7 +280,7 @@ describe('ChooseAttackPromptResolver', () => {
 
     // when
     const action = resolver.resolvePrompt(state, player, prompt) as ResolvePromptAction;
-    const result: Attack = action.result;
+    const result: Power = action.result;
 
     // then
     expect(action instanceof ResolvePromptAction).toBeTruthy();

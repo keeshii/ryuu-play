@@ -95,7 +95,7 @@ export class MysteriousFossil extends TrainerCard implements PokemonCard {
       });
     }
 
-    // Block retreat for Clefairy Doll
+    // Block retreat
     if (effect instanceof RetreatEffect && effect.player.active.getPokemonCard() === this) {
       throw new GameError(GameMessage.BLOCKED_BY_EFFECT);
     }
