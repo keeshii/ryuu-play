@@ -67,7 +67,7 @@ export class Slowbro extends PokemonCard {
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
       const player = effect.player;
-      const pokemonSlot = StateUtils.findPokemonSlot(state, this);
+      const pokemonSlot = StateUtils.findPokemonSlot(state, effect.card);
 
       if (pokemonSlot === undefined
         || pokemonSlot.specialConditions.includes(SpecialCondition.ASLEEP)
@@ -79,14 +79,28 @@ export class Slowbro extends PokemonCard {
       const maxAllowedDamage: DamageMap[] = [];
       const blockedFrom: CardTarget[] = [];
       const blockedTo: CardTarget[] = [];
-      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (pokemonSlot, card, target) => {
-        if (pokemonSlot.getPokemonCard() !== this) {
-          blockedTo.push(target);
-        }
+      let hasPokemonWithDamage = false;
+      let hasSlowbroHpLeft = false;
+      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (pokemonSlot, pokemonCard, target) => {
         const checkHpEffect = new CheckHpEffect(player, pokemonSlot);
         store.reduceEffect(state, checkHpEffect);
         maxAllowedDamage.push({ target, damage: checkHpEffect.hp - 10 });
+        if (pokemonCard === effect.card) {
+          blockedFrom.push(target);
+          if (pokemonSlot.damage < checkHpEffect.hp - 10) {
+            hasSlowbroHpLeft = true;
+          }
+        } else {
+          blockedTo.push(target);
+          if (pokemonSlot.damage > 0) {
+            hasPokemonWithDamage = true;
+          }
+        }
       });
+
+      if (!hasSlowbroHpLeft || !hasPokemonWithDamage) {
+        throw new GameError(GameMessage.CANNOT_USE_POWER);
+      }
 
       return store.prompt(
         state,

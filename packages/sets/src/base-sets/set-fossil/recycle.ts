@@ -12,12 +12,15 @@ import {
   TrainerType,
 } from '@ptcg/common';
 
-function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
+function* playCard(next: Function, store: StoreLike, state: State, self: Recycle, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
 
   if (player.discard.cards.length === 0) {
     throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
   }
+
+  // We will discard this card after prompt confirmation
+  effect.preventDefault = true;
 
   let flipResult = false;
   yield store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
@@ -26,6 +29,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   });
 
   if (!flipResult) {
+    player.hand.moveCardTo(self, player.discard);
     return state;
   }
 
@@ -44,6 +48,9 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
       next();
     }
   );
+
+  // Discard the trainer card
+  player.hand.moveCardTo(self, player.discard);
 
   // Operation canceled by the user
   if (recovered.length === 0) {
@@ -74,7 +81,7 @@ export class Recycle extends TrainerCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
-      const generator = playCard(() => generator.next(), store, state, effect);
+      const generator = playCard(() => generator.next(), store, state, this, effect);
       return generator.next().value;
     }
 

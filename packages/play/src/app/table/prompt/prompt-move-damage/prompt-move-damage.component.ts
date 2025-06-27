@@ -56,7 +56,8 @@ export class PromptMoveDamageComponent implements OnChanges {
   }
 
   public onCardClick(item: PokemonItem) {
-    if (this.pokemonData.matchesTarget(item, this.blockedFrom)) {
+    if (this.pokemonData.matchesTarget(item, this.blockedFrom)
+      && this.pokemonData.matchesTarget(item, this.blockedTo)) {
       return;
     }
     this.pokemonData.unselectAll();
@@ -112,6 +113,10 @@ export class PromptMoveDamageComponent implements OnChanges {
 
     const target = this.selectedItem.target;
     const cardList = this.selectedItem.pokemonSlot;
+
+    const isBlockedFrom = this.pokemonData.matchesTarget(this.selectedItem, this.blockedFrom);
+    const isBlockedTo = this.pokemonData.matchesTarget(this.selectedItem, this.blockedTo);
+
     const damageMap = this.maxDamageMap.find(d => {
       return d.target.player === target.player
         && d.target.slot === target.slot
@@ -134,12 +139,20 @@ export class PromptMoveDamageComponent implements OnChanges {
         && i.target.slot === target.slot
         && i.target.index === target.index;
     });
+    const initialDamage: number | undefined = initial && initial.damage;
+
+    if (isBlockedFrom && cardList.damage <= initialDamage) {
+      isRemoveDisabled = true;
+    }
+
+    if (isBlockedTo && cardList.damage >= initialDamage) {
+      isAddDisabled = true;
+    }
+
     const results = this.buildDamageTransfers(this.pokemonData);
     const transfers = results.length + Math.round(this.damage / 10);
-    if (transfers >= this.max && initial !== undefined) {
-      if (initial.damage >= cardList.damage) {
-        isRemoveDisabled = true;
-      }
+    if (transfers >= this.max && initialDamage >= cardList.damage) {
+      isRemoveDisabled = true;
     }
 
     this.isAddDisabled = isAddDisabled;
@@ -173,7 +186,7 @@ export class PromptMoveDamageComponent implements OnChanges {
 
     const results: DamageTransfer[] = [];
     const len = Math.min(fromItems.length, toItems.length);
-    for (let i = 0; i < len; i++ ) {
+    for (let i = 0; i < len; i++) {
       results.push({ from: fromItems[i].target, to: toItems[i].target });
     }
 
