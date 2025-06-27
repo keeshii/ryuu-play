@@ -6,6 +6,7 @@ import {
   Effect,
   EndTurnEffect,
   GameError,
+  GameLog,
   GameMessage,
   PokemonCard,
   Stage,
@@ -77,11 +78,12 @@ export class Poliwhirl extends PokemonCard {
 
       return store.prompt(
         state,
-        new ChooseAttackPrompt(player.id, GameMessage.CHOOSE_ATTACK_TO_COPY, [pokemonCard], {
+        new ChooseAttackPrompt(player.id, GameMessage.CHOOSE_ATTACK_TO_DISABLE, [pokemonCard], {
           allowCancel: true,
         }),
         attack => {
           if (attack !== null) {
+            store.log(state, GameLog.LOG_PLAYER_DISABLED_ATTACK, { name: player.name, attack: attack.name });
             const markerName = this.AMNESIA_MARKER.replace('{name}', attack.name);
             opponent.active.marker.addMarker(markerName, this);
           }
