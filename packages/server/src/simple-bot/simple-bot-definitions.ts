@@ -26,6 +26,8 @@ import { OrderCardsPromptResolver } from './prompt-resolver/order-cards-prompt-r
 import { PutDamagePromptResolver } from './prompt-resolver/put-damage-prompt-resolver';
 import { SelectPromptResolver } from './prompt-resolver/select-prompt-resolver';
 import { BotFlipMode, BotShuffleMode } from '@ptcg/common';
+import { PlayFossilTactic } from './simple-tactics/play-fossil-tactic';
+import { UseTrainerInPlayTactic } from './simple-tactics/use-trainer-in-play-tactic';
 
 export const defaultStateScores = {
   hand: {
@@ -118,6 +120,7 @@ export const allPromptResolvers: PromptResolverList = [
 export const allSimpleTactics: SimpleTacticList = [
   EvolveTactic,
   PlayBasicTactic,
+  PlayFossilTactic,
   AttachEnergyTactic,
   AttachToolTactic,
   UseDiscardAbilityTactic,
@@ -126,6 +129,7 @@ export const allSimpleTactics: SimpleTacticList = [
   PlaySupporterTactic,
   UseAbilityTactic,
   UseStadiumTactic,
+  UseTrainerInPlayTactic,
   RetreatTactic,
   AttackTactic
 ];
