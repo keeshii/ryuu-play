@@ -1,17 +1,13 @@
 import {
   Effect,
+  GameError,
+  GameMessage,
   State,
   StoreLike,
   TrainerCard,
   TrainerEffect,
   TrainerType,
 } from '@ptcg/common';
-
-function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
-  // const player = effect.player;
-  // const opponent = StateUtils.getOpponent(state, player);
-  return state;
-}
 
 export class DoubleFullHeal extends TrainerCard {
   public trainerType: TrainerType = TrainerType.ITEM;
@@ -26,8 +22,16 @@ export class DoubleFullHeal extends TrainerCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
-      const generator = playCard(() => generator.next(), store, state, effect);
-      return generator.next().value;
+      const player = effect.player;
+
+      if (player.active.specialConditions.length === 0) {
+        throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
+      }
+
+      const conditions = player.active.specialConditions.slice();
+      conditions.forEach(condition => {
+        player.active.removeSpecialCondition(condition);
+      });
     }
 
     return state;

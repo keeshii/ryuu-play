@@ -1,12 +1,22 @@
 import {
+  AddSpecialConditionsEffect,
   AttackEffect,
   CardType,
+  ChoosePokemonPrompt,
   Effect,
+  GameError,
+  GameMessage,
+  HealTargetEffect,
+  PlayerType,
   PokemonCard,
   PowerEffect,
   PowerType,
+  RetreatEffect,
+  SlotType,
+  SpecialCondition,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -57,16 +67,59 @@ export class Cradily extends PokemonCard {
   public fullName: string = 'Cradily SS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
-      return state;
+    // Block retreat for opponent's Pokemon.
+    if (effect instanceof RetreatEffect) {
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      if (opponent.active.getPokemonCard() !== this) {
+        return state;
+      }
+
+      // Try to reduce PowerEffect, to check if something is blocking our ability
+      try {
+        const powerEffect = new PowerEffect(opponent, this.powers[0], this);
+        store.reduceEffect(state, powerEffect);
+      } catch {
+        return state;
+      }
+
+      throw new GameError(GameMessage.BLOCKED_BY_ABILITY);
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+      const hasBench = opponent.bench.some(b => b.pokemons.cards.length > 0);
+
+      if (hasBench === false) {
+        return state;
+      }
+
+      return store.prompt(
+        state,
+        new ChoosePokemonPrompt(
+          player.id,
+          GameMessage.CHOOSE_POKEMON_TO_SWITCH,
+          PlayerType.TOP_PLAYER,
+          [SlotType.BENCH],
+          { allowCancel: true }
+        ),
+        targets => {
+          if (targets && targets.length > 0) {
+            opponent.switchPokemon(targets[0]);
+          }
+          const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.POISONED]);
+          store.reduceEffect(state, specialConditionEffect);
+        }
+      );
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+      const healEffect = new HealTargetEffect(effect, 20);
+      healEffect.target = player.active;
+      return store.reduceEffect(state, healEffect);
     }
 
     return state;

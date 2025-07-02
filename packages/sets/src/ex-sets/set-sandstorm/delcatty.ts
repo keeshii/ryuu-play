@@ -2,9 +2,11 @@ import {
   AttackEffect,
   CardType,
   Effect,
+  EnergyType,
   PokemonCard,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -48,7 +50,23 @@ export class Delcatty extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      let energies = 0;
+      player.active.energies.cards.forEach(card => {
+        if (card.energyType === EnergyType.BASIC) {
+          energies += 1;
+        }
+      });
+
+      opponent.active.energies.cards.forEach(card => {
+        if (card.energyType === EnergyType.BASIC) {
+          energies += 1;
+        }
+      });
+
+      effect.damage = energies * 10;
     }
 
     return state;

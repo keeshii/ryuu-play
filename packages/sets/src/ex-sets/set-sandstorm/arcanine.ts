@@ -1,12 +1,21 @@
 import {
+  AfterDamageEffect,
   AttackEffect,
+  Card,
   CardType,
+  CheckProvidedEnergyEffect,
+  CoinFlipPrompt,
+  DiscardCardsEffect,
   Effect,
+  GameMessage,
+  GamePhase,
   PokemonCard,
   PowerEffect,
   PowerType,
+  SpecialCondition,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -51,12 +60,52 @@ export class Arcanine extends PokemonCard {
   public fullName: string = 'Arcanine SS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
-      return state;
+    if (effect instanceof AfterDamageEffect && effect.target.pokemons.cards.includes(this)) {
+      const player = effect.player;
+      const targetPlayer = StateUtils.findOwner(state, effect.target);
+
+      // No damage, or damage done by itself, or Carvanha is not active
+      if (effect.damage <= 0 || player === targetPlayer || targetPlayer.active !== effect.target) {
+        return state;
+      }
+
+      // Pokemon is evolved, Not an attack
+      if (effect.target.getPokemonCard() !== this || state.phase !== GamePhase.ATTACK) {
+        return state;
+      }
+
+      // Try to reduce PowerEffect, to check if something is blocking our ability
+      try {
+        const powerEffect = new PowerEffect(player, this.powers[0], this);
+        store.reduceEffect(state, powerEffect);
+      } catch {
+        return state;
+      }
+
+      // Add condition to the Attacking Pokemon
+      player.active.addSpecialCondition(SpecialCondition.BURNED);
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+        if (result === false) {
+          const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);
+          state = store.reduceEffect(state, checkProvidedEnergy);
+
+          const cards: Card[] = [];
+          checkProvidedEnergy.energyMap.forEach(em => {
+            if (em.provides.includes(CardType.FIRE) || em.provides.includes(CardType.ANY)) {
+              cards.push(em.card);
+            }
+          });
+
+          const discardEnergy = new DiscardCardsEffect(effect, cards);
+          discardEnergy.target = player.active;
+          store.reduceEffect(state, discardEnergy);
+        }
+      });
     }
 
     return state;

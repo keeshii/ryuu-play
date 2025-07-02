@@ -4,8 +4,10 @@ import {
   CardType,
   Effect,
   PokemonCard,
+  PutDamageEffect,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -56,11 +58,25 @@ export class AggronEx extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      if (opponent.active.damage) {
+        effect.damage += 30;
+      }
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      opponent.bench.forEach(benched => {
+        if (benched.pokemons.cards.length > 0) {
+          const dealDamage = new PutDamageEffect(effect, 10);
+          dealDamage.target = benched;
+          store.reduceEffect(state, dealDamage);
+        }
+      });
     }
 
     return state;

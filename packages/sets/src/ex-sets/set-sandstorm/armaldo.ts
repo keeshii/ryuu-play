@@ -1,11 +1,15 @@
 import {
   CardType,
   Effect,
+  GameError,
+  GameMessage,
+  PlaySupporterEffect,
   PokemonCard,
   PowerEffect,
   PowerType,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -48,8 +52,25 @@ export class Armaldo extends PokemonCard {
   public fullName: string = 'Armaldo SS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
-      return state;
+    // Block playing Pokemon Tools from hand
+    if (effect instanceof PlaySupporterEffect) {
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      // Check each player active Pokemon
+      if (player.active.getPokemonCard() !== this && opponent.active.getPokemonCard() !== this) {
+        return state;
+      }
+
+      // Try to reduce PowerEffect, to check if something is blocking our ability
+      try {
+        const powerEffect = new PowerEffect(player, this.powers[0], this);
+        store.reduceEffect(state, powerEffect);
+      } catch {
+        return state;
+      }
+
+      throw new GameError(GameMessage.BLOCKED_BY_ABILITY);
     }
 
     return state;

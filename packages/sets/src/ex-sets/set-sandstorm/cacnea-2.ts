@@ -3,10 +3,13 @@ import {
   CardType,
   Effect,
   PokemonCard,
+  SpecialCondition,
   Stage,
   State,
   StoreLike,
 } from '@ptcg/common';
+
+import { commonAttacks } from '../../common';
 
 export class Cacnea2 extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -37,8 +40,10 @@ export class Cacnea2 extends PokemonCard {
   public fullName: string = 'Cacnea SS-2';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    const flipSpecialConditions = commonAttacks.flipSpecialConditions(this, store, state, effect);
+    
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      return flipSpecialConditions.use(effect, [SpecialCondition.POISONED]);
     }
 
     return state;

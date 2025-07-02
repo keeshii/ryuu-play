@@ -1,10 +1,15 @@
 import {
   AttackEffect,
   CardType,
+  CheckHpEffect,
+  CoinFlipPrompt,
   Effect,
+  GameMessage,
   PokemonCard,
+  PutCountersEffect,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -50,11 +55,30 @@ export class Dusclops extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      return store.prompt(
+        state,
+        [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)],
+        results => {
+          if (results.includes(false)) {
+            return;
+          }
+          const checkHpEffect = new CheckHpEffect(player, opponent.active);
+          store.reduceEffect(state, checkHpEffect);
+          const hpLeft = Math.max(0, checkHpEffect.hp - opponent.active.damage);
+
+          // Put Counters equal to HP left (Knock Out)
+          const putCountersEffect = new PutCountersEffect(effect, hpLeft);
+          store.reduceEffect(state, putCountersEffect);
+        }
+      );
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const putCountersEffect = new PutCountersEffect(effect, 50);
+      store.reduceEffect(state, putCountersEffect);
     }
 
     return state;

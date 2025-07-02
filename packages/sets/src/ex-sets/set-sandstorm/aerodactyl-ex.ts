@@ -1,13 +1,21 @@
 import {
+  AddSpecialConditionsEffect,
+  AttachPokemonToolEffect,
   AttackEffect,
   CardTag,
   CardType,
+  CheckTableStateEffect,
   Effect,
+  GameError,
+  GameMessage,
+  PlayerType,
   PokemonCard,
   PowerEffect,
   PowerType,
+  SpecialCondition,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -64,12 +72,64 @@ export class AerodactylEx extends PokemonCard {
   public fullName: string = 'Aerodactyl ex SS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
+
+    // Block playing Pokemon Tools from hand
+    if (effect instanceof AttachPokemonToolEffect) {
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      let isAerodactylInPlay = false;
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, (pokemonSlot, pokemonCard) => {
+        if (pokemonCard === this) {
+          isAerodactylInPlay = true;
+        }
+      });
+
+      if (!isAerodactylInPlay) {
+        return state;
+      }
+
+      // Try to reduce PowerEffect, to check if something is blocking our ability
+      try {
+        const powerEffect = new PowerEffect(player, this.powers[0], this);
+        store.reduceEffect(state, powerEffect);
+      } catch {
+        return state;
+      }
+
+      throw new GameError(GameMessage.BLOCKED_BY_ABILITY);
+    }
+
+    // Discards Pokemon Tools in play
+    if (effect instanceof CheckTableStateEffect) {
+      const pokemonSlot = StateUtils.findPokemonSlot(state, this);
+      if (!pokemonSlot || pokemonSlot.getPokemonCard() !== this) {
+        return state;
+      }
+
+      const player = StateUtils.findOwner(state, pokemonSlot);
+      const opponent = StateUtils.getOpponent(state, player);
+
+      // Try to reduce PowerEffect, to check if something is blocking our ability
+      try {
+        const powerEffect = new PowerEffect(player, this.powers[0], this);
+        store.reduceEffect(state, powerEffect);
+      } catch {
+        return state;
+      }
+
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, pokemonSlot => {
+        const toolCards = pokemonSlot.getTools();
+        pokemonSlot.trainers.moveCardsTo(toolCards, opponent.discard);
+      });
+      
       return state;
     }
 
+    // Attack effects
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.CONFUSED]);
+      store.reduceEffect(state, specialConditionEffect);
     }
 
     return state;

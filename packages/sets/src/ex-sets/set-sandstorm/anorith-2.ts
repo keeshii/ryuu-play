@@ -8,6 +8,8 @@ import {
   StoreLike,
 } from '@ptcg/common';
 
+import { commonAttacks } from '../../common';
+
 export class Anorith2 extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
 
@@ -45,8 +47,11 @@ export class Anorith2 extends PokemonCard {
   public fullName: string = 'Anorith SS-2';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+
+    const flipDamageTimes = commonAttacks.flipDamageTimes(this, store, state, effect);
+
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      return flipDamageTimes.use(effect, 2, 40);
     }
 
     return state;

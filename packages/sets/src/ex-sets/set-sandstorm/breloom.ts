@@ -1,8 +1,10 @@
 import {
+  AddSpecialConditionsEffect,
   AttackEffect,
   CardType,
   Effect,
   PokemonCard,
+  SpecialCondition,
   Stage,
   State,
   StoreLike,
@@ -45,11 +47,20 @@ export class Breloom extends PokemonCard {
   public fullName: string = 'Breloom SS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
+      const player = effect.player;
+      const opponentEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.CONFUSED]);
+      store.reduceEffect(state, opponentEffect);
+
+      const playerEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.CONFUSED]);
+      playerEffect.target = player.active;
+      store.reduceEffect(state, playerEffect);
       return state;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
+      effect.ignoreResistance = true;
       return state;
     }
 

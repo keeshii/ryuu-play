@@ -1,12 +1,70 @@
 import {
+  AttachEnergyPrompt,
   AttackEffect,
   CardType,
+  ChoosePokemonPrompt,
+  CoinFlipPrompt,
   Effect,
+  EnergyCard,
+  EnergyType,
+  GameMessage,
+  PlayerType,
   PokemonCard,
+  PutDamageEffect,
+  SlotType,
   Stage,
   State,
+  StateUtils,
   StoreLike,
+  SuperType,
 } from '@ptcg/common';
+
+function* usePlasma(next: Function, store: StoreLike, state: State, effect: AttackEffect): IterableIterator<State> {
+  const player = effect.player;
+
+  const hasEnergyInDiscard = player.discard.cards.some(c => {
+    return c instanceof EnergyCard && c.energyType === EnergyType.BASIC && c.provides.includes(CardType.LIGHTNING);
+  });
+  if (!hasEnergyInDiscard) {
+    return state;
+  }
+
+  let flipResult = false;
+  yield store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+    flipResult = result;
+    next();
+  });
+
+  if (!flipResult) {
+    return state;
+  }
+
+  return store.prompt(
+    state,
+    new AttachEnergyPrompt(
+      player.id,
+      GameMessage.ATTACH_ENERGY_TO_BENCH,
+      player.discard,
+      PlayerType.BOTTOM_PLAYER,
+      [SlotType.ACTIVE],
+      {
+        superType: SuperType.ENERGY,
+        energyType: EnergyType.BASIC,
+        provides: [CardType.LIGHTNING],
+      },
+      { allowCancel: false, min: 1, max: 1 }
+    ),
+    transfers => {
+      transfers = transfers || [];
+      for (const transfer of transfers) {
+        const target = StateUtils.getTarget(state, player, transfer.to);
+        player.discard.moveCardTo(transfer.card, target.energies);
+      }
+    }
+  );
+
+  return state;
+}
 
 export class Electabuzz extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -50,11 +108,37 @@ export class Electabuzz extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const generator = usePlasma(() => generator.next(), store, state, effect);
+      return generator.next().value;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      const hasBenched = opponent.bench.some(b => b.pokemons.cards.length > 0);
+      if (!hasBenched) {
+        return state;
+      }
+
+      return store.prompt(
+        state,
+        new ChoosePokemonPrompt(
+          player.id,
+          GameMessage.CHOOSE_POKEMON_TO_DAMAGE,
+          PlayerType.TOP_PLAYER,
+          [SlotType.BENCH],
+          { allowCancel: false }
+        ),
+        targets => {
+          if (!targets || targets.length === 0) {
+            return;
+          }
+          const damageEffect = new PutDamageEffect(effect, 40);
+          damageEffect.target = targets[0];
+          store.reduceEffect(state, damageEffect);
+        }
+      );
     }
 
     return state;

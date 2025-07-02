@@ -1,12 +1,21 @@
 import {
+  AfterDamageEffect,
   AttackEffect,
   CardType,
+  ChoosePokemonPrompt,
   Effect,
+  GameMessage,
+  GamePhase,
+  PlayerType,
   PokemonCard,
   PowerEffect,
   PowerType,
+  PutCountersEffect,
+  SlotType,
+  SpecialCondition,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -53,12 +62,59 @@ export class Cacturne extends PokemonCard {
   public fullName: string = 'Cacturne SS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
-      return state;
+    if (effect instanceof AfterDamageEffect && effect.target.pokemons.cards.includes(this)) {
+      const player = effect.player;
+      const targetPlayer = StateUtils.findOwner(state, effect.target);
+
+      // No damage, or damage done by itself, or Carvanha is not active
+      if (effect.damage <= 0 || player === targetPlayer || targetPlayer.active !== effect.target) {
+        return state;
+      }
+
+      // Pokemon is evolved, Not an attack
+      if (effect.target.getPokemonCard() !== this || state.phase !== GamePhase.ATTACK) {
+        return state;
+      }
+
+      // Try to reduce PowerEffect, to check if something is blocking our ability
+      try {
+        const powerEffect = new PowerEffect(player, this.powers[0], this);
+        store.reduceEffect(state, powerEffect);
+      } catch {
+        return state;
+      }
+
+      // Add condition to the Attacking Pokemon
+      player.active.addSpecialCondition(SpecialCondition.POISONED);
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      const hasBenched = opponent.bench.some(b => b.pokemons.cards.length > 0);
+      if (!hasBenched) {
+        return state;
+      }
+
+      return store.prompt(
+        state,
+        new ChoosePokemonPrompt(
+          player.id,
+          GameMessage.CHOOSE_POKEMON_TO_DAMAGE,
+          PlayerType.TOP_PLAYER,
+          [SlotType.BENCH],
+          { allowCancel: false }
+        ),
+        targets => {
+          if (!targets || targets.length === 0) {
+            return;
+          }
+          const putCountersEffect = new PutCountersEffect(effect, 40);
+          putCountersEffect.target = targets[0];
+          store.reduceEffect(state, putCountersEffect);
+        }
+      );
     }
 
     return state;

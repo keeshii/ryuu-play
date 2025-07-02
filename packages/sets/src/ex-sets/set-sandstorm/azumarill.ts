@@ -1,12 +1,22 @@
 import {
+  AttachEnergyPrompt,
   AttackEffect,
   CardType,
+  CheckProvidedEnergyEffect,
   Effect,
+  EnergyCard,
+  EnergyType,
+  GameMessage,
+  PlayerType,
   PokemonCard,
+  SlotType,
   Stage,
   State,
+  StateUtils,
   StoreLike,
+  SuperType,
 } from '@ptcg/common';
+import { commonAttacks } from '../../common';
 
 export class Azumarill extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -49,12 +59,56 @@ export class Azumarill extends PokemonCard {
   public fullName: string = 'Azumarill SS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    const flipDamageTimes = commonAttacks.flipDamageTimes(this, store, state, effect);
+
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
+      const player = effect.player;
+
+      const hasEnergyInHand = player.hand.cards.some(c => {
+        return c instanceof EnergyCard && c.energyType === EnergyType.BASIC && c.provides.includes(CardType.WATER);
+      });
+      if (!hasEnergyInHand) {
+        return state;
+      }
+
+      state = store.prompt(
+        state,
+        new AttachEnergyPrompt(
+          player.id,
+          GameMessage.ATTACH_ENERGY_TO_ACTIVE,
+          player.hand,
+          PlayerType.BOTTOM_PLAYER,
+          [SlotType.ACTIVE],
+          {
+            superType: SuperType.ENERGY,
+            energyType: EnergyType.BASIC,
+            provides: [CardType.WATER],
+          },
+          { allowCancel: true, min: 1 }
+        ),
+        transfers => {
+          transfers = transfers || [];
+          // cancelled by user
+          if (transfers.length === 0) {
+            return;
+          }
+          for (const transfer of transfers) {
+            const target = StateUtils.getTarget(state, player, transfer.to);
+            player.discard.moveCardTo(transfer.card, target.energies);
+          }
+        }
+      );
+
       return state;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+
+      const checkProvidedEnergyEffect = new CheckProvidedEnergyEffect(player);
+      store.reduceEffect(state, checkProvidedEnergyEffect);
+      const energyCount = checkProvidedEnergyEffect.energyMap.reduce((left, p) => left + p.provides.length, 0);
+      return flipDamageTimes.use(effect, energyCount, 30);
     }
 
     return state;
