@@ -2,10 +2,14 @@ import {
   AttackEffect,
   CardTag,
   CardType,
+  CheckProvidedEnergyEffect,
   Effect,
+  PlayerType,
   PokemonCard,
+  PutCountersEffect,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -51,11 +55,33 @@ export class GardevoirEx extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+      const damage = opponent.hand.cards.length * 10;
+
+      const putCountersEffect = new PutCountersEffect(effect, damage);
+      store.reduceEffect(state, putCountersEffect);
       return state;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      let energies = 0;
+      player.forEachPokemon(PlayerType.TOP_PLAYER, pokemonSlot => {
+        const checkProvidedEnergy = new CheckProvidedEnergyEffect(player, pokemonSlot);
+        state = store.reduceEffect(state, checkProvidedEnergy);
+        energies += checkProvidedEnergy.energyMap.reduce((left, p) => left + p.provides.length, 0);
+      });
+
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, pokemonSlot => {
+        const checkProvidedEnergy = new CheckProvidedEnergyEffect(opponent, pokemonSlot);
+        state = store.reduceEffect(state, checkProvidedEnergy);
+        energies += checkProvidedEnergy.energyMap.reduce((left, p) => left + p.provides.length, 0);
+      });
+
+      effect.damage = energies * 10;
     }
 
     return state;

@@ -2,12 +2,16 @@ import {
   AttackEffect,
   CardTag,
   CardType,
+  CheckProvidedEnergyEffect,
   Effect,
+  HealTargetEffect,
   PokemonCard,
   Stage,
   State,
   StoreLike,
 } from '@ptcg/common';
+
+import { commonAttacks } from '../../common';
 
 export class KabutopsEx extends PokemonCard {
   public tags = [CardTag.POKEMON_EX];
@@ -51,12 +55,21 @@ export class KabutopsEx extends PokemonCard {
   public fullName: string = 'Kabutops ex SS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    const flipDamageTimes = commonAttacks.flipDamageTimes(this, store, state, effect);
+    
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+      const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);
+      state = store.reduceEffect(state, checkProvidedEnergy);
+      const energyCount = checkProvidedEnergy.energyMap.reduce((left, p) => left + p.provides.length, 0);
+      return flipDamageTimes.use(effect, Math.min(3, energyCount), 40);
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+      const healEffect = new HealTargetEffect(effect, 20);
+      healEffect.target = player.active;
+      return store.reduceEffect(state, healEffect);
     }
 
     return state;

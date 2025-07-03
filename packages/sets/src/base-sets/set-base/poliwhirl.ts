@@ -1,20 +1,14 @@
 import {
   AttackEffect,
   CardType,
-  ChooseAttackPrompt,
-  CoinFlipPrompt,
   Effect,
-  EndTurnEffect,
-  GameError,
-  GameLog,
-  GameMessage,
   PokemonCard,
   Stage,
   State,
-  StateUtils,
   StoreLike,
-  UseAttackEffect,
 } from '@ptcg/common';
+
+import { commonAttacks } from '../../common';
 
 export class Poliwhirl extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -57,60 +51,16 @@ export class Poliwhirl extends PokemonCard {
   public readonly AMNESIA_MARKER = 'AMNESIA_MARKER_{name}';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof UseAttackEffect) {
-      const player = effect.player;
-      const markerName = this.AMNESIA_MARKER.replace('{name}', effect.attack.name);
 
-      if (player.active.marker.hasMarker(markerName, this)) {
-        throw new GameError(GameMessage.BLOCKED_BY_EFFECT);
-      }
-    }
+    const amnesia = commonAttacks.amnesia(this, store, state, effect);
+    const flipDamageTimes = commonAttacks.flipDamageTimes(this, store, state, effect);
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      const player = effect.player;
-      const opponent = StateUtils.getOpponent(state, player);
-
-      // Choose an opponent's Pokemon attack
-      const pokemonCard = opponent.active.getPokemonCard();
-      if (pokemonCard === undefined || pokemonCard.attacks.length === 0) {
-        return state;
-      }
-
-      return store.prompt(
-        state,
-        new ChooseAttackPrompt(player.id, GameMessage.CHOOSE_ATTACK_TO_DISABLE, [pokemonCard], {
-          allowCancel: true,
-        }),
-        attack => {
-          if (attack !== null) {
-            store.log(state, GameLog.LOG_PLAYER_DISABLED_ATTACK, { name: player.name, attack: attack.name });
-            const markerName = this.AMNESIA_MARKER.replace('{name}', attack.name);
-            opponent.active.marker.addMarker(markerName, this);
-          }
-        }
-      );
+      return amnesia.use(effect);
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      const player = effect.player;
-      return store.prompt(
-        state,
-        [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)],
-        results => {
-          let heads: number = 0;
-          results.forEach(r => {
-            heads += r ? 1 : 0;
-          });
-          effect.damage = 30 * heads;
-        }
-      );
-    }
-
-    if (effect instanceof EndTurnEffect) {
-      const markers = effect.player.active.marker.markers.filter(c => c.source === this);
-      for (const marker of markers) {
-        effect.player.active.marker.removeMarker(marker.name, marker.source);
-      }
+      return flipDamageTimes.use(effect, 2, 30);
     }
 
     return state;

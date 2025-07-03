@@ -1,12 +1,17 @@
 import {
   AttackEffect,
   CardType,
+  CheckProvidedEnergyEffect,
   Effect,
   PokemonCard,
+  SpecialCondition,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
+
+import { commonAttacks } from '../../common';
 
 export class Kirlia extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -47,12 +52,27 @@ export class Kirlia extends PokemonCard {
   public fullName: string = 'Kirlia SS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    const flipSpecialConditions = commonAttacks.flipSpecialConditions(this, store, state, effect);
+
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      return flipSpecialConditions.use(effect, [SpecialCondition.PARALYZED]);
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      const checkPlayerEnergy = new CheckProvidedEnergyEffect(player);
+      state = store.reduceEffect(state, checkPlayerEnergy);
+      const playerEnergies = checkPlayerEnergy.energyMap.reduce((left, p) => left + p.provides.length, 0);
+
+      const checkOpponentEnergy = new CheckProvidedEnergyEffect(opponent);
+      state = store.reduceEffect(state, checkOpponentEnergy);
+      const opponentEnergies = checkPlayerEnergy.energyMap.reduce((left, p) => left + p.provides.length, 0);
+
+      if (playerEnergies !== opponentEnergies) {
+        effect.damage = 30;
+      }
     }
 
     return state;

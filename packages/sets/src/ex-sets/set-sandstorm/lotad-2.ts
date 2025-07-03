@@ -2,6 +2,7 @@ import {
   AttackEffect,
   CardType,
   Effect,
+  HealTargetEffect,
   PokemonCard,
   Stage,
   State,
@@ -44,7 +45,10 @@ export class Lotad2 extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+      const healEffect = new HealTargetEffect(effect, 10);
+      healEffect.target = player.active;
+      return store.reduceEffect(state, healEffect);
     }
 
     return state;

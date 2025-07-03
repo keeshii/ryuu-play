@@ -1,5 +1,6 @@
 
 export * from './additional-energy-damage';
+export * from './amnesia';
 export * from './call-for-family';
 export * from './cant-retreat';
 export * from './flip-damage-times';

@@ -5,6 +5,7 @@ import {
   PokemonCard,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -50,11 +51,17 @@ export class Fearow extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
+      effect.damage = 20;
       return state;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      if (opponent.active.damage) {
+        effect.damage += 20;
+      }
     }
 
     return state;

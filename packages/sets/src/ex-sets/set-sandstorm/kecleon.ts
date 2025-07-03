@@ -1,14 +1,19 @@
 import {
   AttackEffect,
   CardType,
+  CheckPokemonTypeEffect,
   Effect,
+  EnergyType,
   PokemonCard,
   PowerEffect,
   PowerType,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
+
+import { commonAttacks } from '../../common';
 
 export class Kecleon extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -47,12 +52,39 @@ export class Kecleon extends PokemonCard {
   public fullName: string = 'Kecleon SS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
+    const flipDamageTimes = commonAttacks.flipDamageTimes(this, store, state, effect);
+
+    if (effect instanceof CheckPokemonTypeEffect && effect.target.pokemons.cards.includes(this)) {
+
+      if (effect.target.getPokemonCard() !== this) {
+        return state;
+      }
+
+      const player = StateUtils.findOwner(state, effect.target);
+
+      // Try to reduce PowerEffect, to check if something is blocking our ability
+      try {
+        const powerEffect = new PowerEffect(player, this.powers[0], this);
+        store.reduceEffect(state, powerEffect);
+      } catch {
+        return state;
+      }
+
+      const basicEnergies = effect.target.energies.cards.filter(c => c.energyType === EnergyType.BASIC);
+      const energyTypes: CardType[] = [];
+      for (const card of basicEnergies) {
+        for (const energyType of card.provides) {
+          if (!energyTypes.includes(energyType)) {
+            energyTypes.push(energyType);
+          }
+        }
+      }
+      effect.cardTypes = energyTypes;
       return state;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      return flipDamageTimes.use(effect, 2, 20);
     }
 
     return state;

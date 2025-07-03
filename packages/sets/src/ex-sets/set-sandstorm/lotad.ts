@@ -1,11 +1,16 @@
 import {
+  BetweenTurnsEffect,
   CardType,
   Effect,
+  HealEffect,
+  PlayerType,
   PokemonCard,
+  PokemonSlot,
   PowerEffect,
   PowerType,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -46,7 +51,39 @@ export class Lotad extends PokemonCard {
   public fullName: string = 'Lotad SS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
+    if (effect instanceof BetweenTurnsEffect) {
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+      let targetPlayer = player;
+      let target: PokemonSlot | undefined;
+
+      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (slot, pokemonCard) => {
+        if (pokemonCard === this && slot.damage >= 10) {
+          targetPlayer = player;
+          target = slot;
+        }
+      });
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, (slot, pokemonCard) => {
+        if (pokemonCard === this && slot.damage >= 10) {
+          targetPlayer = opponent;
+          target = slot;
+        }
+      });
+
+      if (!target) {
+        return state;
+      }
+
+      // Try to reduce PowerEffect, to check if something is blocking our ability
+      try {
+        const powerEffect = new PowerEffect(player, this.powers[0], this);
+        store.reduceEffect(state, powerEffect);
+      } catch {
+        return state;
+      }
+
+      const healEffect = new HealEffect(targetPlayer, target, 10);
+      store.reduceEffect(state, healEffect);
       return state;
     }
 

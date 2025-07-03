@@ -8,6 +8,8 @@ import {
   StoreLike,
 } from '@ptcg/common';
 
+import { commonAttacks } from '../../common';
+
 export class Lileep2 extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
 
@@ -47,8 +49,10 @@ export class Lileep2 extends PokemonCard {
   public fullName: string = 'Lileep SS-2';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    const amnesia = commonAttacks.amnesia(this, store, state, effect);
+
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      return amnesia.use(effect);
     }
 
     return state;

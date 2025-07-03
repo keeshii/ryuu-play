@@ -1,12 +1,19 @@
 import {
   AttackEffect,
+  Card,
   CardType,
+  CheckProvidedEnergyEffect,
+  ConfirmPrompt,
+  DiscardCardsEffect,
   Effect,
+  GameMessage,
   PokemonCard,
   Stage,
   State,
   StoreLike,
 } from '@ptcg/common';
+
+import { commonAttacks } from '../../common';
 
 export class Jolteon extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -51,12 +58,33 @@ export class Jolteon extends PokemonCard {
   public fullName: string = 'Jolteon SS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    const flipDamageTimes = commonAttacks.flipDamageTimes(this, store, state, effect);
+    
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      return flipDamageTimes.use(effect, 2, 20);
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+
+      return store.prompt(state, new ConfirmPrompt(effect.player.id, GameMessage.WANT_TO_DISCARD_ENERGY), result => {
+        if (result) {
+          const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);
+          store.reduceEffect(state, checkProvidedEnergy);
+
+          const cards: Card[] = [];
+          checkProvidedEnergy.energyMap.forEach(em => {
+            if (em.provides.includes(CardType.LIGHTNING) || em.provides.includes(CardType.ANY)) {
+              cards.push(em.card);
+            }
+          });
+
+          effect.damage = 70;
+          const discardEnergy = new DiscardCardsEffect(effect, cards);
+          discardEnergy.target = player.active;
+          return store.reduceEffect(state, discardEnergy);
+        }
+      });
     }
 
     return state;

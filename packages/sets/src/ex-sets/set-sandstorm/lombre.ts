@@ -7,6 +7,7 @@ import {
   State,
   StoreLike,
 } from '@ptcg/common';
+import { commonAttacks } from '../../common';
 
 export class Lombre extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -47,12 +48,15 @@ export class Lombre extends PokemonCard {
   public fullName: string = 'Lombre SS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    const surprise = commonAttacks.surprise(this, store, state, effect);
+    const flipDamageTimes = commonAttacks.flipDamageTimes(this, store, state, effect);
+
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      return surprise.use(effect);
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      return flipDamageTimes.use(effect, 3, 20);
     }
 
     return state;
