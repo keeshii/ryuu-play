@@ -7,11 +7,7 @@ import {
   TrainerType,
 } from '@ptcg/common';
 
-function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
-  // const player = effect.player;
-  // const opponent = StateUtils.getOpponent(state, player);
-  return state;
-}
+import { commonTrainers } from '../../common';
 
 export class RareCandy extends TrainerCard {
   public trainerType: TrainerType = TrainerType.ITEM;
@@ -27,9 +23,10 @@ export class RareCandy extends TrainerCard {
     'in your hand, put that card on the Basic Pokémon. (This counts as evolving that Pokémon.)';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    const rareCandy = commonTrainers.rareCandy(this, store, state, effect);
+
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
-      const generator = playCard(() => generator.next(), store, state, effect);
-      return generator.next().value;
+      rareCandy.playCard(effect);
     }
 
     return state;

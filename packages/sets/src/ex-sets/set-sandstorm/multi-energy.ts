@@ -1,5 +1,6 @@
 import {
   CardType,
+  CheckProvidedEnergyEffect,
   Effect,
   EnergyCard,
   EnergyType,
@@ -24,6 +25,20 @@ export class MultiEnergy extends EnergyCard {
     'provides C Energy when attached to a Pokémon that already has Special Energy cards attached to it.';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    if (effect instanceof CheckProvidedEnergyEffect && effect.source.energies.cards.includes(this)) {
+
+      // Special Energy card already attached
+      if (effect.source.energies.cards.some(e => e.energyType === EnergyType.SPECIAL && e !== this)) {
+        return state;
+      }
+
+      effect.energyMap.forEach(item => {
+        if (item.card === this) {
+          item.provides = [CardType.ANY];
+        }
+      });
+    }
+
     return state;
   }
 }

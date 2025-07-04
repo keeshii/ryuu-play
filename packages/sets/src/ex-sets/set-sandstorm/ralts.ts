@@ -1,10 +1,14 @@
 import {
+  AddSpecialConditionsEffect,
   AttackEffect,
   CardType,
+  CheckProvidedEnergyEffect,
   Effect,
   PokemonCard,
+  SpecialCondition,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -44,10 +48,19 @@ export class Ralts extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.ASLEEP]);
+      store.reduceEffect(state, specialConditionEffect);
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      const checkProvidedEnergy = new CheckProvidedEnergyEffect(opponent);
+      state = store.reduceEffect(state, checkProvidedEnergy);
+      const energyCount = checkProvidedEnergy.energyMap.reduce((left, p) => left + p.provides.length, 0);
+
+      effect.damage = energyCount * 10;
       return state;
     }
 

@@ -1,12 +1,17 @@
 import {
   AttackEffect,
   CardType,
+  CoinFlipPrompt,
   Effect,
+  GameMessage,
   PokemonCard,
+  SpecialCondition,
   Stage,
   State,
   StoreLike,
 } from '@ptcg/common';
+
+import { commonAttacks } from '../../common';
 
 export class Nuzleaf2 extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -45,12 +50,20 @@ export class Nuzleaf2 extends PokemonCard {
   public fullName: string = 'Nuzleaf SS-2';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    const flipSpecialConditions = commonAttacks.flipSpecialConditions(this, store, state, effect);
+    
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      return flipSpecialConditions.use(effect, [SpecialCondition.PARALYZED]);
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+        if (result === false) {
+          effect.damage = 0;
+        }
+      });
     }
 
     return state;

@@ -1,10 +1,19 @@
 import {
+  AddSpecialConditionsEffect,
   AttackEffect,
+  Card,
+  CardTag,
   CardType,
+  CheckProvidedEnergyEffect,
+  ChooseEnergyPrompt,
+  DiscardCardsEffect,
   Effect,
+  GameMessage,
   PokemonCard,
+  SpecialCondition,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -44,10 +53,47 @@ export class Seviper extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+
+      const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);
+      state = store.reduceEffect(state, checkProvidedEnergy);
+
+      return store.prompt(
+        state,
+        new ChooseEnergyPrompt(
+          player.id,
+          GameMessage.CHOOSE_ENERGIES_TO_DISCARD,
+          checkProvidedEnergy.energyMap,
+          [CardType.GRASS],
+          { allowCancel: true }
+        ),
+        energy => {
+          const cards: Card[] = (energy || []).map(e => e.card);
+          if (cards.length === 0) {
+            return;
+          }
+          const discardEnergy = new DiscardCardsEffect(effect, cards);
+          discardEnergy.target = player.active;
+          store.reduceEffect(state, discardEnergy);
+
+          const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.POISONED]);
+          store.reduceEffect(state, specialConditionEffect);
+        }
+      );
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+      const defending = opponent.active.getPokemonCard();
+
+      if (defending && defending.tags.includes(CardTag.POKEMON_EX)) {
+        const specialConditionEffect = new AddSpecialConditionsEffect(effect, [
+          SpecialCondition.ASLEEP,
+          SpecialCondition.POISONED
+        ]);
+        store.reduceEffect(state, specialConditionEffect);
+      }
       return state;
     }
 

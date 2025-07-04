@@ -117,7 +117,7 @@ export class Azurill extends PokemonCard {
           player.id,
           GameMessage.CHOOSE_POKEMON_TO_EVOLVE,
           player.hand,
-          { superType: SuperType.POKEMON, name: 'Pikachu' },
+          { superType: SuperType.POKEMON, name: 'Marill' },
           { min: 1, max: 1, allowCancel: true }
         ),
         selected => {

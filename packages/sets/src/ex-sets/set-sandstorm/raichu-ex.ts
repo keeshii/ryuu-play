@@ -2,12 +2,16 @@ import {
   AttackEffect,
   CardTag,
   CardType,
+  DiscardCardsEffect,
   Effect,
   PokemonCard,
+  SpecialCondition,
   Stage,
   State,
   StoreLike,
 } from '@ptcg/common';
+
+import { commonAttacks } from '../../common';
 
 export class RaichuEx extends PokemonCard {
   public tags = [CardTag.POKEMON_EX];
@@ -48,12 +52,18 @@ export class RaichuEx extends PokemonCard {
   public fullName: string = 'Raichu ex SS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    const flipSpecialConditions = commonAttacks.flipSpecialConditions(this, store, state, effect);
+    
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      return flipSpecialConditions.use(effect, [SpecialCondition.CONFUSED]);
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+      const cards = player.active.energies.cards.slice();
+      const discardEnergy = new DiscardCardsEffect(effect, cards);
+      discardEnergy.target = player.active;
+      store.reduceEffect(state, discardEnergy);
     }
 
     return state;

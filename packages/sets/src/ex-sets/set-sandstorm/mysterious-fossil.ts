@@ -1,20 +1,32 @@
 import {
+  Attack,
+  CardTag,
+  CardType,
+  CheckTableStateEffect,
+  ConfirmPrompt,
   Effect,
+  GameError,
+  GameMessage,
+  PlayPokemonEffect,
+  PokemonCard,
+  Power,
+  Resistance,
+  RetreatEffect,
+  Stage,
   State,
+  StateUtils,
   StoreLike,
   TrainerCard,
   TrainerEffect,
   TrainerType,
+  UseTrainerInPlayEffect,
+  Weakness,
 } from '@ptcg/common';
 
-function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
-  // const player = effect.player;
-  // const opponent = StateUtils.getOpponent(state, player);
-  return state;
-}
-
-export class MysteriousFossil extends TrainerCard {
+export class MysteriousFossil extends TrainerCard implements PokemonCard {
   public trainerType: TrainerType = TrainerType.ITEM;
+
+  public tags = [CardTag.FOSSIL];
 
   public set: string = 'SS';
 
@@ -28,10 +40,79 @@ export class MysteriousFossil extends TrainerCard {
     'by any Special Conditions. If Mysterious is Knocked Out, it doesn\'t count as a Knocked Out Pokémon. (Discard ' +
     'it anyway.) At any time during your turn before your attack, you may discard Mysterious Fossil from play.';
 
+  public useWhenInPlay = true;
+
+  public attacks: Attack[] = [];
+
+  public powers: Power[] = [];
+
+  public resistance: Resistance[] = [];
+
+  public weakness: Weakness[] = [];
+
+  public hp = 10;
+
+  public retreat: CardType[] = [];
+
+  public stage: Stage = Stage.BASIC;
+
+  public evolvesFrom = '';
+
+  public cardTypes: CardType[] = [CardType.COLORLESS];
+
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
-      const generator = playCard(() => generator.next(), store, state, effect);
-      return generator.next().value;
+      const player = effect.player;
+      const pokemonSlot = effect.target;
+
+      if (!pokemonSlot || pokemonSlot.pokemons.cards.length > 0) {
+        throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
+      }
+
+      // Don't discard this card, put it into play instead
+      effect.preventDefault = true;
+
+      // Play this card as Pokemon
+      const playPokemonEffect = new PlayPokemonEffect(player, this, pokemonSlot);
+      store.reduceEffect(state, playPokemonEffect);
+      return state;
+    }
+
+    if (effect instanceof UseTrainerInPlayEffect && effect.trainerCard === this) {
+      const player = effect.player;
+      const pokemonSlot = StateUtils.findPokemonSlot(state, this);
+
+      if (!pokemonSlot || pokemonSlot.getPokemonCard() !== this) {
+        throw new GameError(GameMessage.CANNOT_USE_POWER);
+      }
+
+      return store.prompt(state, new ConfirmPrompt(effect.player.id, GameMessage.WANT_TO_DISCARD_POKEMON), result => {
+        if (result) {
+          pokemonSlot.moveTo(player.discard);
+          pokemonSlot.clearEffects();
+        }
+      });
+    }
+
+    // Block retreat
+    if (effect instanceof RetreatEffect && effect.player.active.getPokemonCard() === this) {
+      throw new GameError(GameMessage.BLOCKED_BY_EFFECT);
+    }
+
+    // Remove all special conditions from this Pokemon
+    if (effect instanceof CheckTableStateEffect) {
+      state.players.forEach(player => {
+        if (player.active.specialConditions.length === 0) {
+          return;
+        }
+        if (player.active.getPokemonCard() === this) {
+          const conditions = player.active.specialConditions.slice();
+          conditions.forEach(condition => {
+            player.active.removeSpecialCondition(condition);
+          });
+        }
+      });
+      return state;
     }
 
     return state;

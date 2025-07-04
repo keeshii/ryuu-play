@@ -1,10 +1,16 @@
 import {
   AttackEffect,
   CardType,
+  ChoosePokemonPrompt,
   Effect,
+  GameMessage,
+  PlayerType,
   PokemonCard,
+  PutCountersEffect,
+  SlotType,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -48,7 +54,32 @@ export class Shiftry2 extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      const hasBenched = opponent.bench.some(b => b.pokemons.cards.length > 0);
+      if (!hasBenched) {
+        return state;
+      }
+
+      return store.prompt(
+        state,
+        new ChoosePokemonPrompt(
+          player.id,
+          GameMessage.CHOOSE_POKEMON_TO_DAMAGE,
+          PlayerType.TOP_PLAYER,
+          [SlotType.BENCH],
+          { allowCancel: false }
+        ),
+        targets => {
+          if (!targets || targets.length === 0) {
+            return;
+          }
+          const putCountersEffect = new PutCountersEffect(effect, 40);
+          putCountersEffect.target = targets[0];
+          store.reduceEffect(state, putCountersEffect);
+        }
+      );
     }
 
     return state;

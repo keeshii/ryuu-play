@@ -7,6 +7,7 @@ import {
   State,
   StoreLike,
 } from '@ptcg/common';
+import { commonAttacks } from '../../common';
 
 export class Pelipper extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -45,8 +46,10 @@ export class Pelipper extends PokemonCard {
   public fullName: string = 'Pelipper SS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    const additionalEnergyDamage = commonAttacks.additionalEnergyDamage(this, store, state, effect);
+    
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      return additionalEnergyDamage.use(effect, CardType.WATER, 10, 2);
     }
 
     return state;

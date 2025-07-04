@@ -3,10 +3,12 @@ import {
   CardType,
   Effect,
   PokemonCard,
+  PutDamageEffect,
   Stage,
   State,
   StoreLike,
 } from '@ptcg/common';
+import { commonAttacks } from '../../common';
 
 export class Sandslash extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -48,12 +50,23 @@ export class Sandslash extends PokemonCard {
   public fullName: string = 'Sandslash SS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    const cantRetreat = commonAttacks.cantRetreat(this, store, state, effect);
+    
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      effect.damage = 20;
+      return cantRetreat.use(effect);
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+
+      player.bench.forEach(benched => {
+        if (benched.pokemons.cards.length > 0) {
+          const dealDamage = new PutDamageEffect(effect, 10);
+          dealDamage.target = benched;
+          store.reduceEffect(state, dealDamage);
+        }
+      });
     }
 
     return state;

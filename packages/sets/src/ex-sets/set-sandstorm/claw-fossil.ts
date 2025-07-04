@@ -61,7 +61,7 @@ export class ClawFossil extends TrainerCard implements PokemonCard {
 
   public weakness: Weakness[] = [];
 
-  public hp = 10;
+  public hp = 40;
 
   public retreat: CardType[] = [];
 

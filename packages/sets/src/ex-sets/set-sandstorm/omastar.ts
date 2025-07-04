@@ -2,11 +2,15 @@ import {
   AttackEffect,
   CardType,
   Effect,
+  MoveCardsEffect,
+  PlayerType,
   PokemonCard,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
+import { commonAttacks } from '../../common';
 
 export class Omastar extends PokemonCard {
   public stage: Stage = Stage.STAGE_2;
@@ -49,12 +53,25 @@ export class Omastar extends PokemonCard {
   public fullName: string = 'Omastar SS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    const additionalEnergyDamage = commonAttacks.additionalEnergyDamage(this, store, state, effect);
+
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      opponent.forEachPokemon(PlayerType.TOP_PLAYER, (pokemonSlot, pokemonCard, cardTarget) => {
+        if (pokemonSlot.pokemons.cards.length > 1) {
+          const moveCardsEffect = new MoveCardsEffect(effect, [pokemonCard], opponent.hand);
+          moveCardsEffect.target = pokemonSlot;
+          store.reduceEffect(state, moveCardsEffect);
+        }
+      });
+
       return state;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      return additionalEnergyDamage.use(effect, CardType.WATER, 20, 2);
     }
 
     return state;

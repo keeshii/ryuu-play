@@ -1,12 +1,60 @@
 import {
   AttackEffect,
+  Card,
   CardType,
+  ChooseCardsPrompt,
+  ChoosePokemonPrompt,
   Effect,
+  GameMessage,
+  PlayerType,
   PokemonCard,
+  ShuffleDeckPrompt,
+  SlotType,
   Stage,
   State,
+  StateUtils,
   StoreLike,
+  SuperType,
+  TrainerType,
 } from '@ptcg/common';
+
+function* useScam(next: Function, store: StoreLike, state: State, effect: AttackEffect): IterableIterator<State> {
+  const player = effect.player;
+  const opponent = StateUtils.getOpponent(state, player);
+
+  if (opponent.hand.cards.length === 0) {
+    return state;
+  }
+
+  let cards: Card[] = [];
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_DECK,
+      opponent.hand,
+      { superType: SuperType.TRAINER, trainerType: TrainerType.SUPPORTER },
+      { allowCancel: true, min: 1, max: 1 }
+    ),
+    results => {
+      cards = results || [];
+      next();
+    }
+  );
+
+  if (cards.length === 0) {
+    return state;
+  }
+
+  opponent.hand.moveCardsTo(cards, opponent.deck);
+
+  return store.prompt(state, new ShuffleDeckPrompt(opponent.id), order => {
+    opponent.deck.applyOrder(order);
+
+    // Draw card after shuffle
+    opponent.deck.moveTo(opponent.hand, 1);
+  });
+}
 
 export class Mawile extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -48,11 +96,34 @@ export class Mawile extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const generator = useScam(() => generator.next(), store, state, effect);
+      return generator.next().value;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+      const hasBench = opponent.bench.some(b => b.pokemons.cards.length > 0);
+
+      if (hasBench === false) {
+        return state;
+      }
+
+      return store.prompt(
+        state,
+        new ChoosePokemonPrompt(
+          player.id,
+          GameMessage.CHOOSE_POKEMON_TO_SWITCH,
+          PlayerType.TOP_PLAYER,
+          [SlotType.BENCH],
+          { allowCancel: false }
+        ),
+        targets => {
+          if (targets && targets.length > 0) {
+            opponent.switchPokemon(targets[0]);
+          }
+        }
+      );
     }
 
     return state;

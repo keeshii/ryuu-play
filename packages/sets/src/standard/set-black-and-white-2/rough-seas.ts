@@ -27,6 +27,8 @@ export class RoughSeas extends TrainerCard {
     'Once during each player\'s turn, that player may heal 30 damage ' +
     'from each of his or her W Pokémon and L Pokémon.';
 
+  public useWhenInPlay = true;
+
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof UseStadiumEffect && StateUtils.getStadiumCard(state) === this) {
       const player = effect.player;
