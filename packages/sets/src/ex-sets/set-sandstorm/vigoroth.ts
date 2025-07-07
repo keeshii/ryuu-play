@@ -7,6 +7,7 @@ import {
   State,
   StoreLike,
 } from '@ptcg/common';
+import { commonMarkers } from '../../common';
 
 export class Vigoroth extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -45,7 +46,17 @@ export class Vigoroth extends PokemonCard {
   public fullName: string = 'Vigoroth SS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    const duringYourNextTurn = commonMarkers.duringYourNextTurn(this, store, state, effect);
+
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
+      duringYourNextTurn.setMarker(effect);
+      return state;
+    }
+
+    if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
+      if (duringYourNextTurn.hasMarker(effect)) {
+        effect.damage = 90;
+      }
       return state;
     }
 

@@ -62,6 +62,7 @@ export class Shiftry extends PokemonCard {
     {
       name: 'Fan Away',
       powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
       text:
         'Once during your turn (before your attack), you may flip a coin. If heads, return 1 Energy card attached ' +
         'to the Defending Pokémon to your opponent\'s hand. This power can\'t be used if Shiftry is affected by a ' +

@@ -67,6 +67,7 @@ export class Elekid extends PokemonCard {
     {
       name: 'Baby Evolution',
       powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
       text:
         'Once during your turn (before your attack), you may put Electabuzz from your hand onto Elekid (this counts ' +
         'as evolving Elekid) and remove all damage counters from Elekid.'

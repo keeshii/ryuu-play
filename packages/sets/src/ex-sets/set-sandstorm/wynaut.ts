@@ -1,6 +1,8 @@
 import {
   AttackEffect,
+  Card,
   CardType,
+  CheckProvidedEnergyEffect,
   ChooseCardsPrompt,
   Effect,
   EvolveEffect,
@@ -9,12 +11,59 @@ import {
   PokemonCard,
   PowerEffect,
   PowerType,
+  ShowCardsPrompt,
+  ShuffleDeckPrompt,
   Stage,
   State,
   StateUtils,
   StoreLike,
   SuperType,
 } from '@ptcg/common';
+
+function* useAlluringSmile(next: Function, store: StoreLike, state: State, effect: AttackEffect): IterableIterator<State> {
+  const player = effect.player;
+  const opponent = StateUtils.getOpponent(state, player);
+
+  if (player.deck.cards.length === 0) {
+    return state;
+  }
+
+  const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);
+  state = store.reduceEffect(state, checkProvidedEnergy);
+  const max = checkProvidedEnergy.energyMap.reduce((left, p) => left + p.provides.length, 0);
+
+  if (max === 0) {
+    return state;
+  }
+
+  let cards: Card[] = [];
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_HAND,
+      player.deck,
+      { superType: SuperType.POKEMON },
+      { min: 0, max, allowCancel: true }
+    ),
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
+
+  player.deck.moveCardsTo(cards, player.hand);
+
+  if (cards.length > 0) {
+    yield store.prompt(state, new ShowCardsPrompt(opponent.id, GameMessage.CARDS_SHOWED_BY_THE_OPPONENT, cards), () =>
+      next()
+    );
+  }
+
+  return store.prompt(state, new ShuffleDeckPrompt(player.id), order => {
+    player.deck.applyOrder(order);
+  });
+}
 
 export class Wynaut extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -27,6 +76,7 @@ export class Wynaut extends PokemonCard {
     {
       name: 'Baby Evolution',
       powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
       text:
         'Once during your turn (before your attack), you may put Wobbuffet from your hand onto Wynaut (this counts ' +
         'as evolving Wynaut), and remove all damage counters from Wynaut.'
@@ -94,7 +144,8 @@ export class Wynaut extends PokemonCard {
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const generator = useAlluringSmile(() => generator.next(), store, state, effect);
+      return generator.next().value;
     }
 
     return state;

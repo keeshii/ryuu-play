@@ -1,12 +1,15 @@
 import {
   AttackEffect,
   CardType,
+  CheckTableStateEffect,
   Effect,
   PokemonCard,
   PowerEffect,
   PowerType,
+  SpecialCondition,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -53,16 +56,47 @@ export class Zangoose extends PokemonCard {
   public fullName: string = 'Zangoose SS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
+    if (effect instanceof CheckTableStateEffect) {
+      const pokemonSlot = StateUtils.findPokemonSlot(state, this);
+      if (!pokemonSlot) {
+        return state;
+      }
+
+      const player = StateUtils.findOwner(state, pokemonSlot);
+      if (player.active !== pokemonSlot || !pokemonSlot.specialConditions.includes(SpecialCondition.POISONED)) {
+        return state;
+      }
+
+      // Try to reduce PowerEffect, to check if something is blocking our ability
+      try {
+        const powerEffect = new PowerEffect(player, this.powers[0], this);
+        store.reduceEffect(state, powerEffect);
+      } catch {
+        return state;
+      }
+
+      player.active.removeSpecialCondition(SpecialCondition.POISONED);
       return state;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      const defending = opponent.active.getPokemonCard();
+      if (defending && defending.name === 'Seviper') {
+        effect.damage += 30;
+      }
       return state;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      if (opponent.active.pokemons.cards.length > 1) {
+        effect.damage += 30;
+      }
     }
 
     return state;

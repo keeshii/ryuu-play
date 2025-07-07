@@ -1,16 +1,52 @@
 import {
+  Card,
+  ChooseCardsPrompt,
   Effect,
+  GameError,
+  GameMessage,
+  ShuffleDeckPrompt,
   State,
   StoreLike,
+  SuperType,
   TrainerCard,
   TrainerEffect,
   TrainerType,
 } from '@ptcg/common';
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
-  // const player = effect.player;
-  // const opponent = StateUtils.getOpponent(state, player);
-  return state;
+  const player = effect.player;
+  const pokemonCard = player.active.getPokemonCard() ;
+  let cards: Card[] = [];
+
+  if (player.deck.cards.length === 0 || !pokemonCard) {
+    throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
+  }
+
+  yield store.prompt(
+    state,
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_HAND,
+      player.deck,
+      { superType: SuperType.POKEMON, evolvesFrom: pokemonCard.name },
+      { min: 1, max: 1, allowCancel: true }
+    ),
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
+
+  if (cards.length > 0) {
+    // Evolve Pokemon
+    player.deck.moveCardsTo(cards, player.active.pokemons);
+    player.active.clearEffects();
+    player.active.pokemonPlayedTurn = state.turn;
+  }
+
+  return store.prompt(state, new ShuffleDeckPrompt(player.id), order => {
+    player.deck.applyOrder(order);
+  });
 }
 
 export class WallysTraining extends TrainerCard {

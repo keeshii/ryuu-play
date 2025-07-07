@@ -67,6 +67,7 @@ export class Azurill extends PokemonCard {
     {
       name: 'Baby Evolution',
       powerType: PowerType.POKEPOWER,
+      useWenInPlay: true,
       text:
         'Once during your turn (before your attack), you may put Marill from your hand onto Azurill (this counts as ' +
         'evolving Azurill), and remove all damage counters from Azurill.'

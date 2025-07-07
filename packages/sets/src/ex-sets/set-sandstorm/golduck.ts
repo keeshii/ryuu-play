@@ -31,6 +31,7 @@ export class Golduck extends PokemonCard {
     {
       name: 'Chaos Flash',
       powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
       text:
         'Once during your turn (before your attack), if Golduck is your Active Pokémon, you may flip a coin. If ' +
         'heads, the Defending Pokémon (choose 1 if there are 2) is now Confused. This power can\'t be used if ' +

@@ -1,12 +1,19 @@
 import {
+  AddSpecialConditionsEffect,
   AttackEffect,
   CardType,
+  CheckRetreatCostEffect,
+  CoinFlipPrompt,
   Effect,
+  GameMessage,
+  PlayerType,
   PokemonCard,
   PowerEffect,
   PowerType,
+  SpecialCondition,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -57,16 +64,53 @@ export class Volbeat extends PokemonCard {
   public fullName: string = 'Volbeat SS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
-      return state;
+    if (effect instanceof CheckRetreatCostEffect && effect.player.active.pokemons.cards.includes(this)) {
+      const player = effect.player;
+
+      if (player.active.getPokemonCard() !== this) {
+        return state;
+      }
+
+      let hasIllumise = false;
+      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (pokemonSlot, pokemonCard) => {
+        if (pokemonCard.name === 'Illumise') {
+          hasIllumise = true;
+        }
+      });
+
+      // Illumise not in play
+      if (!hasIllumise) {
+        return state;
+      }
+
+      // Try to reduce PowerEffect, to check if something is blocking our ability
+      try {
+        const powerEffect = new PowerEffect(player, this.powers[0], this);
+        store.reduceEffect(state, powerEffect);
+      } catch {
+        return state;
+      }
+
+      effect.cost = [];
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+
+      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+        const condition = result ? SpecialCondition.POISONED : SpecialCondition.ASLEEP;
+        const specialConditionEffect = new AddSpecialConditionsEffect(effect, [condition]);
+        store.reduceEffect(state, specialConditionEffect);
+      });
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return state;
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      if (opponent.active.specialConditions.length > 0) {
+        effect.damage += 20;
+      }
     }
 
     return state;

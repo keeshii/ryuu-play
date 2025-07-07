@@ -1,12 +1,16 @@
 import {
+  AbstractAttackEffect,
   AttackEffect,
+  CardTag,
   CardType,
   Effect,
   PokemonCard,
   PowerEffect,
   PowerType,
+  PutDamageEffect,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -47,12 +51,37 @@ export class Wobbuffet extends PokemonCard {
   public fullName: string = 'Wobbuffet SS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
+    if (effect instanceof AbstractAttackEffect && effect.target.pokemons.cards.includes(this)) {
+      const target = effect.target;
+      const targetPlayer = StateUtils.findOwner(state, target);
+
+      if (target.getPokemonCard() !== this || effect.source === effect.target) {
+        return state;
+      }
+
+      const pokemonCard = effect.source.getPokemonCard();
+      if (!pokemonCard || !pokemonCard.tags.includes(CardTag.POKEMON_EX)) {
+        return state;
+      }
+
+      // Try to reduce PowerEffect, to check if something is blocking our ability
+      try {
+        const powerEffect = new PowerEffect(targetPlayer, this.powers[0], this);
+        store.reduceEffect(state, powerEffect);
+      } catch {
+        return state;
+      }
+
+      effect.preventDefault = true;
       return state;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      const player = effect.player;
+
+      const dealDamage = new PutDamageEffect(effect, 10);
+      dealDamage.target = player.active;
+      store.reduceEffect(state, dealDamage);
     }
 
     return state;

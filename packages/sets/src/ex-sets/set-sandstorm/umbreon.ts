@@ -3,10 +3,12 @@ import {
   CardType,
   Effect,
   PokemonCard,
+  SpecialCondition,
   Stage,
   State,
   StoreLike,
 } from '@ptcg/common';
+import { commonAttacks } from '../../common';
 
 export class Umbreon extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -49,8 +51,10 @@ export class Umbreon extends PokemonCard {
   public fullName: string = 'Umbreon SS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    const flipSpecialConditions = commonAttacks.flipSpecialConditions(this, store, state, effect);
+
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return state;
+      return flipSpecialConditions.use(effect, [SpecialCondition.CONFUSED]);
     }
 
     return state;

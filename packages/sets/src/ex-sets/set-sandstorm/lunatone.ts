@@ -27,6 +27,7 @@ export class Lunatone extends PokemonCard {
     {
       name: 'Lunar Eclipse',
       powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
       text:
         'Once during your turn (before your attack), if Solrock is in play, you may use this power. Until the end ' +
         'of your turn, Lunatone\'s type is D. This power can\'t be used if Lunatone is affected by a Special ' +

@@ -84,6 +84,7 @@ export class Pichu extends PokemonCard {
     {
       name: 'Baby Evolution',
       powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
       text:
         'Once during your turn (before your attack), you may put Pikachu from your hand onto Pichu (this counts as ' +
         'evolving Pichu) and remove all damage counters from Pichu.'

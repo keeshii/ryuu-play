@@ -3,8 +3,10 @@ import {
   CardType,
   Effect,
   PokemonCard,
+  PutDamageEffect,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -52,10 +54,23 @@ export class Steelix extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
+      effect.damage += effect.player.active.damage;
       return state;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+
+      opponent.bench.forEach(benched => {
+        if (benched.pokemons.cards.length > 0) {
+          const dealDamage = new PutDamageEffect(effect, 20);
+          dealDamage.target = benched;
+          store.reduceEffect(state, dealDamage);
+        }
+      });
+
+      effect.damage = 20;
       return state;
     }
 
