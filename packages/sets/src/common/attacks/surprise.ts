@@ -5,6 +5,7 @@ import {
   Effect,
   GameMessage,
   PokemonCard,
+  ShowCardsPrompt,
   ShuffleDeckPrompt,
   State,
   StateUtils,
@@ -40,6 +41,12 @@ function* useSurprise(next: Function, store: StoreLike, state: State, effect: At
   );
 
   opponent.hand.moveCardsTo(cards, opponent.deck);
+
+  if (cards.length > 0) {
+    yield store.prompt(state, new ShowCardsPrompt(player.id, GameMessage.CARDS_SHOWED_BY_THE_OPPONENT, cards), () =>
+      next()
+    );
+  }
 
   return store.prompt(state, new ShuffleDeckPrompt(opponent.id), order => {
     opponent.deck.applyOrder(order);

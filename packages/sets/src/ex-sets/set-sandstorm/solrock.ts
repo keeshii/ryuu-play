@@ -109,11 +109,12 @@ export class Solrock extends PokemonCard {
         }
       });
 
-      if (hasEvolved) {
-        const player = effect.player;
-        player.deck.moveTo(player.hand, 3);
+      if (!hasEvolved) {
         return state;
       }
+
+      player.deck.moveTo(player.hand, 3);
+      return state;
     }
 
     if (effect instanceof CheckPokemonTypeEffect && effect.target.marker.hasMarker(this.SOLAR_ECLIPSE_MARKER, this)) {

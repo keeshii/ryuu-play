@@ -10,7 +10,6 @@ import {
   PokemonCard,
   PowerEffect,
   PowerType,
-  PutCountersEffect,
   SlotType,
   SpecialCondition,
   Stage,
@@ -90,12 +89,6 @@ export class Cacturne extends PokemonCard {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
-      const opponent = StateUtils.getOpponent(state, player);
-
-      const hasBenched = opponent.bench.some(b => b.pokemons.cards.length > 0);
-      if (!hasBenched) {
-        return state;
-      }
 
       return store.prompt(
         state,
@@ -103,16 +96,17 @@ export class Cacturne extends PokemonCard {
           player.id,
           GameMessage.CHOOSE_POKEMON_TO_DAMAGE,
           PlayerType.TOP_PLAYER,
-          [SlotType.BENCH],
+          [SlotType.ACTIVE, SlotType.BENCH],
           { allowCancel: false }
         ),
         targets => {
           if (!targets || targets.length === 0) {
             return;
           }
-          const putCountersEffect = new PutCountersEffect(effect, 40);
-          putCountersEffect.target = targets[0];
-          store.reduceEffect(state, putCountersEffect);
+          targets[0].damage += 40;
+          const afterDamage = new AfterDamageEffect(effect, 40);
+          afterDamage.target = targets[0];
+          state = store.reduceEffect(state, afterDamage);
         }
       );
     }

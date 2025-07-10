@@ -6,9 +6,11 @@ import {
   Effect,
   GameMessage,
   PokemonCard,
+  ShowCardsPrompt,
   ShuffleDeckPrompt,
   Stage,
   State,
+  StateUtils,
   StoreLike,
   SuperType,
 } from '@ptcg/common';
@@ -21,6 +23,7 @@ function* useFastEvolution(
   effect: AttackEffect,
 ): IterableIterator<State> {
   const player = effect.player;
+  const opponent = StateUtils.getOpponent(state, player);
 
   if (player.deck.cards.length === 0) {
     return state;
@@ -46,6 +49,12 @@ function* useFastEvolution(
   );
 
   player.deck.moveCardsTo(cards, player.hand);
+
+  if (cards.length > 0) {
+    yield store.prompt(state, new ShowCardsPrompt(opponent.id, GameMessage.CARDS_SHOWED_BY_THE_OPPONENT, cards), () =>
+      next()
+    );
+  }
 
   return store.prompt(state, new ShuffleDeckPrompt(player.id), order => {
     player.deck.applyOrder(order);

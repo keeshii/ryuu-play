@@ -1,5 +1,6 @@
 import {
   AttackEffect,
+  Card,
   CardType,
   ChooseCardsPrompt,
   DealDamageEffect,
@@ -8,11 +9,53 @@ import {
   EnergyType,
   GameMessage,
   PokemonCard,
+  ShowCardsPrompt,
   Stage,
   State,
+  StateUtils,
   StoreLike,
   SuperType,
 } from '@ptcg/common';
+
+function* useEnergyCatch(next: Function, store: StoreLike, state: State, effect: AttackEffect): IterableIterator<State> {
+  const player = effect.player;
+  const opponent = StateUtils.getOpponent(state, player);
+  let cards: Card[] = [];
+
+  const hasEnergyInDiscard = player.discard.cards.some(c => {
+    return c instanceof EnergyCard && c.energyType === EnergyType.BASIC;
+  });
+
+  if (!hasEnergyInDiscard) {
+    return state;
+  }
+
+  yield store.prompt(
+    state,
+    [
+      new ChooseCardsPrompt(
+        player.id,
+        GameMessage.CHOOSE_CARD_TO_HAND,
+        player.discard,
+        { superType: SuperType.ENERGY, energyType: EnergyType.BASIC },
+        { min: 1, max: 1, allowCancel: false }
+      ),
+    ],
+    selected => {
+      cards = selected || [];
+      next();
+    }
+  );
+
+  if (cards.length > 0) {
+    yield store.prompt(state, new ShowCardsPrompt(opponent.id, GameMessage.CARDS_SHOWED_BY_THE_OPPONENT, cards), () =>
+      next()
+    );
+  }
+
+  player.discard.moveCardsTo(cards, player.hand);
+  return state;
+}
 
 export class Skitty extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -50,32 +93,8 @@ export class Skitty extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      const player = effect.player;
-
-      const hasEnergyInDiscard = player.discard.cards.some(c => {
-        return c instanceof EnergyCard && c.energyType === EnergyType.BASIC;
-      });
-
-      if (!hasEnergyInDiscard) {
-        return state;
-      }
-
-      return store.prompt(
-        state,
-        [
-          new ChooseCardsPrompt(
-            player.id,
-            GameMessage.CHOOSE_CARD_TO_HAND,
-            player.discard,
-            { superType: SuperType.ENERGY, energyType: EnergyType.BASIC },
-            { min: 1, max: 1, allowCancel: false }
-          ),
-        ],
-        selected => {
-          const cards = selected || [];
-          player.discard.moveCardsTo(cards, player.hand);
-        }
-      );
+      const generator = useEnergyCatch(() => generator.next(), store, state, effect);
+      return generator.next().value;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {

@@ -49,13 +49,8 @@ export class Breloom extends PokemonCard {
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      const player = effect.player;
-      const opponentEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.CONFUSED]);
-      store.reduceEffect(state, opponentEffect);
-
-      const playerEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.CONFUSED]);
-      playerEffect.target = player.active;
-      store.reduceEffect(state, playerEffect);
+      const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.POISONED]);
+      store.reduceEffect(state, specialConditionEffect);
       return state;
     }
 
