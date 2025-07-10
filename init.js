@@ -36,7 +36,7 @@ cardManager.defineFormat('Standard', [
 
 cardManager.defineFormat('EX Sets', [
   exSets.setRubyAndSapphire,
-  // exSets.setSandstorm, // Not implemented yet
+  exSets.setSandstorm
 ]);
 
 cardManager.defineFormat('Base Sets', [

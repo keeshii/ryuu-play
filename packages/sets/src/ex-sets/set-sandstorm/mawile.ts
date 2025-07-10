@@ -116,7 +116,7 @@ export class Mawile extends PokemonCard {
           GameMessage.CHOOSE_POKEMON_TO_SWITCH,
           PlayerType.TOP_PLAYER,
           [SlotType.BENCH],
-          { allowCancel: false }
+          { allowCancel: true }
         ),
         targets => {
           if (targets && targets.length > 0) {

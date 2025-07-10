@@ -116,27 +116,26 @@ export class Electabuzz extends PokemonCard {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
 
-      const hasBenched = opponent.bench.some(b => b.pokemons.cards.length > 0);
-      if (!hasBenched) {
-        return state;
-      }
-
       return store.prompt(
         state,
         new ChoosePokemonPrompt(
           player.id,
           GameMessage.CHOOSE_POKEMON_TO_DAMAGE,
           PlayerType.TOP_PLAYER,
-          [SlotType.BENCH],
+          [SlotType.ACTIVE, SlotType.BENCH],
           { allowCancel: false }
         ),
-        targets => {
-          if (!targets || targets.length === 0) {
+        selected => {
+          const targets = selected || [];
+          if (targets.includes(opponent.active)) {
+            effect.damage = 40;
             return;
           }
-          const damageEffect = new PutDamageEffect(effect, 40);
-          damageEffect.target = targets[0];
-          store.reduceEffect(state, damageEffect);
+          targets.forEach(target => {
+            const damageEffect = new PutDamageEffect(effect, 40);
+            damageEffect.target = target;
+            store.reduceEffect(state, damageEffect);
+          });
         }
       );
     }

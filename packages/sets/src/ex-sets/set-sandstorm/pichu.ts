@@ -1,9 +1,8 @@
 import {
+  AttachEnergyPrompt,
   AttackEffect,
-  Card,
   CardType,
   ChooseCardsPrompt,
-  ChoosePokemonPrompt,
   Effect,
   EnergyCard,
   EnergyType,
@@ -21,57 +20,6 @@ import {
   StoreLike,
   SuperType,
 } from '@ptcg/common';
-
-
-function* useEnergyRetrieval(next: Function, store: StoreLike, state: State, effect: AttackEffect): IterableIterator<State> {
-  const player = effect.player;
-
-  const hasBasicEnergy = player.discard.cards
-    .some(c => c instanceof EnergyCard && c.energyType === EnergyType.BASIC);
-
-  if (!hasBasicEnergy) {
-    return state;
-  }
-
-  let cards: Card[] = [];
-  yield store.prompt(
-    state,
-    new ChooseCardsPrompt(
-      player.id,
-      GameMessage.CHOOSE_POKEMON_TO_EVOLVE,
-      player.hand,
-      { superType: SuperType.ENERGY, energyType: EnergyType.BASIC },
-      { min: 0, max: 2, allowCancel: false }
-    ),
-    selected => {
-      cards = selected || [];
-      next();
-    }
-  );
-
-  if (cards.length === 0) {
-    return state;
-  }
-
-  return store.prompt(
-    state,
-    new ChoosePokemonPrompt(
-      player.id,
-      GameMessage.CHOOSE_POKEMON_TO_ATTACH_CARDS,
-      PlayerType.BOTTOM_PLAYER,
-      [SlotType.ACTIVE, SlotType.BENCH],
-      { allowCancel: false }
-    ),
-    targets => {
-      if (!targets || targets.length === 0) {
-        return;
-      }
-      player.discard.moveCardsTo(cards, targets[0].energies);
-      targets[0].damage += cards.length * 10;
-    }
-  );
-
-}
 
 export class Pichu extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -152,8 +100,37 @@ export class Pichu extends PokemonCard {
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      const generator = useEnergyRetrieval(() => generator.next(), store, state, effect);
-      return generator.next().value;
+      const player = effect.player;
+
+      const hasBasicEnergy = player.discard.cards
+        .some(c => c instanceof EnergyCard && c.energyType === EnergyType.BASIC);
+
+      if (!hasBasicEnergy) {
+        return state;
+      }
+
+      return store.prompt(
+        state,
+        new AttachEnergyPrompt(
+          player.id,
+          GameMessage.ATTACH_ENERGY_CARDS,
+          player.discard,
+          PlayerType.BOTTOM_PLAYER,
+          [SlotType.ACTIVE, SlotType.BENCH],
+          {
+            superType: SuperType.ENERGY, energyType: EnergyType.BASIC
+          },
+          { allowCancel: false, min: 0, max: 2, sameTarget: true }
+        ),
+        transfers => {
+          transfers = transfers || [];
+          for (const transfer of transfers) {
+            const target = StateUtils.getTarget(state, player, transfer.to);
+            player.discard.moveCardTo(transfer.card, target.energies);
+            target.damage += 10;
+          }
+        }
+      );
     }
 
     return state;

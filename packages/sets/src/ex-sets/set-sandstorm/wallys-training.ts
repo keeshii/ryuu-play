@@ -15,7 +15,7 @@ import {
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
-  const pokemonCard = player.active.getPokemonCard() ;
+  const pokemonCard = player.active.getPokemonCard();
   let cards: Card[] = [];
 
   if (player.deck.cards.length === 0 || !pokemonCard) {
@@ -26,7 +26,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     state,
     new ChooseCardsPrompt(
       player.id,
-      GameMessage.CHOOSE_CARD_TO_HAND,
+      GameMessage.CHOOSE_CARD_TO_EVOLVE,
       player.deck,
       { superType: SuperType.POKEMON, evolvesFrom: pokemonCard.name },
       { min: 1, max: 1, allowCancel: true }

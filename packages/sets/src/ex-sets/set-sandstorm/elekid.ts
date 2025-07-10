@@ -32,7 +32,7 @@ function* useGatherEnergy(next: Function, store: StoreLike, state: State, effect
     state,
     new AttachEnergyPrompt(
       player.id,
-      GameMessage.ATTACH_ENERGY_TO_ACTIVE,
+      GameMessage.ATTACH_ENERGY_CARDS,
       player.deck,
       PlayerType.BOTTOM_PLAYER,
       [SlotType.ACTIVE, SlotType.BENCH],
