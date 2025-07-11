@@ -136,24 +136,28 @@
     <div class="stats" *ngIf="card.superType === SuperType.POKEMON">
       <div class="stats-item">
         <div class="stats-item-header" translate>CARDS_WEAKNESS</div>
-        <div class="stats-item-value" *ngFor="let weakness of card.weakness">
-          <div class="stats-item-value-type">
-            <ptcg-energy [type]="weakness.type"></ptcg-energy>
-          </div>
-          <div class="stats-item-value-modifier">
-            {{ weakness.value ? '+' + weakness.value : 'x2' }}
+        <div class="stats-item-value-group">
+          <div class="stats-item-value" *ngFor="let weakness of card.weakness">
+            <div class="stats-item-value-type">
+              <ptcg-energy [type]="weakness.type"></ptcg-energy>
+            </div>
+            <div class="stats-item-value-modifier">
+              {{ weakness.value ? '+' + weakness.value : 'x2' }}
+            </div>
           </div>
         </div>
       </div>
 
       <div class="stats-item">
         <div class="stats-item-header" translate>CARDS_RESISTANCE</div>
-        <div class="stats-item-value" *ngFor="let resistance of card.resistance">
-          <div class="stats-item-value-type">
-            <ptcg-energy [type]="resistance.type"></ptcg-energy>
-          </div>
-          <div class="stats-item-value-modifier">
-            {{ resistance.value }}
+        <div class="stats-item-value-group">
+          <div class="stats-item-value" *ngFor="let resistance of card.resistance">
+            <div class="stats-item-value-type">
+              <ptcg-energy [type]="resistance.type"></ptcg-energy>
+            </div>
+            <div class="stats-item-value-modifier">
+              {{ resistance.value }}
+            </div>
           </div>
         </div>
       </div>

@@ -84,10 +84,20 @@
   padding-bottom: math.div(map-get($padding, small), 2);
 }
 
+.stats-item-value-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
 .stats-item-value {
   align-items: flex-end;
   display: flex;
   justify-content: center;
+}
+
+.stats-item-value + .stats-item-value {
+  margin-left: math.div(map-get($padding, small), 2);
 }
 
 .stats-item-value-type {
