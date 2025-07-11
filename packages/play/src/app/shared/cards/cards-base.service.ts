@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Card, StateSerializer, SuperType, PokemonCard, EnergyCard, CardType,
-  TrainerCard, CardsInfo, CardManager } from '@ptcg/common';
+  TrainerCard, CardManager } from '@ptcg/common';
 
 import { ApiService } from '../../api/api.service';
 import { CardInfoPopupData, CardInfoPopupComponent } from './card-info-popup/card-info-popup.component';
@@ -8,6 +8,7 @@ import { CardInfoListPopupComponent } from './card-info-list-popup/card-info-lis
 import { CardInfoPaneAction } from './card-info-pane/card-info-pane.component';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { SessionService } from '../session/session.service';
+import { CardsData } from '../../api/interfaces/cards.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -26,8 +27,8 @@ export class CardsBaseService {
     this.cardManager = CardManager.getInstance();
   }
 
-  public loadCardsInfo(cardsInfo: CardsInfo) {
-    this.cardManager.loadCardsInfo(cardsInfo);
+  public loadCardsData(data: CardsData) {
+    this.cardManager.loadCardsInfo(data.cardsInfo, data.cards);
     this.cards = this.cardManager.getAllCards().slice();
     this.names = this.cards.map(c => c.fullName);
     this.cards.sort(this.compareCards);

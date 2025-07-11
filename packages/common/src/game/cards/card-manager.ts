@@ -79,11 +79,11 @@ export class CardManager {
     }
   }
 
-  public loadCardsInfo(cardsInfo: CardsInfo) {
+  public loadCardsInfo(cardsInfo: CardsInfo, cards: Card[]) {
     this.cardIndex = {};
     this.cardFormats = {};
 
-    this.cards = cardsInfo.cards;
+    this.cards = cards;
     for (let i = 0; i < this.cards.length; i++) {
       this.cardIndex[this.cards[i].fullName] = i;
       this.cardFormats[this.cards[i].fullName] = [];

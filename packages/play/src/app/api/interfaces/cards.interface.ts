@@ -1,11 +1,15 @@
 import { Response } from './response.interface';
-import { CardsInfo } from '@ptcg/common';
+import { Card, CardsInfo } from '@ptcg/common';
 
-export interface CardsResponse extends Response {
+export interface CardsData {
   cardsInfo: CardsInfo;
+  cards: Card[];
 }
 
-export interface CardsHashResponse extends Response {
-  cardsTotal: number;
-  hash: string;
+export interface CardsResponse extends Response {
+  cards: Card[];
+}
+
+export interface CardsInfoResponse extends Response {
+  cardsInfo: CardsInfo;
 }

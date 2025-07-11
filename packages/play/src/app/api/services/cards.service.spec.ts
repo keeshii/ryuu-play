@@ -35,15 +35,15 @@ describe('CardsService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should get all cards', () => {
+  it('should get cards page', () => {
     spyOn(apiService, 'get');
-    service.getAll();
-    expect(apiService.get).toHaveBeenCalledWith('/v1/cards/all');
+    service.getCardsPage(5);
+    expect(apiService.get).toHaveBeenCalledWith('/v1/cards/get/5');
   });
 
-  it('should get cards hash', () => {
+  it('should get cards info', () => {
     spyOn(apiService, 'get');
-    service.getHash();
-    expect(apiService.get).toHaveBeenCalledWith('/v1/cards/hash');
+    service.getInfo();
+    expect(apiService.get).toHaveBeenCalledWith('/v1/cards/info');
   });
 });

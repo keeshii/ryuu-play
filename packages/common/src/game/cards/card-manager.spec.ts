@@ -91,8 +91,9 @@ describe('CardManager', () => {
   });
 
   it('Should load cardsInfo', () => {
+    const cards: Card[] = [...set1, ...set2];
     const cardsInfo: CardsInfo = {
-      cards: [...set1, ...set2],
+      cardsTotal: cards.length,
       formats: [{
         name: 'Format 1',
         ranges: [[0, 3]],
@@ -104,7 +105,7 @@ describe('CardManager', () => {
       }],
       hash: ''
     };
-    service.loadCardsInfo(cardsInfo);
+    service.loadCardsInfo(cardsInfo, cards);
     expect(service.getAllCards()).toEqual([...set1, ...set2]);
     expect(service.getAllFormats()).toEqual([{
       name: 'Format 1',

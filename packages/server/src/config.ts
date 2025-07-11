@@ -17,7 +17,8 @@ export const config = {
     replayFileSize: 512 * 1024,
     rateLimitCount: 10, // Ban IP after that many wrong password errors
     rateLimitTime: 60 * 60 * 1000, // How long the user should be banned
-    webUiDir: ''  // Directory to ptcg-play static files (empty = UI disabled)
+    webUiDir: '',  // Directory to ptcg-play static files (empty = UI disabled)
+    cardsPerRequest: 250
   },
   storage: {
     type: 'mysql',

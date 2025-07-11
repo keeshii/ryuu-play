@@ -1,4 +1,4 @@
-import { Card, Rules } from '../store';
+import { Rules } from '../store';
 
 export interface FormatInfo {
   name: string;
@@ -7,12 +7,7 @@ export interface FormatInfo {
 }
 
 export interface CardsInfo {
-  cards: Card[];
-  formats: FormatInfo[];
-  hash: string;
-}
-
-export interface CardsHash {
   cardsTotal: number;
+  formats: FormatInfo[];
   hash: string;
 }

@@ -1,28 +1,40 @@
 import { Request, Response } from 'express';
-import { CardManager, CardsInfo } from '@ptcg/common';
+import { Card, CardManager, CardsInfo } from '@ptcg/common';
 import { Controller, Get } from './controller';
 import { Md5 } from '../../utils';
+import { config } from '../../config';
 
 export class Cards extends Controller {
 
   private cardsInfo?: CardsInfo;
 
-  @Get('/all')
-  public async onAll(req: Request, res: Response) {
+  @Get('/get/:page')
+  public async onGet(req: Request, res: Response) {
+    const page: number = parseInt(req.params.page, 10);
+    const cards = this.buildCardsPage(page);
+    res.send({ok: true, cards});
+  }
+
+  @Get('/info')
+  public async onInfo(req: Request, res: Response) {
     if (!this.cardsInfo) {
       this.cardsInfo = this.buildCardsInfo();
     }
     res.send({ok: true, cardsInfo: this.cardsInfo });
   }
 
-  @Get('/hash')
-  public async onHash(req: Request, res: Response) {
-    if (!this.cardsInfo) {
-      this.cardsInfo = this.buildCardsInfo();
+  private buildCardsPage(page: number): Card[] {
+    const cardManager = CardManager.getInstance();
+    const allCards = cardManager.getAllCards();
+    const pageSize = config.backend.cardsPerRequest;
+    
+    const start = page * pageSize;
+    if (start >= allCards.length) {
+      return [];
     }
-    const cardsTotal = this.cardsInfo.cards.length;
-    const hash = this.cardsInfo.hash;
-    res.send({ok: true, cardsTotal, hash });
+
+    const end = Math.min(start + pageSize, allCards.length);
+    return allCards.slice(start, end);
   }
 
   private buildCardsInfo(): CardsInfo {
@@ -31,7 +43,7 @@ export class Cards extends Controller {
     const formats = cardManager.getAllFormats();
  
     const cardsInfo: CardsInfo = {
-      cards,
+      cardsTotal: cards.length,
       formats: formats.map(f => ({
         name: f.name,
         ranges: f.ranges,
@@ -40,7 +52,7 @@ export class Cards extends Controller {
       hash: ''
     };
 
-    const hash = Md5.init(JSON.stringify(cardsInfo));
+    const hash = Md5.init(JSON.stringify([cardsInfo, cards]));
     cardsInfo.hash = hash;
     return cardsInfo;
   }
