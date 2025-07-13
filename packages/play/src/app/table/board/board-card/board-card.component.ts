@@ -28,9 +28,16 @@ export class BoardCardComponent {
     if (value instanceof CardList) {
       this.cardList = value;
     }
+
     if (value instanceof PokemonSlot) {
       this.pokemonSlot = value;
-      this.cardList = value.pokemons;
+      // Cardlist that contains all cards from the PokemonSlot
+      this.cardList = Object.assign(new CardList(), value.pokemons);
+      this.cardList.cards = [
+        ...value.pokemons.cards,
+        ...value.energies.cards,
+        ...value.trainers.cards
+      ];
     }
 
     this.isEmpty = !this.cardList || !this.cardList.cards.length;

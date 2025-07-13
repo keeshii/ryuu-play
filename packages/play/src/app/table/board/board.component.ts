@@ -201,7 +201,7 @@ export class BoardComponent implements OnDestroy {
     return boardCardItem;
   }
 
-  public onCardClick(card: Card, cardList: CardList) {
+  public onCardClick(card: Card, cardList?: CardList) {
     this.cardsBaseService.showCardInfo({ card, cardList });
   }
 

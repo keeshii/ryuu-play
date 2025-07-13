@@ -45,7 +45,7 @@
     <div class="ptcg-board-row ptcg-board-stadium">
       <ptcg-board-card
         [value]="topPlayer?.supporter" [owner]="topPlayer?.id === clientId"
-        (cardClick)="onCardClick($event.card, null)">
+        (cardClick)="onCardClick($event.card)">
       </ptcg-board-card>
     </div>
 
@@ -106,7 +106,7 @@
     <div class="ptcg-board-row ptcg-board-supporter">
       <ptcg-board-card
         [value]="bottomPlayer?.supporter" [owner]="bottomPlayer?.id === clientId"
-        (cardClick)="onCardClick($event.card, null)">
+        (cardClick)="onCardClick($event.card)">
       </ptcg-board-card>
     </div>
 

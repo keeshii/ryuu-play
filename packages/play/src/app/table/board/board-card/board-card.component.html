@@ -2,7 +2,7 @@
 
   <div class="ptcg-energy-cards">
     <ptcg-card [card]="energyCard" *ngFor="let energyCard of energyCards"
-    (click)="onCardClick(energyCard, pokemonSlot.energies)"></ptcg-card>
+    (click)="onCardClick(energyCard, cardList)"></ptcg-card>
   </div>
 
   <div class="ptcg-energy-more" *ngIf="moreEnergies > 0">
@@ -13,7 +13,7 @@
 
   <div class="ptcg-trainer-card" *ngIf="trainerCard">
     <ptcg-card [card]="trainerCard"
-    (click)="onCardClick(trainerCard, pokemonSlot.trainers)"></ptcg-card>
+    (click)="onCardClick(trainerCard, cardList)"></ptcg-card>
   </div>
 
   <ptcg-card
