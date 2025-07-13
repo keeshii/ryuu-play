@@ -25,6 +25,7 @@ export class DeckEditComponent implements OnInit {
   public deck: Deck;
   public deckItems: DeckItem[] = [];
   public toolbarFilter: DeckEditToolbarFilter;
+  public deckFormat: string;
   public DeckEditPane = DeckEditPane;
   private destroyRef = inject(DestroyRef);
 
@@ -51,6 +52,7 @@ export class DeckEditComponent implements OnInit {
         this.loading = false;
         this.deck = response.deck;
         this.deckItems = this.loadDeckItems(response.deck.cards);
+        this.deckFormat = this.loadDeckFormat(response.deck.formatNames);
       }, async () => {
         await this.alertService.error(this.translate.instant('DECK_EDIT_LOADING_ERROR'));
         this.router.navigate(['/decks']);
@@ -79,6 +81,19 @@ export class DeckEditComponent implements OnInit {
     }
 
     return deckItems;
+  }
+
+  private loadDeckFormat(formatNames: string[]): string {
+    const availableFormats = this.cardsBaseService.getAllFormats().map(f => f.name);
+    if (availableFormats.length === 0) {
+      return '';
+    }
+    for (const formatName of formatNames) {
+      if (availableFormats.includes(formatName)) {
+        return formatName;
+      }
+    }
+    return availableFormats[0];
   }
 
   public importDeck(cardNames: string[]) {

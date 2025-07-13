@@ -27,6 +27,11 @@ export class DeckEditToolbarComponent {
 
   @Output() export = new EventEmitter<void>();
 
+  @Input() set formatName(value: string) {
+    this.filterValue.formatName = value;
+    this.filterChange.next({...this.filterValue});
+  }
+
   public formatNames: string[];
 
   private destroyRef = inject(DestroyRef);

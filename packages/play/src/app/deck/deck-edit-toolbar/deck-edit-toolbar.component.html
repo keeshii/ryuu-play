@@ -25,12 +25,12 @@
   </mat-toolbar-row>
 
   <mat-toolbar-row class="search-toolbar">
-    <mat-form-field floatLabel="never" appearance="legacy">
-      <mat-select [placeholder]="'DECK_EDIT_ALL_FORMATS' | translate" (selectionChange)="onFormatChange($event)">
-        <mat-option value="">{{ 'DECK_EDIT_ALL_FORMATS' | translate }}</mat-option>
+    <mat-form-field floatLabel="never" appearance="legacy" *ngIf="formatNames.length > 0">
+      <mat-select [value]="filterValue.formatName" (selectionChange)="onFormatChange($event)">
         <mat-option *ngFor="let formatName of formatNames" [value]="formatName">
           {{ formatName }}
         </mat-option>
+        <mat-option value="">{{ 'DECK_EDIT_ALL_FORMATS' | translate }}</mat-option>
       </mat-select>
     </mat-form-field>
 

@@ -3,6 +3,7 @@
     <ptcg-deck-edit-toolbar
       [disabled]="loading"
       [deck]="deck"
+      [formatName]="deckFormat"
       (filterChange)="toolbarFilter = $event"
       (save)="saveDeck()"
       (import)="importDeck($event)"
