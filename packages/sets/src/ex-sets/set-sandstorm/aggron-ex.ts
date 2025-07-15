@@ -40,8 +40,8 @@ export class AggronEx extends PokemonCard {
   ];
 
   public weakness = [
-    { type: CardType.FIGHTING },
-    { type: CardType.FIRE }
+    { type: CardType.FIRE },
+    { type: CardType.FIGHTING }
   ];
 
   public resistance = [

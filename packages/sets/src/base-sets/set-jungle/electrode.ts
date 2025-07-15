@@ -33,8 +33,8 @@ export class Electrode extends PokemonCard {
       cost: [CardType.LIGHTNING, CardType.LIGHTNING, CardType.LIGHTNING],
       damage: '20',
       text:
-        'If the Defending Pokémon isn\'t C, this attack does 10 damage to each Benched Pokémon of the same type as ' +
-        'the Defending Pokémon (including your own).'
+        'If the Defending Pokémon isn\'t Colorless, this attack does 10 damage to each Benched Pokémon of ' +
+        'the same type as the Defending Pokémon (including your own).'
     },
   ];
 

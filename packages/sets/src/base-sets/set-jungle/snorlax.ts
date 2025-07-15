@@ -58,15 +58,30 @@ export class Snorlax extends PokemonCard {
 
   public fullName: string = 'Snorlax JU';
 
+  public readonly THICK_SKIN_BLOCKED_MARKER = 'THICK_SKIN_BLOCKED_MARKER';
+
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof CheckTableStateEffect) {
       const pokemonSlot = StateUtils.findPokemonSlot(state, this);
-      if (!pokemonSlot) {
+      if (!pokemonSlot || pokemonSlot.getPokemonCard() !== this) {
         return state;
       }
 
       const player = StateUtils.findOwner(state, pokemonSlot);
-      if (player.active !== pokemonSlot || pokemonSlot.specialConditions.length === 0) {
+      const hasMarker = player.marker.hasMarker(this.THICK_SKIN_BLOCKED_MARKER, this);
+      const affectedBySpecialCondition = pokemonSlot.specialConditions.includes(SpecialCondition.ASLEEP)
+        || pokemonSlot.specialConditions.includes(SpecialCondition.CONFUSED)
+        || pokemonSlot.specialConditions.includes(SpecialCondition.PARALYZED);
+
+      // The Power was blocked and now Snorlax is affected by Special Condition.
+      // Thick Skin is not working.
+      if (hasMarker && affectedBySpecialCondition) {
+        return state;
+      }
+
+      // The Power was never blocked and no Special Condition on Snorlax.
+      // No need to use PowerEffect
+      if (!hasMarker && (player.active !== pokemonSlot || pokemonSlot.specialConditions.length === 0)) {
         return state;
       }
 
@@ -75,9 +90,13 @@ export class Snorlax extends PokemonCard {
         const powerEffect = new PowerEffect(player, this.powers[0], this);
         store.reduceEffect(state, powerEffect);
       } catch {
+        // If Snorlax will be affected by Special Condition while having this Marker,
+        // he won't heal by itself even if Power will no longer be blocked.
+        player.marker.addMarker(this.THICK_SKIN_BLOCKED_MARKER, this);
         return state;
       }
 
+      player.marker.removeMarker(this.THICK_SKIN_BLOCKED_MARKER, this);
       const conditions = player.active.specialConditions.slice();
       conditions.forEach(condition => {
         player.active.removeSpecialCondition(condition);
