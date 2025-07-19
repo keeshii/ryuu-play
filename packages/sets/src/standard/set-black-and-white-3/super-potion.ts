@@ -23,7 +23,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   const blocked: CardTarget[] = [];
   let hasPokemonWithDamage: boolean = false;
   player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (pokemonSlot, card, target) => {
-    if (pokemonSlot.damage === 0 || pokemonSlot.energies.cards.length > 0) {
+    if (pokemonSlot.damage === 0 || pokemonSlot.energies.cards.length === 0) {
       blocked.push(target);
     } else {
       hasPokemonWithDamage = true;
