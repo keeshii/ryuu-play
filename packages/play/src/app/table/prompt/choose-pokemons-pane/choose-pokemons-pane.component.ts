@@ -1,5 +1,5 @@
 import { Component, Input, EventEmitter, Output, OnDestroy } from '@angular/core';
-import { PlayerType, Card } from '@ptcg/common';
+import { PlayerType, Card, CardList } from '@ptcg/common';
 import { DraggedItem } from '@ng-dnd/sortable';
 import { DropTarget, DndService } from '@ng-dnd/core';
 import { Observable } from 'rxjs';
@@ -96,7 +96,13 @@ export class ChoosePokemonsPaneComponent implements OnDestroy {
     event.stopPropagation();
     const pokemonSlot = item.pokemonSlot;
     const card = pokemonSlot.getPokemonCard();
-    this.cardsBaseService.showCardInfo({ card, cardList: pokemonSlot.pokemons });
+    const cardList: CardList = Object.assign(new CardList(), pokemonSlot.pokemons);
+    cardList.cards = [
+      ...pokemonSlot.pokemons.cards,
+      ...pokemonSlot.energies.cards,
+      ...pokemonSlot.trainers.cards
+    ];
+    this.cardsBaseService.showCardInfo({ card, cardList });
   }
 
   ngOnDestroy() {
