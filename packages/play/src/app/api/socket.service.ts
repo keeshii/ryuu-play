@@ -19,6 +19,7 @@ export class SocketService {
   private callbacks: {event: string, fn: any}[] = [];
   private enabled = false;
   private connectionSubject = new BehaviorSubject<boolean>(false);
+  private hasWakeLock = false;
 
   constructor() {
     this.setServerUrl(environment.apiUrl);
@@ -51,12 +52,14 @@ export class SocketService {
 
     (this.socket.io.opts.query as any).token = authToken;
     this.socket.connect();
+    this.acquireWakeLock(); // keep android on to not get disconnected
     this.enabled = true;
   }
 
   public disable() {
     this.off();
     this.socket.disconnect();
+    this.releaseWakeLock(); // no longer needed to keep android on
     this.enabled = false;
   }
 
@@ -96,6 +99,26 @@ export class SocketService {
         return false;
       }
       return true;
+    });
+  }
+
+  private acquireWakeLock() {
+    const hasCordova = !!(window as any).cordova;
+    if (!hasCordova || this.hasWakeLock) {
+      return;
+    }
+    (window as any).powermanagement.acquire(() => {
+      this.hasWakeLock = true;
+    });
+  }
+
+  private releaseWakeLock() {
+    const hasCordova = !!(window as any).cordova;
+    if (!hasCordova || !this.hasWakeLock) {
+      return;
+    }
+    (window as any).powermanagement.release(() => {
+      this.hasWakeLock = false;
     });
   }
 

@@ -33,7 +33,8 @@
       "cordova-plugin-file": {},
       "cordova-plugin-file-transfer": {},
       "cordova-plugin-device": {},
-      "cordova-plugin-save-dialog": {}
+      "cordova-plugin-save-dialog": {},
+      "cordova-plugin-powermanagement": {}
     },
     "platforms": [
       "browser",
