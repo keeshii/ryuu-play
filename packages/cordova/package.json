@@ -1,7 +1,7 @@
 {
   "name": "@ptcg/cordova",
   "displayName": "RyuuPlay",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Android client for the ptcg server.",
   "main": "index.js",
   "scripts": {
@@ -21,6 +21,7 @@
     "cordova-plugin-device": "^2.0.3",
     "cordova-plugin-file": "^6.0.2",
     "cordova-plugin-file-transfer": "^1.7.1",
+    "cordova-plugin-powermanagement": "^1.0.5",
     "cordova-plugin-save-dialog": "^2.0.1",
     "cordova-plugin-statusbar-patched": "http://dev.ryuu.eu/distfiles/cordova-plugin-statusbar-patched-2.4.3.tar.gz",
     "cordova-plugin-whitelist": "^1.3.4"

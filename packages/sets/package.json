@@ -1,6 +1,6 @@
 {
   "name": "@ptcg/sets",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Package with cards implementation.",
   "main": "./dist/cjs/index.js",
   "types": "./dist/cjs/index.d.ts",

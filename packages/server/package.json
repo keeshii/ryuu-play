@@ -1,6 +1,6 @@
 {
   "name": "@ptcg/server",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Server of the ptcg game.",
   "main": "./dist/cjs/index.js",
   "types": "./dist/cjs/index.d.ts",
