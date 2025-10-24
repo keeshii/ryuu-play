@@ -18,7 +18,7 @@ describe('Scheduler', () => {
   });
 
   afterEach(() => {
-    config.core = originalConfig
+    config.core = originalConfig;
     scheduler.stop(callback);
     jasmine.clock().uninstall();
   });

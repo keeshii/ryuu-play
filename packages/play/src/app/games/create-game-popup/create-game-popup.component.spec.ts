@@ -4,9 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
 import { TranslateModule } from '@ngx-translate/core';
-import { Format, GameSettings, Rules } from '@ptcg/common';
+import { Format, Rules } from '@ptcg/common';
 
-import { CreateGamePopupComponent, CreateGamePopupData } from './create-game-popup.component';
+import { CreateGamePopupComponent } from './create-game-popup.component';
 import { CardsBaseService } from '../../shared/cards/cards-base.service';
 import { DeckListEntry } from '../../api/interfaces/deck.interface';
 

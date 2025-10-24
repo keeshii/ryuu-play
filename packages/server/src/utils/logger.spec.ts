@@ -12,7 +12,7 @@ describe('Logger', () => {
   });
 
   afterEach(() => {
-    config.core = originalConfig
+    config.core = originalConfig;
   });
 
   describe('log', () => {

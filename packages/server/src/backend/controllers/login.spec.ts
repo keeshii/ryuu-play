@@ -30,7 +30,7 @@ describe('Login', () => {
     app = jasmine.createSpyObj('Application', ['get', 'post']);
     db = jasmine.createSpyObj('Storage', ['findOne', 'save']);
     core = jasmine.createSpyObj('Core', ['connect', 'disconnect']);
-    validToken = generateToken(1)
+    validToken = generateToken(1);
     rateLimitMock = new RateLimitMock();
     
     spyOn(RateLimit, 'getInstance').and.returnValue(rateLimitMock);
