@@ -1,19 +1,16 @@
 import {
-  AbstractAttackEffect,
   AddSpecialConditionsEffect,
   AttackEffect,
-  AttackEffects,
   CardType,
   Effect,
-  GamePhase,
   PokemonCard,
-  PowerEffect,
   PowerType,
   SpecialCondition,
   Stage,
   State,
   StoreLike,
 } from '@ptcg/common';
+import { commonPowers } from '../../common';
 
 export class Dustox extends PokemonCard {
   public stage: Stage = Stage.STAGE_2;
@@ -60,42 +57,9 @@ export class Dustox extends PokemonCard {
   public fullName: string = 'Dustox RS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof AbstractAttackEffect && effect.target.pokemons.cards.includes(this)) {
-      const player = effect.player;
+    const protectiveDust = commonPowers.protectiveDust(this, store, state, effect);
 
-      // pokemon is evolved
-      if (effect.target.getPokemonCard() !== this) {
-        return state;
-      }
-
-      // Not an attack
-      if (state.phase !== GamePhase.ATTACK) {
-        return state;
-      }
-
-      // Do not block effects that inflict damage
-      const damageEffects: string[] = [
-        AttackEffects.APPLY_WEAKNESS_EFFECT,
-        AttackEffects.DEAL_DAMAGE_EFFECT,
-        AttackEffects.PUT_DAMAGE_EFFECT,
-        AttackEffects.AFTER_DAMAGE_EFFECT,
-        // AttackEffects.PUT_COUNTERS_EFFECT, <-- This is not damage
-      ];
-      if (damageEffects.includes(effect.type)) {
-        return state;
-      }
-
-      // Try to reduce PowerEffect, to check if something is blocking our ability
-      try {
-        const powerEffect = new PowerEffect(player, this.powers[0], this);
-        store.reduceEffect(state, powerEffect);
-      } catch {
-        return state;
-      }
-
-      effect.preventDefault = true;
-      return state;
-    }
+    protectiveDust.reduce(this.powers[0]);
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const specialCondition = new AddSpecialConditionsEffect(effect, [SpecialCondition.POISONED]);

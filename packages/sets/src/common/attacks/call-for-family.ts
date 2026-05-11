@@ -23,10 +23,14 @@ function* useCallForFamily(
   state: State,
   effect: AttackEffect,
   filterType: FilterType,
+  pokemons?: number
 ): IterableIterator<State> {
   const player = effect.player;
   const slots: PokemonSlot[] = player.bench.filter(b => b.pokemons.cards.length === 0);
-  const max = Math.min(slots.length, 1);
+  if (pokemons === undefined) {
+    pokemons = player.bench.length;
+  }
+  const max = Math.min(slots.length, pokemons);
 
   if (player.deck.cards.length === 0) {
     return state;
@@ -62,7 +66,7 @@ function* useCallForFamily(
   });
 }
 
-export const callForFamily: CommonAttack<[FilterType]> = function(
+export const callForFamily: CommonAttack<[FilterType, number?]> = function(
   self: PokemonCard,
   store: StoreLike,
   state: State,
@@ -70,7 +74,7 @@ export const callForFamily: CommonAttack<[FilterType]> = function(
 ) {
 
   return {
-    use: (attackEffect: AttackEffect, filterType: FilterType) => {
+    use: (attackEffect: AttackEffect, filterType: FilterType, pokemons?: number) => {
       if (!(filterType instanceof Array)) {
         filterType = [filterType];
       }
@@ -83,7 +87,8 @@ export const callForFamily: CommonAttack<[FilterType]> = function(
           ...filter,
           superType: SuperType.POKEMON,
           stage: Stage.BASIC,
-        }))
+        })),
+        pokemons
       );
       return generator.next().value;
     }

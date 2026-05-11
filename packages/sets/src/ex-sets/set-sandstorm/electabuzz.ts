@@ -62,8 +62,6 @@ function* usePlasma(next: Function, store: StoreLike, state: State, effect: Atta
       }
     }
   );
-
-  return state;
 }
 
 export class Electabuzz extends PokemonCard {

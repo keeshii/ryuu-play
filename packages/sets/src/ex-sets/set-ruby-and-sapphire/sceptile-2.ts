@@ -1,82 +1,17 @@
 import {
   AttackEffect,
-  Card,
-  CardTarget,
   CardType,
-  CheckProvidedEnergyEffect,
   CoinFlipPrompt,
   Effect,
-  EnergyCard,
-  GameError,
   GameMessage,
-  MoveEnergyPrompt,
-  PlayerType,
   PokemonCard,
-  PowerEffect,
   PowerType,
-  SlotType,
   Stage,
   State,
-  StateUtils,
   StoreLike,
 } from '@ptcg/common';
+import { commonPowers } from '../../common';
 
-function* useEnergyTrans(next: Function, store: StoreLike, state: State, self: Sceptile2, effect: PowerEffect): IterableIterator<State> {
-  const player = effect.player;
-  const pokemonSlot = StateUtils.findPokemonSlot(state, self);
-
-  if (!pokemonSlot || pokemonSlot.specialConditions.length > 0) {
-    throw new GameError(GameMessage.CANNOT_USE_POWER);
-  }
-
-  const blockedMap: { source: CardTarget; blocked: number[] }[] = [];
-  player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (slot, card, target) => {
-    const checkProvidedEnergy = new CheckProvidedEnergyEffect(player, slot);
-    store.reduceEffect(state, checkProvidedEnergy);
-    const blockedCards: Card[] = [];
-
-    checkProvidedEnergy.energyMap.forEach(em => {
-      if (!em.provides.includes(CardType.GRASS) && !em.provides.includes(CardType.ANY)) {
-        blockedCards.push(em.card);
-      }
-    });
-
-    const blocked: number[] = [];
-    blockedCards.forEach(bc => {
-      const index = slot.energies.cards.indexOf(bc as EnergyCard);
-      if (index !== -1 && !blocked.includes(index)) {
-        blocked.push(index);
-      }
-    });
-
-    if (blocked.length !== 0) {
-      blockedMap.push({ source: target, blocked });
-    }
-  });
-
-  return store.prompt(
-    state,
-    new MoveEnergyPrompt(
-      effect.player.id,
-      GameMessage.MOVE_ENERGY_CARDS,
-      PlayerType.BOTTOM_PLAYER,
-      [SlotType.ACTIVE, SlotType.BENCH],
-      { },
-      { allowCancel: true, blockedMap }
-    ),
-    transfers => {
-      if (transfers === null) {
-        return;
-      }
-
-      for (const transfer of transfers) {
-        const source = StateUtils.getTarget(state, player, transfer.from);
-        const target = StateUtils.getTarget(state, player, transfer.to);
-        source.moveCardTo(transfer.card, target.energies);
-      }
-    }
-  );
-}
 
 export class Sceptile2 extends PokemonCard {
   public stage: Stage = Stage.STAGE_2;
@@ -121,10 +56,9 @@ export class Sceptile2 extends PokemonCard {
   public fullName: string = 'Sceptile RS-2';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
-      const generator = useEnergyTrans(() => generator.next(), store, state, this, effect);
-      return generator.next().value;
-    }
+    const energyTrans = commonPowers.energyTrans(this, store, state, effect);
+    
+    energyTrans.reduce(this.powers[0], CardType.GRASS);
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;

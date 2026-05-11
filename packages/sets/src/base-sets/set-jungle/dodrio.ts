@@ -5,6 +5,7 @@ import {
   Effect,
   PlayerType,
   PokemonCard,
+  PowerEffect,
   PowerType,
   Stage,
   State,
@@ -65,6 +66,14 @@ export class Dodrio extends PokemonCard {
       });
 
       if (!hasDodrioOnBench) {
+        return state;
+      }
+
+      // Try to reduce PowerEffect, to check if something is blocking our ability
+      try {
+        const powerEffect = new PowerEffect(player, this.powers[0], this);
+        store.reduceEffect(state, powerEffect);
+      } catch {
         return state;
       }
 

@@ -1,0 +1,70 @@
+import {
+  AddSpecialConditionsEffect,
+  AttackEffect,
+  CardType,
+  Effect,
+  EndTurnEffect,
+  PokemonCard,
+  SpecialCondition,
+  Stage,
+  State,
+  StateUtils,
+  StoreLike,
+} from '@ptcg/common';
+import { commonMarkers } from '../../common';
+
+export class Gastly extends PokemonCard {
+  public stage: Stage = Stage.BASIC;
+
+  public cardTypes: CardType[] = [CardType.PSYCHIC];
+
+  public hp: number = 50;
+
+  public attacks = [
+    {
+      name: 'Slow Trip Gas',
+      cost: [CardType.COLORLESS],
+      damage: '',
+      text: 'At the end of your opponent\'s next turn, the Defending Pokémon is now Confused.'
+    },
+  ];
+
+  public weakness = [
+    { type: CardType.DARK }
+  ];
+
+  public resistance = [
+    { type: CardType.FIGHTING, value: -30 }
+  ];
+
+  public retreat = [CardType.COLORLESS];
+
+  public set: string = 'RG';
+
+  public name: string = 'Gastly';
+
+  public fullName: string = 'Gastly RG';
+
+  public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+
+    const duringOpponentNextTurn = commonMarkers.duringOpponentNextTurn(this, store, state, effect);
+
+    if (effect instanceof EndTurnEffect && duringOpponentNextTurn.hasMarker(effect, effect.player.active)) {
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+      const attackEffect = new AttackEffect(opponent, player, this.attacks[0]);
+      const specialConditionEffect = new AddSpecialConditionsEffect(attackEffect, [SpecialCondition.CONFUSED]);
+      store.reduceEffect(state, specialConditionEffect);
+      return state;
+    }
+
+    if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
+      const player = effect.player;
+      const opponent = StateUtils.getOpponent(state, player);
+      duringOpponentNextTurn.setMarker(effect, opponent.active);
+      return state;
+    }
+
+    return state;
+  }
+}

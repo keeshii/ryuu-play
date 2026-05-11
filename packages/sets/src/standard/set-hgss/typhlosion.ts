@@ -2,7 +2,6 @@ import {
   AttachEnergyPrompt,
   AttackEffect,
   CardType,
-  CheckProvidedEnergyEffect,
   ChooseCardsPrompt,
   DiscardCardsEffect,
   Effect,
@@ -32,9 +31,6 @@ function* useFlareDestroy(
 ): IterableIterator<State> {
   const player = effect.player;
   const opponent = StateUtils.getOpponent(state, player);
-
-  const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);
-  state = store.reduceEffect(state, checkProvidedEnergy);
 
   if (player.active.energies.cards.length > 0) {
     yield store.prompt(

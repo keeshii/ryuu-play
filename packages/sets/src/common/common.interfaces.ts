@@ -1,4 +1,4 @@
-import { AttackEffect, Effect, Player, PokemonCard, State, StoreLike, TrainerCard, TrainerEffect } from '@ptcg/common';
+import { AttackEffect, Effect, Player, PokemonCard, Power, State, StoreLike, TrainerCard, TrainerEffect } from '@ptcg/common';
 
 
 export type CommonAttack<T extends unknown[] = []> = (
@@ -19,6 +19,16 @@ export type CommonMarker<T extends unknown[] = []> = (
 ) => {
   setMarker: (playerEffect: Effect & { player: Player }, ...params: T) => void,
   hasMarker: (playerEffect: Effect & { player: Player }, ...params: T) => boolean,
+};
+
+
+export type CommonPower<T extends unknown[] = []> = (
+  self: PokemonCard,
+  store: StoreLike,
+  state: State,
+  effect: Effect
+) => {
+  reduce: (power: Power, ...params: T) => State
 };
 
 

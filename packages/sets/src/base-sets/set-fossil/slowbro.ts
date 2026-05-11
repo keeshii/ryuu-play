@@ -1,26 +1,19 @@
 import {
-  AddSpecialConditionsEffect,
   AttackEffect,
-  CardTarget,
   CardType,
-  CheckHpEffect,
-  CoinFlipPrompt,
-  DamageMap,
   Effect,
   GameError,
   GameMessage,
-  MoveDamagePrompt,
-  PlayerType,
   PokemonCard,
   PowerEffect,
   PowerType,
-  SlotType,
   SpecialCondition,
   Stage,
   State,
   StateUtils,
   StoreLike,
 } from '@ptcg/common';
+import { commonAttacks, commonPowers } from '../../common';
 
 export class Slowbro extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -65,8 +58,10 @@ export class Slowbro extends PokemonCard {
   public fullName: string = 'Slowbro FO';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    const strangeBehavior = commonPowers.strangeBehavior(this, store, state, effect);
+    const flipSpecialConditions = commonAttacks.flipSpecialConditions(this, store, state, effect);
+
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
-      const player = effect.player;
       const pokemonSlot = StateUtils.findPokemonSlot(state, effect.card);
 
       if (pokemonSlot === undefined
@@ -76,67 +71,11 @@ export class Slowbro extends PokemonCard {
         throw new GameError(GameMessage.CANNOT_USE_POWER);
       }
 
-      const maxAllowedDamage: DamageMap[] = [];
-      const blockedFrom: CardTarget[] = [];
-      const blockedTo: CardTarget[] = [];
-      let hasPokemonWithDamage = false;
-      let hasSlowbroHpLeft = false;
-      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (pokemonSlot, pokemonCard, target) => {
-        const checkHpEffect = new CheckHpEffect(player, pokemonSlot);
-        store.reduceEffect(state, checkHpEffect);
-        maxAllowedDamage.push({ target, damage: checkHpEffect.hp - 10 });
-        if (pokemonCard === effect.card) {
-          blockedFrom.push(target);
-          if (pokemonSlot.damage < checkHpEffect.hp - 10) {
-            hasSlowbroHpLeft = true;
-          }
-        } else {
-          blockedTo.push(target);
-          if (pokemonSlot.damage > 0) {
-            hasPokemonWithDamage = true;
-          }
-        }
-      });
-
-      if (!hasSlowbroHpLeft || !hasPokemonWithDamage) {
-        throw new GameError(GameMessage.CANNOT_USE_POWER);
-      }
-
-      return store.prompt(
-        state,
-        new MoveDamagePrompt(
-          effect.player.id,
-          GameMessage.MOVE_DAMAGE,
-          PlayerType.BOTTOM_PLAYER,
-          [SlotType.ACTIVE, SlotType.BENCH],
-          maxAllowedDamage,
-          { allowCancel: true, blockedFrom, blockedTo }
-        ),
-        transfers => {
-          if (transfers === null) {
-            return;
-          }
-          for (const transfer of transfers) {
-            const source = StateUtils.getTarget(state, player, transfer.from);
-            const target = StateUtils.getTarget(state, player, transfer.to);
-            if (source.damage >= 10) {
-              source.damage -= 10;
-              target.damage += 10;
-            }
-          }
-        }
-      );
+      strangeBehavior.reduce(this.powers[0]);
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      const player = effect.player;
-
-      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
-        if (result === true) {
-          const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.PARALYZED]);
-          store.reduceEffect(state, specialConditionEffect);
-        }
-      });
+      return flipSpecialConditions.use(effect, [SpecialCondition.PARALYZED]);
     }
 
     return state;

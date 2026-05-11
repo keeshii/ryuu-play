@@ -52,7 +52,7 @@ function* useBuzzap(next: Function, store: StoreLike, state: State, self: Electr
   });
 
   if (!hasAnyOtherPokemon) {
-    return state;
+    throw new GameError(GameMessage.CANNOT_USE_POWER);
   }
 
   const blocked: number[] = [];
