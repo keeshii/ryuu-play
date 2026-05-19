@@ -3,6 +3,7 @@ import {
   AttackEffect,
   CardType,
   CoinFlipPrompt,
+  ConfirmPrompt,
   Effect,
   GameMessage,
   PokemonCard,
@@ -54,9 +55,13 @@ export class Tauros extends PokemonCard {
       const stadiumCard = StateUtils.getStadiumCard(state);
       // Discard Stadium
       if (stadiumCard !== undefined) {
-        const cardList = StateUtils.findCardList(state, stadiumCard);
-        const player = StateUtils.findOwner(state, cardList);
-        cardList.moveTo(player.discard);
+        return store.prompt(state, new ConfirmPrompt(effect.player.id, GameMessage.WANT_TO_DISCARD_STADIUM), result => {
+          if (result) {
+            const cardList = StateUtils.findCardList(state, stadiumCard);
+            const player = StateUtils.findOwner(state, cardList);
+            cardList.moveTo(player.discard);
+          }
+        });
       }
     }
 

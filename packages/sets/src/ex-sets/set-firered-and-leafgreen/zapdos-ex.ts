@@ -60,7 +60,7 @@ export class ZapdosEx extends PokemonCard {
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     const legendaryAscent = commonPowers.legendaryAscent(this, store, state, effect);
 
-    legendaryAscent.reduce(this.powers[0], 'Lightning Energy');
+    legendaryAscent.reduce(this.powers[0], CardType.LIGHTNING);
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;

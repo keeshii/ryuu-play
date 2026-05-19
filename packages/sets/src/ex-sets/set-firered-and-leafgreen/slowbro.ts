@@ -28,6 +28,7 @@ export class Slowbro extends PokemonCard {
     {
       name: 'Strange Behavior',
       powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
       text:
         'As often as you like during your turn (before your attack), you may move 1 damage counter from 1 of your ' +
         'Pokémon to Slowbro as long as you don\'t Knock Out Slowbro. This power can\'t be used if Slowbro is affected ' +

@@ -101,6 +101,7 @@ export class Snorlax extends PokemonCard {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.ASLEEP]);
+      specialConditionEffect.target = effect.player.active;
       store.reduceEffect(state, specialConditionEffect);
     }
 

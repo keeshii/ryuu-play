@@ -104,7 +104,7 @@ describe('ChooseCardsPrompt', () => {
   });
 
   it('should override default options with provided values', () => {
-    const options: Partial<ChooseCardsOptions> = {
+    const options: ChooseCardsOptions = {
       min: 1,
       max: 2,
       allowCancel: false,

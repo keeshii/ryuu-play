@@ -33,7 +33,7 @@ function* useColdCrush(next: Function, store: StoreLike, state: State, effect: A
       GameMessage.CHOOSE_ENERGIES_TO_DISCARD,
       player.active.energies,
       { },
-      { min: 1, max: 1, allowCancel: true }
+      { min: 0, max: 1, allowCancel: true }
     ),
     selected => {
       cards = selected || [];
@@ -121,7 +121,7 @@ export class ArticunoEx extends PokemonCard {
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     const legendaryAscent = commonPowers.legendaryAscent(this, store, state, effect);
 
-    legendaryAscent.reduce(this.powers[0], 'Water Energy');
+    legendaryAscent.reduce(this.powers[0], CardType.WATER);
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const generator = useColdCrush(() => generator.next(), store, state, effect);

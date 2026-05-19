@@ -3,9 +3,7 @@ import {
   BetweenTurnsEffect,
   CardType,
   Effect,
-  PlayerType,
   PokemonCard,
-  PokemonSlot,
   PowerEffect,
   PowerType,
   Stage,
@@ -61,16 +59,10 @@ export class Victreebel extends PokemonCard {
     if (effect instanceof BetweenTurnsEffect) {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
-      const targets: PokemonSlot[] = [];
 
       if (player.active.getPokemonCard() !== this) {
         return state;
       }
-
-      // Create list of Pokemons to heal
-      opponent.forEachPokemon(PlayerType.TOP_PLAYER, (pokemonSlot) => {
-        targets.push(pokemonSlot);
-      });
 
       // Try to reduce PowerEffect, to check if something is blocking our ability
       try {
@@ -80,9 +72,7 @@ export class Victreebel extends PokemonCard {
         return state;
       }
 
-      for (const target of targets) {
-        target.damage += 10;
-      }
+      opponent.active.damage += 10;
 
       return state;
     }

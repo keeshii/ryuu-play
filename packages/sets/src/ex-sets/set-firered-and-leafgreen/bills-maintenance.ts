@@ -1,5 +1,6 @@
 import {
   Card,
+  CardList,
   ChooseCardsPrompt,
   Effect,
   GameError,
@@ -15,17 +16,16 @@ import {
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect, self: BillsMaintenance): IterableIterator<State> {
   const player = effect.player;
 
+  const handWithoutBill = new CardList();
+  handWithoutBill.cards = player.hand.cards.filter(c => c !== self);
+
   // We don't have a card to shuffle into deck
-  if (!player.hand.cards.some(c => c !== self)) {
+  if (handWithoutBill.cards.length === 0) {
     throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
   }
 
-  // Don't allow to shufle the supporter card (not necessary when supporter effect is copied by ability)
-  const blocked: number[] = [];
-  const index = player.hand.cards.indexOf(self);
-  if (index !== -1) {
-    blocked.push(index);
-  }
+  // We will discard this card after prompt confirmation
+  effect.preventDefault = true;
 
   let cards: Card[] = [];
   yield store.prompt(
@@ -33,9 +33,9 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     new ChooseCardsPrompt(
       player.id,
       GameMessage.CHOOSE_CARD_TO_DECK,
-      player.hand,
+      handWithoutBill,
       {},
-      { min: 1, max: 1, allowCancel: false, blocked }
+      { min: 1, max: 1, allowCancel: true }
     ),
     selected => {
       cards = selected || [];
@@ -43,6 +43,12 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     }
   );
 
+  // Operation canceled by the user
+  if (cards.length === 0) {
+    return state;
+  }
+
+  player.hand.moveCardTo(self, player.supporter);
   player.hand.moveCardsTo(cards, player.deck);
 
   return store.prompt(state, [new ShuffleDeckPrompt(player.id)], deckOrder => {

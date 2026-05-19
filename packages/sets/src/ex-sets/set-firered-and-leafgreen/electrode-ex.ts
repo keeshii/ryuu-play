@@ -14,6 +14,7 @@ import {
   EnergyType,
   GameError,
   GameMessage,
+  KnockOutEffect,
   PlayerType,
   PokemonCard,
   PokemonSlot,
@@ -27,17 +28,8 @@ import {
   SuperType
 } from '@ptcg/common';
 
-function* useExtraEnergyBomb(next: Function, store: StoreLike, state: State, self: ElectrodeEx, effect: PowerEffect): IterableIterator<State> {
+function* useExtraEnergyBomb(next: Function, store: StoreLike, state: State, self: ElectrodeEx, effect: KnockOutEffect): IterableIterator<State> {
   const player = effect.player;
-  const pokemonSlot = StateUtils.findPokemonSlot(state, self);
-
-  if (pokemonSlot === undefined || pokemonSlot.specialConditions.length > 0) {
-    throw new GameError(GameMessage.CANNOT_USE_POWER);
-  }
-
-  const checkHpEffect = new CheckHpEffect(player, pokemonSlot);
-  store.reduceEffect(state, checkHpEffect);
-  pokemonSlot.damage = Math.max(checkHpEffect.hp, pokemonSlot.damage);
 
   // Wait for Knock Out, because player should be able to pickup the energies
   // that he just discarded with electrode ex.
@@ -63,6 +55,11 @@ function* useExtraEnergyBomb(next: Function, store: StoreLike, state: State, sel
       energies += 1;
     }
   });
+  energies = Math.min(5, energies);
+
+  if (energies === 0) {
+    return state;
+  }
 
   return store.prompt(
     state,
@@ -95,14 +92,13 @@ function* useExtraEnergyBomb(next: Function, store: StoreLike, state: State, sel
 
 function* useCrushAndBurn(next: Function, store: StoreLike, state: State, effect: AttackEffect): IterableIterator<State> {
   const player = effect.player;
-  const opponent = StateUtils.getOpponent(state, player);
 
   let targets: PokemonSlot[] = [];
 
   do {
     let hasPokemonWithEnergy = false;
     const blocked: CardTarget[] = [];
-    opponent.forEachPokemon(PlayerType.TOP_PLAYER, (pokemonSlot, card, target) => {
+    player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (pokemonSlot, card, target) => {
       if (pokemonSlot.energies.cards.length > 0) {
         hasPokemonWithEnergy = true;
       } else {
@@ -121,7 +117,7 @@ function* useCrushAndBurn(next: Function, store: StoreLike, state: State, effect
         GameMessage.CHOOSE_POKEMON_TO_DISCARD_CARDS,
         PlayerType.BOTTOM_PLAYER,
         [SlotType.ACTIVE, SlotType.BENCH],
-        { allowCancel: true, blocked }
+        { min: 0, max: 1, allowCancel: true, blocked }
       ),
       results => {
         targets = results || [];
@@ -130,10 +126,11 @@ function* useCrushAndBurn(next: Function, store: StoreLike, state: State, effect
     );
 
     if (targets.length > 0) {
-      const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);
+      const target = targets[0];
+
+      const checkProvidedEnergy = new CheckProvidedEnergyEffect(player, target);
       state = store.reduceEffect(state, checkProvidedEnergy);
 
-      const target = targets[0];
       let cards: Card[] = [];
       yield store.prompt(
         state,
@@ -178,6 +175,7 @@ export class ElectrodeEx extends PokemonCard {
     {
       name: 'Extra Energy Bomb',
       powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
       text:
         'Once during your turn (before your attack), you may discard Electrode ex and all the cards attached to it ' +
         '(this counts as Knocking Out Electrode ex). If you do, search your discard pile for 5 Energy cards and ' +
@@ -209,14 +207,32 @@ export class ElectrodeEx extends PokemonCard {
 
   public fullName: string = 'Electrode ex RG';
 
+  public readonly ENERGY_BOMB_MARKER = 'ENERGY_BOMB_MARKER';
+
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
-      const generator = useExtraEnergyBomb(() => generator.next(), store, state, this, effect);
-      return generator.next().value;
+      const player = effect.player;
+      const pokemonSlot = StateUtils.findPokemonSlot(state, this);
+
+      if (pokemonSlot === undefined || pokemonSlot.specialConditions.length > 0) {
+        throw new GameError(GameMessage.CANNOT_USE_POWER);
+      }
+
+      const checkHpEffect = new CheckHpEffect(player, pokemonSlot);
+      store.reduceEffect(state, checkHpEffect);
+      pokemonSlot.damage = Math.max(checkHpEffect.hp, pokemonSlot.damage);
+      player.marker.addMarker(this.ENERGY_BOMB_MARKER, this);
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const generator = useCrushAndBurn(() => generator.next(), store, state, effect);
+      return generator.next().value;
+    }
+
+    if (effect instanceof KnockOutEffect && effect.player.marker.hasMarker(this.ENERGY_BOMB_MARKER, this)) {
+      const player = effect.player;
+      player.marker.removeMarker(this.ENERGY_BOMB_MARKER, this);
+      const generator = useExtraEnergyBomb(() => generator.next(), store, state, this, effect);
       return generator.next().value;
     }
 

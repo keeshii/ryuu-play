@@ -11,6 +11,7 @@ import {
   PowerType,
   Stage,
   State,
+  StateUtils,
   StoreLike,
   SuperType,
 } from '@ptcg/common';
@@ -27,6 +28,7 @@ export class Ditto extends PokemonCard {
     {
       name: 'Form Variation',
       powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
       text:
         'Once during your turn (before your attack), you may search your discard pile for a Basic Pokémon ' +
         '(excluding Pokémon-ex and Ditto) and switch it with Ditto. (Any cards attached to Ditto, damage counters, ' +
@@ -63,9 +65,18 @@ export class Ditto extends PokemonCard {
 
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
       const player = effect.player;
+      const pokemonSlot = StateUtils.findPokemonSlot(state, this);
+
+      // Not in play
+      if (pokemonSlot === undefined) {
+        throw new GameError(GameMessage.CANNOT_USE_POWER);
+      }
 
       const hasPokemonInDiscard = player.discard.cards.some(c => {
-        return c instanceof PokemonCard && c.stage === Stage.BASIC && c.name !== 'Ditto' && !c.tags.includes(CardTag.POKEMON_EX);
+        return c instanceof PokemonCard
+          && c.stage === Stage.BASIC
+          && c.name !== 'Ditto'
+          && !c.tags.includes(CardTag.POKEMON_EX);
       });
 
       if (!hasPokemonInDiscard) {
@@ -73,8 +84,11 @@ export class Ditto extends PokemonCard {
       }
 
       const blocked = player.discard.cards
-        .filter(c => c instanceof PokemonCard && c.stage === Stage.BASIC && (c.name === 'Ditto' || c.tags.includes(CardTag.POKEMON_EX)))
-        .map(c => player.deck.cards.indexOf(c));
+        .filter(c => c instanceof PokemonCard
+          && c.stage === Stage.BASIC
+          && (c.name === 'Ditto' || c.tags.includes(CardTag.POKEMON_EX))
+        )
+        .map(c => player.discard.cards.indexOf(c));
 
       return store.prompt(
         state,
@@ -94,8 +108,8 @@ export class Ditto extends PokemonCard {
           if (cards.length !== 1) {
             return;
           }
-          player.discard.moveCardTo(cards[0], player.active.pokemons);
-          player.active.pokemons.moveCardTo(this, player.discard);
+          player.discard.moveCardTo(cards[0], pokemonSlot.pokemons);
+          pokemonSlot.pokemons.moveCardTo(this, player.discard);
         }
       );
     }

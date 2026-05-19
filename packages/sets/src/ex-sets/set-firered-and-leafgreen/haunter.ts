@@ -14,7 +14,7 @@ import {
   State,
   StoreLike,
 } from '@ptcg/common';
-import { commonAttacks } from '../../common';
+import { commonAttacks, commonMarkers } from '../../common';
 
 export class Haunter extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -29,6 +29,7 @@ export class Haunter extends PokemonCard {
     {
       name: 'Head Trip',
       powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
       text:
         'Once during your turn (before your attack), if Haunter is on your Bench, you may use this power. One of ' +
         'your Active Pokémon is now Confused.'
@@ -62,6 +63,7 @@ export class Haunter extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     const flipSpecialConditions = commonAttacks.flipSpecialConditions(this, store, state, effect);
+    const powerUseOnce = commonMarkers.powerUseOnce(this, store, state, effect);
 
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
       const player = effect.player;
@@ -77,6 +79,11 @@ export class Haunter extends PokemonCard {
         throw new GameError(GameMessage.CANNOT_USE_POWER);
       }
 
+      if (powerUseOnce.hasMarker(effect)) {
+        throw new GameError(GameMessage.POWER_ALREADY_USED);
+      }
+
+      powerUseOnce.setMarker(effect);
       player.active.addSpecialCondition(SpecialCondition.CONFUSED);
     }
 

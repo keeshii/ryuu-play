@@ -96,6 +96,7 @@ export class Wigglytuff extends PokemonCard {
     {
       name: 'Assistance',
       powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
       text:
         'Once during your turn (before your attack), if Wigglytuff is on your Bench, you may choose 1 of your ' +
         'Active Pokémon and remove 1 Special Condition from it.'

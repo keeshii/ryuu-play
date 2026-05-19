@@ -13,7 +13,7 @@ import { commonAttacks } from '../../common';
 export class ClefableEx extends PokemonCard {
   public tags = [CardTag.POKEMON_EX];
 
-  public stage: Stage = Stage.STAGE_2;
+  public stage: Stage = Stage.STAGE_1;
 
   public evolvesFrom = 'Clefairy';
 

@@ -46,7 +46,7 @@ function* useHyperWhirlpool(
       heads += flipResult ? 1 : 0;
       next();
     });
-  } while (flipResult && heads >= max);
+  } while (flipResult && heads < max);
 
   // No heads, nothing to discard
   if (heads === 0) {
@@ -85,6 +85,7 @@ export class BlastoiseEx extends PokemonCard {
     {
       name: 'Energy Rain',
       powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
       text:
         'As often as you like during your turn (before your attack), you may attach a W Energy card from your hand ' +
         'to 1 of your Pokémon. Put 1 damage counter on that Pokémon. This power can\'t be used if Blastoise ex is ' +
@@ -153,7 +154,7 @@ export class BlastoiseEx extends PokemonCard {
           }
           for (const transfer of transfers) {
             const target = StateUtils.getTarget(state, player, transfer.to);
-            player.discard.moveCardTo(transfer.card, target.energies);
+            player.hand.moveCardTo(transfer.card, target.energies);
             target.damage += 10;
           }
         }

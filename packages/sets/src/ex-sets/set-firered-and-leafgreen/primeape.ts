@@ -57,6 +57,7 @@ export class Primeape extends PokemonCard {
 
       const hasToolsInHand = player.hand.cards.some(c => c instanceof TrainerCard && c.trainerType === TrainerType.TOOL);
       if (!hasToolsInHand) {
+        effect.damage = 0;
         return state;
       }
 
@@ -72,7 +73,7 @@ export class Primeape extends PokemonCard {
         selected => {
           const cards = selected || [];
           player.hand.moveCardsTo(cards, player.discard);
-          effect.damage += cards.length * 30;
+          effect.damage = cards.length * 30;
         }
       );
     }

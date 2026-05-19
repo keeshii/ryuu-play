@@ -4,6 +4,7 @@ import {
   CardType,
   Effect,
   EndTurnEffect,
+  PlayerType,
   PokemonCard,
   SpecialCondition,
   Stage,
@@ -11,7 +12,6 @@ import {
   StateUtils,
   StoreLike,
 } from '@ptcg/common';
-import { commonMarkers } from '../../common';
 
 export class Gastly extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -45,23 +45,33 @@ export class Gastly extends PokemonCard {
 
   public fullName: string = 'Gastly RG';
 
+  public readonly SLOW_TRIP_GAS_MARKER = 'SLOW_TRIP_GAS_MARKER';
+
+  public readonly CLEAR_SLOW_TRIP_GAS_MARKER = 'CLEAR_SLOW_TRIP_GAS_MARKER';
+
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
 
-    const duringOpponentNextTurn = commonMarkers.duringOpponentNextTurn(this, store, state, effect);
-
-    if (effect instanceof EndTurnEffect && duringOpponentNextTurn.hasMarker(effect, effect.player.active)) {
+    if (effect instanceof EndTurnEffect && effect.player.marker.hasMarker(this.CLEAR_SLOW_TRIP_GAS_MARKER, this)) {
+      effect.player.marker.removeMarker(this.CLEAR_SLOW_TRIP_GAS_MARKER, this);
       const player = effect.player;
-      const opponent = StateUtils.getOpponent(state, player);
-      const attackEffect = new AttackEffect(opponent, player, this.attacks[0]);
-      const specialConditionEffect = new AddSpecialConditionsEffect(attackEffect, [SpecialCondition.CONFUSED]);
-      store.reduceEffect(state, specialConditionEffect);
-      return state;
+      const opponent = StateUtils.getOpponent(state, effect.player);
+
+      if (player.active.marker.hasMarker(this.SLOW_TRIP_GAS_MARKER, this)) {
+        const attackEffect = new AttackEffect(opponent, player, this.attacks[0]);
+        const specialConditionEffect = new AddSpecialConditionsEffect(attackEffect, [SpecialCondition.CONFUSED]);
+        store.reduceEffect(state, specialConditionEffect);
+      }
+
+      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, pokemonSlot => {
+        pokemonSlot.marker.removeMarker(this.SLOW_TRIP_GAS_MARKER, this);
+      });
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
-      duringOpponentNextTurn.setMarker(effect, opponent.active);
+      opponent.active.marker.addMarker(this.SLOW_TRIP_GAS_MARKER, this);
+      opponent.marker.addMarker(this.CLEAR_SLOW_TRIP_GAS_MARKER, this);
       return state;
     }
 

@@ -31,6 +31,11 @@ export const damageOpponentPokemon: CommonAttack<[damage: number, slotTypes?: Sl
     ) => {
       const player = attackEffect.player;
       const opponent = StateUtils.getOpponent(state, player);
+      const hasBench = opponent.bench.some(b => b.pokemons.cards.length > 0);
+
+      if (!slotTypes.includes(SlotType.ACTIVE) && !hasBench) {
+        return state;
+      }
 
       return store.prompt(
         state,
@@ -43,15 +48,15 @@ export const damageOpponentPokemon: CommonAttack<[damage: number, slotTypes?: Sl
         ),
         selected => {
           const targets = selected || [];
-          if (targets.includes(opponent.active)) {
-            attackEffect.damage = damage;
-            return;
+          for (const target of targets) {
+            if (target === opponent.active) {
+              attackEffect.damage = damage;
+            } else {
+              const damageEffect = new PutDamageEffect(attackEffect, damage);
+              damageEffect.target = target;
+              store.reduceEffect(state, damageEffect);
+            }
           }
-          targets.forEach(target => {
-            const damageEffect = new PutDamageEffect(attackEffect, damage);
-            damageEffect.target = target;
-            store.reduceEffect(state, damageEffect);
-          });
         }
       );
     }

@@ -59,7 +59,7 @@ function* useEnergyPowder(next: Function, store: StoreLike, state: State, effect
       }
       for (const transfer of transfers) {
         const target = StateUtils.getTarget(state, player, transfer.to);
-        player.discard.moveCardTo(transfer.card, target.energies);
+        player.deck.moveCardTo(transfer.card, target.energies);
       }
       next();
     }

@@ -59,7 +59,7 @@ export class Onix extends PokemonCard {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
       // Can't use this attack next turn
       duringYourNextTurn.setMarker(effect);
-      return damageOpponentPokemon.use(effect, 10, [SlotType.ACTIVE, SlotType.BENCH], { min: 0, max: 2 });
+      return damageOpponentPokemon.use(effect, 10, [SlotType.BENCH], { min: 0, max: 2 });
     }
 
     return state;

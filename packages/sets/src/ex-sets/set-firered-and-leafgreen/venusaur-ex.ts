@@ -4,11 +4,15 @@ import {
   CardTag,
   CardType,
   Effect,
+  GameError,
+  GameMessage,
   PokemonCard,
+  PowerEffect,
   PowerType,
   SpecialCondition,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 import { commonPowers } from '../../common';
@@ -28,6 +32,7 @@ export class VenusaurEx extends PokemonCard {
     {
       name: 'Energy Trans',
       powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
       text:
         'As often as you like during your turn (before your attack), move a G Energy card attached to 1 of your ' +
         'Pokémon to another of your Pokémon. This power can\'t be used if Venusaur ex is affected by a Special ' +
@@ -66,7 +71,16 @@ export class VenusaurEx extends PokemonCard {
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     const energyTrans = commonPowers.energyTrans(this, store, state, effect);
 
-    energyTrans.reduce(this.powers[0], CardType.GRASS);
+    if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
+      const pokemonSlot = StateUtils.findPokemonSlot(state, effect.card);
+
+      if (pokemonSlot === undefined
+        || pokemonSlot.specialConditions.length > 0) {
+        throw new GameError(GameMessage.CANNOT_USE_POWER);
+      }
+
+      energyTrans.reduce(this.powers[0], CardType.GRASS);
+    }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const specialConditionEffect = new AddSpecialConditionsEffect(effect, [

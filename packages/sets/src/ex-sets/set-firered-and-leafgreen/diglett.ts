@@ -1,18 +1,13 @@
 import {
   AttackEffect,
   CardType,
-  ChoosePokemonPrompt,
   Effect,
-  GameMessage,
-  PlayerType,
   PokemonCard,
-  PutDamageEffect,
-  SlotType,
   Stage,
   State,
-  StateUtils,
   StoreLike,
 } from '@ptcg/common';
+import { commonAttacks } from '../../common';
 
 export class Diglett extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -45,32 +40,12 @@ export class Diglett extends PokemonCard {
   public fullName: string = 'Diglett RG';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      const player = effect.player;
-      const opponent = StateUtils.getOpponent(state, player);
+    const damageOpponentPokemon = commonAttacks.damageOpponentPokemon(this, store, state, effect);
 
-      return store.prompt(
-        state,
-        new ChoosePokemonPrompt(
-          player.id,
-          GameMessage.CHOOSE_POKEMON_TO_DAMAGE,
-          PlayerType.TOP_PLAYER,
-          [SlotType.ACTIVE, SlotType.BENCH],
-          { allowCancel: false }
-        ),
-        selected => {
-          const targets = selected || [];
-          if (targets.includes(opponent.active)) {
-            effect.damage = 20;
-            return;
-          }
-          targets.forEach(target => {
-            const damageEffect = new PutDamageEffect(effect, 10);
-            damageEffect.target = target;
-            store.reduceEffect(state, damageEffect);
-          });
-        }
-      );
+    if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
+      effect.ignoreResistance = true;
+      effect.ignoreWeakness = true;
+      return damageOpponentPokemon.use(effect, 10);
     }
 
     return state;

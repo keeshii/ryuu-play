@@ -5,7 +5,6 @@ import {
   CheckProvidedEnergyEffect,
   Effect,
   EnergyCard,
-  GameError,
   GameMessage,
   MoveEnergyPrompt,
   PlayerType,
@@ -30,11 +29,6 @@ function* useEnergyTrans(
   cardType: CardType
 ): IterableIterator<State> {
   const player = effect.player;
-  const pokemonSlot = StateUtils.findPokemonSlot(state, self);
-
-  if (!pokemonSlot || pokemonSlot.specialConditions.length > 0) {
-    throw new GameError(GameMessage.CANNOT_USE_POWER);
-  }
 
   const blockedMap: { source: CardTarget; blocked: number[] }[] = [];
   player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (slot, card, target) => {

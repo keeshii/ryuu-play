@@ -7,7 +7,6 @@ import {
   ChoosePokemonPrompt,
   Effect,
   GameMessage,
-  MoveCardsEffect,
   PlayerType,
   PokemonCard,
   PokemonSlot,
@@ -34,8 +33,25 @@ function* useHoard(
   }
 
   let toolsAttached = 0;
+  let hasCheckedDeck = false;
 
   while (toolsAttached < 2) {
+
+    let hasPokemonWithoutTool = false;
+    const blocked: CardTarget[] = [];
+    player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (pokemonSlot, card, target) => {
+      if (pokemonSlot.trainers.cards.some(t => t.trainerType === TrainerType.TOOL)) {
+        blocked.push(target);
+      } else {
+        hasPokemonWithoutTool = true;
+      }
+    });
+
+    if (hasCheckedDeck && !hasPokemonWithoutTool) {
+      break;
+    }
+
+    const max = hasPokemonWithoutTool ? 1 : 0;
     let cards: Card[] = [];
     yield store.prompt(
       state,
@@ -44,29 +60,16 @@ function* useHoard(
         GameMessage.CHOOSE_CARD_TO_ATTACH,
         player.deck,
         { superType: SuperType.TRAINER, trainerType: TrainerType.TOOL },
-        { min: 0, max: 1, allowCancel: true }
+        { min: 0, max, allowCancel: true }
       ),
       selected => {
         cards = selected || [];
+        hasCheckedDeck = true;
         next();
       }
     );
 
     if (cards.length === 0) {
-      break;
-    }
-
-    let hasPokemonWithoutTool = false;
-    const blocked: CardTarget[] = [];
-    player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (slot, card, target) => {
-      if (slot.trainers.cards.some(t => t.trainerType === TrainerType.TOOL)) {
-        blocked.push(target);
-      } else {
-        hasPokemonWithoutTool = true;
-      }
-    });
-
-    if (!hasPokemonWithoutTool) {
       break;
     }
 
@@ -87,8 +90,7 @@ function* useHoard(
     );
 
     if (targets.length > 0) {
-      const moveCardsEffect = new MoveCardsEffect(effect, cards, targets[0].trainers);
-      state = store.reduceEffect(state, moveCardsEffect);
+      player.deck.moveCardsTo(cards, targets[0].trainers);
       toolsAttached += 1;
     }
   }

@@ -44,7 +44,7 @@ function* useRecharge(next: Function, store: StoreLike, state: State, effect: At
         energyType: EnergyType.BASIC,
         name: 'Lightning Energy',
       },
-      { min: 1, max: 2, allowCancel: true }
+      { min: 0, max: 2, allowCancel: true }
     ),
     selected => {
       cards = selected || [];

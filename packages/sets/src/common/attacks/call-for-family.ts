@@ -23,13 +23,10 @@ function* useCallForFamily(
   state: State,
   effect: AttackEffect,
   filterType: FilterType,
-  pokemons?: number
+  pokemons: number
 ): IterableIterator<State> {
   const player = effect.player;
   const slots: PokemonSlot[] = player.bench.filter(b => b.pokemons.cards.length === 0);
-  if (pokemons === undefined) {
-    pokemons = player.bench.length;
-  }
   const max = Math.min(slots.length, pokemons);
 
   if (player.deck.cards.length === 0) {
@@ -74,7 +71,7 @@ export const callForFamily: CommonAttack<[FilterType, number?]> = function(
 ) {
 
   return {
-    use: (attackEffect: AttackEffect, filterType: FilterType, pokemons?: number) => {
+    use: (attackEffect: AttackEffect, filterType: FilterType, pokemons: number = 1) => {
       if (!(filterType instanceof Array)) {
         filterType = [filterType];
       }

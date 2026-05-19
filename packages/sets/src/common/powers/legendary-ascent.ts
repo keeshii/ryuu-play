@@ -1,8 +1,11 @@
 import {
   CardTarget,
+  CardType,
   ConfirmPrompt,
   Effect,
   EnergyType,
+  FilterType,
+  FilterUtils,
   GameMessage,
   MoveEnergyPrompt,
   PlayerType,
@@ -26,7 +29,7 @@ function* useLegendaryAscent(
   state: State,
   effect: PlayPokemonEffect,
   self: PokemonCard,
-  energyName: string
+  cardType: CardType
 ): IterableIterator<State> {
   const player = effect.player;
 
@@ -43,7 +46,13 @@ function* useLegendaryAscent(
   // Switch Articuno to Active
   player.switchPokemon(effect.target);
 
-  let hasWaterEnergy = false;
+  const filterType: FilterType = {
+    superType: SuperType.ENERGY,
+    energyType: EnergyType.BASIC,
+    provides: [cardType],
+  };
+
+  let hasBasicEnergy = false;
   const blockedTo: CardTarget[] = [];
   const blockedFrom: CardTarget[] = [];
   player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (cardList, card, target) => {
@@ -51,13 +60,13 @@ function* useLegendaryAscent(
       blockedFrom.push(target);
     } else {
       blockedTo.push(target);
-      if (cardList.energies.cards.some(c => c.name === energyName)) {
-        hasWaterEnergy = true;
+      if (cardList.energies.cards.some(c => FilterUtils.match(c, filterType))) {
+        hasBasicEnergy = true;
       }
     }
   });
 
-  if (!hasWaterEnergy) {
+  if (!hasBasicEnergy) {
     return state;
   }
 
@@ -68,11 +77,7 @@ function* useLegendaryAscent(
       GameMessage.MOVE_ENERGY_TO_ACTIVE,
       PlayerType.BOTTOM_PLAYER,
       [SlotType.ACTIVE, SlotType.BENCH],
-      {
-        superType: SuperType.ENERGY,
-        energyType: EnergyType.BASIC,
-        name: 'Water Energy',
-      },
+      filterType,
       { allowCancel: true, blockedFrom, blockedTo }
     ),
     result => {
@@ -86,14 +91,14 @@ function* useLegendaryAscent(
   );
 }
 
-export const legendaryAscent: CommonPower<[energyName: string]> = function(
+export const legendaryAscent: CommonPower<[cardType: CardType]> = function(
   self: PokemonCard,
   store: StoreLike,
   state: State,
   effect: Effect
 ) {
   return {
-    reduce: (power: Power, energyName: string) => {
+    reduce: (power: Power, cardType: CardType) => {
       if (effect instanceof PlayPokemonEffect && effect.pokemonCard === self) {
         const player = effect.player;
 
@@ -105,7 +110,7 @@ export const legendaryAscent: CommonPower<[energyName: string]> = function(
           return state;
         }
 
-        const generator = useLegendaryAscent(() => generator.next(), store, state, effect, self, energyName);
+        const generator = useLegendaryAscent(() => generator.next(), store, state, effect, self, cardType);
         return generator.next().value;
       }
       return state;
