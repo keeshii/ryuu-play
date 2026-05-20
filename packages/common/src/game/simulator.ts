@@ -27,6 +27,10 @@ export class Simulator implements StoreHandler {
     return new Simulator(this.store.state);
   }
 
+  public setBotArbiter(botArbiter: BotArbiter) {
+    this.botArbiter = botArbiter;
+  }
+
   public onStateChange(state: State): void {}
 
   private handleArbiterPrompts(state: State): ResolvePromptAction | undefined {

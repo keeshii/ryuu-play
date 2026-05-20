@@ -64,8 +64,8 @@ describe('Butterfree JU', () => {
   });
 
   it('Should use Mega Drain', () => {
-    const { opponent, active, prompts } = TestUtils.getAll(sim);
-    active.damage = 60;
+    const { opponent, player, prompts } = TestUtils.getAll(sim);
+    player.active.damage = 60;
 
     // attack
     sim.dispatch(new AttackAction(1, 'Mega Drain'));
@@ -75,6 +75,6 @@ describe('Butterfree JU', () => {
     expect(state.turn).toEqual(1);
     expect(state.activePlayer).toEqual(1);
     expect(opponent.active.damage).toEqual(40);
-    expect(active.damage).toEqual(40);
+    expect(player.active.damage).toEqual(40);
   });
 });

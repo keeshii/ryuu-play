@@ -98,7 +98,8 @@ export const defaultStateScores = {
 
 export const defaultArbiterOptions = {
   flipMode: BotFlipMode.ALL_HEADS,
-  shuffleMode: BotShuffleMode.NO_SHUFFLE
+  shuffleMode: BotShuffleMode.NO_SHUFFLE,
+  flipResults: []
 };
 
 export const allPromptResolvers: PromptResolverList = [

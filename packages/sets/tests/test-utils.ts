@@ -1,4 +1,25 @@
-import { BotArbiterOptions, BotFlipMode, BotShuffleMode, Card, CardList, CardType, EnergyCard, GamePhase, Player, PokemonCard, PokemonSlot, Prompt, Simulator, State, TrainerCard } from "@ptcg/common";
+import {
+  BotArbiter,
+  BotArbiterOptions,
+  BotFlipMode,
+  BotShuffleMode,
+  Card,
+  CardList,
+  CardTarget,
+  CardType,
+  EnergyCard,
+  GameError,
+  GamePhase,
+  Player,
+  PlayerType,
+  PokemonCard,
+  PokemonSlot,
+  Prompt,
+  Simulator,
+  SlotType,
+  State,
+  TrainerCard
+} from "@ptcg/common";
 import { TestCard } from "./test-cards/test-card";
 import { TestEnergy } from "./test-cards/test-energy";
 import { TestPokemon } from "./test-cards/test-pokemon";
@@ -28,7 +49,7 @@ export class TestUtils {
       opponent.prizes.push(new CardList());
       opponent.prizes[i].cards = [new TestCard()];
     }
-    
+
     for (let i = 0; i < 5; i++) {
       player.bench.push(new PokemonSlot());
       opponent.bench.push(new PokemonSlot());
@@ -36,14 +57,16 @@ export class TestUtils {
 
     state.players = [player, opponent];
     state.phase = GamePhase.PLAYER_TURN;
-    return new Simulator(state);
+    return new Simulator(state, options);
   }
 
-  public static createTailsTestSimulator() {
-    return TestUtils.createTestSimulator({
-      flipMode: BotFlipMode.ALL_TAILS,
-      shuffleMode: BotShuffleMode.REVERSE
+  public static setFlipResults(sim: Simulator, flipResults: boolean[]) {
+    const botArbiter = new BotArbiter({
+      flipMode: BotFlipMode.CUSTOM,
+      shuffleMode: BotShuffleMode.REVERSE,
+      flipResults
     });
+    sim.setBotArbiter(botArbiter);
   }
 
   public static getAll(sim: Simulator) {
@@ -52,7 +75,6 @@ export class TestUtils {
     return {
       state,
       player,
-      active: player.active,
       bench: player.bench,
       deck: player.deck,
       discard: player.discard,
@@ -62,9 +84,25 @@ export class TestUtils {
     };
   }
 
-  public static getLastPrompt(sim: Simulator): Prompt<any> | undefined {
+  public static lastPrompt(sim: Simulator, player?: Player): Prompt<any> | undefined {
     const prompts = sim.store.state.prompts;
-    return prompts.length ? prompts[prompts.length - 1] : undefined;
+    for (let i = prompts.length - 1; i >= 0; i--) {
+      const prompt = prompts[i];
+      if (player === undefined || prompt.playerId === player.id) {
+        return prompt;
+      }
+    }
+  }
+
+  public static isPlayerTurn(sim: Simulator, player: Player): boolean {
+    const state = sim.store.state;
+
+    if (state.phase !== GamePhase.PLAYER_TURN
+      || state.activePlayer !== state.players.findIndex(p => p.id === player.id)
+      || state.prompts.some(p => p.result === undefined)) {
+      return false;
+    }
+    return true;
   }
 
   public static setActive(
@@ -73,10 +111,11 @@ export class TestUtils {
     energies: CardType[] = [],
     trainers: TrainerCard[] = []
   ) {
+    const pokemonSlot = TestUtils.pokemonSlot(pokemons, energies, trainers);
     const active = sim.store.state.players[0].active;
-    active.pokemons.cards = pokemons;
-    active.energies.cards = TestUtils.makeEnergies(energies);
-    active.trainers.cards = trainers;
+    active.pokemons.cards = pokemonSlot.pokemons.cards;
+    active.energies.cards = pokemonSlot.energies.cards;
+    active.trainers.cards = pokemonSlot.trainers.cards;
   }
 
   public static setDefending(
@@ -85,10 +124,11 @@ export class TestUtils {
     energies: CardType[] = [],
     trainers: TrainerCard[] = []
   ) {
-    const active = sim.store.state.players[1].active;
-    active.pokemons.cards = pokemons;
-    active.energies.cards = TestUtils.makeEnergies(energies);
-    active.trainers.cards = trainers;
+    const pokemonSlot = TestUtils.pokemonSlot(pokemons, energies, trainers);
+    const defending = sim.store.state.players[1].active;
+    defending.pokemons.cards = pokemonSlot.pokemons.cards;
+    defending.energies.cards = pokemonSlot.energies.cards;
+    defending.trainers.cards = pokemonSlot.trainers.cards;
   }
 
   public static makeTestCards(count: number): Card[] {
@@ -105,6 +145,52 @@ export class TestUtils {
       cards.push(new TestEnergy(cardTypes[i]));
     }
     return cards;
+  }
+
+  public static target(sim: Simulator, pokemonSlot?: PokemonSlot | CardList, pov?: Player): CardTarget {
+    const state = sim.store.state;
+    pov = pov || state.players[0];
+
+    if (!pokemonSlot) {
+      return { player: PlayerType.BOTTOM_PLAYER, slot: SlotType.BOARD, index: 0 };
+    }
+
+    for (const player of state.players) {
+      const playerType = player === pov ? PlayerType.BOTTOM_PLAYER : PlayerType.TOP_PLAYER;
+
+      if (pokemonSlot === player.active) {
+        return { player: playerType, slot: SlotType.ACTIVE, index: 0 };
+      }
+
+      if (pokemonSlot === player.hand) {
+        return { player: playerType, slot: SlotType.HAND, index: 0 };
+      }
+
+      if (pokemonSlot === player.discard) {
+        return { player: playerType, slot: SlotType.DISCARD, index: 0 };
+      }
+
+      let index = player.bench.indexOf(pokemonSlot as PokemonSlot);
+      if (index !== -1) {
+        return { player: playerType, slot: SlotType.BENCH, index }
+      }
+    }
+
+    return { player: PlayerType.BOTTOM_PLAYER, slot: SlotType.BOARD, index: 0 };
+  }
+
+  public static pokemonSlot(
+    pokemons: PokemonCard[],
+    energies: CardType[] = [],
+    trainers: TrainerCard[] = [],
+    damage: number = 0
+  ): PokemonSlot {
+    const pokemonSlot = new PokemonSlot();
+    pokemonSlot.pokemons.cards = pokemons;
+    pokemonSlot.energies.cards = TestUtils.makeEnergies(energies);
+    pokemonSlot.trainers.cards = trainers;
+    pokemonSlot.damage = damage;
+    return pokemonSlot;
   }
 
   public static getAllCards(sim: Simulator): Card[] {
@@ -136,8 +222,8 @@ export class TestUtils {
     const ids: number[] = [];
     let id = 1;
     for (const card of cards) {
-        card.id = id++;
-        ids.push(card.id);
+      card.id = id++;
+      ids.push(card.id);
     }
     return ids;
   }
@@ -146,10 +232,17 @@ export class TestUtils {
     const cards = TestUtils.getAllCards(sim);
     let ids: number[] = [];
     for (const card of cards) {
-        ids.push(card.id);
+      ids.push(card.id);
     }
     ids.sort((a, b) => a - b);
     return ids;
+  }
+
+  public static getErrorMessage(error: any): string {
+    if (error instanceof GameError) {
+      return error.message;
+    }
+    return '';
   }
 
 }

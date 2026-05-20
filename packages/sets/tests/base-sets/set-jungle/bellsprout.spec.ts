@@ -48,9 +48,9 @@ describe('Bellsprout JU', () => {
   it('Should use Call For Family - cancel prompt', () => {
     // attack
     sim.dispatch(new AttackAction(1, 'Call for Family'));
-    const prompt = TestUtils.getLastPrompt(sim) as ChooseCardsPrompt;
+    const prompt = TestUtils.lastPrompt(sim) as ChooseCardsPrompt;
     expect(prompt).toBeTruthy();
-    expect(prompt?.type).toEqual('Choose cards');
+    expect(prompt instanceof ChooseCardsPrompt).toBeTrue();
 
     // cancel prompt
     sim.dispatch(new ResolvePromptAction(prompt.id, null));
@@ -67,7 +67,7 @@ describe('Bellsprout JU', () => {
     sim.dispatch(new AttackAction(1, 'Call for Family'));
 
     // ends turn without prompt
-    const prompt = TestUtils.getLastPrompt(sim);
+    const prompt = TestUtils.lastPrompt(sim);
     expect(prompt).toBeFalsy();
     expect(state.turn).toEqual(1);
     expect(state.activePlayer).toEqual(1);

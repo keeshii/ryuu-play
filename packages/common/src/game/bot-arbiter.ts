@@ -8,6 +8,7 @@ import { ResolvePromptAction } from '../store';
 export enum BotFlipMode {
   ALL_HEADS,
   ALL_TAILS,
+  CUSTOM,
   RANDOM
 }
 
@@ -19,19 +20,26 @@ export enum BotShuffleMode {
 
 export interface BotArbiterOptions {
   flipMode: BotFlipMode,
-  shuffleMode: BotShuffleMode
+  shuffleMode: BotShuffleMode,
+  flipResults: boolean[]
 }
 
 export class BotArbiter {
 
   private options: BotArbiterOptions;
-  private flipCount: number = 0;
+  private flipCount: number = -1;
 
   constructor(options: Partial<BotArbiterOptions> = {}) {
     this.options = Object.assign({
       flipMode: BotFlipMode.ALL_HEADS,
-      shuffleMode: BotShuffleMode.NO_SHUFFLE
+      shuffleMode: BotShuffleMode.NO_SHUFFLE,
+      flipResults: []
     }, options);
+
+    // We do not allow CUSTOM flip mode without provided flip results
+    if (this.options.flipMode === BotFlipMode.CUSTOM && this.options.flipResults.length === 0) {
+      this.options.flipMode =  BotFlipMode.ALL_HEADS;
+    }
   }
 
   public resolvePrompt(state: State, prompt: Prompt<any>): ResolvePromptAction | undefined {
@@ -67,6 +75,9 @@ export class BotArbiter {
         case BotFlipMode.RANDOM:
           result = Math.round(Math.random()) === 0;
           return new ResolvePromptAction(prompt.id, result);
+        case BotFlipMode.CUSTOM:
+          result = this.options.flipResults[this.flipCount % this.options.flipResults.length];
+          return new ResolvePromptAction(prompt.id, result);
         case BotFlipMode.ALL_TAILS:
           // Every 10th coin is opposite to avoid infinite loops.
           result = (this.flipCount % 10 === 9) ? true : false;
@@ -86,11 +97,9 @@ export class BotArbiter {
       order.push(i);
     }
 
-    for (let i = 0; i < len; i++) {
-      const position = Math.min(len - 1, Math.round(Math.random() * len));
-      const tmp = order[i];
-      order[i] = order[position];
-      order[position] = tmp;
+    for (let i = len-1; i > 0; i--) {
+      const position = Math.floor(Math.random() * (i+1));
+      [order[i], order[position]] = [order[position], order[i]];
     }
 
     return order;
