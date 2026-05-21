@@ -11,6 +11,7 @@ import {
 import { ArticunoEx } from "../../../src/ex-sets/set-firered-and-leafgreen/articuno-ex";
 import { TestPokemon } from "../../test-cards/test-pokemon";
 import { TestPokemonBlockPowers } from "../../test-cards/test-pokemon-block-powers";
+import { TestPokemonIgnoreAttackCost } from "../../test-cards/test-pokemon-ignore-attack-cost";
 import { TestUtils } from "../../test-utils";
 
 describe('Articuno ex RG', () => {
@@ -349,6 +350,37 @@ describe('Articuno ex RG', () => {
         [new ArticunoEx()],
         [CardType.WATER, CardType.WATER, CardType.COLORLESS]
       ));
+
+    const expectedDefending = TestUtils.pokemonSlot(
+      [new TestPokemon()],
+      [CardType.WATER]
+    );
+    expectedDefending.damage = 50;
+    expect(opponent.active).toEqual(expectedDefending);
+
+    expect(player.discard.cards).toEqual([]);
+    expect(opponent.discard.cards).toEqual([]);
+  });
+
+  it('Should use Cold Crush - player has no energies', () => {
+    const { player, opponent } = TestUtils.getAll(sim);
+    player.bench[0].pokemons.cards = [ new TestPokemonIgnoreAttackCost() ];
+    player.active.energies.cards = [];
+
+    TestUtils.setDefending(
+      sim,
+      [new TestPokemon()],
+      [CardType.WATER]
+    );
+
+    // attack
+    sim.dispatch(new AttackAction(1, 'Cold Crush'));
+
+    // Player has no energies, no prompt
+
+    expect(TestUtils.isPlayerTurn(sim, opponent)).toBeTrue();
+
+    expect(player.active).toEqual(TestUtils.pokemonSlot([new ArticunoEx()]));
 
     const expectedDefending = TestUtils.pokemonSlot(
       [new TestPokemon()],
