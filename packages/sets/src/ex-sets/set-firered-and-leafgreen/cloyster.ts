@@ -68,13 +68,8 @@ export class Cloyster extends PokemonCard {
     if (effect instanceof PutDamageEffect && effect.target.pokemons.cards.includes(this)) {
       const pokemonCard = effect.target.getPokemonCard();
 
-      // It's not this pokemon card
-      if (pokemonCard !== this) {
-        return state;
-      }
-
-      // It's not an attack
-      if (state.phase !== GamePhase.ATTACK) {
+      // Not an attack, or it's not this pokemon card
+      if (state.phase !== GamePhase.ATTACK || pokemonCard !== this) {
         return state;
       }
 

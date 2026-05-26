@@ -1,5 +1,4 @@
 import {
-  CardTag,
   ChooseCardsPrompt,
   GameMessage,
   PlayCardAction,
@@ -8,6 +7,7 @@ import {
 } from "@ptcg/common";
 import { CeliosNetwork } from "../../../src/ex-sets/set-firered-and-leafgreen/celios-network";
 import { TestPokemon } from "../../test-cards/test-pokemon";
+import { TestPokemonEx } from "../../test-cards/test-pokemon-ex";
 
 
 import { TestUtils } from "../../test-utils";
@@ -73,8 +73,7 @@ describe('Celio\'s Network RG', () => {
     const { opponent, player, prompts } = TestUtils.getAll(sim);
     const target = TestUtils.target(sim);
     const testPokemon = new TestPokemon();
-    const testPokemonEx = new TestPokemon();
-    testPokemonEx.tags = [CardTag.POKEMON_EX];
+    const testPokemonEx = new TestPokemonEx();
 
     player.deck.cards.push(testPokemon, testPokemonEx);
 

@@ -1,4 +1,4 @@
-import { CardType, Effect, GameError, GameMessage, PokemonCard, PowerEffect, State, StoreLike, SuperType } from "@ptcg/common";
+import { CardType, Effect, GameError, GameMessage, PokemonCard, PowerEffect, State, StoreLike, SuperType, Weakness } from "@ptcg/common";
 
 // A pokemon card with no types or abilities, used in tests.
 export class TestPokemonBlockPowers extends PokemonCard {
@@ -18,9 +18,9 @@ export class TestPokemonBlockPowers extends PokemonCard {
     },
   ];
 
-  public weakness = [];
+  public weakness: Weakness[] = [];
 
-  public retreat = [];
+  public retreat: CardType[] = [];
 
   public set: string = 'TEST';
 

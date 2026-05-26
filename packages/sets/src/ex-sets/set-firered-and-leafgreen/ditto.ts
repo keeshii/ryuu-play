@@ -67,11 +67,6 @@ export class Ditto extends PokemonCard {
       const player = effect.player;
       const pokemonSlot = StateUtils.findPokemonSlot(state, this);
 
-      // Not in play
-      if (pokemonSlot === undefined) {
-        throw new GameError(GameMessage.CANNOT_USE_POWER);
-      }
-
       const hasPokemonInDiscard = player.discard.cards.some(c => {
         return c instanceof PokemonCard
           && c.stage === Stage.BASIC
@@ -79,7 +74,7 @@ export class Ditto extends PokemonCard {
           && !c.tags.includes(CardTag.POKEMON_EX);
       });
 
-      if (!hasPokemonInDiscard) {
+      if (pokemonSlot === undefined || !hasPokemonInDiscard) {
         throw new GameError(GameMessage.CANNOT_USE_POWER);
       }
 

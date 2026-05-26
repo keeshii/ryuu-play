@@ -103,7 +103,7 @@ describe('Butterfree RG', () => {
       options: jasmine.objectContaining({ allowCancel: false })
     }));
 
-    // Move energies
+    // Choose Pokemon
     const selected: PokemonSlot[] = [opponent.bench[0]];
     sim.dispatch(new ResolvePromptAction(prompts[0].id, selected));
 

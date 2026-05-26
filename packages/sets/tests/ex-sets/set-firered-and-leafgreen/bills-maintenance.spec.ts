@@ -99,7 +99,7 @@ describe('Bill\'s Maintenance RG', () => {
       cards: handWithoutBill
     }));
 
-    // Cancel prompt
+    // Choose card
     sim.dispatch(new ResolvePromptAction(prompts[0].id, [handWithoutBill.cards[0]]));
 
     // Cart still in hand, no supported played

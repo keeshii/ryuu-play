@@ -1,11 +1,13 @@
-import { CardType, PokemonCard, SuperType, Weakness } from "@ptcg/common";
+import { CardTag, CardType, PokemonCard, SuperType, Weakness } from "@ptcg/common";
 
 // A pokemon card with no types or abilities, used in tests.
-export class TestPokemon extends PokemonCard {
+export class TestPokemonEx extends PokemonCard {
 
   public superType: SuperType = SuperType.POKEMON;
 
   public cardTypes: CardType[] = [];
+  
+  public tags: CardTag[] = [CardTag.POKEMON_EX];
 
   public hp: number = 400;
 
