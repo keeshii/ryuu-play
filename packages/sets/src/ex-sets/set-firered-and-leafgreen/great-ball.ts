@@ -7,11 +7,9 @@ import {
   GameMessage,
   PokemonCard,
   PokemonSlot,
-  ShowCardsPrompt,
   ShuffleDeckPrompt,
   Stage,
   State,
-  StateUtils,
   StoreLike,
   SuperType,
   TrainerCard,
@@ -21,7 +19,6 @@ import {
 
 function* playCard(next: Function, store: StoreLike, state: State, effect: TrainerEffect): IterableIterator<State> {
   const player = effect.player;
-  const opponent = StateUtils.getOpponent(state, player);
   const slots: PokemonSlot[] = player.bench.filter(b => b.pokemons.cards.length === 0);
 
   let cards: Card[] = [];
@@ -42,7 +39,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     state,
     new ChooseCardsPrompt(
       player.id,
-      GameMessage.CHOOSE_CARD_TO_HAND,
+      GameMessage.CHOOSE_CARD_TO_PUT_ONTO_BENCH,
       player.deck,
       { superType: SuperType.POKEMON, stage: Stage.BASIC },
       { min: 1, max: 1, allowCancel: true, blocked }
@@ -58,10 +55,6 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
       player.deck.moveCardTo(card, slots[index].pokemons);
       slots[index].pokemonPlayedTurn = state.turn;
     });
-
-    yield store.prompt(state, new ShowCardsPrompt(opponent.id, GameMessage.CARDS_SHOWED_BY_THE_OPPONENT, cards), () =>
-      next()
-    );
   }
 
   return store.prompt(state, new ShuffleDeckPrompt(player.id), order => {
