@@ -11,6 +11,7 @@
     "packages/common",
     "packages/sets",
     "packages/server",
+    "packages/simple-bot",
     "packages/play",
     "packages/cordova"
   ],
@@ -18,6 +19,7 @@
   "license": "MIT",
   "dependencies": {
     "@ptcg/server": "*",
+    "@ptcg/simple-bot": "*",
     "@ptcg/sets": "*"
   }
 }

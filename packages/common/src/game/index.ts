@@ -3,6 +3,7 @@ export * from './cards/deck-analyser';
 export * from './cards/format.interface';
 
 export * from './bot-arbiter';
+export * from './bot-player';
 export * from './game-settings';
 export * from './player-stats';
 export * from './replay.interface';

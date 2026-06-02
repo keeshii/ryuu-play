@@ -1,7 +1,7 @@
 FROM node:18.20.8 as base
 
 ARG REPO=https://github.com/keeshii/ryuu-play.git
-ARG TAG=master
+ARG TAG=develop
 ARG EXTERNAL_URL=http://localhost:12021
 
 # Download repository
@@ -14,7 +14,8 @@ RUN cd /repo \
   && npm install \
   && npm run build -w packages/common \
   && npm run build -w packages/sets \
-  && npm run build -w packages/server
+  && npm run build -w packages/server \
+  && npm run build -w packages/simple-bot
 
 # Build ptcg-play in production
 RUN cd /repo \
@@ -24,7 +25,7 @@ RUN cd /repo \
 # Include only porduction dependencies only
 RUN cd /repo \
   && rm -rf node_modules \
-  && NODE_ENV=production npm ci --omit=dev -w=packages/server -w=packages/sets
+  && NODE_ENV=production npm ci --omit=dev -w=packages/server -w=packages/sets -w=packages/simple-bot
 
 # Listen to all interfaces, update path to web-ui
 RUN cd /repo \

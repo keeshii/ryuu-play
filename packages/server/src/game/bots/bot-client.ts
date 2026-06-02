@@ -1,4 +1,4 @@
-import { CardManager } from '@ptcg/common';
+import { BotPlayer, CardManager } from '@ptcg/common';
 import { Client } from '../client/client.interface';
 import { DeckAnalyser } from '@ptcg/common';
 import { Game } from '../core/game';
@@ -8,40 +8,79 @@ import { User, Message, Deck } from '../../storage';
 import { Core } from '../core/core';
 import { State } from '@ptcg/common';
 import { GameSettings } from '@ptcg/common';
+import { BotGameHandler } from './bot-game-handler';
 
-export abstract class BotClient implements Client {
+export class BotClient implements Client {
 
   public id: number = 0;
   public name: string;
   public user: User;
   public core: Core | undefined;
   public games: Game[] = [];
+  private gameHandlers: BotGameHandler[] = [];
 
-  constructor(name: string) {
+  constructor(private botPlayer: BotPlayer) {
     this.user = new User();
-    this.user.name = name;
-    this.name = name;
+    this.user.name = botPlayer.name;
+    this.name = botPlayer.name;
   }
 
-  public abstract onConnect(client: Client): void;
+  public onConnect(client: Client): void { }
 
-  public abstract onDisconnect(client: Client): void;
+  public onDisconnect(client: Client): void { }
 
-  public abstract onUsersUpdate(users: User[]): void;
+  public onUsersUpdate(users: User[]): void {
+    const me = users.find(u => u.id === this.user.id);
+    if (me !== undefined) {
+      this.user = me;
+    }
+  }
 
-  public abstract onGameAdd(game: Game): void;
+  public onMessage(from: Client, message: Message): void { }
 
-  public abstract onGameDelete(game: Game): void;
+  public onMessageRead(user: User): void { }
 
-  public abstract onGameJoin(game: Game, client: Client): void;
+  public onGameJoin(game: Game, client: Client): void {
+    if (client === this) {
+      const state = game.state;
+      this.addGameHandler(game);
+      this.onStateChange(game, state);
+    }
+  }
 
-  public abstract onGameLeave(game: Game, client: Client): void;
+  public onGameLeave(game: Game, client: Client): void {
+    const gameHandler = this.gameHandlers.find(gh => gh.game === game);
 
-  public abstract onStateChange(game: Game, state: State): void;
-  
-  public abstract onMessage(from: Client, message: Message): void;
+    if (client === this && gameHandler !== undefined) {
+      this.deleteGameHandler(gameHandler);
+      return;
+    }
+  }
 
-  public abstract onMessageRead(user: User): void;
+  public onGameAdd(game: Game): void { }
+
+  public onGameDelete(game: Game): void { }
+
+  public onStateChange(game: Game, state: State): void {
+    const gameHandler = this.gameHandlers.find(handler => handler.game === game);
+    if (gameHandler !== undefined) {
+      gameHandler.onStateChange(state);
+    }
+  }
+
+  protected addGameHandler(game: Game): BotGameHandler {
+    const formatName = game.state.rules.formatName;
+    const gameHandler = new BotGameHandler(this, this.botPlayer, game, this.loadDeck(formatName));
+    this.gameHandlers.push(gameHandler);
+    return gameHandler;
+  }
+
+  protected deleteGameHandler(gameHandler: BotGameHandler): void {
+    const index = this.gameHandlers.indexOf(gameHandler);
+    if (index !== -1) {
+      this.gameHandlers.splice(index, 1);
+    }
+  }
 
   createGame(deck: string[], gameSettings?: GameSettings, invited?: Client): Game {
     if (this.core === undefined) {

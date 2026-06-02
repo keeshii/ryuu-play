@@ -1,20 +1,18 @@
-import { Action } from '@ptcg/common';
+import { Action, BotPlayer, BotPlayerAi } from '@ptcg/common';
 import { State } from '@ptcg/common';
-import { Client } from '../game/client/client.interface';
-import { Game } from '../game/core/game';
-import { SimpleBotOptions } from './simple-bot-options';
-import { SimpleTacticsAi } from './simple-tactics-ai';
-import { config } from '../config';
+import { Client } from '../client/client.interface';
+import { Game } from '../core/game';
+import { config } from '../../config';
 
-export class SimpleGameHandler {
+export class BotGameHandler {
 
-  private ai: SimpleTacticsAi | undefined;
+  private ai: BotPlayerAi | undefined;
   private state: State | undefined;
   private changeInProgress: boolean = false;
 
   constructor(
     private client: Client,
-    private options: SimpleBotOptions,
+    private botPlayer: BotPlayer,
     public game: Game,
     deckPromise: Promise<string[]>
   ) {
@@ -50,7 +48,7 @@ export class SimpleGameHandler {
       // continue regardless of error
     }
 
-    this.ai = new SimpleTacticsAi(this.client, this.options, deck);
+    this.ai = this.botPlayer.createBotAiInstance(this.client.id, deck);
 
     // A state change was ignored, because we were loading the deck
     if (this.state) {

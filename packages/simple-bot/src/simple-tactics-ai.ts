@@ -1,18 +1,17 @@
 import { Player, State, PassTurnAction, Action, GamePhase, Prompt,
-  InvitePlayerPrompt, StateLog, ResolvePromptAction, GameLog } from '@ptcg/common';
-import { Client } from '../game/client/client.interface';
+  InvitePlayerPrompt, StateLog, ResolvePromptAction, GameLog, BotPlayerAi } from '@ptcg/common';
 import { PromptResolver } from './prompt-resolver/prompt-resolver';
 import { SimpleTactic } from './simple-tactics/simple-tactics';
 import { SimpleBotOptions } from './simple-bot-options';
 import { Simulator } from '@ptcg/common';
 
-export class SimpleTacticsAi {
+export class SimpleTacticsAi implements BotPlayerAi {
 
   private tactics: SimpleTactic[];
   private resolvers: PromptResolver[];
 
   constructor(
-    private client: Client,
+    private playerId: number,
     options: SimpleBotOptions,
     private deck: string[] | null
   ) {
@@ -23,7 +22,7 @@ export class SimpleTacticsAi {
   public decodeNextAction(state: State): Action | undefined {
     let player: Player | undefined;
     for (let i = 0; i < state.players.length; i++) {
-      if (state.players[i].id === this.client.id) {
+      if (state.players[i].id === this.playerId) {
         player = state.players[i];
       }
     }
@@ -46,7 +45,7 @@ export class SimpleTacticsAi {
     }
 
     const activePlayer = state.players[state.activePlayer];
-    const isMyTurn = activePlayer.id === this.client.id;
+    const isMyTurn = activePlayer.id === this.playerId;
     if (state.phase === GamePhase.PLAYER_TURN && isMyTurn) {
       return this.decodePlayerTurnAction(player, state);
     }
@@ -60,7 +59,7 @@ export class SimpleTacticsAi {
       }
     }
 
-    return new PassTurnAction(this.client.id);
+    return new PassTurnAction(this.playerId);
   }
 
   public resolvePrompt(player: Player, state: State, prompt: Prompt<any>): Action {

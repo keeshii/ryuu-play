@@ -1,4 +1,5 @@
-const { BotManager, SimpleBot, config } = require('@ptcg/server');
+const { BotManager, config } = require('@ptcg/server');
+const { SimpleBot } =  require('@ptcg/simple-bot');
 const { CardManager } = require('@ptcg/common');
 
 // Backend config

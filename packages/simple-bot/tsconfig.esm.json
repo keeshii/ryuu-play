@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig",
+  "compilerOptions": {
+    "module": "es2015",
+    "outDir": "dist/esm",
+    "moduleResolution": "nodenext"
+  },
+  "include": [
+    "src/index.ts"
+  ]
+}

@@ -39,6 +39,8 @@ The project consists of several packages:
 
 * **@ptcg/cordova** is a cordova wrapper for the ptcg-play package, so it can be running as an android application. This has some advantages like storing card images in the cache or avoiding CORS issues.
 
+* **@ptcg/simple-bot** is a a simple implementation of the AI player that follows the game rules.
+
 ### Node and npm version
 
 The entire system is written in TypeScript and requires node.js for compilation, test execution and runnning. The repository is a "monorepo" (multiple packages in one repository) and it is managed by npm workspaces. Npm supports workspaces starting with version 7.
@@ -129,7 +131,7 @@ config.storage.database = 'name';
 
 The cards are implemented on the server side. It is not required to rebuild the client after adding/modyfing the cards, because all the simulation is handled by the server and list of available cards are downloaded by clients after successful login. This guarantees consistency between clients.
 
-Currently there are about 250 cards added to the project. You may find them in the the directory `packages/sets`. If you wish to add some more cards, it is the good place to look into.
+Currently there are about 1000 cards added to the project. You may find them in the the directory `packages/sets`. If you wish to add some more cards, it is the good place to look into.
 
 ```
 const { CardManager } = require('@ptcg/common');
@@ -171,7 +173,8 @@ It's fine to reuse same sets in multiple formats. The game engine will handle th
 You can create autonomous AI players on your private server. They work as regular player that always has time to play with you. Initially there is one bot loaded, called `bot`, of course you can always add more. They are defined in the file `ptcg-server/start.js`.
 
 ```
-const { BotManager, SimpleBot, config } = require('@ptcg/server');
+const { BotManager, config } = require('@ptcg/server');
+const { SimpleBot } = require('@ptcg/simple-bot');
 
 config.bots.defaultPassword = 'bot';
 
@@ -179,7 +182,7 @@ const botManager = BotManager.getInstance();
 botManager.registerBot(new SimpleBot('bot'));
 ```
 
-SimpleBot is the universal AI implementation that should be capable of playing with any deck. It creates list of possible actions, simulates the outcome and compares the score of the game state. Then chooses the best possible action and repeats the process until its turn is over. For more details check the source code at `packages/server/simple-bot`.
+SimpleBot is the universal AI implementation that should be capable of playing with any deck. It creates list of possible actions, simulates the outcome and compares the score of the game state. Then chooses the best possible action and repeats the process until its turn is over. For more details check the source code at `packages/simple-bot`.
 
 Server is automatically creating an account for bot user with password provided in the `init.js` file. You can login as that user, define its deck and set an avatar. AI player won't be able to accept the game invitation until you provide him a valid deck. If you define more than one deck, then each time bot will randomly choose one.
 
