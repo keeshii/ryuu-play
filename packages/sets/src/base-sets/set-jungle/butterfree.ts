@@ -57,10 +57,10 @@ export class Butterfree extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
 
-    const opponentSwichesDamageFirst = commonAttacks.opponentSwichesDamageFirst(this, store, state, effect);
+    const opponentSwitchesDamageFirst = commonAttacks.opponentSwitchesDamageFirst(this, store, state, effect);
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      opponentSwichesDamageFirst.use(effect);
+      opponentSwitchesDamageFirst.use(effect);
     }
 
     if (effect instanceof AfterDamageEffect && effect.attack === this.attacks[1]) {

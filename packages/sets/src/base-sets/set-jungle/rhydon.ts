@@ -55,7 +55,7 @@ export class Rhydon extends PokemonCard {
   public fullName: string = 'Rhydon JU';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    const opponentSwichesDamageFirst = commonAttacks.opponentSwichesDamageFirst(this, store, state, effect);
+    const opponentSwitchesDamageFirst = commonAttacks.opponentSwitchesDamageFirst(this, store, state, effect);
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
       const player = effect.player;
@@ -64,7 +64,7 @@ export class Rhydon extends PokemonCard {
       dealDamage.target = player.active;
       store.reduceEffect(state, dealDamage);
 
-      opponentSwichesDamageFirst.use(effect);
+      opponentSwitchesDamageFirst.use(effect);
     }
 
     return state;

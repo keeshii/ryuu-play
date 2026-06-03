@@ -57,11 +57,11 @@ export class Pidgeotto extends PokemonCard {
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
 
     const mirrorMove = commonAttacks.mirrorMove(this, store, state, effect);
-    const opponentSwichesDamageFirst = commonAttacks.opponentSwichesDamageFirst(this, store, state, effect);
+    const opponentSwitchesDamageFirst = commonAttacks.opponentSwitchesDamageFirst(this, store, state, effect);
 
     // Whirlwind
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      opponentSwichesDamageFirst.use(effect);
+      opponentSwitchesDamageFirst.use(effect);
     }
 
     // Mirror Move

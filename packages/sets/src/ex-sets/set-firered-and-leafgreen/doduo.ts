@@ -1,17 +1,15 @@
 import {
   AttackEffect,
   CardType,
-  ChoosePokemonPrompt,
   CoinFlipPrompt,
   Effect,
   GameMessage,
-  PlayerType,
   PokemonCard,
-  SlotType,
   Stage,
   State,
   StoreLike,
 } from '@ptcg/common';
+import { commonAttacks } from '../../common';
 
 export class Doduo extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -52,31 +50,10 @@ export class Doduo extends PokemonCard {
   public fullName: string = 'Doduo RG';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
+    const switchDamageFirst = commonAttacks.switchDamageFirst(this, store, state, effect);
+
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      const player = effect.player;
-
-      const hasBenched = player.bench.some(b => b.pokemons.cards.length > 0);
-      if (!hasBenched) {
-        return state;
-      }
-
-      return store.prompt(
-        state,
-        new ChoosePokemonPrompt(
-          player.id,
-          GameMessage.CHOOSE_NEW_ACTIVE_POKEMON,
-          PlayerType.BOTTOM_PLAYER,
-          [SlotType.BENCH],
-          { allowCancel: false }
-        ),
-        selected => {
-          if (!selected || selected.length === 0) {
-            return state;
-          }
-          const target = selected[0];
-          player.switchPokemon(target);
-        }
-      );
+      return switchDamageFirst.use(effect, false);
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {

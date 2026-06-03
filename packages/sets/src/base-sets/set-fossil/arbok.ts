@@ -54,13 +54,13 @@ export class Arbok extends PokemonCard {
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     
-    const opponentSwichesDamageFirst = commonAttacks.opponentSwichesDamageFirst(this, store, state, effect);
+    const opponentSwitchesDamageFirst = commonAttacks.opponentSwitchesDamageFirst(this, store, state, effect);
     
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
       return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
         if (result === true) {
-          opponentSwichesDamageFirst.use(effect);
+          opponentSwitchesDamageFirst.use(effect);
         }
       });
     }

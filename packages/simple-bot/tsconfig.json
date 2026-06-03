@@ -1,23 +1,7 @@
 {
+  "extends": "../common/tsconfig",
   "compilerOptions": {
-    "target": "es2017",
-    "module": "commonjs",
-    "lib": ["dom", "es2017"],
-    "declaration": true,
-    "outDir": "dist/cjs",
-    "rootDirs": ["./src"],
-    "removeComments": false,
-    "preserveConstEnums": true,
-    "noEmitOnError": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "noUnusedLocals": true,
-    "typeRoots": [
-      "../../node_modules/@types",
-      "node_modules/@types"
-    ],
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "outDir": "dist/cjs"
   },
   "include": [
     "src/**/*.ts"

@@ -45,10 +45,10 @@ export class Pidgey extends PokemonCard {
   public fullName: string = 'Pidgey BS';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    const opponentSwichesDamageFirst = commonAttacks.opponentSwichesDamageFirst(this, store, state, effect);
+    const opponentSwitchesDamageFirst = commonAttacks.opponentSwitchesDamageFirst(this, store, state, effect);
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      opponentSwichesDamageFirst.use(effect);
+      opponentSwitchesDamageFirst.use(effect);
     }
 
     return state;

@@ -14,7 +14,7 @@ import {
 
 import { CommonAttack } from '../common.interfaces';
 
-export const opponentSwichesDamageFirst: CommonAttack = function(
+export const opponentSwitchesDamageFirst: CommonAttack = function(
   self: PokemonCard,
   store: StoreLike,
   state: State,

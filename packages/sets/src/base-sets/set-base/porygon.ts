@@ -1,19 +1,14 @@
 import {
   AttackEffect,
   CardType,
-  CheckPokemonStatsEffect,
   Effect,
-  GameLog,
-  GameMessage,
   PokemonCard,
-  SelectPrompt,
   Stage,
   State,
-  StateUtils,
-  StoreLike,
+  StoreLike
 } from '@ptcg/common';
 
-import { changeType } from '../../common';
+import { commonAttacks } from '../../common';
 
 export class Porygon extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -53,84 +48,15 @@ export class Porygon extends PokemonCard {
 
   public fullName: string = 'Porygon BS';
 
-  public readonly WEAKNESS_CHANGE_MARKER = 'WEAKNESS_CHANGE_MARKER_';
-
-  public readonly RESISTANCE_CHANGE_MARKER = 'RESISTANCE_CHANGE_MARKER_';
-
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-
-    if (effect instanceof CheckPokemonStatsEffect) {
-      const weakness = changeType.getMarkerType(this, this.WEAKNESS_CHANGE_MARKER, effect.target);
-      const resitance = changeType.getMarkerType(this, this.RESISTANCE_CHANGE_MARKER, effect.target);
-
-      if (weakness) {
-        effect.weakness = effect.weakness.map(w => ({ type: weakness, value: w.value }));
-      }
-
-      if (resitance) {
-        effect.resistance = effect.resistance.map(r => ({ type: resitance, value: r.value }));
-      }
-
-      return state;
-    }
+    const conversion1And2 = commonAttacks.conversion1And2(this, store, state, effect);
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      const player = effect.player;
-      const opponent = StateUtils.getOpponent(state, player);
-      const pokemonCard = opponent.active.getPokemonCard();
-
-      if (!pokemonCard || pokemonCard.weakness.length === 0) {
-        return state;
-      }
-
-      return store.prompt(
-        state,
-        new SelectPrompt(
-          player.id,
-          GameMessage.CHOOSE_CARD_TYPE,
-          changeType.PROMPT_OPTIONS.map(p => p.message),
-          { allowCancel: true }
-        ),
-        choice => {
-          if (choice === null) {
-            return;
-          }
-          const value = changeType.PROMPT_OPTIONS[choice].value;
-          const message = changeType.PROMPT_OPTIONS[choice].message;
-          store.log(state, GameLog.LOG_PLAYER_CHANGES_TYPE_TO, { name: player.name, message });
-          changeType.removeMarkersByName(this.WEAKNESS_CHANGE_MARKER, opponent.active);
-          opponent.active.marker.addMarker(this.WEAKNESS_CHANGE_MARKER + value, this);
-        }
-      );
+      return conversion1And2.use(effect, 1);
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      const player = effect.player;
-      const pokemonCard = player.active.getPokemonCard();
-
-      if (!pokemonCard || pokemonCard.resistance.length === 0) {
-        return state;
-      }
-
-      return store.prompt(
-        state,
-        new SelectPrompt(
-          player.id,
-          GameMessage.CHOOSE_CARD_TYPE,
-          changeType.PROMPT_OPTIONS.map(p => p.message),
-          { allowCancel: true }
-        ),
-        choice => {
-          if (choice === null) {
-            return;
-          }
-          const value = changeType.PROMPT_OPTIONS[choice].value;
-          const message = changeType.PROMPT_OPTIONS[choice].message;
-          store.log(state, GameLog.LOG_PLAYER_CHANGES_TYPE_TO, { name: player.name, message });
-          changeType.removeMarkersByName(this.RESISTANCE_CHANGE_MARKER, player.active);
-          player.active.marker.addMarker(this.RESISTANCE_CHANGE_MARKER + value, this);
-        }
-      );
+      return conversion1And2.use(effect, 2);
     }
 
     return state;

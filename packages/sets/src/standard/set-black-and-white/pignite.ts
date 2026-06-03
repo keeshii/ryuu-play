@@ -4,7 +4,6 @@ import {
   CardType,
   ChooseCardsPrompt,
   Effect,
-  EnergyType,
   GameMessage,
   PokemonCard,
   ShuffleDeckPrompt,
@@ -36,8 +35,7 @@ function* useFlameCharge(next: Function, store: StoreLike, state: State, self: P
       player.deck,
       {
         superType: SuperType.ENERGY,
-        energyType: EnergyType.BASIC,
-        name: 'Fire Energy',
+        provides: [CardType.FIRE]
       },
       { min: 1, max: 1, allowCancel: true }
     ),

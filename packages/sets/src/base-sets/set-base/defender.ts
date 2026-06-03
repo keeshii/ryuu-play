@@ -1,11 +1,11 @@
 import {
   ChoosePokemonPrompt,
-  DealDamageEffect,
   Effect,
   EndTurnEffect,
   GameMessage,
   PlayerType,
   PokemonSlot,
+  PutDamageEffect,
   SlotType,
   State,
   StateUtils,
@@ -56,7 +56,7 @@ export class Defender extends TrainerCard {
       );
     }
 
-    if (effect instanceof DealDamageEffect && effect.target.trainers.cards.includes(this)) {
+    if (effect instanceof PutDamageEffect && effect.target.trainers.cards.includes(this)) {
       effect.damage -= 20;
       return state;
     }
