@@ -1,4 +1,4 @@
-import { BotPlayer, CardManager } from '@ptcg/common';
+import { BotAiFactory, CardManager } from '@ptcg/common';
 import { Client } from '../client/client.interface';
 import { DeckAnalyser } from '@ptcg/common';
 import { Game } from '../core/game';
@@ -19,10 +19,10 @@ export class BotClient implements Client {
   public games: Game[] = [];
   private gameHandlers: BotGameHandler[] = [];
 
-  constructor(private botPlayer: BotPlayer) {
+  constructor(private botAiFactory: BotAiFactory) {
     this.user = new User();
-    this.user.name = botPlayer.name;
-    this.name = botPlayer.name;
+    this.user.name = botAiFactory.name;
+    this.name = botAiFactory.name;
   }
 
   public onConnect(client: Client): void { }
@@ -70,7 +70,7 @@ export class BotClient implements Client {
 
   protected addGameHandler(game: Game): BotGameHandler {
     const formatName = game.state.rules.formatName;
-    const gameHandler = new BotGameHandler(this, this.botPlayer, game, this.loadDeck(formatName));
+    const gameHandler = new BotGameHandler(this, this.botAiFactory, game, this.loadDeck(formatName));
     this.gameHandlers.push(gameHandler);
     return gameHandler;
   }

@@ -1,4 +1,4 @@
-import { Action, BotPlayer, BotPlayerAi } from '@ptcg/common';
+import { Action, BotAi, BotAiFactory } from '@ptcg/common';
 import { State } from '@ptcg/common';
 import { Client } from '../client/client.interface';
 import { Game } from '../core/game';
@@ -6,13 +6,13 @@ import { config } from '../../config';
 
 export class BotGameHandler {
 
-  private ai: BotPlayerAi | undefined;
+  private ai: BotAi | undefined;
   private state: State | undefined;
   private changeInProgress: boolean = false;
 
   constructor(
     private client: Client,
-    private botPlayer: BotPlayer,
+    private botAiFactory: BotAiFactory,
     public game: Game,
     deckPromise: Promise<string[]>
   ) {
@@ -48,7 +48,7 @@ export class BotGameHandler {
       // continue regardless of error
     }
 
-    this.ai = this.botPlayer.createBotAiInstance(this.client.id, deck);
+    this.ai = this.botAiFactory.createBotAi(this.client.id, deck);
 
     // A state change was ignored, because we were loading the deck
     if (this.state) {

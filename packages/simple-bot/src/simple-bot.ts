@@ -1,11 +1,11 @@
 import { SimpleBotOptions } from './simple-bot-options';
 import { allSimpleTactics, allPromptResolvers, defaultStateScores,
   defaultArbiterOptions } from './simple-bot-definitions';
-import { BotPlayer, BotPlayerAi } from '@ptcg/common';
+import { BotAi, BotAiFactory } from '@ptcg/common';
 import { SimpleTacticsAi } from './simple-tactics-ai';
 
 
-export class SimpleBot extends BotPlayer {
+export class SimpleBot extends BotAiFactory {
 
   private options: SimpleBotOptions;
 
@@ -19,7 +19,7 @@ export class SimpleBot extends BotPlayer {
     }, options);
   }
 
-  public createBotAiInstance(playerId: number, deck: string[] | null): BotPlayerAi {
+  public createBotAi(playerId: number, deck: string[] | null): BotAi {
     return new SimpleTacticsAi(playerId, this.options, deck);
   }
 

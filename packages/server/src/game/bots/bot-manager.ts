@@ -1,6 +1,6 @@
 import { BotClient } from './bot-client';
 import { Core } from '../core/core';
-import { BotPlayer, GameError } from '@ptcg/common';
+import { BotAiFactory, GameError } from '@ptcg/common';
 import { GameMessage } from '@ptcg/common';
 import { User } from '../../storage';
 import { config } from '../../config';
@@ -22,8 +22,8 @@ export class BotManager {
     return BotManager.instance;
   }
 
-  public registerBot(botPlayer: BotPlayer): void {
-    this.bots.push(new BotClient(botPlayer));
+  public registerBot(botAiFactory: BotAiFactory): void {
+    this.bots.push(new BotClient(botAiFactory));
   }
 
   public async initBots(core: Core) {

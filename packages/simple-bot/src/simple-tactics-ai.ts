@@ -1,11 +1,11 @@
 import { Player, State, PassTurnAction, Action, GamePhase, Prompt,
-  InvitePlayerPrompt, StateLog, ResolvePromptAction, GameLog, BotPlayerAi } from '@ptcg/common';
+  InvitePlayerPrompt, StateLog, ResolvePromptAction, GameLog, BotAi } from '@ptcg/common';
 import { PromptResolver } from './prompt-resolver/prompt-resolver';
 import { SimpleTactic } from './simple-tactics/simple-tactics';
 import { SimpleBotOptions } from './simple-bot-options';
 import { Simulator } from '@ptcg/common';
 
-export class SimpleTacticsAi implements BotPlayerAi {
+export class SimpleTacticsAi implements BotAi {
 
   private tactics: SimpleTactic[];
   private resolvers: PromptResolver[];
@@ -62,7 +62,7 @@ export class SimpleTacticsAi implements BotPlayerAi {
     return new PassTurnAction(this.playerId);
   }
 
-  public resolvePrompt(player: Player, state: State, prompt: Prompt<any>): Action {
+  private resolvePrompt(player: Player, state: State, prompt: Prompt<any>): Action {
     if (prompt instanceof InvitePlayerPrompt) {
       const result = this.deck;
       let log: StateLog | undefined;
