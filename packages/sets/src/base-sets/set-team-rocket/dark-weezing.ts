@@ -86,7 +86,7 @@ export class DarkWeezing extends PokemonCard {
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
       const player = effect.player;
-      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+      return store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
         const specialCondition = result ? SpecialCondition.POISONED : SpecialCondition.PARALYZED;
         const specialConditionEffect = new AddSpecialConditionsEffect(effect, [specialCondition]);
         store.reduceEffect(state, specialConditionEffect);

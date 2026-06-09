@@ -17,7 +17,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   let flipResult = true;
 
   while (flipResult) {
-    yield store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+    yield store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
       flipResult = result;
       next();
     });

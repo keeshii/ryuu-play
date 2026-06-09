@@ -69,7 +69,7 @@ export class Chansey extends PokemonCard {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
 
-      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+      return store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
         if (result === true) {
           player.active.marker.addMarker(this.SCRUNCH_MARKER, this);
           opponent.marker.addMarker(this.CLEAR_SCRUNCH_MARKER, this);

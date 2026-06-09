@@ -32,6 +32,7 @@ export class Charmander extends PokemonCard {
     {
       name: 'Gather Fire',
       powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
       text:
         'Once during your turn (before your attack), you may take 1 R Energy card attached to 1 of your other ' +
         'Pokémon and attach it to Charmander. This power can\'t be used if Charmander is Asleep, Confused, or ' +

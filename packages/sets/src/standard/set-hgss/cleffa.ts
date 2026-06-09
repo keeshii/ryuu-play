@@ -57,7 +57,7 @@ export class Cleffa extends PokemonCard {
       specialCondition.target = player.active;
       store.reduceEffect(state, specialCondition);
 
-      return store.prompt(state, [new ShuffleDeckPrompt(player.id)], deckOrder => {
+      return store.prompt(state, new ShuffleDeckPrompt(player.id), deckOrder => {
         player.deck.applyOrder(deckOrder);
         player.deck.moveTo(player.hand, 6);
       });

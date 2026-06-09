@@ -104,7 +104,7 @@ export class DarkGyarados extends PokemonCard {
         return state;
       }
 
-      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+      return store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
         if (result === true) {
           const attack: Attack = {
             name: this.powers[0].name,

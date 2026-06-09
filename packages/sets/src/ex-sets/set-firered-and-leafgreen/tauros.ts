@@ -69,7 +69,7 @@ export class Tauros extends PokemonCard {
       const player = effect.player;
       effect.damage += player.active.damage;
 
-      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+      return store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
         if (result === false) {
           const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.CONFUSED]);
           specialConditionEffect.target = player.active;

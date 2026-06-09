@@ -27,7 +27,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   active.addSpecialCondition(SpecialCondition.POISONED);
 
   let coinResult: boolean = false;
-  yield store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+  yield store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
     coinResult = result;
     next();
   });

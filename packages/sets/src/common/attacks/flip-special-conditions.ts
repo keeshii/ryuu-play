@@ -23,7 +23,7 @@ export const flipSpecialConditions: CommonAttack<[SpecialCondition[]]> = functio
     use: (attackEffect: AttackEffect, conditions: SpecialCondition[]) => {
       const player = attackEffect.player;
 
-      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+      return store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
         if (result === true) {
           const specialConditionEffect = new AddSpecialConditionsEffect(attackEffect, conditions);
           store.reduceEffect(state, specialConditionEffect);

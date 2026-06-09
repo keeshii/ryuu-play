@@ -124,7 +124,7 @@ export class Slowpoke extends PokemonCard {
         return state;
       }
 
-      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+      return store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
         if (result === true) {
           const healEffect = new HealTargetEffect(effect, 10);
           healEffect.target = player.active;

@@ -71,6 +71,7 @@ export class DarkDragonair extends PokemonCard {
     {
       name: 'Evolutionary Light',
       powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
       text:
         'Once during your turn (before your attack), you may search your deck for an Evolution card. Show it to ' +
         'your opponent and put it into your hand. Shuffle your deck afterward. This power can\'t be used if Dark ' +
@@ -125,7 +126,7 @@ export class DarkDragonair extends PokemonCard {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
 
-      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+      return store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
         if (result === true) {
           effect.damage += 20;
         }

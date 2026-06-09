@@ -18,7 +18,7 @@ function* useFireWorks(next: Function, store: StoreLike, state: State, effect: A
   const player = effect.player;
 
   let flipResult = false;
-  yield store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+  yield store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
     flipResult = result;
     next();
   });

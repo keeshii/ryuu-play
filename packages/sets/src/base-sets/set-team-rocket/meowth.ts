@@ -54,7 +54,7 @@ export class Meowth extends PokemonCard {
 
       effect.ignoreResistance = true;
       effect.ignoreWeakness = true;
-      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+      return store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
         if (result === true) {
           damageOpponentPokemon.use(effect, 20);
         }

@@ -95,7 +95,7 @@ function* useHoard(
     }
   }
 
-  return store.prompt(state, [new ShuffleDeckPrompt(player.id)], deckOrder => {
+  return store.prompt(state, new ShuffleDeckPrompt(player.id), deckOrder => {
     player.deck.applyOrder(deckOrder);
   });
 }

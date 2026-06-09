@@ -68,7 +68,7 @@ export class Metapod extends PokemonCard {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
       
-      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+      return store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
         if (result === true) {
           player.active.marker.addMarker(this.STIFFEN_MARKER, this);
           opponent.marker.addMarker(this.CLEAR_STIFFEN_MARKER, this);
@@ -79,7 +79,7 @@ export class Metapod extends PokemonCard {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
       const player = effect.player;
 
-      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+      return store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
         if (result === true) {
           const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.PARALYZED]);
           store.reduceEffect(state, specialConditionEffect);

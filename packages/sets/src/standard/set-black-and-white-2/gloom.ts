@@ -22,7 +22,7 @@ function* useMiraclePowder(
   const player = effect.player;
 
   let flip = false;
-  yield store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+  yield store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
     flip = result;
     next();
   });

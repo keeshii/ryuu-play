@@ -73,7 +73,7 @@ export class DarkBlastoise extends PokemonCard {
       dealDamage.target = player.active;
       store.reduceEffect(state, dealDamage);
 
-      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+      return store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
         if (result === true) {
           opponentNextTurn.setMarker(effect, effect.player.active);
         }

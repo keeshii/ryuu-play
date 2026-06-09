@@ -26,7 +26,7 @@ export const smokescreen: CommonAttack = function(
     if (effect instanceof UseAttackEffect && effect.player.active.marker.hasMarker(SMOKESCREEN_MARKER, self)) {
       const player = effect.player;
       effect.preventDefault = true;
-      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+      return store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
         player.active.marker.removeMarker(SMOKESCREEN_MARKER);
         const attackEffect = result ? new UseAttackEffect(player, effect.attack) : new EndTurnEffect(player);
         store.reduceEffect(state, attackEffect);

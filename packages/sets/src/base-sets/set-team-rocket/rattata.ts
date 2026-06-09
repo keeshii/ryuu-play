@@ -28,6 +28,7 @@ export class Rattata extends PokemonCard {
     {
       name: 'Trickery',
       powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
       text:
         'Once during your turn (before your attack), you may switch 1 of your Prizes with the top card of your ' +
         'deck. This power can\'t be used if Rattata is Asleep, Confused, or Paralyzed.'
@@ -99,7 +100,7 @@ export class Rattata extends PokemonCard {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
       const player = effect.player;
 
-      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+      return store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
         if (result === true) {
           effect.damage += 10;
         }

@@ -47,7 +47,7 @@ function* useRebirth(
   player.marker.addMarker(self.REBIRTH_MAREKER, self);
 
   let flipResult = false;
-  yield store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+  yield store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
     flipResult = result;
     next();
   });

@@ -69,7 +69,7 @@ export class Farfetchd extends PokemonCard {
 
       player.marker.addMarker(this.LEEK_SLAP_MARKER, this);
 
-      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+      return store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
         if (result === false) {
           effect.damage = 0;
         }

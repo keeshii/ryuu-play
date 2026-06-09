@@ -103,7 +103,7 @@ export class Nosepass extends PokemonCard {
         return state;
       }
 
-      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+      return store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
         if (result) {
           const defendingCards = [
             ...opponent.active.pokemons.cards,

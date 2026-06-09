@@ -54,7 +54,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   player.hand.moveCardsTo(cards, player.discard);
   opponent.hand.moveTo(opponent.deck);
 
-  return store.prompt(state, [new ShuffleDeckPrompt(opponent.id)], deckOrder => {
+  return store.prompt(state, new ShuffleDeckPrompt(opponent.id), deckOrder => {
     opponent.deck.applyOrder(deckOrder);
     opponent.deck.moveTo(opponent.hand, 4);
   });

@@ -28,6 +28,7 @@ export class Drowzee extends PokemonCard {
     {
       name: 'Long-Distance Hypnosis',
       powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
       text:
         'Once during your turn (before your attack), you may flip a coin. If heads, the Defending Pokémon is now ' +
         'Asleep; if tails, your Active Pokémon is now Asleep. This power can\'t be used if Drowzee is Asleep, ' +
@@ -77,7 +78,7 @@ export class Drowzee extends PokemonCard {
 
       powerUseOnce.setMarker(effect);
 
-      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+      return store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
         const target = result ? opponent.active : player.active;
         target.addSpecialCondition(SpecialCondition.ASLEEP);
       });

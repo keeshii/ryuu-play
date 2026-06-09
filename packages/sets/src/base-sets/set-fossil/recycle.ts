@@ -23,7 +23,7 @@ function* playCard(next: Function, store: StoreLike, state: State, self: Recycle
   effect.preventDefault = true;
 
   let flipResult = false;
-  yield store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+  yield store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
     flipResult = result;
     next();
   });

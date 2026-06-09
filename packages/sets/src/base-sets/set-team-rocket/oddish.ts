@@ -1,4 +1,5 @@
 import {
+  AddSpecialConditionsEffect,
   AttackEffect,
   CardType,
   Effect,
@@ -8,7 +9,6 @@ import {
   State,
   StoreLike,
 } from '@ptcg/common';
-import { commonAttacks } from '../../common';
 
 export class Oddish extends PokemonCard {
   public stage: Stage = Stage.BASIC;
@@ -45,14 +45,14 @@ export class Oddish extends PokemonCard {
   public fullName: string = 'Oddish TR';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    const flipSpecialConditions = commonAttacks.flipSpecialConditions(this, store, state, effect);
-
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      return flipSpecialConditions.use(effect, [SpecialCondition.ASLEEP]);
+      const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.ASLEEP]);
+      store.reduceEffect(state, specialConditionEffect);
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
-      return flipSpecialConditions.use(effect, [SpecialCondition.POISONED]);
+      const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.POISONED]);
+      store.reduceEffect(state, specialConditionEffect);
     }
 
     return state;

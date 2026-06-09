@@ -2,7 +2,6 @@ import {
   AttackEffect,
   CheckPokemonStatsEffect,
   Effect,
-  EndTurnEffect,
   GameLog,
   GameMessage,
   PokemonCard,
@@ -23,7 +22,7 @@ const RESISTANCE_CHANGE_MARKER = 'RESISTANCE_CHANGE_MARKER_';
 // Conversion 2
 // Change Porygon's Resistance to a type of your choice other than Colorless.
 
-export const conversion1And2: CommonAttack<[number]> = function(
+export const conversion1And2: CommonAttack<[1 | 2]> = function(
   self: PokemonCard,
   store: StoreLike,
   state: State,
@@ -44,13 +43,6 @@ export const conversion1And2: CommonAttack<[number]> = function(
       }
 
       return state;
-    }
-
-    if (effect instanceof EndTurnEffect) {
-      const markers = effect.player.active.marker.markers.filter(c => c.source === self);
-      for (const marker of markers) {
-        effect.player.active.marker.removeMarker(marker.name, marker.source);
-      }
     }
 
     return state;

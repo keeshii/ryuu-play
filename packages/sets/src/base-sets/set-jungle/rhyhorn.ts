@@ -63,7 +63,7 @@ export class Rhyhorn extends PokemonCard {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
 
-      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+      return store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
         if (result === true) {
           opponentNextTurn.setMarker(effect, player.active);
           opponentNextTurn.setMarker(effect, opponent.active);

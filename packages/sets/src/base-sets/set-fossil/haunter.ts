@@ -103,7 +103,7 @@ export class Haunter extends PokemonCard {
       effect.preventDefault = true;
 
       // Opponent flips coin, if heads prevent the damage
-      return store.prompt(state, [new CoinFlipPrompt(opponent.id, GameMessage.COIN_FLIP)], result => {
+      return store.prompt(state, new CoinFlipPrompt(opponent.id, GameMessage.COIN_FLIP), result => {
         const markerName = result ? this.TRANSPARENCY_SUCCESS_MARKER : this.TRANSPARENCY_FAIL_MARKER;
         pokemonSlot.marker.addMarker(markerName, this);
         player.marker.addMarker(this.CLEAR_TRANSPARENCY_MARKER, this);

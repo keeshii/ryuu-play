@@ -66,7 +66,7 @@ export class Wartortle extends PokemonCard {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
 
-      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+      return store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
         if (result === true) {
           player.active.marker.addMarker(this.WITHDRAW_MARKER, this);
           opponent.marker.addMarker(this.CLEAR_WITHDRAW_MARKER, this);

@@ -1,16 +1,56 @@
 import {
   AttackEffect,
   CardType,
+  ChoosePokemonPrompt,
   CoinFlipPrompt,
   Effect,
   GameMessage,
+  PlayerType,
   PokemonCard,
+  SlotType,
   SpecialCondition,
   Stage,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 import { commonAttacks } from '../../common';
+
+function* useFascinate(next: Function, store: StoreLike, state: State, effect: AttackEffect): IterableIterator<State> {
+  const player = effect.player;
+  const opponent = StateUtils.getOpponent(state, player);
+  const hasBench = opponent.bench.some(b => b.pokemons.cards.length > 0);
+
+  if (hasBench === false) {
+    return state;
+  }
+
+  let flipResult = false;
+  yield store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
+    flipResult = result;
+    next();
+  });
+
+  if (!flipResult) {
+    return state;
+  }
+
+  return store.prompt(
+    state,
+    new ChoosePokemonPrompt(
+      player.id,
+      GameMessage.CHOOSE_POKEMON_TO_SWITCH,
+      PlayerType.TOP_PLAYER,
+      [SlotType.BENCH],
+      { allowCancel: false }
+    ),
+    targets => {
+      if (targets && targets.length > 0) {
+        opponent.switchPokemon(targets[0]);
+      }
+    }
+  );
+}
 
 export class DarkPersian extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
@@ -55,17 +95,11 @@ export class DarkPersian extends PokemonCard {
   public fullName: string = 'Dark Persian TR';
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
-    const switchDamageFirst = commonAttacks.switchDamageFirst(this, store, state, effect);
     const flipSpecialConditions = commonAttacks.flipSpecialConditions(this, store, state, effect);
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      const player = effect.player;
-
-      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
-        if (result === true) {
-          switchDamageFirst.use(effect, false);
-        }
-      });
+      const generator = useFascinate(() => generator.next(), store, state, effect);
+      return generator.next().value;
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {

@@ -17,7 +17,7 @@ function* useSurpriseThunder(next: Function, store: StoreLike, state: State, eff
   const opponent = StateUtils.getOpponent(state, player);
 
   let flipResult = false;
-  yield store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+  yield store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
     flipResult = result;
     next();
   });
@@ -26,7 +26,7 @@ function* useSurpriseThunder(next: Function, store: StoreLike, state: State, eff
     return state;
   }
 
-  yield store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+  yield store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
     flipResult = result;
     next();
   });

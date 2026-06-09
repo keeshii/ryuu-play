@@ -29,6 +29,7 @@ export class DarkKadabra extends PokemonCard {
     {
       name: 'Matter Exchange',
       powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
       text:
         'Once during your turn (before your attack), you may discard a card from your hand in order to draw a card. ' +
         'This power can\'t be used if Dark Kadabra is Asleep, Confused, or Paralyzed.'

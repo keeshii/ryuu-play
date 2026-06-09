@@ -95,7 +95,7 @@ export class DarkDugtrio extends PokemonCard {
       // Q. Is Dark Dugtrio's Sinkhole Pokémon Power cumulative in any way?
       // A. They are cumulative. You would flip for each Dugtrio's effect (May 4, 2000 WotC Chat, Q20)
 
-      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+      return store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
         if (result === false) {
           player.active.damage += 20;
         }
@@ -106,7 +106,7 @@ export class DarkDugtrio extends PokemonCard {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
 
-      return store.prompt(state, [new CoinFlipPrompt(opponent.id, GameMessage.COIN_FLIP)], result => {
+      return store.prompt(state, new CoinFlipPrompt(opponent.id, GameMessage.COIN_FLIP), result => {
         if (result === false) {
           effect.damage += 20;
         }

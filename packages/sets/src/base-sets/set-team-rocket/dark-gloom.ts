@@ -30,6 +30,7 @@ export class DarkGloom extends PokemonCard {
     {
       name: 'Pollen Stench',
       powerType: PowerType.POKEPOWER,
+      useWhenInPlay: true,
       text:
         'Once during your turn (before your attack), you may flip a coin. If heads, the Defending Pokémon is now ' +
         'Confused; if tails, your Active Pokémon is now Confused. This power can\'t be used if Dark Gloom is Asleep, ' +
@@ -78,7 +79,7 @@ export class DarkGloom extends PokemonCard {
         throw new GameError(GameMessage.POWER_ALREADY_USED);
       }
 
-      return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+      return store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
         const target = result ? opponent.active : player.active;
         target.addSpecialCondition(SpecialCondition.CONFUSED);
         powerUseOnce.setMarker(effect);

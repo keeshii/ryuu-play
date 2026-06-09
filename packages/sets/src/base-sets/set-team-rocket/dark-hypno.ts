@@ -56,9 +56,17 @@ export class DarkHypno extends PokemonCard {
       const opponent = StateUtils.getOpponent(state, player);
       const benched = opponent.bench.reduce((left, b) => left + (b.pokemons.cards.length ? 1 : 0), 0);
 
+      if (benched === 0) {
+        effect.damage = 0;
+        return state;
+      }
+
+      effect.ignoreResistance = true;
+      effect.ignoreWeakness = true;
+
       const coinFlipPrompts: CoinFlipPrompt[] = [];
       for (let i = 0; i < benched; i++) {
-        coinFlipPrompts.push(new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP));
+        coinFlipPrompts.push(new CoinFlipPrompt(opponent.id, GameMessage.COIN_FLIP));
       }
 
       return store.prompt(
@@ -69,8 +77,6 @@ export class DarkHypno extends PokemonCard {
           results.forEach(r => {
             tails += r ? 0 : 1;
           });
-          effect.ignoreResistance = true;
-          effect.ignoreWeakness = true;
           effect.damage = 20 * tails;
         }
       );

@@ -29,8 +29,9 @@ import { setupPhaseReducer } from './reducers/setup-reducer';
 import { abortGameReducer } from './reducers/abort-game-reducer';
 
 interface PromptItem {
-  ids: number[],
+  ids: number[];
   then: (results: any) => void;
+  isArray: boolean;
 }
 
 export class Store implements StoreLike {
@@ -103,7 +104,10 @@ export class Store implements StoreLike {
   }
 
   public prompt(state: State, prompts: Prompt<any>[] | Prompt<any>, then: (results: any) => void): State {
+    let isArray = true;
+
     if (!(prompts instanceof Array)) {
+      isArray = false;
       prompts = [prompts];
     }
 
@@ -115,7 +119,8 @@ export class Store implements StoreLike {
 
     const promptItem: PromptItem = {
       ids: prompts.map(prompt => prompt.id),
-      then: then
+      then: then,
+      isArray
     };
 
     this.promptItems.push(promptItem);
@@ -160,7 +165,7 @@ export class Store implements StoreLike {
 
       if (results.every(result => result !== undefined)) {
         const itemIndex = this.promptItems.indexOf(promptItem);
-        promptItem.then(results.length === 1 ? results[0] : results);
+        promptItem.then(promptItem.isArray ? results : results[0]);
         this.promptItems.splice(itemIndex, 1);
       }
 

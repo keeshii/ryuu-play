@@ -26,7 +26,7 @@ function* playCard(next: Function, store: StoreLike, state: State, self: Gambler
     next();
   });
 
-  return store.prompt(state, [new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP)], result => {
+  return store.prompt(state, new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP), result => {
     player.deck.moveTo(player.hand, result ? 8 : 1);
   });
 }

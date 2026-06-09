@@ -21,7 +21,7 @@ function* usePsychicExchange(next: Function, store: StoreLike, state: State, eff
   if (player.hand.cards.length > 0) {
     player.hand.moveTo(player.deck);
 
-    yield store.prompt(state, [new ShuffleDeckPrompt(player.id)], deckOrder => {
+    yield store.prompt(state, new ShuffleDeckPrompt(player.id), deckOrder => {
       player.deck.applyOrder(deckOrder);
       next();
     });
