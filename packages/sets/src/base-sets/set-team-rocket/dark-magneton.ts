@@ -78,7 +78,7 @@ export class DarkMagneton extends PokemonCard {
         new AttachEnergyPrompt(
           player.id,
           GameMessage.ATTACH_ENERGY_TO_BENCH,
-          player.active.energies,
+          opponent.active.energies,
           PlayerType.TOP_PLAYER,
           [SlotType.BENCH],
           {

@@ -44,7 +44,8 @@ cardManager.defineFormat('EX Sets', [
 cardManager.defineFormat('Base Sets', [
   baseSets.setBase,
   baseSets.setJungle,
-  baseSets.setFossil
+  baseSets.setFossil,
+  baseSets.setTeamRocket
 ]);
 
 // Define bots

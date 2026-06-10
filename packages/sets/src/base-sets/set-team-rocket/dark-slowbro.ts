@@ -61,7 +61,7 @@ export class DarkSlowbro extends PokemonCard {
       const player = StateUtils.findOwner(state, effect.target);
       const hasPokemonInDiscard = player.discard.cards.some(card => card.superType === SuperType.POKEMON);
 
-      if (hasPokemonInDiscard) {
+      if (!hasPokemonInDiscard) {
         return state;
       }
 

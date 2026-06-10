@@ -24,13 +24,13 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
   }
 
   const trainersInHand = FilterUtils.count(
-    player.hand.cards,
+    opponent.hand.cards,
     { superType: SuperType.TRAINER, trainerType: TrainerType.ITEM }
   );
   const min = Math.min(trainersInHand, 1);
 
   let cards: Card[] = [];
-  return store.prompt(
+  yield store.prompt(
     state,
     new ChooseCardsPrompt(
       player.id,
@@ -41,6 +41,7 @@ function* playCard(next: Function, store: StoreLike, state: State, effect: Train
     ),
     selected => {
       cards = selected || [];
+      next();
     }
   );
 

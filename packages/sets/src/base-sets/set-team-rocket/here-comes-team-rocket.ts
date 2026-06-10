@@ -1,5 +1,8 @@
 import {
+  CardList,
   Effect,
+  GameError,
+  GameMessage,
   State,
   StateUtils,
   StoreLike,
@@ -23,13 +26,13 @@ export class HereComesTeamRocket extends TrainerCard {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
       const player = effect.player;
       const opponent = StateUtils.getOpponent(state, player);
+      const prizes: CardList[] = [...player.prizes, ...opponent.prizes];
 
-      player.prizes.forEach(p => {
-        p.isPublic = true;
-        p.isSecret = false;
-      });
+      if (prizes.every(cardList => cardList.isPublic && !cardList.isSecret)) {
+        throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
+      }
 
-      opponent.prizes.forEach(p => {
+      prizes.forEach(p => {
         p.isPublic = true;
         p.isSecret = false;
       });

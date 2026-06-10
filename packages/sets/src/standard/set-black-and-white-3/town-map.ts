@@ -1,4 +1,15 @@
-import { Effect, State, StoreLike, TrainerCard, TrainerEffect, TrainerType } from '@ptcg/common';
+import {
+  CardList,
+  Effect,
+  GameError,
+  GameMessage,
+  State,
+  StateUtils,
+  StoreLike,
+  TrainerCard,
+  TrainerEffect,
+  TrainerType,
+} from '@ptcg/common';
 
 export class TownMap extends TrainerCard {
   public trainerType: TrainerType = TrainerType.ITEM;
@@ -15,7 +26,14 @@ export class TownMap extends TrainerCard {
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
     if (effect instanceof TrainerEffect && effect.trainerCard === this) {
       const player = effect.player;
-      player.prizes.forEach(p => {
+      const opponent = StateUtils.getOpponent(state, player);
+      const prizes: CardList[] = [...player.prizes, ...opponent.prizes];
+
+      if (prizes.every(cardList => cardList.isPublic && !cardList.isSecret)) {
+        throw new GameError(GameMessage.CANNOT_PLAY_THIS_CARD);
+      }
+
+      prizes.forEach(p => {
         p.isPublic = true;
         p.isSecret = false;
       });

@@ -77,6 +77,12 @@ export class DarkPrimeape extends PokemonCard {
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
+      // Damage first
+      const dealDamageEffect = new DealDamageEffect(effect, effect.damage);
+      store.reduceEffect(state, dealDamageEffect);
+      effect.damage = 0;
+
+      // Now we are confused
       const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.CONFUSED]);
       specialConditionEffect.target = effect.player.active;
       store.reduceEffect(state, specialConditionEffect);

@@ -1,6 +1,7 @@
 import {
   AttackEffect,
   Card,
+  CardList,
   CardType,
   ChooseCardsPrompt,
   DiscardCardsEffect,
@@ -40,22 +41,30 @@ function* useThirdEye(next: Function, store: StoreLike, state: State, effect: At
   discardEnergy.target = player.active;
   store.reduceEffect(state, discardEnergy);
 
+  // Nothing to draw
   if (player.deck.cards.length === 0) {
     return state;
   }
 
-  // Draw up to 3 cards
+  const deckTop = new CardList();
+  deckTop.cards = player.deck.top(3);
+
+  if (deckTop.cards.length === 0) {
+    return state;
+  }
+
+  // Draw up to 3 cards.
   return store.prompt(
     state,
     new ChooseCardsPrompt(
       player.id,
       GameMessage.CHOOSE_CARD_TO_HAND,
-      player.deck,
+      deckTop,
       {},
-      { min: 0, max: 3, allowCancel: true, isSecret: true }
+      { min: 0, max: deckTop.cards.length, allowCancel: true, isSecret: true }
     ),
     selected => {
-      const cards = selected || [];
+      cards = selected || [];
       player.deck.moveTo(player.hand, cards.length);
     }
   );

@@ -74,7 +74,8 @@ export class DarkWartortle extends PokemonCard {
 
       target.marker.addMarker(this.MIRROR_SHELL_USED_MARKER, this);
 
-      const dealDamageEffect = new DealDamageEffect(effect.attackEffect, effect.damage);
+      const attackEffect = new AttackEffect(player, opponent, this.attacks[1]);
+      const dealDamageEffect = new DealDamageEffect(attackEffect, effect.damage);
       dealDamageEffect.target = opponent.active;
       store.reduceEffect(state, dealDamageEffect);
       return state;

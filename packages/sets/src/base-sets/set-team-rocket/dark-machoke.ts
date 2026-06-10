@@ -72,13 +72,13 @@ export class DarkMachoke extends PokemonCard {
         new ChoosePokemonPrompt(
           player.id,
           GameMessage.CHOOSE_NEW_ACTIVE_POKEMON,
-          PlayerType.BOTTOM_PLAYER,
+          PlayerType.TOP_PLAYER,
           [SlotType.BENCH],
           { allowCancel: false }
         ),
         targets => {
           if (targets && targets.length > 0) {
-            player.switchPokemon(targets[0]);
+            opponent.switchPokemon(targets[0]);
           }
         }
       );

@@ -7,8 +7,10 @@ import {
   GameError,
   GameMessage,
   PokemonCard,
+  ShowCardsPrompt,
   ShuffleDeckPrompt,
   State,
+  StateUtils,
   StoreLike,
   TrainerCard,
   TrainerEffect,
@@ -23,6 +25,7 @@ function* playCard(
   effect: TrainerEffect
 ): IterableIterator<State> {
   const player = effect.player;
+  const opponent = StateUtils.getOpponent(state, player);
 
   let pokemonsOrEnergyInDiscard: number = 0;
   const blocked: number[] = [];
@@ -65,6 +68,10 @@ function* playCard(
   if (cards.length === 0) {
     return state;
   }
+
+  yield store.prompt(state, new ShowCardsPrompt(opponent.id, GameMessage.CARDS_SHOWED_BY_THE_OPPONENT, cards), () =>
+    next()
+  );
 
   player.hand.moveCardTo(self, player.discard);
   player.discard.moveCardsTo(cards, player.deck);
