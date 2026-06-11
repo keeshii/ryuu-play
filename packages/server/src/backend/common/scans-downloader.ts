@@ -29,10 +29,11 @@ export class ScansDownloader {
     console.log(`Cards total: ${cards.length}, cards with missing scans: ${cardsToDownload.length}.`);
     console.log('Downloading missing images, please wait...');
 
-    for (const card of cardsToDownload) {
+    for (let i = 0; i < cardsToDownload.length; i++) {
+      const card = cardsToDownload[i];
       const filePath = config.sets.scansDir + this.getCardPath(card);
       const downloadUrl = config.sets.scansDownloadUrl + this.getCardPath(card);
-      console.log('File: ' + downloadUrl);
+      console.log(`File (${i + 1}/${cardsToDownload.length}): ${downloadUrl}`);
 
       await this.createDirectoryForFile(filePath);
       await this.downloadFile(downloadUrl, filePath);
@@ -63,23 +64,24 @@ export class ScansDownloader {
 
   private downloadFile(url: string, filePath: string): Promise<void> {
     return new Promise((resolve, reject) => {
-      const file = createWriteStream(filePath);
       const get = url.startsWith('https://') ? httpsGet : httpGet;
 
       const request = get(url, response => {
         if (response.statusCode !== 200) {
           return reject(new Error('Cannot download file: ' + url));
         }
+
+        const file = createWriteStream(filePath);
+        file.on('finish', () => file.close(() => resolve()));
+
+        file.on('error', err => {
+          unlink(filePath, () => reject(err)); // delete the (partial) file and then return the error
+        });
+
         response.pipe(file);
       });
 
-      file.on('finish', () => file.close(() => resolve()));
-
       request.on('error', err => {
-        unlink(filePath, () => reject(err)); // delete the (partial) file and then return the error
-      });
-
-      file.on('error', err => {
         unlink(filePath, () => reject(err)); // delete the (partial) file and then return the error
       });
     });

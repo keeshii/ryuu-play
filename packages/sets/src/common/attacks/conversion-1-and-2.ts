@@ -51,20 +51,21 @@ export const conversion1And2: CommonAttack<[1 | 2]> = function(
   state = reduceEffect();
 
   return {
-    use: (attackEffect: AttackEffect, conversionNumber: number) => {
+    use: (attackEffect: AttackEffect, conversionNumber: 1 | 2) => {
       const player = attackEffect.player;
       const opponent = StateUtils.getOpponent(state, player);
-      const pokemonCard = opponent.active.getPokemonCard();
+      const attacking = player.active.getPokemonCard();
+      const defending = opponent.active.getPokemonCard();
 
-      if (!pokemonCard) {
+      if (!attacking || !defending) {
         return state;
       }
 
-      if (conversionNumber === 1 && pokemonCard.weakness.length === 0) {
+      if (conversionNumber === 1 && defending.weakness.length === 0) {
         return state;
       }
 
-      if (conversionNumber === 2 && pokemonCard.resistance.length === 0) {
+      if (conversionNumber === 2 && attacking.resistance.length === 0) {
         return state;
       }
 
