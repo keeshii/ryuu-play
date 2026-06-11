@@ -32,15 +32,13 @@ function* useEnergyCatch(next: Function, store: StoreLike, state: State, effect:
 
   yield store.prompt(
     state,
-    [
-      new ChooseCardsPrompt(
-        player.id,
-        GameMessage.CHOOSE_CARD_TO_HAND,
-        player.discard,
-        { superType: SuperType.ENERGY, energyType: EnergyType.BASIC },
-        { min: 1, max: 1, allowCancel: false }
-      ),
-    ],
+    new ChooseCardsPrompt(
+      player.id,
+      GameMessage.CHOOSE_CARD_TO_HAND,
+      player.discard,
+      { superType: SuperType.ENERGY, energyType: EnergyType.BASIC },
+      { min: 1, max: 1, allowCancel: false }
+    ),
     selected => {
       cards = selected || [];
       next();

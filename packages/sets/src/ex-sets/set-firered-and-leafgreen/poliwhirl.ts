@@ -67,15 +67,13 @@ export class Poliwhirl extends PokemonCard {
 
       return store.prompt(
         state,
-        [
-          new ChooseCardsPrompt(
-            player.id,
-            GameMessage.CHOOSE_CARD_TO_ATTACH,
-            player.discard,
-            { superType: SuperType.ENERGY, energyType: EnergyType.BASIC },
-            { min: 1, max: 1, allowCancel: false }
-          ),
-        ],
+        new ChooseCardsPrompt(
+          player.id,
+          GameMessage.CHOOSE_CARD_TO_ATTACH,
+          player.discard,
+          { superType: SuperType.ENERGY, energyType: EnergyType.BASIC },
+          { min: 1, max: 1, allowCancel: false }
+        ),
         selected => {
           const cards = selected || [];
           player.discard.moveCardsTo(cards, player.active.energies);

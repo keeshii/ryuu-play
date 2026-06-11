@@ -76,15 +76,13 @@ export class Sableye extends PokemonCard {
 
       return store.prompt(
         state,
-        [
-          new ChooseCardsPrompt(
-            player.id,
-            GameMessage.CHOOSE_CARD_TO_HAND,
-            player.discard,
-            { superType: SuperType.TRAINER, trainerType: TrainerType.ITEM },
-            { min, max, allowCancel: false }
-          ),
-        ],
+        new ChooseCardsPrompt(
+          player.id,
+          GameMessage.CHOOSE_CARD_TO_HAND,
+          player.discard,
+          { superType: SuperType.TRAINER, trainerType: TrainerType.ITEM },
+          { min, max, allowCancel: false }
+        ),
         selected => {
           const cards = selected || [];
           player.discard.moveCardsTo(cards, player.hand);

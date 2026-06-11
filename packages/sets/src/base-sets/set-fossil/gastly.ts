@@ -73,15 +73,13 @@ export class Gastly extends PokemonCard {
 
       return store.prompt(
         state,
-        [
-          new ChooseCardsPrompt(
-            player.id,
-            GameMessage.CHOOSE_CARD_TO_HAND,
-            player.discard,
-            { superType: SuperType.ENERGY },
-            { min: 0, max, allowCancel: false }
-          ),
-        ],
+        new ChooseCardsPrompt(
+          player.id,
+          GameMessage.CHOOSE_CARD_TO_HAND,
+          player.discard,
+          { superType: SuperType.ENERGY },
+          { min: 0, max, allowCancel: false }
+        ),
         selected => {
           const cards = selected || [];
           player.discard.moveCardsTo(cards, player.hand);
