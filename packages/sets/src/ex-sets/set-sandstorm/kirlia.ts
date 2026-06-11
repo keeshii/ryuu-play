@@ -64,11 +64,11 @@ export class Kirlia extends PokemonCard {
 
       const checkPlayerEnergy = new CheckProvidedEnergyEffect(player);
       state = store.reduceEffect(state, checkPlayerEnergy);
-      const playerEnergies = checkPlayerEnergy.energyMap.reduce((left, p) => left + p.provides.length, 0);
+      const playerEnergies = checkPlayerEnergy.energyMap.reduce((left, p) => left + p.provideAmount, 0);
 
       const checkOpponentEnergy = new CheckProvidedEnergyEffect(opponent);
       state = store.reduceEffect(state, checkOpponentEnergy);
-      const opponentEnergies = checkOpponentEnergy.energyMap.reduce((left, p) => left + p.provides.length, 0);
+      const opponentEnergies = checkOpponentEnergy.energyMap.reduce((left, p) => left + p.provideAmount, 0);
 
       if (playerEnergies !== opponentEnergies) {
         effect.damage = 30;

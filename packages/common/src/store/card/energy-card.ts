@@ -10,5 +10,7 @@ export abstract class EnergyCard extends Card {
 
   public provides: CardType[] = [];
 
+  public provideAmount: number = 1;
+
   public text: string = '';
 }

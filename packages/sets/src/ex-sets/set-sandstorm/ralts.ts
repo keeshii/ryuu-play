@@ -58,7 +58,7 @@ export class Ralts extends PokemonCard {
 
       const checkProvidedEnergy = new CheckProvidedEnergyEffect(opponent);
       state = store.reduceEffect(state, checkProvidedEnergy);
-      const energyCount = checkProvidedEnergy.energyMap.reduce((left, p) => left + p.provides.length, 0);
+      const energyCount = checkProvidedEnergy.energyMap.reduce((left, p) => left + p.provideAmount, 0);
 
       effect.damage = energyCount * 10;
       return state;

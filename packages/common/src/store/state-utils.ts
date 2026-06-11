@@ -15,45 +15,46 @@ export class StateUtils {
       return true;
     }
 
-    const provides: CardType[] = [];
+    const units: CardType[][] = [];
+    // Expand each EnergyMap into individual energy units according to provideAmount
     energy.forEach(e => {
-      e.provides.forEach(cardType => provides.push(cardType));
-    });
-
-    let colorless = 0;
-    let rainbow = 0;
-
-    // First remove from array cards with specific energy types
-    cost.forEach(costType => {
-      switch (costType) {
-        case CardType.ANY:
-          break;
-        case CardType.COLORLESS:
-          colorless += 1;
-          break;
-        default: {
-          const index = provides.findIndex(energy => energy === costType);
-          if (index !== -1) {
-            provides.splice(index, 1);
-          } else {
-            rainbow += 1;
-          }
-        }
+      for (let i = 0; i < e.provideAmount; i++) {
+        units.push(e.provides);
       }
     });
 
-    // Check if we have enough rainbow energies
-    for (let i = 0; i < rainbow; i++) {
-      const index = provides.findIndex(energy => energy === CardType.ANY);
-      if (index !== -1) {
-        provides.splice(index, 1);
-      } else {
+    // Separate specific costs and colorless costs
+    const specificCosts: CardType[] = cost.filter(c => c !== CardType.COLORLESS);
+    const colorless = cost.length - specificCosts.length;
+
+    // Bipartite matching: try to assign each specific cost to a unit that provides it.
+    const matchUnit: number[] = new Array(units.length).fill(-1); // unit -> cost index
+
+    const dfs = (costIdx: number, visited: boolean[]): boolean => {
+      for (let u = 0; u < units.length; u++) {
+        if (visited[u] || !units[u].includes(specificCosts[costIdx])) {
+          continue;
+        }
+
+        visited[u] = true;
+        if (matchUnit[u] === -1 || dfs(matchUnit[u], visited)) {
+          matchUnit[u] = costIdx;
+          return true;
+        }
+      }
+      return false;
+    };
+
+    for (let i = 0; i < specificCosts.length; i++) {
+      const visited = new Array(units.length).fill(false);
+      if (!dfs(i, visited)) {
         return false;
       }
     }
 
-    // Rest cards can be used to pay for colorless energies
-    return provides.length >= colorless;
+    const matched = matchUnit.reduce((acc, v) => acc + (v !== -1 ? 1 : 0), 0);
+    const remaining = units.length - matched;
+    return remaining >= colorless;
   }
 
   public static checkExactEnergy(energy: EnergyMap[], cost: CardType[]): boolean {
@@ -81,6 +82,21 @@ export class StateUtils {
       tempCost.push(energyType);
     }
     return additional;
+  }
+
+  public static rainbowEnergy(): CardType[] {
+    return [
+      CardType.GRASS,
+      CardType.FIGHTING,
+      CardType.PSYCHIC,
+      CardType.WATER,
+      CardType.LIGHTNING,
+      CardType.METAL,
+      CardType.DARK,
+      CardType.FIRE,
+      CardType.DRAGON,
+      CardType.FAIRY
+    ];
   }
 
   public static getOpponent(state: State, player: Player): Player {

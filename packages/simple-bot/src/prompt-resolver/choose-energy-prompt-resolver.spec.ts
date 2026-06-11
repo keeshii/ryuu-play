@@ -1,4 +1,4 @@
-import { CardType, SuperType, State, Player, ResolvePromptAction, GameMessage } from '@ptcg/common';
+import { CardType, SuperType, State, Player, ResolvePromptAction, GameMessage, StateUtils } from '@ptcg/common';
 import { ChooseEnergyPrompt, EnergyMap } from '@ptcg/common';
 import { ChooseEnergyPromptResolver } from './choose-energy-prompt-resolver';
 import {
@@ -16,8 +16,9 @@ describe('ChooseEnergyPromptResolver', () => {
   let player: Player;
 
   function createEnergy(name: string, provides: CardType[]): EnergyMap {
-    const card = { name, superType: SuperType.ENERGY, provides } as any;
-    return { card, provides };
+    const provideAmount = name === 'dce' ? 2 : 1;
+    const card = { name, superType: SuperType.ENERGY, provides, provideAmount } as any;
+    return { card, provides, provideAmount };
   }
 
   beforeEach(() => {
@@ -36,7 +37,7 @@ describe('ChooseEnergyPromptResolver', () => {
   it('Should choose valid energy cost for [R]', () => {
     // given
     const fire = [ CardType.FIRE ];
-    const dce = [ CardType.COLORLESS, CardType.COLORLESS ];
+    const dce = [ CardType.COLORLESS ];
 
     prompt.cost = [ CardType.FIRE ];
     prompt.energy = [
@@ -56,7 +57,7 @@ describe('ChooseEnergyPromptResolver', () => {
   it('Should choose valid energy cost for [R] when dce is first', () => {
     // given
     const fire = [ CardType.FIRE ];
-    const dce = [ CardType.COLORLESS, CardType.COLORLESS ];
+    const dce = [ CardType.COLORLESS ];
 
     prompt.cost = [ CardType.FIRE ];
     prompt.energy = [
@@ -75,9 +76,9 @@ describe('ChooseEnergyPromptResolver', () => {
 
   it('Should choose valid energy cost for [RRC]', () => {
     // given
-    const rainbow = [ CardType.ANY ];
+    const rainbow = StateUtils.rainbowEnergy();
     const fire = [ CardType.FIRE ];
-    const dce = [ CardType.COLORLESS, CardType.COLORLESS ];
+    const dce = [ CardType.COLORLESS ];
 
     prompt.cost = [ CardType.FIRE, CardType.FIRE, CardType.COLORLESS ];
     prompt.energy = [
@@ -101,9 +102,9 @@ describe('ChooseEnergyPromptResolver', () => {
 
   it('Should choose valid energy cost for [C]', () => {
     // given
-    const rainbow = [ CardType.ANY ];
+    const rainbow = StateUtils.rainbowEnergy();
     const fire = [ CardType.FIRE ];
-    const dce = [ CardType.COLORLESS, CardType.COLORLESS ];
+    const dce = [ CardType.COLORLESS ];
 
     prompt.cost = [ CardType.COLORLESS ];
     prompt.energy = [
@@ -125,9 +126,9 @@ describe('ChooseEnergyPromptResolver', () => {
 
   it('Should choose valid energy cost for [CC]', () => {
     // given
-    const rainbow = [ CardType.ANY ];
+    const rainbow = StateUtils.rainbowEnergy();
     const fire = [ CardType.FIRE ];
-    const dce = [ CardType.COLORLESS, CardType.COLORLESS ];
+    const dce = [ CardType.COLORLESS ];
 
     prompt.cost = [ CardType.COLORLESS, CardType.COLORLESS ];
     prompt.energy = [
@@ -149,9 +150,9 @@ describe('ChooseEnergyPromptResolver', () => {
 
   it('Should choose valid energy cost for [WCC]', () => {
     // given
-    const rainbow = [ CardType.ANY ];
+    const rainbow = StateUtils.rainbowEnergy();
     const fire = [ CardType.FIRE ];
-    const dce = [ CardType.COLORLESS, CardType.COLORLESS ];
+    const dce = [ CardType.COLORLESS ];
 
     prompt.cost = [ CardType.WATER, CardType.COLORLESS, CardType.COLORLESS ];
     prompt.energy = [
@@ -175,7 +176,7 @@ describe('ChooseEnergyPromptResolver', () => {
   it('Should choose valid energy cost for [WCC] (impossible to pay)', () => {
     // given
     const fire = [ CardType.FIRE ];
-    const dce = [ CardType.COLORLESS, CardType.COLORLESS ];
+    const dce = [ CardType.COLORLESS ];
 
     prompt.cost = [ CardType.WATER, CardType.COLORLESS, CardType.COLORLESS ];
     prompt.energy = [

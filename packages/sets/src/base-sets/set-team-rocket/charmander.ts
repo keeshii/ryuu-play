@@ -95,7 +95,7 @@ export class Charmander extends PokemonCard {
         const blockedCards: Card[] = [];
 
         checkProvidedEnergy.energyMap.forEach(em => {
-          if (!em.provides.includes(CardType.FIRE) && !em.provides.includes(CardType.ANY)) {
+          if (!em.provides.includes(CardType.FIRE)) {
             blockedCards.push(em.card);
           } else {
             hasFireEnergy = true;

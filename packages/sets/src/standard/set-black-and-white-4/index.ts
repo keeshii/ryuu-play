@@ -1,4 +1,6 @@
 import { Card } from '@ptcg/common';
+import { BlendEnergyGRPD } from './blend-energy-grpd';
+import { BlendEnergyWLFM } from './blend-energy-wlfm';
 import { Crobat } from './crobat';
 import { Donphan } from './donphan';
 import { FightingStadium } from './fighting-stadium';
@@ -17,6 +19,8 @@ import { Wobbuffet } from './wobbuffet';
 import { Zubat } from './zubat';
 
 export const setBlackAndWhite4: Card[] = [
+  new BlendEnergyGRPD(),
+  new BlendEnergyWLFM(),
   new Crobat(),
   new Donphan(),
   new FightingStadium(),

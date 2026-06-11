@@ -54,7 +54,8 @@ describe('Charizard ex RG', () => {
     // Choose an energy to discard
     const selected: EnergyMap[] = player.active.energies.cards.map(c => ({
       card: c,
-      provides: [CardType.FIRE]
+      provides: [CardType.FIRE],
+      provideAmount: 1
     }));
     sim.dispatch(new ResolvePromptAction(prompts[0].id, selected));
 
@@ -126,7 +127,8 @@ describe('Charizard ex RG', () => {
     // Choose an energy to discard
     const selected: EnergyMap[] = player.active.energies.cards.map(c => ({
       card: c,
-      provides: [CardType.FIRE]
+      provides: [CardType.FIRE],
+      provideAmount: 1
     }));
     sim.dispatch(new ResolvePromptAction(prompts[0].id, selected));
 

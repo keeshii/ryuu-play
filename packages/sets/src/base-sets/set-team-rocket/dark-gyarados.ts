@@ -97,7 +97,7 @@ export class DarkGyarados extends PokemonCard {
       const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);
       state = store.reduceEffect(state, checkProvidedEnergy);
       const waterEnergy = checkProvidedEnergy.energyMap.reduce(
-        (left, p) => left + p.provides.filter(p => p === CardType.WATER || p === CardType.ANY).length, 0);
+        (left, p) => left + (p.provides.includes(CardType.WATER) ? p.provideAmount : 0), 0);
       const damage = 20 * waterEnergy;
 
       if (damage === 0) {

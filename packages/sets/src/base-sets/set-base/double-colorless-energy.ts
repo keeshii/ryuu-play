@@ -1,7 +1,9 @@
 import { CardType, EnergyCard, EnergyType } from '@ptcg/common';
 
 export class DoubleColorlessEnergy extends EnergyCard {
-  public provides: CardType[] = [CardType.COLORLESS, CardType.COLORLESS];
+  public provides: CardType[] = [CardType.COLORLESS];
+
+  public provideAmount = 2;
 
   public energyType = EnergyType.SPECIAL;
 

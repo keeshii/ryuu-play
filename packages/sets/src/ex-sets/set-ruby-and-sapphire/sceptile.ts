@@ -57,7 +57,7 @@ export class Sceptile extends PokemonCard {
 
       const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);
       state = store.reduceEffect(state, checkProvidedEnergy);
-      const energyCount = checkProvidedEnergy.energyMap.reduce((left, p) => left + p.provides.length, 0);
+      const energyCount = checkProvidedEnergy.energyMap.reduce((left, p) => left + p.provideAmount, 0);
 
       switch (energyCount) {
         case 0:

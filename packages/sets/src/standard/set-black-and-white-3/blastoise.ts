@@ -69,9 +69,7 @@ export class Blastoise extends PokemonCard {
 
       let energyCount = 0;
       checkProvidedEnergyEffect.energyMap.forEach(em => {
-        energyCount += em.provides.filter(cardType => {
-          return cardType === CardType.WATER || cardType === CardType.ANY;
-        }).length;
+        energyCount += em.provides.includes(CardType.WATER) ? em.provideAmount : 0;
       });
       effect.damage += energyCount * 10;
       return state;

@@ -8,17 +8,23 @@ export class ChooseEnergyPromptResolver extends PromptResolver {
   public resolvePrompt(state: State, player: Player, prompt: Prompt<any>): Action | undefined {
     if (prompt instanceof ChooseEnergyPrompt) {
       let result: EnergyMap[] = [];
-      const provides = prompt.energy.slice();
+      // const provides = prompt.energy.slice();
       const costs: CardType[] = prompt.cost.filter(c => c !== CardType.COLORLESS);
+
+      const provides: EnergyMap[] = [];
+      // Expand each EnergyMap into individual energy units according to provideAmount
+      prompt.energy.forEach(e => {
+        for (let i = 0; i < e.provideAmount; i++) {
+          provides.push(e);
+        }
+      });
+
+      // First use energies that are providing less energy types
+      provides.sort((a, b) => a.provides.length - b.provides.length);
 
       while (costs.length > 0 && provides.length > 0) {
         const cost = costs[0];
-        let index = provides.findIndex(p => p.provides.includes(cost));
-
-        if (index === -1) {
-          // concrete energy not found, try to use rainbow energies
-          index = provides.findIndex(p => p.provides.includes(CardType.ANY));
-        }
+        const index = provides.findIndex(p => p.provides.includes(cost));
 
         if (index === -1) {
           break; // impossible to pay for the cost
@@ -26,18 +32,11 @@ export class ChooseEnergyPromptResolver extends PromptResolver {
 
         const provide = provides[index];
         provides.splice(index, 1);
-        result.push(provide);
+        if (!result.some(r => r.card === provide.card)) {
+          result.push(provide);
+        }
 
-        provide.provides.forEach(c => {
-          if (c === CardType.ANY && costs.length > 0) {
-            costs.shift();
-          } else {
-            const i = costs.indexOf(c);
-            if (i !== -1) {
-              costs.splice(i, 1);
-            }
-          }
-        });
+        costs.shift();
       }
 
       if (costs.length > 0) {
@@ -45,18 +44,20 @@ export class ChooseEnergyPromptResolver extends PromptResolver {
         return new ResolvePromptAction(prompt.id, null);
       }
 
+      const remainingEnergies = prompt.energy.filter(p => !result.includes(p));
+
       // Only colorless energies are remaining to pay
       // Sort rest of the provided energies by the score
       // (Number of provided energy, provided type)
-      provides.sort((p1, p2) => {
-        const score1 = this.getEnergyCardScore(p1.provides);
-        const score2 = this.getEnergyCardScore(p2.provides);
+      remainingEnergies.sort((p1, p2) => {
+        const score1 = this.getEnergyCardScore(p1.provides, p1.provideAmount);
+        const score2 = this.getEnergyCardScore(p2.provides, p2.provideAmount);
         return score1 - score2;
       });
 
       // Add energies until all colorless cost is paid
-      while (provides.length > 0 && !StateUtils.checkEnoughEnergy(result, prompt.cost)) {
-        const provide = provides.shift();
+      while (remainingEnergies.length > 0 && !StateUtils.checkEnoughEnergy(result, prompt.cost)) {
+        const provide = remainingEnergies.shift();
         if (provide !== undefined) {
           result.push(provide);
         }
@@ -82,18 +83,16 @@ export class ChooseEnergyPromptResolver extends PromptResolver {
     }
   }
 
-  private getEnergyCardScore(provides: CardType[]): number {
+  private getEnergyCardScore(provides: CardType[], provideAmount: number): number {
     let score = 0;
     provides.forEach(c => {
       if (c === CardType.COLORLESS) {
         score += 2;
-      } else if (c === CardType.ANY) {
-        score += 10;
       } else {
         score += 3;
       }
     });
-    return score;
+    return provideAmount * score;
   }
 
 }

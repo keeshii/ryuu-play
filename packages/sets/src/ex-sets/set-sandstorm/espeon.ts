@@ -64,7 +64,7 @@ export class Espeon extends PokemonCard {
       opponent.forEachPokemon(PlayerType.TOP_PLAYER, pokemonSlot => {
         const checkProvidedEnergy = new CheckProvidedEnergyEffect(opponent, pokemonSlot);
         state = store.reduceEffect(state, checkProvidedEnergy);
-        energies += checkProvidedEnergy.energyMap.reduce((left, p) => left + p.provides.length, 0);
+        energies += checkProvidedEnergy.energyMap.reduce((left, p) => left + p.provideAmount, 0);
       });
 
       effect.damage += energies * 10;

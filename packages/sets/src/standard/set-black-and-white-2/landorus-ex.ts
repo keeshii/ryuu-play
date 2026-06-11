@@ -97,7 +97,7 @@ export class LandorusEx extends PokemonCard {
 
           const cards: Card[] = [];
           checkProvidedEnergy.energyMap.forEach(em => {
-            if (em.provides.includes(CardType.FIGHTING) || em.provides.includes(CardType.ANY)) {
+            if (em.provides.includes(CardType.FIGHTING)) {
               cards.push(em.card);
             }
           });

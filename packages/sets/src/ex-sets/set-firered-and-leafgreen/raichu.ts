@@ -113,7 +113,7 @@ export class Raichu extends PokemonCard {
       let hasLightningEnergy = false;
 
       checkProvidedEnergy.energyMap.forEach(em => {
-        if (!em.provides.includes(CardType.LIGHTNING) && !em.provides.includes(CardType.ANY)) {
+        if (!em.provides.includes(CardType.LIGHTNING)) {
           blocked.push(player.active.energies.cards.indexOf(em.card));
         } else {
           hasLightningEnergy = true;

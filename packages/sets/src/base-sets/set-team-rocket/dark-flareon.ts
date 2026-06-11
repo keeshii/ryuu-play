@@ -28,7 +28,7 @@ function* usePlayingWithFire(next: Function, store: StoreLike, state: State, eff
     if (index === -1) {
       return; // make sure, that energy is attached to the active
     }
-    if (em.provides.includes(CardType.FIRE) || em.provides.includes(CardType.ANY)) {
+    if (em.provides.includes(CardType.FIRE)) {
       hasFireEnergy = true;
     } else {
       blocked.push(index);

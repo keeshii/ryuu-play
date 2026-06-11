@@ -145,7 +145,7 @@ function* useCrushAndBurn(next: Function, store: StoreLike, state: State, effect
           cards = selected || [];
           for (const card of cards) {
             const energyMap = checkProvidedEnergy.energyMap.find(em => em.card === card);
-            effect.damage += energyMap ? energyMap.provides.length * 20 : 0;
+            effect.damage += energyMap ? energyMap.provideAmount * 20 : 0;
           }
           next();
         }

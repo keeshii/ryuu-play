@@ -43,8 +43,8 @@ export class CardsBaseService {
       case SuperType.POKEMON: {
         const p1 = c1 as PokemonCard;
         const p2 = c2 as PokemonCard;
-        const type1 = p1.cardTypes.length > 0 ? p1.cardTypes[0] : CardType.ANY;
-        const type2 = p2.cardTypes.length > 0 ? p2.cardTypes[0] : CardType.ANY;
+        const type1 = p1.cardTypes.length > 0 ? p1.cardTypes[0] : CardType.COLORLESS;
+        const type2 = p2.cardTypes.length > 0 ? p2.cardTypes[0] : CardType.COLORLESS;
         if (type1 !== type2) {
           return type1 - type2;
         }
@@ -56,8 +56,8 @@ export class CardsBaseService {
         if (e1.energyType !== e2.energyType) {
           return e1.energyType - e2.energyType;
         }
-        const type1 = e1.provides.length > 0 ? e1.provides[0] : CardType.ANY;
-        const type2 = e2.provides.length > 0 ? e2.provides[0] : CardType.ANY;
+        const type1 = e1.provides.length > 0 ? e1.provides[0] : CardType.COLORLESS;
+        const type2 = e2.provides.length > 0 ? e2.provides[0] : CardType.COLORLESS;
         if (type1 !== type2) {
           return type1 - type2;
         }

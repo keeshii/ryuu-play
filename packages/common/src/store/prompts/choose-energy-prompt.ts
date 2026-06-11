@@ -10,7 +10,11 @@ export interface ChooseEnergyOptions {
   allowCancel: boolean;
 }
 
-export type EnergyMap = { card: EnergyCard, provides: CardType[] }
+export interface EnergyMap {
+  card: EnergyCard;
+  provides: CardType[];
+  provideAmount: number;
+}
 
 export class ChooseEnergyPrompt extends Prompt<EnergyMap[]> {
 
@@ -56,35 +60,30 @@ export class ChooseEnergyPrompt extends Prompt<EnergyMap[]> {
   }
 
   private getCostThatCanBePaid(): CardType[] {
+    // NOTE: This is greedy, not perfect algorithm, but should be OK for this prompt
     const result: CardType[] = this.cost.slice();
-    const provides = this.energy.slice();
     const costs: CardType[] = this.cost.filter(c => c !== CardType.COLORLESS);
     const colorlessCount = result.length - costs.length;
 
-    while (costs.length > 0 && provides.length > 0) {
-      const cost = costs[0];
-      let index = provides.findIndex(p => p.provides.includes(cost));
-
-      if (index === -1) {
-        // concrete energy not found, try to use rainbow energies
-        index = provides.findIndex(p => p.provides.includes(CardType.ANY));
+    const units: CardType[][] = [];
+    // Expand each EnergyMap into individual energy units according to provideAmount
+    this.energy.forEach(e => {
+      for (let i = 0; i < e.provideAmount; i++) {
+        units.push(e.provides);
       }
+    });
+
+    // First try to use the energies that are providing less energy types
+    units.sort((a, b) => a.length - b.length);
+
+    while (costs.length > 0 && units.length > 0) {
+      const cost = costs[0];
+      const index = units.findIndex(u => u.includes(cost));
 
       if (index !== -1) {
         // Energy can be paid, so remove that energy from the provides
-        const provide = provides[index];
-        provides.splice(index, 1);
-
-        provide.provides.forEach(c => {
-          if (c === CardType.ANY && costs.length > 0) {
-            costs.shift();
-          } else {
-            const i = costs.indexOf(c);
-            if (i !== -1) {
-              costs.splice(i, 1);
-            }
-          }
-        });
+        units.splice(index, 1);
+        costs.shift();
 
       } else {
         // Impossible to pay for this cost
@@ -96,11 +95,7 @@ export class ChooseEnergyPrompt extends Prompt<EnergyMap[]> {
       }
     }
 
-    let energyLeft = 0;
-    for (const energy of provides) {
-      energyLeft += energy.provides.length;
-    }
-
+    const energyLeft = units.length;
     const colorlessToDelete = Math.max(0, colorlessCount - energyLeft);
     for (let i = 0; i < colorlessToDelete; i++) {
       const costToDelete = result.indexOf(CardType.COLORLESS);

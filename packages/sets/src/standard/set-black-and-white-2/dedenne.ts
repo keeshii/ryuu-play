@@ -103,7 +103,7 @@ export class Dedenne extends PokemonCard {
 
       const checkProvidedEnergyEffect = new CheckProvidedEnergyEffect(opponent);
       store.reduceEffect(state, checkProvidedEnergyEffect);
-      const energyCount = checkProvidedEnergyEffect.energyMap.reduce((left, p) => left + p.provides.length, 0);
+      const energyCount = checkProvidedEnergyEffect.energyMap.reduce((left, p) => left + p.provideAmount, 0);
       effect.damage = energyCount * 20;
     }
 

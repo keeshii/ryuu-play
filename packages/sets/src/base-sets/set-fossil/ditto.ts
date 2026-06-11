@@ -152,7 +152,7 @@ export class Ditto extends PokemonCard {
         return state;
       }
       effect.energyMap.forEach(item => {
-        item.provides = item.provides.map(p => CardType.ANY);
+        item.provides = StateUtils.rainbowEnergy();
       });
     }
 

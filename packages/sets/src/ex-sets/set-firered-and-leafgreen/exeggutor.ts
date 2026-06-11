@@ -102,7 +102,7 @@ export class Exeggutor extends PokemonCard {
       const player = effect.player;
       const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);
       state = store.reduceEffect(state, checkProvidedEnergy);
-      const energyCount = checkProvidedEnergy.energyMap.reduce((left, p) => left + p.provides.length, 0);
+      const energyCount = checkProvidedEnergy.energyMap.reduce((left, p) => left + p.provideAmount, 0);
 
       return flipDamageTimes.use(effect, energyCount, 40);
     }

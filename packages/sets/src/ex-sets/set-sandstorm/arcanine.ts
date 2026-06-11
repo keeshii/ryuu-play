@@ -96,7 +96,7 @@ export class Arcanine extends PokemonCard {
 
           const cards: Card[] = [];
           checkProvidedEnergy.energyMap.forEach(em => {
-            if (em.provides.includes(CardType.FIRE) || em.provides.includes(CardType.ANY)) {
+            if (em.provides.includes(CardType.FIRE)) {
               cards.push(em.card);
             }
           });

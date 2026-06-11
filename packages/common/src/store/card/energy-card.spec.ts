@@ -18,6 +18,7 @@ describe('EnergyCard', () => {
     expect(energy.superType).toBe(SuperType.ENERGY);
     expect(energy.energyType).toBe(EnergyType.BASIC);
     expect(energy.provides).toEqual([]);
+    expect(energy.provideAmount).toEqual(1);
     expect(energy.text).toBe('');
   });
 

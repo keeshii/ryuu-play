@@ -122,7 +122,7 @@ export class Rotom extends PokemonCard {
           
           const checkProvidedEnergyEffect = new CheckProvidedEnergyEffect(opponent, targets[0]);
           store.reduceEffect(state, checkProvidedEnergyEffect);
-          const energyCount = checkProvidedEnergyEffect.energyMap.reduce((left, p) => left + p.provides.length, 0);
+          const energyCount = checkProvidedEnergyEffect.energyMap.reduce((left, p) => left + p.provideAmount, 0);
           const damage = 20 * energyCount;
 
           const damageEffect = new PutDamageEffect(effect, damage);

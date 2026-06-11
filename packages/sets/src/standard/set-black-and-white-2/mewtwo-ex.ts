@@ -56,11 +56,11 @@ export class MewtwoEx extends PokemonCard {
 
       const playerProvidedEnergy = new CheckProvidedEnergyEffect(player);
       store.reduceEffect(state, playerProvidedEnergy);
-      const playerEnergyCount = playerProvidedEnergy.energyMap.reduce((left, p) => left + p.provides.length, 0);
+      const playerEnergyCount = playerProvidedEnergy.energyMap.reduce((left, p) => left + p.provideAmount, 0);
 
       const opponentProvidedEnergy = new CheckProvidedEnergyEffect(opponent);
       store.reduceEffect(state, opponentProvidedEnergy);
-      const opponentEnergyCount = opponentProvidedEnergy.energyMap.reduce((left, p) => left + p.provides.length, 0);
+      const opponentEnergyCount = opponentProvidedEnergy.energyMap.reduce((left, p) => left + p.provideAmount, 0);
 
       effect.damage = (playerEnergyCount + opponentEnergyCount) * 20;
     }

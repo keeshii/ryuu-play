@@ -50,12 +50,11 @@ export class Breloom extends PokemonCard {
       const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);
       state = store.reduceEffect(state, checkProvidedEnergy);
 
-      for (const energyMap of checkProvidedEnergy.energyMap) {
-        const energy = energyMap.provides.filter(t => t === CardType.FIGHTING || t === CardType.ANY);
-        if (energy.length > 0) {
-          effect.damage += 10 * energy.length;
-        }
-      }
+      let energyCount = 0;
+      checkProvidedEnergy.energyMap.forEach(em => {
+        energyCount += em.provides.includes(CardType.FIGHTING) ? em.provideAmount : 0;
+      });
+      effect.damage += 10 * energyCount;
     }
     return state;
   }

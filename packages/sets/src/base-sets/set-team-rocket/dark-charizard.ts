@@ -28,7 +28,7 @@ function* useContinuousFireball(next: Function, store: StoreLike, state: State, 
     if (index === -1) {
       return; // make sure, that energy is attached to the active
     }
-    if (em.provides.includes(CardType.FIRE) || em.provides.includes(CardType.ANY)) {
+    if (em.provides.includes(CardType.FIRE)) {
       coinFlipPrompts.push(new CoinFlipPrompt(player.id, GameMessage.COIN_FLIP));
     } else {
       blocked.push(index);

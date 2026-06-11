@@ -74,7 +74,7 @@ export class Jolteon extends PokemonCard {
 
           const cards: Card[] = [];
           checkProvidedEnergy.energyMap.forEach(em => {
-            if (em.provides.includes(CardType.LIGHTNING) || em.provides.includes(CardType.ANY)) {
+            if (em.provides.includes(CardType.LIGHTNING)) {
               cards.push(em.card);
             }
           });

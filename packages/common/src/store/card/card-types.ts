@@ -36,7 +36,6 @@ export enum Stage {
 }
 
 export enum CardType {
-  ANY,  // Rainbow energy
   COLORLESS,
   GRASS,
   FIGHTING,

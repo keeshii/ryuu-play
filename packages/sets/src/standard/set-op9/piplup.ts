@@ -66,10 +66,10 @@ export class Piplup extends PokemonCard {
       state = store.reduceEffect(state, opponentEnergy);
 
       let playerEnergyCount = 0;
-      playerEnergy.energyMap.forEach(e => (playerEnergyCount += e.provides.length));
+      playerEnergy.energyMap.forEach(e => (playerEnergyCount += e.provideAmount));
 
       let opponentEnergyCount = 0;
-      opponentEnergy.energyMap.forEach(e => (opponentEnergyCount += e.provides.length));
+      opponentEnergy.energyMap.forEach(e => (opponentEnergyCount += e.provideAmount));
 
       if (playerEnergyCount < opponentEnergyCount) {
         effect.damage += 10;

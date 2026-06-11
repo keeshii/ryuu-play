@@ -1,4 +1,4 @@
-import { CardType, CheckProvidedEnergyEffect, Effect, EnergyCard, EnergyType, State, StoreLike } from '@ptcg/common';
+import { CardType, CheckProvidedEnergyEffect, Effect, EnergyCard, EnergyType, State, StateUtils, StoreLike } from '@ptcg/common';
 
 export class PrismEnergy extends EnergyCard {
   public provides: CardType[] = [CardType.COLORLESS];
@@ -20,7 +20,7 @@ export class PrismEnergy extends EnergyCard {
     if (effect instanceof CheckProvidedEnergyEffect && effect.source.energies.cards.includes(this) && effect.source.isBasic()) {
       effect.energyMap.forEach(item => {
         if (item.card === this) {
-          item.provides = [CardType.ANY];
+          item.provides = StateUtils.rainbowEnergy();
         }
       });
     }

@@ -143,7 +143,7 @@ export class Delcatty extends PokemonCard {
       const player = effect.player;
       const checkProvidedEnergyEffect = new CheckProvidedEnergyEffect(player);
       store.reduceEffect(state, checkProvidedEnergyEffect);
-      const energyCount = checkProvidedEnergyEffect.energyMap.reduce((left, p) => left + p.provides.length, 0);
+      const energyCount = checkProvidedEnergyEffect.energyMap.reduce((left, p) => left + p.provideAmount, 0);
       effect.damage = energyCount * 10;
     }
 

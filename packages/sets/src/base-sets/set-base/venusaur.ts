@@ -39,7 +39,7 @@ function* useEnergyTrans(next: Function, store: StoreLike, state: State, self: V
     const blockedCards: Card[] = [];
 
     checkProvidedEnergy.energyMap.forEach(em => {
-      if (!em.provides.includes(CardType.GRASS) && !em.provides.includes(CardType.ANY)) {
+      if (!em.provides.includes(CardType.GRASS)) {
         blockedCards.push(em.card);
       }
     });

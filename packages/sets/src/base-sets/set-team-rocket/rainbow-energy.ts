@@ -6,6 +6,7 @@ import {
   EnergyCard,
   EnergyType,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -30,7 +31,7 @@ export class RainbowEnergy extends EnergyCard {
     if (effect instanceof CheckProvidedEnergyEffect && effect.source.energies.cards.includes(this)) {
       effect.energyMap.forEach(item => {
         if (item.card === this) {
-          item.provides = [CardType.ANY];
+          item.provides = StateUtils.rainbowEnergy();
         }
       });
     }

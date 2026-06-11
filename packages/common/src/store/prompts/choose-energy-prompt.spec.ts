@@ -1,6 +1,7 @@
 import { ChooseEnergyPrompt, EnergyMap } from './choose-energy-prompt';
 import { GameMessage } from '../../game-message';
 import { CardType, SuperType } from '../card/card-types';
+import { StateUtils } from '../state-utils';
 
 describe('ChooseEnergyPrompt', () => {
 
@@ -12,8 +13,9 @@ describe('ChooseEnergyPrompt', () => {
   let dce: CardType[];
 
   function createEnergy(name: string, provides: CardType[]): EnergyMap {
-    const card = { name, superType: SuperType.ENERGY, provides } as any;
-    return { card, provides };
+    const provideAmount = name === 'dce' ? 2 : 1;
+    const card = { name, superType: SuperType.ENERGY, provides, provideAmount } as any;
+    return { card, provides, provideAmount };
   }
 
   beforeEach(() => {
@@ -21,8 +23,8 @@ describe('ChooseEnergyPrompt', () => {
     fire = [ CardType.FIRE ];
     dark = [ CardType.DARK ];
     colorless = [ CardType.COLORLESS ];
-    rainbow = [ CardType.ANY ];
-    dce = [ CardType.COLORLESS, CardType.COLORLESS ];
+    rainbow = StateUtils.rainbowEnergy();
+    dce = [ CardType.COLORLESS ];
   });
 
   it('Should not change the cost (because possible to cancel)', () => {

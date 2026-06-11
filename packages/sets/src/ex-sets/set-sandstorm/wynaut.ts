@@ -30,7 +30,7 @@ function* useAlluringSmile(next: Function, store: StoreLike, state: State, effec
 
   const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);
   state = store.reduceEffect(state, checkProvidedEnergy);
-  const max = checkProvidedEnergy.energyMap.reduce((left, p) => left + p.provides.length, 0);
+  const max = checkProvidedEnergy.energyMap.reduce((left, p) => left + p.provideAmount, 0);
 
   if (max === 0) {
     return state;

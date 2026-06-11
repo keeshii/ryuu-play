@@ -81,7 +81,7 @@ export class Metapod extends PokemonCard {
       const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);
       checkProvidedEnergy.source = effect.target;
       state = store.reduceEffect(state, checkProvidedEnergy);
-      const energyCount = checkProvidedEnergy.energyMap.reduce((left, p) => left + p.provides.length, 0);
+      const energyCount = checkProvidedEnergy.energyMap.reduce((left, p) => left + p.provideAmount, 0);
 
       const reduction = Math.min(energyCount, 3) * 10;
       effect.damage = Math.max(0, effect.damage - reduction);

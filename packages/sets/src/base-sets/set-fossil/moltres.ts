@@ -64,7 +64,7 @@ export class Moltres extends PokemonCard {
       player.active.energies.cards.forEach((card, index) => {
         const energyMap = checkProvidedEnergy.energyMap.find(em => em.card === card);
         const provides: CardType[] = energyMap ? energyMap.provides : [];
-        if (provides.every(ct => ct !== CardType.FIRE && ct !== CardType.ANY)) {
+        if (provides.every(ct => ct !== CardType.FIRE)) {
           blocked.push(index);
         }
       });
@@ -89,10 +89,11 @@ export class Moltres extends PokemonCard {
           let energyCount = 0;
           for (const card of cards) {
             const energyMap = checkProvidedEnergy.energyMap.find(em => em.card === card);
-            const provides: CardType[] = energyMap ? energyMap.provides : [];
-            for (const cardType of provides) {
-              if (cardType === CardType.FIRE || cardType == CardType.ANY) {
-                energyCount += 1;
+            if (energyMap !== undefined) {
+              for (const cardType of energyMap.provides) {
+                if (cardType === CardType.FIRE) {
+                  energyCount += energyMap.provideAmount;
+                }
               }
             }
           }

@@ -31,7 +31,7 @@ function* useDarkTrance(next: Function, store: StoreLike, state: State, effect: 
     const blockedCards: Card[] = [];
 
     checkProvidedEnergy.energyMap.forEach(em => {
-      if (!em.provides.includes(CardType.DARK) && !em.provides.includes(CardType.ANY)) {
+      if (!em.provides.includes(CardType.DARK)) {
         blockedCards.push(em.card);
       }
     });

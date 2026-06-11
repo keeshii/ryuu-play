@@ -113,7 +113,7 @@ export class CheckProvidedEnergyEffect implements Effect {
     this.player = player;
     this.source = source === undefined ? player.active : source;
     this.source.energies.cards.forEach(c => {
-      this.energyMap.push({ card: c, provides: c.provides });
+      this.energyMap.push({ card: c, provides: c.provides, provideAmount: c.provideAmount });
     });
   }
 }

@@ -184,6 +184,8 @@ export class Electrode extends PokemonCard implements EnergyCard {
 
   public provides: CardType[] = [];
 
+  public provideAmount = 2;
+
   public energyType = EnergyType.SPECIAL;
 
   public reduceEffect(store: StoreLike, state: State, effect: Effect): State {
@@ -210,7 +212,7 @@ export class Electrode extends PokemonCard implements EnergyCard {
 
       effect.energyMap.forEach(item => {
         if (item.card === this) {
-          item.provides = [cardType, cardType];
+          item.provides = [cardType];
         }
       });
     }

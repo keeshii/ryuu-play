@@ -1,4 +1,4 @@
-import { CardType, EnergyCard } from "@ptcg/common";
+import { CardType, EnergyCard, StateUtils } from "@ptcg/common";
 
 // An energy card used to pay for attacks in tests.
 export class TestEnergy extends EnergyCard {
@@ -11,8 +11,8 @@ export class TestEnergy extends EnergyCard {
 
   public fullName: string = 'Test Energy TEST';
 
-  constructor(cardType: CardType = CardType.ANY) {
+  constructor(cardType?: CardType) {
     super();
-    this.provides = [ cardType ];
+    this.provides = cardType ? [ cardType ] : StateUtils.rainbowEnergy();
   }
 }

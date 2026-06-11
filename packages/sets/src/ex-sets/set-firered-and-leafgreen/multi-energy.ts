@@ -5,6 +5,7 @@ import {
   EnergyCard,
   EnergyType,
   State,
+  StateUtils,
   StoreLike,
 } from '@ptcg/common';
 
@@ -34,7 +35,7 @@ export class MultiEnergy extends EnergyCard {
 
       effect.energyMap.forEach(item => {
         if (item.card === this) {
-          item.provides = [CardType.ANY];
+          item.provides = StateUtils.rainbowEnergy();
         }
       });
     }

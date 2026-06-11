@@ -20,7 +20,7 @@ export class EnergyScore extends SimpleScore {
         : scores.bench;
 
       missing.forEach(p => {
-        score += p === CardType.ANY
+        score += p === CardType.COLORLESS
           ? scores.missingColorless * multipier
           : scores.missingMatch * multipier;
       });
@@ -31,11 +31,11 @@ export class EnergyScore extends SimpleScore {
 
   private mergeMissing(missing1: CardType[], missing2: CardType[]): CardType[] {
     let any1 = 0;
-    missing1.forEach(c => { any1 += c === CardType.ANY ? 1 : 0; });
-    missing1 = missing1.filter(c => c !== CardType.ANY);
+    missing1.forEach(c => { any1 += c === CardType.COLORLESS ? 1 : 0; });
+    missing1 = missing1.filter(c => c !== CardType.COLORLESS);
     let any2 = 0;
-    missing2.forEach(c => { any2 += c === CardType.ANY ? 1 : 0; });
-    missing2 = missing2.filter(c => c !== CardType.ANY);
+    missing2.forEach(c => { any2 += c === CardType.COLORLESS ? 1 : 0; });
+    missing2 = missing2.filter(c => c !== CardType.COLORLESS);
 
     missing1.forEach(c => {
       const index = missing2.indexOf(c);
@@ -52,7 +52,7 @@ export class EnergyScore extends SimpleScore {
 
     const max = Math.max(any1, any2);
     for (let i = 0; i < max ; i++) {
-      missing1.push(CardType.ANY);
+      missing1.push(CardType.COLORLESS);
     }
 
     return missing1;
@@ -64,23 +64,24 @@ export class EnergyScore extends SimpleScore {
       return [];
     }
 
-    const provided: CardType[] = [];
+    const provided: CardType[][] = [];
     pokemonSlot.energies.cards.forEach(card => {
-      card.provides.forEach(energy => provided.push(energy));
+      for (let i = 0; i < card.provideAmount; i++) {
+        provided.push(card.provides);
+      }
     });
+    provided.sort((a, b) => a.length - b.length);
 
     const missing: CardType[] = [];
     let colorless = 0;
     // First remove from array cards with specific energy types
     cost.forEach(costType => {
       switch (costType) {
-        case CardType.ANY:
-          break;
         case CardType.COLORLESS:
           colorless += 1;
           break;
         default: {
-          const index = provided.findIndex(energy => energy === costType);
+          const index = provided.findIndex(p => p.includes(costType));
           if (index !== -1) {
             provided.splice(index, 1);
           } else {
@@ -93,7 +94,7 @@ export class EnergyScore extends SimpleScore {
     colorless -= provided.length;
 
     for (let i = 0; i < colorless; i++) {
-      missing.push(CardType.ANY);
+      missing.push(CardType.COLORLESS);
     }
 
     return missing;

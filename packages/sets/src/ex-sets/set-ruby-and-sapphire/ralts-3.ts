@@ -51,11 +51,11 @@ export class Ralts3 extends PokemonCard {
 
       const checkProvidedEnergyPlayer = new CheckProvidedEnergyEffect(player);
       state = store.reduceEffect(state, checkProvidedEnergyPlayer);
-      const playerEnergy = checkProvidedEnergyPlayer.energyMap.reduce((left, p) => left + p.provides.length, 0);
+      const playerEnergy = checkProvidedEnergyPlayer.energyMap.reduce((left, p) => left + p.provideAmount, 0);
 
       const checkProvidedEnergyOpponent = new CheckProvidedEnergyEffect(opponent);
       state = store.reduceEffect(state, checkProvidedEnergyOpponent);
-      const opponentEnergy = checkProvidedEnergyPlayer.energyMap.reduce((left, p) => left + p.provides.length, 0);
+      const opponentEnergy = checkProvidedEnergyPlayer.energyMap.reduce((left, p) => left + p.provideAmount, 0);
 
       if (playerEnergy !== opponentEnergy) {
         effect.damage = 10;

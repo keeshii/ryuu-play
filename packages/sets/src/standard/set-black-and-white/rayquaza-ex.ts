@@ -4,16 +4,18 @@ import {
   CardList,
   CardTag,
   CardType,
-  CheckProvidedEnergyEffect,
   DiscardCardsEffect,
   Effect,
   EnergyCard,
+  EnergyType,
+  FilterUtils,
   GameMessage,
   PokemonCard,
   SelectPrompt,
   Stage,
   State,
   StoreLike,
+  SuperType
 } from '@ptcg/common';
 
 export class RayquazaEx extends PokemonCard {
@@ -69,9 +71,6 @@ export class RayquazaEx extends PokemonCard {
     if (effect instanceof AttackEffect && effect.attack === this.attacks[1]) {
       const player = effect.player;
 
-      const checkProvidedEnergy = new CheckProvidedEnergyEffect(player);
-      state = store.reduceEffect(state, checkProvidedEnergy);
-
       return store.prompt(
         state,
         new SelectPrompt(
@@ -82,21 +81,15 @@ export class RayquazaEx extends PokemonCard {
         ),
         choice => {
           const cardType = choice === 0 ? CardType.FIRE : CardType.LIGHTNING;
-          let damage = 0;
-
-          const cards: Card[] = [];
-          for (const energyMap of checkProvidedEnergy.energyMap) {
-            const energy = energyMap.provides.filter(t => t === cardType || t === CardType.ANY);
-            if (energy.length > 0) {
-              cards.push(energyMap.card);
-              damage += 60 * energy.length;
-            }
-          }
+          const cards: Card[] = FilterUtils.filter(
+            player.active.energies.cards,
+            { superType: SuperType.ENERGY, energyType: EnergyType.BASIC, provides: [cardType] }
+          );
 
           const discardEnergy = new DiscardCardsEffect(effect, cards);
           discardEnergy.target = player.active;
           store.reduceEffect(state, discardEnergy);
-          effect.damage = damage;
+          effect.damage = 60 * cards.length;
         }
       );
     }
