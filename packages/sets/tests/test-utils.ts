@@ -69,6 +69,11 @@ export class TestUtils {
     sim.setBotArbiter(botArbiter);
   }
 
+  public static setActivePlayer(sim: Simulator, player: Player) {
+    const state = sim.store.state;
+    state.activePlayer = state.players.findIndex(p => p.id === player.id);
+  }
+
   public static getAll(sim: Simulator) {
     const state = sim.store.state;
     const player = state.players[0];

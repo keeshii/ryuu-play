@@ -1,4 +1,4 @@
-import { CardType, PokemonCard, SuperType, Weakness } from "@ptcg/common";
+import { Attack, CardType, PokemonCard, SuperType, Weakness } from "@ptcg/common";
 
 // A pokemon card with no types or abilities, used in tests.
 export class TestPokemon extends PokemonCard {
@@ -9,7 +9,7 @@ export class TestPokemon extends PokemonCard {
 
   public hp: number = 400;
 
-  public attacks = [
+  public attacks: Attack[] = [
     {
       name: 'Test attack',
       cost: [],

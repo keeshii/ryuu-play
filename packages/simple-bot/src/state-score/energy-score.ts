@@ -48,6 +48,9 @@ export class EnergyScore extends SimpleScore {
 
     missing2.forEach(c => {
       missing1.push(c);
+      if (any1 > 0) {
+        any1 -= 1;
+      }
     });
 
     const max = Math.max(any1, any2);

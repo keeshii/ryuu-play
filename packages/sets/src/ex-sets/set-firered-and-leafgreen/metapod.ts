@@ -58,13 +58,8 @@ export class Metapod extends PokemonCard {
     if (effect instanceof PutDamageEffect && effect.target.pokemons.cards.includes(this)) {
       const pokemonCard = effect.target.getPokemonCard();
 
-      // It's not this pokemon card
-      if (pokemonCard !== this) {
-        return state;
-      }
-
-      // It's not an attack
-      if (state.phase !== GamePhase.ATTACK) {
+      // It's not this pokemon card, or it's not an attack
+      if (pokemonCard !== this || state.phase !== GamePhase.ATTACK) {
         return state;
       }
 
