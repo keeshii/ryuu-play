@@ -64,7 +64,10 @@ export class Venomoth extends PokemonCard {
     protectiveDust.reduce(this.powers[0]);
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {
-      const specialConditionEffect = new AddSpecialConditionsEffect(effect, [SpecialCondition.POISONED]);
+      const specialConditionEffect = new AddSpecialConditionsEffect(effect, [
+        SpecialCondition.ASLEEP,
+        SpecialCondition.POISONED
+      ]);
       store.reduceEffect(state, specialConditionEffect);
     }
 

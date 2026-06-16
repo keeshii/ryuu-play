@@ -24,13 +24,8 @@ export const protectiveDust: CommonPower = function(
       if (effect instanceof AbstractAttackEffect && effect.target.pokemons.cards.includes(self)) {
         const player = effect.player;
 
-        // pokemon is evolved
-        if (effect.target.getPokemonCard() !== self) {
-          return state;
-        }
-
-        // Not an attack
-        if (state.phase !== GamePhase.ATTACK) {
+        // pokemon is evolved or not an attack
+        if (effect.target.getPokemonCard() !== self || state.phase !== GamePhase.ATTACK) {
           return state;
         }
 

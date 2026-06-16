@@ -18,71 +18,6 @@ import {
 } from '@ptcg/common';
 import { commonMarkers } from '../../common';
 
-function* useAssistance(
-  next: Function,
-  store: StoreLike,
-  state: State,
-  effect: PowerEffect,
-  self: Wigglytuff
-): IterableIterator<State> {
-  const player = effect.player;
-
-  let isWigglytuffOnBench = false;
-  player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (pokemonSlot, card, target) => {
-    if (target.slot === SlotType.BENCH && card === self) {
-      isWigglytuffOnBench = true;
-    }
-  });
-
-  if (!isWigglytuffOnBench) {
-    throw new GameError(GameMessage.CANNOT_USE_POWER);
-  }
-
-  const options: { message: GameMessage; value: SpecialCondition }[] = [
-    {
-      message: GameMessage.SPECIAL_CONDITION_PARALYZED,
-      value: SpecialCondition.PARALYZED,
-    },
-    {
-      message: GameMessage.SPECIAL_CONDITION_CONFUSED,
-      value: SpecialCondition.CONFUSED,
-    },
-    {
-      message: GameMessage.SPECIAL_CONDITION_ASLEEP,
-      value: SpecialCondition.ASLEEP,
-    },
-    {
-      message: GameMessage.SPECIAL_CONDITION_POISONED,
-      value: SpecialCondition.POISONED,
-    },
-    {
-      message: GameMessage.SPECIAL_CONDITION_BURNED,
-      value: SpecialCondition.BURNED,
-    },
-  ].filter(item => player.active.specialConditions.includes(item.value));
-  
-  if (options.length === 0) {
-    throw new GameError(GameMessage.CANNOT_USE_POWER);
-  } 
-
-  return store.prompt(
-    state,
-    new SelectPrompt(
-      player.id,
-      GameMessage.CHOOSE_SPECIAL_CONDITION,
-      options.map(c => c.message),
-      { allowCancel: false }
-    ),
-    choice => {
-      const option = options[choice];
-
-      if (option !== undefined) {
-        player.active.removeSpecialCondition(option.value);
-      }
-    }
-  );
-}
-
 export class Wigglytuff extends PokemonCard {
   public stage: Stage = Stage.STAGE_1;
 
@@ -131,13 +66,67 @@ export class Wigglytuff extends PokemonCard {
     const powerUseOnce = commonMarkers.powerUseOnce(this, store, state, effect);
 
     if (effect instanceof PowerEffect && effect.power === this.powers[0]) {
+      const player = effect.player;
+
+      let isWigglytuffOnBench = false;
+      player.forEachPokemon(PlayerType.BOTTOM_PLAYER, (pokemonSlot, card, target) => {
+        if (target.slot === SlotType.BENCH && card === this) {
+          isWigglytuffOnBench = true;
+        }
+      });
+
+      if (!isWigglytuffOnBench) {
+        throw new GameError(GameMessage.CANNOT_USE_POWER);
+      }
+
+      const options: { message: GameMessage; value: SpecialCondition }[] = [
+        {
+          message: GameMessage.SPECIAL_CONDITION_PARALYZED,
+          value: SpecialCondition.PARALYZED,
+        },
+        {
+          message: GameMessage.SPECIAL_CONDITION_CONFUSED,
+          value: SpecialCondition.CONFUSED,
+        },
+        {
+          message: GameMessage.SPECIAL_CONDITION_ASLEEP,
+          value: SpecialCondition.ASLEEP,
+        },
+        {
+          message: GameMessage.SPECIAL_CONDITION_POISONED,
+          value: SpecialCondition.POISONED,
+        },
+        {
+          message: GameMessage.SPECIAL_CONDITION_BURNED,
+          value: SpecialCondition.BURNED,
+        },
+      ].filter(item => player.active.specialConditions.includes(item.value));
+
+      if (options.length === 0) {
+        throw new GameError(GameMessage.CANNOT_USE_POWER);
+      } 
+
       if (powerUseOnce.hasMarker(effect)) {
         throw new GameError(GameMessage.POWER_ALREADY_USED);
       }
 
-      powerUseOnce.setMarker(effect);
-      const generator = useAssistance(() => generator.next(), store, state, effect, this);
-      return generator.next().value;
+      return store.prompt(
+        state,
+        new SelectPrompt(
+          player.id,
+          GameMessage.CHOOSE_SPECIAL_CONDITION,
+          options.map(c => c.message),
+          { allowCancel: false }
+        ),
+        choice => {
+          const option = options[choice];
+
+          if (option !== undefined) {
+            powerUseOnce.setMarker(effect);
+            player.active.removeSpecialCondition(option.value);
+          }
+        }
+      );
     }
 
     if (effect instanceof AttackEffect && effect.attack === this.attacks[0]) {

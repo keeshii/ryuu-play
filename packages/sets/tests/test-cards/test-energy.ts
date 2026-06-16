@@ -13,6 +13,6 @@ export class TestEnergy extends EnergyCard {
 
   constructor(cardType?: CardType) {
     super();
-    this.provides = cardType ? [ cardType ] : StateUtils.rainbowEnergy();
+    this.provides = cardType !== undefined ? [ cardType ] : StateUtils.rainbowEnergy();
   }
 }

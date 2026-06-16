@@ -22,11 +22,6 @@ import {
 
 function* useRecharge(next: Function, store: StoreLike, state: State, effect: AttackEffect, self: Raichu): IterableIterator<State> {
   const player = effect.player;
-  const pokemonSlot = StateUtils.findPokemonSlot(state, self);
-
-  if (!pokemonSlot) {
-    return state;
-  }
 
   if (player.deck.cards.length === 0) {
     return state;
@@ -53,7 +48,7 @@ function* useRecharge(next: Function, store: StoreLike, state: State, effect: At
   );
 
   if (cards.length > 0) {
-    player.deck.moveCardsTo(cards, pokemonSlot.energies);
+    player.deck.moveCardsTo(cards, player.active.energies);
   }
 
   return store.prompt(state, new ShuffleDeckPrompt(player.id), order => {
