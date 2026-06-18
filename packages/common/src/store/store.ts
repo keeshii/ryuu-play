@@ -236,7 +236,7 @@ export class Store implements StoreLike {
       player.deck.cards.forEach(c => cards.push(c));
       player.discard.cards.forEach(c => cards.push(c));
     }
-    cards.sort(c => c.superType);
+    cards.sort((c1, c2) => (c2.superType - c1.superType) || c1.fullName.localeCompare(c2.fullName));
     cards.forEach(c => { state = c.reduceEffect(this, state, effect); });
     return state;
   }
